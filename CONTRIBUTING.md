@@ -9,6 +9,9 @@
 ## 검증 기준
 
 - 토큰 이름이 특정 제품이나 캠페인에 묶이지 않는다.
+- 색상 토큰은 `hex` fallback과 `oklch` 값을 함께 추가하거나 함께 변경한다.
 - 컴포넌트가 인증, 결제, 권한 판단을 직접 수행하지 않는다.
+- 시각 변경은 Storybook의 `Design System/Overview`와 `preview/index.html`에서 light/dark 상태를 확인한다.
+- Workduck 개발 서버와 빌드 액션이 깨지지 않도록 `dev`와 `build` 스크립트를 유지한다.
 - 패키지 export가 안정된 뒤에는 변경 내역을 `CHANGELOG.md`에 남긴다.
-- 토큰 JSON, CSS 변수, public export 변경 뒤에는 `bun run tokens:check`를 실행한다.
+- 토큰 JSON, CSS 변수, public export, Storybook, preview 변경 뒤에는 `bun run check`를 실행한다.

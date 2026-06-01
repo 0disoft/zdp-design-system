@@ -1,32 +1,83 @@
 {
   "$schema": "https://zdp.zerodi.dev/schemas/design-tokens.schema.json",
   "name": "zdp-core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "color": {
     "ink": {
-      "strong": "#111827",
-      "normal": "#1f2937",
-      "muted": "#667085",
-      "inverse": "#ffffff"
+      "strong": {
+        "hex": "#111827",
+        "oklch": "oklch(21% 0.035 265)"
+      },
+      "normal": {
+        "hex": "#1f2937",
+        "oklch": "oklch(28% 0.035 260)"
+      },
+      "muted": {
+        "hex": "#667085",
+        "oklch": "oklch(55% 0.035 260)"
+      },
+      "inverse": {
+        "hex": "#ffffff",
+        "oklch": "oklch(100% 0 0)"
+      }
     },
     "surface": {
-      "canvas": "#f7f8fb",
-      "panel": "#ffffff",
-      "raised": "#f2f4f7",
-      "inverse": "#111827"
+      "canvas": {
+        "hex": "#f7f8fb",
+        "oklch": "oklch(98% 0.006 260)"
+      },
+      "panel": {
+        "hex": "#ffffff",
+        "oklch": "oklch(100% 0 0)"
+      },
+      "raised": {
+        "hex": "#f2f4f7",
+        "oklch": "oklch(96% 0.008 260)"
+      },
+      "inverse": {
+        "hex": "#111827",
+        "oklch": "oklch(21% 0.035 265)"
+      }
     },
     "line": {
-      "subtle": "#d0d5dd",
-      "strong": "#98a2b3",
-      "focus": "#2563eb"
+      "subtle": {
+        "hex": "#d0d5dd",
+        "oklch": "oklch(86% 0.018 260)"
+      },
+      "strong": {
+        "hex": "#98a2b3",
+        "oklch": "oklch(70% 0.03 260)"
+      },
+      "focus": {
+        "hex": "#2563eb",
+        "oklch": "oklch(54% 0.19 260)"
+      }
     },
     "accent": {
-      "primary": "#2563eb",
-      "primaryStrong": "#1d4ed8",
-      "primarySoft": "#dbeafe",
-      "success": "#0f766e",
-      "warning": "#b54708",
-      "danger": "#b42318"
+      "primary": {
+        "hex": "#2563eb",
+        "oklch": "oklch(54% 0.19 260)"
+      },
+      "primaryStrong": {
+        "hex": "#1d4ed8",
+        "oklch": "oklch(48% 0.2 260)"
+      },
+      "primarySoft": {
+        "hex": "#dbeafe",
+        "oklch": "oklch(92% 0.045 255)"
+      },
+      "success": {
+        "hex": "#0f766e",
+        "oklch": "oklch(48% 0.1 190)"
+      },
+      "warning": {
+        "hex": "#b54708",
+        "oklch": "oklch(56% 0.14 55)"
+      },
+      "danger": {
+        "hex": "#b42318",
+        "oklch": "oklch(50% 0.17 30)"
+      }
     }
   },
   "space": {

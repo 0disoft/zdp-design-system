@@ -4,7 +4,7 @@ import { join } from 'node:path';
 interface TokenDocument {
   readonly name: string;
   readonly version: string;
-  readonly color: Record<string, Record<string, string>>;
+  readonly color: ColorTokenGroups;
   readonly space: Record<string, string>;
   readonly radius: Record<string, string>;
   readonly font: {
@@ -17,20 +17,40 @@ interface TokenDocument {
   readonly motion: Record<string, string>;
 }
 
+interface ColorTokenValue {
+  readonly hex: string;
+  readonly oklch: string;
+}
+
+type ColorTokenGroups = Record<string, Record<string, ColorTokenValue>>;
+
 const root = process.cwd();
 const tokenPath = join(root, 'tokens', 'zdp.tokens.json');
 const cssPath = join(root, 'src', 'styles', 'tokens.css');
 const publicEntryPath = join(root, 'src', 'lib', 'index.ts');
+const hexColorPattern = /^#[0-9a-fA-F]{6}$/;
+const oklchColorPattern = /^oklch\([^)]+\)$/;
 
 const tokenDocument = await readTokenDocument(tokenPath);
 const css = await readFile(cssPath, 'utf8');
 const publicEntry = await readFile(publicEntryPath, 'utf8');
 const tokenVariables = collectCssVariableNames(tokenDocument);
+const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
 
 for (const variable of tokenVariables) {
   if (!css.includes(`--${variable}:`)) {
     failures.push(`Missing CSS variable --${variable}.`);
+  }
+}
+
+for (const { variable, token } of colorTokens) {
+  if (!hasCssDeclaration(css, variable, token.hex)) {
+    failures.push(`Missing hex fallback declaration --${variable}: ${token.hex};`);
+  }
+
+  if (!hasCssDeclaration(css, variable, token.oklch)) {
+    failures.push(`Missing OKLCH declaration --${variable}: ${token.oklch};`);
   }
 }
 
@@ -65,7 +85,7 @@ async function readTokenDocument(path: string): Promise<TokenDocument> {
   return {
     name: parsed.name,
     version: parsed.version,
-    color: assertNestedStringRecord(parsed.color, 'color'),
+    color: assertColorGroups(parsed.color, 'color'),
     space: assertStringRecord(parsed.space, 'space'),
     radius: assertStringRecord(parsed.radius, 'radius'),
     font: {
@@ -96,13 +116,24 @@ function collectCssVariableNames(tokens: TokenDocument): readonly string[] {
   ];
 }
 
+function collectColorTokens(
+  tokens: TokenDocument
+): readonly { readonly variable: string; readonly token: ColorTokenValue }[] {
+  return Object.entries(tokens.color).flatMap(([group, entries]) =>
+    Object.entries(entries).map(([key, token]) => ({
+      variable: `zdp-color-${toKebabCase(group)}-${toKebabCase(key)}`,
+      token
+    }))
+  );
+}
+
 function collectNames(prefix: string, values: Record<string, string>): readonly string[] {
   return Object.keys(values).map((key) => `zdp-${prefix}-${toKebabCase(key)}`);
 }
 
 function collectNestedNames(
   prefix: string,
-  values: Record<string, Record<string, string>>
+  values: Record<string, Record<string, unknown>>
 ): readonly string[] {
   return Object.entries(values).flatMap(([group, entries]) =>
     Object.keys(entries).map((key) => `zdp-${prefix}-${toKebabCase(group)}-${toKebabCase(key)}`)
@@ -127,18 +158,48 @@ function assertStringRecord(value: unknown, path: string): Record<string, string
   return record as Record<string, string>;
 }
 
-function assertNestedStringRecord(
+function assertColorGroups(
   value: unknown,
   path: string
-): Record<string, Record<string, string>> {
+): ColorTokenGroups {
   const record = readRequiredRecord(value, path);
-  const output: Record<string, Record<string, string>> = {};
+  const output: ColorTokenGroups = {};
 
   for (const [key, entry] of Object.entries(record)) {
-    output[key] = assertStringRecord(entry, `${path}.${key}`);
+    output[key] = assertColorRecord(entry, `${path}.${key}`);
   }
 
   return output;
+}
+
+function assertColorRecord(value: unknown, path: string): Record<string, ColorTokenValue> {
+  const record = readRequiredRecord(value, path);
+  const output: Record<string, ColorTokenValue> = {};
+
+  for (const [key, entry] of Object.entries(record)) {
+    output[key] = assertColorTokenValue(entry, `${path}.${key}`);
+  }
+
+  return output;
+}
+
+function assertColorTokenValue(value: unknown, path: string): ColorTokenValue {
+  const record = readRequiredRecord(value, path);
+  const hex = record.hex;
+  const oklch = record.oklch;
+
+  assertString(hex, `${path}.hex`);
+  assertString(oklch, `${path}.oklch`);
+
+  if (!hexColorPattern.test(hex)) {
+    throw new Error(`Token field ${path}.hex must be a six-digit hex color.`);
+  }
+
+  if (!oklchColorPattern.test(oklch)) {
+    throw new Error(`Token field ${path}.oklch must be an oklch(...) color.`);
+  }
+
+  return { hex, oklch };
 }
 
 function readRequiredRecord(value: unknown, path: string): Record<string, unknown> {
@@ -151,6 +212,15 @@ function readRequiredRecord(value: unknown, path: string): Record<string, unknow
 
 function toKebabCase(value: string): string {
   return value.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
+}
+
+function hasCssDeclaration(cssText: string, variable: string, value: string): boolean {
+  const pattern = new RegExp(`--${escapeRegExp(variable)}:\\s*${escapeRegExp(value)}\\s*;`);
+  return pattern.test(cssText);
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

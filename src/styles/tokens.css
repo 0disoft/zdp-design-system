@@ -73,6 +73,49 @@
   --zdp-color-accent-danger: #f87171;
 }
 
+@supports (color: oklch(50% 0.1 240)) {
+  :root,
+  [data-zdp-theme="light"] {
+    --zdp-color-ink-strong: oklch(21% 0.035 265);
+    --zdp-color-ink-normal: oklch(28% 0.035 260);
+    --zdp-color-ink-muted: oklch(55% 0.035 260);
+    --zdp-color-ink-inverse: oklch(100% 0 0);
+    --zdp-color-surface-canvas: oklch(98% 0.006 260);
+    --zdp-color-surface-panel: oklch(100% 0 0);
+    --zdp-color-surface-raised: oklch(96% 0.008 260);
+    --zdp-color-surface-inverse: oklch(21% 0.035 265);
+    --zdp-color-line-subtle: oklch(86% 0.018 260);
+    --zdp-color-line-strong: oklch(70% 0.03 260);
+    --zdp-color-line-focus: oklch(54% 0.19 260);
+    --zdp-color-accent-primary: oklch(54% 0.19 260);
+    --zdp-color-accent-primary-strong: oklch(48% 0.2 260);
+    --zdp-color-accent-primary-soft: oklch(92% 0.045 255);
+    --zdp-color-accent-success: oklch(48% 0.1 190);
+    --zdp-color-accent-warning: oklch(56% 0.14 55);
+    --zdp-color-accent-danger: oklch(50% 0.17 30);
+  }
+
+  [data-zdp-theme="dark"] {
+    --zdp-color-ink-strong: oklch(98% 0.004 260);
+    --zdp-color-ink-normal: oklch(92% 0.01 260);
+    --zdp-color-ink-muted: oklch(75% 0.025 260);
+    --zdp-color-ink-inverse: oklch(21% 0.035 265);
+    --zdp-color-surface-canvas: oklch(21% 0.035 265);
+    --zdp-color-surface-panel: oklch(23% 0.035 265);
+    --zdp-color-surface-raised: oklch(31% 0.035 260);
+    --zdp-color-surface-inverse: oklch(100% 0 0);
+    --zdp-color-line-subtle: oklch(42% 0.035 260);
+    --zdp-color-line-strong: oklch(55% 0.035 260);
+    --zdp-color-line-focus: oklch(68% 0.16 255);
+    --zdp-color-accent-primary: oklch(68% 0.16 255);
+    --zdp-color-accent-primary-strong: oklch(78% 0.11 255);
+    --zdp-color-accent-primary-soft: oklch(38% 0.12 260);
+    --zdp-color-accent-success: oklch(76% 0.13 185);
+    --zdp-color-accent-warning: oklch(76% 0.15 65);
+    --zdp-color-accent-danger: oklch(70% 0.16 30);
+  }
+}
+
 .zdp-surface-reset {
   box-sizing: border-box;
   color: var(--zdp-color-ink-normal);
