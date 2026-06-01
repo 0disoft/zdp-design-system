@@ -1,7 +1,32 @@
 {
   "name": "zdp-design-system",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
-  "description": "ZDP design tokens, CSS, icons, and Svelte UI package boundary."
+  "description": "ZDP design tokens, CSS, icons, and Svelte UI package boundary.",
+  "exports": {
+    ".": {
+      "svelte": "./src/lib/index.ts",
+      "types": "./src/lib/index.ts",
+      "default": "./src/lib/index.ts"
+    },
+    "./styles.css": "./src/styles/tokens.css",
+    "./tokens": "./tokens/zdp.tokens.json"
+  },
+  "files": [
+    "src/",
+    "tokens/",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "sideEffects": [
+    "./src/styles/tokens.css"
+  ],
+  "scripts": {
+    "tokens:check": "bun scripts/check-tokens.ts",
+    "check": "bun scripts/check-tokens.ts"
+  },
+  "peerDependencies": {
+    "svelte": "^5.0.0"
+  }
 }

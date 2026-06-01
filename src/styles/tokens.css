@@ -1,0 +1,95 @@
+:root,
+[data-zdp-theme="light"] {
+  --zdp-color-ink-strong: #111827;
+  --zdp-color-ink-normal: #1f2937;
+  --zdp-color-ink-muted: #667085;
+  --zdp-color-ink-inverse: #ffffff;
+  --zdp-color-surface-canvas: #f7f8fb;
+  --zdp-color-surface-panel: #ffffff;
+  --zdp-color-surface-raised: #f2f4f7;
+  --zdp-color-surface-inverse: #111827;
+  --zdp-color-line-subtle: #d0d5dd;
+  --zdp-color-line-strong: #98a2b3;
+  --zdp-color-line-focus: #2563eb;
+  --zdp-color-accent-primary: #2563eb;
+  --zdp-color-accent-primary-strong: #1d4ed8;
+  --zdp-color-accent-primary-soft: #dbeafe;
+  --zdp-color-accent-success: #0f766e;
+  --zdp-color-accent-warning: #b54708;
+  --zdp-color-accent-danger: #b42318;
+  --zdp-space-0: 0;
+  --zdp-space-1: 0.25rem;
+  --zdp-space-2: 0.5rem;
+  --zdp-space-3: 0.75rem;
+  --zdp-space-4: 1rem;
+  --zdp-space-5: 1.25rem;
+  --zdp-space-6: 1.5rem;
+  --zdp-space-8: 2rem;
+  --zdp-space-10: 2.5rem;
+  --zdp-space-12: 3rem;
+  --zdp-radius-none: 0;
+  --zdp-radius-sm: 0.25rem;
+  --zdp-radius-md: 0.5rem;
+  --zdp-radius-lg: 0.75rem;
+  --zdp-radius-pill: 999px;
+  --zdp-font-family-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --zdp-font-family-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  --zdp-font-size-xs: 0.75rem;
+  --zdp-font-size-sm: 0.875rem;
+  --zdp-font-size-md: 1rem;
+  --zdp-font-size-lg: 1.125rem;
+  --zdp-font-size-xl: 1.25rem;
+  --zdp-font-weight-regular: 400;
+  --zdp-font-weight-medium: 500;
+  --zdp-font-weight-semibold: 600;
+  --zdp-font-weight-bold: 700;
+  --zdp-font-line-height-tight: 1.2;
+  --zdp-font-line-height-normal: 1.5;
+  --zdp-font-line-height-relaxed: 1.65;
+  --zdp-shadow-focus: 0 0 0 3px rgba(37, 99, 235, 0.28);
+  --zdp-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.08);
+  --zdp-shadow-md: 0 8px 24px rgba(16, 24, 40, 0.12);
+  --zdp-motion-fast: 120ms;
+  --zdp-motion-normal: 180ms;
+}
+
+[data-zdp-theme="dark"] {
+  --zdp-color-ink-strong: #f9fafb;
+  --zdp-color-ink-normal: #e5e7eb;
+  --zdp-color-ink-muted: #a8b1c2;
+  --zdp-color-ink-inverse: #111827;
+  --zdp-color-surface-canvas: #0f172a;
+  --zdp-color-surface-panel: #111827;
+  --zdp-color-surface-raised: #1f2937;
+  --zdp-color-surface-inverse: #ffffff;
+  --zdp-color-line-subtle: #344054;
+  --zdp-color-line-strong: #667085;
+  --zdp-color-line-focus: #60a5fa;
+  --zdp-color-accent-primary: #60a5fa;
+  --zdp-color-accent-primary-strong: #93c5fd;
+  --zdp-color-accent-primary-soft: #1e3a8a;
+  --zdp-color-accent-success: #2dd4bf;
+  --zdp-color-accent-warning: #f59e0b;
+  --zdp-color-accent-danger: #f87171;
+}
+
+.zdp-surface-reset {
+  box-sizing: border-box;
+  color: var(--zdp-color-ink-normal);
+  font-family: var(--zdp-font-family-sans);
+  line-height: var(--zdp-font-line-height-normal);
+}
+
+.zdp-surface-reset *,
+.zdp-surface-reset *::before,
+.zdp-surface-reset *::after {
+  box-sizing: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root,
+  [data-zdp-theme] {
+    --zdp-motion-fast: 1ms;
+    --zdp-motion-normal: 1ms;
+  }
+}

@@ -27,7 +27,40 @@ ZDP의 디자인 토큰, CSS, 아이콘, Svelte UI 컴포넌트 경계를 고정
 - `CONTRIBUTING.md`
 - `CHANGELOG.md`
 
+## 패키지 표면
+
+웹 소비 저장소는 공통 CSS 토큰을 먼저 불러온다.
+
+```ts
+import 'zdp-design-system/styles.css';
+```
+
+Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
+
+```svelte
+<script lang="ts">
+  import { Button, IconButton, Surface } from 'zdp-design-system';
+</script>
+
+<Surface>
+  <Button>저장</Button>
+  <IconButton ariaLabel="닫기">X</IconButton>
+</Surface>
+```
+
+Astro는 `styles.css`를 전역으로 쓰고, Svelte island가 필요한 부분에서 같은 Svelte 컴포넌트를 소비한다. Flutter는 Svelte 컴포넌트를 직접 쓰지 않고 `tokens/zdp.tokens.json`을 Dart theme adapter의 입력으로 사용한다.
+
+## 토큰 원칙
+
+- 토큰 이름은 제품명이나 캠페인명이 아니라 역할을 기준으로 둔다.
+- 색상, 간격, radius, typography, shadow, motion은 `tokens/zdp.tokens.json`이 원천이다.
+- `src/styles/tokens.css`는 웹과 Tauri WebView가 쓰는 CSS 변수 표면이다.
+- Flutter, native shell, 문서 생성기는 JSON 토큰을 변환해서 사용한다.
+
 ## 검증
 
-아직 구현체 검증은 붙이지 않았다. 토큰과 컴포넌트가 들어오면 `tokens:check`, 접근성 검사, 패키지 export 검증을 먼저 추가한다.
+```bash
+bun run tokens:check
+```
 
+`tokens:check`는 토큰 JSON, CSS 변수, public component export가 함께 맞는지 확인한다. Svelte 컴파일, 접근성 검사, package artifact 검증은 다음 단계에서 추가한다.

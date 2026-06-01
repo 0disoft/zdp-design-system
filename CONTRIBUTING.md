@@ -11,4 +11,4 @@
 - 토큰 이름이 특정 제품이나 캠페인에 묶이지 않는다.
 - 컴포넌트가 인증, 결제, 권한 판단을 직접 수행하지 않는다.
 - 패키지 export가 안정된 뒤에는 변경 내역을 `CHANGELOG.md`에 남긴다.
-
+- 토큰 JSON, CSS 변수, public export 변경 뒤에는 `bun run tokens:check`를 실행한다.
