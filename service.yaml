@@ -1,0 +1,81 @@
+contract:
+  schema_version: 2
+  contract_version: 1
+  review_owner: 0disoft
+  review_interval_days: 90
+service:
+  id: design-system
+  owner: 0disoft
+  repo: zdp-design-system
+  status: experiment
+  tier: tier3
+  risk_level: low
+domain:
+  type: frontend
+  user_facing: false
+  public_api: false
+  money_movement: false
+  regulated: false
+runtime:
+  core: svelte
+  framework: design-token-package
+  database: none
+cost:
+  cost_center: design-system
+  owner: 0disoft
+  monthly_budget_limit_usd: 0
+  warn_at_percent: 80
+  block_at_percent: 100
+data:
+  owner_domain: frontend
+  classes: []
+  datastores: []
+  retention_days: null
+  pii_level: none
+  payment_data: false
+  money_movement: false
+  message_content: false
+  ai_user_data: false
+  crypto_key_material: false
+  deletion:
+    required: false
+    targets: []
+access:
+  auth_required: false
+  object_level_auth_required: false
+  permission_model: none
+audit:
+  required: false
+  events: []
+  sink: null
+idempotency:
+  required: false
+  scope: null
+  store: null
+observability:
+  product_metrics: []
+  operational_metrics:
+    - token-contract-drift
+  otel:
+    service_name: design-system
+    required_attributes:
+      - service_id
+      - cost_center
+api:
+  exposure: package
+  openapi_required: false
+  rate_limit_policy: null
+events:
+  produced: []
+  consumed: []
+  dead_letter_policy: null
+exit:
+  success_criteria:
+    - web, app, lab, and game surfaces can share token names without product-specific forks
+    - UI package changes are reviewable before consumers adopt them
+  kill_criteria:
+    - product-specific screens or business rules move into the design package
+  review_at: null
+notes:
+  - This repository starts as a package boundary, not as a full component implementation.
+
