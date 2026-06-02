@@ -1,17 +1,33 @@
 <script lang="ts">
+  type DescribedBy = string | readonly string[] | null;
+
   export let id: string | null = null;
   export let name: string | null = null;
   export let value = '';
   export let placeholder: string | null = null;
-  export let describedBy: string | null = null;
+  export let describedBy: DescribedBy = null;
+  export let errorMessageId: string | null = null;
   export let invalid = false;
   export let disabled = false;
   export let readonly = false;
   export let required = false;
   export let rows = 4;
 
+  $: ariaDescribedBy = normalizeIdRefs(describedBy);
+  $: resolvedErrorMessageId = invalid && errorMessageId ? errorMessageId : null;
+
   function handleInput(event: Event): void {
     value = (event.currentTarget as HTMLTextAreaElement).value;
+  }
+
+  function normalizeIdRefs(value: DescribedBy): string | null {
+    if (Array.isArray(value)) {
+      const normalized = value.map((entry) => entry.trim()).filter(Boolean);
+      return normalized.length > 0 ? normalized.join(' ') : null;
+    }
+
+    const normalized = value?.trim();
+    return normalized ? normalized : null;
   }
 </script>
 
@@ -21,7 +37,8 @@
   name={name ?? undefined}
   {value}
   placeholder={placeholder ?? undefined}
-  aria-describedby={describedBy ?? undefined}
+  aria-describedby={ariaDescribedBy ?? undefined}
+  aria-errormessage={resolvedErrorMessageId ?? undefined}
   aria-invalid={invalid ? 'true' : undefined}
   {disabled}
   readonly={readonly}

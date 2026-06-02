@@ -24,13 +24,13 @@
       <h2 id="forms-light-title">Light</h2>
       <Surface padding="lg">
         <Stack gap="lg">
-          <Field>
+          <Field required>
             <Label forId="forms-light-name" required>이름</Label>
             <Input id="forms-light-name" name="forms-light-name" placeholder="홍길동" describedBy="forms-light-name-help" required />
             <HelpText id="forms-light-name-help">공개 표기와 알림에 사용됩니다.</HelpText>
           </Field>
 
-          <Field>
+          <Field readonly>
             <Label forId="forms-light-id">고정 ID</Label>
             <Input id="forms-light-id" name="forms-light-id" value="ZDP-2401" describedBy="forms-light-id-help" readonly />
             <HelpText id="forms-light-id-help">이미 발급된 값은 그대로 둡니다.</HelpText>
@@ -38,10 +38,18 @@
 
           <Field invalid>
             <Label forId="forms-light-status">상태</Label>
-            <Select id="forms-light-status" name="forms-light-status" value="blocked" describedBy="forms-light-status-error" invalid>
+            <Select
+              id="forms-light-status"
+              name="forms-light-status"
+              value="blocked"
+              describedBy={['forms-light-status-help', 'forms-light-status-error']}
+              errorMessageId="forms-light-status-error"
+              invalid
+            >
               <option value="ready">준비됨</option>
               <option value="blocked">확인 필요</option>
             </Select>
+            <HelpText id="forms-light-status-help">현재 작업 상태를 선택하세요.</HelpText>
             <ErrorText id="forms-light-status-error">다음 단계 전에 기준을 확인하세요.</ErrorText>
           </Field>
 
@@ -49,6 +57,19 @@
             <Label forId="forms-light-note">메모</Label>
             <Textarea id="forms-light-note" name="forms-light-note" placeholder="짧게 남기기" describedBy="forms-light-note-help" rows={3} />
             <HelpText id="forms-light-note-help">긴 문장은 줄바꿈으로 자연스럽게 이어집니다.</HelpText>
+          </Field>
+
+          <Field disabled>
+            <Label forId="forms-light-email">초대 메일</Label>
+            <Input
+              id="forms-light-email"
+              name="forms-light-email"
+              type="email"
+              value="team@example.com"
+              describedBy="forms-light-email-help"
+              disabled
+            />
+            <HelpText id="forms-light-email-help">초대 기능이 열리면 수정할 수 있습니다.</HelpText>
           </Field>
 
           <Stack gap="md">
@@ -74,13 +95,13 @@
       <h2 id="forms-dark-title">Dark</h2>
       <Surface padding="lg">
         <Stack gap="lg">
-          <Field>
+          <Field required>
             <Label forId="forms-dark-name" required>이름</Label>
             <Input id="forms-dark-name" name="forms-dark-name" placeholder="홍길동" describedBy="forms-dark-name-help" required />
             <HelpText id="forms-dark-name-help">공개 표기와 알림에 사용됩니다.</HelpText>
           </Field>
 
-          <Field>
+          <Field readonly>
             <Label forId="forms-dark-id">고정 ID</Label>
             <Input id="forms-dark-id" name="forms-dark-id" value="ZDP-2401" describedBy="forms-dark-id-help" readonly />
             <HelpText id="forms-dark-id-help">이미 발급된 값은 그대로 둡니다.</HelpText>
@@ -88,10 +109,18 @@
 
           <Field invalid>
             <Label forId="forms-dark-status">상태</Label>
-            <Select id="forms-dark-status" name="forms-dark-status" value="blocked" describedBy="forms-dark-status-error" invalid>
+            <Select
+              id="forms-dark-status"
+              name="forms-dark-status"
+              value="blocked"
+              describedBy={['forms-dark-status-help', 'forms-dark-status-error']}
+              errorMessageId="forms-dark-status-error"
+              invalid
+            >
               <option value="ready">준비됨</option>
               <option value="blocked">확인 필요</option>
             </Select>
+            <HelpText id="forms-dark-status-help">현재 작업 상태를 선택하세요.</HelpText>
             <ErrorText id="forms-dark-status-error">다음 단계 전에 기준을 확인하세요.</ErrorText>
           </Field>
 
@@ -99,6 +128,19 @@
             <Label forId="forms-dark-note">메모</Label>
             <Textarea id="forms-dark-note" name="forms-dark-note" placeholder="짧게 남기기" describedBy="forms-dark-note-help" rows={3} />
             <HelpText id="forms-dark-note-help">긴 문장은 줄바꿈으로 자연스럽게 이어집니다.</HelpText>
+          </Field>
+
+          <Field disabled>
+            <Label forId="forms-dark-email">초대 메일</Label>
+            <Input
+              id="forms-dark-email"
+              name="forms-dark-email"
+              type="email"
+              value="team@example.com"
+              describedBy="forms-dark-email-help"
+              disabled
+            />
+            <HelpText id="forms-dark-email-help">초대 기능이 열리면 수정할 수 있습니다.</HelpText>
           </Field>
 
           <Stack gap="md">

@@ -38,8 +38,8 @@ if (failures.length > 0) {
 }
 
 function checkPackageSurface(packageJson: PackageJson): void {
-  if (packageJson.version !== '0.23.0') {
-    failures.push('package.json version must be 0.23.0 for the layout primitive package surface.');
+  if (packageJson.version !== '0.24.0') {
+    failures.push('package.json version must be 0.24.0 for the form accessibility package surface.');
   }
 
   if (!packageJson.files?.includes('docs/')) {
@@ -92,6 +92,8 @@ function checkConsumerContractDocument(documentText: string): void {
     'focus.surface',
     'control.heightMd',
     'readonly',
+    'errorMessageId',
+    'aria-errormessage',
     'onclick',
     'ariaControls',
     'ariaExpanded',
@@ -126,6 +128,8 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'Divider',
     'Dialog는 모달 레이어',
     'Page, Container, Section, PageHeader는 페이지 폭',
+    '`describedBy`에 id 배열',
+    '`errorMessageId`로 `aria-errormessage`',
     'Astro는 `styles.css`',
     'Flutter는 Svelte 컴포넌트를 직접 쓰지 않고'
   ]) {
@@ -151,6 +155,9 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'Container는 페이지 폭',
     'Section은 섹션 block rhythm',
     'PageHeader는 제목',
+    '`errorMessageId`를 통해 `aria-errormessage`',
+    '스크린리더용 필수 텍스트',
+    'live-region 기본값',
     '대표 소비처'
   ]) {
     if (!contributing.includes(requiredText)) {

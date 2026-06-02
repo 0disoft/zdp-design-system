@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.24.0
+
+- Strengthened form accessibility props for `Input`, `Select`, and `Textarea` so help and error text can be connected with multiple `aria-describedby` ids.
+- Added `errorMessageId` support for invalid text controls so consumers can wire `aria-errormessage` without hand-editing markup.
+- Added screen-reader required text to `Label`, live-region support to `ErrorText`, and field-level required, readonly, disabled, and invalid state markers.
+- Updated Storybook form examples and contract checks so required, readonly, invalid, and disabled states stay visible in light and dark themes.
+
 ## 0.23.0
 
 - Added layout primitives: `Page`, `Container`, `Section`, and `PageHeader`.

@@ -28,6 +28,9 @@
 - Button과 IconButton은 `onclick`, `ariaControls`, `ariaExpanded`, `ariaPressed`, `ariaDescribedBy` 같은 native button 연결 props를 유지하되 저장, 삭제, 권한, 결제 판단을 직접 수행하지 않는다.
 - 링크 focus는 sunlit gold 배경과 어두운 하단선, 입력류 focus는 sunlit gold outline과 어두운 border가 함께 보여야 한다.
 - Field, Label, Input, Textarea, Select, HelpText, ErrorText는 form public surface로 유지하고 help/error/id/aria 연결을 끊지 않는다.
+- Input, Textarea, Select의 invalid 상태는 도움말과 에러 id를 함께 `aria-describedby`로 연결하고, 에러 id는 `errorMessageId`를 통해 `aria-errormessage`로 연결한다.
+- Label의 필수 표시는 시각적 `*`만 두지 않고 스크린리더용 필수 텍스트도 유지한다.
+- ErrorText는 동적으로 나타나는 에러를 읽을 수 있도록 live-region 기본값을 유지한다.
 - 입력류 hover, focus, invalid, disabled 상태는 light/dark 모두 같은 토큰 계열로 움직이며 그림자나 이동 효과를 쓰지 않는다.
 - Input과 Textarea의 readonly 상태는 disabled처럼 흐리지 않고 포커스 가능한 읽기 전용 값으로 유지한다.
 - Checkbox, Radio, Switch는 native input을 유지하고 label, checked, focus-visible, disabled 상태가 키보드와 스크린리더에서 끊기지 않게 한다.

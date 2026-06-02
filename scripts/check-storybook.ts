@@ -35,6 +35,7 @@ const checkboxPath = join(root, 'src', 'lib', 'components', 'Checkbox.svelte');
 const containerPath = join(root, 'src', 'lib', 'components', 'Container.svelte');
 const dialogPath = join(root, 'src', 'lib', 'components', 'Dialog.svelte');
 const dividerPath = join(root, 'src', 'lib', 'components', 'Divider.svelte');
+const errorTextPath = join(root, 'src', 'lib', 'components', 'ErrorText.svelte');
 const fieldPath = join(root, 'src', 'lib', 'components', 'Field.svelte');
 const inputPath = join(root, 'src', 'lib', 'components', 'Input.svelte');
 const labelPath = join(root, 'src', 'lib', 'components', 'Label.svelte');
@@ -81,6 +82,7 @@ const [
   container,
   dialog,
   divider,
+  errorText,
   field,
   input,
   label,
@@ -126,6 +128,7 @@ const [
     readFile(containerPath, 'utf8'),
     readFile(dialogPath, 'utf8'),
     readFile(dividerPath, 'utf8'),
+    readFile(errorTextPath, 'utf8'),
     readFile(fieldPath, 'utf8'),
     readFile(inputPath, 'utf8'),
     readFile(labelPath, 'utf8'),
@@ -465,9 +468,18 @@ for (const requiredText of [
   'line-height: var(--zdp-type-title-line-height)',
   'forms-light-id',
   'forms-dark-id',
+  'forms-light-email',
+  'forms-dark-email',
   'readonly',
+  'disabled',
   '이미 발급된 값은 그대로 둡니다.',
+  "describedBy={['forms-light-status-help', 'forms-light-status-error']}",
+  "describedBy={['forms-dark-status-help', 'forms-dark-status-error']}",
+  'errorMessageId="forms-light-status-error"',
+  'errorMessageId="forms-dark-status-error"',
+  '현재 작업 상태를 선택하세요.',
   '다음 단계 전에 기준을 확인하세요.',
+  '초대 기능이 열리면 수정할 수 있습니다.',
   '업데이트 받기',
   '알림 주기',
   '자동 저장',
@@ -884,7 +896,11 @@ for (const requiredText of [
 for (const requiredText of [
   '.zdp-field',
   '.zdp-field--sm',
-  '.zdp-field--md'
+  '.zdp-field--md',
+  'data-disabled={disabled ?',
+  'data-readonly={readonly ?',
+  'data-required={required ?',
+  '.zdp-field[data-disabled="true"]'
 ]) {
   if (!field.includes(requiredText)) {
     failures.push(`Field component is missing ${requiredText}.`);
@@ -893,11 +909,23 @@ for (const requiredText of [
 
 for (const requiredText of [
   '.zdp-label',
+  "requiredLabel = '필수'",
   'font-weight: var(--zdp-font-weight-medium)',
-  '.zdp-label__required'
+  '.zdp-label__required',
+  '.zdp-label__required-text',
+  'clip-path: inset(50%)'
 ]) {
   if (!label.includes(requiredText)) {
     failures.push(`Label component is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  'live:',
+  "aria-live={live === 'off' ? undefined : live}"
+]) {
+  if (!errorText.includes(requiredText)) {
+    failures.push(`ErrorText component is missing ${requiredText}.`);
   }
 }
 
@@ -908,7 +936,10 @@ for (const [componentName, componentSource] of Object.entries({
 })) {
   for (const requiredText of [
     `class="zdp-${componentName.toLowerCase()}"`,
-    'aria-describedby={describedBy ?? undefined}',
+    'type DescribedBy = string | readonly string[] | null',
+    'normalizeIdRefs',
+    'aria-describedby={ariaDescribedBy ?? undefined}',
+    'aria-errormessage={resolvedErrorMessageId ?? undefined}',
     "aria-invalid={invalid ? 'true' : undefined}",
     'border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong)',
     'background: var(--zdp-color-surface-panel)',

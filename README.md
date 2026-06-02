@@ -130,15 +130,27 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
     >
       <p>{selectedId === 'history' ? '변경 기록입니다.' : '프로젝트 개요입니다.'}</p>
     </Tabs>
-    <Field>
+    <Field required>
       <Label forId="project-name">프로젝트</Label>
       <Input id="project-name" name="project-name" describedBy="project-name-help" />
       <HelpText id="project-name-help">공개 표기에 사용됩니다.</HelpText>
     </Field>
-    <Field>
+    <Field readonly>
       <Label forId="project-id">고정 ID</Label>
       <Input id="project-id" name="project-id" value="ZDP-2401" describedBy="project-id-help" readonly />
       <HelpText id="project-id-help">이미 발급된 값은 그대로 둡니다.</HelpText>
+    </Field>
+    <Field invalid>
+      <Label forId="project-status">상태</Label>
+      <Input
+        id="project-status"
+        name="project-status"
+        describedBy={['project-status-help', 'project-status-error']}
+        errorMessageId="project-status-error"
+        invalid
+      />
+      <HelpText id="project-status-help">현재 작업 상태를 입력하세요.</HelpText>
+      <ErrorText id="project-status-error">다음 단계 전에 기준을 확인하세요.</ErrorText>
     </Field>
     <Checkbox name="release-updates" checked>업데이트 받기</Checkbox>
     <Switch name="autosave" checked>자동 저장</Switch>
@@ -220,7 +232,7 @@ preview/index.html
 - Button, IconButton, Badge, Callout, Link, SkipLink, Breadcrumb, Tabs, Field, Label, Input, Textarea, Select, Checkbox, Radio, Switch, HelpText, ErrorText, Surface, Page, Container, Section, PageHeader, preview panel은 `0.375rem` radius를 기준으로 보고 pill 형태를 쓰지 않는다.
 - Button과 IconButton은 `2px` border width를 기준으로 하는 framed control 방향을 유지한다.
 - Button과 IconButton은 `onclick`, `ariaControls`, `ariaExpanded`, `ariaPressed`, `ariaDescribedBy` 같은 실제 앱 액션 연결 props를 native button에 전달한다.
-- Input, Textarea, Select는 Button과 같은 framed control 방향을 쓰고, help/error text는 id와 `aria-describedby`로 연결한다.
+- Input, Textarea, Select는 Button과 같은 framed control 방향을 쓰고, help/error text는 id와 `aria-describedby`로 연결한다. 도움말과 에러가 함께 있을 때는 `describedBy`에 id 배열을 넘기고, invalid 상태에서는 `errorMessageId`로 `aria-errormessage`를 연결한다.
 - Input과 Textarea의 `readonly` 상태는 제출과 포커스를 유지하는 읽기 전용 값에 사용하고, `disabled` 상태와 혼동하지 않는다.
 - Checkbox, Radio, Switch는 native input을 유지하고 `checked`, `focus-visible`, `disabled`, `invalid` 상태를 토큰으로 표현한다.
 - Badge와 Callout은 짧은 상태와 페이지 안 피드백을 표현하되 제품 판단 로직을 갖지 않는다.
