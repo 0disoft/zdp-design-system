@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.25.0
+
+- Added data display primitives: `Table`, `KeyValue`, and `EmptyState`.
+- Added static `.zdp-table`, `.zdp-key-value`, and `.zdp-empty-state` utility classes for Astro and non-Svelte consumers.
+- Added Storybook and static preview examples for operational tables, repository boundary facts, and empty roadmap states.
+- Strengthened package, Storybook, preview, and consumer contract checks so data display primitives stay semantic, responsive, flat, and free of product-owned data decisions.
+
 ## 0.24.0
 
 - Strengthened form accessibility props for `Input`, `Select`, and `Textarea` so help and error text can be connected with multiple `aria-describedby` ids.

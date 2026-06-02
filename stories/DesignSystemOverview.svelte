@@ -7,12 +7,14 @@
   import Container from '../src/lib/components/Container.svelte';
   import Dialog from '../src/lib/components/Dialog.svelte';
   import Divider from '../src/lib/components/Divider.svelte';
+  import EmptyState from '../src/lib/components/EmptyState.svelte';
   import ErrorText from '../src/lib/components/ErrorText.svelte';
   import Field from '../src/lib/components/Field.svelte';
   import HelpText from '../src/lib/components/HelpText.svelte';
   import IconButton from '../src/lib/components/IconButton.svelte';
   import Inline from '../src/lib/components/Inline.svelte';
   import Input from '../src/lib/components/Input.svelte';
+  import KeyValue from '../src/lib/components/KeyValue.svelte';
   import Label from '../src/lib/components/Label.svelte';
   import Link from '../src/lib/components/Link.svelte';
   import Page from '../src/lib/components/Page.svelte';
@@ -25,6 +27,7 @@
   import Surface from '../src/lib/components/Surface.svelte';
   import Switch from '../src/lib/components/Switch.svelte';
   import Tabs from '../src/lib/components/Tabs.svelte';
+  import Table from '../src/lib/components/Table.svelte';
   import Textarea from '../src/lib/components/Textarea.svelte';
   import VisuallyHidden from '../src/lib/components/VisuallyHidden.svelte';
 
@@ -180,6 +183,43 @@
           <strong>{lightSelectedTabId === 'history' ? '기록' : lightSelectedTabId === 'settings' ? '설정' : '개요'}</strong>
           <p>탭은 페이지 안의 가까운 정보 묶음을 바꿀 때 사용합니다.</p>
         </Tabs>
+      </section>
+
+      <section class="preview-section" aria-labelledby="storybook-light-data">
+        <h3 id="storybook-light-data">Data</h3>
+        <Stack gap="md">
+          <Table caption="보안 점검 목록" density="compact">
+            <thead>
+              <tr>
+                <th scope="col">항목</th>
+                <th scope="col">상태</th>
+                <th scope="col">다음 확인</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">권한 분리</th>
+                <td>통과</td>
+                <td>분기 리뷰</td>
+              </tr>
+              <tr>
+                <th scope="row">감사 로그</th>
+                <td>통과</td>
+                <td>릴리스 전</td>
+              </tr>
+            </tbody>
+          </Table>
+          <KeyValue columns="two">
+            <dt>소유 저장소</dt>
+            <dd>zdp-money-platform</dd>
+            <dt>승격 조건</dt>
+            <dd>예산, 소유자, 운영 증거 확인</dd>
+          </KeyValue>
+          <EmptyState labelledBy="storybook-light-empty-title">
+            <h4 id="storybook-light-empty-title">아직 공개할 변경이 없습니다.</h4>
+            <p>검토가 끝난 항목만 공개 로드맵에 올라갑니다.</p>
+          </EmptyState>
+        </Stack>
       </section>
 
       <section class="preview-section" aria-labelledby="storybook-light-forms">
@@ -424,6 +464,43 @@
           <strong>{darkSelectedTabId === 'history' ? '기록' : darkSelectedTabId === 'settings' ? '설정' : '개요'}</strong>
           <p>탭은 페이지 안의 가까운 정보 묶음을 바꿀 때 사용합니다.</p>
         </Tabs>
+      </section>
+
+      <section class="preview-section" aria-labelledby="storybook-dark-data">
+        <h3 id="storybook-dark-data">Data</h3>
+        <Stack gap="md">
+          <Table caption="보안 점검 목록" density="compact">
+            <thead>
+              <tr>
+                <th scope="col">항목</th>
+                <th scope="col">상태</th>
+                <th scope="col">다음 확인</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">권한 분리</th>
+                <td>통과</td>
+                <td>분기 리뷰</td>
+              </tr>
+              <tr>
+                <th scope="row">비밀값 보관</th>
+                <td>대기</td>
+                <td>운영 전</td>
+              </tr>
+            </tbody>
+          </Table>
+          <KeyValue columns="two">
+            <dt>소유 저장소</dt>
+            <dd>zdp-money-platform</dd>
+            <dt>승격 조건</dt>
+            <dd>예산, 소유자, 운영 증거 확인</dd>
+          </KeyValue>
+          <EmptyState tone="raised" align="center" labelledBy="storybook-dark-empty-title">
+            <h4 id="storybook-dark-empty-title">대기 중인 알림이 없습니다.</h4>
+            <p>위험 신호가 생기면 이 자리에 바로 표시됩니다.</p>
+          </EmptyState>
+        </Stack>
       </section>
 
       <section class="preview-section" aria-labelledby="storybook-dark-forms">

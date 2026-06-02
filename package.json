@@ -1,6 +1,6 @@
 {
   "name": "zdp-design-system",
-  "version": "0.24.0",
+  "version": "0.25.0",
   "private": true,
   "type": "module",
   "description": "ZDP design tokens, CSS, icons, and Svelte UI package boundary.",

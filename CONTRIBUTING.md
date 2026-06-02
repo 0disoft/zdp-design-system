@@ -54,6 +54,12 @@
 - Inline과 `.zdp-inline`은 색상, 그림자, 그라데이션, hover 상태를 만들지 않고 `gap`, `align-items`, `justify-content`, `flex-wrap`, `min-width` 계약만 유지한다.
 - Divider는 가까운 내용 사이의 시각적 구분선만 담당하며 section layout, page rhythm, 라우팅, 데이터, 권한, 제품별 visibility 판단을 직접 수행하지 않는다.
 - Divider와 `.zdp-divider`는 그림자, 그라데이션, 배경 장식 없이 `border-block-start` 또는 `border-inline-start`와 line token만 유지한다.
+- Table은 표 형식 정보의 native table, caption, row/column header, overflow wrapper만 담당하며 정렬, 필터, 페이지네이션, 데이터 로딩 판단을 직접 수행하지 않는다.
+- Table과 `.zdp-table`은 그림자, 그라데이션, sticky 장식 없이 border, spacing, typography, overflow 계약만 유지한다.
+- KeyValue는 용어와 값의 description list 구조만 담당하며 원장, 보안, 결제, 권한 판단을 직접 수행하지 않는다.
+- KeyValue와 `.zdp-key-value`는 `dt`와 `dd` 구조, responsive columns, border rhythm만 유지한다.
+- EmptyState는 비어 있는 상태의 surface, 제목 연결, 액션 배치만 담당하며 어떤 상태가 비었는지와 다음 액션 가능 여부를 직접 판단하지 않는다.
+- EmptyState와 `.zdp-empty-state`는 그림자, 그라데이션, 일러스트 강제 삽입 없이 spacing, border, typography 계약만 유지한다.
 - Breadcrumb는 `nav`, ordered list, link, separator, `aria-current="page"` 구조를 유지하고 라우팅, SEO, 권한, 데이터 로딩 판단을 직접 수행하지 않는다.
 - Breadcrumb link focus는 sunlit gold 배경과 어두운 하단선을 유지한다.
 - Tabs는 페이지 안의 가까운 정보 묶음 전환에만 사용하고 라우팅, 권한, 데이터 로딩 판단을 직접 수행하지 않는다.

@@ -71,10 +71,12 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
     Container,
     Dialog,
     Divider,
+    EmptyState,
     Field,
     HelpText,
     Input,
     Inline,
+    KeyValue,
     Label,
     Link,
     Page,
@@ -85,6 +87,7 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
     Surface,
     Switch,
     Tabs,
+    Table,
     VisuallyHidden
   } from 'zdp-design-system';
 
@@ -119,6 +122,35 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
       <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
     </Callout>
     <Divider />
+    <Table caption="보안 점검 목록" density="compact">
+      <thead>
+        <tr>
+          <th scope="col">항목</th>
+          <th scope="col">상태</th>
+          <th scope="col">다음 확인</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">권한 분리</th>
+          <td>통과</td>
+          <td>분기 리뷰</td>
+        </tr>
+      </tbody>
+    </Table>
+    <KeyValue columns="two">
+      <dt>소유 저장소</dt>
+      <dd>zdp-money-platform</dd>
+      <dt>승격 조건</dt>
+      <dd>예산, 소유자, 운영 증거 확인</dd>
+    </KeyValue>
+    <EmptyState labelledBy="empty-roadmap-title">
+      <h2 id="empty-roadmap-title">아직 공개할 변경이 없습니다.</h2>
+      <p>검토가 끝난 항목만 공개 로드맵에 올라갑니다.</p>
+      <svelte:fragment slot="actions">
+        <Button variant="secondary">초안 보기</Button>
+      </svelte:fragment>
+    </EmptyState>
     <Tabs
       ariaLabel="프로젝트 섹션"
       items={[
@@ -180,7 +212,7 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
 ```
 
 Astro는 `styles.css`를 전역으로 쓰고, Svelte island가 필요한 부분에서 같은 Svelte 컴포넌트를 소비한다. Flutter는 Svelte 컴포넌트를 직접 쓰지 않고 `tokens/zdp.tokens.json`을 Dart theme adapter의 입력으로 사용한다.
-정적 HTML 소비처는 `.zdp-page`, `.zdp-container`, `.zdp-section`, `.zdp-page-header` utility로 기본 페이지 폭, 섹션 리듬, 헤더 액션 배치를 맞출 수 있다. 가까운 요소의 세로 흐름은 `.zdp-stack`과 `.zdp-stack--gap-*` utility로 적용하고, `.zdp-inline`과 `.zdp-inline--gap-*` utility로 가까운 가로 흐름을 맞출 수 있다. 얇은 구분선은 `.zdp-divider`와 `.zdp-divider--horizontal` utility로 받되, 제품별 라우팅, SEO, visibility, 데이터 판단은 소비처가 정한다.
+정적 HTML 소비처는 `.zdp-page`, `.zdp-container`, `.zdp-section`, `.zdp-page-header` utility로 기본 페이지 폭, 섹션 리듬, 헤더 액션 배치를 맞출 수 있다. 가까운 요소의 세로 흐름은 `.zdp-stack`과 `.zdp-stack--gap-*` utility로 적용하고, `.zdp-inline`과 `.zdp-inline--gap-*` utility로 가까운 가로 흐름을 맞출 수 있다. 얇은 구분선은 `.zdp-divider`와 `.zdp-divider--horizontal` utility로 받는다. 표 형식 정보는 `.zdp-table-wrap`과 `.zdp-table`, 용어와 값 목록은 `.zdp-key-value`, 빈 목록이나 대기 상태는 `.zdp-empty-state` utility로 받되, 제품별 라우팅, SEO, visibility, 데이터 판단은 소비처가 정한다.
 
 소비 저장소별 적용 순서와 금지 경계는 `docs/CONSUMER_CONTRACT.md`를 기준으로 맞춘다. Astro, Svelte, Tauri, Flutter 소비처는 public export와 token name을 유지하고 내부 `src/` deep import를 만들지 않는다.
 
@@ -193,7 +225,7 @@ bun install
 bun run dev
 ```
 
-Storybook은 Svelte/Vite 기반이며 `Design System/Overview` story에서 light/dark 테마, 색상, 타이포그래피, 버튼, 아이콘 버튼, form, surface 상태를 함께 확인한다. 개별 피드백은 `Design System/Components/Button`, `Design System/Components/Form Controls`, `Design System/Components/Navigation`, `Design System/Components/Feedback`, `Design System/Components/Interaction` story에서 상태별로 좁혀 확인한다.
+Storybook은 Svelte/Vite 기반이며 `Design System/Overview` story에서 light/dark 테마, 색상, 타이포그래피, 버튼, 아이콘 버튼, form, surface 상태를 함께 확인한다. 개별 피드백은 `Design System/Components/Button`, `Design System/Components/Data Display`, `Design System/Components/Form Controls`, `Design System/Components/Navigation`, `Design System/Components/Feedback`, `Design System/Components/Interaction` story에서 상태별로 좁혀 확인한다.
 Workduck의 개발 서버 터미널은 `bun run dev`를, 빌드 터미널은 `bun run build`를 표준 진입점으로 사용한다. `bun run storybook`과 `bun run storybook:build`는 같은 명령을 가리키는 별칭이다.
 정적 HTML이 필요할 때는 fallback으로 `preview/index.html`을 그대로 열 수 있다.
 
@@ -229,7 +261,7 @@ preview/index.html
 - Button과 IconButton hover는 light/dark 모두 배경색과 border 색이 함께 변한다.
 - 버튼 active도 위치 이동이나 그림자 없이 배경색, 테두리색, 글자색만 바꾼다.
 - focus는 그림자가 아니라 `focus.surface` outline, `focus.line` border, 링크의 하단선으로 표시한다.
-- Button, IconButton, Badge, Callout, Link, SkipLink, Breadcrumb, Tabs, Field, Label, Input, Textarea, Select, Checkbox, Radio, Switch, HelpText, ErrorText, Surface, Page, Container, Section, PageHeader, preview panel은 `0.375rem` radius를 기준으로 보고 pill 형태를 쓰지 않는다.
+- Button, IconButton, Badge, Callout, Link, SkipLink, Breadcrumb, Tabs, Table, KeyValue, EmptyState, Field, Label, Input, Textarea, Select, Checkbox, Radio, Switch, HelpText, ErrorText, Surface, Page, Container, Section, PageHeader, preview panel은 `0.375rem` radius를 기준으로 보고 pill 형태를 쓰지 않는다.
 - Button과 IconButton은 `2px` border width를 기준으로 하는 framed control 방향을 유지한다.
 - Button과 IconButton은 `onclick`, `ariaControls`, `ariaExpanded`, `ariaPressed`, `ariaDescribedBy` 같은 실제 앱 액션 연결 props를 native button에 전달한다.
 - Input, Textarea, Select는 Button과 같은 framed control 방향을 쓰고, help/error text는 id와 `aria-describedby`로 연결한다. 도움말과 에러가 함께 있을 때는 `describedBy`에 id 배열을 넘기고, invalid 상태에서는 `errorMessageId`로 `aria-errormessage`를 연결한다.
@@ -240,6 +272,9 @@ preview/index.html
 - SkipLink는 키보드 사용자가 반복되는 상단 탐색을 건너뛰도록 돕되 페이지 레이아웃, 라우팅, 본문 id 소유는 소비 앱에 남긴다.
 - VisuallyHidden은 스크린리더 전용 보조 텍스트 숨김만 제공하며 라벨 문구, 번역, 권한, 데이터 판단은 소비 앱에 남긴다.
 - Page, Container, Section, PageHeader는 페이지 폭, 섹션 리듬, 헤더 액션 배치만 제공하며 라우팅, SEO, visibility, 데이터, 권한 판단은 소비 앱에 남긴다.
+- Table은 표 형식 정보의 semantic table, caption, row/column header, overflow wrapper만 제공하며 정렬, 필터, 페이지네이션, 데이터 로딩 판단은 소비 앱에 남긴다.
+- KeyValue는 용어와 값의 description list 구조만 제공하며 원장, 보안, 결제, 권한의 실제 판단은 소비 앱에 남긴다.
+- EmptyState는 비어 있는 상태의 surface, 제목 연결, 액션 배치만 제공하며 어떤 상태가 비었는지와 다음 액션의 가능 여부는 소비 앱에 남긴다.
 - Breadcrumb는 현재 위치를 `nav`, `ol`, `aria-current="page"`로 표현하되 라우팅, SEO, 권한, 데이터 로딩 결정을 갖지 않는다.
 - Tabs는 가까운 정보 묶음 전환을 표현하되 라우팅, 권한, 데이터 로딩 결정을 갖지 않는다.
 - Dialog는 모달 레이어, backdrop, 닫기, focus trap, `role="dialog"`와 `aria-modal` 구조만 제공하고 저장/삭제/권한/결제 판단은 소비 앱에 남긴다.

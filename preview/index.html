@@ -585,6 +585,52 @@
             </div>
           </section>
 
+          <section class="preview-section" aria-labelledby="light-data-title">
+            <h3 class="preview-section__title" id="light-data-title">Data</h3>
+            <div class="zdp-stack zdp-stack--gap-md">
+              <div class="zdp-table-wrap">
+                <table class="zdp-table zdp-table--density-compact" aria-labelledby="light-data-title">
+                  <caption class="zdp-table__caption">보안 점검 목록</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">항목</th>
+                      <th scope="col">상태</th>
+                      <th scope="col">다음 확인</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">권한 분리</th>
+                      <td>통과</td>
+                      <td>분기 리뷰</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">감사 로그</th>
+                      <td>통과</td>
+                      <td>릴리스 전</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <h4>원장 경계</h4>
+              <dl class="zdp-key-value zdp-key-value--columns-two" aria-labelledby="light-data-title">
+                <dt>소유 저장소</dt>
+                <dd>zdp-money-platform</dd>
+                <dt>승격 조건</dt>
+                <dd>예산, 소유자, 운영 증거 확인</dd>
+              </dl>
+              <section class="zdp-empty-state" aria-labelledby="light-empty-title">
+                <div class="zdp-empty-state__body">
+                  <h4 id="light-empty-title">아직 공개할 변경이 없습니다.</h4>
+                  <p>검토가 끝난 항목만 공개 로드맵에 올라갑니다.</p>
+                </div>
+                <div class="zdp-empty-state__actions">
+                  <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">초안 보기</button>
+                </div>
+              </section>
+            </div>
+          </section>
+
           <section class="preview-section" aria-labelledby="light-forms-title">
             <h3 class="preview-section__title" id="light-forms-title">Forms</h3>
             <div class="form-grid">
@@ -909,6 +955,52 @@
                 <strong>개요</strong>
                 <p>탭은 페이지 안의 가까운 정보 묶음을 바꿀 때 사용합니다.</p>
               </div>
+            </div>
+          </section>
+
+          <section class="preview-section" aria-labelledby="dark-data-title">
+            <h3 class="preview-section__title" id="dark-data-title">Data</h3>
+            <div class="zdp-stack zdp-stack--gap-md">
+              <div class="zdp-table-wrap">
+                <table class="zdp-table zdp-table--density-compact" aria-labelledby="dark-data-title">
+                  <caption class="zdp-table__caption">보안 점검 목록</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">항목</th>
+                      <th scope="col">상태</th>
+                      <th scope="col">다음 확인</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">권한 분리</th>
+                      <td>통과</td>
+                      <td>분기 리뷰</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">비밀값 보관</th>
+                      <td>대기</td>
+                      <td>운영 전</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <h4>원장 경계</h4>
+              <dl class="zdp-key-value zdp-key-value--columns-two" aria-labelledby="dark-data-title">
+                <dt>소유 저장소</dt>
+                <dd>zdp-money-platform</dd>
+                <dt>승격 조건</dt>
+                <dd>예산, 소유자, 운영 증거 확인</dd>
+              </dl>
+              <section class="zdp-empty-state zdp-empty-state--raised zdp-empty-state--align-center" aria-labelledby="dark-empty-title">
+                <div class="zdp-empty-state__body">
+                  <h4 id="dark-empty-title">대기 중인 알림이 없습니다.</h4>
+                  <p>위험 신호가 생기면 이 자리에 바로 표시됩니다.</p>
+                </div>
+                <div class="zdp-empty-state__actions">
+                  <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">기록 보기</button>
+                </div>
+              </section>
             </div>
           </section>
 

@@ -17,6 +17,8 @@ const storyPath = join(root, 'stories', 'DesignSystemOverview.stories.ts');
 const componentPath = join(root, 'stories', 'DesignSystemOverview.svelte');
 const buttonsStoryPath = join(root, 'stories', 'Buttons.stories.ts');
 const buttonsComponentPath = join(root, 'stories', 'Buttons.svelte');
+const dataDisplayStoryPath = join(root, 'stories', 'DataDisplay.stories.ts');
+const dataDisplayComponentPath = join(root, 'stories', 'DataDisplay.svelte');
 const feedbackStoryPath = join(root, 'stories', 'Feedback.stories.ts');
 const feedbackComponentPath = join(root, 'stories', 'Feedback.svelte');
 const formsStoryPath = join(root, 'stories', 'Forms.stories.ts');
@@ -35,9 +37,11 @@ const checkboxPath = join(root, 'src', 'lib', 'components', 'Checkbox.svelte');
 const containerPath = join(root, 'src', 'lib', 'components', 'Container.svelte');
 const dialogPath = join(root, 'src', 'lib', 'components', 'Dialog.svelte');
 const dividerPath = join(root, 'src', 'lib', 'components', 'Divider.svelte');
+const emptyStatePath = join(root, 'src', 'lib', 'components', 'EmptyState.svelte');
 const errorTextPath = join(root, 'src', 'lib', 'components', 'ErrorText.svelte');
 const fieldPath = join(root, 'src', 'lib', 'components', 'Field.svelte');
 const inputPath = join(root, 'src', 'lib', 'components', 'Input.svelte');
+const keyValuePath = join(root, 'src', 'lib', 'components', 'KeyValue.svelte');
 const labelPath = join(root, 'src', 'lib', 'components', 'Label.svelte');
 const linkPath = join(root, 'src', 'lib', 'components', 'Link.svelte');
 const pagePath = join(root, 'src', 'lib', 'components', 'Page.svelte');
@@ -49,6 +53,7 @@ const skipLinkPath = join(root, 'src', 'lib', 'components', 'SkipLink.svelte');
 const stackPath = join(root, 'src', 'lib', 'components', 'Stack.svelte');
 const switchPath = join(root, 'src', 'lib', 'components', 'Switch.svelte');
 const tabsPath = join(root, 'src', 'lib', 'components', 'Tabs.svelte');
+const tablePath = join(root, 'src', 'lib', 'components', 'Table.svelte');
 const textareaPath = join(root, 'src', 'lib', 'components', 'Textarea.svelte');
 const visuallyHiddenPath = join(root, 'src', 'lib', 'components', 'VisuallyHidden.svelte');
 const iconButtonPath = join(root, 'src', 'lib', 'components', 'IconButton.svelte');
@@ -64,6 +69,8 @@ const [
   component,
   buttonsStory,
   buttonsComponent,
+  dataDisplayStory,
+  dataDisplayComponent,
   feedbackStory,
   feedbackComponent,
   formsStory,
@@ -82,9 +89,11 @@ const [
   container,
   dialog,
   divider,
+  emptyState,
   errorText,
   field,
   input,
+  keyValue,
   label,
   link,
   page,
@@ -96,6 +105,7 @@ const [
   stack,
   switchComponent,
   tabs,
+  table,
   textarea,
   visuallyHidden,
   iconButton,
@@ -110,6 +120,8 @@ const [
     readFile(componentPath, 'utf8'),
     readFile(buttonsStoryPath, 'utf8'),
     readFile(buttonsComponentPath, 'utf8'),
+    readFile(dataDisplayStoryPath, 'utf8'),
+    readFile(dataDisplayComponentPath, 'utf8'),
     readFile(feedbackStoryPath, 'utf8'),
     readFile(feedbackComponentPath, 'utf8'),
     readFile(formsStoryPath, 'utf8'),
@@ -128,9 +140,11 @@ const [
     readFile(containerPath, 'utf8'),
     readFile(dialogPath, 'utf8'),
     readFile(dividerPath, 'utf8'),
+    readFile(emptyStatePath, 'utf8'),
     readFile(errorTextPath, 'utf8'),
     readFile(fieldPath, 'utf8'),
     readFile(inputPath, 'utf8'),
+    readFile(keyValuePath, 'utf8'),
     readFile(labelPath, 'utf8'),
     readFile(linkPath, 'utf8'),
     readFile(pagePath, 'utf8'),
@@ -142,6 +156,7 @@ const [
     readFile(stackPath, 'utf8'),
     readFile(switchPath, 'utf8'),
     readFile(tabsPath, 'utf8'),
+    readFile(tablePath, 'utf8'),
     readFile(textareaPath, 'utf8'),
     readFile(visuallyHiddenPath, 'utf8'),
     readFile(iconButtonPath, 'utf8'),
@@ -223,6 +238,16 @@ for (const [storyName, source, requiredTexts] of [
     ]
   ],
   [
+    'Data display story definition',
+    dataDisplayStory,
+    [
+      "title: 'Design System/Components/Data Display'",
+      'DataDisplay',
+      "layout: 'fullscreen'",
+      'States'
+    ]
+  ],
+  [
     'Feedback story definition',
     feedbackStory,
     [
@@ -289,12 +314,14 @@ for (const requiredText of [
   '../src/lib/components/Container.svelte',
   '../src/lib/components/Dialog.svelte',
   '../src/lib/components/Divider.svelte',
+  '../src/lib/components/EmptyState.svelte',
   '../src/lib/components/ErrorText.svelte',
   '../src/lib/components/Field.svelte',
   '../src/lib/components/HelpText.svelte',
   '../src/lib/components/IconButton.svelte',
   '../src/lib/components/Inline.svelte',
   '../src/lib/components/Input.svelte',
+  '../src/lib/components/KeyValue.svelte',
   '../src/lib/components/Label.svelte',
   '../src/lib/components/Link.svelte',
   '../src/lib/components/Page.svelte',
@@ -307,6 +334,7 @@ for (const requiredText of [
   '../src/lib/components/Surface.svelte',
   '../src/lib/components/Switch.svelte',
   '../src/lib/components/Tabs.svelte',
+  '../src/lib/components/Table.svelte',
   '../src/lib/components/Textarea.svelte',
   '../src/lib/components/VisuallyHidden.svelte',
   '<main class="storybook-preview zdp-surface-reset" lang="ko">',
@@ -356,6 +384,14 @@ for (const requiredText of [
   '현재 위치',
   'storybook-light-tabs',
   'storybook-dark-tabs',
+  'storybook-light-data',
+  'storybook-dark-data',
+  '보안 점검 목록',
+  '<th scope="col">항목</th>',
+  '<th scope="row">권한 분리</th>',
+  '<KeyValue columns="two">',
+  '아직 공개할 변경이 없습니다.',
+  '대기 중인 알림이 없습니다.',
   'storybook-light-dialog',
   'storybook-dark-dialog',
   'storybook-light-dialog-title',
@@ -418,6 +454,36 @@ for (const requiredText of [
 ]) {
   if (!buttonsComponent.includes(requiredText)) {
     failures.push(`Buttons story surface is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  '../src/lib/components/Badge.svelte',
+  '../src/lib/components/Button.svelte',
+  '../src/lib/components/EmptyState.svelte',
+  '../src/lib/components/Inline.svelte',
+  '../src/lib/components/KeyValue.svelte',
+  '../src/lib/components/Stack.svelte',
+  '../src/lib/components/Surface.svelte',
+  '../src/lib/components/Table.svelte',
+  'Operational information',
+  'data-zdp-theme="light"',
+  'data-zdp-theme="dark"',
+  '보안 점검',
+  '보안 점검 목록',
+  '<th scope="col">항목</th>',
+  '<th scope="row">권한 분리</th>',
+  '<KeyValue columns="two"',
+  '원장 경계',
+  'zdp-money-platform',
+  'zdp-products-lab',
+  '아직 공개할 변경이 없습니다.',
+  '대기 중인 알림이 없습니다.',
+  'slot="actions"',
+  'zdp-surface-reset'
+]) {
+  if (!dataDisplayComponent.includes(requiredText)) {
+    failures.push(`Data display story surface is missing ${requiredText}.`);
   }
 }
 
@@ -840,6 +906,64 @@ assertNoDecorativeEffects(failures, 'Divider component', divider);
 assertNoOverRoundedUsage(failures, 'Divider component', divider);
 
 for (const requiredText of [
+  '.zdp-table-wrap',
+  'caption:',
+  'captionMode:',
+  'density:',
+  'aria-labelledby={labelledBy ?? undefined}',
+  '<caption class={`zdp-table__caption zdp-table__caption--${captionMode}`}>',
+  '.zdp-table :global(th)',
+  '.zdp-table :global(td)',
+  '.zdp-table :global(thead th)',
+  'overflow-x: auto'
+]) {
+  if (!table.includes(requiredText)) {
+    failures.push(`Table component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Table component', table);
+assertNoOverRoundedUsage(failures, 'Table component', table);
+
+for (const requiredText of [
+  '.zdp-key-value',
+  'columns:',
+  'density:',
+  'aria-labelledby={labelledBy ?? undefined}',
+  '.zdp-key-value :global(dt)',
+  '.zdp-key-value :global(dd)',
+  'grid-template-columns: minmax(10rem, 0.42fr) minmax(0, 1fr)',
+  '@media (max-width: 42rem)',
+  'overflow-wrap: var(--zdp-i18n-overflow-wrap)'
+]) {
+  if (!keyValue.includes(requiredText)) {
+    failures.push(`KeyValue component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'KeyValue component', keyValue);
+assertNoOverRoundedUsage(failures, 'KeyValue component', keyValue);
+
+for (const requiredText of [
+  '.zdp-empty-state',
+  'align:',
+  'tone:',
+  'aria-labelledby={labelledBy ?? undefined}',
+  'class="zdp-empty-state__body"',
+  'slot name="actions"',
+  '.zdp-empty-state__actions',
+  'flex-wrap: wrap',
+  'text-align: center'
+]) {
+  if (!emptyState.includes(requiredText)) {
+    failures.push(`EmptyState component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'EmptyState component', emptyState);
+assertNoOverRoundedUsage(failures, 'EmptyState component', emptyState);
+
+for (const requiredText of [
   'export interface BreadcrumbItem',
   'readonly href?: string',
   'readonly current?: boolean',
@@ -1125,6 +1249,7 @@ assertNoDecorativeEffects(failures, 'IconButton component', iconButton);
 assertNoDecorativeEffects(failures, 'Surface component', surface);
 assertNoDecorativeEffects(failures, 'Storybook overview', component);
 assertNoDecorativeEffects(failures, 'Buttons story', buttonsComponent);
+assertNoDecorativeEffects(failures, 'Data display story', dataDisplayComponent);
 assertNoDecorativeEffects(failures, 'Feedback story', feedbackComponent);
 assertNoDecorativeEffects(failures, 'Forms story', formsComponent);
 assertNoDecorativeEffects(failures, 'Interaction story', interactionComponent);
@@ -1134,6 +1259,7 @@ assertNoOverRoundedUsage(failures, 'IconButton component', iconButton);
 assertNoOverRoundedUsage(failures, 'Surface component', surface);
 assertNoOverRoundedUsage(failures, 'Storybook overview', component);
 assertNoOverRoundedUsage(failures, 'Buttons story', buttonsComponent);
+assertNoOverRoundedUsage(failures, 'Data display story', dataDisplayComponent);
 assertNoOverRoundedUsage(failures, 'Feedback story', feedbackComponent);
 assertNoOverRoundedUsage(failures, 'Forms story', formsComponent);
 assertNoOverRoundedUsage(failures, 'Interaction story', interactionComponent);

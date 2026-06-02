@@ -1034,6 +1034,187 @@
   user-select: none;
 }
 
+.zdp-table-wrap {
+  border: 1px solid var(--zdp-color-line-subtle);
+  border-radius: var(--zdp-control-radius);
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.zdp-table {
+  border-collapse: collapse;
+  color: var(--zdp-color-ink-normal);
+  font-family: var(--zdp-font-family-sans);
+  font-size: var(--zdp-type-body-small-size);
+  inline-size: 100%;
+  line-height: var(--zdp-type-body-small-line-height);
+  min-inline-size: 36rem;
+}
+
+.zdp-table__caption {
+  color: var(--zdp-color-ink-strong);
+  font-size: var(--zdp-type-label-size);
+  font-weight: var(--zdp-font-weight-medium);
+  line-height: var(--zdp-type-label-line-height);
+  padding: var(--zdp-space-3) var(--zdp-space-4);
+  text-align: start;
+}
+
+.zdp-table__caption--hidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.zdp-table th,
+.zdp-table td {
+  border-block-start: 1px solid var(--zdp-color-line-subtle);
+  padding: var(--zdp-space-3) var(--zdp-space-4);
+  text-align: start;
+  vertical-align: top;
+}
+
+.zdp-table th {
+  color: var(--zdp-color-ink-strong);
+  font-weight: var(--zdp-font-weight-medium);
+}
+
+.zdp-table thead th {
+  background: var(--zdp-color-surface-raised);
+}
+
+.zdp-table--density-compact th,
+.zdp-table--density-compact td {
+  padding: var(--zdp-space-2) var(--zdp-space-3);
+}
+
+.zdp-key-value {
+  border: 1px solid var(--zdp-color-line-subtle);
+  border-radius: var(--zdp-control-radius);
+  color: var(--zdp-color-ink-normal);
+  display: grid;
+  font-family: var(--zdp-font-family-sans);
+  font-size: var(--zdp-type-body-small-size);
+  line-height: var(--zdp-type-body-small-line-height);
+  margin: 0;
+  min-width: 0;
+}
+
+.zdp-key-value dt,
+.zdp-key-value dd {
+  border-block-start: 1px solid var(--zdp-color-line-subtle);
+  margin: 0;
+  min-width: 0;
+  padding: var(--zdp-space-3) var(--zdp-space-4);
+}
+
+.zdp-key-value dt:first-child,
+.zdp-key-value dt:first-child + dd {
+  border-block-start: 0;
+}
+
+.zdp-key-value dt {
+  color: var(--zdp-color-ink-muted);
+  font-weight: var(--zdp-font-weight-medium);
+}
+
+.zdp-key-value dd {
+  color: var(--zdp-color-ink-strong);
+  overflow-wrap: var(--zdp-i18n-overflow-wrap);
+}
+
+.zdp-key-value--columns-two {
+  grid-template-columns: minmax(10rem, 0.42fr) minmax(0, 1fr);
+}
+
+.zdp-key-value--columns-one {
+  grid-template-columns: 1fr;
+}
+
+.zdp-key-value--density-compact dt,
+.zdp-key-value--density-compact dd {
+  padding: var(--zdp-space-2) var(--zdp-space-3);
+}
+
+.zdp-empty-state {
+  background: var(--zdp-color-surface-panel);
+  border: 1px solid var(--zdp-color-line-subtle);
+  border-radius: var(--zdp-control-radius);
+  box-sizing: border-box;
+  color: var(--zdp-color-ink-normal);
+  display: grid;
+  font-family: var(--zdp-font-family-sans);
+  gap: var(--zdp-space-4);
+  min-width: 0;
+  padding: var(--zdp-space-6);
+}
+
+.zdp-empty-state--raised {
+  background: var(--zdp-color-surface-raised);
+}
+
+.zdp-empty-state--align-center {
+  justify-items: center;
+  text-align: center;
+}
+
+.zdp-empty-state__body {
+  display: grid;
+  gap: var(--zdp-space-2);
+  max-inline-size: 36rem;
+  min-width: 0;
+}
+
+.zdp-empty-state__body * {
+  margin-block: 0;
+}
+
+.zdp-empty-state__body strong,
+.zdp-empty-state__body h2,
+.zdp-empty-state__body h3 {
+  color: var(--zdp-color-ink-strong);
+  font-size: var(--zdp-type-body-size);
+  font-weight: var(--zdp-font-weight-medium);
+  line-height: var(--zdp-type-body-line-height);
+}
+
+.zdp-empty-state__body p {
+  color: var(--zdp-color-ink-muted);
+  font-size: var(--zdp-type-body-small-size);
+  line-height: var(--zdp-type-body-small-line-height);
+}
+
+.zdp-empty-state__actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--zdp-space-2);
+  min-width: 0;
+}
+
+.zdp-empty-state--align-center .zdp-empty-state__actions {
+  justify-content: center;
+}
+
+@media (max-width: 42rem) {
+  .zdp-key-value--columns-two {
+    grid-template-columns: 1fr;
+  }
+
+  .zdp-key-value--columns-two dd {
+    border-block-start: 0;
+    padding-block-start: 0;
+  }
+}
+
 .zdp-tabs {
   display: grid;
   gap: var(--zdp-space-3);

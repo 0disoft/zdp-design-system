@@ -38,8 +38,8 @@ if (failures.length > 0) {
 }
 
 function checkPackageSurface(packageJson: PackageJson): void {
-  if (packageJson.version !== '0.24.0') {
-    failures.push('package.json version must be 0.24.0 for the form accessibility package surface.');
+  if (packageJson.version !== '0.25.0') {
+    failures.push('package.json version must be 0.25.0 for the data display package surface.');
   }
 
   if (!packageJson.files?.includes('docs/')) {
@@ -65,13 +65,16 @@ function checkConsumerContractDocument(documentText: string): void {
     'Container',
     'Dialog',
     'Divider',
+    'EmptyState',
     'Inline',
+    'KeyValue',
     'Link',
     'Page',
     'PageHeader',
     'Section',
     'SkipLink',
     'Stack',
+    'Table',
     'VisuallyHidden',
     'tokens/zdp.tokens.json',
     '.zdp-surface-reset',
@@ -126,6 +129,7 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'Stack',
     'Inline',
     'Divider',
+    'Table, KeyValue, EmptyState',
     'Dialog는 모달 레이어',
     'Page, Container, Section, PageHeader는 페이지 폭',
     '`describedBy`에 id 배열',
@@ -150,6 +154,9 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'Stack은 가까운 요소',
     'Inline은 가까운 버튼',
     'Divider는 가까운 내용',
+    'Table은 표 형식 정보',
+    'KeyValue는 용어와 값',
+    'EmptyState는 비어 있는 상태',
     'Dialog는 `role="dialog"`',
     'Page는 shared page root',
     'Container는 페이지 폭',
@@ -197,8 +204,10 @@ function checkTokenAndComponentSurface(tokenDocument: string, publicEntry: strin
     'export { default as Container }',
     'export { default as Dialog }',
     'export { default as Divider }',
+    'export { default as EmptyState }',
     'export { default as Field }',
     'export { default as Input }',
+    'export { default as KeyValue }',
     'export { default as Label }',
     'export { default as Inline }',
     'export { default as Link }',
@@ -209,6 +218,7 @@ function checkTokenAndComponentSurface(tokenDocument: string, publicEntry: strin
     'export { default as Stack }',
     'export { default as Surface }',
     'export { default as Tabs }',
+    'export { default as Table }',
     'export { default as VisuallyHidden }',
     'export { zdpTokenNames }'
   ]) {
