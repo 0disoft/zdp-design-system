@@ -17,13 +17,12 @@
 <style>
   .zdp-button {
     align-items: center;
-    border: 1px solid var(--zdp-color-line-strong);
+    border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
     border-radius: var(--zdp-control-radius);
-    box-shadow: var(--zdp-shadow-sm);
     cursor: pointer;
     display: inline-flex;
-    font-family: var(--zdp-font-family-serif);
-    font-weight: var(--zdp-font-weight-semibold);
+    font-family: var(--zdp-font-family-sans);
+    font-weight: var(--zdp-font-weight-medium);
     gap: var(--zdp-space-2);
     justify-content: center;
     font-size: var(--zdp-type-control-size);
@@ -34,9 +33,7 @@
     transition:
       background-color var(--zdp-motion-fast) ease,
       border-color var(--zdp-motion-fast) ease,
-      box-shadow var(--zdp-motion-fast) ease,
-      color var(--zdp-motion-fast) ease,
-      transform var(--zdp-motion-fast) ease;
+      color var(--zdp-motion-fast) ease;
   }
 
   .zdp-button--sm {
@@ -52,69 +49,87 @@
   }
 
   .zdp-button--primary {
-    background: linear-gradient(
-      180deg,
-      var(--zdp-color-accent-primary),
-      var(--zdp-color-accent-primary-strong)
-    );
+    background: var(--zdp-color-accent-primary);
     border-color: var(--zdp-color-accent-primary-strong);
     color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-button--primary:hover:not(:disabled) {
-    box-shadow: var(--zdp-shadow-md);
-    transform: translateY(-1px);
+    background: var(--zdp-color-accent-primary-strong);
+    border-color: var(--zdp-color-accent-primary-strong);
+  }
+
+  .zdp-button--primary:active:not(:disabled) {
+    background: var(--zdp-color-accent-primary-strong);
+    border-color: var(--zdp-color-accent-primary-strong);
   }
 
   .zdp-button--secondary {
-    background: linear-gradient(180deg, var(--zdp-color-surface-panel), var(--zdp-color-surface-raised));
-    border-color: var(--zdp-color-line-subtle);
+    background: var(--zdp-color-surface-panel);
+    border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-button--secondary:hover:not(:disabled) {
+    background: var(--zdp-color-surface-raised);
     border-color: var(--zdp-color-line-strong);
-    box-shadow: var(--zdp-shadow-md);
-    transform: translateY(-1px);
+    color: var(--zdp-color-ink-strong);
+  }
+
+  .zdp-button--secondary:active:not(:disabled) {
+    background: var(--zdp-color-surface-raised);
+    border-color: var(--zdp-color-line-strong);
   }
 
   :global([data-zdp-theme="dark"]) .zdp-button--secondary {
     background: var(--zdp-color-surface-panel);
-    border-color: var(--zdp-color-line-subtle);
-    box-shadow: none;
+    border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-muted);
   }
 
   :global([data-zdp-theme="dark"]) .zdp-button--secondary:hover:not(:disabled) {
     background: var(--zdp-color-surface-raised);
+    border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-button--danger {
-    background: linear-gradient(180deg, var(--zdp-color-accent-danger), var(--zdp-color-surface-inverse));
+    background: var(--zdp-color-surface-panel);
     border-color: var(--zdp-color-accent-danger);
-    color: var(--zdp-color-ink-inverse);
+    color: var(--zdp-color-accent-danger);
   }
 
   :global([data-zdp-theme="dark"]) .zdp-button--danger {
-    background: var(--zdp-color-surface-raised);
+    background: transparent;
     border-color: var(--zdp-color-accent-danger);
-    color: var(--zdp-color-ink-strong);
+    color: var(--zdp-color-accent-danger);
   }
 
   .zdp-button--danger:hover:not(:disabled) {
-    box-shadow: var(--zdp-shadow-md);
-    transform: translateY(-1px);
+    background: var(--zdp-color-surface-raised);
+  }
+
+  :global([data-zdp-theme="dark"]) .zdp-button--danger:hover:not(:disabled) {
+    background: var(--zdp-color-surface-raised);
+    border-color: var(--zdp-color-accent-danger);
+    color: var(--zdp-color-accent-danger);
+  }
+
+  .zdp-button--danger:active:not(:disabled) {
+    background: var(--zdp-color-surface-raised);
+    border-color: var(--zdp-color-accent-danger);
+    color: var(--zdp-color-accent-danger);
   }
 
   .zdp-button:focus-visible {
-    box-shadow: var(--zdp-shadow-focus);
-    outline: none;
+    border-color: var(--zdp-color-focus-line);
+    outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
+    outline-offset: var(--zdp-control-focus-outline-offset);
   }
 
   .zdp-button:disabled {
     cursor: not-allowed;
     opacity: 0.56;
-    transform: none;
   }
+
 </style>

@@ -47,8 +47,20 @@
         <h3 id="storybook-light-type">Type</h3>
         <p class="type-sample">
           <strong>마을 광장처럼 밝고 단단하게</strong>
-          <span>Readable serif text with warm contrast and enough air for product work.</span>
+          <span>Pretendard-first multiscript text with warm contrast and enough air for product work.</span>
+          <a href="#foundation-tokens">자세히 보기</a>
         </p>
+      </section>
+
+      <section class="preview-section" aria-labelledby="storybook-light-focus">
+        <h3 id="storybook-light-focus">Focus</h3>
+        <div class="focus-demo">
+          <a href="#foundation-tokens">출시 노트 보기</a>
+          <label class="focus-demo__field" for="storybook-light-focus-search">
+            <span>검색</span>
+            <input id="storybook-light-focus-search" type="search" placeholder="Search Design System" />
+          </label>
+        </div>
       </section>
 
       <section class="preview-section" aria-labelledby="storybook-light-actions">
@@ -111,7 +123,19 @@
         <p class="type-sample">
           <strong>밤에도 종이결은 남기기</strong>
           <span>Dark mode keeps the same market palette without turning into a blue console.</span>
+          <a href="#foundation-tokens">자세히 보기</a>
         </p>
+      </section>
+
+      <section class="preview-section" aria-labelledby="storybook-dark-focus">
+        <h3 id="storybook-dark-focus">Focus</h3>
+        <div class="focus-demo">
+          <a href="#foundation-tokens">업데이트 보기</a>
+          <label class="focus-demo__field" for="storybook-dark-focus-search">
+            <span>검색</span>
+            <input id="storybook-dark-focus-search" type="search" placeholder="Search Design System" />
+          </label>
+        </div>
       </section>
 
       <section class="preview-section" aria-labelledby="storybook-dark-actions">
@@ -142,10 +166,10 @@
     </section>
   </div>
 
-  <section class="foundation-strip" aria-label="Foundation tokens">
+  <section class="foundation-strip" id="foundation-tokens" aria-label="Foundation tokens">
     <article>
       <span>Type</span>
-      <strong>Body / title / label / control</strong>
+      <strong>Body / small / caption / data</strong>
     </article>
     <article>
       <span>Control</span>
@@ -157,7 +181,7 @@
     </article>
     <article>
       <span>i18n</span>
-      <strong>긴문장과SuperLongWordSafe</strong>
+      <strong><span lang="ko">긴문장</span> / <span lang="zh">自由</span> / <span lang="hi">स्वर</span> / Safe</strong>
     </article>
   </section>
 
@@ -170,10 +194,7 @@
 
 <style>
   .storybook-preview {
-    background:
-      radial-gradient(circle at 16% 8%, var(--zdp-color-surface-raised), transparent 34%),
-      radial-gradient(circle at 82% 16%, var(--zdp-color-accent-warning), transparent 26%),
-      linear-gradient(180deg, var(--zdp-color-surface-panel), var(--zdp-color-surface-canvas));
+    background: var(--zdp-color-surface-canvas);
     color: var(--zdp-color-ink-normal);
     display: grid;
     gap: var(--zdp-space-8);
@@ -217,7 +238,7 @@
   .theme-panel__header span {
     background: var(--zdp-color-surface-raised);
     border: 1px solid var(--zdp-color-line-subtle);
-    border-radius: var(--zdp-radius-pill);
+    border-radius: var(--zdp-radius-md);
     color: var(--zdp-color-ink-muted);
     font-size: var(--zdp-font-size-xs);
     font-weight: var(--zdp-font-weight-semibold);
@@ -231,12 +252,9 @@
   }
 
   .theme-panel {
-    background:
-      radial-gradient(circle at 12% 8%, var(--zdp-color-surface-raised), transparent 34%),
-      linear-gradient(180deg, var(--zdp-color-surface-panel), var(--zdp-color-surface-canvas));
+    background: var(--zdp-color-surface-panel);
     border: 1px solid var(--zdp-color-line-subtle);
     border-radius: var(--zdp-radius-lg);
-    box-shadow: var(--zdp-shadow-md);
     color: var(--zdp-color-ink-normal);
     display: grid;
     gap: var(--zdp-space-6);
@@ -249,9 +267,7 @@
   }
 
   .theme-panel--dark {
-    background:
-      radial-gradient(circle at 12% 8%, var(--zdp-color-accent-primary-soft), transparent 34%),
-      linear-gradient(180deg, var(--zdp-color-surface-panel), var(--zdp-color-surface-canvas));
+    background: var(--zdp-color-surface-panel);
   }
 
   .theme-panel__header {
@@ -323,6 +339,7 @@
     display: block;
     font-size: var(--zdp-font-size-xs);
     padding: var(--zdp-space-2);
+    text-decoration: none;
   }
 
   [data-zdp-theme="dark"] .swatch__label {
@@ -354,6 +371,24 @@
     gap: var(--zdp-space-3);
   }
 
+  .focus-demo {
+    display: grid;
+    gap: var(--zdp-space-3);
+    max-width: 28rem;
+  }
+
+  .focus-demo__field {
+    display: grid;
+    gap: var(--zdp-space-2);
+  }
+
+  .focus-demo__field span {
+    color: var(--zdp-color-ink-strong);
+    font-size: var(--zdp-type-label-size);
+    font-weight: var(--zdp-font-weight-medium);
+    line-height: var(--zdp-type-label-line-height);
+  }
+
   .surface-grid {
     display: grid;
     gap: var(--zdp-space-3);
@@ -379,6 +414,11 @@
   }
 
   .foundation-strip {
+    --storybook-type-body-small: var(--zdp-type-body-small-size);
+    --storybook-type-caption: var(--zdp-type-caption-size);
+    --storybook-type-data: var(--zdp-type-data-size);
+    --storybook-control-border-width: var(--zdp-control-border-width);
+    --storybook-focus-outline-width: var(--zdp-control-focus-outline-width);
     display: grid;
     gap: var(--zdp-space-3);
     grid-template-columns: repeat(4, minmax(0, 1fr));

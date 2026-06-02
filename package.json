@@ -1,6 +1,6 @@
 {
   "name": "zdp-design-system",
-  "version": "0.6.0",
+  "version": "0.8.0",
   "private": true,
   "type": "module",
   "description": "ZDP design tokens, CSS, icons, and Svelte UI package boundary.",
@@ -11,6 +11,7 @@
       "default": "./src/lib/index.ts"
     },
     "./styles.css": "./src/styles/index.css",
+    "./locale-fonts.css": "./src/styles/locale-fonts.css",
     "./tokens": "./tokens/zdp.tokens.json"
   },
   "files": [
@@ -21,6 +22,7 @@
   ],
   "sideEffects": [
     "./src/styles/index.css",
+    "./src/styles/locale-fonts.css",
     "./src/styles/tokens.css",
     "./src/styles/components.css"
   ],

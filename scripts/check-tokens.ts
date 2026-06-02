@@ -26,21 +26,47 @@ interface ColorTokenValue {
   readonly oklch: string;
 }
 
+interface PackageJson {
+  readonly version?: string;
+  readonly exports?: Record<string, unknown>;
+  readonly sideEffects?: readonly unknown[];
+}
+
 type ColorTokenGroups = Record<string, Record<string, ColorTokenValue>>;
 
 const root = process.cwd();
+const packagePath = join(root, 'package.json');
 const tokenPath = join(root, 'tokens', 'zdp.tokens.json');
 const cssPath = join(root, 'src', 'styles', 'tokens.css');
+const localeFontsPath = join(root, 'src', 'styles', 'locale-fonts.css');
 const publicEntryPath = join(root, 'src', 'lib', 'index.ts');
 const hexColorPattern = /^#[0-9a-fA-F]{6}$/;
 const oklchColorPattern = /^oklch\([^)]+\)$/;
 
+const packageJson = await readPackageJson(packagePath);
 const tokenDocument = await readTokenDocument(tokenPath);
 const css = await readFile(cssPath, 'utf8');
+const localeFonts = await readFile(localeFontsPath, 'utf8');
 const publicEntry = await readFile(publicEntryPath, 'utf8');
 const tokenVariables = collectCssVariableNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
+
+if (packageJson.version !== '0.8.0') {
+  failures.push('package.json version must be 0.8.0 for the accessible focus token contract.');
+}
+
+if (tokenDocument.version !== '0.5.0') {
+  failures.push('Token document version must be 0.5.0 for the accessible focus token contract.');
+}
+
+if (packageJson.exports?.['./locale-fonts.css'] !== './src/styles/locale-fonts.css') {
+  failures.push('package.json must export ./locale-fonts.css.');
+}
+
+if (!packageJson.sideEffects?.includes('./src/styles/locale-fonts.css')) {
+  failures.push('package.json sideEffects must include ./src/styles/locale-fonts.css.');
+}
 
 for (const variable of tokenVariables) {
   if (!css.includes(`--${variable}:`)) {
@@ -68,6 +94,138 @@ if (!publicEntry.includes("export { zdpTokenNames }")) {
   failures.push('Missing zdpTokenNames public export.');
 }
 
+if (
+  !tokenDocument.font.family.sans.startsWith(
+    '"Pretendard Variable", Pretendard, "Manrope Variable", Manrope, '
+  )
+) {
+  failures.push('font.family.sans must be a Pretendard Variable-first stack.');
+}
+
+if (
+  !tokenDocument.font.family.display.startsWith(
+    '"Pretendard Variable", Pretendard, "Manrope Variable", Manrope, '
+  )
+) {
+  failures.push('font.family.display must be a Pretendard Variable-first stack.');
+}
+
+for (const [familyName, expectedText] of Object.entries({
+  latin: '"Manrope Variable", Manrope, "Inter Variable", Inter',
+  korean: '"Pretendard Variable", Pretendard, "Apple SD Gothic Neo"',
+  chinese: '"Noto Sans SC Variable", "Noto Sans SC", "PingFang SC"',
+  devanagari: '"Noto Sans Devanagari Variable", "Noto Sans Devanagari", "Nirmala UI"',
+  multiscript: '"Pretendard Variable", Pretendard, "Manrope Variable", Manrope'
+})) {
+  if (!tokenDocument.font.family[familyName]?.includes(expectedText)) {
+    failures.push(`font.family.${familyName} must include ${expectedText}.`);
+  }
+}
+
+if (
+  !css.includes(
+    '@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");'
+  )
+) {
+  failures.push('Token CSS must load Pretendard Variable dynamic subset.');
+}
+
+if (!css.includes('font-family: var(--zdp-font-family-sans);')) {
+  failures.push('Surface reset must use the sans font family by default.');
+}
+
+for (const requiredText of [
+  '--zdp-font-family-latin',
+  '--zdp-font-family-korean',
+  '--zdp-font-family-chinese',
+  '--zdp-font-family-devanagari',
+  '--zdp-font-family-multiscript',
+  '.zdp-surface-reset:lang(en)',
+  '.zdp-surface-reset:lang(ko)',
+  '.zdp-surface-reset:lang(zh)',
+  '.zdp-surface-reset:lang(hi)',
+  'word-break: keep-all',
+  'line-break: strict'
+]) {
+  if (!css.includes(requiredText)) {
+    failures.push(`Token CSS multiscript contract is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  '@fontsource-variable/manrope@5.2.8/index.css',
+  '@fontsource-variable/noto-sans-sc@5.2.10/index.css',
+  '@fontsource-variable/noto-sans-devanagari@5.2.8/index.css'
+]) {
+  if (!localeFonts.includes(requiredText)) {
+    failures.push(`Locale font CSS export is missing ${requiredText}.`);
+  }
+}
+
+if (tokenDocument.font.lineHeight.normal !== '1.6') {
+  failures.push('font.lineHeight.normal must stay 1.6 for readable product text.');
+}
+
+if (tokenDocument.type.bodyLineHeight !== '1.6') {
+  failures.push('type.bodyLineHeight must stay 1.6 for readable product text.');
+}
+
+for (const [tokenName, expectedValue] of Object.entries({
+  bodySize: '1.125rem',
+  bodySmallSize: '1rem',
+  bodySmallLineHeight: '1.6',
+  titleSize: '1.375rem',
+  labelSize: '0.875rem',
+  captionSize: '0.875rem',
+  captionLineHeight: '1.4',
+  dataSize: '1rem',
+  dataLineHeight: '1.4'
+})) {
+  if (tokenDocument.type[tokenName] !== expectedValue) {
+    failures.push(`type.${tokenName} must stay ${expectedValue} for compact product text.`);
+  }
+}
+
+for (const radiusName of ['md', 'lg']) {
+  if (tokenDocument.radius[radiusName] !== '0.375rem') {
+    failures.push(`radius.${radiusName} must stay 0.375rem to keep core surfaces squared off.`);
+  }
+}
+
+if (tokenDocument.control.radius !== '0.375rem') {
+  failures.push('control.radius must stay 0.375rem to keep buttons squared off.');
+}
+
+if (tokenDocument.control.borderWidth !== '2px') {
+  failures.push('control.borderWidth must stay 2px for framed action controls.');
+}
+
+for (const [tokenName, expectedValue] of Object.entries({
+  focusOutlineWidth: '3px',
+  focusOutlineOffset: '2px',
+  focusUnderlineWidth: '3px'
+})) {
+  if (tokenDocument.control[tokenName] !== expectedValue) {
+    failures.push(`control.${tokenName} must stay ${expectedValue} for visible keyboard focus.`);
+  }
+}
+
+for (const [tokenName, expectedValue] of Object.entries({
+  surface: '#e7c97a',
+  text: '#1f160d',
+  line: '#1f160d'
+})) {
+  if (tokenDocument.color.focus?.[tokenName]?.hex !== expectedValue) {
+    failures.push(`color.focus.${tokenName}.hex must stay ${expectedValue}.`);
+  }
+}
+
+for (const shadowName of ['focus', 'sm', 'md']) {
+  if (tokenDocument.shadow[shadowName] !== 'none') {
+    failures.push(`shadow.${shadowName} must stay none for flat UI surfaces.`);
+  }
+}
+
 if (failures.length > 0) {
   for (const failure of failures) {
     console.error(failure);
@@ -81,6 +239,10 @@ async function readTokenDocument(path: string): Promise<TokenDocument> {
 
   if (!isRecord(parsed)) {
     throw new Error('Token document must be a JSON object.');
+  }
+
+  if ('gradient' in parsed) {
+    throw new Error('Token document must not define gradient tokens for core UI surfaces.');
   }
 
   assertString(parsed.name, 'name');
@@ -107,6 +269,20 @@ async function readTokenDocument(path: string): Promise<TokenDocument> {
     i18n: assertStringRecord(parsed.i18n, 'i18n'),
     shadow: assertStringRecord(parsed.shadow, 'shadow'),
     motion: assertStringRecord(parsed.motion, 'motion')
+  };
+}
+
+async function readPackageJson(path: string): Promise<PackageJson> {
+  const parsed: unknown = JSON.parse(await readFile(path, 'utf8'));
+
+  if (!isRecord(parsed)) {
+    throw new Error('package.json must be a JSON object.');
+  }
+
+  return {
+    version: typeof parsed.version === 'string' ? parsed.version : undefined,
+    exports: isRecord(parsed.exports) ? parsed.exports : undefined,
+    sideEffects: Array.isArray(parsed.sideEffects) ? parsed.sideEffects : undefined
   };
 }
 

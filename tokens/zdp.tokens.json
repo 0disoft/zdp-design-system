@@ -1,7 +1,7 @@
 {
   "$schema": "https://zdp.zerodi.dev/schemas/design-tokens.schema.json",
   "name": "zdp-core",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "color": {
     "ink": {
       "strong": {
@@ -53,6 +53,20 @@
         "oklch": "oklch(63% 0.08 250)"
       }
     },
+    "focus": {
+      "surface": {
+        "hex": "#e7c97a",
+        "oklch": "oklch(84% 0.1 86)"
+      },
+      "text": {
+        "hex": "#1f160d",
+        "oklch": "oklch(20% 0.035 70)"
+      },
+      "line": {
+        "hex": "#1f160d",
+        "oklch": "oklch(20% 0.035 70)"
+      }
+    },
     "accent": {
       "primary": {
         "hex": "#6d8fb7",
@@ -95,23 +109,28 @@
   "radius": {
     "none": "0",
     "sm": "0.25rem",
-    "md": "0.5rem",
-    "lg": "0.5rem",
+    "md": "0.375rem",
+    "lg": "0.375rem",
     "pill": "999px"
   },
   "font": {
     "family": {
-      "sans": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      "sans": "\"Pretendard Variable\", Pretendard, \"Manrope Variable\", Manrope, \"Inter Variable\", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      "latin": "\"Manrope Variable\", Manrope, \"Inter Variable\", Inter, \"Pretendard Variable\", Pretendard, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      "korean": "\"Pretendard Variable\", Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      "chinese": "\"Noto Sans SC Variable\", \"Noto Sans SC\", \"PingFang SC\", \"Microsoft YaHei\", \"Pretendard Variable\", Pretendard, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      "devanagari": "\"Noto Sans Devanagari Variable\", \"Noto Sans Devanagari\", \"Nirmala UI\", \"Kohinoor Devanagari\", ui-sans-serif, system-ui, sans-serif",
+      "multiscript": "\"Pretendard Variable\", Pretendard, \"Manrope Variable\", Manrope, \"Inter Variable\", Inter, \"Noto Sans SC Variable\", \"Noto Sans SC\", \"Noto Sans Devanagari Variable\", \"Noto Sans Devanagari\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"PingFang SC\", \"Microsoft YaHei\", \"Nirmala UI\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
       "serif": "Cardo, Georgia, \"Times New Roman\", ui-serif, serif",
-      "display": "Cinzel, Cardo, Georgia, \"Times New Roman\", ui-serif, serif",
+      "display": "\"Pretendard Variable\", Pretendard, \"Manrope Variable\", Manrope, \"Inter Variable\", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
       "mono": "\"JetBrains Mono\", \"SFMono-Regular\", Consolas, monospace"
     },
     "size": {
-      "xs": "0.75rem",
-      "sm": "0.875rem",
-      "md": "1rem",
-      "lg": "1.125rem",
-      "xl": "1.25rem"
+      "xs": "0.875rem",
+      "sm": "1rem",
+      "md": "1.0625rem",
+      "lg": "1.1875rem",
+      "xl": "1.375rem"
     },
     "weight": {
       "regular": "400",
@@ -121,19 +140,25 @@
     },
     "lineHeight": {
       "tight": "1.2",
-      "normal": "1.5",
+      "normal": "1.6",
       "relaxed": "1.65"
     }
   },
   "type": {
-    "bodySize": "1rem",
-    "bodyLineHeight": "1.5",
-    "titleSize": "1.25rem",
+    "bodySize": "1.125rem",
+    "bodyLineHeight": "1.6",
+    "bodySmallSize": "1rem",
+    "bodySmallLineHeight": "1.6",
+    "titleSize": "1.375rem",
     "titleLineHeight": "1.2",
-    "labelSize": "0.75rem",
+    "labelSize": "0.875rem",
     "labelLineHeight": "1.2",
+    "captionSize": "0.875rem",
+    "captionLineHeight": "1.4",
     "controlSize": "1rem",
-    "controlLineHeight": "1.2"
+    "controlLineHeight": "1.2",
+    "dataSize": "1rem",
+    "dataLineHeight": "1.4"
   },
   "breakpoint": {
     "mobile": "40rem",
@@ -146,7 +171,11 @@
     "heightMd": "2.75rem",
     "iconSm": "2.25rem",
     "iconMd": "2.75rem",
-    "radius": "0.5rem",
+    "radius": "0.375rem",
+    "borderWidth": "2px",
+    "focusOutlineWidth": "3px",
+    "focusOutlineOffset": "2px",
+    "focusUnderlineWidth": "3px",
     "hitTarget": "2.75rem"
   },
   "i18n": {
@@ -156,9 +185,9 @@
     "hyphens": "auto"
   },
   "shadow": {
-    "focus": "0 0 0 3px rgba(109, 143, 183, 0.34)",
-    "sm": "0 1px 2px rgba(82, 59, 32, 0.1)",
-    "md": "0 10px 28px rgba(82, 59, 32, 0.14)"
+    "focus": "none",
+    "sm": "none",
+    "md": "none"
   },
   "motion": {
     "fast": "120ms",

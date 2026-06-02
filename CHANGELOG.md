@@ -1,5 +1,66 @@
 # Changelog
 
+## 0.8.0
+
+- Added accessible focus color tokens for sunlit gold focus surfaces, dark focus text, and dark focus lines.
+- Added shared control focus width tokens for outline, offset, and link underline states.
+- Updated links, inputs, buttons, and icon buttons to use the same high-visibility keyboard focus contract.
+- Added focus examples to Storybook and the static preview so link and search input focus can be reviewed with the Tab key.
+- Strengthened token, preview, and Storybook checks for the focus contract.
+
+## 0.7.0
+
+- Added an optional `zdp-design-system/locale-fonts.css` package export for explicit Latin, Chinese, and Devanagari webfont loading.
+- Kept the default `styles.css` path Pretendard-first so consumers can avoid heavy non-Korean locale font loads unless they opt in.
+- Strengthened package export and side-effect checks for the optional locale font CSS surface.
+
+## 0.6.8
+
+- Added language-specific font family tokens for Latin, Korean, Chinese, Devanagari, and multiscript surfaces.
+- Added `:lang(en/es/fr/ko/zh/hi)` CSS overrides so shared surfaces can switch font stacks without product-specific CSS.
+- Updated preview, Storybook, and token checks to keep the multiscript typography contract synchronized.
+
+## 0.6.7
+
+- Loaded Pretendard Variable dynamic subset from the shared CSS token entry and moved sans/display stacks to `"Pretendard Variable", Pretendard`.
+- Increased body, body-small, label, caption, data, and supporting font-size tokens by one step for better balance against larger headings.
+- Changed button labels from semibold to medium weight.
+
+## 0.6.6
+
+- Added a shared 2px control border width token for framed action controls.
+- Normalized Button and IconButton hover states so light and dark themes change background and border consistently.
+- Strengthened preview and Storybook checks for the framed-control hover contract.
+
+## 0.6.5
+
+- Reduced shared core component radius from 0.5rem to 0.375rem for a more squared-off control shape.
+- Updated token checks and contribution docs to keep buttons, icon buttons, surfaces, Storybook, and preview panels closer to rectangular forms.
+
+## 0.6.4
+
+- Clarified semantic state color roles for success, warning, and danger tokens.
+- Added flat active-state contracts for buttons and icon buttons without motion, shadows, or gradients.
+- Extended type tokens with body small, caption, and data text roles for product dashboards and detail surfaces.
+- Strengthened preview and Storybook checks for compact type tokens and active component states.
+
+## 0.6.3
+
+- Tightened the flat UI contract with a 0.5rem shared radius ceiling for core components and previews.
+- Changed default body line-height tokens to 1.6 for calmer reading rhythm without decorative separation.
+- Added checks that reject pill-radius usage in shared components, Storybook overview, and static preview surfaces.
+
+## 0.6.2
+
+- Softened destructive button styling in light and dark themes so danger actions read as lower-emphasis outlines.
+- Smoothed raised surface gold gradients to avoid hard visual cutoffs in compact cards.
+- Normalized swatch labels so color names do not look like links in dark theme previews.
+- Added underline-free link defaults with hover color transitions inside design-system surfaces.
+- Replaced button lift-and-shadow hover motion with flat color and border-state changes.
+- Changed default and display typography to a Pretendard-first sans-serif stack while keeping serif available as an explicit token.
+- Removed decorative gradients and shadows from shared buttons, icon buttons, surfaces, Storybook, and static preview panels.
+- Documented the flat UI contract and centralized checks that reject decorative gradients, shadows, sheen pseudo-elements, and hover movement in shared surfaces.
+
 ## 0.6.0
 
 - Added foundation token groups for typography roles, responsive breakpoints, control metrics, and i18n-safe text behavior.
