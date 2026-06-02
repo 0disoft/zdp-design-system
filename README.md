@@ -12,6 +12,10 @@ ZDP의 디자인 토큰, CSS, 아이콘, Svelte UI 컴포넌트 경계를 고정
 - 아이콘 사용 기준과 접근성 기본 규칙
 - Storybook 또는 동등한 컴포넌트 검토 표면
 
+## 시각 방향
+
+기본 톤은 밝은 중세 유럽 마을 광장과 수채화 종이 질감이다. 토큰 값은 parchment, dusty blue, sage green, sunlit gold, burgundy, terracotta 계열을 쓰되, 토큰 이름은 `primary`, `surface`, `line`, `danger`처럼 역할 중심으로 유지한다.
+
 ## 현재 제외
 
 - 제품별 화면 구성

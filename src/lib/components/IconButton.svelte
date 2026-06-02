@@ -22,8 +22,9 @@
 <style>
   .zdp-icon-button {
     align-items: center;
-    border: 1px solid transparent;
+    border: 1px solid var(--zdp-color-line-subtle);
     border-radius: var(--zdp-radius-md);
+    box-shadow: var(--zdp-shadow-sm);
     cursor: pointer;
     display: inline-flex;
     justify-content: center;
@@ -35,17 +36,17 @@
   }
 
   .zdp-icon-button--sm {
-    height: 2rem;
-    width: 2rem;
+    height: 2.25rem;
+    width: 2.25rem;
   }
 
   .zdp-icon-button--md {
-    height: 2.5rem;
-    width: 2.5rem;
+    height: 2.75rem;
+    width: 2.75rem;
   }
 
   .zdp-icon-button--ghost {
-    background: transparent;
+    background: var(--zdp-color-surface-panel);
     color: var(--zdp-color-ink-normal);
   }
 
@@ -54,8 +55,25 @@
     color: var(--zdp-color-ink-strong);
   }
 
+  :global([data-zdp-theme="dark"]) .zdp-icon-button--ghost {
+    background: var(--zdp-color-surface-panel);
+    border-color: var(--zdp-color-line-subtle);
+    box-shadow: none;
+    color: var(--zdp-color-ink-muted);
+  }
+
+  :global([data-zdp-theme="dark"]) .zdp-icon-button--ghost:hover:not(:disabled) {
+    background: var(--zdp-color-surface-raised);
+    color: var(--zdp-color-ink-strong);
+  }
+
   .zdp-icon-button--solid {
-    background: var(--zdp-color-accent-primary);
+    background: linear-gradient(
+      180deg,
+      var(--zdp-color-accent-primary),
+      var(--zdp-color-accent-primary-strong)
+    );
+    border-color: var(--zdp-color-accent-primary-strong);
     color: var(--zdp-color-ink-inverse);
   }
 

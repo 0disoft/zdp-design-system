@@ -1,82 +1,82 @@
 {
   "$schema": "https://zdp.zerodi.dev/schemas/design-tokens.schema.json",
   "name": "zdp-core",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "color": {
     "ink": {
       "strong": {
-        "hex": "#111827",
-        "oklch": "oklch(21% 0.035 265)"
+        "hex": "#2f2418",
+        "oklch": "oklch(27% 0.04 70)"
       },
       "normal": {
-        "hex": "#1f2937",
-        "oklch": "oklch(28% 0.035 260)"
+        "hex": "#4a3826",
+        "oklch": "oklch(36% 0.05 70)"
       },
       "muted": {
-        "hex": "#667085",
-        "oklch": "oklch(55% 0.035 260)"
+        "hex": "#776955",
+        "oklch": "oklch(50% 0.035 82)"
       },
       "inverse": {
-        "hex": "#ffffff",
-        "oklch": "oklch(100% 0 0)"
+        "hex": "#fff8ea",
+        "oklch": "oklch(98% 0.025 86)"
       }
     },
     "surface": {
       "canvas": {
-        "hex": "#f7f8fb",
-        "oklch": "oklch(98% 0.006 260)"
+        "hex": "#f7f1e3",
+        "oklch": "oklch(95% 0.03 86)"
       },
       "panel": {
-        "hex": "#ffffff",
-        "oklch": "oklch(100% 0 0)"
+        "hex": "#fff8ea",
+        "oklch": "oklch(98% 0.025 86)"
       },
       "raised": {
-        "hex": "#f2f4f7",
-        "oklch": "oklch(96% 0.008 260)"
+        "hex": "#f1e4cc",
+        "oklch": "oklch(91% 0.045 82)"
       },
       "inverse": {
-        "hex": "#111827",
-        "oklch": "oklch(21% 0.035 265)"
+        "hex": "#2f2418",
+        "oklch": "oklch(27% 0.04 70)"
       }
     },
     "line": {
       "subtle": {
-        "hex": "#d0d5dd",
-        "oklch": "oklch(86% 0.018 260)"
+        "hex": "#d8c8ac",
+        "oklch": "oklch(82% 0.045 82)"
       },
       "strong": {
-        "hex": "#98a2b3",
-        "oklch": "oklch(70% 0.03 260)"
+        "hex": "#b89a6a",
+        "oklch": "oklch(70% 0.08 76)"
       },
       "focus": {
-        "hex": "#2563eb",
-        "oklch": "oklch(54% 0.19 260)"
+        "hex": "#6d8fb7",
+        "oklch": "oklch(63% 0.08 250)"
       }
     },
     "accent": {
       "primary": {
-        "hex": "#2563eb",
-        "oklch": "oklch(54% 0.19 260)"
+        "hex": "#6d8fb7",
+        "oklch": "oklch(63% 0.08 250)"
       },
       "primaryStrong": {
-        "hex": "#1d4ed8",
-        "oklch": "oklch(48% 0.2 260)"
+        "hex": "#3f6286",
+        "oklch": "oklch(47% 0.08 250)"
       },
       "primarySoft": {
-        "hex": "#dbeafe",
-        "oklch": "oklch(92% 0.045 255)"
+        "hex": "#dce8f4",
+        "oklch": "oklch(92% 0.035 250)"
       },
       "success": {
-        "hex": "#0f766e",
-        "oklch": "oklch(48% 0.1 190)"
+        "hex": "#8ba489",
+        "oklch": "oklch(68% 0.055 140)"
       },
       "warning": {
-        "hex": "#b54708",
-        "oklch": "oklch(56% 0.14 55)"
+        "hex": "#e7c97a",
+        "oklch": "oklch(84% 0.1 86)"
       },
       "danger": {
-        "hex": "#b42318",
-        "oklch": "oklch(50% 0.17 30)"
+        "hex": "#8e2e3d",
+        "oklch": "oklch(43% 0.12 25)"
       }
     }
   },
@@ -96,12 +96,14 @@
     "none": "0",
     "sm": "0.25rem",
     "md": "0.5rem",
-    "lg": "0.75rem",
+    "lg": "0.5rem",
     "pill": "999px"
   },
   "font": {
     "family": {
       "sans": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      "serif": "Cardo, Georgia, \"Times New Roman\", ui-serif, serif",
+      "display": "Cinzel, Cardo, Georgia, \"Times New Roman\", ui-serif, serif",
       "mono": "\"JetBrains Mono\", \"SFMono-Regular\", Consolas, monospace"
     },
     "size": {
@@ -124,9 +126,9 @@
     }
   },
   "shadow": {
-    "focus": "0 0 0 3px rgba(37, 99, 235, 0.28)",
-    "sm": "0 1px 2px rgba(16, 24, 40, 0.08)",
-    "md": "0 8px 24px rgba(16, 24, 40, 0.12)"
+    "focus": "0 0 0 3px rgba(109, 143, 183, 0.34)",
+    "sm": "0 1px 2px rgba(82, 59, 32, 0.1)",
+    "md": "0 10px 28px rgba(82, 59, 32, 0.14)"
   },
   "motion": {
     "fast": "120ms",

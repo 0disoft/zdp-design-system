@@ -20,15 +20,27 @@
   }
 
   .zdp-surface--panel {
-    background: var(--zdp-color-surface-panel);
+    background:
+      radial-gradient(circle at 18% 12%, var(--zdp-color-surface-raised), transparent 38%),
+      linear-gradient(180deg, var(--zdp-color-surface-panel), var(--zdp-color-surface-canvas));
+  }
+
+  :global([data-zdp-theme="dark"]) .zdp-surface--panel {
+    background:
+      radial-gradient(circle at 18% 12%, var(--zdp-color-accent-primary-soft), transparent 38%),
+      linear-gradient(180deg, var(--zdp-color-surface-panel), var(--zdp-color-surface-canvas));
   }
 
   .zdp-surface--raised {
-    background: var(--zdp-color-surface-raised);
+    background:
+      radial-gradient(circle at 80% 0%, var(--zdp-color-accent-warning), transparent 26%),
+      linear-gradient(180deg, var(--zdp-color-surface-raised), var(--zdp-color-surface-panel));
   }
 
   .zdp-surface--inverse {
-    background: var(--zdp-color-surface-inverse);
+    background:
+      radial-gradient(circle at 16% 12%, var(--zdp-color-accent-primary-soft), transparent 34%),
+      linear-gradient(180deg, var(--zdp-color-surface-inverse), var(--zdp-color-ink-strong));
     color: var(--zdp-color-ink-inverse);
   }
 

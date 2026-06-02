@@ -7,14 +7,15 @@
 <main class="storybook-preview zdp-surface-reset">
   <header class="storybook-preview__header">
     <div>
+      <p class="eyebrow">Sunlit parchment kit</p>
       <h1>ZDP Design System</h1>
-      <p>Tokens, surfaces, buttons, light and dark.</p>
+      <p>Bright town-square surfaces, soft heraldic color, and quiet working controls.</p>
     </div>
     <span>Storybook</span>
   </header>
 
   <div class="storybook-preview__grid" aria-label="Theme previews">
-    <section class="theme-panel" data-zdp-theme="light" aria-labelledby="storybook-light-title">
+    <section class="theme-panel theme-panel--light" data-zdp-theme="light" aria-labelledby="storybook-light-title">
       <div class="theme-panel__header">
         <h2 id="storybook-light-title">Light</h2>
         <span>OKLCH</span>
@@ -25,19 +26,19 @@
         <div class="swatches">
           <span class="swatch">
             <span class="swatch__paint swatch__paint--primary"></span>
-            <span class="swatch__label">Primary</span>
+            <span class="swatch__label">Dusty blue</span>
           </span>
           <span class="swatch">
             <span class="swatch__paint swatch__paint--success"></span>
-            <span class="swatch__label">Success</span>
+            <span class="swatch__label">Sage green</span>
           </span>
           <span class="swatch">
             <span class="swatch__paint swatch__paint--warning"></span>
-            <span class="swatch__label">Warning</span>
+            <span class="swatch__label">Sunlit gold</span>
           </span>
           <span class="swatch">
             <span class="swatch__paint swatch__paint--danger"></span>
-            <span class="swatch__label">Danger</span>
+            <span class="swatch__label">Burgundy</span>
           </span>
         </div>
       </section>
@@ -45,8 +46,8 @@
       <section class="preview-section" aria-labelledby="storybook-light-type">
         <h3 id="storybook-light-type">Type</h3>
         <p class="type-sample">
-          <strong>빠르게 만들고 오래 가져가기</strong>
-          <span>Readable body text with steady spacing and quiet contrast.</span>
+          <strong>마을 광장처럼 밝고 단단하게</strong>
+          <span>Readable serif text with warm contrast and enough air for product work.</span>
         </p>
       </section>
 
@@ -64,20 +65,20 @@
         <h3 id="storybook-light-surfaces">Surfaces</h3>
         <div class="surface-grid">
           <Surface tone="panel" padding="lg">
-            <span class="surface-kicker">Panel</span>
-            <strong>기본 작업 영역</strong>
-            <p>차분한 배경 위에서 내용과 액션이 먼저 보인다.</p>
+            <span class="surface-kicker">Parchment</span>
+            <strong>작업을 펼치는 자리</strong>
+            <p>밝은 종이감 위에 내용, 선택지, 다음 액션이 또렷하게 올라온다.</p>
           </Surface>
           <Surface tone="raised" padding="lg">
-            <span class="surface-kicker">Raised</span>
-            <strong>강조 영역</strong>
-            <p>목록, 설정, 선택 흐름에 맞는 밀도다.</p>
+            <span class="surface-kicker">Banner</span>
+            <strong>살짝 들어 올린 강조</strong>
+            <p>목록, 설정, 작은 알림이 과하게 튀지 않고 구분된다.</p>
           </Surface>
         </div>
       </section>
     </section>
 
-    <section class="theme-panel" data-zdp-theme="dark" aria-labelledby="storybook-dark-title">
+    <section class="theme-panel theme-panel--dark" data-zdp-theme="dark" aria-labelledby="storybook-dark-title">
       <div class="theme-panel__header">
         <h2 id="storybook-dark-title">Dark</h2>
         <span>OKLCH</span>
@@ -88,19 +89,19 @@
         <div class="swatches">
           <span class="swatch">
             <span class="swatch__paint swatch__paint--primary"></span>
-            <span class="swatch__label">Primary</span>
+            <span class="swatch__label">Moonlit blue</span>
           </span>
           <span class="swatch">
             <span class="swatch__paint swatch__paint--success"></span>
-            <span class="swatch__label">Success</span>
+            <span class="swatch__label">Sage green</span>
           </span>
           <span class="swatch">
             <span class="swatch__paint swatch__paint--warning"></span>
-            <span class="swatch__label">Warning</span>
+            <span class="swatch__label">Lantern gold</span>
           </span>
           <span class="swatch">
             <span class="swatch__paint swatch__paint--danger"></span>
-            <span class="swatch__label">Danger</span>
+            <span class="swatch__label">Terracotta</span>
           </span>
         </div>
       </section>
@@ -108,8 +109,8 @@
       <section class="preview-section" aria-labelledby="storybook-dark-type">
         <h3 id="storybook-dark-type">Type</h3>
         <p class="type-sample">
-          <strong>빠르게 만들고 오래 가져가기</strong>
-          <span>Readable body text with steady spacing and quiet contrast.</span>
+          <strong>밤에도 종이결은 남기기</strong>
+          <span>Dark mode keeps the same market palette without turning into a blue console.</span>
         </p>
       </section>
 
@@ -119,7 +120,7 @@
           <Button variant="primary">저장</Button>
           <Button variant="secondary">취소</Button>
           <Button variant="danger">삭제</Button>
-          <IconButton ariaLabel="추가" variant="solid">+</IconButton>
+          <IconButton ariaLabel="추가" variant="ghost">+</IconButton>
         </div>
       </section>
 
@@ -127,24 +128,33 @@
         <h3 id="storybook-dark-surfaces">Surfaces</h3>
         <div class="surface-grid">
           <Surface tone="panel" padding="lg">
-            <span class="surface-kicker">Panel</span>
-            <strong>기본 작업 영역</strong>
-            <p>차분한 배경 위에서 내용과 액션이 먼저 보인다.</p>
+            <span class="surface-kicker">Parchment</span>
+            <strong>어두운 배경의 작업지</strong>
+            <p>톤은 낮추되 버튼과 상태 색은 같은 계열로 이어진다.</p>
           </Surface>
           <Surface tone="raised" padding="lg">
-            <span class="surface-kicker">Raised</span>
-            <strong>강조 영역</strong>
-            <p>목록, 설정, 선택 흐름에 맞는 밀도다.</p>
+            <span class="surface-kicker">Banner</span>
+            <strong>중요한 조각만 살짝 앞으로</strong>
+            <p>짙은 잉크 위에서도 경계와 초점이 분명하다.</p>
           </Surface>
         </div>
       </section>
     </section>
   </div>
+
+  <section class="motif-strip" aria-label="Decorative motif samples">
+    <span class="motif-strip__line"></span>
+    <span class="motif-strip__mark">✦</span>
+    <span class="motif-strip__line"></span>
+  </section>
 </main>
 
 <style>
   .storybook-preview {
-    background: var(--zdp-color-surface-canvas);
+    background:
+      radial-gradient(circle at 16% 8%, var(--zdp-color-surface-raised), transparent 34%),
+      radial-gradient(circle at 82% 16%, var(--zdp-color-accent-warning), transparent 26%),
+      linear-gradient(180deg, var(--zdp-color-surface-panel), var(--zdp-color-surface-canvas));
     color: var(--zdp-color-ink-normal);
     display: grid;
     gap: var(--zdp-space-8);
@@ -159,25 +169,37 @@
     justify-content: space-between;
   }
 
+  .eyebrow {
+    color: var(--zdp-color-accent-danger);
+    font-size: var(--zdp-font-size-xs);
+    font-weight: var(--zdp-font-weight-bold);
+    letter-spacing: 0;
+    margin: 0 0 var(--zdp-space-2);
+    text-transform: uppercase;
+  }
+
   .storybook-preview__header h1 {
     color: var(--zdp-color-ink-strong);
+    font-family: var(--zdp-font-family-display);
     font-size: 3.5rem;
     font-weight: var(--zdp-font-weight-bold);
     line-height: 1;
     margin: 0;
   }
 
-  .storybook-preview__header p {
+  .storybook-preview__header p:not(.eyebrow) {
     color: var(--zdp-color-ink-muted);
-    font-size: var(--zdp-font-size-sm);
+    font-size: var(--zdp-font-size-md);
     margin: var(--zdp-space-3) 0 0;
+    max-width: 34rem;
   }
 
   .storybook-preview__header > span,
   .theme-panel__header span {
-    background: var(--zdp-color-accent-primary-soft);
+    background: var(--zdp-color-surface-raised);
+    border: 1px solid var(--zdp-color-line-subtle);
     border-radius: var(--zdp-radius-pill);
-    color: var(--zdp-color-accent-primary-strong);
+    color: var(--zdp-color-ink-muted);
     font-size: var(--zdp-font-size-xs);
     font-weight: var(--zdp-font-weight-semibold);
     padding: var(--zdp-space-1) var(--zdp-space-3);
@@ -190,9 +212,12 @@
   }
 
   .theme-panel {
-    background: var(--zdp-color-surface-canvas);
+    background:
+      radial-gradient(circle at 12% 8%, var(--zdp-color-surface-raised), transparent 34%),
+      linear-gradient(180deg, var(--zdp-color-surface-panel), var(--zdp-color-surface-canvas));
     border: 1px solid var(--zdp-color-line-subtle);
     border-radius: var(--zdp-radius-lg);
+    box-shadow: var(--zdp-shadow-md);
     color: var(--zdp-color-ink-normal);
     display: grid;
     gap: var(--zdp-space-6);
@@ -200,14 +225,26 @@
     padding: var(--zdp-space-6);
   }
 
+  .theme-panel--light {
+    border-color: var(--zdp-color-line-strong);
+  }
+
+  .theme-panel--dark {
+    background:
+      radial-gradient(circle at 12% 8%, var(--zdp-color-accent-primary-soft), transparent 34%),
+      linear-gradient(180deg, var(--zdp-color-surface-panel), var(--zdp-color-surface-canvas));
+  }
+
   .theme-panel__header {
     align-items: center;
     display: flex;
+    gap: var(--zdp-space-3);
     justify-content: space-between;
   }
 
   .theme-panel__header h2 {
     color: var(--zdp-color-ink-strong);
+    font-family: var(--zdp-font-family-display);
     font-size: var(--zdp-font-size-xl);
     font-weight: var(--zdp-font-weight-bold);
     margin: 0;
@@ -234,9 +271,10 @@
   }
 
   .swatch {
+    background: var(--zdp-color-surface-panel);
     border: 1px solid var(--zdp-color-line-subtle);
     border-radius: var(--zdp-radius-md);
-    min-height: 4.25rem;
+    min-height: 4.5rem;
     overflow: hidden;
   }
 
@@ -262,11 +300,15 @@
   }
 
   .swatch__label {
-    background: var(--zdp-color-surface-panel);
     color: var(--zdp-color-ink-muted);
     display: block;
     font-size: var(--zdp-font-size-xs);
     padding: var(--zdp-space-2);
+  }
+
+  [data-zdp-theme="dark"] .swatch__label {
+    background: var(--zdp-color-surface-inverse);
+    color: var(--zdp-color-ink-inverse);
   }
 
   .type-sample {
@@ -277,6 +319,7 @@
 
   .type-sample strong {
     color: var(--zdp-color-ink-strong);
+    font-family: var(--zdp-font-family-display);
     font-size: var(--zdp-font-size-xl);
     line-height: var(--zdp-font-line-height-tight);
   }
@@ -303,7 +346,7 @@
   }
 
   .surface-kicker {
-    color: var(--zdp-color-ink-muted);
+    color: var(--zdp-color-accent-danger);
     display: block;
     font-size: var(--zdp-font-size-xs);
     font-weight: var(--zdp-font-weight-semibold);
@@ -314,6 +357,26 @@
     color: inherit;
     font-size: var(--zdp-font-size-sm);
     margin: var(--zdp-space-2) 0 0;
+  }
+
+  .motif-strip {
+    align-items: center;
+    color: var(--zdp-color-line-strong);
+    display: grid;
+    gap: var(--zdp-space-3);
+    grid-template-columns: 1fr auto 1fr;
+  }
+
+  .motif-strip__line {
+    background: currentcolor;
+    display: block;
+    height: 1px;
+  }
+
+  .motif-strip__mark {
+    color: var(--zdp-color-accent-warning);
+    font-size: var(--zdp-font-size-xl);
+    line-height: 1;
   }
 
   @media (max-width: 860px) {
