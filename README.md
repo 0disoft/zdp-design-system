@@ -69,61 +69,91 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
     Callout,
     Checkbox,
     Dialog,
+    Divider,
     Field,
     HelpText,
     Input,
+    Inline,
     Label,
+    Link,
+    SkipLink,
+    Stack,
     Surface,
     Switch,
-    Tabs
+    Tabs,
+    VisuallyHidden
   } from 'zdp-design-system';
+
+  let dialogOpen = false;
 </script>
 
 <Surface>
-  <Breadcrumb
-    ariaLabel="현재 위치"
-    items={[
-      { label: '홈', href: '/' },
-      { label: '플랫폼', href: '/platform' },
-      { label: '디자인 시스템' }
-    ]}
-  />
-  <Badge tone="success">정상</Badge>
-  <Callout tone="info" semanticRole="note">
-    <strong>다음 단계가 준비됐습니다.</strong>
-    <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
-  </Callout>
-  <Tabs
-    ariaLabel="프로젝트 섹션"
-    items={[
-      { id: 'overview', label: '개요' },
-      { id: 'history', label: '기록' }
-    ]}
-    selectedId="overview"
-    let:selectedId
-  >
-    <p>{selectedId === 'history' ? '변경 기록입니다.' : '프로젝트 개요입니다.'}</p>
-  </Tabs>
-  <Field>
-    <Label forId="project-name">프로젝트</Label>
-    <Input id="project-name" name="project-name" describedBy="project-name-help" />
-    <HelpText id="project-name-help">공개 표기에 사용됩니다.</HelpText>
-  </Field>
-  <Checkbox name="release-updates" checked>업데이트 받기</Checkbox>
-  <Switch name="autosave" checked>자동 저장</Switch>
-  <Button>저장</Button>
-  <Dialog
-    open={false}
-    labelledBy="project-dialog-title"
-    describedBy="project-dialog-desc"
-  >
-    <h2 slot="title" id="project-dialog-title">변경 내용을 저장할까요?</h2>
-    <p id="project-dialog-desc">저장하면 공개 표기에 바로 반영됩니다.</p>
-  </Dialog>
+  <SkipLink href="#content">본문으로 건너뛰기</SkipLink>
+  <Stack gap="md">
+    <Breadcrumb
+      ariaLabel="현재 위치"
+      items={[
+        { label: '홈', href: '/' },
+        { label: '플랫폼', href: '/platform' },
+        { label: '디자인 시스템' }
+      ]}
+    />
+    <Badge tone="success">정상</Badge>
+    <Link href="/design">자세히 보기</Link>
+    <Callout tone="info" semanticRole="note">
+      <strong>다음 단계가 준비됐습니다.</strong>
+      <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
+    </Callout>
+    <Divider />
+    <Tabs
+      ariaLabel="프로젝트 섹션"
+      items={[
+        { id: 'overview', label: '개요' },
+        { id: 'history', label: '기록' }
+      ]}
+      selectedId="overview"
+      let:selectedId
+    >
+      <p>{selectedId === 'history' ? '변경 기록입니다.' : '프로젝트 개요입니다.'}</p>
+    </Tabs>
+    <Field>
+      <Label forId="project-name">프로젝트</Label>
+      <Input id="project-name" name="project-name" describedBy="project-name-help" />
+      <HelpText id="project-name-help">공개 표기에 사용됩니다.</HelpText>
+    </Field>
+    <Field>
+      <Label forId="project-id">고정 ID</Label>
+      <Input id="project-id" name="project-id" value="ZDP-2401" describedBy="project-id-help" readonly />
+      <HelpText id="project-id-help">이미 발급된 값은 그대로 둡니다.</HelpText>
+    </Field>
+    <Checkbox name="release-updates" checked>업데이트 받기</Checkbox>
+    <Switch name="autosave" checked>자동 저장</Switch>
+    <Inline gap="sm">
+      <Button onclick={() => (dialogOpen = true)} ariaControls="project-dialog" ariaExpanded={dialogOpen}>저장</Button>
+      <Button variant="secondary">
+        <VisuallyHidden>새 항목 </VisuallyHidden>추가
+      </Button>
+    </Inline>
+    <Dialog
+      open={dialogOpen}
+      id="project-dialog"
+      labelledBy="project-dialog-title"
+      describedBy="project-dialog-desc"
+      onClose={() => (dialogOpen = false)}
+    >
+      <h2 slot="title" id="project-dialog-title">변경 내용을 저장할까요?</h2>
+      <p id="project-dialog-desc">저장하면 공개 표기에 바로 반영됩니다.</p>
+      <svelte:fragment slot="footer">
+        <Button variant="secondary" onclick={() => (dialogOpen = false)}>취소</Button>
+        <Button onclick={() => (dialogOpen = false)}>저장</Button>
+      </svelte:fragment>
+    </Dialog>
+  </Stack>
 </Surface>
 ```
 
 Astro는 `styles.css`를 전역으로 쓰고, Svelte island가 필요한 부분에서 같은 Svelte 컴포넌트를 소비한다. Flutter는 Svelte 컴포넌트를 직접 쓰지 않고 `tokens/zdp.tokens.json`을 Dart theme adapter의 입력으로 사용한다.
+정적 HTML 소비처는 `.zdp-stack`과 `.zdp-stack--gap-*` utility로 같은 세로 간격 계약을 적용하고, `.zdp-inline`과 `.zdp-inline--gap-*` utility로 가까운 가로 흐름을 맞출 수 있다. 얇은 구분선은 `.zdp-divider`와 `.zdp-divider--horizontal` utility로 받되, 페이지 간격은 소비처가 정한다.
 
 소비 저장소별 적용 순서와 금지 경계는 `docs/CONSUMER_CONTRACT.md`를 기준으로 맞춘다. Astro, Svelte, Tauri, Flutter 소비처는 public export와 token name을 유지하고 내부 `src/` deep import를 만들지 않는다.
 
@@ -136,7 +166,7 @@ bun install
 bun run dev
 ```
 
-Storybook은 Svelte/Vite 기반이며 `Design System/Overview` story에서 light/dark 테마, 색상, 타이포그래피, 버튼, 아이콘 버튼, form, surface 상태를 함께 확인한다.
+Storybook은 Svelte/Vite 기반이며 `Design System/Overview` story에서 light/dark 테마, 색상, 타이포그래피, 버튼, 아이콘 버튼, form, surface 상태를 함께 확인한다. 개별 피드백은 `Design System/Components/Button`, `Design System/Components/Form Controls`, `Design System/Components/Navigation`, `Design System/Components/Feedback`, `Design System/Components/Interaction` story에서 상태별로 좁혀 확인한다.
 Workduck의 개발 서버 터미널은 `bun run dev`를, 빌드 터미널은 `bun run build`를 표준 진입점으로 사용한다. `bun run storybook`과 `bun run storybook:build`는 같은 명령을 가리키는 별칭이다.
 정적 HTML이 필요할 때는 fallback으로 `preview/index.html`을 그대로 열 수 있다.
 
@@ -172,11 +202,16 @@ preview/index.html
 - Button과 IconButton hover는 light/dark 모두 배경색과 border 색이 함께 변한다.
 - 버튼 active도 위치 이동이나 그림자 없이 배경색, 테두리색, 글자색만 바꾼다.
 - focus는 그림자가 아니라 `focus.surface` outline, `focus.line` border, 링크의 하단선으로 표시한다.
-- Button, IconButton, Badge, Callout, Breadcrumb, Tabs, Field, Label, Input, Textarea, Select, Checkbox, Radio, Switch, HelpText, ErrorText, Surface, preview panel은 `0.375rem` radius를 기준으로 보고 pill 형태를 쓰지 않는다.
+- Button, IconButton, Badge, Callout, Link, SkipLink, Breadcrumb, Tabs, Field, Label, Input, Textarea, Select, Checkbox, Radio, Switch, HelpText, ErrorText, Surface, preview panel은 `0.375rem` radius를 기준으로 보고 pill 형태를 쓰지 않는다.
 - Button과 IconButton은 `2px` border width를 기준으로 하는 framed control 방향을 유지한다.
+- Button과 IconButton은 `onclick`, `ariaControls`, `ariaExpanded`, `ariaPressed`, `ariaDescribedBy` 같은 실제 앱 액션 연결 props를 native button에 전달한다.
 - Input, Textarea, Select는 Button과 같은 framed control 방향을 쓰고, help/error text는 id와 `aria-describedby`로 연결한다.
+- Input과 Textarea의 `readonly` 상태는 제출과 포커스를 유지하는 읽기 전용 값에 사용하고, `disabled` 상태와 혼동하지 않는다.
 - Checkbox, Radio, Switch는 native input을 유지하고 `checked`, `focus-visible`, `disabled`, `invalid` 상태를 토큰으로 표현한다.
 - Badge와 Callout은 짧은 상태와 페이지 안 피드백을 표현하되 제품 판단 로직을 갖지 않는다.
+- Link는 일반 텍스트 이동을 표현하되 라우팅, SEO, 권한, 데이터 로딩 결정을 갖지 않는다.
+- SkipLink는 키보드 사용자가 반복되는 상단 탐색을 건너뛰도록 돕되 페이지 레이아웃, 라우팅, 본문 id 소유는 소비 앱에 남긴다.
+- VisuallyHidden은 스크린리더 전용 보조 텍스트 숨김만 제공하며 라벨 문구, 번역, 권한, 데이터 판단은 소비 앱에 남긴다.
 - Breadcrumb는 현재 위치를 `nav`, `ol`, `aria-current="page"`로 표현하되 라우팅, SEO, 권한, 데이터 로딩 결정을 갖지 않는다.
 - Tabs는 가까운 정보 묶음 전환을 표현하되 라우팅, 권한, 데이터 로딩 결정을 갖지 않는다.
 - Dialog는 모달 레이어, backdrop, 닫기, focus trap, `role="dialog"`와 `aria-modal` 구조만 제공하고 저장/삭제/권한/결제 판단은 소비 앱에 남긴다.

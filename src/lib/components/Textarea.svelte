@@ -6,6 +6,7 @@
   export let describedBy: string | null = null;
   export let invalid = false;
   export let disabled = false;
+  export let readonly = false;
   export let required = false;
   export let rows = 4;
 
@@ -23,6 +24,7 @@
   aria-describedby={describedBy ?? undefined}
   aria-invalid={invalid ? 'true' : undefined}
   {disabled}
+  readonly={readonly}
   {required}
   {rows}
   oninput={handleInput}
@@ -65,6 +67,15 @@
 
   .zdp-textarea[aria-invalid="true"] {
     border-color: var(--zdp-color-accent-danger);
+  }
+
+  .zdp-textarea[readonly] {
+    background: var(--zdp-color-surface-raised);
+    color: var(--zdp-color-ink-normal);
+  }
+
+  .zdp-textarea[readonly]:hover {
+    background: var(--zdp-color-surface-raised);
   }
 
   .zdp-textarea:disabled {

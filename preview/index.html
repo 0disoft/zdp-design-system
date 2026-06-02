@@ -43,7 +43,7 @@
         font-family: var(--zdp-font-family-display);
         font-size: 3.5rem;
         font-weight: var(--zdp-font-weight-bold);
-        line-height: 1;
+        line-height: var(--zdp-type-title-line-height);
         margin: 0;
       }
 
@@ -147,9 +147,7 @@
       }
 
       .sample-stack {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--zdp-space-3);
+        max-width: 100%;
       }
 
       .type-sample {
@@ -195,9 +193,7 @@
       }
 
       .badge-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--zdp-space-2);
+        max-width: 100%;
       }
 
       .dialog-demo {
@@ -350,6 +346,7 @@
     </style>
   </head>
   <body>
+    <a class="zdp-skip-link" href="#foundation-tokens">본문으로 건너뛰기</a>
     <main class="preview-shell zdp-surface-reset">
       <header class="preview-header">
         <div>
@@ -394,14 +391,14 @@
             <p class="type-sample">
               <strong>마을 광장처럼 밝고 단단하게</strong>
               <span>Pretendard-first multiscript text with warm contrast and enough air for product work.</span>
-              <a href="#foundation-tokens">자세히 보기</a>
+              <a class="zdp-link" href="#foundation-tokens">자세히 보기</a>
             </p>
           </section>
 
           <section class="preview-section" aria-labelledby="light-focus-title">
             <h3 class="preview-section__title" id="light-focus-title">Focus</h3>
             <div class="focus-demo">
-              <a href="#foundation-tokens">출시 노트 보기</a>
+              <a class="zdp-link" href="#foundation-tokens">출시 노트 보기</a>
               <label class="focus-demo__field" for="light-focus-search">
                 <span class="focus-demo__label">검색</span>
                 <input id="light-focus-search" type="search" placeholder="Search Design System" />
@@ -411,9 +408,11 @@
 
           <section class="preview-section" aria-labelledby="light-actions-title">
             <h3 class="preview-section__title" id="light-actions-title">Actions</h3>
-            <div class="sample-stack">
+            <div class="sample-stack zdp-inline zdp-inline--gap-sm zdp-inline--align-center">
               <button class="zdp-button zdp-button--primary zdp-button--md">저장</button>
-              <button class="zdp-button zdp-button--secondary zdp-button--md">취소</button>
+              <button class="zdp-button zdp-button--secondary zdp-button--md">
+                <span class="zdp-visually-hidden">작업 </span>취소
+              </button>
               <button class="zdp-button zdp-button--danger zdp-button--md">삭제</button>
               <button class="zdp-icon-button zdp-icon-button--solid zdp-icon-button--md" aria-label="추가">
                 <span class="zdp-icon-button__glyph" aria-hidden="true">+</span>
@@ -442,8 +441,8 @@
 
           <section class="preview-section" aria-labelledby="light-feedback-title">
             <h3 class="preview-section__title" id="light-feedback-title">Feedback</h3>
-            <div class="feedback-stack">
-              <div class="badge-row" aria-label="Status badges">
+            <div class="feedback-stack zdp-stack zdp-stack--gap-md zdp-stack--align-start">
+              <div class="badge-row zdp-inline zdp-inline--gap-sm zdp-inline--align-center" aria-label="Status badges">
                 <span class="zdp-badge zdp-badge--primary zdp-badge--md">검토 중</span>
                 <span class="zdp-badge zdp-badge--success zdp-badge--md">정상</span>
                 <span class="zdp-badge zdp-badge--warning zdp-badge--md">대기</span>
@@ -456,6 +455,7 @@
                   <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
                 </div>
               </section>
+              <div class="zdp-divider zdp-divider--horizontal zdp-divider--subtle" aria-hidden="true"></div>
               <section class="zdp-callout zdp-callout--danger" aria-labelledby="light-callout-danger" role="alert">
                 <span class="zdp-callout__mark" aria-hidden="true"></span>
                 <div class="zdp-callout__body">
@@ -562,6 +562,19 @@
                   required
                 />
                 <p class="zdp-help-text" id="light-name-help">공개 표기와 알림에 사용됩니다.</p>
+              </div>
+              <div class="zdp-field zdp-field--md">
+                <label class="zdp-label" for="light-id">고정 ID</label>
+                <input
+                  class="zdp-input"
+                  id="light-id"
+                  name="light-id"
+                  type="text"
+                  value="ZDP-2401"
+                  aria-describedby="light-id-help"
+                  readonly
+                />
+                <p class="zdp-help-text" id="light-id-help">이미 발급된 값은 그대로 둡니다.</p>
               </div>
               <div class="zdp-field zdp-field--md" data-invalid="true">
                 <label class="zdp-label" for="light-status">상태</label>
@@ -705,14 +718,14 @@
             <p class="type-sample">
               <strong>밤에도 종이결은 남기기</strong>
               <span>Dark mode keeps the same market palette without turning into a blue console.</span>
-              <a href="#foundation-tokens">자세히 보기</a>
+              <a class="zdp-link" href="#foundation-tokens">자세히 보기</a>
             </p>
           </section>
 
           <section class="preview-section" aria-labelledby="dark-focus-title">
             <h3 class="preview-section__title" id="dark-focus-title">Focus</h3>
             <div class="focus-demo">
-              <a href="#foundation-tokens">업데이트 보기</a>
+              <a class="zdp-link" href="#foundation-tokens">업데이트 보기</a>
               <label class="focus-demo__field" for="dark-focus-search">
                 <span class="focus-demo__label">검색</span>
                 <input id="dark-focus-search" type="search" placeholder="Search Design System" />
@@ -722,9 +735,11 @@
 
           <section class="preview-section" aria-labelledby="dark-actions-title">
             <h3 class="preview-section__title" id="dark-actions-title">Actions</h3>
-            <div class="sample-stack">
+            <div class="sample-stack zdp-inline zdp-inline--gap-sm zdp-inline--align-center">
               <button class="zdp-button zdp-button--primary zdp-button--md">저장</button>
-              <button class="zdp-button zdp-button--secondary zdp-button--md">취소</button>
+              <button class="zdp-button zdp-button--secondary zdp-button--md">
+                <span class="zdp-visually-hidden">작업 </span>취소
+              </button>
               <button class="zdp-button zdp-button--danger zdp-button--md">삭제</button>
               <button class="zdp-icon-button zdp-icon-button--ghost zdp-icon-button--md" aria-label="추가">
                 <span class="zdp-icon-button__glyph" aria-hidden="true">+</span>
@@ -753,8 +768,8 @@
 
           <section class="preview-section" aria-labelledby="dark-feedback-title">
             <h3 class="preview-section__title" id="dark-feedback-title">Feedback</h3>
-            <div class="feedback-stack">
-              <div class="badge-row" aria-label="Status badges">
+            <div class="feedback-stack zdp-stack zdp-stack--gap-md zdp-stack--align-start">
+              <div class="badge-row zdp-inline zdp-inline--gap-sm zdp-inline--align-center" aria-label="Status badges">
                 <span class="zdp-badge zdp-badge--primary zdp-badge--md">검토 중</span>
                 <span class="zdp-badge zdp-badge--success zdp-badge--md">정상</span>
                 <span class="zdp-badge zdp-badge--warning zdp-badge--md">대기</span>
@@ -767,6 +782,7 @@
                   <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
                 </div>
               </section>
+              <div class="zdp-divider zdp-divider--horizontal zdp-divider--subtle" aria-hidden="true"></div>
               <section class="zdp-callout zdp-callout--danger" aria-labelledby="dark-callout-danger" role="alert">
                 <span class="zdp-callout__mark" aria-hidden="true"></span>
                 <div class="zdp-callout__body">
@@ -873,6 +889,19 @@
                   required
                 />
                 <p class="zdp-help-text" id="dark-name-help">공개 표기와 알림에 사용됩니다.</p>
+              </div>
+              <div class="zdp-field zdp-field--md">
+                <label class="zdp-label" for="dark-id">고정 ID</label>
+                <input
+                  class="zdp-input"
+                  id="dark-id"
+                  name="dark-id"
+                  type="text"
+                  value="ZDP-2401"
+                  aria-describedby="dark-id-help"
+                  readonly
+                />
+                <p class="zdp-help-text" id="dark-id-help">이미 발급된 값은 그대로 둡니다.</p>
               </div>
               <div class="zdp-field zdp-field--md" data-invalid="true">
                 <label class="zdp-label" for="dark-status">상태</label>

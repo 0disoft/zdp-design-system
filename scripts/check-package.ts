@@ -20,19 +20,30 @@ const componentPaths = [
   'src/lib/components/Callout.svelte',
   'src/lib/components/Checkbox.svelte',
   'src/lib/components/Dialog.svelte',
+  'src/lib/components/Divider.svelte',
   'src/lib/components/ErrorText.svelte',
   'src/lib/components/Field.svelte',
   'src/lib/components/HelpText.svelte',
   'src/lib/components/IconButton.svelte',
+  'src/lib/components/Inline.svelte',
   'src/lib/components/Input.svelte',
   'src/lib/components/Label.svelte',
+  'src/lib/components/Link.svelte',
   'src/lib/components/Radio.svelte',
   'src/lib/components/Select.svelte',
+  'src/lib/components/SkipLink.svelte',
+  'src/lib/components/Stack.svelte',
   'src/lib/components/Surface.svelte',
   'src/lib/components/Switch.svelte',
   'src/lib/components/Tabs.svelte',
   'src/lib/components/Textarea.svelte',
-  'stories/DesignSystemOverview.svelte'
+  'src/lib/components/VisuallyHidden.svelte',
+  'stories/Buttons.svelte',
+  'stories/DesignSystemOverview.svelte',
+  'stories/Feedback.svelte',
+  'stories/Forms.svelte',
+  'stories/Interaction.svelte',
+  'stories/Navigation.svelte'
 ] as const;
 const expectedRootExport = './src/lib/index.ts';
 const expectedSubpathExports = {

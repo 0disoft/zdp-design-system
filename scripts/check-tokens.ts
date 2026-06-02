@@ -52,8 +52,8 @@ const tokenVariables = collectCssVariableNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
 
-if (packageJson.version !== '0.15.0') {
-  failures.push('package.json version must be 0.15.0 for the breadcrumb component package surface.');
+if (packageJson.version !== '0.22.0') {
+  failures.push('package.json version must be 0.22.0 for the readonly form control package surface.');
 }
 
 if (tokenDocument.version !== '0.5.0') {
@@ -91,18 +91,24 @@ for (const component of [
   'Callout',
   'Checkbox',
   'Dialog',
+  'Divider',
   'ErrorText',
   'Field',
   'HelpText',
   'IconButton',
+  'Inline',
   'Input',
   'Label',
+  'Link',
   'Radio',
   'Select',
+  'SkipLink',
+  'Stack',
   'Surface',
   'Switch',
   'Tabs',
-  'Textarea'
+  'Textarea',
+  'VisuallyHidden'
 ]) {
   if (!publicEntry.includes(`export { default as ${component} }`)) {
     failures.push(`Missing public export for ${component}.`);

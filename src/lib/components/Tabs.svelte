@@ -133,15 +133,18 @@
   }
 
   .zdp-tabs__tab {
+    align-items: center;
     background: transparent;
     border: 0;
     border-bottom: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius) var(--zdp-control-radius) 0 0;
     color: var(--zdp-color-ink-muted);
     cursor: pointer;
+    display: inline-flex;
     font-family: var(--zdp-font-family-sans);
     font-size: var(--zdp-type-control-size);
     font-weight: var(--zdp-font-weight-medium);
+    justify-content: center;
     line-height: var(--zdp-type-control-line-height);
     min-height: var(--zdp-control-height-md);
     padding: 0 var(--zdp-space-3);

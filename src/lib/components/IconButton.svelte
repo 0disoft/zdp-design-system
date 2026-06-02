@@ -5,14 +5,32 @@
   export let size: 'sm' | 'md' = 'md';
   export let type: 'button' | 'submit' | 'reset' = 'button';
   export let disabled = false;
+  export let id: string | null = null;
+  export let name: string | null = null;
+  export let value: string | null = null;
+  export let form: string | null = null;
+  export let ariaControls: string | null = null;
+  export let ariaDescribedBy: string | null = null;
+  export let ariaExpanded: boolean | null = null;
+  export let ariaPressed: boolean | null = null;
+  export let onclick: ((event: MouseEvent) => void) | null = null;
 </script>
 
 <button
   class={`zdp-icon-button zdp-icon-button--${variant} zdp-icon-button--${size}`}
+  {id}
+  {name}
+  {value}
+  {form}
   aria-label={ariaLabel}
   title={title ?? ariaLabel}
   {type}
   {disabled}
+  aria-controls={ariaControls ?? undefined}
+  aria-describedby={ariaDescribedBy ?? undefined}
+  aria-expanded={ariaExpanded ?? undefined}
+  aria-pressed={ariaPressed ?? undefined}
+  onclick={onclick ?? undefined}
 >
   <span class="zdp-icon-button__glyph" aria-hidden="true">
     <slot />
@@ -26,6 +44,8 @@
     border-radius: var(--zdp-control-radius);
     cursor: pointer;
     display: inline-flex;
+    font-family: var(--zdp-font-family-sans);
+    font-weight: var(--zdp-font-weight-regular);
     justify-content: center;
     transition:
       background-color var(--zdp-motion-fast) ease,

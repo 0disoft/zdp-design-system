@@ -2,6 +2,7 @@
   import { tick } from 'svelte';
 
   export let open = false;
+  export let id: string | null = null;
   export let labelledBy: string;
   export let describedBy: string | null = null;
   export let size: 'sm' | 'md' | 'lg' = 'md';
@@ -119,6 +120,7 @@
     ></button>
     <div
       class={`zdp-dialog__panel zdp-dialog__panel--${size}`}
+      id={id ?? undefined}
       bind:this={panelElement}
       role="dialog"
       aria-modal="true"

@@ -5,22 +5,30 @@
   import Callout from '../src/lib/components/Callout.svelte';
   import Checkbox from '../src/lib/components/Checkbox.svelte';
   import Dialog from '../src/lib/components/Dialog.svelte';
+  import Divider from '../src/lib/components/Divider.svelte';
   import ErrorText from '../src/lib/components/ErrorText.svelte';
   import Field from '../src/lib/components/Field.svelte';
   import HelpText from '../src/lib/components/HelpText.svelte';
   import IconButton from '../src/lib/components/IconButton.svelte';
+  import Inline from '../src/lib/components/Inline.svelte';
   import Input from '../src/lib/components/Input.svelte';
   import Label from '../src/lib/components/Label.svelte';
+  import Link from '../src/lib/components/Link.svelte';
   import Radio from '../src/lib/components/Radio.svelte';
   import Select from '../src/lib/components/Select.svelte';
+  import SkipLink from '../src/lib/components/SkipLink.svelte';
+  import Stack from '../src/lib/components/Stack.svelte';
   import Surface from '../src/lib/components/Surface.svelte';
   import Switch from '../src/lib/components/Switch.svelte';
   import Tabs from '../src/lib/components/Tabs.svelte';
   import Textarea from '../src/lib/components/Textarea.svelte';
+  import VisuallyHidden from '../src/lib/components/VisuallyHidden.svelte';
 
   let lightDialogOpen = false;
   let darkDialogOpen = false;
 </script>
+
+<SkipLink href="#foundation-tokens">본문으로 건너뛰기</SkipLink>
 
 <main class="storybook-preview zdp-surface-reset" lang="ko">
   <header class="storybook-preview__header">
@@ -66,14 +74,14 @@
         <p class="type-sample">
           <strong>마을 광장처럼 밝고 단단하게</strong>
           <span>Pretendard-first multiscript text with warm contrast and enough air for product work.</span>
-          <a href="#foundation-tokens">자세히 보기</a>
+          <Link href="#foundation-tokens">자세히 보기</Link>
         </p>
       </section>
 
       <section class="preview-section" aria-labelledby="storybook-light-focus">
         <h3 id="storybook-light-focus">Focus</h3>
         <div class="focus-demo">
-          <a href="#foundation-tokens">출시 노트 보기</a>
+          <Link href="#foundation-tokens">출시 노트 보기</Link>
           <label class="focus-demo__field" for="storybook-light-focus-search">
             <span>검색</span>
             <input id="storybook-light-focus-search" type="search" placeholder="Search Design System" />
@@ -83,12 +91,12 @@
 
       <section class="preview-section" aria-labelledby="storybook-light-actions">
         <h3 id="storybook-light-actions">Actions</h3>
-        <div class="action-row">
+        <Inline gap="sm" align="center">
           <Button variant="primary">저장</Button>
-          <Button variant="secondary">취소</Button>
+          <Button variant="secondary"><VisuallyHidden>작업 </VisuallyHidden>취소</Button>
           <Button variant="danger">삭제</Button>
           <IconButton ariaLabel="추가" variant="solid">+</IconButton>
-        </div>
+        </Inline>
       </section>
 
       <section class="preview-section" aria-labelledby="storybook-light-breadcrumb">
@@ -106,35 +114,40 @@
       <section class="preview-section" aria-labelledby="storybook-light-feedback">
         <h3 id="storybook-light-feedback">Feedback</h3>
         <div class="feedback-stack">
-          <div class="badge-row" aria-label="Status badges">
-            <Badge tone="primary">검토 중</Badge>
-            <Badge tone="success">정상</Badge>
-            <Badge tone="warning">대기</Badge>
-            <Badge tone="danger">주의</Badge>
-          </div>
-          <Callout tone="info" labelledBy="storybook-light-callout-info" semanticRole="note">
-            <strong id="storybook-light-callout-info">다음 단계가 준비됐습니다.</strong>
-            <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
-          </Callout>
-          <Callout tone="danger" labelledBy="storybook-light-callout-danger" semanticRole="alert">
-            <strong id="storybook-light-callout-danger">삭제 전에 다시 확인하세요.</strong>
-            <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
-          </Callout>
+          <Stack gap="md" align="start">
+            <Inline as="section" gap="sm" align="center" labelledBy="storybook-light-feedback">
+              <Badge tone="primary">검토 중</Badge>
+              <Badge tone="success">정상</Badge>
+              <Badge tone="warning">대기</Badge>
+              <Badge tone="danger">주의</Badge>
+            </Inline>
+            <Callout tone="info" labelledBy="storybook-light-callout-info" semanticRole="note">
+              <strong id="storybook-light-callout-info">다음 단계가 준비됐습니다.</strong>
+              <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
+            </Callout>
+            <Divider />
+            <Callout tone="danger" labelledBy="storybook-light-callout-danger" semanticRole="alert">
+              <strong id="storybook-light-callout-danger">삭제 전에 다시 확인하세요.</strong>
+              <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
+            </Callout>
+          </Stack>
         </div>
       </section>
 
       <section class="preview-section" aria-labelledby="storybook-light-dialog">
         <h3 id="storybook-light-dialog">Dialog</h3>
         <div class="dialog-demo">
-          <button
-            class="zdp-button zdp-button--secondary zdp-button--md"
-            type="button"
+          <Button
+            variant="secondary"
             onclick={() => (lightDialogOpen = true)}
-          >검토 열기</button>
+            ariaControls="storybook-light-dialog-panel"
+            ariaExpanded={lightDialogOpen}
+          >검토 열기</Button>
           <p>중요한 확인은 같은 화면 위에서 짧고 분명하게 처리한다.</p>
         </div>
         <Dialog
           open={lightDialogOpen}
+          id="storybook-light-dialog-panel"
           labelledBy="storybook-light-dialog-title"
           describedBy="storybook-light-dialog-desc"
           onClose={() => (lightDialogOpen = false)}
@@ -142,8 +155,8 @@
           <h4 slot="title" id="storybook-light-dialog-title">변경 내용을 저장할까요?</h4>
           <p id="storybook-light-dialog-desc">저장하면 연결된 화면의 공개 표기가 함께 바뀝니다.</p>
           <div slot="footer" class="action-row">
-            <button class="zdp-button zdp-button--secondary zdp-button--md" type="button" onclick={() => (lightDialogOpen = false)}>취소</button>
-            <button class="zdp-button zdp-button--primary zdp-button--md" type="button" onclick={() => (lightDialogOpen = false)}>저장</button>
+            <Button variant="secondary" onclick={() => (lightDialogOpen = false)}>취소</Button>
+            <Button variant="primary" onclick={() => (lightDialogOpen = false)}>저장</Button>
           </div>
         </Dialog>
       </section>
@@ -178,6 +191,17 @@
               required
             />
             <HelpText id="storybook-light-name-help">공개 표기와 알림에 사용됩니다.</HelpText>
+          </Field>
+          <Field>
+            <Label forId="storybook-light-id">고정 ID</Label>
+            <Input
+              id="storybook-light-id"
+              name="light-id"
+              value="ZDP-2401"
+              describedBy="storybook-light-id-help"
+              readonly
+            />
+            <HelpText id="storybook-light-id-help">이미 발급된 값은 그대로 둡니다.</HelpText>
           </Field>
           <Field invalid>
             <Label forId="storybook-light-status">상태</Label>
@@ -294,14 +318,14 @@
         <p class="type-sample">
           <strong>밤에도 종이결은 남기기</strong>
           <span>Dark mode keeps the same market palette without turning into a blue console.</span>
-          <a href="#foundation-tokens">자세히 보기</a>
+          <Link href="#foundation-tokens">자세히 보기</Link>
         </p>
       </section>
 
       <section class="preview-section" aria-labelledby="storybook-dark-focus">
         <h3 id="storybook-dark-focus">Focus</h3>
         <div class="focus-demo">
-          <a href="#foundation-tokens">업데이트 보기</a>
+          <Link href="#foundation-tokens">업데이트 보기</Link>
           <label class="focus-demo__field" for="storybook-dark-focus-search">
             <span>검색</span>
             <input id="storybook-dark-focus-search" type="search" placeholder="Search Design System" />
@@ -311,12 +335,12 @@
 
       <section class="preview-section" aria-labelledby="storybook-dark-actions">
         <h3 id="storybook-dark-actions">Actions</h3>
-        <div class="action-row">
+        <Inline gap="sm" align="center">
           <Button variant="primary">저장</Button>
-          <Button variant="secondary">취소</Button>
+          <Button variant="secondary"><VisuallyHidden>작업 </VisuallyHidden>취소</Button>
           <Button variant="danger">삭제</Button>
           <IconButton ariaLabel="추가" variant="ghost">+</IconButton>
-        </div>
+        </Inline>
       </section>
 
       <section class="preview-section" aria-labelledby="storybook-dark-breadcrumb">
@@ -334,35 +358,40 @@
       <section class="preview-section" aria-labelledby="storybook-dark-feedback">
         <h3 id="storybook-dark-feedback">Feedback</h3>
         <div class="feedback-stack">
-          <div class="badge-row" aria-label="Status badges">
-            <Badge tone="primary">검토 중</Badge>
-            <Badge tone="success">정상</Badge>
-            <Badge tone="warning">대기</Badge>
-            <Badge tone="danger">주의</Badge>
-          </div>
-          <Callout tone="info" labelledBy="storybook-dark-callout-info" semanticRole="note">
-            <strong id="storybook-dark-callout-info">다음 단계가 준비됐습니다.</strong>
-            <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
-          </Callout>
-          <Callout tone="danger" labelledBy="storybook-dark-callout-danger" semanticRole="alert">
-            <strong id="storybook-dark-callout-danger">삭제 전에 다시 확인하세요.</strong>
-            <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
-          </Callout>
+          <Stack gap="md" align="start">
+            <Inline as="section" gap="sm" align="center" labelledBy="storybook-dark-feedback">
+              <Badge tone="primary">검토 중</Badge>
+              <Badge tone="success">정상</Badge>
+              <Badge tone="warning">대기</Badge>
+              <Badge tone="danger">주의</Badge>
+            </Inline>
+            <Callout tone="info" labelledBy="storybook-dark-callout-info" semanticRole="note">
+              <strong id="storybook-dark-callout-info">다음 단계가 준비됐습니다.</strong>
+              <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
+            </Callout>
+            <Divider />
+            <Callout tone="danger" labelledBy="storybook-dark-callout-danger" semanticRole="alert">
+              <strong id="storybook-dark-callout-danger">삭제 전에 다시 확인하세요.</strong>
+              <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
+            </Callout>
+          </Stack>
         </div>
       </section>
 
       <section class="preview-section" aria-labelledby="storybook-dark-dialog">
         <h3 id="storybook-dark-dialog">Dialog</h3>
         <div class="dialog-demo">
-          <button
-            class="zdp-button zdp-button--secondary zdp-button--md"
-            type="button"
+          <Button
+            variant="secondary"
             onclick={() => (darkDialogOpen = true)}
-          >검토 열기</button>
+            ariaControls="storybook-dark-dialog-panel"
+            ariaExpanded={darkDialogOpen}
+          >검토 열기</Button>
           <p>어두운 표면에서도 focus와 닫기 동작은 같은 규칙을 따른다.</p>
         </div>
         <Dialog
           open={darkDialogOpen}
+          id="storybook-dark-dialog-panel"
           labelledBy="storybook-dark-dialog-title"
           describedBy="storybook-dark-dialog-desc"
           onClose={() => (darkDialogOpen = false)}
@@ -370,8 +399,8 @@
           <h4 slot="title" id="storybook-dark-dialog-title">삭제 전에 확인하세요.</h4>
           <p id="storybook-dark-dialog-desc">이 작업은 제품 저장소의 별도 확인 흐름과 함께 사용합니다.</p>
           <div slot="footer" class="action-row">
-            <button class="zdp-button zdp-button--secondary zdp-button--md" type="button" onclick={() => (darkDialogOpen = false)}>취소</button>
-            <button class="zdp-button zdp-button--danger zdp-button--md" type="button" onclick={() => (darkDialogOpen = false)}>삭제</button>
+            <Button variant="secondary" onclick={() => (darkDialogOpen = false)}>취소</Button>
+            <Button variant="danger" onclick={() => (darkDialogOpen = false)}>삭제</Button>
           </div>
         </Dialog>
       </section>
@@ -406,6 +435,17 @@
               required
             />
             <HelpText id="storybook-dark-name-help">공개 표기와 알림에 사용됩니다.</HelpText>
+          </Field>
+          <Field>
+            <Label forId="storybook-dark-id">고정 ID</Label>
+            <Input
+              id="storybook-dark-id"
+              name="dark-id"
+              value="ZDP-2401"
+              describedBy="storybook-dark-id-help"
+              readonly
+            />
+            <HelpText id="storybook-dark-id-help">이미 발급된 값은 그대로 둡니다.</HelpText>
           </Field>
           <Field invalid>
             <Label forId="storybook-dark-status">상태</Label>
@@ -547,7 +587,7 @@
     font-family: var(--zdp-font-family-display);
     font-size: 3.5rem;
     font-weight: var(--zdp-font-weight-bold);
-    line-height: 1;
+    line-height: var(--zdp-type-title-line-height);
     margin: 0;
   }
 
@@ -717,12 +757,6 @@
     display: grid;
     gap: var(--zdp-space-3);
     max-width: 34rem;
-  }
-
-  .badge-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--zdp-space-2);
   }
 
   .dialog-demo {

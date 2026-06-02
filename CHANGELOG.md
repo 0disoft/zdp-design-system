@@ -1,5 +1,54 @@
 # Changelog
 
+## 0.22.0
+
+- Added readonly state support to `Input` and `Textarea`.
+- Added static readonly styling for `.zdp-input[readonly]` and `.zdp-textarea[readonly]`.
+- Updated Storybook, preview, and contract checks so readonly controls stay focusable, flat, and visually distinct from disabled controls.
+- Added focused Storybook stories for Button/IconButton states and form control states.
+- Added focused Storybook stories for navigation and feedback surfaces.
+- Added a focused Storybook story for Tabs and Dialog interaction states.
+- Centered tab labels with explicit inline-flex alignment so tab controls keep stable vertical and horizontal placement.
+- Added native action and aria linkage props to Button, IconButton, and Dialog examples so consumers can wire interaction state without raw button class fallbacks.
+- Strengthened Button and IconButton stories so action handlers, described-by status text, expanded state, and pressed state stay covered by Storybook contract checks.
+- Relaxed Storybook and preview heading line-height to the shared title token so large labels avoid vertical clipping.
+
+## 0.21.0
+
+- Added `Divider` for shared flat separators without page-layout ownership.
+- Added static `.zdp-divider` utility classes for Astro and non-Svelte consumers.
+- Strengthened package, Storybook, preview, and consumer contract checks so Divider stays exported, documented, compiled, semantic when needed, and free of decorative effects.
+
+## 0.20.0
+
+- Added `Inline` for shared horizontal wrapping flow without product-specific layout decisions.
+- Added static `.zdp-inline` utility classes for Astro and non-Svelte consumers.
+- Strengthened package, Storybook, preview, and consumer contract checks so Inline stays exported, documented, compiled, and free of decorative effects.
+
+## 0.19.0
+
+- Added `Stack` for shared vertical spacing without product-specific layout decisions.
+- Added static `.zdp-stack` utility classes for Astro and non-Svelte consumers.
+- Strengthened package, Storybook, preview, and consumer contract checks so Stack stays exported, documented, compiled, and free of decorative effects.
+
+## 0.18.0
+
+- Added `VisuallyHidden` for shared screen-reader-only text without product-specific CSS copies.
+- Added static `.zdp-visually-hidden` utility coverage for Astro and non-Svelte consumers.
+- Strengthened package, token, Storybook, preview, and consumer contract checks so hidden accessible text stays exported, compiled, documented, and free of decorative effects.
+
+## 0.17.0
+
+- Added `SkipLink` for shared keyboard-first page bypass navigation with sunlit focus highlighting.
+- Added SkipLink examples to Storybook and the static preview.
+- Strengthened package, token, Storybook, preview, and consumer contract checks so skip links stay exported, compiled, documented, and free of decorative effects.
+
+## 0.16.0
+
+- Added `Link` for shared text navigation with hover color changes and sunlit focus highlighting.
+- Added light and dark link examples to Storybook and the static preview.
+- Strengthened package, token, Storybook, preview, and consumer contract checks so link stays exported, compiled, documented, and free of decorative effects.
+
 ## 0.15.0
 
 - Added `Breadcrumb` for accessible page-location trails with `nav`, ordered list markup, link items, separators, and `aria-current="page"`.

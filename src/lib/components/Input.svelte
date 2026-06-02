@@ -8,6 +8,7 @@
   export let describedBy: string | null = null;
   export let invalid = false;
   export let disabled = false;
+  export let readonly = false;
   export let required = false;
 
   function handleInput(event: Event): void {
@@ -26,6 +27,7 @@
   aria-describedby={describedBy ?? undefined}
   aria-invalid={invalid ? 'true' : undefined}
   {disabled}
+  readonly={readonly}
   {required}
   oninput={handleInput}
 />
@@ -66,6 +68,15 @@
 
   .zdp-input[aria-invalid="true"] {
     border-color: var(--zdp-color-accent-danger);
+  }
+
+  .zdp-input[readonly] {
+    background: var(--zdp-color-surface-raised);
+    color: var(--zdp-color-ink-normal);
+  }
+
+  .zdp-input[readonly]:hover {
+    background: var(--zdp-color-surface-raised);
   }
 
   .zdp-input:disabled {

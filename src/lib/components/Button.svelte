@@ -3,13 +3,31 @@
   export let size: 'sm' | 'md' = 'md';
   export let type: 'button' | 'submit' | 'reset' = 'button';
   export let disabled = false;
+  export let id: string | null = null;
+  export let name: string | null = null;
+  export let value: string | null = null;
+  export let form: string | null = null;
+  export let ariaControls: string | null = null;
+  export let ariaDescribedBy: string | null = null;
+  export let ariaExpanded: boolean | null = null;
+  export let ariaPressed: boolean | null = null;
+  export let onclick: ((event: MouseEvent) => void) | null = null;
 </script>
 
 <button
   class={`zdp-button zdp-button--${variant} zdp-button--${size}`}
+  {id}
+  {name}
+  {value}
+  {form}
   {type}
   {disabled}
   aria-disabled={disabled}
+  aria-controls={ariaControls ?? undefined}
+  aria-describedby={ariaDescribedBy ?? undefined}
+  aria-expanded={ariaExpanded ?? undefined}
+  aria-pressed={ariaPressed ?? undefined}
+  onclick={onclick ?? undefined}
 >
   <slot />
 </button>
@@ -22,7 +40,7 @@
     cursor: pointer;
     display: inline-flex;
     font-family: var(--zdp-font-family-sans);
-    font-weight: var(--zdp-font-weight-medium);
+    font-weight: var(--zdp-font-weight-regular);
     gap: var(--zdp-space-2);
     justify-content: center;
     font-size: var(--zdp-type-control-size);

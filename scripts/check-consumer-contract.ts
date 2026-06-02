@@ -38,8 +38,8 @@ if (failures.length > 0) {
 }
 
 function checkPackageSurface(packageJson: PackageJson): void {
-  if (packageJson.version !== '0.15.0') {
-    failures.push('package.json version must be 0.15.0 for the breadcrumb component package surface.');
+  if (packageJson.version !== '0.22.0') {
+    failures.push('package.json version must be 0.22.0 for the readonly form control package surface.');
   }
 
   if (!packageJson.files?.includes('docs/')) {
@@ -63,8 +63,18 @@ function checkConsumerContractDocument(documentText: string): void {
     "from 'zdp-design-system'",
     'Breadcrumb',
     'Dialog',
+    'Divider',
+    'Inline',
+    'Link',
+    'SkipLink',
+    'Stack',
+    'VisuallyHidden',
     'tokens/zdp.tokens.json',
     '.zdp-surface-reset',
+    '.zdp-visually-hidden',
+    '.zdp-stack',
+    '.zdp-inline',
+    '.zdp-divider',
     'Astro',
     'Svelte',
     'Tauri',
@@ -73,6 +83,12 @@ function checkConsumerContractDocument(documentText: string): void {
     'oklch',
     'focus.surface',
     'control.heightMd',
+    'readonly',
+    'onclick',
+    'ariaControls',
+    'ariaExpanded',
+    'ariaPressed',
+    'ariaDescribedBy',
     'aria-current="page"',
     'focus trap',
     'keyboard focus',
@@ -93,6 +109,13 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     "import 'zdp-design-system/locale-fonts.css';",
     'tokens/zdp.tokens.json',
     'Breadcrumb는 현재 위치',
+    'Button과 IconButton은 `onclick`',
+    'Link는 일반 텍스트',
+    'SkipLink는 키보드',
+    'VisuallyHidden은 스크린리더',
+    'Stack',
+    'Inline',
+    'Divider',
     'Dialog는 모달 레이어',
     'Astro는 `styles.css`',
     'Flutter는 Svelte 컴포넌트를 직접 쓰지 않고'
@@ -107,6 +130,13 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'public export',
     '내부 `src/` deep import',
     'Breadcrumb는 `nav`',
+    'Button과 IconButton은 `onclick`',
+    'Link는 일반 텍스트',
+    'SkipLink는 반복 탐색',
+    'VisuallyHidden은 스크린리더',
+    'Stack은 가까운 요소',
+    'Inline은 가까운 버튼',
+    'Divider는 가까운 내용',
     'Dialog는 `role="dialog"`',
     '대표 소비처'
   ]) {
@@ -145,11 +175,17 @@ function checkTokenAndComponentSurface(tokenDocument: string, publicEntry: strin
     'export { default as Button }',
     'export { default as Breadcrumb }',
     'export { default as Dialog }',
+    'export { default as Divider }',
     'export { default as Field }',
     'export { default as Input }',
     'export { default as Label }',
+    'export { default as Inline }',
+    'export { default as Link }',
+    'export { default as SkipLink }',
+    'export { default as Stack }',
     'export { default as Surface }',
     'export { default as Tabs }',
+    'export { default as VisuallyHidden }',
     'export { zdpTokenNames }'
   ]) {
     if (!publicEntry.includes(requiredText)) {
