@@ -52,8 +52,8 @@ const tokenVariables = collectCssVariableNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
 
-if (packageJson.version !== '0.12.0') {
-  failures.push('package.json version must be 0.12.0 for the tabs component package contract.');
+if (packageJson.version !== '0.13.0') {
+  failures.push('package.json version must be 0.13.0 for the consumer contract package surface.');
 }
 
 if (tokenDocument.version !== '0.5.0') {

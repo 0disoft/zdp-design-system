@@ -41,6 +41,7 @@ ZDP의 디자인 토큰, CSS, 아이콘, Svelte UI 컴포넌트 경계를 고정
 - `AGENTS.md`
 - `CONTRIBUTING.md`
 - `CHANGELOG.md`
+- `docs/CONSUMER_CONTRACT.md`
 
 ## 패키지 표면
 
@@ -105,6 +106,8 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
 ```
 
 Astro는 `styles.css`를 전역으로 쓰고, Svelte island가 필요한 부분에서 같은 Svelte 컴포넌트를 소비한다. Flutter는 Svelte 컴포넌트를 직접 쓰지 않고 `tokens/zdp.tokens.json`을 Dart theme adapter의 입력으로 사용한다.
+
+소비 저장소별 적용 순서와 금지 경계는 `docs/CONSUMER_CONTRACT.md`를 기준으로 맞춘다. Astro, Svelte, Tauri, Flutter 소비처는 public export와 token name을 유지하고 내부 `src/` deep import를 만들지 않는다.
 
 ## Storybook
 

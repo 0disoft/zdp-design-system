@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.13.0
+
+- Added `docs/CONSUMER_CONTRACT.md` to pin Astro, Svelte, Tauri, Flutter, and native token consumption boundaries.
+- Added `consumer:check` so package metadata, README, contributing rules, service policy, token JSON, and public component exports stay aligned with the consumer contract.
+- Included `docs/` in the package file surface so the consumer contract ships with reviewed package artifacts.
+
 ## 0.12.0
 
 - Added `Tabs` for accessible in-page section switching with keyboard arrow, Home, and End navigation.

@@ -38,7 +38,7 @@ const expectedSubpathExports = {
   './locale-fonts.css': './src/styles/locale-fonts.css',
   './tokens': './tokens/zdp.tokens.json'
 } as const;
-const expectedPackageFiles = ['src/', 'tokens/', 'README.md', 'CHANGELOG.md'] as const;
+const expectedPackageFiles = ['src/', 'tokens/', 'docs/', 'README.md', 'CHANGELOG.md'] as const;
 const expectedSideEffects = [
   './src/styles/index.css',
   './src/styles/locale-fonts.css',
@@ -46,6 +46,7 @@ const expectedSideEffects = [
   './src/styles/components.css'
 ] as const;
 const expectedScripts = {
+  'consumer:check': 'bun scripts/check-consumer-contract.ts',
   'package:check': 'bun scripts/check-package.ts'
 } as const;
 const failures: string[] = [];
@@ -71,6 +72,10 @@ function checkPackageScripts(packageJson: PackageJson): void {
 
   if (!packageJson.scripts?.check?.includes('bun scripts/check-package.ts')) {
     failures.push('package.json check script must include package artifact validation.');
+  }
+
+  if (!packageJson.scripts?.check?.includes('bun scripts/check-consumer-contract.ts')) {
+    failures.push('package.json check script must include consumer contract validation.');
   }
 }
 

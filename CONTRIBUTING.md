@@ -13,6 +13,9 @@
 - sans/display 폰트 스택은 `"Pretendard Variable", Pretendard`를 우선하고, CSS는 Pretendard Variable dynamic subset 로드를 유지한다.
 - `font.family.latin`, `font.family.korean`, `font.family.chinese`, `font.family.devanagari`, `font.family.multiscript`는 `:lang()` CSS 계약과 함께 변경한다.
 - 선택형 `locale-fonts.css` public export를 바꾸면 `package.json` export, sideEffects, README, token/preview/storybook check를 함께 맞춘다.
+- 소비 저장소 적용 방식은 `docs/CONSUMER_CONTRACT.md`와 함께 변경한다.
+- Astro, Svelte, Tauri, Flutter 소비처는 public export만 사용하게 하고 내부 `src/` deep import를 문서나 예제로 만들지 않는다.
+- 새 디자인 시스템 버전은 대표 소비처에서 build와 시각 QA를 확인한 뒤 broad adoption한다.
 - `success`, `warning`, `danger` 상태 색은 각각 긍정/완료, 주의/보류, 삭제/오류/위험 의미로 유지한다.
 - `focus.surface`, `focus.text`, `focus.line`은 keyboard focus 전용 기능 색으로 유지하고 일반 hover, 브랜드 장식, 상태 색으로 재사용하지 않는다.
 - 카드, 버튼, 아이콘 버튼, preview 패널은 그림자와 그라데이션 없이 surface 색상, framed border, typography, spacing으로만 위계를 만든다.
