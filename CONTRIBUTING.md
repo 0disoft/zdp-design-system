@@ -40,6 +40,11 @@
 - SkipLink는 평소 숨겨져 있다가 `focus-visible`에서만 sunlit gold 배경과 어두운 2px framed border로 표시한다.
 - VisuallyHidden은 스크린리더 전용 보조 텍스트 숨김만 담당하며 라벨 문구, 번역, 권한, 데이터 판단을 직접 수행하지 않는다.
 - VisuallyHidden은 레이아웃, 그림자, 색상, 그라데이션, hover 상태를 만들지 않는다.
+- Page는 shared page root, surface reset, theme tone만 담당하며 라우팅, SEO, 데이터, 권한, 제품별 visibility 판단을 직접 수행하지 않는다.
+- Container는 페이지 폭, inline padding, centered width만 담당하며 그리드 의미, 라우팅, 데이터, 권한, 제품별 visibility 판단을 직접 수행하지 않는다.
+- Section은 섹션 block rhythm과 optional full-width band만 담당하며 카드, 라우팅, 데이터, 권한, 제품별 visibility 판단을 직접 수행하지 않는다.
+- PageHeader는 제목, 요약, 액션 배치만 담당하며 문구, SEO heading hierarchy, 라우팅, 데이터, 권한 판단을 직접 수행하지 않는다.
+- Page, Container, Section, PageHeader와 `.zdp-page`, `.zdp-container`, `.zdp-section`, `.zdp-page-header`는 그림자, 그라데이션, hover 상태를 만들지 않고 spacing, width, border, typography 계약만 유지한다.
 - Stack은 가까운 요소의 세로 흐름과 간격만 담당하며 페이지 그리드, 라우팅, 데이터, 권한, 제품별 visibility 판단을 직접 수행하지 않는다.
 - Stack과 `.zdp-stack`은 색상, 그림자, 그라데이션, hover 상태를 만들지 않고 `gap`, `align-items`, `min-width` 계약만 유지한다.
 - Inline은 가까운 버튼, 배지, 링크, 작은 액션의 가로 흐름과 wrapping만 담당하며 페이지 그리드, 라우팅, 데이터, 권한, 제품별 visibility 판단을 직접 수행하지 않는다.

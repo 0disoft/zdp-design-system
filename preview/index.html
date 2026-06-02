@@ -60,6 +60,26 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
+      .layout-preview {
+        border: 1px solid var(--zdp-color-line-subtle);
+      }
+
+      .layout-preview__eyebrow {
+        color: var(--zdp-color-accent-danger);
+        font-size: var(--zdp-type-label-size);
+        font-weight: var(--zdp-font-weight-medium);
+        line-height: var(--zdp-type-label-line-height);
+        text-transform: uppercase;
+      }
+
+      .layout-preview h2 {
+        color: var(--zdp-color-ink-strong);
+        font-family: var(--zdp-font-family-display);
+        font-size: var(--zdp-type-title-size);
+        line-height: var(--zdp-type-title-line-height);
+        margin: 0;
+      }
+
       .theme-panel {
         background: var(--zdp-color-surface-panel);
         border: 1px solid var(--zdp-color-line-subtle);
@@ -347,7 +367,7 @@
   </head>
   <body>
     <a class="zdp-skip-link" href="#foundation-tokens">본문으로 건너뛰기</a>
-    <main class="preview-shell zdp-surface-reset">
+    <main class="preview-shell zdp-page zdp-page--canvas zdp-surface-reset">
       <header class="preview-header">
         <div>
           <p class="preview-eyebrow">Sunlit parchment kit</p>
@@ -356,6 +376,26 @@
         </div>
         <a class="zdp-button zdp-button--secondary zdp-button--md" href="../README.md">README</a>
       </header>
+
+      <section class="zdp-section zdp-section--spacing-lg zdp-section--panel layout-preview" aria-labelledby="layout-preview-title">
+        <div class="zdp-container zdp-container--lg zdp-container--padding-lg">
+          <header class="zdp-page-header zdp-page-header--align-center" aria-labelledby="layout-preview-title">
+            <div class="zdp-page-header__body">
+              <span class="layout-preview__eyebrow">Layout</span>
+              <div class="zdp-page-header__title">
+                <h2 id="layout-preview-title">화면의 첫 장면</h2>
+              </div>
+              <div class="zdp-page-header__summary">
+                <p>페이지 폭과 섹션 리듬은 조용하게 맞추고, 제품의 결정은 각 저장소에 남긴다.</p>
+              </div>
+            </div>
+            <div class="zdp-page-header__actions">
+              <button class="zdp-button zdp-button--primary zdp-button--md" type="button">시작</button>
+              <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">기록</button>
+            </div>
+          </header>
+        </div>
+      </section>
 
       <div class="preview-stage" aria-label="Theme previews">
         <section class="theme-panel" data-zdp-theme="light" aria-labelledby="light-theme-title">

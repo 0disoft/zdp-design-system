@@ -19,6 +19,7 @@ const componentPaths = [
   'src/lib/components/Button.svelte',
   'src/lib/components/Callout.svelte',
   'src/lib/components/Checkbox.svelte',
+  'src/lib/components/Container.svelte',
   'src/lib/components/Dialog.svelte',
   'src/lib/components/Divider.svelte',
   'src/lib/components/ErrorText.svelte',
@@ -29,7 +30,10 @@ const componentPaths = [
   'src/lib/components/Input.svelte',
   'src/lib/components/Label.svelte',
   'src/lib/components/Link.svelte',
+  'src/lib/components/Page.svelte',
+  'src/lib/components/PageHeader.svelte',
   'src/lib/components/Radio.svelte',
+  'src/lib/components/Section.svelte',
   'src/lib/components/Select.svelte',
   'src/lib/components/SkipLink.svelte',
   'src/lib/components/Stack.svelte',
@@ -43,6 +47,7 @@ const componentPaths = [
   'stories/Feedback.svelte',
   'stories/Forms.svelte',
   'stories/Interaction.svelte',
+  'stories/Layout.svelte',
   'stories/Navigation.svelte'
 ] as const;
 const expectedRootExport = './src/lib/index.ts';

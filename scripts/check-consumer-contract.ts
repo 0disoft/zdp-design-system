@@ -38,8 +38,8 @@ if (failures.length > 0) {
 }
 
 function checkPackageSurface(packageJson: PackageJson): void {
-  if (packageJson.version !== '0.22.0') {
-    failures.push('package.json version must be 0.22.0 for the readonly form control package surface.');
+  if (packageJson.version !== '0.23.0') {
+    failures.push('package.json version must be 0.23.0 for the layout primitive package surface.');
   }
 
   if (!packageJson.files?.includes('docs/')) {
@@ -62,15 +62,23 @@ function checkConsumerContractDocument(documentText: string): void {
     "import 'zdp-design-system/locale-fonts.css';",
     "from 'zdp-design-system'",
     'Breadcrumb',
+    'Container',
     'Dialog',
     'Divider',
     'Inline',
     'Link',
+    'Page',
+    'PageHeader',
+    'Section',
     'SkipLink',
     'Stack',
     'VisuallyHidden',
     'tokens/zdp.tokens.json',
     '.zdp-surface-reset',
+    '.zdp-page',
+    '.zdp-container',
+    '.zdp-section',
+    '.zdp-page-header',
     '.zdp-visually-hidden',
     '.zdp-stack',
     '.zdp-inline',
@@ -117,6 +125,7 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'Inline',
     'Divider',
     'Dialog는 모달 레이어',
+    'Page, Container, Section, PageHeader는 페이지 폭',
     'Astro는 `styles.css`',
     'Flutter는 Svelte 컴포넌트를 직접 쓰지 않고'
   ]) {
@@ -138,6 +147,10 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'Inline은 가까운 버튼',
     'Divider는 가까운 내용',
     'Dialog는 `role="dialog"`',
+    'Page는 shared page root',
+    'Container는 페이지 폭',
+    'Section은 섹션 block rhythm',
+    'PageHeader는 제목',
     '대표 소비처'
   ]) {
     if (!contributing.includes(requiredText)) {
@@ -174,6 +187,7 @@ function checkTokenAndComponentSurface(tokenDocument: string, publicEntry: strin
   for (const requiredText of [
     'export { default as Button }',
     'export { default as Breadcrumb }',
+    'export { default as Container }',
     'export { default as Dialog }',
     'export { default as Divider }',
     'export { default as Field }',
@@ -181,6 +195,9 @@ function checkTokenAndComponentSurface(tokenDocument: string, publicEntry: strin
     'export { default as Label }',
     'export { default as Inline }',
     'export { default as Link }',
+    'export { default as Page }',
+    'export { default as PageHeader }',
+    'export { default as Section }',
     'export { default as SkipLink }',
     'export { default as Stack }',
     'export { default as Surface }',

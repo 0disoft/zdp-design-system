@@ -68,6 +68,7 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
     Button,
     Callout,
     Checkbox,
+    Container,
     Dialog,
     Divider,
     Field,
@@ -76,8 +77,11 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
     Inline,
     Label,
     Link,
+    Page,
+    PageHeader,
     SkipLink,
     Stack,
+    Section,
     Surface,
     Switch,
     Tabs,
@@ -87,9 +91,19 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
   let dialogOpen = false;
 </script>
 
-<Surface>
+<Page labelledBy="design-system-title">
   <SkipLink href="#content">본문으로 건너뛰기</SkipLink>
-  <Stack gap="md">
+  <Section spacing="lg">
+    <Container size="lg" padding="lg">
+      <PageHeader labelledBy="design-system-title">
+        <span slot="eyebrow">플랫폼</span>
+        <h1 id="design-system-title">디자인 시스템</h1>
+        <p slot="summary">공개 화면과 작업 화면이 같은 기준 위에서 움직입니다.</p>
+      </PageHeader>
+    </Container>
+  </Section>
+  <Container as="section" id="content" size="lg" padding="lg">
+    <Stack gap="md">
     <Breadcrumb
       ariaLabel="현재 위치"
       items={[
@@ -148,12 +162,13 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
         <Button onclick={() => (dialogOpen = false)}>저장</Button>
       </svelte:fragment>
     </Dialog>
-  </Stack>
-</Surface>
+    </Stack>
+  </Container>
+</Page>
 ```
 
 Astro는 `styles.css`를 전역으로 쓰고, Svelte island가 필요한 부분에서 같은 Svelte 컴포넌트를 소비한다. Flutter는 Svelte 컴포넌트를 직접 쓰지 않고 `tokens/zdp.tokens.json`을 Dart theme adapter의 입력으로 사용한다.
-정적 HTML 소비처는 `.zdp-stack`과 `.zdp-stack--gap-*` utility로 같은 세로 간격 계약을 적용하고, `.zdp-inline`과 `.zdp-inline--gap-*` utility로 가까운 가로 흐름을 맞출 수 있다. 얇은 구분선은 `.zdp-divider`와 `.zdp-divider--horizontal` utility로 받되, 페이지 간격은 소비처가 정한다.
+정적 HTML 소비처는 `.zdp-page`, `.zdp-container`, `.zdp-section`, `.zdp-page-header` utility로 기본 페이지 폭, 섹션 리듬, 헤더 액션 배치를 맞출 수 있다. 가까운 요소의 세로 흐름은 `.zdp-stack`과 `.zdp-stack--gap-*` utility로 적용하고, `.zdp-inline`과 `.zdp-inline--gap-*` utility로 가까운 가로 흐름을 맞출 수 있다. 얇은 구분선은 `.zdp-divider`와 `.zdp-divider--horizontal` utility로 받되, 제품별 라우팅, SEO, visibility, 데이터 판단은 소비처가 정한다.
 
 소비 저장소별 적용 순서와 금지 경계는 `docs/CONSUMER_CONTRACT.md`를 기준으로 맞춘다. Astro, Svelte, Tauri, Flutter 소비처는 public export와 token name을 유지하고 내부 `src/` deep import를 만들지 않는다.
 
@@ -202,7 +217,7 @@ preview/index.html
 - Button과 IconButton hover는 light/dark 모두 배경색과 border 색이 함께 변한다.
 - 버튼 active도 위치 이동이나 그림자 없이 배경색, 테두리색, 글자색만 바꾼다.
 - focus는 그림자가 아니라 `focus.surface` outline, `focus.line` border, 링크의 하단선으로 표시한다.
-- Button, IconButton, Badge, Callout, Link, SkipLink, Breadcrumb, Tabs, Field, Label, Input, Textarea, Select, Checkbox, Radio, Switch, HelpText, ErrorText, Surface, preview panel은 `0.375rem` radius를 기준으로 보고 pill 형태를 쓰지 않는다.
+- Button, IconButton, Badge, Callout, Link, SkipLink, Breadcrumb, Tabs, Field, Label, Input, Textarea, Select, Checkbox, Radio, Switch, HelpText, ErrorText, Surface, Page, Container, Section, PageHeader, preview panel은 `0.375rem` radius를 기준으로 보고 pill 형태를 쓰지 않는다.
 - Button과 IconButton은 `2px` border width를 기준으로 하는 framed control 방향을 유지한다.
 - Button과 IconButton은 `onclick`, `ariaControls`, `ariaExpanded`, `ariaPressed`, `ariaDescribedBy` 같은 실제 앱 액션 연결 props를 native button에 전달한다.
 - Input, Textarea, Select는 Button과 같은 framed control 방향을 쓰고, help/error text는 id와 `aria-describedby`로 연결한다.
@@ -212,6 +227,7 @@ preview/index.html
 - Link는 일반 텍스트 이동을 표현하되 라우팅, SEO, 권한, 데이터 로딩 결정을 갖지 않는다.
 - SkipLink는 키보드 사용자가 반복되는 상단 탐색을 건너뛰도록 돕되 페이지 레이아웃, 라우팅, 본문 id 소유는 소비 앱에 남긴다.
 - VisuallyHidden은 스크린리더 전용 보조 텍스트 숨김만 제공하며 라벨 문구, 번역, 권한, 데이터 판단은 소비 앱에 남긴다.
+- Page, Container, Section, PageHeader는 페이지 폭, 섹션 리듬, 헤더 액션 배치만 제공하며 라우팅, SEO, visibility, 데이터, 권한 판단은 소비 앱에 남긴다.
 - Breadcrumb는 현재 위치를 `nav`, `ol`, `aria-current="page"`로 표현하되 라우팅, SEO, 권한, 데이터 로딩 결정을 갖지 않는다.
 - Tabs는 가까운 정보 묶음 전환을 표현하되 라우팅, 권한, 데이터 로딩 결정을 갖지 않는다.
 - Dialog는 모달 레이어, backdrop, 닫기, focus trap, `role="dialog"`와 `aria-modal` 구조만 제공하고 저장/삭제/권한/결제 판단은 소비 앱에 남긴다.

@@ -4,6 +4,7 @@
   import Button from '../src/lib/components/Button.svelte';
   import Callout from '../src/lib/components/Callout.svelte';
   import Checkbox from '../src/lib/components/Checkbox.svelte';
+  import Container from '../src/lib/components/Container.svelte';
   import Dialog from '../src/lib/components/Dialog.svelte';
   import Divider from '../src/lib/components/Divider.svelte';
   import ErrorText from '../src/lib/components/ErrorText.svelte';
@@ -14,7 +15,10 @@
   import Input from '../src/lib/components/Input.svelte';
   import Label from '../src/lib/components/Label.svelte';
   import Link from '../src/lib/components/Link.svelte';
+  import Page from '../src/lib/components/Page.svelte';
+  import PageHeader from '../src/lib/components/PageHeader.svelte';
   import Radio from '../src/lib/components/Radio.svelte';
+  import Section from '../src/lib/components/Section.svelte';
   import Select from '../src/lib/components/Select.svelte';
   import SkipLink from '../src/lib/components/SkipLink.svelte';
   import Stack from '../src/lib/components/Stack.svelte';

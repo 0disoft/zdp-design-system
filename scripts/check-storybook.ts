@@ -23,6 +23,8 @@ const formsStoryPath = join(root, 'stories', 'Forms.stories.ts');
 const formsComponentPath = join(root, 'stories', 'Forms.svelte');
 const interactionStoryPath = join(root, 'stories', 'Interaction.stories.ts');
 const interactionComponentPath = join(root, 'stories', 'Interaction.svelte');
+const layoutStoryPath = join(root, 'stories', 'Layout.stories.ts');
+const layoutComponentPath = join(root, 'stories', 'Layout.svelte');
 const navigationStoryPath = join(root, 'stories', 'Navigation.stories.ts');
 const navigationComponentPath = join(root, 'stories', 'Navigation.svelte');
 const badgePath = join(root, 'src', 'lib', 'components', 'Badge.svelte');
@@ -30,13 +32,17 @@ const breadcrumbPath = join(root, 'src', 'lib', 'components', 'Breadcrumb.svelte
 const buttonPath = join(root, 'src', 'lib', 'components', 'Button.svelte');
 const calloutPath = join(root, 'src', 'lib', 'components', 'Callout.svelte');
 const checkboxPath = join(root, 'src', 'lib', 'components', 'Checkbox.svelte');
+const containerPath = join(root, 'src', 'lib', 'components', 'Container.svelte');
 const dialogPath = join(root, 'src', 'lib', 'components', 'Dialog.svelte');
 const dividerPath = join(root, 'src', 'lib', 'components', 'Divider.svelte');
 const fieldPath = join(root, 'src', 'lib', 'components', 'Field.svelte');
 const inputPath = join(root, 'src', 'lib', 'components', 'Input.svelte');
 const labelPath = join(root, 'src', 'lib', 'components', 'Label.svelte');
 const linkPath = join(root, 'src', 'lib', 'components', 'Link.svelte');
+const pagePath = join(root, 'src', 'lib', 'components', 'Page.svelte');
+const pageHeaderPath = join(root, 'src', 'lib', 'components', 'PageHeader.svelte');
 const radioPath = join(root, 'src', 'lib', 'components', 'Radio.svelte');
+const sectionPath = join(root, 'src', 'lib', 'components', 'Section.svelte');
 const selectPath = join(root, 'src', 'lib', 'components', 'Select.svelte');
 const skipLinkPath = join(root, 'src', 'lib', 'components', 'SkipLink.svelte');
 const stackPath = join(root, 'src', 'lib', 'components', 'Stack.svelte');
@@ -63,6 +69,8 @@ const [
   formsComponent,
   interactionStory,
   interactionComponent,
+  layoutStory,
+  layoutComponent,
   navigationStory,
   navigationComponent,
   badge,
@@ -70,13 +78,17 @@ const [
   button,
   callout,
   checkbox,
+  container,
   dialog,
   divider,
   field,
   input,
   label,
   link,
+  page,
+  pageHeader,
   radio,
+  section,
   select,
   skipLink,
   stack,
@@ -102,6 +114,8 @@ const [
     readFile(formsComponentPath, 'utf8'),
     readFile(interactionStoryPath, 'utf8'),
     readFile(interactionComponentPath, 'utf8'),
+    readFile(layoutStoryPath, 'utf8'),
+    readFile(layoutComponentPath, 'utf8'),
     readFile(navigationStoryPath, 'utf8'),
     readFile(navigationComponentPath, 'utf8'),
     readFile(badgePath, 'utf8'),
@@ -109,13 +123,17 @@ const [
     readFile(buttonPath, 'utf8'),
     readFile(calloutPath, 'utf8'),
     readFile(checkboxPath, 'utf8'),
+    readFile(containerPath, 'utf8'),
     readFile(dialogPath, 'utf8'),
     readFile(dividerPath, 'utf8'),
     readFile(fieldPath, 'utf8'),
     readFile(inputPath, 'utf8'),
     readFile(labelPath, 'utf8'),
     readFile(linkPath, 'utf8'),
+    readFile(pagePath, 'utf8'),
+    readFile(pageHeaderPath, 'utf8'),
     readFile(radioPath, 'utf8'),
+    readFile(sectionPath, 'utf8'),
     readFile(selectPath, 'utf8'),
     readFile(skipLinkPath, 'utf8'),
     readFile(stackPath, 'utf8'),
@@ -232,6 +250,16 @@ for (const [storyName, source, requiredTexts] of [
     ]
   ],
   [
+    'Layout story definition',
+    layoutStory,
+    [
+      "title: 'Design System/Components/Layout'",
+      'Layout',
+      "layout: 'fullscreen'",
+      'PageStructure'
+    ]
+  ],
+  [
     'Navigation story definition',
     navigationStory,
     [
@@ -255,6 +283,7 @@ for (const requiredText of [
   '../src/lib/components/Button.svelte',
   '../src/lib/components/Callout.svelte',
   '../src/lib/components/Checkbox.svelte',
+  '../src/lib/components/Container.svelte',
   '../src/lib/components/Dialog.svelte',
   '../src/lib/components/Divider.svelte',
   '../src/lib/components/ErrorText.svelte',
@@ -265,7 +294,10 @@ for (const requiredText of [
   '../src/lib/components/Input.svelte',
   '../src/lib/components/Label.svelte',
   '../src/lib/components/Link.svelte',
+  '../src/lib/components/Page.svelte',
+  '../src/lib/components/PageHeader.svelte',
   '../src/lib/components/Radio.svelte',
+  '../src/lib/components/Section.svelte',
   '../src/lib/components/Select.svelte',
   '../src/lib/components/SkipLink.svelte',
   '../src/lib/components/Stack.svelte',
@@ -449,6 +481,35 @@ for (const requiredText of [
 
 for (const requiredText of [
   '../src/lib/components/Button.svelte',
+  '../src/lib/components/Container.svelte',
+  '../src/lib/components/Inline.svelte',
+  '../src/lib/components/Page.svelte',
+  '../src/lib/components/PageHeader.svelte',
+  '../src/lib/components/Section.svelte',
+  '../src/lib/components/Stack.svelte',
+  '../src/lib/components/Surface.svelte',
+  '화면의 첫 장면',
+  '작업을 모으는 폭',
+  '읽기 좋은 본문 폭',
+  '<Page as="div" tone="canvas" labelledBy="layout-story-title">',
+  '<Section spacing="xl">',
+  '<Container size="lg" padding="lg">',
+  '<PageHeader labelledBy="layout-story-title" align="center">',
+  '<svelte:fragment slot="actions">',
+  'layout-story__grid',
+  'grid-template-columns: repeat(2, minmax(0, 1fr))',
+  'zdp-surface-reset'
+]) {
+  if (!layoutComponent.includes(requiredText)) {
+    failures.push(`Layout story surface is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Layout story surface', layoutComponent);
+assertNoOverRoundedUsage(failures, 'Layout story surface', layoutComponent);
+
+for (const requiredText of [
+  '../src/lib/components/Button.svelte',
   '../src/lib/components/Dialog.svelte',
   '../src/lib/components/Divider.svelte',
   '../src/lib/components/Inline.svelte',
@@ -616,6 +677,90 @@ for (const requiredText of [
 
 assertNoDecorativeEffects(failures, 'VisuallyHidden component', visuallyHidden);
 assertNoOverRoundedUsage(failures, 'VisuallyHidden component', visuallyHidden);
+
+for (const requiredText of [
+  '.zdp-page',
+  'as:',
+  'tone:',
+  'aria-labelledby={labelledBy ?? undefined}',
+  'zdp-surface-reset',
+  'display: grid',
+  'min-block-size: 100%',
+  '.zdp-page--canvas',
+  '.zdp-page--panel'
+]) {
+  if (!page.includes(requiredText)) {
+    failures.push(`Page component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Page component', page);
+assertNoOverRoundedUsage(failures, 'Page component', page);
+
+for (const requiredText of [
+  '.zdp-container',
+  'as:',
+  'size:',
+  'padding:',
+  'aria-labelledby={labelledBy ?? undefined}',
+  'inline-size: 100%',
+  'margin-inline: auto',
+  '.zdp-container--sm',
+  '.zdp-container--md',
+  '.zdp-container--lg',
+  '.zdp-container--xl',
+  '.zdp-container--full',
+  '.zdp-container--padding-lg'
+]) {
+  if (!container.includes(requiredText)) {
+    failures.push(`Container component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Container component', container);
+assertNoOverRoundedUsage(failures, 'Container component', container);
+
+for (const requiredText of [
+  '.zdp-section',
+  'as:',
+  'spacing:',
+  'tone:',
+  'aria-labelledby={labelledBy ?? undefined}',
+  '.zdp-section--spacing-lg',
+  '.zdp-section--spacing-xl',
+  '.zdp-section--plain',
+  '.zdp-section--panel',
+  '.zdp-section--raised',
+  'border-block: 1px solid var(--zdp-color-line-subtle)'
+]) {
+  if (!section.includes(requiredText)) {
+    failures.push(`Section component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Section component', section);
+assertNoOverRoundedUsage(failures, 'Section component', section);
+
+for (const requiredText of [
+  '.zdp-page-header',
+  'as:',
+  'align:',
+  'aria-labelledby={labelledBy ?? undefined}',
+  'slot name="eyebrow"',
+  'class="zdp-page-header__title"',
+  'slot name="summary"',
+  'class="zdp-page-header__actions"',
+  'grid-template-columns: minmax(0, 1fr) auto',
+  'flex-wrap: wrap',
+  '@media (max-width: 48rem)'
+]) {
+  if (!pageHeader.includes(requiredText)) {
+    failures.push(`PageHeader component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'PageHeader component', pageHeader);
+assertNoOverRoundedUsage(failures, 'PageHeader component', pageHeader);
 
 for (const requiredText of [
   '.zdp-stack',

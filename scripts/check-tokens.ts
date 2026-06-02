@@ -52,8 +52,8 @@ const tokenVariables = collectCssVariableNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
 
-if (packageJson.version !== '0.22.0') {
-  failures.push('package.json version must be 0.22.0 for the readonly form control package surface.');
+if (packageJson.version !== '0.23.0') {
+  failures.push('package.json version must be 0.23.0 for the layout primitive package surface.');
 }
 
 if (tokenDocument.version !== '0.5.0') {

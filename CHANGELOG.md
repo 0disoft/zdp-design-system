@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.23.0
+
+- Added layout primitives: `Page`, `Container`, `Section`, and `PageHeader`.
+- Added static `.zdp-page`, `.zdp-container`, `.zdp-section`, and `.zdp-page-header` utility classes for Astro and non-Svelte consumers.
+- Added a focused Storybook layout story and static preview coverage so page width, section rhythm, header actions, and flat layout rules stay aligned.
+- Strengthened package, Storybook, preview, and consumer contract checks so layout primitives stay exported, documented, compiled, responsive, and free of decorative effects.
+
 ## 0.22.0
 
 - Added readonly state support to `Input` and `Textarea`.
