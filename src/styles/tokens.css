@@ -48,6 +48,28 @@
   --zdp-font-line-height-tight: 1.2;
   --zdp-font-line-height-normal: 1.5;
   --zdp-font-line-height-relaxed: 1.65;
+  --zdp-type-body-size: 1rem;
+  --zdp-type-body-line-height: 1.5;
+  --zdp-type-title-size: 1.25rem;
+  --zdp-type-title-line-height: 1.2;
+  --zdp-type-label-size: 0.75rem;
+  --zdp-type-label-line-height: 1.2;
+  --zdp-type-control-size: 1rem;
+  --zdp-type-control-line-height: 1.2;
+  --zdp-breakpoint-mobile: 40rem;
+  --zdp-breakpoint-tablet: 64rem;
+  --zdp-breakpoint-desktop: 80rem;
+  --zdp-breakpoint-wide: 96rem;
+  --zdp-control-height-sm: 2.25rem;
+  --zdp-control-height-md: 2.75rem;
+  --zdp-control-icon-sm: 2.25rem;
+  --zdp-control-icon-md: 2.75rem;
+  --zdp-control-radius: 0.5rem;
+  --zdp-control-hit-target: 2.75rem;
+  --zdp-i18n-text-wrap: pretty;
+  --zdp-i18n-word-break: normal;
+  --zdp-i18n-overflow-wrap: anywhere;
+  --zdp-i18n-hyphens: auto;
   --zdp-shadow-focus: 0 0 0 3px rgba(109, 143, 183, 0.34);
   --zdp-shadow-sm: 0 1px 2px rgba(82, 59, 32, 0.1);
   --zdp-shadow-md: 0 10px 28px rgba(82, 59, 32, 0.14);
@@ -123,6 +145,10 @@
   color: var(--zdp-color-ink-normal);
   font-family: var(--zdp-font-family-serif);
   line-height: var(--zdp-font-line-height-normal);
+  hyphens: var(--zdp-i18n-hyphens);
+  overflow-wrap: var(--zdp-i18n-overflow-wrap);
+  text-wrap: var(--zdp-i18n-text-wrap);
+  word-break: var(--zdp-i18n-word-break);
 }
 
 .zdp-surface-reset *,

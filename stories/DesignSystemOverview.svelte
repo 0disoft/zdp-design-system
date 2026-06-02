@@ -142,6 +142,25 @@
     </section>
   </div>
 
+  <section class="foundation-strip" aria-label="Foundation tokens">
+    <article>
+      <span>Type</span>
+      <strong>Body / title / label / control</strong>
+    </article>
+    <article>
+      <span>Control</span>
+      <strong>2.25rem / 2.75rem</strong>
+    </article>
+    <article>
+      <span>Responsive</span>
+      <strong>40 / 64 / 80 / 96rem</strong>
+    </article>
+    <article>
+      <span>i18n</span>
+      <strong>긴문장과SuperLongWordSafe</strong>
+    </article>
+  </section>
+
   <section class="motif-strip" aria-label="Decorative motif samples">
     <span class="motif-strip__line"></span>
     <span class="motif-strip__mark">✦</span>
@@ -359,6 +378,37 @@
     margin: var(--zdp-space-2) 0 0;
   }
 
+  .foundation-strip {
+    display: grid;
+    gap: var(--zdp-space-3);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .foundation-strip article {
+    background: var(--zdp-color-surface-panel);
+    border: 1px solid var(--zdp-color-line-subtle);
+    border-radius: var(--zdp-control-radius);
+    display: grid;
+    gap: var(--zdp-space-2);
+    min-width: 0;
+    padding: var(--zdp-space-4);
+  }
+
+  .foundation-strip span {
+    color: var(--zdp-color-ink-muted);
+    font-size: var(--zdp-type-label-size);
+    font-weight: var(--zdp-font-weight-bold);
+    line-height: var(--zdp-type-label-line-height);
+    text-transform: uppercase;
+  }
+
+  .foundation-strip strong {
+    color: var(--zdp-color-ink-strong);
+    font-size: var(--zdp-type-body-size);
+    line-height: var(--zdp-type-body-line-height);
+    overflow-wrap: var(--zdp-i18n-overflow-wrap);
+  }
+
   .motif-strip {
     align-items: center;
     color: var(--zdp-color-line-strong);
@@ -394,6 +444,7 @@
     }
 
     .storybook-preview__grid,
+    .foundation-strip,
     .surface-grid {
       grid-template-columns: 1fr;
     }

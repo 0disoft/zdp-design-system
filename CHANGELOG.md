@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.0
+
+- Added foundation token groups for typography roles, responsive breakpoints, control metrics, and i18n-safe text behavior.
+- Added CSS variables for `type`, `breakpoint`, `control`, and `i18n` token groups.
+- Updated button and icon button sizing to consume shared control metric tokens.
+- Added Storybook and static preview foundation token review surfaces.
+- Strengthened token, preview, and Storybook checks for the new foundation contract.
+
 ## 0.5.0
 
 - Changed the core visual language to a bright medieval watercolor palette.

@@ -16,10 +16,20 @@ ZDP의 디자인 토큰, CSS, 아이콘, Svelte UI 컴포넌트 경계를 고정
 
 기본 톤은 밝은 중세 유럽 마을 광장과 수채화 종이 질감이다. 토큰 값은 parchment, dusty blue, sage green, sunlit gold, burgundy, terracotta 계열을 쓰되, 토큰 이름은 `primary`, `surface`, `line`, `danger`처럼 역할 중심으로 유지한다.
 
+## Foundation 계약
+
+디자인 시스템은 각 제품의 번역, 라우팅, SEO, 페이지별 레이아웃을 소유하지 않는다. 대신 소비 표면이 깨지지 않도록 다음 공통 계약을 제공한다.
+
+- `type`: body, title, label, control에 쓰는 기본 크기와 줄높이
+- `breakpoint`: mobile, tablet, desktop, wide 기준 폭
+- `control`: 버튼, 아이콘 버튼, 입력류가 공유할 높이, radius, hit target
+- `i18n`: 긴 텍스트와 CJK/영문 혼합 문장이 UI를 밀어내지 않게 하는 wrapping 기본값
+
 ## 현재 제외
 
 - 제품별 화면 구성
 - 랜딩 페이지 문구
+- 번역 문구, locale 라우팅, SEO hreflang/canonical
 - 결제, 권한, 인증, 관리자 의사결정
 - 앱 라우팅, API 호출, 데이터 저장
 - 브랜드별 캠페인 실험
@@ -80,7 +90,7 @@ preview/index.html
 ## 토큰 원칙
 
 - 토큰 이름은 제품명이나 캠페인명이 아니라 역할을 기준으로 둔다.
-- 색상, 간격, radius, typography, shadow, motion은 `tokens/zdp.tokens.json`이 원천이다.
+- 색상, 간격, radius, typography, responsive, control, i18n, shadow, motion은 `tokens/zdp.tokens.json`이 원천이다.
 - 색상 토큰은 `hex` fallback과 `oklch` 의도값을 함께 가진다.
 - `src/styles/tokens.css`는 웹과 Tauri WebView가 쓰는 CSS 변수 표면이다.
 - CSS는 hex를 먼저 선언하고 OKLCH 지원 브라우저에서만 `@supports`로 덮어쓴다.

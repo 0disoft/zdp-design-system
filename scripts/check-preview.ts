@@ -27,7 +27,12 @@ for (const requiredText of [
   '--zdp-color-accent-primary',
   '--zdp-color-accent-success',
   '--zdp-color-accent-warning',
-  '--zdp-color-accent-danger'
+  '--zdp-color-accent-danger',
+  '--zdp-type-body-size',
+  '--zdp-breakpoint-tablet',
+  '--zdp-control-height-md',
+  '--zdp-i18n-overflow-wrap',
+  'Foundation tokens'
 ]) {
   if (!preview.includes(requiredText)) {
     failures.push(`Preview is missing ${requiredText}.`);

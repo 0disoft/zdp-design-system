@@ -85,7 +85,11 @@ for (const requiredText of [
   'swatch__paint--primary',
   'swatch__paint--success',
   'swatch__paint--warning',
-  'swatch__paint--danger'
+  'swatch__paint--danger',
+  'Foundation tokens',
+  '--zdp-type-body-size',
+  '--zdp-control-radius',
+  '--zdp-i18n-overflow-wrap'
 ]) {
   if (!component.includes(requiredText)) {
     failures.push(`Storybook overview is missing ${requiredText}.`);

@@ -23,7 +23,7 @@
   .zdp-icon-button {
     align-items: center;
     border: 1px solid var(--zdp-color-line-subtle);
-    border-radius: var(--zdp-radius-md);
+    border-radius: var(--zdp-control-radius);
     box-shadow: var(--zdp-shadow-sm);
     cursor: pointer;
     display: inline-flex;
@@ -36,13 +36,13 @@
   }
 
   .zdp-icon-button--sm {
-    height: 2.25rem;
-    width: 2.25rem;
+    height: var(--zdp-control-icon-sm);
+    width: var(--zdp-control-icon-sm);
   }
 
   .zdp-icon-button--md {
-    height: 2.75rem;
-    width: 2.75rem;
+    height: var(--zdp-control-icon-md);
+    width: var(--zdp-control-icon-md);
   }
 
   .zdp-icon-button--ghost {

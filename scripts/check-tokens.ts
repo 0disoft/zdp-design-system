@@ -13,6 +13,10 @@ interface TokenDocument {
     readonly weight: Record<string, string>;
     readonly lineHeight: Record<string, string>;
   };
+  readonly type: Record<string, string>;
+  readonly breakpoint: Record<string, string>;
+  readonly control: Record<string, string>;
+  readonly i18n: Record<string, string>;
   readonly shadow: Record<string, string>;
   readonly motion: Record<string, string>;
 }
@@ -97,6 +101,10 @@ async function readTokenDocument(path: string): Promise<TokenDocument> {
         'font.lineHeight'
       )
     },
+    type: assertStringRecord(parsed.type, 'type'),
+    breakpoint: assertStringRecord(parsed.breakpoint, 'breakpoint'),
+    control: assertStringRecord(parsed.control, 'control'),
+    i18n: assertStringRecord(parsed.i18n, 'i18n'),
     shadow: assertStringRecord(parsed.shadow, 'shadow'),
     motion: assertStringRecord(parsed.motion, 'motion')
   };
@@ -111,6 +119,10 @@ function collectCssVariableNames(tokens: TokenDocument): readonly string[] {
     ...collectNames('font-size', tokens.font.size),
     ...collectNames('font-weight', tokens.font.weight),
     ...collectNames('font-line-height', tokens.font.lineHeight),
+    ...collectNames('type', tokens.type),
+    ...collectNames('breakpoint', tokens.breakpoint),
+    ...collectNames('control', tokens.control),
+    ...collectNames('i18n', tokens.i18n),
     ...collectNames('shadow', tokens.shadow),
     ...collectNames('motion', tokens.motion)
   ];
