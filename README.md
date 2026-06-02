@@ -61,12 +61,46 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
 
 ```svelte
 <script lang="ts">
-  import { Button, IconButton, Surface } from 'zdp-design-system';
+  import {
+    Badge,
+    Button,
+    Callout,
+    Checkbox,
+    Field,
+    HelpText,
+    Input,
+    Label,
+    Surface,
+    Switch,
+    Tabs
+  } from 'zdp-design-system';
 </script>
 
 <Surface>
+  <Badge tone="success">정상</Badge>
+  <Callout tone="info" semanticRole="note">
+    <strong>다음 단계가 준비됐습니다.</strong>
+    <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
+  </Callout>
+  <Tabs
+    ariaLabel="프로젝트 섹션"
+    items={[
+      { id: 'overview', label: '개요' },
+      { id: 'history', label: '기록' }
+    ]}
+    selectedId="overview"
+    let:selectedId
+  >
+    <p>{selectedId === 'history' ? '변경 기록입니다.' : '프로젝트 개요입니다.'}</p>
+  </Tabs>
+  <Field>
+    <Label forId="project-name">프로젝트</Label>
+    <Input id="project-name" name="project-name" describedBy="project-name-help" />
+    <HelpText id="project-name-help">공개 표기에 사용됩니다.</HelpText>
+  </Field>
+  <Checkbox name="release-updates" checked>업데이트 받기</Checkbox>
+  <Switch name="autosave" checked>자동 저장</Switch>
   <Button>저장</Button>
-  <IconButton ariaLabel="닫기">X</IconButton>
 </Surface>
 ```
 
@@ -81,7 +115,7 @@ bun install
 bun run dev
 ```
 
-Storybook은 Svelte/Vite 기반이며 `Design System/Overview` story에서 light/dark 테마, 색상, 타이포그래피, 버튼, 아이콘 버튼, surface 상태를 함께 확인한다.
+Storybook은 Svelte/Vite 기반이며 `Design System/Overview` story에서 light/dark 테마, 색상, 타이포그래피, 버튼, 아이콘 버튼, form, surface 상태를 함께 확인한다.
 Workduck의 개발 서버 터미널은 `bun run dev`를, 빌드 터미널은 `bun run build`를 표준 진입점으로 사용한다. `bun run storybook`과 `bun run storybook:build`는 같은 명령을 가리키는 별칭이다.
 정적 HTML이 필요할 때는 fallback으로 `preview/index.html`을 그대로 열 수 있다.
 
@@ -93,7 +127,7 @@ Workduck의 개발 서버 터미널은 `bun run dev`를, 빌드 터미널은 `bu
 preview/index.html
 ```
 
-이 페이지는 `src/styles/index.css`를 직접 불러와 light/dark 테마, 색상, 타이포그래피, 버튼, 아이콘 버튼, surface 상태를 보여준다. 별도 개발 서버 없이 브라우저에서 열 수 있다.
+이 페이지는 `src/styles/index.css`를 직접 불러와 light/dark 테마, 색상, 타이포그래피, 버튼, 아이콘 버튼, form, surface 상태를 보여준다. 별도 개발 서버 없이 브라우저에서 열 수 있다.
 
 ## 토큰 원칙
 
@@ -117,8 +151,12 @@ preview/index.html
 - Button과 IconButton hover는 light/dark 모두 배경색과 border 색이 함께 변한다.
 - 버튼 active도 위치 이동이나 그림자 없이 배경색, 테두리색, 글자색만 바꾼다.
 - focus는 그림자가 아니라 `focus.surface` outline, `focus.line` border, 링크의 하단선으로 표시한다.
-- Button, IconButton, Surface, preview panel은 `0.375rem` radius를 기준으로 보고 pill 형태를 쓰지 않는다.
+- Button, IconButton, Badge, Callout, Tabs, Field, Label, Input, Textarea, Select, Checkbox, Radio, Switch, HelpText, ErrorText, Surface, preview panel은 `0.375rem` radius를 기준으로 보고 pill 형태를 쓰지 않는다.
 - Button과 IconButton은 `2px` border width를 기준으로 하는 framed control 방향을 유지한다.
+- Input, Textarea, Select는 Button과 같은 framed control 방향을 쓰고, help/error text는 id와 `aria-describedby`로 연결한다.
+- Checkbox, Radio, Switch는 native input을 유지하고 `checked`, `focus-visible`, `disabled`, `invalid` 상태를 토큰으로 표현한다.
+- Badge와 Callout은 짧은 상태와 페이지 안 피드백을 표현하되 제품 판단 로직을 갖지 않는다.
+- Tabs는 가까운 정보 묶음 전환을 표현하되 라우팅, 권한, 데이터 로딩 결정을 갖지 않는다.
 - 본문 텍스트의 기본 line-height는 `1.6`으로 두어 장식 대신 읽기 리듬으로 밀도를 만든다.
 - `success`, `warning`, `danger`는 감성 팔레트 이름이 아니라 상태 의미를 가진 semantic color로 쓴다. 긍정/완료는 `success`, 주의/보류는 `warning`, 삭제/오류/위험은 `danger`에 묶는다.
 - `focus.surface`, `focus.text`, `focus.line`은 브랜드 장식색이 아니라 접근성 기능색이다. 링크 focus는 sunlit gold 배경과 어두운 하단선, 입력류와 framed controls focus는 sunlit gold outline과 어두운 border를 쓴다.
@@ -133,8 +171,9 @@ preview/index.html
 bun run tokens:check
 ```
 
-`tokens:check`는 토큰 JSON, CSS 변수, public component export가 함께 맞는지 확인한다. Svelte 컴파일, 접근성 검사, package artifact 검증은 다음 단계에서 추가한다.
+`tokens:check`는 토큰 JSON, CSS 변수, public component export가 함께 맞는지 확인한다.
 색상 토큰은 JSON의 `hex`와 `oklch` 값이 CSS fallback 및 OKLCH override에 모두 존재해야 통과한다.
 `preview:check`는 정적 미리보기 페이지가 공통 스타일 entry와 핵심 토큰/컴포넌트 표면을 참조하는지 확인한다.
 `storybook:check`는 Storybook 설정, scripts, devDependencies, overview story가 함께 유지되는지 확인한다.
+`package:check`는 package export, files, sideEffects, Svelte 컴포넌트 compile 결과가 함께 맞는지 확인한다.
 `preview:check`와 `storybook:check`는 shared CSS, Svelte 컴포넌트, Storybook, 정적 preview에 장식성 그림자, 그라데이션, 반짝임 pseudo-element, hover 이동 효과, 과한 pill radius가 다시 들어오지 않는지도 확인한다.

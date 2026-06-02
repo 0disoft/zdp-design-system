@@ -1,10 +1,23 @@
 <script lang="ts">
+  import Badge from '../src/lib/components/Badge.svelte';
   import Button from '../src/lib/components/Button.svelte';
+  import Callout from '../src/lib/components/Callout.svelte';
+  import Checkbox from '../src/lib/components/Checkbox.svelte';
+  import ErrorText from '../src/lib/components/ErrorText.svelte';
+  import Field from '../src/lib/components/Field.svelte';
+  import HelpText from '../src/lib/components/HelpText.svelte';
   import IconButton from '../src/lib/components/IconButton.svelte';
+  import Input from '../src/lib/components/Input.svelte';
+  import Label from '../src/lib/components/Label.svelte';
+  import Radio from '../src/lib/components/Radio.svelte';
+  import Select from '../src/lib/components/Select.svelte';
   import Surface from '../src/lib/components/Surface.svelte';
+  import Switch from '../src/lib/components/Switch.svelte';
+  import Tabs from '../src/lib/components/Tabs.svelte';
+  import Textarea from '../src/lib/components/Textarea.svelte';
 </script>
 
-<main class="storybook-preview zdp-surface-reset">
+<main class="storybook-preview zdp-surface-reset" lang="ko">
   <header class="storybook-preview__header">
     <div>
       <p class="eyebrow">Sunlit parchment kit</p>
@@ -70,6 +83,122 @@
           <Button variant="secondary">취소</Button>
           <Button variant="danger">삭제</Button>
           <IconButton ariaLabel="추가" variant="solid">+</IconButton>
+        </div>
+      </section>
+
+      <section class="preview-section" aria-labelledby="storybook-light-feedback">
+        <h3 id="storybook-light-feedback">Feedback</h3>
+        <div class="feedback-stack">
+          <div class="badge-row" aria-label="Status badges">
+            <Badge tone="primary">검토 중</Badge>
+            <Badge tone="success">정상</Badge>
+            <Badge tone="warning">대기</Badge>
+            <Badge tone="danger">주의</Badge>
+          </div>
+          <Callout tone="info" labelledBy="storybook-light-callout-info" semanticRole="note">
+            <strong id="storybook-light-callout-info">다음 단계가 준비됐습니다.</strong>
+            <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
+          </Callout>
+          <Callout tone="danger" labelledBy="storybook-light-callout-danger" semanticRole="alert">
+            <strong id="storybook-light-callout-danger">삭제 전에 다시 확인하세요.</strong>
+            <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
+          </Callout>
+        </div>
+      </section>
+
+      <section class="preview-section" aria-labelledby="storybook-light-tabs">
+        <h3 id="storybook-light-tabs">Tabs</h3>
+        <Tabs
+          ariaLabel="Light theme sections"
+          items={[
+            { id: 'overview', label: '개요' },
+            { id: 'history', label: '기록' },
+            { id: 'settings', label: '설정' }
+          ]}
+          selectedId="overview"
+          let:selectedId={lightSelectedTabId}
+        >
+          <strong>{lightSelectedTabId === 'history' ? '기록' : lightSelectedTabId === 'settings' ? '설정' : '개요'}</strong>
+          <p>탭은 페이지 안의 가까운 정보 묶음을 바꿀 때 사용합니다.</p>
+        </Tabs>
+      </section>
+
+      <section class="preview-section" aria-labelledby="storybook-light-forms">
+        <h3 id="storybook-light-forms">Forms</h3>
+        <div class="form-grid">
+          <Field>
+            <Label forId="storybook-light-name" required>이름</Label>
+            <Input
+              id="storybook-light-name"
+              name="light-name"
+              placeholder="홍길동"
+              describedBy="storybook-light-name-help"
+              required
+            />
+            <HelpText id="storybook-light-name-help">공개 표기와 알림에 사용됩니다.</HelpText>
+          </Field>
+          <Field invalid>
+            <Label forId="storybook-light-status">상태</Label>
+            <Select
+              id="storybook-light-status"
+              name="light-status"
+              value="blocked"
+              describedBy="storybook-light-status-error"
+              invalid
+            >
+              <option value="ready">준비됨</option>
+              <option value="blocked">확인 필요</option>
+            </Select>
+            <ErrorText id="storybook-light-status-error">다음 단계 전에 기준을 확인하세요.</ErrorText>
+          </Field>
+          <Field>
+            <Label forId="storybook-light-note">메모</Label>
+            <Textarea
+              id="storybook-light-note"
+              name="light-note"
+              placeholder="짧게 남기기"
+              describedBy="storybook-light-note-help"
+              rows={3}
+            />
+            <HelpText id="storybook-light-note-help">긴 문장은 줄바꿈으로 자연스럽게 이어집니다.</HelpText>
+          </Field>
+        </div>
+        <div class="choice-grid">
+          <Checkbox
+            id="storybook-light-choice-updates"
+            name="light-choice-updates"
+            describedBy="storybook-light-choice-updates-help"
+            checked
+          >
+            업데이트 받기
+            <span
+              slot="help"
+              class="zdp-help-text"
+              id="storybook-light-choice-updates-help"
+            >중요한 변경만 보냅니다.</span>
+          </Checkbox>
+          <div class="choice-stack" role="radiogroup" aria-labelledby="storybook-light-choice-frequency">
+            <span class="choice-group-label" id="storybook-light-choice-frequency">알림 주기</span>
+            <Radio id="storybook-light-choice-weekly" name="light-choice-frequency" value="weekly" checked>
+              매주
+            </Radio>
+            <Radio id="storybook-light-choice-monthly" name="light-choice-frequency" value="monthly">
+              매월
+            </Radio>
+          </div>
+          <Switch
+            id="storybook-light-choice-autosave"
+            name="light-choice-autosave"
+            describedBy="storybook-light-choice-autosave-help"
+            checked
+          >
+            자동 저장
+            <span
+              slot="help"
+              class="zdp-help-text"
+              id="storybook-light-choice-autosave-help"
+            >작성 중인 내용을 임시 보관합니다.</span>
+          </Switch>
         </div>
       </section>
 
@@ -145,6 +274,122 @@
           <Button variant="secondary">취소</Button>
           <Button variant="danger">삭제</Button>
           <IconButton ariaLabel="추가" variant="ghost">+</IconButton>
+        </div>
+      </section>
+
+      <section class="preview-section" aria-labelledby="storybook-dark-feedback">
+        <h3 id="storybook-dark-feedback">Feedback</h3>
+        <div class="feedback-stack">
+          <div class="badge-row" aria-label="Status badges">
+            <Badge tone="primary">검토 중</Badge>
+            <Badge tone="success">정상</Badge>
+            <Badge tone="warning">대기</Badge>
+            <Badge tone="danger">주의</Badge>
+          </div>
+          <Callout tone="info" labelledBy="storybook-dark-callout-info" semanticRole="note">
+            <strong id="storybook-dark-callout-info">다음 단계가 준비됐습니다.</strong>
+            <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
+          </Callout>
+          <Callout tone="danger" labelledBy="storybook-dark-callout-danger" semanticRole="alert">
+            <strong id="storybook-dark-callout-danger">삭제 전에 다시 확인하세요.</strong>
+            <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
+          </Callout>
+        </div>
+      </section>
+
+      <section class="preview-section" aria-labelledby="storybook-dark-tabs">
+        <h3 id="storybook-dark-tabs">Tabs</h3>
+        <Tabs
+          ariaLabel="Dark theme sections"
+          items={[
+            { id: 'overview', label: '개요' },
+            { id: 'history', label: '기록' },
+            { id: 'settings', label: '설정' }
+          ]}
+          selectedId="overview"
+          let:selectedId={darkSelectedTabId}
+        >
+          <strong>{darkSelectedTabId === 'history' ? '기록' : darkSelectedTabId === 'settings' ? '설정' : '개요'}</strong>
+          <p>탭은 페이지 안의 가까운 정보 묶음을 바꿀 때 사용합니다.</p>
+        </Tabs>
+      </section>
+
+      <section class="preview-section" aria-labelledby="storybook-dark-forms">
+        <h3 id="storybook-dark-forms">Forms</h3>
+        <div class="form-grid">
+          <Field>
+            <Label forId="storybook-dark-name" required>이름</Label>
+            <Input
+              id="storybook-dark-name"
+              name="dark-name"
+              placeholder="홍길동"
+              describedBy="storybook-dark-name-help"
+              required
+            />
+            <HelpText id="storybook-dark-name-help">공개 표기와 알림에 사용됩니다.</HelpText>
+          </Field>
+          <Field invalid>
+            <Label forId="storybook-dark-status">상태</Label>
+            <Select
+              id="storybook-dark-status"
+              name="dark-status"
+              value="blocked"
+              describedBy="storybook-dark-status-error"
+              invalid
+            >
+              <option value="ready">준비됨</option>
+              <option value="blocked">확인 필요</option>
+            </Select>
+            <ErrorText id="storybook-dark-status-error">다음 단계 전에 기준을 확인하세요.</ErrorText>
+          </Field>
+          <Field>
+            <Label forId="storybook-dark-note">메모</Label>
+            <Textarea
+              id="storybook-dark-note"
+              name="dark-note"
+              placeholder="짧게 남기기"
+              describedBy="storybook-dark-note-help"
+              rows={3}
+            />
+            <HelpText id="storybook-dark-note-help">긴 문장은 줄바꿈으로 자연스럽게 이어집니다.</HelpText>
+          </Field>
+        </div>
+        <div class="choice-grid">
+          <Checkbox
+            id="storybook-dark-choice-updates"
+            name="dark-choice-updates"
+            describedBy="storybook-dark-choice-updates-help"
+            checked
+          >
+            업데이트 받기
+            <span
+              slot="help"
+              class="zdp-help-text"
+              id="storybook-dark-choice-updates-help"
+            >중요한 변경만 보냅니다.</span>
+          </Checkbox>
+          <div class="choice-stack" role="radiogroup" aria-labelledby="storybook-dark-choice-frequency">
+            <span class="choice-group-label" id="storybook-dark-choice-frequency">알림 주기</span>
+            <Radio id="storybook-dark-choice-weekly" name="dark-choice-frequency" value="weekly" checked>
+              매주
+            </Radio>
+            <Radio id="storybook-dark-choice-monthly" name="dark-choice-frequency" value="monthly">
+              매월
+            </Radio>
+          </div>
+          <Switch
+            id="storybook-dark-choice-autosave"
+            name="dark-choice-autosave"
+            describedBy="storybook-dark-choice-autosave-help"
+            checked
+          >
+            자동 저장
+            <span
+              slot="help"
+              class="zdp-help-text"
+              id="storybook-dark-choice-autosave-help"
+            >작성 중인 내용을 임시 보관합니다.</span>
+          </Switch>
         </div>
       </section>
 
@@ -383,6 +628,42 @@
   }
 
   .focus-demo__field span {
+    color: var(--zdp-color-ink-strong);
+    font-size: var(--zdp-type-label-size);
+    font-weight: var(--zdp-font-weight-medium);
+    line-height: var(--zdp-type-label-line-height);
+  }
+
+  .feedback-stack {
+    display: grid;
+    gap: var(--zdp-space-3);
+    max-width: 34rem;
+  }
+
+  .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--zdp-space-2);
+  }
+
+  .form-grid {
+    display: grid;
+    gap: var(--zdp-space-4);
+    max-width: 32rem;
+  }
+
+  .choice-grid {
+    display: grid;
+    gap: var(--zdp-space-4);
+    max-width: 32rem;
+  }
+
+  .choice-stack {
+    display: grid;
+    gap: var(--zdp-space-2);
+  }
+
+  .choice-group-label {
     color: var(--zdp-color-ink-strong);
     font-size: var(--zdp-type-label-size);
     font-weight: var(--zdp-font-weight-medium);

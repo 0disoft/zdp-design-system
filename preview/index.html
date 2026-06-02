@@ -188,6 +188,42 @@
         line-height: var(--zdp-type-label-line-height);
       }
 
+      .feedback-stack {
+        display: grid;
+        gap: var(--zdp-space-3);
+        max-width: 34rem;
+      }
+
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--zdp-space-2);
+      }
+
+      .form-grid {
+        display: grid;
+        gap: var(--zdp-space-4);
+        max-width: 32rem;
+      }
+
+      .choice-grid {
+        display: grid;
+        gap: var(--zdp-space-4);
+        max-width: 32rem;
+      }
+
+      .choice-stack {
+        display: grid;
+        gap: var(--zdp-space-2);
+      }
+
+      .choice-group-label {
+        color: var(--zdp-color-ink-strong);
+        font-size: var(--zdp-type-label-size);
+        font-weight: var(--zdp-font-weight-medium);
+        line-height: var(--zdp-type-label-line-height);
+      }
+
       .surface-grid {
         display: grid;
         gap: var(--zdp-space-3);
@@ -371,6 +407,186 @@
             </div>
           </section>
 
+          <section class="preview-section" aria-labelledby="light-feedback-title">
+            <h3 class="preview-section__title" id="light-feedback-title">Feedback</h3>
+            <div class="feedback-stack">
+              <div class="badge-row" aria-label="Status badges">
+                <span class="zdp-badge zdp-badge--primary zdp-badge--md">검토 중</span>
+                <span class="zdp-badge zdp-badge--success zdp-badge--md">정상</span>
+                <span class="zdp-badge zdp-badge--warning zdp-badge--md">대기</span>
+                <span class="zdp-badge zdp-badge--danger zdp-badge--md">주의</span>
+              </div>
+              <section class="zdp-callout zdp-callout--info" aria-labelledby="light-callout-info" role="note">
+                <span class="zdp-callout__mark" aria-hidden="true"></span>
+                <div class="zdp-callout__body">
+                  <strong id="light-callout-info">다음 단계가 준비됐습니다.</strong>
+                  <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
+                </div>
+              </section>
+              <section class="zdp-callout zdp-callout--danger" aria-labelledby="light-callout-danger" role="alert">
+                <span class="zdp-callout__mark" aria-hidden="true"></span>
+                <div class="zdp-callout__body">
+                  <strong id="light-callout-danger">삭제 전에 다시 확인하세요.</strong>
+                  <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <section class="preview-section" aria-labelledby="light-tabs-title">
+            <h3 class="preview-section__title" id="light-tabs-title">Tabs</h3>
+            <div class="zdp-tabs">
+              <div class="zdp-tabs__list" role="tablist" aria-label="Light theme sections" tabindex="-1">
+                <button
+                  class="zdp-tabs__tab zdp-tabs__tab--active"
+                  id="light-tab-overview"
+                  type="button"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="light-tab-panel-overview"
+                >개요</button>
+                <button
+                  class="zdp-tabs__tab"
+                  id="light-tab-history"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="light-tab-panel-history"
+                  tabindex="-1"
+                >기록</button>
+                <button
+                  class="zdp-tabs__tab"
+                  id="light-tab-settings"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="light-tab-panel-settings"
+                  tabindex="-1"
+                >설정</button>
+              </div>
+              <div
+                class="zdp-tabs__panel"
+                id="light-tab-panel-overview"
+                role="tabpanel"
+                aria-labelledby="light-tab-overview"
+                tabindex="0"
+              >
+                <strong>개요</strong>
+                <p>탭은 페이지 안의 가까운 정보 묶음을 바꿀 때 사용합니다.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="preview-section" aria-labelledby="light-forms-title">
+            <h3 class="preview-section__title" id="light-forms-title">Forms</h3>
+            <div class="form-grid">
+              <div class="zdp-field zdp-field--md">
+                <label class="zdp-label" for="light-name">
+                  이름<span class="zdp-label__required" aria-hidden="true">*</span>
+                </label>
+                <input
+                  class="zdp-input"
+                  id="light-name"
+                  name="light-name"
+                  type="text"
+                  placeholder="홍길동"
+                  aria-describedby="light-name-help"
+                  required
+                />
+                <p class="zdp-help-text" id="light-name-help">공개 표기와 알림에 사용됩니다.</p>
+              </div>
+              <div class="zdp-field zdp-field--md" data-invalid="true">
+                <label class="zdp-label" for="light-status">상태</label>
+                <select
+                  class="zdp-select"
+                  id="light-status"
+                  name="light-status"
+                  aria-describedby="light-status-error"
+                  aria-invalid="true"
+                >
+                  <option value="ready">준비됨</option>
+                  <option value="blocked" selected>확인 필요</option>
+                </select>
+                <p class="zdp-error-text" id="light-status-error">다음 단계 전에 기준을 확인하세요.</p>
+              </div>
+              <div class="zdp-field zdp-field--md">
+                <label class="zdp-label" for="light-note">메모</label>
+                <textarea
+                  class="zdp-textarea"
+                  id="light-note"
+                  name="light-note"
+                  placeholder="짧게 남기기"
+                  aria-describedby="light-note-help"
+                  rows="3"
+                ></textarea>
+                <p class="zdp-help-text" id="light-note-help">긴 문장은 줄바꿈으로 자연스럽게 이어집니다.</p>
+              </div>
+            </div>
+            <div class="choice-grid">
+              <label class="zdp-choice zdp-choice--checkbox">
+                <input
+                  class="zdp-choice__input"
+                  id="light-choice-updates"
+                  name="light-choice-updates"
+                  type="checkbox"
+                  aria-describedby="light-choice-updates-help"
+                  checked
+                />
+                <span class="zdp-choice__mark" aria-hidden="true"></span>
+                <span class="zdp-choice__body">
+                  <span class="zdp-choice__label">업데이트 받기</span>
+                  <span class="zdp-help-text" id="light-choice-updates-help">중요한 변경만 보냅니다.</span>
+                </span>
+              </label>
+              <div class="choice-stack" role="radiogroup" aria-labelledby="light-choice-frequency">
+                <span class="choice-group-label" id="light-choice-frequency">알림 주기</span>
+                <label class="zdp-choice zdp-choice--radio">
+                  <input
+                    class="zdp-choice__input"
+                    id="light-choice-weekly"
+                    name="light-choice-frequency"
+                    type="radio"
+                    value="weekly"
+                    checked
+                  />
+                  <span class="zdp-choice__mark" aria-hidden="true"></span>
+                  <span class="zdp-choice__body">
+                    <span class="zdp-choice__label">매주</span>
+                  </span>
+                </label>
+                <label class="zdp-choice zdp-choice--radio">
+                  <input
+                    class="zdp-choice__input"
+                    id="light-choice-monthly"
+                    name="light-choice-frequency"
+                    type="radio"
+                    value="monthly"
+                  />
+                  <span class="zdp-choice__mark" aria-hidden="true"></span>
+                  <span class="zdp-choice__body">
+                    <span class="zdp-choice__label">매월</span>
+                  </span>
+                </label>
+              </div>
+              <label class="zdp-switch">
+                <input
+                  class="zdp-switch__input"
+                  id="light-choice-autosave"
+                  name="light-choice-autosave"
+                  type="checkbox"
+                  role="switch"
+                  aria-describedby="light-choice-autosave-help"
+                  checked
+                />
+                <span class="zdp-switch__track" aria-hidden="true"></span>
+                <span class="zdp-switch__body">
+                  <span class="zdp-switch__label">자동 저장</span>
+                  <span class="zdp-help-text" id="light-choice-autosave-help">작성 중인 내용을 임시 보관합니다.</span>
+                </span>
+              </label>
+            </div>
+          </section>
+
           <section class="preview-section" aria-labelledby="light-surface-title">
             <h3 class="preview-section__title" id="light-surface-title">Surfaces</h3>
             <div class="surface-grid">
@@ -445,6 +661,186 @@
               <button class="zdp-icon-button zdp-icon-button--ghost zdp-icon-button--md" aria-label="추가">
                 <span class="zdp-icon-button__glyph" aria-hidden="true">+</span>
               </button>
+            </div>
+          </section>
+
+          <section class="preview-section" aria-labelledby="dark-feedback-title">
+            <h3 class="preview-section__title" id="dark-feedback-title">Feedback</h3>
+            <div class="feedback-stack">
+              <div class="badge-row" aria-label="Status badges">
+                <span class="zdp-badge zdp-badge--primary zdp-badge--md">검토 중</span>
+                <span class="zdp-badge zdp-badge--success zdp-badge--md">정상</span>
+                <span class="zdp-badge zdp-badge--warning zdp-badge--md">대기</span>
+                <span class="zdp-badge zdp-badge--danger zdp-badge--md">주의</span>
+              </div>
+              <section class="zdp-callout zdp-callout--info" aria-labelledby="dark-callout-info" role="note">
+                <span class="zdp-callout__mark" aria-hidden="true"></span>
+                <div class="zdp-callout__body">
+                  <strong id="dark-callout-info">다음 단계가 준비됐습니다.</strong>
+                  <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
+                </div>
+              </section>
+              <section class="zdp-callout zdp-callout--danger" aria-labelledby="dark-callout-danger" role="alert">
+                <span class="zdp-callout__mark" aria-hidden="true"></span>
+                <div class="zdp-callout__body">
+                  <strong id="dark-callout-danger">삭제 전에 다시 확인하세요.</strong>
+                  <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <section class="preview-section" aria-labelledby="dark-tabs-title">
+            <h3 class="preview-section__title" id="dark-tabs-title">Tabs</h3>
+            <div class="zdp-tabs">
+              <div class="zdp-tabs__list" role="tablist" aria-label="Dark theme sections" tabindex="-1">
+                <button
+                  class="zdp-tabs__tab zdp-tabs__tab--active"
+                  id="dark-tab-overview"
+                  type="button"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="dark-tab-panel-overview"
+                >개요</button>
+                <button
+                  class="zdp-tabs__tab"
+                  id="dark-tab-history"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="dark-tab-panel-history"
+                  tabindex="-1"
+                >기록</button>
+                <button
+                  class="zdp-tabs__tab"
+                  id="dark-tab-settings"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="dark-tab-panel-settings"
+                  tabindex="-1"
+                >설정</button>
+              </div>
+              <div
+                class="zdp-tabs__panel"
+                id="dark-tab-panel-overview"
+                role="tabpanel"
+                aria-labelledby="dark-tab-overview"
+                tabindex="0"
+              >
+                <strong>개요</strong>
+                <p>탭은 페이지 안의 가까운 정보 묶음을 바꿀 때 사용합니다.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="preview-section" aria-labelledby="dark-forms-title">
+            <h3 class="preview-section__title" id="dark-forms-title">Forms</h3>
+            <div class="form-grid">
+              <div class="zdp-field zdp-field--md">
+                <label class="zdp-label" for="dark-name">
+                  이름<span class="zdp-label__required" aria-hidden="true">*</span>
+                </label>
+                <input
+                  class="zdp-input"
+                  id="dark-name"
+                  name="dark-name"
+                  type="text"
+                  placeholder="홍길동"
+                  aria-describedby="dark-name-help"
+                  required
+                />
+                <p class="zdp-help-text" id="dark-name-help">공개 표기와 알림에 사용됩니다.</p>
+              </div>
+              <div class="zdp-field zdp-field--md" data-invalid="true">
+                <label class="zdp-label" for="dark-status">상태</label>
+                <select
+                  class="zdp-select"
+                  id="dark-status"
+                  name="dark-status"
+                  aria-describedby="dark-status-error"
+                  aria-invalid="true"
+                >
+                  <option value="ready">준비됨</option>
+                  <option value="blocked" selected>확인 필요</option>
+                </select>
+                <p class="zdp-error-text" id="dark-status-error">다음 단계 전에 기준을 확인하세요.</p>
+              </div>
+              <div class="zdp-field zdp-field--md">
+                <label class="zdp-label" for="dark-note">메모</label>
+                <textarea
+                  class="zdp-textarea"
+                  id="dark-note"
+                  name="dark-note"
+                  placeholder="짧게 남기기"
+                  aria-describedby="dark-note-help"
+                  rows="3"
+                ></textarea>
+                <p class="zdp-help-text" id="dark-note-help">긴 문장은 줄바꿈으로 자연스럽게 이어집니다.</p>
+              </div>
+            </div>
+            <div class="choice-grid">
+              <label class="zdp-choice zdp-choice--checkbox">
+                <input
+                  class="zdp-choice__input"
+                  id="dark-choice-updates"
+                  name="dark-choice-updates"
+                  type="checkbox"
+                  aria-describedby="dark-choice-updates-help"
+                  checked
+                />
+                <span class="zdp-choice__mark" aria-hidden="true"></span>
+                <span class="zdp-choice__body">
+                  <span class="zdp-choice__label">업데이트 받기</span>
+                  <span class="zdp-help-text" id="dark-choice-updates-help">중요한 변경만 보냅니다.</span>
+                </span>
+              </label>
+              <div class="choice-stack" role="radiogroup" aria-labelledby="dark-choice-frequency">
+                <span class="choice-group-label" id="dark-choice-frequency">알림 주기</span>
+                <label class="zdp-choice zdp-choice--radio">
+                  <input
+                    class="zdp-choice__input"
+                    id="dark-choice-weekly"
+                    name="dark-choice-frequency"
+                    type="radio"
+                    value="weekly"
+                    checked
+                  />
+                  <span class="zdp-choice__mark" aria-hidden="true"></span>
+                  <span class="zdp-choice__body">
+                    <span class="zdp-choice__label">매주</span>
+                  </span>
+                </label>
+                <label class="zdp-choice zdp-choice--radio">
+                  <input
+                    class="zdp-choice__input"
+                    id="dark-choice-monthly"
+                    name="dark-choice-frequency"
+                    type="radio"
+                    value="monthly"
+                  />
+                  <span class="zdp-choice__mark" aria-hidden="true"></span>
+                  <span class="zdp-choice__body">
+                    <span class="zdp-choice__label">매월</span>
+                  </span>
+                </label>
+              </div>
+              <label class="zdp-switch">
+                <input
+                  class="zdp-switch__input"
+                  id="dark-choice-autosave"
+                  name="dark-choice-autosave"
+                  type="checkbox"
+                  role="switch"
+                  aria-describedby="dark-choice-autosave-help"
+                  checked
+                />
+                <span class="zdp-switch__track" aria-hidden="true"></span>
+                <span class="zdp-switch__body">
+                  <span class="zdp-switch__label">자동 저장</span>
+                  <span class="zdp-help-text" id="dark-choice-autosave-help">작성 중인 내용을 임시 보관합니다.</span>
+                </span>
+              </label>
             </div>
           </section>
 

@@ -15,19 +15,61 @@ const mainPath = join(root, '.storybook', 'main.ts');
 const previewPath = join(root, '.storybook', 'preview.ts');
 const storyPath = join(root, 'stories', 'DesignSystemOverview.stories.ts');
 const componentPath = join(root, 'stories', 'DesignSystemOverview.svelte');
+const badgePath = join(root, 'src', 'lib', 'components', 'Badge.svelte');
 const buttonPath = join(root, 'src', 'lib', 'components', 'Button.svelte');
+const calloutPath = join(root, 'src', 'lib', 'components', 'Callout.svelte');
+const checkboxPath = join(root, 'src', 'lib', 'components', 'Checkbox.svelte');
+const fieldPath = join(root, 'src', 'lib', 'components', 'Field.svelte');
+const inputPath = join(root, 'src', 'lib', 'components', 'Input.svelte');
+const labelPath = join(root, 'src', 'lib', 'components', 'Label.svelte');
+const radioPath = join(root, 'src', 'lib', 'components', 'Radio.svelte');
+const selectPath = join(root, 'src', 'lib', 'components', 'Select.svelte');
+const switchPath = join(root, 'src', 'lib', 'components', 'Switch.svelte');
+const tabsPath = join(root, 'src', 'lib', 'components', 'Tabs.svelte');
+const textareaPath = join(root, 'src', 'lib', 'components', 'Textarea.svelte');
 const iconButtonPath = join(root, 'src', 'lib', 'components', 'IconButton.svelte');
 const surfacePath = join(root, 'src', 'lib', 'components', 'Surface.svelte');
 const failures: string[] = [];
 
-const [packageJson, main, preview, story, component, button, iconButton, surface] =
+const [
+  packageJson,
+  main,
+  preview,
+  story,
+  component,
+  badge,
+  button,
+  callout,
+  checkbox,
+  field,
+  input,
+  label,
+  radio,
+  select,
+  switchComponent,
+  tabs,
+  textarea,
+  iconButton,
+  surface
+] =
   await Promise.all([
     readPackageJson(packagePath),
     readFile(mainPath, 'utf8'),
     readFile(previewPath, 'utf8'),
     readFile(storyPath, 'utf8'),
     readFile(componentPath, 'utf8'),
+    readFile(badgePath, 'utf8'),
     readFile(buttonPath, 'utf8'),
+    readFile(calloutPath, 'utf8'),
+    readFile(checkboxPath, 'utf8'),
+    readFile(fieldPath, 'utf8'),
+    readFile(inputPath, 'utf8'),
+    readFile(labelPath, 'utf8'),
+    readFile(radioPath, 'utf8'),
+    readFile(selectPath, 'utf8'),
+    readFile(switchPath, 'utf8'),
+    readFile(tabsPath, 'utf8'),
+    readFile(textareaPath, 'utf8'),
     readFile(iconButtonPath, 'utf8'),
     readFile(surfacePath, 'utf8')
   ]);
@@ -95,9 +137,23 @@ for (const requiredText of [
 }
 
 for (const requiredText of [
+  '../src/lib/components/Badge.svelte',
   '../src/lib/components/Button.svelte',
+  '../src/lib/components/Callout.svelte',
+  '../src/lib/components/Checkbox.svelte',
+  '../src/lib/components/ErrorText.svelte',
+  '../src/lib/components/Field.svelte',
+  '../src/lib/components/HelpText.svelte',
   '../src/lib/components/IconButton.svelte',
+  '../src/lib/components/Input.svelte',
+  '../src/lib/components/Label.svelte',
+  '../src/lib/components/Radio.svelte',
+  '../src/lib/components/Select.svelte',
   '../src/lib/components/Surface.svelte',
+  '../src/lib/components/Switch.svelte',
+  '../src/lib/components/Tabs.svelte',
+  '../src/lib/components/Textarea.svelte',
+  '<main class="storybook-preview zdp-surface-reset" lang="ko">',
   'data-zdp-theme="light"',
   'data-zdp-theme="dark"',
   'Pretendard-first multiscript text',
@@ -119,11 +175,65 @@ for (const requiredText of [
   'Search Design System',
   '출시 노트 보기',
   '업데이트 보기',
-  '자세히 보기'
+  '자세히 보기',
+  'storybook-light-forms',
+  'storybook-dark-forms',
+  '공개 표기와 알림에 사용됩니다.',
+  '다음 단계 전에 기준을 확인하세요.',
+  '업데이트 받기',
+  '알림 주기',
+  '자동 저장',
+  '작성 중인 내용을 임시 보관합니다.',
+  'storybook-light-feedback',
+  'storybook-dark-feedback',
+  'storybook-light-tabs',
+  'storybook-dark-tabs',
+  '검토 중',
+  '정상',
+  '삭제 전에 다시 확인하세요.',
+  '탭은 페이지 안의 가까운 정보 묶음을 바꿀 때 사용합니다.'
 ]) {
   if (!component.includes(requiredText)) {
     failures.push(`Storybook overview is missing ${requiredText}.`);
   }
+}
+
+for (const requiredText of [
+  '.zdp-badge',
+  '.zdp-badge--primary',
+  '.zdp-badge--success',
+  '.zdp-badge--warning',
+  '.zdp-badge--danger',
+  'font-weight: var(--zdp-font-weight-medium)',
+  'border-radius: var(--zdp-control-radius)',
+  'background: var(--zdp-color-surface-panel)'
+]) {
+  if (!badge.includes(requiredText)) {
+    failures.push(`Badge component is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  '.zdp-callout',
+  '.zdp-callout__mark',
+  '.zdp-callout__body',
+  'aria-labelledby={labelledBy ?? undefined}',
+  'role={semanticRole ?? undefined}',
+  'border-radius: var(--zdp-control-radius)',
+  'background: var(--zdp-color-surface-panel)',
+  '.zdp-callout--info .zdp-callout__mark',
+  '.zdp-callout--success .zdp-callout__mark',
+  '.zdp-callout--warning .zdp-callout__mark',
+  '.zdp-callout--danger .zdp-callout__mark'
+]) {
+  if (!callout.includes(requiredText)) {
+    failures.push(`Callout component is missing ${requiredText}.`);
+  }
+}
+
+for (const source of [badge, callout]) {
+  assertNoDecorativeEffects(failures, 'Feedback component', source);
+  assertNoOverRoundedUsage(failures, 'Feedback component', source);
 }
 
 for (const requiredText of [
@@ -142,6 +252,138 @@ for (const requiredText of [
   if (!button.includes(requiredText)) {
     failures.push(`Button component is missing ${requiredText}.`);
   }
+}
+
+for (const requiredText of [
+  '.zdp-field',
+  '.zdp-field--sm',
+  '.zdp-field--md'
+]) {
+  if (!field.includes(requiredText)) {
+    failures.push(`Field component is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  '.zdp-label',
+  'font-weight: var(--zdp-font-weight-medium)',
+  '.zdp-label__required'
+]) {
+  if (!label.includes(requiredText)) {
+    failures.push(`Label component is missing ${requiredText}.`);
+  }
+}
+
+for (const [componentName, componentSource] of Object.entries({
+  Input: input,
+  Select: select,
+  Textarea: textarea
+})) {
+  for (const requiredText of [
+    `class="zdp-${componentName.toLowerCase()}"`,
+    'aria-describedby={describedBy ?? undefined}',
+    "aria-invalid={invalid ? 'true' : undefined}",
+    'border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong)',
+    'background: var(--zdp-color-surface-panel)',
+    ':hover:not(:disabled)',
+    'background: var(--zdp-color-surface-raised)',
+    ':focus-visible',
+    'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
+    'border-color: var(--zdp-color-focus-line)',
+    '[aria-invalid="true"]',
+    'border-color: var(--zdp-color-accent-danger)'
+  ]) {
+    if (!componentSource.includes(requiredText)) {
+      failures.push(`${componentName} component is missing ${requiredText}.`);
+    }
+  }
+}
+
+for (const [componentName, componentSource] of Object.entries({
+  Checkbox: checkbox,
+  Radio: radio
+})) {
+  for (const requiredText of [
+    'class="zdp-choice__input"',
+    'class="zdp-choice__mark"',
+    'class="zdp-choice__body"',
+    'class="zdp-choice__label"',
+    'aria-describedby={describedBy ?? undefined}',
+    'onchange={handleChange}',
+    '.zdp-choice__input:checked + .zdp-choice__mark',
+    '.zdp-choice__input:focus-visible + .zdp-choice__mark',
+    'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
+    'border-color: var(--zdp-color-focus-line)',
+    'border-color: var(--zdp-color-accent-danger)'
+  ]) {
+    if (!componentSource.includes(requiredText)) {
+      failures.push(`${componentName} component is missing ${requiredText}.`);
+    }
+  }
+}
+
+if (!checkbox.includes("aria-invalid={invalid ? 'true' : undefined}")) {
+  failures.push('Checkbox component must keep aria-invalid for checkbox invalid state.');
+}
+
+if (!checkbox.includes('.zdp-choice__input[aria-invalid="true"] + .zdp-choice__mark')) {
+  failures.push('Checkbox component must style aria-invalid on the native checkbox input.');
+}
+
+if (!radio.includes('.zdp-choice[data-invalid="true"] .zdp-choice__mark')) {
+  failures.push('Radio component must express invalid state on the wrapper, not the native radio input.');
+}
+
+for (const requiredText of [
+  'role="switch"',
+  'class="zdp-switch__input"',
+  'class="zdp-switch__track"',
+  'class="zdp-switch__body"',
+  'class="zdp-switch__label"',
+  'aria-describedby={describedBy ?? undefined}',
+  'onchange={handleChange}',
+  '.zdp-switch__input:checked + .zdp-switch__track',
+  '.zdp-switch__input:focus-visible + .zdp-switch__track',
+  'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
+  'border-color: var(--zdp-color-focus-line)'
+]) {
+  if (!switchComponent.includes(requiredText)) {
+    failures.push(`Switch component is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  'export interface TabItem',
+  'role="tablist"',
+  'tabindex="-1"',
+  'role="tab"',
+  'role="tabpanel"',
+  '{#if selectedItem}',
+  'id={panelId(selectedItem.id)}',
+  'aria-labelledby={tabId(selectedItem.id)}',
+  '<slot selectedId={selectedItem.id} selectedItem={selectedItem} />',
+  'aria-selected={item.id === activeId}',
+  'aria-controls={panelId(item.id)}',
+  'tabindex={item.id === activeId ? 0 : -1}',
+  'onkeydown={handleKeydown}',
+  'onclick={() => selectTab(item)}',
+  '.zdp-tabs__tab--active',
+  '.zdp-tabs__tab:focus-visible',
+  '.zdp-tabs__panel:focus-visible',
+  'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
+  'border-color: var(--zdp-color-focus-line)'
+]) {
+  if (!tabs.includes(requiredText)) {
+    failures.push(`Tabs component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Tabs component', tabs);
+assertNoOverRoundedUsage(failures, 'Tabs component', tabs);
+
+for (const source of [checkbox, field, input, label, radio, select, switchComponent, textarea]) {
+  assertNoDecorativeEffects(failures, 'Form component', source);
+  assertNoOverRoundedUsage(failures, 'Form component', source);
 }
 
 for (const requiredText of [

@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.12.0
+
+- Added `Tabs` for accessible in-page section switching with keyboard arrow, Home, and End navigation.
+- Added light and dark tab examples to Storybook and the static preview.
+- Strengthened package, token, Storybook, and preview checks so the tab structure stays exported, compiled, and focus-visible.
+
+## 0.11.0
+
+- Added shared feedback components: `Badge` for compact statuses and `Callout` for inline information, warning, and danger messages.
+- Added light and dark feedback examples to Storybook and the static preview.
+- Strengthened package, token, Storybook, and preview checks so feedback components stay exported, compiled, and free of decorative effects.
+
+## 0.10.0
+
+- Added shared choice controls for product forms: `Checkbox`, `Radio`, and `Switch`.
+- Added light and dark choice-control examples to Storybook and the static preview.
+- Strengthened package, token, Storybook, and preview checks so choice controls stay exported, compiled, focusable, and free of decorative effects.
+
+## 0.9.0
+
+- Added the first shared form component set: `Field`, `Label`, `Input`, `Textarea`, `Select`, `HelpText`, and `ErrorText`.
+- Added light and dark form examples to Storybook and the static preview, including help text and invalid states.
+- Strengthened package, token, Storybook, and preview checks so the new form public surface stays exported and visually aligned.
+
+## 0.8.1
+
+- Added package artifact validation for export targets, package files, and CSS side-effect entries.
+- Added Svelte compile validation for shared components and the Storybook overview surface.
+- Included package validation in the default `bun run check` contract.
+
 ## 0.8.0
 
 - Added accessible focus color tokens for sunlit gold focus surfaces, dark focus text, and dark focus lines.

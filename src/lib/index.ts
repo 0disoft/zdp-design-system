@@ -1,5 +1,18 @@
+export { default as Badge } from './components/Badge.svelte';
 export { default as Button } from './components/Button.svelte';
+export { default as Callout } from './components/Callout.svelte';
+export { default as Checkbox } from './components/Checkbox.svelte';
+export { default as ErrorText } from './components/ErrorText.svelte';
+export { default as Field } from './components/Field.svelte';
+export { default as HelpText } from './components/HelpText.svelte';
 export { default as IconButton } from './components/IconButton.svelte';
+export { default as Input } from './components/Input.svelte';
+export { default as Label } from './components/Label.svelte';
+export { default as Radio } from './components/Radio.svelte';
+export { default as Select } from './components/Select.svelte';
 export { default as Surface } from './components/Surface.svelte';
+export { default as Switch } from './components/Switch.svelte';
+export { default as Tabs } from './components/Tabs.svelte';
+export { default as Textarea } from './components/Textarea.svelte';
 export { zdpTokenNames } from './tokens.ts';
 export type { ZdpTokenName } from './tokens.ts';

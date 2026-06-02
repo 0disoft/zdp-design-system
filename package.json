@@ -1,6 +1,6 @@
 {
   "name": "zdp-design-system",
-  "version": "0.8.0",
+  "version": "0.12.0",
   "private": true,
   "type": "module",
   "description": "ZDP design tokens, CSS, icons, and Svelte UI package boundary.",
@@ -31,10 +31,11 @@
     "build": "storybook build",
     "tokens:check": "bun scripts/check-tokens.ts",
     "preview:check": "bun scripts/check-preview.ts",
+    "package:check": "bun scripts/check-package.ts",
     "storybook": "bun run dev",
     "storybook:build": "bun run build",
     "storybook:check": "bun scripts/check-storybook.ts",
-    "check": "bun scripts/check-tokens.ts && bun scripts/check-preview.ts && bun scripts/check-storybook.ts"
+    "check": "bun scripts/check-tokens.ts && bun scripts/check-preview.ts && bun scripts/check-storybook.ts && bun scripts/check-package.ts"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^6.2.0",

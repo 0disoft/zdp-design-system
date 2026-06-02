@@ -52,8 +52,8 @@ const tokenVariables = collectCssVariableNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
 
-if (packageJson.version !== '0.8.0') {
-  failures.push('package.json version must be 0.8.0 for the accessible focus token contract.');
+if (packageJson.version !== '0.12.0') {
+  failures.push('package.json version must be 0.12.0 for the tabs component package contract.');
 }
 
 if (tokenDocument.version !== '0.5.0') {
@@ -84,7 +84,24 @@ for (const { variable, token } of colorTokens) {
   }
 }
 
-for (const component of ['Button', 'IconButton', 'Surface']) {
+for (const component of [
+  'Badge',
+  'Button',
+  'Callout',
+  'Checkbox',
+  'ErrorText',
+  'Field',
+  'HelpText',
+  'IconButton',
+  'Input',
+  'Label',
+  'Radio',
+  'Select',
+  'Surface',
+  'Switch',
+  'Tabs',
+  'Textarea'
+]) {
   if (!publicEntry.includes(`export { default as ${component} }`)) {
     failures.push(`Missing public export for ${component}.`);
   }
