@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.15.0
+
+- Added `Breadcrumb` for accessible page-location trails with `nav`, ordered list markup, link items, separators, and `aria-current="page"`.
+- Added light and dark breadcrumb examples to Storybook and the static preview.
+- Strengthened package, token, Storybook, preview, and consumer contract checks so breadcrumb stays exported, compiled, documented, and free of decorative effects.
+
 ## 0.14.0
 
 - Added `Dialog` for accessible modal layers with backdrop close, Escape close, focus restoration, focus trap, and labelled dialog semantics.

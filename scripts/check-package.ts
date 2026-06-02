@@ -15,6 +15,7 @@ const root = process.cwd();
 const packagePath = join(root, 'package.json');
 const componentPaths = [
   'src/lib/components/Badge.svelte',
+  'src/lib/components/Breadcrumb.svelte',
   'src/lib/components/Button.svelte',
   'src/lib/components/Callout.svelte',
   'src/lib/components/Checkbox.svelte',

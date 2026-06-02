@@ -32,6 +32,8 @@
 - 선택 컨트롤도 framed border와 surface 색상만 사용하며 hover 장식, 그림자, 그라데이션, pill switch를 기본값으로 만들지 않는다.
 - Badge와 Callout은 상태 전달용 표면이며 제품 판단, 권한, 결제, 보안 결정을 직접 수행하지 않는다.
 - Badge와 Callout도 그림자, 그라데이션, 반짝임 없이 surface, border, semantic accent 색상으로만 위계를 만든다.
+- Breadcrumb는 `nav`, ordered list, link, separator, `aria-current="page"` 구조를 유지하고 라우팅, SEO, 권한, 데이터 로딩 판단을 직접 수행하지 않는다.
+- Breadcrumb link focus는 sunlit gold 배경과 어두운 하단선을 유지한다.
 - Tabs는 페이지 안의 가까운 정보 묶음 전환에만 사용하고 라우팅, 권한, 데이터 로딩 판단을 직접 수행하지 않는다.
 - Tabs는 `tablist`, `tab`, `tabpanel`, roving tabindex, focus-visible 상태를 유지한다.
 - Dialog는 `role="dialog"`, `aria-modal`, `aria-labelledby`, 선택적 `aria-describedby`, Escape 닫기, backdrop 닫기, focus trap, focus-visible 상태를 유지한다.

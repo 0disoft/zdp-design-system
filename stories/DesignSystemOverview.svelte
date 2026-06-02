@@ -1,5 +1,6 @@
 <script lang="ts">
   import Badge from '../src/lib/components/Badge.svelte';
+  import Breadcrumb from '../src/lib/components/Breadcrumb.svelte';
   import Button from '../src/lib/components/Button.svelte';
   import Callout from '../src/lib/components/Callout.svelte';
   import Checkbox from '../src/lib/components/Checkbox.svelte';
@@ -88,6 +89,18 @@
           <Button variant="danger">삭제</Button>
           <IconButton ariaLabel="추가" variant="solid">+</IconButton>
         </div>
+      </section>
+
+      <section class="preview-section" aria-labelledby="storybook-light-breadcrumb">
+        <h3 id="storybook-light-breadcrumb">Breadcrumb</h3>
+        <Breadcrumb
+          ariaLabel="현재 위치"
+          items={[
+            { label: '홈', href: '/' },
+            { label: '플랫폼', href: '/platform' },
+            { label: '디자인 시스템' }
+          ]}
+        />
       </section>
 
       <section class="preview-section" aria-labelledby="storybook-light-feedback">
@@ -304,6 +317,18 @@
           <Button variant="danger">삭제</Button>
           <IconButton ariaLabel="추가" variant="ghost">+</IconButton>
         </div>
+      </section>
+
+      <section class="preview-section" aria-labelledby="storybook-dark-breadcrumb">
+        <h3 id="storybook-dark-breadcrumb">Breadcrumb</h3>
+        <Breadcrumb
+          ariaLabel="현재 위치"
+          items={[
+            { label: '홈', href: '/' },
+            { label: '플랫폼', href: '/platform' },
+            { label: '디자인 시스템' }
+          ]}
+        />
       </section>
 
       <section class="preview-section" aria-labelledby="storybook-dark-feedback">

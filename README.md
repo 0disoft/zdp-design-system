@@ -64,6 +64,7 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
 <script lang="ts">
   import {
     Badge,
+    Breadcrumb,
     Button,
     Callout,
     Checkbox,
@@ -79,6 +80,14 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
 </script>
 
 <Surface>
+  <Breadcrumb
+    ariaLabel="현재 위치"
+    items={[
+      { label: '홈', href: '/' },
+      { label: '플랫폼', href: '/platform' },
+      { label: '디자인 시스템' }
+    ]}
+  />
   <Badge tone="success">정상</Badge>
   <Callout tone="info" semanticRole="note">
     <strong>다음 단계가 준비됐습니다.</strong>
@@ -163,11 +172,12 @@ preview/index.html
 - Button과 IconButton hover는 light/dark 모두 배경색과 border 색이 함께 변한다.
 - 버튼 active도 위치 이동이나 그림자 없이 배경색, 테두리색, 글자색만 바꾼다.
 - focus는 그림자가 아니라 `focus.surface` outline, `focus.line` border, 링크의 하단선으로 표시한다.
-- Button, IconButton, Badge, Callout, Tabs, Field, Label, Input, Textarea, Select, Checkbox, Radio, Switch, HelpText, ErrorText, Surface, preview panel은 `0.375rem` radius를 기준으로 보고 pill 형태를 쓰지 않는다.
+- Button, IconButton, Badge, Callout, Breadcrumb, Tabs, Field, Label, Input, Textarea, Select, Checkbox, Radio, Switch, HelpText, ErrorText, Surface, preview panel은 `0.375rem` radius를 기준으로 보고 pill 형태를 쓰지 않는다.
 - Button과 IconButton은 `2px` border width를 기준으로 하는 framed control 방향을 유지한다.
 - Input, Textarea, Select는 Button과 같은 framed control 방향을 쓰고, help/error text는 id와 `aria-describedby`로 연결한다.
 - Checkbox, Radio, Switch는 native input을 유지하고 `checked`, `focus-visible`, `disabled`, `invalid` 상태를 토큰으로 표현한다.
 - Badge와 Callout은 짧은 상태와 페이지 안 피드백을 표현하되 제품 판단 로직을 갖지 않는다.
+- Breadcrumb는 현재 위치를 `nav`, `ol`, `aria-current="page"`로 표현하되 라우팅, SEO, 권한, 데이터 로딩 결정을 갖지 않는다.
 - Tabs는 가까운 정보 묶음 전환을 표현하되 라우팅, 권한, 데이터 로딩 결정을 갖지 않는다.
 - Dialog는 모달 레이어, backdrop, 닫기, focus trap, `role="dialog"`와 `aria-modal` 구조만 제공하고 저장/삭제/권한/결제 판단은 소비 앱에 남긴다.
 - 본문 텍스트의 기본 line-height는 `1.6`으로 두어 장식 대신 읽기 리듬으로 밀도를 만든다.

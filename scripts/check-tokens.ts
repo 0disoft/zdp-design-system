@@ -52,8 +52,8 @@ const tokenVariables = collectCssVariableNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
 
-if (packageJson.version !== '0.14.0') {
-  failures.push('package.json version must be 0.14.0 for the dialog component package surface.');
+if (packageJson.version !== '0.15.0') {
+  failures.push('package.json version must be 0.15.0 for the breadcrumb component package surface.');
 }
 
 if (tokenDocument.version !== '0.5.0') {
@@ -86,6 +86,7 @@ for (const { variable, token } of colorTokens) {
 
 for (const component of [
   'Badge',
+  'Breadcrumb',
   'Button',
   'Callout',
   'Checkbox',

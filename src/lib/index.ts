@@ -1,4 +1,5 @@
 export { default as Badge } from './components/Badge.svelte';
+export { default as Breadcrumb } from './components/Breadcrumb.svelte';
 export { default as Button } from './components/Button.svelte';
 export { default as Callout } from './components/Callout.svelte';
 export { default as Checkbox } from './components/Checkbox.svelte';

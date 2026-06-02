@@ -16,6 +16,7 @@ const previewPath = join(root, '.storybook', 'preview.ts');
 const storyPath = join(root, 'stories', 'DesignSystemOverview.stories.ts');
 const componentPath = join(root, 'stories', 'DesignSystemOverview.svelte');
 const badgePath = join(root, 'src', 'lib', 'components', 'Badge.svelte');
+const breadcrumbPath = join(root, 'src', 'lib', 'components', 'Breadcrumb.svelte');
 const buttonPath = join(root, 'src', 'lib', 'components', 'Button.svelte');
 const calloutPath = join(root, 'src', 'lib', 'components', 'Callout.svelte');
 const checkboxPath = join(root, 'src', 'lib', 'components', 'Checkbox.svelte');
@@ -39,6 +40,7 @@ const [
   story,
   component,
   badge,
+  breadcrumb,
   button,
   callout,
   checkbox,
@@ -61,6 +63,7 @@ const [
     readFile(storyPath, 'utf8'),
     readFile(componentPath, 'utf8'),
     readFile(badgePath, 'utf8'),
+    readFile(breadcrumbPath, 'utf8'),
     readFile(buttonPath, 'utf8'),
     readFile(calloutPath, 'utf8'),
     readFile(checkboxPath, 'utf8'),
@@ -141,6 +144,7 @@ for (const requiredText of [
 
 for (const requiredText of [
   '../src/lib/components/Badge.svelte',
+  '../src/lib/components/Breadcrumb.svelte',
   '../src/lib/components/Button.svelte',
   '../src/lib/components/Callout.svelte',
   '../src/lib/components/Checkbox.svelte',
@@ -190,6 +194,9 @@ for (const requiredText of [
   '작성 중인 내용을 임시 보관합니다.',
   'storybook-light-feedback',
   'storybook-dark-feedback',
+  'storybook-light-breadcrumb',
+  'storybook-dark-breadcrumb',
+  '현재 위치',
   'storybook-light-tabs',
   'storybook-dark-tabs',
   'storybook-light-dialog',
@@ -245,6 +252,32 @@ for (const source of [badge, callout]) {
   assertNoDecorativeEffects(failures, 'Feedback component', source);
   assertNoOverRoundedUsage(failures, 'Feedback component', source);
 }
+
+for (const requiredText of [
+  'export interface BreadcrumbItem',
+  'readonly href?: string',
+  'readonly current?: boolean',
+  '<nav class="zdp-breadcrumb" aria-label={ariaLabel}>',
+  '<ol class="zdp-breadcrumb__list">',
+  'class="zdp-breadcrumb__item"',
+  'class="zdp-breadcrumb__separator"',
+  'aria-hidden="true"',
+  'class="zdp-breadcrumb__link"',
+  'href={item.href}',
+  'class="zdp-breadcrumb__current"',
+  "aria-current={item.current ? 'page' : undefined}",
+  '.zdp-breadcrumb__link:focus-visible',
+  'background: var(--zdp-color-focus-surface)',
+  'border-bottom-color: var(--zdp-color-focus-line)',
+  'color: var(--zdp-color-focus-text)'
+]) {
+  if (!breadcrumb.includes(requiredText)) {
+    failures.push(`Breadcrumb component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Breadcrumb component', breadcrumb);
+assertNoOverRoundedUsage(failures, 'Breadcrumb component', breadcrumb);
 
 for (const requiredText of [
   'font-family: var(--zdp-font-family-sans)',
