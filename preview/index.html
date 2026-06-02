@@ -64,6 +64,11 @@
         border: 1px solid var(--zdp-color-line-subtle);
       }
 
+      .layout-preview .zdp-container {
+        display: grid;
+        gap: var(--zdp-space-4);
+      }
+
       .layout-preview__eyebrow {
         color: var(--zdp-color-accent-danger);
         font-size: var(--zdp-type-label-size);
@@ -394,6 +399,27 @@
               <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">기록</button>
             </div>
           </header>
+          <div class="zdp-grid zdp-grid--columns-two zdp-grid--gap-md" aria-labelledby="layout-preview-title">
+            <article class="zdp-surface zdp-surface--panel zdp-surface--padding-lg">
+              <span class="layout-preview__eyebrow">Grid</span>
+              <strong>반복되는 요약</strong>
+              <p class="surface-copy">카드의 의미는 소비처에 두고 열과 간격만 맞춘다.</p>
+            </article>
+            <article class="zdp-surface zdp-surface--raised zdp-surface--padding-lg">
+              <span class="layout-preview__eyebrow">Responsive</span>
+              <strong>작은 화면에서 한 줄</strong>
+              <p class="surface-copy">좁은 폭에서는 억지로 두 칸을 유지하지 않는다.</p>
+            </article>
+          </div>
+          <div class="zdp-toolbar zdp-toolbar--gap-md zdp-toolbar--align-center" aria-labelledby="layout-toolbar-title">
+            <div class="zdp-toolbar__main">
+              <strong id="layout-toolbar-title">검토 흐름</strong>
+            </div>
+            <div class="zdp-toolbar__actions">
+              <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">초안</button>
+              <button class="zdp-button zdp-button--primary zdp-button--md" type="button">검토 요청</button>
+            </div>
+          </div>
         </div>
       </section>
 

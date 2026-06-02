@@ -54,6 +54,10 @@
 - Inline과 `.zdp-inline`은 색상, 그림자, 그라데이션, hover 상태를 만들지 않고 `gap`, `align-items`, `justify-content`, `flex-wrap`, `min-width` 계약만 유지한다.
 - Divider는 가까운 내용 사이의 시각적 구분선만 담당하며 section layout, page rhythm, 라우팅, 데이터, 권한, 제품별 visibility 판단을 직접 수행하지 않는다.
 - Divider와 `.zdp-divider`는 그림자, 그라데이션, 배경 장식 없이 `border-block-start` 또는 `border-inline-start`와 line token만 유지한다.
+- Grid는 반복되는 카드, 요약, 선택지 묶음의 responsive columns와 gap만 담당하며 각 항목의 의미, 데이터 로딩, 권한 판단을 직접 수행하지 않는다.
+- Grid와 `.zdp-grid`는 색상, 그림자, 그라데이션, hover 상태를 만들지 않고 `grid-template-columns`, `gap`, `min-width`, responsive collapse 계약만 유지한다.
+- Toolbar는 가까운 화면 도구와 액션 묶음의 wrapping, main/action 배치만 담당하며 저장, 삭제, 필터, 권한 판단을 직접 수행하지 않는다.
+- Toolbar와 `.zdp-toolbar`는 색상, 그림자, 그라데이션, hover 상태를 만들지 않고 `flex-wrap`, `gap`, `justify-content`, action wrapping 계약만 유지한다.
 - Table은 표 형식 정보의 native table, caption, row/column header, overflow wrapper만 담당하며 정렬, 필터, 페이지네이션, 데이터 로딩 판단을 직접 수행하지 않는다.
 - Table과 `.zdp-table`은 그림자, 그라데이션, sticky 장식 없이 border, spacing, typography, overflow 계약만 유지한다.
 - KeyValue는 용어와 값의 description list 구조만 담당하며 원장, 보안, 결제, 권한 판단을 직접 수행하지 않는다.

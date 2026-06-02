@@ -40,6 +40,7 @@ const dividerPath = join(root, 'src', 'lib', 'components', 'Divider.svelte');
 const emptyStatePath = join(root, 'src', 'lib', 'components', 'EmptyState.svelte');
 const errorTextPath = join(root, 'src', 'lib', 'components', 'ErrorText.svelte');
 const fieldPath = join(root, 'src', 'lib', 'components', 'Field.svelte');
+const gridPath = join(root, 'src', 'lib', 'components', 'Grid.svelte');
 const inputPath = join(root, 'src', 'lib', 'components', 'Input.svelte');
 const keyValuePath = join(root, 'src', 'lib', 'components', 'KeyValue.svelte');
 const labelPath = join(root, 'src', 'lib', 'components', 'Label.svelte');
@@ -55,6 +56,7 @@ const switchPath = join(root, 'src', 'lib', 'components', 'Switch.svelte');
 const tabsPath = join(root, 'src', 'lib', 'components', 'Tabs.svelte');
 const tablePath = join(root, 'src', 'lib', 'components', 'Table.svelte');
 const textareaPath = join(root, 'src', 'lib', 'components', 'Textarea.svelte');
+const toolbarPath = join(root, 'src', 'lib', 'components', 'Toolbar.svelte');
 const visuallyHiddenPath = join(root, 'src', 'lib', 'components', 'VisuallyHidden.svelte');
 const iconButtonPath = join(root, 'src', 'lib', 'components', 'IconButton.svelte');
 const inlinePath = join(root, 'src', 'lib', 'components', 'Inline.svelte');
@@ -92,6 +94,7 @@ const [
   emptyState,
   errorText,
   field,
+  grid,
   input,
   keyValue,
   label,
@@ -107,6 +110,7 @@ const [
   tabs,
   table,
   textarea,
+  toolbar,
   visuallyHidden,
   iconButton,
   inline,
@@ -143,6 +147,7 @@ const [
     readFile(emptyStatePath, 'utf8'),
     readFile(errorTextPath, 'utf8'),
     readFile(fieldPath, 'utf8'),
+    readFile(gridPath, 'utf8'),
     readFile(inputPath, 'utf8'),
     readFile(keyValuePath, 'utf8'),
     readFile(labelPath, 'utf8'),
@@ -158,6 +163,7 @@ const [
     readFile(tabsPath, 'utf8'),
     readFile(tablePath, 'utf8'),
     readFile(textareaPath, 'utf8'),
+    readFile(toolbarPath, 'utf8'),
     readFile(visuallyHiddenPath, 'utf8'),
     readFile(iconButtonPath, 'utf8'),
     readFile(inlinePath, 'utf8'),
@@ -560,22 +566,25 @@ for (const requiredText of [
 for (const requiredText of [
   '../src/lib/components/Button.svelte',
   '../src/lib/components/Container.svelte',
+  '../src/lib/components/Grid.svelte',
   '../src/lib/components/Inline.svelte',
   '../src/lib/components/Page.svelte',
   '../src/lib/components/PageHeader.svelte',
   '../src/lib/components/Section.svelte',
   '../src/lib/components/Stack.svelte',
   '../src/lib/components/Surface.svelte',
+  '../src/lib/components/Toolbar.svelte',
   '화면의 첫 장면',
   '작업을 모으는 폭',
   '읽기 좋은 본문 폭',
+  '검토 흐름 정리',
   '<Page as="div" tone="canvas" labelledBy="layout-story-title">',
   '<Section spacing="xl">',
   '<Container size="lg" padding="lg">',
   '<PageHeader labelledBy="layout-story-title" align="center">',
   '<svelte:fragment slot="actions">',
-  'layout-story__grid',
-  'grid-template-columns: repeat(2, minmax(0, 1fr))',
+  '<Grid columns="two" gap="md" labelledBy="layout-panel-title">',
+  '<Toolbar labelledBy="layout-toolbar-title">',
   'zdp-surface-reset'
 ]) {
   if (!layoutComponent.includes(requiredText)) {
@@ -882,6 +891,55 @@ for (const requiredText of [
 
 assertNoDecorativeEffects(failures, 'Inline component', inline);
 assertNoOverRoundedUsage(failures, 'Inline component', inline);
+
+for (const requiredText of [
+  '.zdp-grid',
+  'as:',
+  'columns:',
+  'gap:',
+  'aria-labelledby={labelledBy ?? undefined}',
+  'display: grid',
+  'grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr))',
+  '.zdp-grid--columns-two',
+  '.zdp-grid--columns-four',
+  '.zdp-grid--columns-auto',
+  '.zdp-grid--gap-md',
+  '@media (max-width: 64rem)',
+  '@media (max-width: 42rem)'
+]) {
+  if (!grid.includes(requiredText)) {
+    failures.push(`Grid component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Grid component', grid);
+assertNoOverRoundedUsage(failures, 'Grid component', grid);
+
+for (const requiredText of [
+  '.zdp-toolbar',
+  'as:',
+  'gap:',
+  'align:',
+  'aria-labelledby={labelledBy ?? undefined}',
+  'class="zdp-toolbar__main"',
+  'slot name="actions"',
+  'class="zdp-toolbar__actions"',
+  'display: flex',
+  'flex-wrap: wrap',
+  'justify-content: space-between',
+  '.zdp-toolbar--gap-md',
+  '.zdp-toolbar--align-center',
+  '.zdp-toolbar__main',
+  '.zdp-toolbar__actions',
+  '@media (max-width: 42rem)'
+]) {
+  if (!toolbar.includes(requiredText)) {
+    failures.push(`Toolbar component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Toolbar component', toolbar);
+assertNoOverRoundedUsage(failures, 'Toolbar component', toolbar);
 
 for (const requiredText of [
   '.zdp-divider',

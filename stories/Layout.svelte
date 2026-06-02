@@ -1,12 +1,14 @@
 <script lang="ts">
   import Button from '../src/lib/components/Button.svelte';
   import Container from '../src/lib/components/Container.svelte';
+  import Grid from '../src/lib/components/Grid.svelte';
   import Inline from '../src/lib/components/Inline.svelte';
   import Page from '../src/lib/components/Page.svelte';
   import PageHeader from '../src/lib/components/PageHeader.svelte';
   import Section from '../src/lib/components/Section.svelte';
   import Stack from '../src/lib/components/Stack.svelte';
   import Surface from '../src/lib/components/Surface.svelte';
+  import Toolbar from '../src/lib/components/Toolbar.svelte';
 </script>
 
 <main class="layout-story zdp-surface-reset" lang="ko">
@@ -33,16 +35,20 @@
             <h2 id="layout-panel-title">작업을 모으는 폭</h2>
             <p slot="summary">넓은 화면에서는 줄 길이를 붙잡고, 작은 화면에서는 액션이 자연스럽게 아래로 내려온다.</p>
           </PageHeader>
-          <div class="layout-story__grid">
+          <Grid columns="two" gap="md" labelledBy="layout-panel-title">
             <Surface padding="lg">
-              <strong>공개 표면</strong>
-              <p>브랜드, 문서, 로드맵처럼 반복해서 확인하는 화면을 차분하게 묶는다.</p>
+              <div class="layout-story__tile">
+                <strong>공개 표면</strong>
+                <p>브랜드, 문서, 로드맵처럼 반복해서 확인하는 화면을 차분하게 묶는다.</p>
+              </div>
             </Surface>
             <Surface padding="lg">
-              <strong>작업 표면</strong>
-              <p>설정, 입력, 검토 흐름은 같은 여백과 같은 focus 규칙 위에 놓인다.</p>
+              <div class="layout-story__tile">
+                <strong>작업 표면</strong>
+                <p>설정, 입력, 검토 흐름은 같은 여백과 같은 focus 규칙 위에 놓인다.</p>
+              </div>
             </Surface>
-          </div>
+          </Grid>
         </Stack>
       </Container>
     </Section>
@@ -58,6 +64,21 @@
             <Button variant="danger">삭제</Button>
           </Inline>
         </Stack>
+      </Container>
+    </Section>
+
+    <Section tone="raised" spacing="lg" labelledBy="layout-toolbar-title">
+      <Container size="lg" padding="lg">
+        <Toolbar labelledBy="layout-toolbar-title">
+          <Stack gap="xs">
+            <span class="layout-story__eyebrow">Toolbar</span>
+            <h2 id="layout-toolbar-title">검토 흐름 정리</h2>
+          </Stack>
+          <svelte:fragment slot="actions">
+            <Button variant="secondary">초안</Button>
+            <Button variant="primary">검토 요청</Button>
+          </svelte:fragment>
+        </Toolbar>
       </Container>
     </Section>
   </Page>
@@ -92,13 +113,7 @@
     font-size: var(--zdp-type-title-size);
   }
 
-  .layout-story__grid {
-    display: grid;
-    gap: var(--zdp-space-4);
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .layout-story__grid strong {
+  .layout-story__tile strong {
     color: var(--zdp-color-ink-strong);
     display: block;
     font-size: var(--zdp-type-body-size);
@@ -106,7 +121,7 @@
     line-height: var(--zdp-type-body-line-height);
   }
 
-  .layout-story__grid p,
+  .layout-story__tile p,
   .layout-story__copy {
     color: var(--zdp-color-ink-muted);
     font-size: var(--zdp-type-body-size);
@@ -119,8 +134,5 @@
       font-size: 2.25rem;
     }
 
-    .layout-story__grid {
-      grid-template-columns: 1fr;
-    }
   }
 </style>

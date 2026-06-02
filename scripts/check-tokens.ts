@@ -52,8 +52,8 @@ const tokenVariables = collectCssVariableNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
 
-if (packageJson.version !== '0.25.0') {
-  failures.push('package.json version must be 0.25.0 for the data display package surface.');
+if (packageJson.version !== '0.26.0') {
+  failures.push('package.json version must be 0.26.0 for the layout composition package surface.');
 }
 
 if (tokenDocument.version !== '0.5.0') {
@@ -94,6 +94,7 @@ for (const component of [
   'Divider',
   'ErrorText',
   'Field',
+  'Grid',
   'HelpText',
   'IconButton',
   'Inline',
@@ -108,6 +109,7 @@ for (const component of [
   'Switch',
   'Tabs',
   'Textarea',
+  'Toolbar',
   'VisuallyHidden'
 ]) {
   if (!publicEntry.includes(`export { default as ${component} }`)) {

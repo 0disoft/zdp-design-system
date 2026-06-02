@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.26.0
+
+- Added layout composition primitives: `Grid` and `Toolbar`.
+- Added static `.zdp-grid` and `.zdp-toolbar` utility classes for Astro and non-Svelte consumers.
+- Added Storybook and static preview coverage for responsive card grids and action toolbars.
+- Strengthened package, Storybook, preview, and consumer contract checks so layout composition primitives stay responsive, flat, and free of product-owned decisions.
+
 ## 0.25.0
 
 - Added data display primitives: `Table`, `KeyValue`, and `EmptyState`.
