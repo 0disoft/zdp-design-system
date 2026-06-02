@@ -38,8 +38,8 @@ if (failures.length > 0) {
 }
 
 function checkPackageSurface(packageJson: PackageJson): void {
-  if (packageJson.version !== '0.13.0') {
-    failures.push('package.json version must be 0.13.0 for the consumer contract package surface.');
+  if (packageJson.version !== '0.14.0') {
+    failures.push('package.json version must be 0.14.0 for the dialog component package surface.');
   }
 
   if (!packageJson.files?.includes('docs/')) {
@@ -61,6 +61,7 @@ function checkConsumerContractDocument(documentText: string): void {
     "import 'zdp-design-system/styles.css';",
     "import 'zdp-design-system/locale-fonts.css';",
     "from 'zdp-design-system'",
+    'Dialog',
     'tokens/zdp.tokens.json',
     '.zdp-surface-reset',
     'Astro',
@@ -71,6 +72,7 @@ function checkConsumerContractDocument(documentText: string): void {
     'oklch',
     'focus.surface',
     'control.heightMd',
+    'focus trap',
     'keyboard focus',
     'public export',
     'opt-in',
@@ -88,6 +90,7 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     "import 'zdp-design-system/styles.css';",
     "import 'zdp-design-system/locale-fonts.css';",
     'tokens/zdp.tokens.json',
+    'Dialog는 모달 레이어',
     'Astro는 `styles.css`',
     'Flutter는 Svelte 컴포넌트를 직접 쓰지 않고'
   ]) {
@@ -100,6 +103,7 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'CONSUMER_CONTRACT.md',
     'public export',
     '내부 `src/` deep import',
+    'Dialog는 `role="dialog"`',
     '대표 소비처'
   ]) {
     if (!contributing.includes(requiredText)) {
@@ -135,6 +139,7 @@ function checkTokenAndComponentSurface(tokenDocument: string, publicEntry: strin
 
   for (const requiredText of [
     'export { default as Button }',
+    'export { default as Dialog }',
     'export { default as Field }',
     'export { default as Input }',
     'export { default as Label }',

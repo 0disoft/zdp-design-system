@@ -67,6 +67,7 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
     Button,
     Callout,
     Checkbox,
+    Dialog,
     Field,
     HelpText,
     Input,
@@ -102,6 +103,14 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
   <Checkbox name="release-updates" checked>업데이트 받기</Checkbox>
   <Switch name="autosave" checked>자동 저장</Switch>
   <Button>저장</Button>
+  <Dialog
+    open={false}
+    labelledBy="project-dialog-title"
+    describedBy="project-dialog-desc"
+  >
+    <h2 slot="title" id="project-dialog-title">변경 내용을 저장할까요?</h2>
+    <p id="project-dialog-desc">저장하면 공개 표기에 바로 반영됩니다.</p>
+  </Dialog>
 </Surface>
 ```
 
@@ -160,6 +169,7 @@ preview/index.html
 - Checkbox, Radio, Switch는 native input을 유지하고 `checked`, `focus-visible`, `disabled`, `invalid` 상태를 토큰으로 표현한다.
 - Badge와 Callout은 짧은 상태와 페이지 안 피드백을 표현하되 제품 판단 로직을 갖지 않는다.
 - Tabs는 가까운 정보 묶음 전환을 표현하되 라우팅, 권한, 데이터 로딩 결정을 갖지 않는다.
+- Dialog는 모달 레이어, backdrop, 닫기, focus trap, `role="dialog"`와 `aria-modal` 구조만 제공하고 저장/삭제/권한/결제 판단은 소비 앱에 남긴다.
 - 본문 텍스트의 기본 line-height는 `1.6`으로 두어 장식 대신 읽기 리듬으로 밀도를 만든다.
 - `success`, `warning`, `danger`는 감성 팔레트 이름이 아니라 상태 의미를 가진 semantic color로 쓴다. 긍정/완료는 `success`, 주의/보류는 `warning`, 삭제/오류/위험은 `danger`에 묶는다.
 - `focus.surface`, `focus.text`, `focus.line`은 브랜드 장식색이 아니라 접근성 기능색이다. 링크 focus는 sunlit gold 배경과 어두운 하단선, 입력류와 framed controls focus는 sunlit gold outline과 어두운 border를 쓴다.

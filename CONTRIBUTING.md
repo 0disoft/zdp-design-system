@@ -34,6 +34,8 @@
 - Badge와 Callout도 그림자, 그라데이션, 반짝임 없이 surface, border, semantic accent 색상으로만 위계를 만든다.
 - Tabs는 페이지 안의 가까운 정보 묶음 전환에만 사용하고 라우팅, 권한, 데이터 로딩 판단을 직접 수행하지 않는다.
 - Tabs는 `tablist`, `tab`, `tabpanel`, roving tabindex, focus-visible 상태를 유지한다.
+- Dialog는 `role="dialog"`, `aria-modal`, `aria-labelledby`, 선택적 `aria-describedby`, Escape 닫기, backdrop 닫기, focus trap, focus-visible 상태를 유지한다.
+- Dialog는 저장, 삭제, 인증, 결제, 권한 판단을 직접 수행하지 않고 소비 앱의 확인 흐름을 담는 레이어 표면으로만 둔다.
 - 본문 텍스트 line-height는 `1.6`을 기준으로 하며, compact control line-height와 섞지 않는다.
 - 작은 본문, 캡션, 데이터 숫자 표시는 `bodySmall`, `caption`, `data` 타입 토큰을 우선 사용한다.
 - 컴포넌트가 인증, 결제, 권한 판단을 직접 수행하지 않는다.

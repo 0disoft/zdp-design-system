@@ -200,6 +200,20 @@
         gap: var(--zdp-space-2);
       }
 
+      .dialog-demo {
+        align-items: start;
+        display: grid;
+        gap: var(--zdp-space-2);
+        max-width: 32rem;
+      }
+
+      .dialog-demo p {
+        color: var(--zdp-color-ink-muted);
+        font-size: var(--zdp-type-body-small-size);
+        line-height: var(--zdp-type-body-small-line-height);
+        margin: 0;
+      }
+
       .form-grid {
         display: grid;
         gap: var(--zdp-space-4);
@@ -430,6 +444,41 @@
                   <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
                 </div>
               </section>
+            </div>
+          </section>
+
+          <section class="preview-section" aria-labelledby="light-dialog-title">
+            <h3 class="preview-section__title" id="light-dialog-title">Dialog</h3>
+            <div class="dialog-demo">
+              <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">검토 열기</button>
+              <p>중요한 확인은 같은 화면 위에서 짧고 분명하게 처리한다.</p>
+            </div>
+            <div class="zdp-dialog" hidden>
+              <button class="zdp-dialog__backdrop" type="button" aria-label="닫기" tabindex="-1"></button>
+              <div
+                class="zdp-dialog__panel zdp-dialog__panel--md"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="light-dialog-sample-title"
+                aria-describedby="light-dialog-sample-desc"
+                tabindex="-1"
+              >
+                <header class="zdp-dialog__header">
+                  <div class="zdp-dialog__title">
+                    <h4 id="light-dialog-sample-title">변경 내용을 저장할까요?</h4>
+                  </div>
+                  <button class="zdp-dialog__close" type="button" aria-label="닫기">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </header>
+                <div class="zdp-dialog__body">
+                  <p id="light-dialog-sample-desc">저장하면 연결된 화면의 공개 표기가 함께 바뀝니다.</p>
+                </div>
+                <div class="zdp-dialog__footer">
+                  <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">취소</button>
+                  <button class="zdp-button zdp-button--primary zdp-button--md" type="button">저장</button>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -687,6 +736,41 @@
                   <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
                 </div>
               </section>
+            </div>
+          </section>
+
+          <section class="preview-section" aria-labelledby="dark-dialog-title">
+            <h3 class="preview-section__title" id="dark-dialog-title">Dialog</h3>
+            <div class="dialog-demo">
+              <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">검토 열기</button>
+              <p>어두운 표면에서도 focus와 닫기 동작은 같은 규칙을 따른다.</p>
+            </div>
+            <div class="zdp-dialog" hidden>
+              <button class="zdp-dialog__backdrop" type="button" aria-label="닫기" tabindex="-1"></button>
+              <div
+                class="zdp-dialog__panel zdp-dialog__panel--md"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="dark-dialog-sample-title"
+                aria-describedby="dark-dialog-sample-desc"
+                tabindex="-1"
+              >
+                <header class="zdp-dialog__header">
+                  <div class="zdp-dialog__title">
+                    <h4 id="dark-dialog-sample-title">삭제 전에 확인하세요.</h4>
+                  </div>
+                  <button class="zdp-dialog__close" type="button" aria-label="닫기">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </header>
+                <div class="zdp-dialog__body">
+                  <p id="dark-dialog-sample-desc">이 작업은 제품 저장소의 별도 확인 흐름과 함께 사용합니다.</p>
+                </div>
+                <div class="zdp-dialog__footer">
+                  <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">취소</button>
+                  <button class="zdp-button zdp-button--danger zdp-button--md" type="button">삭제</button>
+                </div>
+              </div>
             </div>
           </section>
 

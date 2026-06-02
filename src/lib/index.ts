@@ -2,6 +2,7 @@ export { default as Badge } from './components/Badge.svelte';
 export { default as Button } from './components/Button.svelte';
 export { default as Callout } from './components/Callout.svelte';
 export { default as Checkbox } from './components/Checkbox.svelte';
+export { default as Dialog } from './components/Dialog.svelte';
 export { default as ErrorText } from './components/ErrorText.svelte';
 export { default as Field } from './components/Field.svelte';
 export { default as HelpText } from './components/HelpText.svelte';

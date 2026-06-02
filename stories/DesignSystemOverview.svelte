@@ -3,6 +3,7 @@
   import Button from '../src/lib/components/Button.svelte';
   import Callout from '../src/lib/components/Callout.svelte';
   import Checkbox from '../src/lib/components/Checkbox.svelte';
+  import Dialog from '../src/lib/components/Dialog.svelte';
   import ErrorText from '../src/lib/components/ErrorText.svelte';
   import Field from '../src/lib/components/Field.svelte';
   import HelpText from '../src/lib/components/HelpText.svelte';
@@ -15,6 +16,9 @@
   import Switch from '../src/lib/components/Switch.svelte';
   import Tabs from '../src/lib/components/Tabs.svelte';
   import Textarea from '../src/lib/components/Textarea.svelte';
+
+  let lightDialogOpen = false;
+  let darkDialogOpen = false;
 </script>
 
 <main class="storybook-preview zdp-surface-reset" lang="ko">
@@ -104,6 +108,31 @@
             <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
           </Callout>
         </div>
+      </section>
+
+      <section class="preview-section" aria-labelledby="storybook-light-dialog">
+        <h3 id="storybook-light-dialog">Dialog</h3>
+        <div class="dialog-demo">
+          <button
+            class="zdp-button zdp-button--secondary zdp-button--md"
+            type="button"
+            onclick={() => (lightDialogOpen = true)}
+          >검토 열기</button>
+          <p>중요한 확인은 같은 화면 위에서 짧고 분명하게 처리한다.</p>
+        </div>
+        <Dialog
+          open={lightDialogOpen}
+          labelledBy="storybook-light-dialog-title"
+          describedBy="storybook-light-dialog-desc"
+          onClose={() => (lightDialogOpen = false)}
+        >
+          <h4 slot="title" id="storybook-light-dialog-title">변경 내용을 저장할까요?</h4>
+          <p id="storybook-light-dialog-desc">저장하면 연결된 화면의 공개 표기가 함께 바뀝니다.</p>
+          <div slot="footer" class="action-row">
+            <button class="zdp-button zdp-button--secondary zdp-button--md" type="button" onclick={() => (lightDialogOpen = false)}>취소</button>
+            <button class="zdp-button zdp-button--primary zdp-button--md" type="button" onclick={() => (lightDialogOpen = false)}>저장</button>
+          </div>
+        </Dialog>
       </section>
 
       <section class="preview-section" aria-labelledby="storybook-light-tabs">
@@ -295,6 +324,31 @@
             <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
           </Callout>
         </div>
+      </section>
+
+      <section class="preview-section" aria-labelledby="storybook-dark-dialog">
+        <h3 id="storybook-dark-dialog">Dialog</h3>
+        <div class="dialog-demo">
+          <button
+            class="zdp-button zdp-button--secondary zdp-button--md"
+            type="button"
+            onclick={() => (darkDialogOpen = true)}
+          >검토 열기</button>
+          <p>어두운 표면에서도 focus와 닫기 동작은 같은 규칙을 따른다.</p>
+        </div>
+        <Dialog
+          open={darkDialogOpen}
+          labelledBy="storybook-dark-dialog-title"
+          describedBy="storybook-dark-dialog-desc"
+          onClose={() => (darkDialogOpen = false)}
+        >
+          <h4 slot="title" id="storybook-dark-dialog-title">삭제 전에 확인하세요.</h4>
+          <p id="storybook-dark-dialog-desc">이 작업은 제품 저장소의 별도 확인 흐름과 함께 사용합니다.</p>
+          <div slot="footer" class="action-row">
+            <button class="zdp-button zdp-button--secondary zdp-button--md" type="button" onclick={() => (darkDialogOpen = false)}>취소</button>
+            <button class="zdp-button zdp-button--danger zdp-button--md" type="button" onclick={() => (darkDialogOpen = false)}>삭제</button>
+          </div>
+        </Dialog>
       </section>
 
       <section class="preview-section" aria-labelledby="storybook-dark-tabs">
@@ -644,6 +698,20 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--zdp-space-2);
+  }
+
+  .dialog-demo {
+    align-items: start;
+    display: grid;
+    gap: var(--zdp-space-2);
+    max-width: 32rem;
+  }
+
+  .dialog-demo p {
+    color: var(--zdp-color-ink-muted);
+    font-size: var(--zdp-type-body-small-size);
+    line-height: var(--zdp-type-body-small-line-height);
+    margin: 0;
   }
 
   .form-grid {

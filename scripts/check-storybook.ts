@@ -19,6 +19,7 @@ const badgePath = join(root, 'src', 'lib', 'components', 'Badge.svelte');
 const buttonPath = join(root, 'src', 'lib', 'components', 'Button.svelte');
 const calloutPath = join(root, 'src', 'lib', 'components', 'Callout.svelte');
 const checkboxPath = join(root, 'src', 'lib', 'components', 'Checkbox.svelte');
+const dialogPath = join(root, 'src', 'lib', 'components', 'Dialog.svelte');
 const fieldPath = join(root, 'src', 'lib', 'components', 'Field.svelte');
 const inputPath = join(root, 'src', 'lib', 'components', 'Input.svelte');
 const labelPath = join(root, 'src', 'lib', 'components', 'Label.svelte');
@@ -41,6 +42,7 @@ const [
   button,
   callout,
   checkbox,
+  dialog,
   field,
   input,
   label,
@@ -62,6 +64,7 @@ const [
     readFile(buttonPath, 'utf8'),
     readFile(calloutPath, 'utf8'),
     readFile(checkboxPath, 'utf8'),
+    readFile(dialogPath, 'utf8'),
     readFile(fieldPath, 'utf8'),
     readFile(inputPath, 'utf8'),
     readFile(labelPath, 'utf8'),
@@ -141,6 +144,7 @@ for (const requiredText of [
   '../src/lib/components/Button.svelte',
   '../src/lib/components/Callout.svelte',
   '../src/lib/components/Checkbox.svelte',
+  '../src/lib/components/Dialog.svelte',
   '../src/lib/components/ErrorText.svelte',
   '../src/lib/components/Field.svelte',
   '../src/lib/components/HelpText.svelte',
@@ -188,6 +192,12 @@ for (const requiredText of [
   'storybook-dark-feedback',
   'storybook-light-tabs',
   'storybook-dark-tabs',
+  'storybook-light-dialog',
+  'storybook-dark-dialog',
+  'storybook-light-dialog-title',
+  'storybook-dark-dialog-title',
+  '검토 열기',
+  '변경 내용을 저장할까요?',
   '검토 중',
   '정상',
   '삭제 전에 다시 확인하세요.',
@@ -380,6 +390,33 @@ for (const requiredText of [
 
 assertNoDecorativeEffects(failures, 'Tabs component', tabs);
 assertNoOverRoundedUsage(failures, 'Tabs component', tabs);
+
+for (const requiredText of [
+  'role="dialog"',
+  'aria-modal="true"',
+  'aria-labelledby={labelledBy}',
+  'aria-describedby={describedBy ?? undefined}',
+  'onkeydown={handleKeydown}',
+  'onclick={handleBackdropClick}',
+  'bind:this={panelElement}',
+  'closeOnEscape',
+  'closeOnBackdrop',
+  'getFocusableElements',
+  '.zdp-dialog',
+  '.zdp-dialog__backdrop',
+  '.zdp-dialog__panel',
+  '.zdp-dialog__panel:focus-visible',
+  '.zdp-dialog__close:focus-visible',
+  'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
+  'border-color: var(--zdp-color-focus-line)'
+]) {
+  if (!dialog.includes(requiredText)) {
+    failures.push(`Dialog component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Dialog component', dialog);
+assertNoOverRoundedUsage(failures, 'Dialog component', dialog);
 
 for (const source of [checkbox, field, input, label, radio, select, switchComponent, textarea]) {
   assertNoDecorativeEffects(failures, 'Form component', source);

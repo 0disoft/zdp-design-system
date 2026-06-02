@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.14.0
+
+- Added `Dialog` for accessible modal layers with backdrop close, Escape close, focus restoration, focus trap, and labelled dialog semantics.
+- Added light and dark dialog examples to Storybook and the static preview.
+- Strengthened package, token, Storybook, preview, and consumer contract checks so the dialog surface stays exported, compiled, documented, and free of decorative effects.
+
 ## 0.13.0
 
 - Added `docs/CONSUMER_CONTRACT.md` to pin Astro, Svelte, Tauri, Flutter, and native token consumption boundaries.

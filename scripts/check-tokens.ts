@@ -52,8 +52,8 @@ const tokenVariables = collectCssVariableNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
 
-if (packageJson.version !== '0.13.0') {
-  failures.push('package.json version must be 0.13.0 for the consumer contract package surface.');
+if (packageJson.version !== '0.14.0') {
+  failures.push('package.json version must be 0.14.0 for the dialog component package surface.');
 }
 
 if (tokenDocument.version !== '0.5.0') {
@@ -89,6 +89,7 @@ for (const component of [
   'Button',
   'Callout',
   'Checkbox',
+  'Dialog',
   'ErrorText',
   'Field',
   'HelpText',
