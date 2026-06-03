@@ -39,7 +39,7 @@
     display: grid;
     font-family: var(--zdp-font-family-sans);
     gap: var(--zdp-space-3);
-    grid-template-columns: 3rem minmax(0, 1fr);
+    grid-template-columns: var(--zdp-control-switch-width) minmax(0, 1fr);
     line-height: var(--zdp-type-body-small-line-height);
     min-width: 0;
   }
@@ -58,30 +58,30 @@
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     display: inline-flex;
-    height: 1.5rem;
-    margin-top: var(--zdp-space-1);
+    height: var(--zdp-control-switch-height);
+    margin-top: var(--zdp-control-switch-thumb-offset);
     position: relative;
     transition:
       background-color var(--zdp-motion-fast) ease,
       border-color var(--zdp-motion-fast) ease;
-    width: 3rem;
+    width: var(--zdp-control-switch-width);
   }
 
   .zdp-switch__track::after {
     background: var(--zdp-color-ink-muted);
     border-radius: var(--zdp-radius-sm);
     content: "";
-    height: 1rem;
-    left: 0.125rem;
+    height: var(--zdp-control-switch-thumb-size);
+    left: var(--zdp-control-switch-thumb-offset);
     position: absolute;
-    top: 0.125rem;
+    top: var(--zdp-control-switch-thumb-offset);
     transition:
       background-color var(--zdp-motion-fast) ease,
       left var(--zdp-motion-fast) ease;
-    width: 1rem;
+    width: var(--zdp-control-switch-thumb-size);
   }
 
-  .zdp-switch:hover .zdp-switch__input:not(:disabled) + .zdp-switch__track {
+  .zdp-switch:hover .zdp-switch__input:not(:checked):not(:disabled) + .zdp-switch__track {
     background: var(--zdp-color-surface-raised);
     border-color: var(--zdp-color-line-strong);
   }
@@ -93,7 +93,7 @@
 
   .zdp-switch__input:checked + .zdp-switch__track::after {
     background: var(--zdp-color-ink-inverse);
-    left: 1.625rem;
+    left: var(--zdp-control-switch-thumb-checked-offset);
   }
 
   .zdp-switch__input:focus-visible + .zdp-switch__track {

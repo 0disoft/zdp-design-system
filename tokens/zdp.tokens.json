@@ -1,7 +1,7 @@
 {
   "$schema": "https://zdp.zerodi.dev/schemas/design-tokens.schema.json",
   "name": "zdp-core",
-  "version": "0.6.0",
+  "version": "0.6.3",
   "color": {
     "ink": {
       "strong": {
@@ -65,6 +65,20 @@
       "line": {
         "hex": "#1f160d",
         "oklch": "oklch(20% 0.035 70)"
+      }
+    },
+    "scrollbar": {
+      "track": {
+        "hex": "#f1e4cc",
+        "oklch": "oklch(91% 0.045 82)"
+      },
+      "thumb": {
+        "hex": "#b89a6a",
+        "oklch": "oklch(70% 0.08 76)"
+      },
+      "thumbHover": {
+        "hex": "#8b6f45",
+        "oklch": "oklch(55% 0.075 76)"
       }
     },
     "accent": {
@@ -173,11 +187,19 @@
     "iconMd": "2.75rem",
     "glyphSm": "1rem",
     "glyphMd": "1.25rem",
+    "choiceSize": "1.25rem",
+    "choiceIndicatorSize": "0.5rem",
+    "switchWidth": "2.25rem",
+    "switchHeight": "1.25rem",
+    "switchThumbSize": "0.875rem",
+    "switchThumbOffset": "0.125rem",
+    "switchThumbCheckedOffset": "1.125rem",
     "radius": "0.375rem",
-    "borderWidth": "2px",
+    "borderWidth": "1px",
     "focusOutlineWidth": "3px",
     "focusOutlineOffset": "2px",
     "focusUnderlineWidth": "3px",
+    "scrollbarSize": "0.5rem",
     "hitTarget": "2.75rem"
   },
   "i18n": {

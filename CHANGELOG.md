@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.28.0
+
+- Added `ConfirmAction` for slide-or-hold confirmation flows such as payment and deletion gates without owning product decisions.
+- Reduced the shared control border width from `2px` to `1px` so buttons and framed controls keep a lighter default edge.
+- Kept the stronger sunlit focus outline unchanged so keyboard focus remains easy to find without making resting controls feel heavy.
+- Updated token, consumer, Storybook, and preview contracts to treat thin framed controls as the default.
+- Added compact choice-control tokens so Checkbox, Radio, and Switch no longer reuse icon button sizing.
+- Reduced checkbox and radio marks to line-height-friendly dimensions while keeping the native input, label, hover, invalid, disabled, and focus-visible contracts intact.
+- Added themed scrollbar tokens and shared reset styling so overflow panels use thin parchment/market scrollbars instead of browser-default gray controls.
+- Fixed choice-control hover rules so checked Checkbox, Radio, and Switch states do not visually fall back to unchecked surfaces on hover.
+- Aligned Callout marks to one title line so the accent bar no longer lands between the heading and body copy.
+- Increased the Checkbox checkmark stroke so the selected state reads clearly while the outer control border stays thin.
+
 ## 0.27.0
 
 - Added `Icon` for shared glyph sizing and centered inline alignment.

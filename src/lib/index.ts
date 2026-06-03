@@ -3,6 +3,7 @@ export { default as Breadcrumb } from './components/Breadcrumb.svelte';
 export { default as Button } from './components/Button.svelte';
 export { default as Callout } from './components/Callout.svelte';
 export { default as Checkbox } from './components/Checkbox.svelte';
+export { default as ConfirmAction } from './components/ConfirmAction.svelte';
 export { default as Container } from './components/Container.svelte';
 export { default as Dialog } from './components/Dialog.svelte';
 export { default as Divider } from './components/Divider.svelte';

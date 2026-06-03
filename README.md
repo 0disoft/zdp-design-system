@@ -22,7 +22,7 @@ ZDP의 디자인 토큰, CSS, 아이콘, Svelte UI 컴포넌트 경계를 고정
 
 - `type`: body, body small, title, label, caption, control, data에 쓰는 기본 크기와 줄높이
 - `breakpoint`: mobile, tablet, desktop, wide 기준 폭
-- `control`: 버튼, 아이콘 버튼, 입력류가 공유할 높이, radius, border width, hit target
+- `control`: 버튼, 아이콘 버튼, 입력류가 공유할 높이, radius, border width, hit target, 선택 컨트롤 전용 mark, indicator, switch, scrollbar 크기
 - `focus`: 키보드 사용자가 현재 위치를 놓치지 않도록 하는 sunlit focus highlight, dark text, dark line
 - `i18n`: 긴 텍스트와 CJK/영문/힌디어 혼합 문장이 UI를 밀어내지 않게 하는 wrapping 및 언어별 폰트 기본값
 
@@ -68,6 +68,7 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
     Button,
     Callout,
     Checkbox,
+    ConfirmAction,
     Container,
     Dialog,
     Divider,
@@ -274,7 +275,7 @@ preview/index.html
 
 ## Flat UI 계약
 
-기본 컴포넌트는 그림자, 그라데이션, 반짝임, 이동형 hover 장식을 쓰지 않는다. 깊이는 `surface` 색상 단계, 2px framed border, 명확한 타이포그래피, 충분한 여백으로 표현한다.
+기본 컴포넌트는 그림자, 그라데이션, 반짝임, 이동형 hover 장식을 쓰지 않는다. 깊이는 `surface` 색상 단계, 1px framed border, 명확한 타이포그래피, 충분한 여백으로 표현한다.
 
 - `shadow.focus`, `shadow.sm`, `shadow.md`는 의도적으로 `none`이다.
 - core 토큰에는 `gradient` 그룹을 만들지 않는다.
@@ -282,13 +283,16 @@ preview/index.html
 - Button과 IconButton hover는 light/dark 모두 배경색과 border 색이 함께 변한다.
 - 버튼 active도 위치 이동이나 그림자 없이 배경색, 테두리색, 글자색만 바꾼다.
 - focus는 그림자가 아니라 `focus.surface` outline, `focus.line` border, 링크의 하단선으로 표시한다.
-- Button, IconButton, Badge, Callout, Link, SkipLink, Breadcrumb, Tabs, Grid, Toolbar, Table, KeyValue, EmptyState, Field, Label, Input, Textarea, Select, Checkbox, Radio, Switch, HelpText, ErrorText, Surface, Page, Container, Section, PageHeader, preview panel은 `0.375rem` radius를 기준으로 보고 pill 형태를 쓰지 않는다.
-- Button과 IconButton은 `2px` border width를 기준으로 하는 framed control 방향을 유지한다.
+- Button, IconButton, ConfirmAction, Badge, Callout, Link, SkipLink, Breadcrumb, Tabs, Grid, Toolbar, Table, KeyValue, EmptyState, Field, Label, Input, Textarea, Select, Checkbox, Radio, Switch, HelpText, ErrorText, Surface, Page, Container, Section, PageHeader, preview panel은 `0.375rem` radius를 기준으로 보고 pill 형태를 쓰지 않는다.
+- Button과 IconButton은 `1px` border width를 기준으로 하는 thin framed control 방향을 유지한다.
 - Icon은 장식용 glyph 또는 짧은 보조 기호의 박스, 크기, 중앙정렬만 제공하며 의미, 라벨 문구, 상태 판단은 소비 앱에 남긴다.
 - Button과 IconButton은 `onclick`, `ariaControls`, `ariaExpanded`, `ariaPressed`, `ariaDescribedBy` 같은 실제 앱 액션 연결 props를 native button에 전달한다.
+- ConfirmAction은 중요한 액션을 밀기 또는 길게 누르기로 확인하는 표면만 제공하고 결제, 삭제, 권한, 환불 판단은 소비 앱에 남긴다.
 - Input, Textarea, Select는 Button과 같은 framed control 방향을 쓰고, help/error text는 id와 `aria-describedby`로 연결한다. 도움말과 에러가 함께 있을 때는 `describedBy`에 id 배열을 넘기고, invalid 상태에서는 `errorMessageId`로 `aria-errormessage`를 연결한다.
 - Input과 Textarea의 `readonly` 상태는 제출과 포커스를 유지하는 읽기 전용 값에 사용하고, `disabled` 상태와 혼동하지 않는다.
-- Checkbox, Radio, Switch는 native input을 유지하고 `checked`, `focus-visible`, `disabled`, `invalid` 상태를 토큰으로 표현한다.
+- Checkbox, Radio, Switch는 native input을 유지하고 `checked`, `focus-visible`, `disabled`, `invalid` 상태를 토큰으로 표현한다. 선택 mark와 switch track은 버튼 hit area가 아니라 `choice`/`switch` 전용 control token을 쓴다.
+- Checkbox, Radio, Switch hover는 checked 상태를 덮지 않는다. 이미 선택된 컨트롤은 hover 중에도 선택된 색과 mark 위치를 유지한다.
+- Scrollbar는 얇은 track과 thumb을 `color.scrollbar.*`, `control.scrollbarSize`로 고정해 브라우저 기본 회색 UI가 shared surface 안에 노출되지 않게 한다.
 - Badge와 Callout은 짧은 상태와 페이지 안 피드백을 표현하되 제품 판단 로직을 갖지 않는다.
 - Link는 일반 텍스트 이동을 표현하되 라우팅, SEO, 권한, 데이터 로딩 결정을 갖지 않는다.
 - SkipLink는 키보드 사용자가 반복되는 상단 탐색을 건너뛰도록 돕되 페이지 레이아웃, 라우팅, 본문 id 소유는 소비 앱에 남긴다.

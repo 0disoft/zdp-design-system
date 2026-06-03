@@ -16,6 +16,9 @@
   --zdp-color-focus-surface: #e7c97a;
   --zdp-color-focus-text: #1f160d;
   --zdp-color-focus-line: #1f160d;
+  --zdp-color-scrollbar-track: #f1e4cc;
+  --zdp-color-scrollbar-thumb: #b89a6a;
+  --zdp-color-scrollbar-thumb-hover: #8b6f45;
   --zdp-color-accent-primary: #6d8fb7;
   --zdp-color-accent-primary-strong: #3f6286;
   --zdp-color-accent-primary-soft: #dce8f4;
@@ -82,11 +85,19 @@
   --zdp-control-icon-md: 2.75rem;
   --zdp-control-glyph-sm: 1rem;
   --zdp-control-glyph-md: 1.25rem;
+  --zdp-control-choice-size: 1.25rem;
+  --zdp-control-choice-indicator-size: 0.5rem;
+  --zdp-control-switch-width: 2.25rem;
+  --zdp-control-switch-height: 1.25rem;
+  --zdp-control-switch-thumb-size: 0.875rem;
+  --zdp-control-switch-thumb-offset: 0.125rem;
+  --zdp-control-switch-thumb-checked-offset: 1.125rem;
   --zdp-control-radius: 0.375rem;
-  --zdp-control-border-width: 2px;
+  --zdp-control-border-width: 1px;
   --zdp-control-focus-outline-width: 3px;
   --zdp-control-focus-outline-offset: 2px;
   --zdp-control-focus-underline-width: 3px;
+  --zdp-control-scrollbar-size: 0.5rem;
   --zdp-control-hit-target: 2.75rem;
   --zdp-i18n-text-wrap: pretty;
   --zdp-i18n-word-break: normal;
@@ -115,6 +126,9 @@
   --zdp-color-focus-surface: #e7c97a;
   --zdp-color-focus-text: #1f160d;
   --zdp-color-focus-line: #1f160d;
+  --zdp-color-scrollbar-track: #44321f;
+  --zdp-color-scrollbar-thumb: #b89a6a;
+  --zdp-color-scrollbar-thumb-hover: #d8c8ac;
   --zdp-color-accent-primary: #8fb3d8;
   --zdp-color-accent-primary-strong: #dce8f4;
   --zdp-color-accent-primary-soft: #3f6286;
@@ -140,6 +154,9 @@
     --zdp-color-focus-surface: oklch(84% 0.1 86);
     --zdp-color-focus-text: oklch(20% 0.035 70);
     --zdp-color-focus-line: oklch(20% 0.035 70);
+    --zdp-color-scrollbar-track: oklch(91% 0.045 82);
+    --zdp-color-scrollbar-thumb: oklch(70% 0.08 76);
+    --zdp-color-scrollbar-thumb-hover: oklch(55% 0.075 76);
     --zdp-color-accent-primary: oklch(63% 0.08 250);
     --zdp-color-accent-primary-strong: oklch(47% 0.08 250);
     --zdp-color-accent-primary-soft: oklch(92% 0.035 250);
@@ -163,6 +180,9 @@
     --zdp-color-focus-surface: oklch(84% 0.1 86);
     --zdp-color-focus-text: oklch(20% 0.035 70);
     --zdp-color-focus-line: oklch(20% 0.035 70);
+    --zdp-color-scrollbar-track: oklch(34% 0.05 70);
+    --zdp-color-scrollbar-thumb: oklch(70% 0.08 76);
+    --zdp-color-scrollbar-thumb-hover: oklch(82% 0.045 82);
     --zdp-color-accent-primary: oklch(72% 0.08 250);
     --zdp-color-accent-primary-strong: oklch(92% 0.035 250);
     --zdp-color-accent-primary-soft: oklch(47% 0.08 250);
@@ -179,8 +199,44 @@
   line-height: var(--zdp-font-line-height-normal);
   hyphens: var(--zdp-i18n-hyphens);
   overflow-wrap: var(--zdp-i18n-overflow-wrap);
+  scrollbar-color: var(--zdp-color-scrollbar-thumb) var(--zdp-color-scrollbar-track);
+  scrollbar-width: thin;
   text-wrap: var(--zdp-i18n-text-wrap);
   word-break: var(--zdp-i18n-word-break);
+}
+
+.zdp-surface-reset *,
+.zdp-surface-reset {
+  scrollbar-color: var(--zdp-color-scrollbar-thumb) var(--zdp-color-scrollbar-track);
+  scrollbar-width: thin;
+}
+
+.zdp-surface-reset::-webkit-scrollbar,
+.zdp-surface-reset *::-webkit-scrollbar {
+  height: var(--zdp-control-scrollbar-size);
+  width: var(--zdp-control-scrollbar-size);
+}
+
+.zdp-surface-reset::-webkit-scrollbar-track,
+.zdp-surface-reset *::-webkit-scrollbar-track {
+  background: var(--zdp-color-scrollbar-track);
+}
+
+.zdp-surface-reset::-webkit-scrollbar-thumb,
+.zdp-surface-reset *::-webkit-scrollbar-thumb {
+  background-color: var(--zdp-color-scrollbar-thumb);
+  border: 1px solid var(--zdp-color-scrollbar-track);
+  border-radius: var(--zdp-radius-sm);
+}
+
+.zdp-surface-reset::-webkit-scrollbar-thumb:hover,
+.zdp-surface-reset *::-webkit-scrollbar-thumb:hover {
+  background-color: var(--zdp-color-scrollbar-thumb-hover);
+}
+
+.zdp-surface-reset::-webkit-scrollbar-corner,
+.zdp-surface-reset *::-webkit-scrollbar-corner {
+  background: var(--zdp-color-scrollbar-track);
 }
 
 .zdp-surface-reset:lang(en),

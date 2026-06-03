@@ -38,8 +38,8 @@ if (failures.length > 0) {
 }
 
 function checkPackageSurface(packageJson: PackageJson): void {
-  if (packageJson.version !== '0.27.0') {
-    failures.push('package.json version must be 0.27.0 for the icon alignment package surface.');
+  if (packageJson.version !== '0.28.0') {
+    failures.push('package.json version must be 0.28.0 for the confirm action package surface.');
   }
 
   if (!packageJson.files?.includes('docs/')) {
@@ -62,6 +62,7 @@ function checkConsumerContractDocument(documentText: string): void {
     "import 'zdp-design-system/locale-fonts.css';",
     "from 'zdp-design-system'",
     'Breadcrumb',
+    'ConfirmAction',
     'Container',
     'Dialog',
     'Divider',
@@ -101,6 +102,12 @@ function checkConsumerContractDocument(documentText: string): void {
     'focus.surface',
     'control.heightMd',
     'control.glyphMd',
+    'control.choiceSize',
+    'control.choiceIndicatorSize',
+    'control.switchWidth',
+    'control.switchHeight',
+    'control.scrollbarSize',
+    'color.scrollbar',
     'readonly',
     'errorMessageId',
     'aria-errormessage',
@@ -130,6 +137,7 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'tokens/zdp.tokens.json',
     'Breadcrumb는 현재 위치',
     'Button과 IconButton은 `onclick`',
+    'ConfirmAction은 중요한 액션',
     'Icon은 장식용 glyph',
     'Link는 일반 텍스트',
     'SkipLink는 키보드',
@@ -159,6 +167,7 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     '내부 `src/` deep import',
     'Breadcrumb는 `nav`',
     'Button과 IconButton은 `onclick`',
+    'ConfirmAction은 `onconfirm`',
     'Link는 일반 텍스트',
     'SkipLink는 반복 탐색',
     'VisuallyHidden은 스크린리더',
@@ -198,11 +207,17 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
 
 function checkTokenAndComponentSurface(tokenDocument: string, publicEntry: string): void {
   for (const requiredText of [
-    '"version": "0.6.0"',
+    '"version": "0.6.3"',
     '"font"',
     '"breakpoint"',
     '"control"',
     '"glyphMd"',
+    '"choiceSize"',
+    '"choiceIndicatorSize"',
+    '"switchWidth"',
+    '"switchHeight"',
+    '"scrollbarSize"',
+    '"scrollbar"',
     '"i18n"',
     '"focus"',
     '"hex"',
@@ -216,6 +231,7 @@ function checkTokenAndComponentSurface(tokenDocument: string, publicEntry: strin
   for (const requiredText of [
     'export { default as Button }',
     'export { default as Breadcrumb }',
+    'export { default as ConfirmAction }',
     'export { default as Container }',
     'export { default as Dialog }',
     'export { default as Divider }',

@@ -34,6 +34,7 @@ const breadcrumbPath = join(root, 'src', 'lib', 'components', 'Breadcrumb.svelte
 const buttonPath = join(root, 'src', 'lib', 'components', 'Button.svelte');
 const calloutPath = join(root, 'src', 'lib', 'components', 'Callout.svelte');
 const checkboxPath = join(root, 'src', 'lib', 'components', 'Checkbox.svelte');
+const confirmActionPath = join(root, 'src', 'lib', 'components', 'ConfirmAction.svelte');
 const containerPath = join(root, 'src', 'lib', 'components', 'Container.svelte');
 const dialogPath = join(root, 'src', 'lib', 'components', 'Dialog.svelte');
 const dividerPath = join(root, 'src', 'lib', 'components', 'Divider.svelte');
@@ -89,6 +90,7 @@ const [
   button,
   callout,
   checkbox,
+  confirmAction,
   container,
   dialog,
   divider,
@@ -143,6 +145,7 @@ const [
     readFile(buttonPath, 'utf8'),
     readFile(calloutPath, 'utf8'),
     readFile(checkboxPath, 'utf8'),
+    readFile(confirmActionPath, 'utf8'),
     readFile(containerPath, 'utf8'),
     readFile(dialogPath, 'utf8'),
     readFile(dividerPath, 'utf8'),
@@ -364,6 +367,9 @@ for (const requiredText of [
   '--zdp-type-data-size',
   '--zdp-control-radius',
   '--zdp-control-border-width',
+  '--zdp-control-choice-size',
+  '--zdp-control-switch-width',
+  '--zdp-control-scrollbar-size',
   '--zdp-control-focus-outline-width',
   '--zdp-i18n-overflow-wrap',
   'line-height: var(--zdp-type-title-line-height)',
@@ -424,6 +430,7 @@ for (const requiredText of [
 
 for (const requiredText of [
   '../src/lib/components/Button.svelte',
+  '../src/lib/components/ConfirmAction.svelte',
   '../src/lib/components/Icon.svelte',
   '../src/lib/components/IconButton.svelte',
   '../src/lib/components/Inline.svelte',
@@ -435,8 +442,10 @@ for (const requiredText of [
   'data-zdp-theme="dark"',
   'line-height: var(--zdp-type-title-line-height)',
   'let lightActionCount = 0',
+  'let lightConfirmCount = 0',
   'let lightIconPressed = false',
   'let darkActionCount = 0',
+  'let darkConfirmCount = 0',
   'let darkIconPressed = false',
   '기본 작업',
   '비활성 작업',
@@ -453,6 +462,11 @@ for (const requiredText of [
   'ariaPressed={darkIconPressed}',
   'onclick={() => (lightIconPressed = !lightIconPressed)}',
   'onclick={() => (darkIconPressed = !darkIconPressed)}',
+  '밀어서 결제하기',
+  '밀어서 삭제하기',
+  '또는 2초간 누르기',
+  'onconfirm={() => (lightConfirmCount += 1)}',
+  'onconfirm={() => (darkConfirmCount += 1)}',
   'id="buttons-light-status"',
   'id="buttons-dark-status"',
   'story-status',
@@ -695,6 +709,7 @@ for (const requiredText of [
   '.zdp-callout__body',
   'aria-labelledby={labelledBy ?? undefined}',
   'role={semanticRole ?? undefined}',
+  'height: calc(var(--zdp-type-body-small-size) * var(--zdp-type-body-small-line-height))',
   'border-radius: var(--zdp-control-radius)',
   'background: var(--zdp-color-surface-panel)',
   '.zdp-callout--info .zdp-callout__mark',
@@ -1072,6 +1087,28 @@ for (const requiredText of [
 }
 
 for (const requiredText of [
+  'export let tone: \'primary\' | \'danger\' = \'primary\'',
+  'export let label = \'밀어서 확인\'',
+  'export let hint = \'밀거나 2초간 누르기\'',
+  'export let completeLabel = \'확인됨\'',
+  'export let onconfirm: (() => void) | null = null',
+  'onpointerdown={handlePointerDown}',
+  'onpointermove={handlePointerMove}',
+  'onkeydown={handleKeydown}',
+  '--zdp-confirm-action-progress: 0',
+  'width: calc(var(--zdp-confirm-action-progress) * 100%)',
+  'touch-action: none',
+  '.zdp-confirm-action--danger',
+  'background: var(--zdp-color-accent-danger)',
+  'opacity: 0.24',
+  '.zdp-confirm-action[data-confirmed="true"]'
+]) {
+  if (!confirmAction.includes(requiredText)) {
+    failures.push(`ConfirmAction component is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
   'onclick: ((event: MouseEvent) => void) | null = null',
   'ariaControls: string | null = null',
   'ariaDescribedBy: string | null = null',
@@ -1189,8 +1226,12 @@ for (const [componentName, componentSource] of Object.entries({
     'class="zdp-choice__mark"',
     'class="zdp-choice__body"',
     'class="zdp-choice__label"',
+    'grid-template-columns: var(--zdp-control-choice-size) minmax(0, 1fr)',
+    'height: var(--zdp-control-choice-size)',
+    'width: var(--zdp-control-choice-size)',
     'aria-describedby={describedBy ?? undefined}',
     'onchange={handleChange}',
+    '.zdp-choice:hover .zdp-choice__input:not(:checked):not(:disabled) + .zdp-choice__mark',
     '.zdp-choice__input:checked + .zdp-choice__mark',
     '.zdp-choice__input:focus-visible + .zdp-choice__mark',
     'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
@@ -1207,6 +1248,15 @@ if (!checkbox.includes("aria-invalid={invalid ? 'true' : undefined}")) {
   failures.push('Checkbox component must keep aria-invalid for checkbox invalid state.');
 }
 
+for (const requiredText of [
+  'border-bottom: 2px solid currentcolor',
+  'border-left: 2px solid currentcolor'
+]) {
+  if (!checkbox.includes(requiredText)) {
+    failures.push(`Checkbox component is missing thicker checkmark stroke ${requiredText}.`);
+  }
+}
+
 if (!checkbox.includes('.zdp-choice__input[aria-invalid="true"] + .zdp-choice__mark')) {
   failures.push('Checkbox component must style aria-invalid on the native checkbox input.');
 }
@@ -1221,8 +1271,12 @@ for (const requiredText of [
   'class="zdp-switch__track"',
   'class="zdp-switch__body"',
   'class="zdp-switch__label"',
+  'grid-template-columns: var(--zdp-control-switch-width) minmax(0, 1fr)',
+  'height: var(--zdp-control-switch-height)',
+  'width: var(--zdp-control-switch-width)',
   'aria-describedby={describedBy ?? undefined}',
   'onchange={handleChange}',
+  '.zdp-switch:hover .zdp-switch__input:not(:checked):not(:disabled) + .zdp-switch__track',
   '.zdp-switch__input:checked + .zdp-switch__track',
   '.zdp-switch__input:focus-visible + .zdp-switch__track',
   'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',

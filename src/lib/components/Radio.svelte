@@ -41,7 +41,7 @@
     display: grid;
     font-family: var(--zdp-font-family-sans);
     gap: var(--zdp-space-3);
-    grid-template-columns: var(--zdp-control-icon-sm) minmax(0, 1fr);
+    grid-template-columns: var(--zdp-control-choice-size) minmax(0, 1fr);
     line-height: var(--zdp-type-body-small-line-height);
     min-width: 0;
   }
@@ -62,14 +62,14 @@
     box-sizing: border-box;
     color: var(--zdp-color-ink-inverse);
     display: inline-flex;
-    height: var(--zdp-control-icon-sm);
+    height: var(--zdp-control-choice-size);
     justify-content: center;
-    margin-top: var(--zdp-space-1);
+    margin-top: var(--zdp-control-switch-thumb-offset);
     transition:
       background-color var(--zdp-motion-fast) ease,
       border-color var(--zdp-motion-fast) ease,
       color var(--zdp-motion-fast) ease;
-    width: var(--zdp-control-icon-sm);
+    width: var(--zdp-control-choice-size);
   }
 
   .zdp-choice__mark::after {
@@ -77,11 +77,11 @@
     border-radius: 50%;
     content: "";
     display: none;
-    height: 0.65rem;
-    width: 0.65rem;
+    height: var(--zdp-control-choice-indicator-size);
+    width: var(--zdp-control-choice-indicator-size);
   }
 
-  .zdp-choice:hover .zdp-choice__input:not(:disabled) + .zdp-choice__mark {
+  .zdp-choice:hover .zdp-choice__input:not(:checked):not(:disabled) + .zdp-choice__mark {
     background: var(--zdp-color-surface-raised);
     border-color: var(--zdp-color-line-strong);
   }

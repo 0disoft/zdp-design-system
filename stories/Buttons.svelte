@@ -1,5 +1,6 @@
 <script lang="ts">
   import Button from '../src/lib/components/Button.svelte';
+  import ConfirmAction from '../src/lib/components/ConfirmAction.svelte';
   import Icon from '../src/lib/components/Icon.svelte';
   import IconButton from '../src/lib/components/IconButton.svelte';
   import Inline from '../src/lib/components/Inline.svelte';
@@ -8,8 +9,10 @@
   import VisuallyHidden from '../src/lib/components/VisuallyHidden.svelte';
 
   let lightActionCount = 0;
+  let lightConfirmCount = 0;
   let lightIconPressed = false;
   let darkActionCount = 0;
+  let darkConfirmCount = 0;
   let darkIconPressed = false;
 </script>
 
@@ -67,6 +70,21 @@
             </Inline>
           </Stack>
         </Surface>
+
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3>중요한 작업</h3>
+            <ConfirmAction
+              label="밀어서 결제하기"
+              hint="또는 2초간 누르기"
+              completeLabel="결제 확인됨"
+              onconfirm={() => (lightConfirmCount += 1)}
+            />
+            <p class="story-status">
+              {lightConfirmCount > 0 ? `확인 ${lightConfirmCount}회` : '확인 전'}
+            </p>
+          </Stack>
+        </Surface>
       </Stack>
     </section>
 
@@ -115,6 +133,22 @@
               <Button variant="danger" disabled>삭제</Button>
               <IconButton ariaLabel="추가" variant="ghost" disabled>+</IconButton>
             </Inline>
+          </Stack>
+        </Surface>
+
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3>중요한 작업</h3>
+            <ConfirmAction
+              tone="danger"
+              label="밀어서 삭제하기"
+              hint="또는 2초간 누르기"
+              completeLabel="삭제 확인됨"
+              onconfirm={() => (darkConfirmCount += 1)}
+            />
+            <p class="story-status">
+              {darkConfirmCount > 0 ? `확인 ${darkConfirmCount}회` : '확인 전'}
+            </p>
           </Stack>
         </Surface>
       </Stack>

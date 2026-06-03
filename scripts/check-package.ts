@@ -19,6 +19,7 @@ const componentPaths = [
   'src/lib/components/Button.svelte',
   'src/lib/components/Callout.svelte',
   'src/lib/components/Checkbox.svelte',
+  'src/lib/components/ConfirmAction.svelte',
   'src/lib/components/Container.svelte',
   'src/lib/components/Dialog.svelte',
   'src/lib/components/Divider.svelte',

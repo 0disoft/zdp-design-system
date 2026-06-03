@@ -33,10 +33,11 @@
   }
 
   .zdp-callout__mark {
+    align-self: start;
     background: var(--zdp-color-line-strong);
     border-radius: var(--zdp-radius-sm);
     display: block;
-    min-height: var(--zdp-control-height-md);
+    height: calc(var(--zdp-type-body-small-size) * var(--zdp-type-body-small-line-height));
     width: var(--zdp-space-2);
   }
 

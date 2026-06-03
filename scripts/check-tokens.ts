@@ -52,12 +52,12 @@ const tokenVariables = collectCssVariableNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
 
-if (packageJson.version !== '0.27.0') {
-  failures.push('package.json version must be 0.27.0 for the icon alignment package surface.');
+if (packageJson.version !== '0.28.0') {
+  failures.push('package.json version must be 0.28.0 for the confirm action package surface.');
 }
 
-if (tokenDocument.version !== '0.6.0') {
-  failures.push('Token document version must be 0.6.0 for the icon glyph token contract.');
+if (tokenDocument.version !== '0.6.3') {
+  failures.push('Token document version must be 0.6.3 for the themed scrollbar contract.');
 }
 
 if (packageJson.exports?.['./locale-fonts.css'] !== './src/styles/locale-fonts.css') {
@@ -90,6 +90,7 @@ for (const component of [
   'Button',
   'Callout',
   'Checkbox',
+  'ConfirmAction',
   'Dialog',
   'Divider',
   'ErrorText',
@@ -224,19 +225,44 @@ if (tokenDocument.control.radius !== '0.375rem') {
   failures.push('control.radius must stay 0.375rem to keep buttons squared off.');
 }
 
-if (tokenDocument.control.borderWidth !== '2px') {
-  failures.push('control.borderWidth must stay 2px for framed action controls.');
+if (tokenDocument.control.borderWidth !== '1px') {
+  failures.push('control.borderWidth must stay 1px for thin framed action controls.');
 }
 
 for (const [tokenName, expectedValue] of Object.entries({
+  choiceSize: '1.25rem',
+  choiceIndicatorSize: '0.5rem',
+  switchWidth: '2.25rem',
+  switchHeight: '1.25rem',
+  switchThumbSize: '0.875rem',
+  switchThumbOffset: '0.125rem',
+  switchThumbCheckedOffset: '1.125rem',
   glyphSm: '1rem',
   glyphMd: '1.25rem',
+  scrollbarSize: '0.5rem'
+})) {
+  if (tokenDocument.control[tokenName] !== expectedValue) {
+    failures.push(`control.${tokenName} must stay ${expectedValue} for shared control sizing.`);
+  }
+}
+
+for (const [tokenName, expectedValue] of Object.entries({
   focusOutlineWidth: '3px',
   focusOutlineOffset: '2px',
   focusUnderlineWidth: '3px'
 })) {
   if (tokenDocument.control[tokenName] !== expectedValue) {
     failures.push(`control.${tokenName} must stay ${expectedValue} for visible keyboard focus.`);
+  }
+}
+
+for (const [tokenName, expectedValue] of Object.entries({
+  track: '#f1e4cc',
+  thumb: '#b89a6a',
+  thumbHover: '#8b6f45'
+})) {
+  if (tokenDocument.color.scrollbar?.[tokenName]?.hex !== expectedValue) {
+    failures.push(`color.scrollbar.${tokenName}.hex must stay ${expectedValue}.`);
   }
 }
 

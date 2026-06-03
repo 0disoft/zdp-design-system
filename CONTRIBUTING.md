@@ -24,8 +24,10 @@
 - 버튼 active와 focus-visible도 같은 원칙을 따른다. active는 색과 border만 바꾸고, focus-visible은 `focus.surface` outline과 `focus.line` border로 표시한다.
 - 버튼 라벨은 bold 계열을 쓰지 않고 `medium` weight를 쓴다.
 - 공유 컴포넌트 radius는 `0.375rem`을 기준으로 보고 pill 형태를 기본값으로 쓰지 않는다.
-- 공유 Button과 IconButton border width는 `2px`를 기준으로 유지한다.
+- 공유 Button과 IconButton border width는 `1px`를 기준으로 유지한다.
 - Button과 IconButton은 `onclick`, `ariaControls`, `ariaExpanded`, `ariaPressed`, `ariaDescribedBy` 같은 native button 연결 props를 유지하되 저장, 삭제, 권한, 결제 판단을 직접 수행하지 않는다.
+- ConfirmAction은 `onconfirm` 콜백만 호출하고 결제, 삭제, 권한, 환불 판단이나 서버 요청을 직접 수행하지 않는다.
+- ConfirmAction은 밀기와 길게 누르기를 모두 지원하고 keyboard Enter/Space hold 흐름을 유지한다.
 - Icon은 glyph 박스와 중앙정렬만 담당하며 의미, 라벨 문구, 상태 판단을 직접 수행하지 않는다.
 - 링크 focus는 sunlit gold 배경과 어두운 하단선, 입력류 focus는 sunlit gold outline과 어두운 border가 함께 보여야 한다.
 - Field, Label, Input, Textarea, Select, HelpText, ErrorText는 form public surface로 유지하고 help/error/id/aria 연결을 끊지 않는다.
@@ -36,12 +38,14 @@
 - Input과 Textarea의 readonly 상태는 disabled처럼 흐리지 않고 포커스 가능한 읽기 전용 값으로 유지한다.
 - Checkbox, Radio, Switch는 native input을 유지하고 label, checked, focus-visible, disabled 상태가 키보드와 스크린리더에서 끊기지 않게 한다.
 - 선택 컨트롤도 framed border와 surface 색상만 사용하며 hover 장식, 그림자, 그라데이션, pill switch를 기본값으로 만들지 않는다.
+- Checkbox, Radio, Switch의 hover 상태는 checked 상태를 덮어 선택 해제처럼 보이게 만들지 않는다.
 - Badge와 Callout은 상태 전달용 표면이며 제품 판단, 권한, 결제, 보안 결정을 직접 수행하지 않는다.
 - Badge와 Callout도 그림자, 그라데이션, 반짝임 없이 surface, border, semantic accent 색상으로만 위계를 만든다.
+- Callout mark는 본문 전체 높이가 아니라 첫 제목 라인의 높이에 맞춰 어중간하게 걸쳐 보이지 않게 한다.
 - Link는 일반 텍스트 이동 표면이며 라우팅, SEO, 권한, 데이터 로딩 판단을 직접 수행하지 않는다.
 - Link hover는 밑줄이나 장식 추가가 아니라 색상 변화 중심으로 유지하고, focus는 sunlit gold 배경과 어두운 하단선을 유지한다.
 - SkipLink는 반복 탐색 건너뛰기 표면이며 페이지 레이아웃, 라우팅, 본문 id 판단을 직접 수행하지 않는다.
-- SkipLink는 평소 숨겨져 있다가 `focus-visible`에서만 sunlit gold 배경과 어두운 2px framed border로 표시한다.
+- SkipLink는 평소 숨겨져 있다가 `focus-visible`에서만 sunlit gold 배경과 어두운 1px framed border로 표시한다.
 - VisuallyHidden은 스크린리더 전용 보조 텍스트 숨김만 담당하며 라벨 문구, 번역, 권한, 데이터 판단을 직접 수행하지 않는다.
 - VisuallyHidden은 레이아웃, 그림자, 색상, 그라데이션, hover 상태를 만들지 않는다.
 - Page는 shared page root, surface reset, theme tone만 담당하며 라우팅, SEO, 데이터, 권한, 제품별 visibility 판단을 직접 수행하지 않는다.
@@ -63,6 +67,7 @@
 - Icon과 `.zdp-icon`은 그림자, 그라데이션, hover 상태를 만들지 않고 `control.glyphSm|Md`, `line-height: 1`, `text-align: center` 계약만 유지한다.
 - Table은 표 형식 정보의 native table, caption, row/column header, overflow wrapper만 담당하며 정렬, 필터, 페이지네이션, 데이터 로딩 판단을 직접 수행하지 않는다.
 - Table과 `.zdp-table`은 그림자, 그라데이션, sticky 장식 없이 border, spacing, typography, overflow 계약만 유지한다.
+- Scrollbar는 `.zdp-surface-reset` 안에서 얇은 theme token으로만 표현하고 브라우저 기본 회색 track, 그림자, 그라데이션, hover 이동 효과를 쓰지 않는다.
 - KeyValue는 용어와 값의 description list 구조만 담당하며 원장, 보안, 결제, 권한 판단을 직접 수행하지 않는다.
 - KeyValue와 `.zdp-key-value`는 `dt`와 `dd` 구조, responsive columns, border rhythm만 유지한다.
 - EmptyState는 비어 있는 상태의 surface, 제목 연결, 액션 배치만 담당하며 어떤 상태가 비었는지와 다음 액션 가능 여부를 직접 판단하지 않는다.
