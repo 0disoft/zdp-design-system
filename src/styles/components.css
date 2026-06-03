@@ -627,6 +627,34 @@
   border-color: var(--zdp-color-line-strong);
 }
 
+.zdp-icon {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  justify-content: center;
+  line-height: 1;
+  text-align: center;
+}
+
+.zdp-icon--sm {
+  font-size: var(--zdp-control-glyph-sm);
+  height: var(--zdp-control-glyph-sm);
+  width: var(--zdp-control-glyph-sm);
+}
+
+.zdp-icon--md {
+  font-size: var(--zdp-control-glyph-md);
+  height: var(--zdp-control-glyph-md);
+  width: var(--zdp-control-glyph-md);
+}
+
+.zdp-icon svg {
+  display: block;
+  flex: 0 0 auto;
+  height: 100%;
+  width: 100%;
+}
+
 .zdp-icon-button {
   align-items: center;
   border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
@@ -712,13 +740,15 @@
 .zdp-icon-button__glyph {
   align-items: center;
   display: inline-flex;
-  height: 1.25rem;
+  flex: 0 0 auto;
   justify-content: center;
   line-height: 1;
-  width: 1.25rem;
+  text-align: center;
 }
 
 .zdp-icon-button__glyph svg {
+  display: block;
+  flex: 0 0 auto;
   height: 100%;
   width: 100%;
 }

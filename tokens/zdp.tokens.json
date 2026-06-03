@@ -1,7 +1,7 @@
 {
   "$schema": "https://zdp.zerodi.dev/schemas/design-tokens.schema.json",
   "name": "zdp-core",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "color": {
     "ink": {
       "strong": {
@@ -171,6 +171,8 @@
     "heightMd": "2.75rem",
     "iconSm": "2.25rem",
     "iconMd": "2.75rem",
+    "glyphSm": "1rem",
+    "glyphMd": "1.25rem",
     "radius": "0.375rem",
     "borderWidth": "2px",
     "focusOutlineWidth": "3px",

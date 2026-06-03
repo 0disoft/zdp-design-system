@@ -38,8 +38,8 @@ if (failures.length > 0) {
 }
 
 function checkPackageSurface(packageJson: PackageJson): void {
-  if (packageJson.version !== '0.26.0') {
-    failures.push('package.json version must be 0.26.0 for the layout composition package surface.');
+  if (packageJson.version !== '0.27.0') {
+    failures.push('package.json version must be 0.27.0 for the icon alignment package surface.');
   }
 
   if (!packageJson.files?.includes('docs/')) {
@@ -67,6 +67,7 @@ function checkConsumerContractDocument(documentText: string): void {
     'Divider',
     'EmptyState',
     'Grid',
+    'Icon',
     'Inline',
     'KeyValue',
     'Link',
@@ -89,6 +90,7 @@ function checkConsumerContractDocument(documentText: string): void {
     '.zdp-inline',
     '.zdp-divider',
     '.zdp-grid',
+    '.zdp-icon',
     '.zdp-toolbar',
     'Astro',
     'Svelte',
@@ -98,6 +100,7 @@ function checkConsumerContractDocument(documentText: string): void {
     'oklch',
     'focus.surface',
     'control.heightMd',
+    'control.glyphMd',
     'readonly',
     'errorMessageId',
     'aria-errormessage',
@@ -127,6 +130,7 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'tokens/zdp.tokens.json',
     'Breadcrumb는 현재 위치',
     'Button과 IconButton은 `onclick`',
+    'Icon은 장식용 glyph',
     'Link는 일반 텍스트',
     'SkipLink는 키보드',
     'VisuallyHidden은 스크린리더',
@@ -134,6 +138,7 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'Inline',
     'Divider',
     'Grid',
+    'Icon',
     'Toolbar',
     'Table, KeyValue, EmptyState',
     'Dialog는 모달 레이어',
@@ -161,6 +166,7 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'Inline은 가까운 버튼',
     'Divider는 가까운 내용',
     'Grid는 반복되는 카드',
+    'Icon은 glyph',
     'Toolbar는 가까운 화면',
     'Table은 표 형식 정보',
     'KeyValue는 용어와 값',
@@ -192,10 +198,11 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
 
 function checkTokenAndComponentSurface(tokenDocument: string, publicEntry: string): void {
   for (const requiredText of [
-    '"version": "0.5.0"',
+    '"version": "0.6.0"',
     '"font"',
     '"breakpoint"',
     '"control"',
+    '"glyphMd"',
     '"i18n"',
     '"focus"',
     '"hex"',
@@ -215,6 +222,7 @@ function checkTokenAndComponentSurface(tokenDocument: string, publicEntry: strin
     'export { default as EmptyState }',
     'export { default as Field }',
     'export { default as Grid }',
+    'export { default as Icon }',
     'export { default as Input }',
     'export { default as KeyValue }',
     'export { default as Label }',

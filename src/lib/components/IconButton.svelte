@@ -32,7 +32,7 @@
   aria-pressed={ariaPressed ?? undefined}
   onclick={onclick ?? undefined}
 >
-  <span class="zdp-icon-button__glyph" aria-hidden="true">
+  <span class={`zdp-icon zdp-icon--${size} zdp-icon-button__glyph`} aria-hidden="true">
     <slot />
   </span>
 </button>
@@ -120,16 +120,32 @@
     opacity: 0.56;
   }
 
+  .zdp-icon,
   .zdp-icon-button__glyph {
     align-items: center;
     display: inline-flex;
-    height: 1.25rem;
+    flex: 0 0 auto;
     justify-content: center;
     line-height: 1;
-    width: 1.25rem;
+    text-align: center;
   }
 
+  .zdp-icon--sm {
+    font-size: var(--zdp-control-glyph-sm);
+    height: var(--zdp-control-glyph-sm);
+    width: var(--zdp-control-glyph-sm);
+  }
+
+  .zdp-icon--md {
+    font-size: var(--zdp-control-glyph-md);
+    height: var(--zdp-control-glyph-md);
+    width: var(--zdp-control-glyph-md);
+  }
+
+  .zdp-icon :global(svg),
   .zdp-icon-button__glyph :global(svg) {
+    display: block;
+    flex: 0 0 auto;
     height: 100%;
     width: 100%;
   }

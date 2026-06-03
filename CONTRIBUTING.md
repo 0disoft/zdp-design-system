@@ -26,6 +26,7 @@
 - 공유 컴포넌트 radius는 `0.375rem`을 기준으로 보고 pill 형태를 기본값으로 쓰지 않는다.
 - 공유 Button과 IconButton border width는 `2px`를 기준으로 유지한다.
 - Button과 IconButton은 `onclick`, `ariaControls`, `ariaExpanded`, `ariaPressed`, `ariaDescribedBy` 같은 native button 연결 props를 유지하되 저장, 삭제, 권한, 결제 판단을 직접 수행하지 않는다.
+- Icon은 glyph 박스와 중앙정렬만 담당하며 의미, 라벨 문구, 상태 판단을 직접 수행하지 않는다.
 - 링크 focus는 sunlit gold 배경과 어두운 하단선, 입력류 focus는 sunlit gold outline과 어두운 border가 함께 보여야 한다.
 - Field, Label, Input, Textarea, Select, HelpText, ErrorText는 form public surface로 유지하고 help/error/id/aria 연결을 끊지 않는다.
 - Input, Textarea, Select의 invalid 상태는 도움말과 에러 id를 함께 `aria-describedby`로 연결하고, 에러 id는 `errorMessageId`를 통해 `aria-errormessage`로 연결한다.
@@ -58,6 +59,8 @@
 - Grid와 `.zdp-grid`는 색상, 그림자, 그라데이션, hover 상태를 만들지 않고 `grid-template-columns`, `gap`, `min-width`, responsive collapse 계약만 유지한다.
 - Toolbar는 가까운 화면 도구와 액션 묶음의 wrapping, main/action 배치만 담당하며 저장, 삭제, 필터, 권한 판단을 직접 수행하지 않는다.
 - Toolbar와 `.zdp-toolbar`는 색상, 그림자, 그라데이션, hover 상태를 만들지 않고 `flex-wrap`, `gap`, `justify-content`, action wrapping 계약만 유지한다.
+- Icon은 glyph 크기, inline-flex 중앙정렬, svg sizing만 담당하며 라우팅, 저장, 삭제, 상태 의미, 권한 판단을 직접 수행하지 않는다.
+- Icon과 `.zdp-icon`은 그림자, 그라데이션, hover 상태를 만들지 않고 `control.glyphSm|Md`, `line-height: 1`, `text-align: center` 계약만 유지한다.
 - Table은 표 형식 정보의 native table, caption, row/column header, overflow wrapper만 담당하며 정렬, 필터, 페이지네이션, 데이터 로딩 판단을 직접 수행하지 않는다.
 - Table과 `.zdp-table`은 그림자, 그라데이션, sticky 장식 없이 border, spacing, typography, overflow 계약만 유지한다.
 - KeyValue는 용어와 값의 description list 구조만 담당하며 원장, 보안, 결제, 권한 판단을 직접 수행하지 않는다.

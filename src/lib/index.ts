@@ -11,6 +11,7 @@ export { default as ErrorText } from './components/ErrorText.svelte';
 export { default as Field } from './components/Field.svelte';
 export { default as Grid } from './components/Grid.svelte';
 export { default as HelpText } from './components/HelpText.svelte';
+export { default as Icon } from './components/Icon.svelte';
 export { default as IconButton } from './components/IconButton.svelte';
 export { default as Inline } from './components/Inline.svelte';
 export { default as Input } from './components/Input.svelte';

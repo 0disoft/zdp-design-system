@@ -77,6 +77,8 @@ export const zdpTokenNames = [
   'control.heightMd',
   'control.iconSm',
   'control.iconMd',
+  'control.glyphSm',
+  'control.glyphMd',
   'control.radius',
   'control.borderWidth',
   'control.focusOutlineWidth',

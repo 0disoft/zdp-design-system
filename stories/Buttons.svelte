@@ -1,5 +1,6 @@
 <script lang="ts">
   import Button from '../src/lib/components/Button.svelte';
+  import Icon from '../src/lib/components/Icon.svelte';
   import IconButton from '../src/lib/components/IconButton.svelte';
   import Inline from '../src/lib/components/Inline.svelte';
   import Stack from '../src/lib/components/Stack.svelte';
@@ -35,7 +36,8 @@
                 저장
               </Button>
               <Button variant="secondary" ariaDescribedBy="buttons-light-status">
-                <VisuallyHidden>작업 </VisuallyHidden>취소
+                <Icon size="sm">+</Icon>
+                <VisuallyHidden>새 항목 </VisuallyHidden>추가
               </Button>
               <Button variant="danger">삭제</Button>
               <IconButton
@@ -59,7 +61,7 @@
             <h3>비활성 작업</h3>
             <Inline gap="sm" align="center">
               <Button variant="primary" disabled>저장</Button>
-              <Button variant="secondary" disabled>취소</Button>
+              <Button variant="secondary" disabled><Icon size="sm">+</Icon>추가</Button>
               <Button variant="danger" disabled>삭제</Button>
               <IconButton ariaLabel="추가" variant="solid" disabled>+</IconButton>
             </Inline>
@@ -84,7 +86,8 @@
                 저장
               </Button>
               <Button variant="secondary" ariaDescribedBy="buttons-dark-status">
-                <VisuallyHidden>작업 </VisuallyHidden>취소
+                <Icon size="sm">+</Icon>
+                <VisuallyHidden>새 항목 </VisuallyHidden>추가
               </Button>
               <Button variant="danger">삭제</Button>
               <IconButton
@@ -108,7 +111,7 @@
             <h3>비활성 작업</h3>
             <Inline gap="sm" align="center">
               <Button variant="primary" disabled>저장</Button>
-              <Button variant="secondary" disabled>취소</Button>
+              <Button variant="secondary" disabled><Icon size="sm">+</Icon>추가</Button>
               <Button variant="danger" disabled>삭제</Button>
               <IconButton ariaLabel="추가" variant="ghost" disabled>+</IconButton>
             </Inline>

@@ -58,6 +58,7 @@ const tablePath = join(root, 'src', 'lib', 'components', 'Table.svelte');
 const textareaPath = join(root, 'src', 'lib', 'components', 'Textarea.svelte');
 const toolbarPath = join(root, 'src', 'lib', 'components', 'Toolbar.svelte');
 const visuallyHiddenPath = join(root, 'src', 'lib', 'components', 'VisuallyHidden.svelte');
+const iconPath = join(root, 'src', 'lib', 'components', 'Icon.svelte');
 const iconButtonPath = join(root, 'src', 'lib', 'components', 'IconButton.svelte');
 const inlinePath = join(root, 'src', 'lib', 'components', 'Inline.svelte');
 const surfacePath = join(root, 'src', 'lib', 'components', 'Surface.svelte');
@@ -112,6 +113,7 @@ const [
   textarea,
   toolbar,
   visuallyHidden,
+  icon,
   iconButton,
   inline,
   surface
@@ -165,6 +167,7 @@ const [
     readFile(textareaPath, 'utf8'),
     readFile(toolbarPath, 'utf8'),
     readFile(visuallyHiddenPath, 'utf8'),
+    readFile(iconPath, 'utf8'),
     readFile(iconButtonPath, 'utf8'),
     readFile(inlinePath, 'utf8'),
     readFile(surfacePath, 'utf8')
@@ -324,6 +327,7 @@ for (const requiredText of [
   '../src/lib/components/ErrorText.svelte',
   '../src/lib/components/Field.svelte',
   '../src/lib/components/HelpText.svelte',
+  '../src/lib/components/Icon.svelte',
   '../src/lib/components/IconButton.svelte',
   '../src/lib/components/Inline.svelte',
   '../src/lib/components/Input.svelte',
@@ -420,6 +424,7 @@ for (const requiredText of [
 
 for (const requiredText of [
   '../src/lib/components/Button.svelte',
+  '../src/lib/components/Icon.svelte',
   '../src/lib/components/IconButton.svelte',
   '../src/lib/components/Inline.svelte',
   '../src/lib/components/Stack.svelte',
@@ -451,8 +456,9 @@ for (const requiredText of [
   'id="buttons-light-status"',
   'id="buttons-dark-status"',
   'story-status',
-  '작업 ',
-  '취소',
+  '새 항목 ',
+  '<Icon size="sm">+</Icon>',
+  '추가',
   '삭제',
   'ariaLabel="추가"',
   'disabled',
@@ -1048,6 +1054,24 @@ assertNoDecorativeEffects(failures, 'Breadcrumb component', breadcrumb);
 assertNoOverRoundedUsage(failures, 'Breadcrumb component', breadcrumb);
 
 for (const requiredText of [
+  'export let size: \'sm\' | \'md\' = \'md\'',
+  'export let label: string | null = null',
+  'role={label ? \'img\' : undefined}',
+  'aria-hidden={label ? undefined : \'true\'}',
+  '.zdp-icon--sm',
+  '.zdp-icon--md',
+  'font-size: var(--zdp-control-glyph-md)',
+  'align-items: center',
+  'justify-content: center',
+  'line-height: 1',
+  'text-align: center'
+]) {
+  if (!icon.includes(requiredText)) {
+    failures.push(`Icon component is missing centered glyph contract ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
   'onclick: ((event: MouseEvent) => void) | null = null',
   'ariaControls: string | null = null',
   'ariaDescribedBy: string | null = null',
@@ -1293,6 +1317,9 @@ for (const requiredText of [
   'font-weight: var(--zdp-font-weight-regular)',
   'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
   'border-color: var(--zdp-color-focus-line)',
+  'zdp-icon zdp-icon--${size} zdp-icon-button__glyph',
+  'font-size: var(--zdp-control-glyph-md)',
+  'text-align: center',
   'align-items: center',
   'justify-content: center',
   'line-height: 1'
@@ -1303,6 +1330,7 @@ for (const requiredText of [
 }
 
 assertNoDecorativeEffects(failures, 'Button component', button);
+assertNoDecorativeEffects(failures, 'Icon component', icon);
 assertNoDecorativeEffects(failures, 'IconButton component', iconButton);
 assertNoDecorativeEffects(failures, 'Surface component', surface);
 assertNoDecorativeEffects(failures, 'Storybook overview', component);
@@ -1313,6 +1341,7 @@ assertNoDecorativeEffects(failures, 'Forms story', formsComponent);
 assertNoDecorativeEffects(failures, 'Interaction story', interactionComponent);
 assertNoDecorativeEffects(failures, 'Navigation story', navigationComponent);
 assertNoOverRoundedUsage(failures, 'Button component', button);
+assertNoOverRoundedUsage(failures, 'Icon component', icon);
 assertNoOverRoundedUsage(failures, 'IconButton component', iconButton);
 assertNoOverRoundedUsage(failures, 'Surface component', surface);
 assertNoOverRoundedUsage(failures, 'Storybook overview', component);

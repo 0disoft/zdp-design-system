@@ -75,6 +75,7 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
     Field,
     Grid,
     HelpText,
+    Icon,
     Input,
     Inline,
     KeyValue,
@@ -208,6 +209,7 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
     <Inline gap="sm">
       <Button onclick={() => (dialogOpen = true)} ariaControls="project-dialog" ariaExpanded={dialogOpen}>저장</Button>
       <Button variant="secondary">
+        <Icon size="sm">+</Icon>
         <VisuallyHidden>새 항목 </VisuallyHidden>추가
       </Button>
     </Inline>
@@ -231,7 +233,7 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
 ```
 
 Astro는 `styles.css`를 전역으로 쓰고, Svelte island가 필요한 부분에서 같은 Svelte 컴포넌트를 소비한다. Flutter는 Svelte 컴포넌트를 직접 쓰지 않고 `tokens/zdp.tokens.json`을 Dart theme adapter의 입력으로 사용한다.
-정적 HTML 소비처는 `.zdp-page`, `.zdp-container`, `.zdp-section`, `.zdp-page-header` utility로 기본 페이지 폭, 섹션 리듬, 헤더 액션 배치를 맞출 수 있다. 가까운 요소의 세로 흐름은 `.zdp-stack`과 `.zdp-stack--gap-*` utility로 적용하고, `.zdp-inline`과 `.zdp-inline--gap-*` utility로 가까운 가로 흐름을 맞출 수 있다. 얇은 구분선은 `.zdp-divider`와 `.zdp-divider--horizontal` utility로 받는다. 반복 카드나 요약 묶음은 `.zdp-grid`, 가까운 화면 도구와 액션 묶음은 `.zdp-toolbar` utility로 맞춘다. 표 형식 정보는 `.zdp-table-wrap`과 `.zdp-table`, 용어와 값 목록은 `.zdp-key-value`, 빈 목록이나 대기 상태는 `.zdp-empty-state` utility로 받되, 제품별 라우팅, SEO, visibility, 데이터 판단은 소비처가 정한다.
+정적 HTML 소비처는 `.zdp-page`, `.zdp-container`, `.zdp-section`, `.zdp-page-header` utility로 기본 페이지 폭, 섹션 리듬, 헤더 액션 배치를 맞출 수 있다. 가까운 요소의 세로 흐름은 `.zdp-stack`과 `.zdp-stack--gap-*` utility로 적용하고, `.zdp-inline`과 `.zdp-inline--gap-*` utility로 가까운 가로 흐름을 맞출 수 있다. 얇은 구분선은 `.zdp-divider`와 `.zdp-divider--horizontal` utility로 받는다. 반복 카드나 요약 묶음은 `.zdp-grid`, 가까운 화면 도구와 액션 묶음은 `.zdp-toolbar` utility로 맞춘다. 작은 glyph는 `.zdp-icon`과 `.zdp-icon--sm|md` utility로 중앙정렬한다. 표 형식 정보는 `.zdp-table-wrap`과 `.zdp-table`, 용어와 값 목록은 `.zdp-key-value`, 빈 목록이나 대기 상태는 `.zdp-empty-state` utility로 받되, 제품별 라우팅, SEO, visibility, 데이터 판단은 소비처가 정한다.
 
 소비 저장소별 적용 순서와 금지 경계는 `docs/CONSUMER_CONTRACT.md`를 기준으로 맞춘다. Astro, Svelte, Tauri, Flutter 소비처는 public export와 token name을 유지하고 내부 `src/` deep import를 만들지 않는다.
 
@@ -282,6 +284,7 @@ preview/index.html
 - focus는 그림자가 아니라 `focus.surface` outline, `focus.line` border, 링크의 하단선으로 표시한다.
 - Button, IconButton, Badge, Callout, Link, SkipLink, Breadcrumb, Tabs, Grid, Toolbar, Table, KeyValue, EmptyState, Field, Label, Input, Textarea, Select, Checkbox, Radio, Switch, HelpText, ErrorText, Surface, Page, Container, Section, PageHeader, preview panel은 `0.375rem` radius를 기준으로 보고 pill 형태를 쓰지 않는다.
 - Button과 IconButton은 `2px` border width를 기준으로 하는 framed control 방향을 유지한다.
+- Icon은 장식용 glyph 또는 짧은 보조 기호의 박스, 크기, 중앙정렬만 제공하며 의미, 라벨 문구, 상태 판단은 소비 앱에 남긴다.
 - Button과 IconButton은 `onclick`, `ariaControls`, `ariaExpanded`, `ariaPressed`, `ariaDescribedBy` 같은 실제 앱 액션 연결 props를 native button에 전달한다.
 - Input, Textarea, Select는 Button과 같은 framed control 방향을 쓰고, help/error text는 id와 `aria-describedby`로 연결한다. 도움말과 에러가 함께 있을 때는 `describedBy`에 id 배열을 넘기고, invalid 상태에서는 `errorMessageId`로 `aria-errormessage`를 연결한다.
 - Input과 Textarea의 `readonly` 상태는 제출과 포커스를 유지하는 읽기 전용 값에 사용하고, `disabled` 상태와 혼동하지 않는다.

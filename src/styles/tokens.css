@@ -80,6 +80,8 @@
   --zdp-control-height-md: 2.75rem;
   --zdp-control-icon-sm: 2.25rem;
   --zdp-control-icon-md: 2.75rem;
+  --zdp-control-glyph-sm: 1rem;
+  --zdp-control-glyph-md: 1.25rem;
   --zdp-control-radius: 0.375rem;
   --zdp-control-border-width: 2px;
   --zdp-control-focus-outline-width: 3px;

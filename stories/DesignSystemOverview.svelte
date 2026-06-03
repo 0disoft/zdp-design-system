@@ -11,6 +11,7 @@
   import ErrorText from '../src/lib/components/ErrorText.svelte';
   import Field from '../src/lib/components/Field.svelte';
   import HelpText from '../src/lib/components/HelpText.svelte';
+  import Icon from '../src/lib/components/Icon.svelte';
   import IconButton from '../src/lib/components/IconButton.svelte';
   import Inline from '../src/lib/components/Inline.svelte';
   import Input from '../src/lib/components/Input.svelte';
@@ -100,7 +101,7 @@
         <h3 id="storybook-light-actions">Actions</h3>
         <Inline gap="sm" align="center">
           <Button variant="primary">저장</Button>
-          <Button variant="secondary"><VisuallyHidden>작업 </VisuallyHidden>취소</Button>
+          <Button variant="secondary"><Icon size="sm">+</Icon><VisuallyHidden>새 항목 </VisuallyHidden>추가</Button>
           <Button variant="danger">삭제</Button>
           <IconButton ariaLabel="추가" variant="solid">+</IconButton>
         </Inline>
@@ -381,7 +382,7 @@
         <h3 id="storybook-dark-actions">Actions</h3>
         <Inline gap="sm" align="center">
           <Button variant="primary">저장</Button>
-          <Button variant="secondary"><VisuallyHidden>작업 </VisuallyHidden>취소</Button>
+          <Button variant="secondary"><Icon size="sm">+</Icon><VisuallyHidden>새 항목 </VisuallyHidden>추가</Button>
           <Button variant="danger">삭제</Button>
           <IconButton ariaLabel="추가" variant="ghost">+</IconButton>
         </Inline>

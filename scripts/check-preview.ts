@@ -33,6 +33,7 @@ for (const requiredText of [
   'lang="hi"',
   'zdp-button zdp-button--primary zdp-button--md',
   'zdp-icon-button zdp-icon-button--solid zdp-icon-button--md',
+  'zdp-icon zdp-icon--md zdp-icon-button__glyph',
   'zdp-inline zdp-inline--gap-sm',
   'zdp-badge zdp-badge--primary zdp-badge--md',
   'zdp-badge zdp-badge--success zdp-badge--md',
@@ -338,9 +339,14 @@ for (const requiredText of [
   '.zdp-choice__input[aria-invalid="true"] + .zdp-choice__mark',
   'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
   'border-color: var(--zdp-color-focus-line)',
+  '.zdp-icon',
+  '.zdp-icon--sm',
+  '.zdp-icon--md',
+  'font-size: var(--zdp-control-glyph-md)',
   '.zdp-icon-button__glyph',
   'align-items: center',
   'justify-content: center',
+  'text-align: center',
   'line-height: 1'
 ]) {
   if (!componentStyle.includes(requiredText)) {

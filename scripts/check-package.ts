@@ -27,6 +27,7 @@ const componentPaths = [
   'src/lib/components/Field.svelte',
   'src/lib/components/Grid.svelte',
   'src/lib/components/HelpText.svelte',
+  'src/lib/components/Icon.svelte',
   'src/lib/components/IconButton.svelte',
   'src/lib/components/Inline.svelte',
   'src/lib/components/Input.svelte',

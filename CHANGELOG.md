@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.27.0
+
+- Added `Icon` for shared glyph sizing and centered inline alignment.
+- Added static `.zdp-icon` utility classes for Astro and non-Svelte consumers.
+- Added token document `0.6.0` with `control.glyphSm` and `control.glyphMd` so icon glyph size stays separate from icon button hit area size.
+- Updated IconButton, Storybook, preview, package, token, and consumer contract checks so glyphs stay centered without shadows, gradients, hover motion, or product-owned decisions.
+
 ## 0.26.0
 
 - Added layout composition primitives: `Grid` and `Toolbar`.

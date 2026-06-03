@@ -52,12 +52,12 @@ const tokenVariables = collectCssVariableNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
 
-if (packageJson.version !== '0.26.0') {
-  failures.push('package.json version must be 0.26.0 for the layout composition package surface.');
+if (packageJson.version !== '0.27.0') {
+  failures.push('package.json version must be 0.27.0 for the icon alignment package surface.');
 }
 
-if (tokenDocument.version !== '0.5.0') {
-  failures.push('Token document version must be 0.5.0 for the accessible focus token contract.');
+if (tokenDocument.version !== '0.6.0') {
+  failures.push('Token document version must be 0.6.0 for the icon glyph token contract.');
 }
 
 if (packageJson.exports?.['./locale-fonts.css'] !== './src/styles/locale-fonts.css') {
@@ -96,6 +96,7 @@ for (const component of [
   'Field',
   'Grid',
   'HelpText',
+  'Icon',
   'IconButton',
   'Inline',
   'Input',
@@ -228,6 +229,8 @@ if (tokenDocument.control.borderWidth !== '2px') {
 }
 
 for (const [tokenName, expectedValue] of Object.entries({
+  glyphSm: '1rem',
+  glyphMd: '1.25rem',
   focusOutlineWidth: '3px',
   focusOutlineOffset: '2px',
   focusUnderlineWidth: '3px'
