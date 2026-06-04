@@ -52,12 +52,12 @@ const tokenVariables = collectCssVariableNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
 
-if (packageJson.version !== '0.28.0') {
-  failures.push('package.json version must be 0.28.0 for the confirm action package surface.');
+if (packageJson.version !== '0.31.0') {
+  failures.push('package.json version must be 0.31.0 for the shared shortcut hint contract.');
 }
 
-if (tokenDocument.version !== '0.6.3') {
-  failures.push('Token document version must be 0.6.3 for the themed scrollbar contract.');
+if (tokenDocument.version !== '0.6.7') {
+  failures.push('Token document version must be 0.6.7 for the moderated page title contract.');
 }
 
 if (packageJson.exports?.['./locale-fonts.css'] !== './src/styles/locale-fonts.css') {
@@ -101,10 +101,12 @@ for (const component of [
   'IconButton',
   'Inline',
   'Input',
+  'Kbd',
   'Label',
   'Link',
   'Radio',
   'Select',
+  'ShortcutHint',
   'SkipLink',
   'Stack',
   'Surface',
@@ -144,6 +146,7 @@ for (const [familyName, expectedText] of Object.entries({
   korean: '"Pretendard Variable", Pretendard, "Apple SD Gothic Neo"',
   chinese: '"Noto Sans SC Variable", "Noto Sans SC", "PingFang SC"',
   devanagari: '"Noto Sans Devanagari Variable", "Noto Sans Devanagari", "Nirmala UI"',
+  japanese: '"Noto Sans JP Variable", "Noto Sans JP", "Hiragino Sans"',
   multiscript: '"Pretendard Variable", Pretendard, "Manrope Variable", Manrope'
 })) {
   if (!tokenDocument.font.family[familyName]?.includes(expectedText)) {
@@ -168,11 +171,13 @@ for (const requiredText of [
   '--zdp-font-family-korean',
   '--zdp-font-family-chinese',
   '--zdp-font-family-devanagari',
+  '--zdp-font-family-japanese',
   '--zdp-font-family-multiscript',
   '.zdp-surface-reset:lang(en)',
   '.zdp-surface-reset:lang(ko)',
   '.zdp-surface-reset:lang(zh)',
   '.zdp-surface-reset:lang(hi)',
+  '.zdp-surface-reset:lang(ja)',
   'word-break: keep-all',
   'line-break: strict'
 ]) {
@@ -184,7 +189,8 @@ for (const requiredText of [
 for (const requiredText of [
   '@fontsource-variable/manrope@5.2.8/index.css',
   '@fontsource-variable/noto-sans-sc@5.2.10/index.css',
-  '@fontsource-variable/noto-sans-devanagari@5.2.8/index.css'
+  '@fontsource-variable/noto-sans-devanagari@5.2.8/index.css',
+  '@fontsource-variable/noto-sans-jp@5.2.10/index.css'
 ]) {
   if (!localeFonts.includes(requiredText)) {
     failures.push(`Locale font CSS export is missing ${requiredText}.`);
@@ -203,6 +209,9 @@ for (const [tokenName, expectedValue] of Object.entries({
   bodySize: '1.125rem',
   bodySmallSize: '1rem',
   bodySmallLineHeight: '1.6',
+  pageTitleSize: '2.75rem',
+  pageTitleCompactSize: '2rem',
+  pageTitleLineHeight: '1.15',
   titleSize: '1.375rem',
   labelSize: '0.875rem',
   captionSize: '0.875rem',
@@ -215,10 +224,12 @@ for (const [tokenName, expectedValue] of Object.entries({
   }
 }
 
-for (const radiusName of ['md', 'lg']) {
-  if (tokenDocument.radius[radiusName] !== '0.375rem') {
-    failures.push(`radius.${radiusName} must stay 0.375rem to keep core surfaces squared off.`);
-  }
+if (tokenDocument.radius.md !== '0.375rem') {
+  failures.push('radius.md must stay 0.375rem to keep controls squared off.');
+}
+
+if (tokenDocument.radius.lg !== '0.5rem') {
+  failures.push('radius.lg must stay 0.5rem so flat card surfaces read as a higher layer without shadows.');
 }
 
 if (tokenDocument.control.radius !== '0.375rem') {
@@ -273,6 +284,19 @@ for (const [tokenName, expectedValue] of Object.entries({
 })) {
   if (tokenDocument.color.focus?.[tokenName]?.hex !== expectedValue) {
     failures.push(`color.focus.${tokenName}.hex must stay ${expectedValue}.`);
+  }
+}
+
+for (const [tokenName, expectedValue] of Object.entries({
+  primary: '#d8c8ac',
+  primaryStrong: '#b89a6a',
+  primarySoft: '#f1e4cc',
+  success: '#8a9076',
+  warning: '#a9824f',
+  danger: '#8b5a4d'
+})) {
+  if (tokenDocument.color.accent?.[tokenName]?.hex !== expectedValue) {
+    failures.push(`color.accent.${tokenName}.hex must stay ${expectedValue} for the unified parchment accent contract.`);
   }
 }
 

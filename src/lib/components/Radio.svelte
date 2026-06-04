@@ -60,7 +60,7 @@
     border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
     border-radius: 50%;
     box-sizing: border-box;
-    color: var(--zdp-color-ink-inverse);
+    color: var(--zdp-color-ink-strong);
     display: inline-flex;
     height: var(--zdp-control-choice-size);
     justify-content: center;
@@ -89,6 +89,10 @@
   .zdp-choice__input:checked + .zdp-choice__mark {
     background: var(--zdp-color-accent-primary);
     border-color: var(--zdp-color-accent-primary-strong);
+  }
+
+  :global([data-zdp-theme="dark"]) .zdp-choice__input:checked + .zdp-choice__mark {
+    color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-choice__input:checked + .zdp-choice__mark::after {

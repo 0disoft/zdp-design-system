@@ -32,6 +32,7 @@ const componentPaths = [
   'src/lib/components/IconButton.svelte',
   'src/lib/components/Inline.svelte',
   'src/lib/components/Input.svelte',
+  'src/lib/components/Kbd.svelte',
   'src/lib/components/KeyValue.svelte',
   'src/lib/components/Label.svelte',
   'src/lib/components/Link.svelte',
@@ -40,6 +41,8 @@ const componentPaths = [
   'src/lib/components/Radio.svelte',
   'src/lib/components/Section.svelte',
   'src/lib/components/Select.svelte',
+  'src/lib/components/ShareDock.svelte',
+  'src/lib/components/ShortcutHint.svelte',
   'src/lib/components/SkipLink.svelte',
   'src/lib/components/Stack.svelte',
   'src/lib/components/Surface.svelte',
@@ -64,7 +67,20 @@ const expectedSubpathExports = {
   './locale-fonts.css': './src/styles/locale-fonts.css',
   './tokens': './tokens/zdp.tokens.json'
 } as const;
-const expectedPackageFiles = ['src/', 'tokens/', 'docs/', 'README.md', 'CHANGELOG.md'] as const;
+const expectedShareExport = {
+  types: './share.d.ts',
+  import: './share.js',
+  default: './share.js'
+} as const;
+const expectedPackageFiles = [
+  'src/',
+  'tokens/',
+  'docs/',
+  'share.js',
+  'share.d.ts',
+  'README.md',
+  'CHANGELOG.md'
+] as const;
 const expectedSideEffects = [
   './src/styles/index.css',
   './src/styles/locale-fonts.css',
@@ -73,6 +89,7 @@ const expectedSideEffects = [
 ] as const;
 const expectedScripts = {
   'consumer:check': 'bun scripts/check-consumer-contract.ts',
+  'share-icons:check': 'bun scripts/check-share-icons.ts',
   'package:check': 'bun scripts/check-package.ts'
 } as const;
 const failures: string[] = [];
@@ -102,6 +119,10 @@ function checkPackageScripts(packageJson: PackageJson): void {
 
   if (!packageJson.scripts?.check?.includes('bun scripts/check-consumer-contract.ts')) {
     failures.push('package.json check script must include consumer contract validation.');
+  }
+
+  if (!packageJson.scripts?.check?.includes('bun scripts/check-share-icons.ts')) {
+    failures.push('package.json check script must include share icon brand validation.');
   }
 }
 
@@ -143,7 +164,25 @@ function checkPackageFiles(packageJson: PackageJson): void {
     }
   }
 
-  for (const exportTarget of [expectedRootExport, ...Object.values(expectedSubpathExports)]) {
+  const shareExport = packageJson.exports?.['./share'];
+
+  if (!isRecord(shareExport)) {
+    failures.push('package.json exports["./share"] must be an object.');
+  } else {
+    for (const [condition, expectedPath] of Object.entries(expectedShareExport)) {
+      if (shareExport[condition] !== expectedPath) {
+        failures.push(`package.json exports["./share"].${condition} must be ${expectedPath}.`);
+      }
+
+      assertExistingExportTarget(expectedPath);
+    }
+  }
+
+  for (const exportTarget of [
+    expectedRootExport,
+    ...Object.values(expectedSubpathExports),
+    ...Object.values(expectedShareExport)
+  ]) {
     if (!isCoveredByPackageFiles(packageJson.files, exportTarget)) {
       failures.push(`package.json files does not include export target ${exportTarget}.`);
     }

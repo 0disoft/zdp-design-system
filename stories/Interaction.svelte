@@ -3,12 +3,32 @@
   import Dialog from '../src/lib/components/Dialog.svelte';
   import Divider from '../src/lib/components/Divider.svelte';
   import Inline from '../src/lib/components/Inline.svelte';
+  import Kbd from '../src/lib/components/Kbd.svelte';
+  import ShareDock from '../src/lib/components/ShareDock.svelte';
+  import ShortcutHint from '../src/lib/components/ShortcutHint.svelte';
   import Stack from '../src/lib/components/Stack.svelte';
   import Surface from '../src/lib/components/Surface.svelte';
   import Tabs from '../src/lib/components/Tabs.svelte';
+  import type { ZdpShareDockItem } from '../src/lib/share.ts';
 
   let lightDialogOpen = false;
   let darkDialogOpen = false;
+  let lightShareCount = 0;
+  let darkShareCount = 0;
+  const shareItems: readonly ZdpShareDockItem[] = [
+    { id: 'copy', label: '링크 복사', icon: 'copy', onclick: () => (lightShareCount += 1) },
+    { id: 'device', label: '기기 공유', icon: 'device', onclick: () => (lightShareCount += 1) },
+    { id: 'telegram', label: '텔레그램', icon: 'telegram', href: '#share', ariaLabel: '텔레그램으로 공유' },
+    { id: 'line', label: '라인', icon: 'line', href: '#share', ariaLabel: '라인으로 공유' },
+    { id: 'whatsapp', label: '왓츠앱', icon: 'whatsapp', href: '#share', ariaLabel: '왓츠앱으로 공유' },
+    { id: 'x', label: 'X', icon: 'x', href: '#share', ariaLabel: 'X으로 공유' },
+    { id: 'reddit', label: '레딧', icon: 'reddit', href: '#share', ariaLabel: '레딧으로 공유' }
+  ];
+  const darkShareItems: readonly ZdpShareDockItem[] = shareItems.map((item) =>
+    item.id === 'copy' || item.id === 'device'
+      ? { ...item, onclick: () => (darkShareCount += 1) }
+      : item
+  );
 </script>
 
 <main class="component-story zdp-surface-reset" id="interaction-main" lang="ko" tabindex="-1">
@@ -47,6 +67,39 @@
 
         <Surface padding="lg">
           <Stack gap="md">
+            <h3>Shortcut hints</h3>
+            <p>
+              검색과 이동처럼 반복되는 작업은 키캡으로 길을 보여주되, 실제 keydown 처리는 각 화면에 남깁니다.
+            </p>
+            <div class="shortcut-list" aria-label="Light shortcut hints">
+              <div class="shortcut-row">
+                <span>Search</span>
+                <ShortcutHint keys={['/']} ariaLabel="Search shortcut slash" />
+              </div>
+              <div class="shortcut-row">
+                <span>Command</span>
+                <ShortcutHint keys={['Ctrl', 'K']} ariaLabel="Command shortcut Control K" />
+              </div>
+              <div class="shortcut-row">
+                <span>Go to file</span>
+                <Kbd label="T" ariaLabel="Go to file shortcut T" />
+              </div>
+              <div class="shortcut-row">
+                <span>Save</span>
+                <ShortcutHint keys={['Ctrl', 'S']} ariaLabel="Save shortcut Control S" />
+              </div>
+              <div class="shortcut-row">
+                <span>Close</span>
+                <Kbd label="Esc" ariaLabel="Close shortcut Escape" />
+              </div>
+            </div>
+          </Stack>
+        </Surface>
+
+        <Divider />
+
+        <Surface padding="lg">
+          <Stack gap="md">
             <h3>Dialog</h3>
             <p>확인이 필요한 순간에는 현재 흐름 위에 짧게 띄웁니다.</p>
             <Inline gap="md" align="center">
@@ -74,6 +127,17 @@
                 <Button variant="primary" onclick={() => (lightDialogOpen = false)}>저장</Button>
               </svelte:fragment>
             </Dialog>
+          </Stack>
+        </Surface>
+
+        <Divider />
+
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3>ShareDock</h3>
+            <p>긴 라벨은 숨기고, 아이콘 focus와 툴팁으로 공유 경로를 보여줍니다.</p>
+            <ShareDock placement="inline" ariaLabel="Light share actions" items={shareItems} />
+            <span class="story-status">공유 준비 {lightShareCount}회</span>
           </Stack>
         </Surface>
       </Stack>
@@ -108,6 +172,39 @@
 
         <Surface padding="lg">
           <Stack gap="md">
+            <h3>Shortcut hints</h3>
+            <p>
+              어두운 화면에서도 키캡은 같은 테두리, 같은 focus 계열 안에서만 표시합니다.
+            </p>
+            <div class="shortcut-list" aria-label="Dark shortcut hints">
+              <div class="shortcut-row">
+                <span>Search</span>
+                <ShortcutHint keys={['/']} ariaLabel="Search shortcut slash" />
+              </div>
+              <div class="shortcut-row">
+                <span>Command</span>
+                <ShortcutHint keys={['Ctrl', 'K']} ariaLabel="Command shortcut Control K" />
+              </div>
+              <div class="shortcut-row">
+                <span>Go to file</span>
+                <Kbd label="T" ariaLabel="Go to file shortcut T" />
+              </div>
+              <div class="shortcut-row">
+                <span>Save</span>
+                <ShortcutHint keys={['Ctrl', 'S']} ariaLabel="Save shortcut Control S" />
+              </div>
+              <div class="shortcut-row">
+                <span>Close</span>
+                <Kbd label="Esc" ariaLabel="Close shortcut Escape" />
+              </div>
+            </div>
+          </Stack>
+        </Surface>
+
+        <Divider />
+
+        <Surface padding="lg">
+          <Stack gap="md">
             <h3>Dialog</h3>
             <p>위험한 작업은 낮은 채도의 danger outline으로 확인합니다.</p>
             <Inline gap="md" align="center">
@@ -135,6 +232,17 @@
                 <Button variant="danger" onclick={() => (darkDialogOpen = false)}>삭제</Button>
               </svelte:fragment>
             </Dialog>
+          </Stack>
+        </Surface>
+
+        <Divider />
+
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3>ShareDock</h3>
+            <p>어두운 표면에서도 도크와 아이콘은 같은 framed control 규칙을 따릅니다.</p>
+            <ShareDock placement="inline" ariaLabel="Dark share actions" items={darkShareItems} />
+            <span class="story-status">공유 준비 {darkShareCount}회</span>
           </Stack>
         </Surface>
       </Stack>
@@ -173,8 +281,9 @@
   .component-story__header h1 {
     color: var(--zdp-color-ink-strong);
     font-family: var(--zdp-font-family-display);
-    font-size: 3rem;
-    line-height: var(--zdp-type-title-line-height);
+    font-size: var(--zdp-type-page-title-size);
+    font-weight: var(--zdp-font-weight-medium);
+    line-height: var(--zdp-type-page-title-line-height);
     margin: 0;
   }
 
@@ -220,6 +329,27 @@
     color: var(--zdp-color-ink-muted);
     font-size: var(--zdp-type-caption-size);
     line-height: var(--zdp-type-caption-line-height);
+  }
+
+  .shortcut-list {
+    display: grid;
+    gap: var(--zdp-space-2);
+  }
+
+  .shortcut-row {
+    align-items: center;
+    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+    border-radius: var(--zdp-control-radius);
+    display: flex;
+    gap: var(--zdp-space-3);
+    justify-content: space-between;
+    min-width: 0;
+    padding: var(--zdp-space-2) var(--zdp-space-3);
+  }
+
+  .shortcut-row span {
+    color: var(--zdp-color-ink-strong);
+    line-height: var(--zdp-type-body-line-height);
   }
 
   @media (max-width: 860px) {

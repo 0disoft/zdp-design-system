@@ -1,5 +1,61 @@
 # Changelog
 
+## 0.31.0
+
+- Added `Kbd` and `ShortcutHint` Svelte primitives plus static `.zdp-kbd` and `.zdp-shortcut-hint` utilities for visible shortcut hints.
+- Added optional `ariaKeyShortcuts` passthrough on `Button`, `IconButton`, and `Link` for controls whose shortcuts are implemented by consuming apps.
+- Documented that the design system owns keycap presentation only; keydown dispatch, command palette behavior, search focus movement, and shortcut collision handling stay in consuming apps.
+
+## 0.30.2
+
+- Added static `CommandField` utilities for search, quick navigation, and shortcut keycap affordance without adding product-owned search logic.
+- Documented that search indexes, result ranking, routing, and permissions stay in consuming apps.
+
+## 0.30.1
+
+- Reduced preview and Storybook page-heading samples from marketing-scale headings to shared product title tokens.
+- Updated token document to `0.6.7` so consumers can distinguish ordinary page titles from product-owned hero art.
+
+## 0.30.0
+
+- Added Japanese font-family token and optional Noto Sans JP locale font export for the 10-locale ZDP plan.
+- Expanded locale documentation from the previous 6-language wording to the 10-language target.
+
+## 0.29.2
+
+- Replaced ShareDock platform brand glyphs with Simple Icons paths for Telegram, LINE, WhatsApp, X, and Reddit.
+- Added `share-icons:check` so platform brand glyphs cannot drift back into custom outline approximations.
+- Documented that ShareDock owns brand icon shape data while consumers still own URLs, clipboard, `navigator.share`, and platform routing.
+
+## 0.29.1
+
+- Added `rail` placement for `ShareDock` so document pages can keep icon-only share controls beside the article instead of pinning them to the viewport edge.
+- Reduced share dock action and glyph sizing to the small control tokens for a calmer sticky share rail.
+- Moved the default side placement to the right side of the page frame and kept tooltips opening inward.
+
+## 0.29.0
+
+- Added `ShareDock` and `zdpShareIcons` for icon-only share surfaces with side, bottom, and inline placement.
+- Added static `.zdp-share-*` utilities so Astro and static HTML consumers can use the same share dock without a Svelte island.
+- Kept URL generation, clipboard, `navigator.share`, platform links, routing, and permission decisions in consuming apps.
+
+## 0.28.3
+
+- Moved the primary accent away from dusty blue into the parchment/brass palette so default actions, icon buttons, links, selected controls, and confirm progress no longer pop as a separate blue system.
+- Muted success, warning, and danger accents into the same market palette so semantic states keep their meaning without fighting the page tone.
+- Updated the token document to `0.6.6` and aligned token, preview, Storybook, and consumer checks with the unified accent contract.
+
+## 0.28.2
+
+- Raised only the large surface radius token to `0.5rem` while keeping shared controls at `0.375rem`, so flat cards read as a higher layer without returning to pill-shaped UI.
+- Softened secondary Button and ghost IconButton resting borders to `line-subtle`, while keeping hover and active borders on `line-strong` for consistent flat feedback.
+- Updated the token document to `0.6.5` and aligned token, preview, Storybook, and consumer checks with the flat premium surface contract.
+
+## 0.28.1
+
+- Muted primary, warning, success, and danger accent tokens so semantic states stay inside the parchment market palette instead of popping like separate UI systems.
+- Updated the token document to `0.6.4` and kept the consumer checks aligned with the quieter accent contract.
+
 ## 0.28.0
 
 - Added `ConfirmAction` for slide-or-hold confirmation flows such as payment and deletion gates without owning product decisions.

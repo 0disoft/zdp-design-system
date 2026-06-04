@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { siLine, siReddit, siTelegram, siWhatsapp, siX } from 'simple-icons';
 import { assertNoDecorativeEffects, assertNoOverRoundedUsage } from './style-contract';
 
 const root = process.cwd();
@@ -31,6 +32,7 @@ for (const requiredText of [
   'Pretendard-first multiscript text',
   'lang="zh"',
   'lang="hi"',
+  'lang="ja"',
   'zdp-button zdp-button--primary zdp-button--md',
   'zdp-icon-button zdp-icon-button--solid zdp-icon-button--md',
   'zdp-icon zdp-icon--md zdp-icon-button__glyph',
@@ -55,6 +57,9 @@ for (const requiredText of [
   'zdp-toolbar zdp-toolbar--gap-md zdp-toolbar--align-center',
   'zdp-toolbar__main',
   'zdp-toolbar__actions',
+  'zdp-shortcut-hint',
+  'zdp-shortcut-hint__separator',
+  'zdp-kbd zdp-kbd--md',
   'zdp-divider zdp-divider--horizontal zdp-divider--subtle',
   'zdp-table-wrap',
   'zdp-table zdp-table--density-compact',
@@ -65,6 +70,18 @@ for (const requiredText of [
   'zdp-empty-state',
   'zdp-empty-state__body',
   'zdp-empty-state__actions',
+  'zdp-share-dock zdp-share-dock--inline',
+  'zdp-share-dock__list',
+  'zdp-share-action',
+  'zdp-share-action__mark',
+  'zdp-share-action__tooltip',
+  'zdp-share-icon zdp-share-icon--copy',
+  'zdp-share-icon zdp-share-icon--device',
+  'zdp-share-icon zdp-share-icon--telegram',
+  'zdp-share-icon zdp-share-icon--line',
+  'zdp-share-icon zdp-share-icon--whatsapp',
+  'zdp-share-icon zdp-share-icon--x',
+  'zdp-share-icon zdp-share-icon--reddit',
   'zdp-callout zdp-callout--info',
   'zdp-callout zdp-callout--danger',
   'zdp-callout__mark',
@@ -113,6 +130,9 @@ for (const requiredText of [
   '--zdp-color-accent-danger',
   '--zdp-type-body-size',
   '--zdp-type-body-small-size',
+  '--zdp-type-page-title-size',
+  '--zdp-type-page-title-compact-size',
+  '--zdp-type-page-title-line-height',
   '--zdp-type-caption-size',
   '--zdp-type-data-size',
   '--zdp-breakpoint-tablet',
@@ -124,8 +144,18 @@ for (const requiredText of [
   '--zdp-control-focus-outline-width',
   '--zdp-i18n-overflow-wrap',
   'line-height: var(--zdp-type-title-line-height)',
+  'font-size: var(--zdp-type-page-title-size)',
+  'font-size: var(--zdp-type-page-title-compact-size)',
+  'line-height: var(--zdp-type-page-title-line-height)',
   'Foundation tokens',
   'Search Design System',
+  'Light shortcut hints',
+  'Dark shortcut hints',
+  'Search shortcut slash',
+  'Command shortcut Control K',
+  'Go to file shortcut T',
+  'Save shortcut Control S',
+  'Close shortcut Escape',
   '화면의 첫 장면',
   '반복되는 요약',
   '검토 흐름',
@@ -166,6 +196,22 @@ for (const requiredText of [
   }
 }
 
+for (const [iconName, expectedPath] of [
+  ['telegram', siTelegram.path],
+  ['line', siLine.path],
+  ['whatsapp', siWhatsapp.path],
+  ['x', siX.path],
+  ['reddit', siReddit.path]
+] as const) {
+  if (!preview.includes(`zdp-share-icon zdp-share-icon--${iconName}`)) {
+    failures.push(`Preview is missing ${iconName} share icon class.`);
+  }
+
+  if (!preview.includes(`d="${expectedPath}" fill="currentColor"`)) {
+    failures.push(`Preview ${iconName} icon must match the Simple Icons path.`);
+  }
+}
+
 for (const requiredText of [
   '.zdp-surface-reset a:not(.zdp-button):not(.zdp-icon-button)',
   'font-family: var(--zdp-font-family-sans)',
@@ -177,6 +223,7 @@ for (const requiredText of [
   '.zdp-surface-reset:lang(ko)',
   '.zdp-surface-reset:lang(zh)',
   '.zdp-surface-reset:lang(hi)',
+  '.zdp-surface-reset:lang(ja)',
   'text-decoration-line: none',
   'color var(--zdp-motion-fast) ease',
   '--zdp-color-focus-surface',
@@ -213,6 +260,7 @@ for (const requiredText of [
   'font-family: var(--zdp-font-family-sans)',
   'font-weight: var(--zdp-font-weight-regular)',
   'border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong)',
+  'border-color: var(--zdp-color-line-subtle)',
   '.zdp-confirm-action',
   '.zdp-confirm-action__fill',
   '.zdp-confirm-action__thumb',
@@ -272,6 +320,13 @@ for (const requiredText of [
   '.zdp-toolbar',
   '.zdp-toolbar__main',
   '.zdp-toolbar__actions',
+  '.zdp-kbd',
+  '.zdp-kbd--sm',
+  '.zdp-kbd--md',
+  '.zdp-shortcut-hint',
+  '.zdp-shortcut-hint--sm',
+  '.zdp-shortcut-hint--md',
+  '.zdp-shortcut-hint__separator',
   '.zdp-divider',
   '.zdp-divider--horizontal',
   '.zdp-divider--subtle',
@@ -286,6 +341,20 @@ for (const requiredText of [
   '.zdp-empty-state',
   '.zdp-empty-state__body',
   '.zdp-empty-state__actions',
+  '.zdp-share-dock',
+  '.zdp-share-dock--side',
+  '.zdp-share-dock--rail',
+  '.zdp-share-dock--bottom',
+  '.zdp-share-dock--inline',
+  '.zdp-share-dock__list',
+  '.zdp-share-action',
+  '.zdp-share-action:hover:not(:disabled)',
+  '.zdp-share-action:focus-visible',
+  '.zdp-share-action__mark',
+  '.zdp-share-icon',
+  '.zdp-share-action__tooltip',
+  '.zdp-share-action:hover .zdp-share-action__tooltip',
+  'max-inline-size: calc(100vw - var(--zdp-space-6))',
   'border-block-start: 1px solid var(--zdp-color-line-subtle)',
   'display: flex',
   'flex-wrap: wrap',

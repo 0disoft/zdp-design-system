@@ -1,7 +1,7 @@
 {
   "$schema": "https://zdp.zerodi.dev/schemas/design-tokens.schema.json",
   "name": "zdp-core",
-  "version": "0.6.3",
+  "version": "0.6.7",
   "color": {
     "ink": {
       "strong": {
@@ -49,8 +49,8 @@
         "oklch": "oklch(70% 0.08 76)"
       },
       "focus": {
-        "hex": "#6d8fb7",
-        "oklch": "oklch(63% 0.08 250)"
+        "hex": "#8b6f45",
+        "oklch": "oklch(55% 0.075 76)"
       }
     },
     "focus": {
@@ -83,28 +83,28 @@
     },
     "accent": {
       "primary": {
-        "hex": "#6d8fb7",
-        "oklch": "oklch(63% 0.08 250)"
+        "hex": "#d8c8ac",
+        "oklch": "oklch(82% 0.045 82)"
       },
       "primaryStrong": {
-        "hex": "#3f6286",
-        "oklch": "oklch(47% 0.08 250)"
+        "hex": "#b89a6a",
+        "oklch": "oklch(70% 0.08 76)"
       },
       "primarySoft": {
-        "hex": "#dce8f4",
-        "oklch": "oklch(92% 0.035 250)"
+        "hex": "#f1e4cc",
+        "oklch": "oklch(91% 0.045 82)"
       },
       "success": {
-        "hex": "#8ba489",
-        "oklch": "oklch(68% 0.055 140)"
+        "hex": "#8a9076",
+        "oklch": "oklch(63% 0.035 105)"
       },
       "warning": {
-        "hex": "#e7c97a",
-        "oklch": "oklch(84% 0.1 86)"
+        "hex": "#a9824f",
+        "oklch": "oklch(60% 0.075 68)"
       },
       "danger": {
-        "hex": "#8e2e3d",
-        "oklch": "oklch(43% 0.12 25)"
+        "hex": "#8b5a4d",
+        "oklch": "oklch(48% 0.06 35)"
       }
     }
   },
@@ -124,7 +124,7 @@
     "none": "0",
     "sm": "0.25rem",
     "md": "0.375rem",
-    "lg": "0.375rem",
+    "lg": "0.5rem",
     "pill": "999px"
   },
   "font": {
@@ -134,7 +134,8 @@
       "korean": "\"Pretendard Variable\", Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
       "chinese": "\"Noto Sans SC Variable\", \"Noto Sans SC\", \"PingFang SC\", \"Microsoft YaHei\", \"Pretendard Variable\", Pretendard, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
       "devanagari": "\"Noto Sans Devanagari Variable\", \"Noto Sans Devanagari\", \"Nirmala UI\", \"Kohinoor Devanagari\", ui-sans-serif, system-ui, sans-serif",
-      "multiscript": "\"Pretendard Variable\", Pretendard, \"Manrope Variable\", Manrope, \"Inter Variable\", Inter, \"Noto Sans SC Variable\", \"Noto Sans SC\", \"Noto Sans Devanagari Variable\", \"Noto Sans Devanagari\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"PingFang SC\", \"Microsoft YaHei\", \"Nirmala UI\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      "japanese": "\"Noto Sans JP Variable\", \"Noto Sans JP\", \"Hiragino Sans\", \"Yu Gothic\", \"Meiryo\", \"Pretendard Variable\", Pretendard, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      "multiscript": "\"Pretendard Variable\", Pretendard, \"Manrope Variable\", Manrope, \"Inter Variable\", Inter, \"Noto Sans SC Variable\", \"Noto Sans SC\", \"Noto Sans JP Variable\", \"Noto Sans JP\", \"Noto Sans Devanagari Variable\", \"Noto Sans Devanagari\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"PingFang SC\", \"Microsoft YaHei\", \"Hiragino Sans\", \"Yu Gothic\", \"Meiryo\", \"Nirmala UI\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
       "serif": "Cardo, Georgia, \"Times New Roman\", ui-serif, serif",
       "display": "\"Pretendard Variable\", Pretendard, \"Manrope Variable\", Manrope, \"Inter Variable\", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
       "mono": "\"JetBrains Mono\", \"SFMono-Regular\", Consolas, monospace"
@@ -163,6 +164,9 @@
     "bodyLineHeight": "1.6",
     "bodySmallSize": "1rem",
     "bodySmallLineHeight": "1.6",
+    "pageTitleSize": "2.75rem",
+    "pageTitleCompactSize": "2rem",
+    "pageTitleLineHeight": "1.15",
     "titleSize": "1.375rem",
     "titleLineHeight": "1.2",
     "labelSize": "0.875rem",

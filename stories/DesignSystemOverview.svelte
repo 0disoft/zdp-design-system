@@ -23,6 +23,7 @@
   import Radio from '../src/lib/components/Radio.svelte';
   import Section from '../src/lib/components/Section.svelte';
   import Select from '../src/lib/components/Select.svelte';
+  import ShareDock from '../src/lib/components/ShareDock.svelte';
   import SkipLink from '../src/lib/components/SkipLink.svelte';
   import Stack from '../src/lib/components/Stack.svelte';
   import Surface from '../src/lib/components/Surface.svelte';
@@ -31,9 +32,47 @@
   import Table from '../src/lib/components/Table.svelte';
   import Textarea from '../src/lib/components/Textarea.svelte';
   import VisuallyHidden from '../src/lib/components/VisuallyHidden.svelte';
+  import type { ZdpShareDockItem } from '../src/lib/share.ts';
 
   let lightDialogOpen = false;
   let darkDialogOpen = false;
+  let lightShareCount = 0;
+  let darkShareCount = 0;
+
+  const shareItems: readonly ZdpShareDockItem[] = [
+    {
+      id: 'copy',
+      label: '링크 복사',
+      icon: 'copy',
+      onclick: () => {
+        lightShareCount += 1;
+      }
+    },
+    {
+      id: 'device',
+      label: '기기 공유',
+      icon: 'device',
+      onclick: () => {
+        lightShareCount += 1;
+      }
+    },
+    { id: 'telegram', label: '텔레그램', icon: 'telegram', href: '#share-telegram' },
+    { id: 'line', label: '라인', icon: 'line', href: '#share-line' },
+    { id: 'whatsapp', label: '왓츠앱', icon: 'whatsapp', href: '#share-whatsapp' },
+    { id: 'x', label: 'X', icon: 'x', href: '#share-x' },
+    { id: 'reddit', label: '레딧', icon: 'reddit', href: '#share-reddit' }
+  ];
+
+  const darkShareItems: readonly ZdpShareDockItem[] = shareItems.map((item) =>
+    item.id === 'copy' || item.id === 'device'
+      ? {
+          ...item,
+          onclick: () => {
+            darkShareCount += 1;
+          }
+        }
+      : item
+  );
 </script>
 
 <SkipLink href="#foundation-tokens">본문으로 건너뛰기</SkipLink>
@@ -60,7 +99,7 @@
         <div class="swatches">
           <span class="swatch">
             <span class="swatch__paint swatch__paint--primary"></span>
-            <span class="swatch__label">Dusty blue</span>
+            <span class="swatch__label">Warm brass</span>
           </span>
           <span class="swatch">
             <span class="swatch__paint swatch__paint--success"></span>
@@ -167,6 +206,17 @@
             <Button variant="primary" onclick={() => (lightDialogOpen = false)}>저장</Button>
           </div>
         </Dialog>
+      </section>
+
+      <section class="preview-section" aria-labelledby="storybook-light-share">
+        <h3 id="storybook-light-share">Share</h3>
+        <Surface tone="panel" padding="lg">
+          <Stack gap="sm">
+            <strong>공유 경로</strong>
+            <ShareDock placement="inline" ariaLabel="Light share actions" items={shareItems} />
+            <p class="status-note">확인 {lightShareCount}회</p>
+          </Stack>
+        </Surface>
       </section>
 
       <section class="preview-section" aria-labelledby="storybook-light-tabs">
@@ -341,7 +391,7 @@
         <div class="swatches">
           <span class="swatch">
             <span class="swatch__paint swatch__paint--primary"></span>
-            <span class="swatch__label">Moonlit blue</span>
+            <span class="swatch__label">Warm brass</span>
           </span>
           <span class="swatch">
             <span class="swatch__paint swatch__paint--success"></span>
@@ -362,7 +412,7 @@
         <h3 id="storybook-dark-type">Type</h3>
         <p class="type-sample">
           <strong>밤에도 종이결은 남기기</strong>
-          <span>Dark mode keeps the same market palette without turning into a blue console.</span>
+          <span>Dark mode keeps the same market palette without turning into a separate console theme.</span>
           <Link href="#foundation-tokens">자세히 보기</Link>
         </p>
       </section>
@@ -448,6 +498,17 @@
             <Button variant="danger" onclick={() => (darkDialogOpen = false)}>삭제</Button>
           </div>
         </Dialog>
+      </section>
+
+      <section class="preview-section" aria-labelledby="storybook-dark-share">
+        <h3 id="storybook-dark-share">Share</h3>
+        <Surface tone="panel" padding="lg">
+          <Stack gap="sm">
+            <strong>공유 경로</strong>
+            <ShareDock placement="inline" ariaLabel="Dark share actions" items={darkShareItems} />
+            <p class="status-note">확인 {darkShareCount}회</p>
+          </Stack>
+        </Surface>
       </section>
 
       <section class="preview-section" aria-labelledby="storybook-dark-tabs">
@@ -627,7 +688,7 @@
     </article>
     <article>
       <span>i18n</span>
-      <strong><span lang="ko">긴문장</span> / <span lang="zh">自由</span> / <span lang="hi">स्वर</span> / Safe</strong>
+      <strong><span lang="ko">긴문장</span> / <span lang="zh">自由</span> / <span lang="hi">स्वर</span> / <span lang="ja">余白</span> / Safe</strong>
     </article>
   </section>
 
@@ -667,9 +728,9 @@
   .storybook-preview__header h1 {
     color: var(--zdp-color-ink-strong);
     font-family: var(--zdp-font-family-display);
-    font-size: 3.5rem;
-    font-weight: var(--zdp-font-weight-bold);
-    line-height: var(--zdp-type-title-line-height);
+    font-size: var(--zdp-type-page-title-size);
+    font-weight: var(--zdp-font-weight-medium);
+    line-height: var(--zdp-type-page-title-line-height);
     margin: 0;
   }
 
@@ -728,6 +789,7 @@
     font-family: var(--zdp-font-family-display);
     font-size: var(--zdp-font-size-xl);
     font-weight: var(--zdp-font-weight-bold);
+    line-height: var(--zdp-type-title-line-height);
     margin: 0;
   }
 
@@ -970,7 +1032,7 @@
     }
 
     .storybook-preview__header h1 {
-      font-size: 2.5rem;
+      font-size: var(--zdp-type-page-title-compact-size);
     }
 
     .storybook-preview__grid,

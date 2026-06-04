@@ -43,6 +43,7 @@ const errorTextPath = join(root, 'src', 'lib', 'components', 'ErrorText.svelte')
 const fieldPath = join(root, 'src', 'lib', 'components', 'Field.svelte');
 const gridPath = join(root, 'src', 'lib', 'components', 'Grid.svelte');
 const inputPath = join(root, 'src', 'lib', 'components', 'Input.svelte');
+const kbdPath = join(root, 'src', 'lib', 'components', 'Kbd.svelte');
 const keyValuePath = join(root, 'src', 'lib', 'components', 'KeyValue.svelte');
 const labelPath = join(root, 'src', 'lib', 'components', 'Label.svelte');
 const linkPath = join(root, 'src', 'lib', 'components', 'Link.svelte');
@@ -51,6 +52,8 @@ const pageHeaderPath = join(root, 'src', 'lib', 'components', 'PageHeader.svelte
 const radioPath = join(root, 'src', 'lib', 'components', 'Radio.svelte');
 const sectionPath = join(root, 'src', 'lib', 'components', 'Section.svelte');
 const selectPath = join(root, 'src', 'lib', 'components', 'Select.svelte');
+const shareDockPath = join(root, 'src', 'lib', 'components', 'ShareDock.svelte');
+const shortcutHintPath = join(root, 'src', 'lib', 'components', 'ShortcutHint.svelte');
 const skipLinkPath = join(root, 'src', 'lib', 'components', 'SkipLink.svelte');
 const stackPath = join(root, 'src', 'lib', 'components', 'Stack.svelte');
 const switchPath = join(root, 'src', 'lib', 'components', 'Switch.svelte');
@@ -99,6 +102,7 @@ const [
   field,
   grid,
   input,
+  kbd,
   keyValue,
   label,
   link,
@@ -107,6 +111,8 @@ const [
   radio,
   section,
   select,
+  shareDock,
+  shortcutHint,
   skipLink,
   stack,
   switchComponent,
@@ -154,6 +160,7 @@ const [
     readFile(fieldPath, 'utf8'),
     readFile(gridPath, 'utf8'),
     readFile(inputPath, 'utf8'),
+    readFile(kbdPath, 'utf8'),
     readFile(keyValuePath, 'utf8'),
     readFile(labelPath, 'utf8'),
     readFile(linkPath, 'utf8'),
@@ -162,6 +169,8 @@ const [
     readFile(radioPath, 'utf8'),
     readFile(sectionPath, 'utf8'),
     readFile(selectPath, 'utf8'),
+    readFile(shareDockPath, 'utf8'),
+    readFile(shortcutHintPath, 'utf8'),
     readFile(skipLinkPath, 'utf8'),
     readFile(stackPath, 'utf8'),
     readFile(switchPath, 'utf8'),
@@ -342,6 +351,7 @@ for (const requiredText of [
   '../src/lib/components/Radio.svelte',
   '../src/lib/components/Section.svelte',
   '../src/lib/components/Select.svelte',
+  '../src/lib/components/ShareDock.svelte',
   '../src/lib/components/SkipLink.svelte',
   '../src/lib/components/Stack.svelte',
   '../src/lib/components/Surface.svelte',
@@ -363,6 +373,9 @@ for (const requiredText of [
   'Foundation tokens',
   '--zdp-type-body-size',
   '--zdp-type-body-small-size',
+  '--zdp-type-page-title-size',
+  '--zdp-type-page-title-compact-size',
+  '--zdp-type-page-title-line-height',
   '--zdp-type-caption-size',
   '--zdp-type-data-size',
   '--zdp-control-radius',
@@ -373,9 +386,13 @@ for (const requiredText of [
   '--zdp-control-focus-outline-width',
   '--zdp-i18n-overflow-wrap',
   'line-height: var(--zdp-type-title-line-height)',
+  'font-size: var(--zdp-type-page-title-size)',
+  'font-size: var(--zdp-type-page-title-compact-size)',
+  'line-height: var(--zdp-type-page-title-line-height)',
   'Search Design System',
   '본문으로 건너뛰기',
   'VisuallyHidden',
+  'ShareDock',
   'Stack',
   'Inline',
   'Divider',
@@ -620,9 +637,13 @@ for (const requiredText of [
   '../src/lib/components/Dialog.svelte',
   '../src/lib/components/Divider.svelte',
   '../src/lib/components/Inline.svelte',
+  '../src/lib/components/Kbd.svelte',
+  '../src/lib/components/ShareDock.svelte',
+  '../src/lib/components/ShortcutHint.svelte',
   '../src/lib/components/Stack.svelte',
   '../src/lib/components/Surface.svelte',
   '../src/lib/components/Tabs.svelte',
+  '../src/lib/share.ts',
   'Interaction states',
   'id="interaction-main"',
   'tabindex="-1"',
@@ -630,6 +651,22 @@ for (const requiredText of [
   'data-zdp-theme="dark"',
   'line-height: var(--zdp-type-title-line-height)',
   'Tabs',
+  'Shortcut hints',
+  'Kbd',
+  'ShortcutHint',
+  'keydown 처리는 각 화면에 남깁니다',
+  'Light shortcut hints',
+  'Dark shortcut hints',
+  'Search',
+  'Command',
+  'Go to file',
+  'Save',
+  'Close',
+  "keys={['/']}",
+  "keys={['Ctrl', 'K']}",
+  "keys={['Ctrl', 'S']}",
+  'label="T"',
+  'label="Esc"',
   'Dialog',
   'Light interaction sections',
   'Dark interaction sections',
@@ -650,6 +687,15 @@ for (const requiredText of [
   '삭제 전에 확인하세요.',
   '<Button variant="primary" onclick={() => (lightDialogOpen = false)}>저장</Button>',
   '<Button variant="danger" onclick={() => (darkDialogOpen = false)}>삭제</Button>',
+  '<ShareDock placement="inline"',
+  'Light share actions',
+  'Dark share actions',
+  '링크 복사',
+  '기기 공유',
+  '텔레그램',
+  '라인',
+  '왓츠앱',
+  '레딧',
   'zdp-surface-reset'
 ]) {
   if (!interactionComponent.includes(requiredText)) {
@@ -732,7 +778,9 @@ for (const requiredText of [
   '.zdp-link--primary',
   '.zdp-link--muted',
   'href: string',
+  'ariaKeyShortcuts: string | null = null',
   'aria-current={resolvedAriaCurrent}',
+  'aria-keyshortcuts={ariaKeyShortcuts ?? undefined}',
   'border-bottom: var(--zdp-control-focus-underline-width) solid transparent',
   'text-decoration-line: none',
   '.zdp-link:hover',
@@ -748,6 +796,47 @@ for (const requiredText of [
 
 assertNoDecorativeEffects(failures, 'Link component', link);
 assertNoOverRoundedUsage(failures, 'Link component', link);
+
+for (const requiredText of [
+  '<kbd',
+  'label: string | null = null',
+  "size: 'sm' | 'md' = 'md'",
+  'aria-label={ariaLabel ?? undefined}',
+  'title={title ?? undefined}',
+  'class={`zdp-kbd zdp-kbd--${size}`}',
+  'box-sizing: border-box',
+  'place-items: center',
+  'vertical-align: middle',
+  'white-space: nowrap'
+]) {
+  if (!kbd.includes(requiredText)) {
+    failures.push(`Kbd component is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  "import Kbd from './Kbd.svelte'",
+  'keys: readonly string[] = []',
+  "size: 'sm' | 'md' = 'md'",
+  'ariaLabel: string | null = null',
+  "keys.join(' ')",
+  'class={`zdp-shortcut-hint zdp-shortcut-hint--${size}`}',
+  'aria-label={resolvedAriaLabel}',
+  'class="zdp-shortcut-hint__separator"',
+  'aria-hidden="true"',
+  '<Kbd label={key} {size} />',
+  'display: inline-flex',
+  'white-space: nowrap'
+]) {
+  if (!shortcutHint.includes(requiredText)) {
+    failures.push(`ShortcutHint component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Kbd component', kbd);
+assertNoDecorativeEffects(failures, 'ShortcutHint component', shortcutHint);
+assertNoOverRoundedUsage(failures, 'Kbd component', kbd);
+assertNoOverRoundedUsage(failures, 'ShortcutHint component', shortcutHint);
 
 for (const requiredText of [
   '.zdp-skip-link',
@@ -1082,9 +1171,38 @@ for (const requiredText of [
   'text-align: center'
 ]) {
   if (!icon.includes(requiredText)) {
-    failures.push(`Icon component is missing centered glyph contract ${requiredText}.`);
+  failures.push(`Icon component is missing centered glyph contract ${requiredText}.`);
   }
 }
+
+for (const requiredText of [
+  'zdpShareIcons',
+  'ZdpShareDockItem',
+  "placement: 'side' | 'rail' | 'bottom' | 'inline' = 'side'",
+  'class={`zdp-share-dock zdp-share-dock--${placement}`}',
+  'class="zdp-share-dock__list"',
+  'class="zdp-share-action"',
+  'class="zdp-share-action__mark"',
+  'class={`zdp-share-icon zdp-share-icon--${item.icon}`}',
+  'class="zdp-share-action__tooltip"',
+  'aria-label={item.ariaLabel ?? item.label}',
+  'data-share-id={item.id}',
+  '.zdp-share-dock--side',
+  '.zdp-share-dock--rail',
+  '.zdp-share-dock--bottom',
+  '.zdp-share-dock--inline',
+  '.zdp-share-action:hover:not(:disabled)',
+  '.zdp-share-action:focus-visible',
+  'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
+  'max-inline-size: calc(100vw - var(--zdp-space-6))'
+]) {
+  if (!shareDock.includes(requiredText)) {
+    failures.push(`ShareDock component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'ShareDock component', shareDock);
+assertNoOverRoundedUsage(failures, 'ShareDock component', shareDock);
 
 for (const requiredText of [
   'export let tone: \'primary\' | \'danger\' = \'primary\'',
@@ -1114,14 +1232,17 @@ for (const requiredText of [
   'ariaDescribedBy: string | null = null',
   'ariaExpanded: boolean | null = null',
   'ariaPressed: boolean | null = null',
+  'ariaKeyShortcuts: string | null = null',
   'aria-controls={ariaControls ?? undefined}',
   'aria-describedby={ariaDescribedBy ?? undefined}',
   'aria-expanded={ariaExpanded ?? undefined}',
   'aria-pressed={ariaPressed ?? undefined}',
+  'aria-keyshortcuts={ariaKeyShortcuts ?? undefined}',
   'onclick={onclick ?? undefined}',
   'font-family: var(--zdp-font-family-sans)',
   'font-weight: var(--zdp-font-weight-regular)',
   'border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong)',
+  'border-color: var(--zdp-color-line-subtle)',
   'background: var(--zdp-color-accent-primary)',
   '.zdp-button--primary:hover:not(:disabled)',
   '.zdp-button--secondary:hover:not(:disabled)',
@@ -1358,15 +1479,18 @@ for (const requiredText of [
   'ariaDescribedBy: string | null = null',
   'ariaExpanded: boolean | null = null',
   'ariaPressed: boolean | null = null',
+  'ariaKeyShortcuts: string | null = null',
   'aria-controls={ariaControls ?? undefined}',
   'aria-describedby={ariaDescribedBy ?? undefined}',
   'aria-expanded={ariaExpanded ?? undefined}',
   'aria-pressed={ariaPressed ?? undefined}',
+  'aria-keyshortcuts={ariaKeyShortcuts ?? undefined}',
   'onclick={onclick ?? undefined}',
   '.zdp-icon-button--solid:active:not(:disabled)',
   '.zdp-icon-button--solid:hover:not(:disabled)',
   '.zdp-icon-button--ghost:hover:not(:disabled)',
   'border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong)',
+  'border-color: var(--zdp-color-line-subtle)',
   'font-family: var(--zdp-font-family-sans)',
   'font-weight: var(--zdp-font-weight-regular)',
   'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',

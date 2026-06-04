@@ -41,9 +41,9 @@
       .preview-title {
         color: var(--zdp-color-ink-strong);
         font-family: var(--zdp-font-family-display);
-        font-size: 3.5rem;
-        font-weight: var(--zdp-font-weight-bold);
-        line-height: var(--zdp-type-title-line-height);
+        font-size: var(--zdp-type-page-title-size);
+        font-weight: var(--zdp-font-weight-medium);
+        line-height: var(--zdp-type-page-title-line-height);
         margin: 0;
       }
 
@@ -359,7 +359,7 @@
         }
 
         .preview-title {
-          font-size: 2.5rem;
+          font-size: var(--zdp-type-page-title-compact-size);
         }
       }
 
@@ -435,7 +435,7 @@
             <div class="swatch-grid">
               <span class="swatch">
                 <span class="swatch__paint" style="background: var(--zdp-color-accent-primary)"></span>
-                <span class="swatch__label">Dusty blue</span>
+                <span class="swatch__label">Warm brass</span>
               </span>
               <span class="swatch">
                 <span class="swatch__paint" style="background: var(--zdp-color-accent-success)"></span>
@@ -469,6 +469,27 @@
                 <span class="focus-demo__label">검색</span>
                 <input id="light-focus-search" type="search" placeholder="Search Design System" />
               </label>
+            </div>
+          </section>
+
+          <section class="preview-section" aria-labelledby="light-shortcut-title">
+            <h3 class="preview-section__title" id="light-shortcut-title">Shortcuts</h3>
+            <div class="zdp-inline zdp-inline--gap-sm zdp-inline--align-center" aria-label="Light shortcut hints">
+              <span class="zdp-shortcut-hint" aria-label="Search shortcut slash">
+                <kbd class="zdp-kbd zdp-kbd--md">/</kbd>
+              </span>
+              <span class="zdp-shortcut-hint" aria-label="Command shortcut Control K">
+                <kbd class="zdp-kbd zdp-kbd--md">Ctrl</kbd>
+                <span class="zdp-shortcut-hint__separator" aria-hidden="true">+</span>
+                <kbd class="zdp-kbd zdp-kbd--md">K</kbd>
+              </span>
+              <kbd class="zdp-kbd zdp-kbd--md" aria-label="Go to file shortcut T">T</kbd>
+              <span class="zdp-shortcut-hint" aria-label="Save shortcut Control S">
+                <kbd class="zdp-kbd zdp-kbd--md">Ctrl</kbd>
+                <span class="zdp-shortcut-hint__separator" aria-hidden="true">+</span>
+                <kbd class="zdp-kbd zdp-kbd--md">S</kbd>
+              </span>
+              <kbd class="zdp-kbd zdp-kbd--md" aria-label="Close shortcut Escape">Esc</kbd>
             </div>
           </section>
 
@@ -566,6 +587,76 @@
                 </div>
               </div>
             </div>
+          </section>
+
+          <section class="preview-section" aria-labelledby="light-share-title">
+            <h3 class="preview-section__title" id="light-share-title">Share</h3>
+            <aside class="zdp-share-dock zdp-share-dock--inline" aria-label="공유">
+              <div class="zdp-share-dock__list">
+                <button class="zdp-share-action" type="button" aria-label="링크 복사" data-share-id="copy">
+                  <span class="zdp-share-action__mark" aria-hidden="true">
+                    <svg class="zdp-share-icon zdp-share-icon--copy" viewBox="0 0 24 24" focusable="false">
+                      <path d="M9.5 13.5 14.5 8.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+                      <path d="m8.2 9.8-1.4 1.4a4 4 0 0 0 5.7 5.7l1.2-1.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                      <path d="m10.3 8.3 1.2-1.2a4 4 0 0 1 5.7 5.7l-1.4 1.4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
+                  </span>
+                  <span class="zdp-share-action__tooltip" aria-hidden="true">링크 복사</span>
+                </button>
+                <button class="zdp-share-action" type="button" aria-label="기기 공유" data-share-id="device">
+                  <span class="zdp-share-action__mark" aria-hidden="true">
+                    <svg class="zdp-share-icon zdp-share-icon--device" viewBox="0 0 24 24" focusable="false">
+                      <line x1="9" y1="12" x2="15" y2="7" stroke="currentColor" stroke-linecap="round" stroke-width="2"></line>
+                      <line x1="9" y1="12" x2="15" y2="17" stroke="currentColor" stroke-linecap="round" stroke-width="2"></line>
+                      <circle cx="7" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="2"></circle>
+                      <circle cx="17" cy="6" r="2.6" fill="none" stroke="currentColor" stroke-width="2"></circle>
+                      <circle cx="17" cy="18" r="2.6" fill="none" stroke="currentColor" stroke-width="2"></circle>
+                    </svg>
+                  </span>
+                  <span class="zdp-share-action__tooltip" aria-hidden="true">기기 공유</span>
+                </button>
+                <a class="zdp-share-action" href="#share" aria-label="텔레그램으로 공유" data-share-id="telegram">
+                  <span class="zdp-share-action__mark" aria-hidden="true">
+                    <svg class="zdp-share-icon zdp-share-icon--telegram" viewBox="0 0 24 24" focusable="false">
+                      <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" fill="currentColor"></path>
+                    </svg>
+                  </span>
+                  <span class="zdp-share-action__tooltip" aria-hidden="true">텔레그램</span>
+                </a>
+                <a class="zdp-share-action" href="#share" aria-label="라인으로 공유" data-share-id="line">
+                  <span class="zdp-share-action__mark" aria-hidden="true">
+                    <svg class="zdp-share-icon zdp-share-icon--line" viewBox="0 0 24 24" focusable="false">
+                      <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314" fill="currentColor"></path>
+                    </svg>
+                  </span>
+                  <span class="zdp-share-action__tooltip" aria-hidden="true">라인</span>
+                </a>
+                <a class="zdp-share-action" href="#share" aria-label="왓츠앱으로 공유" data-share-id="whatsapp">
+                  <span class="zdp-share-action__mark" aria-hidden="true">
+                    <svg class="zdp-share-icon zdp-share-icon--whatsapp" viewBox="0 0 24 24" focusable="false">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" fill="currentColor"></path>
+                    </svg>
+                  </span>
+                  <span class="zdp-share-action__tooltip" aria-hidden="true">왓츠앱</span>
+                </a>
+                <a class="zdp-share-action" href="#share" aria-label="X으로 공유" data-share-id="x">
+                  <span class="zdp-share-action__mark" aria-hidden="true">
+                    <svg class="zdp-share-icon zdp-share-icon--x" viewBox="0 0 24 24" focusable="false">
+                      <path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z" fill="currentColor"></path>
+                    </svg>
+                  </span>
+                  <span class="zdp-share-action__tooltip" aria-hidden="true">X</span>
+                </a>
+                <a class="zdp-share-action" href="#share" aria-label="레딧으로 공유" data-share-id="reddit">
+                  <span class="zdp-share-action__mark" aria-hidden="true">
+                    <svg class="zdp-share-icon zdp-share-icon--reddit" viewBox="0 0 24 24" focusable="false">
+                      <path d="M12 0C5.373 0 0 5.373 0 12c0 3.314 1.343 6.314 3.515 8.485l-2.286 2.286C.775 23.225 1.097 24 1.738 24H12c6.627 0 12-5.373 12-12S18.627 0 12 0Zm4.388 3.199c1.104 0 1.999.895 1.999 1.999 0 1.105-.895 2-1.999 2-.946 0-1.739-.657-1.947-1.539v.002c-1.147.162-2.032 1.15-2.032 2.341v.007c1.776.067 3.4.567 4.686 1.363.473-.363 1.064-.58 1.707-.58 1.547 0 2.802 1.254 2.802 2.802 0 1.117-.655 2.081-1.601 2.531-.088 3.256-3.637 5.876-7.997 5.876-4.361 0-7.905-2.617-7.998-5.87-.954-.447-1.614-1.415-1.614-2.538 0-1.548 1.255-2.802 2.803-2.802.645 0 1.239.218 1.712.585 1.275-.79 2.881-1.291 4.64-1.365v-.01c0-1.663 1.263-3.034 2.88-3.207.188-.911.993-1.595 1.959-1.595Zm-8.085 8.376c-.784 0-1.459.78-1.506 1.797-.047 1.016.64 1.429 1.426 1.429.786 0 1.371-.369 1.418-1.385.047-1.017-.553-1.841-1.338-1.841Zm7.406 0c-.786 0-1.385.824-1.338 1.841.047 1.017.634 1.385 1.418 1.385.785 0 1.473-.413 1.426-1.429-.046-1.017-.721-1.797-1.506-1.797Zm-3.703 4.013c-.974 0-1.907.048-2.77.135-.147.015-.241.168-.183.305.483 1.154 1.622 1.964 2.953 1.964 1.33 0 2.47-.81 2.953-1.964.057-.137-.037-.29-.184-.305-.863-.087-1.795-.135-2.769-.135Z" fill="currentColor"></path>
+                    </svg>
+                  </span>
+                  <span class="zdp-share-action__tooltip" aria-hidden="true">레딧</span>
+                </a>
+              </div>
+            </aside>
           </section>
 
           <section class="preview-section" aria-labelledby="light-tabs-title">
@@ -809,7 +900,7 @@
             <div class="swatch-grid">
               <span class="swatch">
                 <span class="swatch__paint" style="background: var(--zdp-color-accent-primary)"></span>
-                <span class="swatch__label">Moonlit blue</span>
+                <span class="swatch__label">Warm brass</span>
               </span>
               <span class="swatch">
                 <span class="swatch__paint" style="background: var(--zdp-color-accent-success)"></span>
@@ -830,7 +921,7 @@
             <h3 class="preview-section__title" id="dark-type-title">Type</h3>
             <p class="type-sample">
               <strong>밤에도 종이결은 남기기</strong>
-              <span>Dark mode keeps the same market palette without turning into a blue console.</span>
+              <span>Dark mode keeps the same market palette without turning into a separate console theme.</span>
               <a class="zdp-link" href="#foundation-tokens">자세히 보기</a>
             </p>
           </section>
@@ -843,6 +934,27 @@
                 <span class="focus-demo__label">검색</span>
                 <input id="dark-focus-search" type="search" placeholder="Search Design System" />
               </label>
+            </div>
+          </section>
+
+          <section class="preview-section" aria-labelledby="dark-shortcut-title">
+            <h3 class="preview-section__title" id="dark-shortcut-title">Shortcuts</h3>
+            <div class="zdp-inline zdp-inline--gap-sm zdp-inline--align-center" aria-label="Dark shortcut hints">
+              <span class="zdp-shortcut-hint" aria-label="Search shortcut slash">
+                <kbd class="zdp-kbd zdp-kbd--md">/</kbd>
+              </span>
+              <span class="zdp-shortcut-hint" aria-label="Command shortcut Control K">
+                <kbd class="zdp-kbd zdp-kbd--md">Ctrl</kbd>
+                <span class="zdp-shortcut-hint__separator" aria-hidden="true">+</span>
+                <kbd class="zdp-kbd zdp-kbd--md">K</kbd>
+              </span>
+              <kbd class="zdp-kbd zdp-kbd--md" aria-label="Go to file shortcut T">T</kbd>
+              <span class="zdp-shortcut-hint" aria-label="Save shortcut Control S">
+                <kbd class="zdp-kbd zdp-kbd--md">Ctrl</kbd>
+                <span class="zdp-shortcut-hint__separator" aria-hidden="true">+</span>
+                <kbd class="zdp-kbd zdp-kbd--md">S</kbd>
+              </span>
+              <kbd class="zdp-kbd zdp-kbd--md" aria-label="Close shortcut Escape">Esc</kbd>
             </div>
           </section>
 
@@ -940,6 +1052,40 @@
                 </div>
               </div>
             </div>
+          </section>
+
+          <section class="preview-section" aria-labelledby="dark-share-title">
+            <h3 class="preview-section__title" id="dark-share-title">Share</h3>
+            <aside class="zdp-share-dock zdp-share-dock--inline" aria-label="공유">
+              <div class="zdp-share-dock__list">
+                <button class="zdp-share-action" type="button" aria-label="링크 복사" data-share-id="copy">
+                  <span class="zdp-share-action__mark" aria-hidden="true">
+                    <svg class="zdp-share-icon zdp-share-icon--copy" viewBox="0 0 24 24" focusable="false">
+                      <path d="M9.5 13.5 14.5 8.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+                      <path d="m8.2 9.8-1.4 1.4a4 4 0 0 0 5.7 5.7l1.2-1.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                      <path d="m10.3 8.3 1.2-1.2a4 4 0 0 1 5.7 5.7l-1.4 1.4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
+                  </span>
+                  <span class="zdp-share-action__tooltip" aria-hidden="true">링크 복사</span>
+                </button>
+                <a class="zdp-share-action" href="#share" aria-label="텔레그램으로 공유" data-share-id="telegram">
+                  <span class="zdp-share-action__mark" aria-hidden="true">
+                    <svg class="zdp-share-icon zdp-share-icon--telegram" viewBox="0 0 24 24" focusable="false">
+                      <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" fill="currentColor"></path>
+                    </svg>
+                  </span>
+                  <span class="zdp-share-action__tooltip" aria-hidden="true">텔레그램</span>
+                </a>
+                <a class="zdp-share-action" href="#share" aria-label="X으로 공유" data-share-id="x">
+                  <span class="zdp-share-action__mark" aria-hidden="true">
+                    <svg class="zdp-share-icon zdp-share-icon--x" viewBox="0 0 24 24" focusable="false">
+                      <path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z" fill="currentColor"></path>
+                    </svg>
+                  </span>
+                  <span class="zdp-share-action__tooltip" aria-hidden="true">X</span>
+                </a>
+              </div>
+            </aside>
           </section>
 
           <section class="preview-section" aria-labelledby="dark-tabs-title">
@@ -1188,7 +1334,7 @@
         </article>
         <article>
           <span>i18n</span>
-          <strong><span lang="ko">긴문장</span> / <span lang="zh">自由</span> / <span lang="hi">स्वर</span> / Safe</strong>
+          <strong><span lang="ko">긴문장</span> / <span lang="zh">自由</span> / <span lang="hi">स्वर</span> / <span lang="ja">余白</span> / Safe</strong>
         </article>
       </section>
 

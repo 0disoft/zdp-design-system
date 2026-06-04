@@ -11,21 +11,23 @@
 - 토큰 이름이 특정 제품이나 캠페인에 묶이지 않는다.
 - 색상 토큰은 `hex` fallback과 `oklch` 값을 함께 추가하거나 함께 변경한다.
 - sans/display 폰트 스택은 `"Pretendard Variable", Pretendard`를 우선하고, CSS는 Pretendard Variable dynamic subset 로드를 유지한다.
-- `font.family.latin`, `font.family.korean`, `font.family.chinese`, `font.family.devanagari`, `font.family.multiscript`는 `:lang()` CSS 계약과 함께 변경한다.
+- `font.family.latin`, `font.family.korean`, `font.family.chinese`, `font.family.devanagari`, `font.family.japanese`, `font.family.multiscript`는 `:lang()` CSS 계약과 함께 변경한다.
 - 선택형 `locale-fonts.css` public export를 바꾸면 `package.json` export, sideEffects, README, token/preview/storybook check를 함께 맞춘다.
 - 소비 저장소 적용 방식은 `docs/CONSUMER_CONTRACT.md`와 함께 변경한다.
 - Astro, Svelte, Tauri, Flutter 소비처는 public export만 사용하게 하고 내부 `src/` deep import를 문서나 예제로 만들지 않는다.
 - 새 디자인 시스템 버전은 대표 소비처에서 build와 시각 QA를 확인한 뒤 broad adoption한다.
 - `success`, `warning`, `danger` 상태 색은 각각 긍정/완료, 주의/보류, 삭제/오류/위험 의미로 유지한다.
+- `primary`, `success`, `warning`, `danger` 상태 색은 parchment/brass/umber 계열 안에서 채도를 낮춰 사용하고, 푸른색이나 원색 경고색이 기본 액션과 상태 배지에서 독립적으로 튀어나오지 않게 한다.
 - `focus.surface`, `focus.text`, `focus.line`은 keyboard focus 전용 기능 색으로 유지하고 일반 hover, 브랜드 장식, 상태 색으로 재사용하지 않는다.
 - 카드, 버튼, 아이콘 버튼, preview 패널은 그림자와 그라데이션 없이 surface 색상, framed border, typography, spacing으로만 위계를 만든다.
 - 버튼 hover는 빛 반사, 위치 이동, 커지는 그림자를 쓰지 않고 색상과 border 상태만 바꾼다.
 - 버튼과 아이콘 버튼 hover는 light/dark 모두 배경색과 border 색을 함께 바꾼다.
 - 버튼 active와 focus-visible도 같은 원칙을 따른다. active는 색과 border만 바꾸고, focus-visible은 `focus.surface` outline과 `focus.line` border로 표시한다.
 - 버튼 라벨은 bold 계열을 쓰지 않고 `medium` weight를 쓴다.
-- 공유 컴포넌트 radius는 `0.375rem`을 기준으로 보고 pill 형태를 기본값으로 쓰지 않는다.
+- Secondary Button과 ghost IconButton은 resting border를 `line-subtle`로 낮추고, hover/active에서만 `line-strong`으로 올린다.
+- 공유 컨트롤 radius는 `0.375rem`, 카드와 패널 같은 큰 surface radius는 `0.5rem`을 기준으로 보고 pill 형태를 기본값으로 쓰지 않는다.
 - 공유 Button과 IconButton border width는 `1px`를 기준으로 유지한다.
-- Button과 IconButton은 `onclick`, `ariaControls`, `ariaExpanded`, `ariaPressed`, `ariaDescribedBy` 같은 native button 연결 props를 유지하되 저장, 삭제, 권한, 결제 판단을 직접 수행하지 않는다.
+- Button과 IconButton은 `onclick`, `ariaControls`, `ariaExpanded`, `ariaPressed`, `ariaDescribedBy`, `ariaKeyShortcuts` 같은 native button 연결 props를 유지하되 저장, 삭제, 권한, 결제 판단을 직접 수행하지 않는다.
 - ConfirmAction은 `onconfirm` 콜백만 호출하고 결제, 삭제, 권한, 환불 판단이나 서버 요청을 직접 수행하지 않는다.
 - ConfirmAction은 밀기와 길게 누르기를 모두 지원하고 keyboard Enter/Space hold 흐름을 유지한다.
 - Icon은 glyph 박스와 중앙정렬만 담당하며 의미, 라벨 문구, 상태 판단을 직접 수행하지 않는다.
@@ -43,11 +45,15 @@
 - Badge와 Callout도 그림자, 그라데이션, 반짝임 없이 surface, border, semantic accent 색상으로만 위계를 만든다.
 - Callout mark는 본문 전체 높이가 아니라 첫 제목 라인의 높이에 맞춰 어중간하게 걸쳐 보이지 않게 한다.
 - Link는 일반 텍스트 이동 표면이며 라우팅, SEO, 권한, 데이터 로딩 판단을 직접 수행하지 않는다.
+- Link는 실제 단축키가 구현된 화면에서만 `ariaKeyShortcuts`를 전달할 수 있으며 단축키 이벤트를 직접 처리하지 않는다.
 - Link hover는 밑줄이나 장식 추가가 아니라 색상 변화 중심으로 유지하고, focus는 sunlit gold 배경과 어두운 하단선을 유지한다.
 - SkipLink는 반복 탐색 건너뛰기 표면이며 페이지 레이아웃, 라우팅, 본문 id 판단을 직접 수행하지 않는다.
 - SkipLink는 평소 숨겨져 있다가 `focus-visible`에서만 sunlit gold 배경과 어두운 1px framed border로 표시한다.
 - VisuallyHidden은 스크린리더 전용 보조 텍스트 숨김만 담당하며 라벨 문구, 번역, 권한, 데이터 판단을 직접 수행하지 않는다.
 - VisuallyHidden은 레이아웃, 그림자, 색상, 그라데이션, hover 상태를 만들지 않는다.
+- ShareDock은 공유 도크의 위치, 아이콘, tooltip, focus-visible 표면만 제공하며 URL 생성, clipboard, navigator.share, 플랫폼별 공유 링크, 권한 판단을 직접 수행하지 않는다.
+- ShareDock과 `.zdp-share-dock`은 side, rail, bottom, inline placement를 제공하되 제품별 공유 가능 여부와 공유 대상 문구는 소비 앱이 소유한다.
+- ShareDock의 플랫폼 브랜드 아이콘은 Simple Icons path 기준을 유지하고, 임의 outline glyph로 대체하지 않는다.
 - Page는 shared page root, surface reset, theme tone만 담당하며 라우팅, SEO, 데이터, 권한, 제품별 visibility 판단을 직접 수행하지 않는다.
 - Container는 페이지 폭, inline padding, centered width만 담당하며 그리드 의미, 라우팅, 데이터, 권한, 제품별 visibility 판단을 직접 수행하지 않는다.
 - Section은 섹션 block rhythm과 optional full-width band만 담당하며 카드, 라우팅, 데이터, 권한, 제품별 visibility 판단을 직접 수행하지 않는다.
@@ -63,6 +69,11 @@
 - Grid와 `.zdp-grid`는 색상, 그림자, 그라데이션, hover 상태를 만들지 않고 `grid-template-columns`, `gap`, `min-width`, responsive collapse 계약만 유지한다.
 - Toolbar는 가까운 화면 도구와 액션 묶음의 wrapping, main/action 배치만 담당하며 저장, 삭제, 필터, 권한 판단을 직접 수행하지 않는다.
 - Toolbar와 `.zdp-toolbar`는 색상, 그림자, 그라데이션, hover 상태를 만들지 않고 `flex-wrap`, `gap`, `justify-content`, action wrapping 계약만 유지한다.
+- CommandField는 검색, 빠른 이동, 명령 팔레트 진입의 frame, focus-within, shortcut keycap만 담당하며 검색 인덱스, 결과 정렬, 라우팅, 권한 판단을 직접 수행하지 않는다.
+- CommandField와 `.zdp-command-field`는 그림자, 그라데이션, hover 장식을 만들지 않고 입력 focus와 `/` 같은 단축키 표시를 같은 테두리/키캡 규칙으로 유지한다.
+- Kbd와 ShortcutHint는 키캡과 단축키 힌트 표면만 담당하며 실제 keydown dispatcher, command palette, 검색 focus 이동, 저장, 닫기, 파일 이동 판단을 직접 수행하지 않는다.
+- Kbd, ShortcutHint, `.zdp-kbd`, `.zdp-shortcut-hint`는 그림자, 그라데이션, hover 장식을 만들지 않고 framed keycap과 간격 규칙만 유지한다.
+- `ariaKeyShortcuts`와 `aria-keyshortcuts`는 실제 단축키가 소비 앱에서 구현된 경우에만 사용한다. 입력창 focus 중 `/`를 가로채는 예외 처리와 브라우저/페이지 단축키 충돌 판단은 소비 앱이 소유한다.
 - Icon은 glyph 크기, inline-flex 중앙정렬, svg sizing만 담당하며 라우팅, 저장, 삭제, 상태 의미, 권한 판단을 직접 수행하지 않는다.
 - Icon과 `.zdp-icon`은 그림자, 그라데이션, hover 상태를 만들지 않고 `control.glyphSm|Md`, `line-height: 1`, `text-align: center` 계약만 유지한다.
 - Table은 표 형식 정보의 native table, caption, row/column header, overflow wrapper만 담당하며 정렬, 필터, 페이지네이션, 데이터 로딩 판단을 직접 수행하지 않는다.
@@ -80,6 +91,7 @@
 - Dialog는 저장, 삭제, 인증, 결제, 권한 판단을 직접 수행하지 않고 소비 앱의 확인 흐름을 담는 레이어 표면으로만 둔다.
 - 본문 텍스트 line-height는 `1.6`을 기준으로 하며, compact control line-height와 섞지 않는다.
 - 작은 본문, 캡션, 데이터 숫자 표시는 `bodySmall`, `caption`, `data` 타입 토큰을 우선 사용한다.
+- 일반 문서와 앱의 페이지 제목은 `type.pageTitleSize`와 `type.pageTitleCompactSize` 토큰 범위로 유지하고, `3rem` 이상의 대형 제목은 브랜드 히어로나 캠페인 표면에서만 소비 저장소 예외로 둔다.
 - 컴포넌트가 인증, 결제, 권한 판단을 직접 수행하지 않는다.
 - 시각 변경은 Storybook의 `Design System/Overview`와 `preview/index.html`에서 light/dark 상태를 확인한다.
 - Workduck 개발 서버와 빌드 액션이 깨지지 않도록 `dev`와 `build` 스크립트를 유지한다.

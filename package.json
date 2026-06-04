@@ -1,6 +1,6 @@
 {
   "name": "zdp-design-system",
-  "version": "0.28.0",
+  "version": "0.31.0",
   "private": true,
   "type": "module",
   "description": "ZDP design tokens, CSS, icons, and Svelte UI package boundary.",
@@ -12,12 +12,19 @@
     },
     "./styles.css": "./src/styles/index.css",
     "./locale-fonts.css": "./src/styles/locale-fonts.css",
+    "./share": {
+      "types": "./share.d.ts",
+      "import": "./share.js",
+      "default": "./share.js"
+    },
     "./tokens": "./tokens/zdp.tokens.json"
   },
   "files": [
     "src/",
     "tokens/",
     "docs/",
+    "share.js",
+    "share.d.ts",
     "README.md",
     "CHANGELOG.md"
   ],
@@ -32,16 +39,18 @@
     "build": "storybook build",
     "tokens:check": "bun scripts/check-tokens.ts",
     "consumer:check": "bun scripts/check-consumer-contract.ts",
+    "share-icons:check": "bun scripts/check-share-icons.ts",
     "preview:check": "bun scripts/check-preview.ts",
     "package:check": "bun scripts/check-package.ts",
     "storybook": "bun run dev",
     "storybook:build": "bun run build",
     "storybook:check": "bun scripts/check-storybook.ts",
-    "check": "bun scripts/check-tokens.ts && bun scripts/check-consumer-contract.ts && bun scripts/check-preview.ts && bun scripts/check-storybook.ts && bun scripts/check-package.ts"
+    "check": "bun scripts/check-tokens.ts && bun scripts/check-consumer-contract.ts && bun scripts/check-share-icons.ts && bun scripts/check-preview.ts && bun scripts/check-storybook.ts && bun scripts/check-package.ts"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^6.2.0",
     "@storybook/svelte-vite": "^10.4.0",
+    "@sveltejs/vite-plugin-svelte": "^6.2.0",
+    "simple-icons": "^16.22.0",
     "storybook": "^10.4.0",
     "svelte": "^5.0.0",
     "vite": "^7.0.0"

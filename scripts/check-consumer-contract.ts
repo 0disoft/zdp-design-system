@@ -38,8 +38,8 @@ if (failures.length > 0) {
 }
 
 function checkPackageSurface(packageJson: PackageJson): void {
-  if (packageJson.version !== '0.28.0') {
-    failures.push('package.json version must be 0.28.0 for the confirm action package surface.');
+  if (packageJson.version !== '0.31.0') {
+    failures.push('package.json version must be 0.31.0 for the shared shortcut hint contract.');
   }
 
   if (!packageJson.files?.includes('docs/')) {
@@ -61,6 +61,7 @@ function checkConsumerContractDocument(documentText: string): void {
     "import 'zdp-design-system/styles.css';",
     "import 'zdp-design-system/locale-fonts.css';",
     "from 'zdp-design-system'",
+    'zdp-design-system/share',
     'Breadcrumb',
     'ConfirmAction',
     'Container',
@@ -70,11 +71,14 @@ function checkConsumerContractDocument(documentText: string): void {
     'Grid',
     'Icon',
     'Inline',
+    'Kbd',
     'KeyValue',
     'Link',
     'Page',
     'PageHeader',
     'Section',
+    'ShareDock',
+    'ShortcutHint',
     'SkipLink',
     'Stack',
     'Table',
@@ -86,6 +90,7 @@ function checkConsumerContractDocument(documentText: string): void {
     '.zdp-container',
     '.zdp-section',
     '.zdp-page-header',
+    '.zdp-share-dock',
     '.zdp-visually-hidden',
     '.zdp-stack',
     '.zdp-inline',
@@ -93,6 +98,9 @@ function checkConsumerContractDocument(documentText: string): void {
     '.zdp-grid',
     '.zdp-icon',
     '.zdp-toolbar',
+    '.zdp-kbd',
+    '.zdp-shortcut-hint',
+    '.zdp-command-field',
     'Astro',
     'Svelte',
     'Tauri',
@@ -115,10 +123,14 @@ function checkConsumerContractDocument(documentText: string): void {
     'ariaControls',
     'ariaExpanded',
     'ariaPressed',
+    'ariaKeyShortcuts',
+    'aria-keyshortcuts',
     'ariaDescribedBy',
+    'zdpShareIcons',
     'aria-current="page"',
     'focus trap',
     'keyboard focus',
+    '실제 keydown',
     'public export',
     'opt-in',
     'zdp-design-system/src/...'
@@ -137,9 +149,14 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'tokens/zdp.tokens.json',
     'Breadcrumb는 현재 위치',
     'Button과 IconButton은 `onclick`',
+    'ariaKeyShortcuts',
     'ConfirmAction은 중요한 액션',
     'Icon은 장식용 glyph',
     'Link는 일반 텍스트',
+    'ShareDock은 공유 도크',
+    'CommandField는 검색',
+    'Kbd와 ShortcutHint',
+    '실제 keydown',
     'SkipLink는 키보드',
     'VisuallyHidden은 스크린리더',
     'Stack',
@@ -154,6 +171,7 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     '`describedBy`에 id 배열',
     '`errorMessageId`로 `aria-errormessage`',
     'Astro는 `styles.css`',
+    'zdp-design-system/share',
     'Flutter는 Svelte 컴포넌트를 직접 쓰지 않고'
   ]) {
     if (!readme.includes(requiredText)) {
@@ -167,8 +185,10 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     '내부 `src/` deep import',
     'Breadcrumb는 `nav`',
     'Button과 IconButton은 `onclick`',
+    'ariaKeyShortcuts',
     'ConfirmAction은 `onconfirm`',
     'Link는 일반 텍스트',
+    'ShareDock은 공유 도크',
     'SkipLink는 반복 탐색',
     'VisuallyHidden은 스크린리더',
     'Stack은 가까운 요소',
@@ -177,6 +197,9 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'Grid는 반복되는 카드',
     'Icon은 glyph',
     'Toolbar는 가까운 화면',
+    'CommandField는 검색',
+    'Kbd와 ShortcutHint',
+    '실제 keydown',
     'Table은 표 형식 정보',
     'KeyValue는 용어와 값',
     'EmptyState는 비어 있는 상태',
@@ -207,7 +230,9 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
 
 function checkTokenAndComponentSurface(tokenDocument: string, publicEntry: string): void {
   for (const requiredText of [
-    '"version": "0.6.3"',
+    '"version": "0.6.7"',
+    '"pageTitleSize": "2.75rem"',
+    '"pageTitleCompactSize": "2rem"',
     '"font"',
     '"breakpoint"',
     '"control"',
@@ -240,6 +265,7 @@ function checkTokenAndComponentSurface(tokenDocument: string, publicEntry: strin
     'export { default as Grid }',
     'export { default as Icon }',
     'export { default as Input }',
+    'export { default as Kbd }',
     'export { default as KeyValue }',
     'export { default as Label }',
     'export { default as Inline }',
@@ -247,6 +273,8 @@ function checkTokenAndComponentSurface(tokenDocument: string, publicEntry: strin
     'export { default as Page }',
     'export { default as PageHeader }',
     'export { default as Section }',
+    'export { default as ShareDock }',
+    'export { default as ShortcutHint }',
     'export { default as SkipLink }',
     'export { default as Stack }',
     'export { default as Surface }',
@@ -254,6 +282,7 @@ function checkTokenAndComponentSurface(tokenDocument: string, publicEntry: strin
     'export { default as Table }',
     'export { default as Toolbar }',
     'export { default as VisuallyHidden }',
+    'export { zdpShareIcons }',
     'export { zdpTokenNames }'
   ]) {
     if (!publicEntry.includes(requiredText)) {

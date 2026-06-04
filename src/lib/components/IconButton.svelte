@@ -13,6 +13,7 @@
   export let ariaDescribedBy: string | null = null;
   export let ariaExpanded: boolean | null = null;
   export let ariaPressed: boolean | null = null;
+  export let ariaKeyShortcuts: string | null = null;
   export let onclick: ((event: MouseEvent) => void) | null = null;
 </script>
 
@@ -30,6 +31,7 @@
   aria-describedby={ariaDescribedBy ?? undefined}
   aria-expanded={ariaExpanded ?? undefined}
   aria-pressed={ariaPressed ?? undefined}
+  aria-keyshortcuts={ariaKeyShortcuts ?? undefined}
   onclick={onclick ?? undefined}
 >
   <span class={`zdp-icon zdp-icon--${size} zdp-icon-button__glyph`} aria-hidden="true">
@@ -65,7 +67,7 @@
 
   .zdp-icon-button--ghost {
     background: var(--zdp-color-surface-panel);
-    border-color: var(--zdp-color-line-strong);
+    border-color: var(--zdp-color-line-subtle);
     color: var(--zdp-color-ink-normal);
   }
 
@@ -77,7 +79,7 @@
 
   :global([data-zdp-theme="dark"]) .zdp-icon-button--ghost {
     background: var(--zdp-color-surface-panel);
-    border-color: var(--zdp-color-line-strong);
+    border-color: var(--zdp-color-line-subtle);
     color: var(--zdp-color-ink-muted);
   }
 
@@ -96,7 +98,7 @@
   .zdp-icon-button--solid {
     background: var(--zdp-color-accent-primary);
     border-color: var(--zdp-color-accent-primary-strong);
-    color: var(--zdp-color-ink-inverse);
+    color: var(--zdp-color-ink-strong);
   }
 
   .zdp-icon-button--solid:hover:not(:disabled) {
@@ -107,6 +109,10 @@
   .zdp-icon-button--solid:active:not(:disabled) {
     background: var(--zdp-color-accent-primary-strong);
     border-color: var(--zdp-color-accent-primary-strong);
+  }
+
+  :global([data-zdp-theme="dark"]) .zdp-icon-button--solid {
+    color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-icon-button:focus-visible {

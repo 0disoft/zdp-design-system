@@ -211,13 +211,17 @@
     border: var(--zdp-control-border-width) solid var(--zdp-color-accent-primary-strong);
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
-    color: var(--zdp-color-ink-inverse);
+    color: var(--zdp-color-ink-strong);
     display: inline-flex;
     font-size: var(--zdp-control-glyph-sm);
     height: var(--zdp-control-height-sm);
     justify-content: center;
     line-height: 1;
     width: var(--zdp-control-height-sm);
+  }
+
+  :global([data-zdp-theme="dark"]) .zdp-confirm-action__thumb {
+    color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-confirm-action__body {

@@ -172,8 +172,9 @@
   .component-story__header h1 {
     color: var(--zdp-color-ink-strong);
     font-family: var(--zdp-font-family-display);
-    font-size: 3rem;
-    line-height: var(--zdp-type-title-line-height);
+    font-size: var(--zdp-type-page-title-size);
+    font-weight: var(--zdp-font-weight-medium);
+    line-height: var(--zdp-type-page-title-line-height);
     margin: 0;
   }
 

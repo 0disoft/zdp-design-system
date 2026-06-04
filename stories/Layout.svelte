@@ -106,7 +106,9 @@
   }
 
   .layout-story h1 {
-    font-size: 3rem;
+    font-size: var(--zdp-type-page-title-size);
+    font-weight: var(--zdp-font-weight-medium);
+    line-height: var(--zdp-type-page-title-line-height);
   }
 
   .layout-story h2 {
@@ -131,7 +133,7 @@
 
   @media (max-width: 48rem) {
     .layout-story h1 {
-      font-size: 2.25rem;
+      font-size: var(--zdp-type-page-title-compact-size);
     }
 
   }

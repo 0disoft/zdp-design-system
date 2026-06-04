@@ -13,6 +13,7 @@
     | true
     | false
     | undefined = undefined;
+  export let ariaKeyShortcuts: string | null = null;
 
   $: resolvedRel = target === '_blank' ? rel ?? 'noreferrer' : rel;
   $: resolvedAriaCurrent =
@@ -25,6 +26,7 @@
   {target}
   rel={resolvedRel}
   aria-current={resolvedAriaCurrent}
+  aria-keyshortcuts={ariaKeyShortcuts ?? undefined}
 >
   <slot />
 </a>
