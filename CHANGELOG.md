@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Fixed remaining Overview a11y addon findings by keeping labelled Inline sections out of landmark navigation and hiding the decorative motif mark itself.
 - Fixed Overview story a11y addon findings by removing decorative ARIA labels from preview layout wrappers, avoiding repeated named `section` landmarks, and hiding the decorative motif strip.
 - Fixed a11y addon findings by using an SVG ConfirmAction thumb glyph, labelled shortcut groups, unique Tabs id prefixes, and roles for labelled div-based layout primitives.
 - Fixed remaining Storybook a11y addon findings by giving labelled PageHeader roots a valid role and separating Kbd visible keycaps from screen-reader labels.

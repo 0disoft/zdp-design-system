@@ -162,7 +162,7 @@
         <h3 id="storybook-light-feedback">Feedback</h3>
         <div class="feedback-stack">
           <Stack gap="md" align="start">
-            <Inline as="section" gap="sm" align="center" labelledBy="storybook-light-feedback">
+            <Inline gap="sm" align="center">
               <Badge tone="primary">검토 중</Badge>
               <Badge tone="success">정상</Badge>
               <Badge tone="warning">대기</Badge>
@@ -455,7 +455,7 @@
         <h3 id="storybook-dark-feedback">Feedback</h3>
         <div class="feedback-stack">
           <Stack gap="md" align="start">
-            <Inline as="section" gap="sm" align="center" labelledBy="storybook-dark-feedback">
+            <Inline gap="sm" align="center">
               <Badge tone="primary">검토 중</Badge>
               <Badge tone="success">정상</Badge>
               <Badge tone="warning">대기</Badge>
@@ -696,7 +696,7 @@
 
   <div class="motif-strip" aria-hidden="true">
     <span class="motif-strip__line"></span>
-    <span class="motif-strip__mark">✦</span>
+    <span class="motif-strip__mark" aria-hidden="true"></span>
     <span class="motif-strip__line"></span>
   </div>
 </main>
@@ -1018,9 +1018,11 @@
   }
 
   .motif-strip__mark {
-    color: var(--zdp-color-accent-warning);
-    font-size: var(--zdp-font-size-xl);
-    line-height: 1;
+    background: var(--zdp-color-accent-warning);
+    block-size: 0.375rem;
+    display: block;
+    inline-size: 0.375rem;
+    transform: rotate(45deg);
   }
 
   @media (max-width: 860px) {

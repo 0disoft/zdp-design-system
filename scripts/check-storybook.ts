@@ -493,7 +493,10 @@ for (const forbiddenText of [
   'storybook-preview__grid" aria-label=',
   '<section class="preview-section" aria-labelledby=',
   '<section class="motif-strip"',
-  'motif-strip" aria-label='
+  'motif-strip" aria-label=',
+  'aria-label="Status badges"',
+  '<Inline as="section" gap="sm" align="center" labelledBy="storybook-',
+  '<span class="motif-strip__mark" aria-hidden="true">✦</span>'
 ]) {
   if (component.includes(forbiddenText)) {
     failures.push(`Storybook overview must not expose decorative preview structure through ${forbiddenText}.`);
@@ -502,6 +505,10 @@ for (const forbiddenText of [
 
 if (!component.includes('<div class="motif-strip" aria-hidden="true">')) {
   failures.push('Storybook overview decorative motif must be hidden from assistive technology.');
+}
+
+if (!component.includes('<span class="motif-strip__mark" aria-hidden="true"></span>')) {
+  failures.push('Storybook overview decorative motif mark must be hidden from assistive technology.');
 }
 
 for (const requiredText of [
@@ -1104,6 +1111,8 @@ for (const requiredText of [
   'gap:',
   'align:',
   'justify:',
+  "as === 'div' && labelledBy ? 'group' : undefined",
+  'role={labelledGroupRole}',
   'aria-labelledby={labelledBy ?? undefined}',
   'display: flex',
   'flex-wrap: wrap',

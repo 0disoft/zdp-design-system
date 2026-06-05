@@ -206,7 +206,9 @@ for (const forbiddenText of [
   'preview-stage" aria-label=',
   '<section class="preview-section" aria-labelledby=',
   '<section class="motif-strip"',
-  'motif-strip" aria-label='
+  'motif-strip" aria-label=',
+  'aria-label="Status badges"',
+  '<span class="motif-strip__mark" aria-hidden="true">✦</span>'
 ]) {
   if (preview.includes(forbiddenText)) {
     failures.push(`Preview must not expose decorative preview structure through ${forbiddenText}.`);
@@ -215,6 +217,10 @@ for (const forbiddenText of [
 
 if (!preview.includes('<div class="motif-strip" aria-hidden="true">')) {
   failures.push('Preview decorative motif must be hidden from assistive technology.');
+}
+
+if (!preview.includes('<span class="motif-strip__mark" aria-hidden="true"></span>')) {
+  failures.push('Preview decorative motif mark must be hidden from assistive technology.');
 }
 
 for (const [iconName, expectedPath] of [
