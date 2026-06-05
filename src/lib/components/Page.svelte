@@ -3,12 +3,15 @@
   export let tone: 'canvas' | 'panel' = 'canvas';
   export let id: string | null = null;
   export let labelledBy: string | null = null;
+
+  $: labelledRegionRole = as === 'div' && labelledBy ? 'region' : undefined;
 </script>
 
 <svelte:element
   this={as}
   class={`zdp-page zdp-page--${tone} zdp-surface-reset`}
   {id}
+  role={labelledRegionRole}
   aria-labelledby={labelledBy ?? undefined}
 >
   <slot />

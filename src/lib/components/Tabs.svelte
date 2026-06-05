@@ -1,3 +1,7 @@
+<script lang="ts" context="module">
+  let nextTabsInstanceId = 0;
+</script>
+
 <script lang="ts">
   export interface TabItem {
     readonly id: string;
@@ -8,6 +12,9 @@
   export let items: readonly TabItem[] = [];
   export let selectedId: string | null = null;
   export let ariaLabel = 'Tabs';
+  export let idPrefix: string | null = null;
+
+  const fallbackIdPrefix = `zdp-tabs-${++nextTabsInstanceId}`;
 
   $: selectedItem =
     items.find((item) => item.id === selectedId && !item.disabled) ??
@@ -65,12 +72,14 @@
     return (currentIndex + 1) % length;
   }
 
+  $: resolvedIdPrefix = toDomId(idPrefix ?? fallbackIdPrefix);
+
   function tabId(id: string): string {
-    return `zdp-tab-${toDomId(id)}`;
+    return `${resolvedIdPrefix}-tab-${toDomId(id)}`;
   }
 
   function panelId(id: string): string {
-    return `zdp-tab-panel-${toDomId(id)}`;
+    return `${resolvedIdPrefix}-panel-${toDomId(id)}`;
   }
 
   function toDomId(id: string): string {

@@ -162,7 +162,11 @@
   onkeyup={handleKeyup}
 >
   <span class="zdp-confirm-action__fill" aria-hidden="true"></span>
-  <span class="zdp-confirm-action__thumb" aria-hidden="true">→</span>
+  <span class="zdp-confirm-action__thumb" aria-hidden="true">
+    <svg class="zdp-confirm-action__glyph" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+      <path d="M5 12h14m-6-6 6 6-6 6" />
+    </svg>
+  </span>
   <span class="zdp-confirm-action__body">
     <span class="zdp-confirm-action__label">{confirmed ? completeLabel : label}</span>
     <span class="zdp-confirm-action__hint">{hint}</span>
@@ -172,6 +176,7 @@
 <style>
   .zdp-confirm-action {
     --zdp-confirm-action-progress: 0;
+    --zdp-confirm-action-fill: var(--zdp-color-accent-primary);
 
     align-items: center;
     background: var(--zdp-color-surface-panel);
@@ -196,7 +201,7 @@
   }
 
   .zdp-confirm-action__fill {
-    background: var(--zdp-color-accent-primary-soft);
+    background: var(--zdp-confirm-action-fill);
     bottom: 0;
     left: 0;
     position: absolute;
@@ -220,8 +225,23 @@
     width: var(--zdp-control-height-sm);
   }
 
+  .zdp-confirm-action__glyph {
+    display: block;
+    fill: none;
+    height: var(--zdp-control-glyph-sm);
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2.25;
+    width: var(--zdp-control-glyph-sm);
+  }
+
   :global([data-zdp-theme="dark"]) .zdp-confirm-action__thumb {
     color: var(--zdp-color-ink-inverse);
+  }
+
+  :global([data-zdp-theme="dark"]) .zdp-confirm-action {
+    --zdp-confirm-action-fill: var(--zdp-color-accent-primary-soft);
   }
 
   .zdp-confirm-action__body {

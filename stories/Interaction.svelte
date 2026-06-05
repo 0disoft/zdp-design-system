@@ -45,6 +45,7 @@
           <Stack gap="md">
             <h3>Tabs</h3>
             <Tabs
+              idPrefix="interaction-light-tabs"
               ariaLabel="Light interaction sections"
               items={[
                 { id: 'overview', label: '개요' },
@@ -71,22 +72,22 @@
             <p>
               검색과 이동처럼 반복되는 작업은 키캡으로 길을 보여주되, 실제 keydown 처리는 각 화면에 남깁니다.
             </p>
-            <div class="shortcut-list" aria-label="Light shortcut hints">
+            <div class="shortcut-list" role="group" aria-label="Light shortcut hints">
               <div class="shortcut-row">
                 <span>Search</span>
                 <ShortcutHint keys={['/']} ariaLabel="Search shortcut slash" />
               </div>
               <div class="shortcut-row">
-                <span>Command</span>
-                <ShortcutHint keys={['Ctrl', 'K']} ariaLabel="Command shortcut Control K" />
+                <span>Shortcuts</span>
+                <ShortcutHint keys={['Shift', '?']} ariaLabel="Shortcut guide Shift question mark" />
               </div>
               <div class="shortcut-row">
                 <span>Go to file</span>
                 <Kbd label="T" ariaLabel="Go to file shortcut T" />
               </div>
               <div class="shortcut-row">
-                <span>Save</span>
-                <ShortcutHint keys={['Ctrl', 'S']} ariaLabel="Save shortcut Control S" />
+                <span>Select</span>
+                <Kbd label="Enter" ariaLabel="Select shortcut Enter" />
               </div>
               <div class="shortcut-row">
                 <span>Close</span>
@@ -150,6 +151,7 @@
           <Stack gap="md">
             <h3>Tabs</h3>
             <Tabs
+              idPrefix="interaction-dark-tabs"
               ariaLabel="Dark interaction sections"
               items={[
                 { id: 'overview', label: '개요' },
@@ -176,22 +178,22 @@
             <p>
               어두운 화면에서도 키캡은 같은 테두리, 같은 focus 계열 안에서만 표시합니다.
             </p>
-            <div class="shortcut-list" aria-label="Dark shortcut hints">
+            <div class="shortcut-list" role="group" aria-label="Dark shortcut hints">
               <div class="shortcut-row">
                 <span>Search</span>
                 <ShortcutHint keys={['/']} ariaLabel="Search shortcut slash" />
               </div>
               <div class="shortcut-row">
-                <span>Command</span>
-                <ShortcutHint keys={['Ctrl', 'K']} ariaLabel="Command shortcut Control K" />
+                <span>Shortcuts</span>
+                <ShortcutHint keys={['Shift', '?']} ariaLabel="Shortcut guide Shift question mark" />
               </div>
               <div class="shortcut-row">
                 <span>Go to file</span>
                 <Kbd label="T" ariaLabel="Go to file shortcut T" />
               </div>
               <div class="shortcut-row">
-                <span>Save</span>
-                <ShortcutHint keys={['Ctrl', 'S']} ariaLabel="Save shortcut Control S" />
+                <span>Select</span>
+                <Kbd label="Enter" ariaLabel="Select shortcut Enter" />
               </div>
               <div class="shortcut-row">
                 <span>Close</span>

@@ -43,6 +43,13 @@ ZDP의 디자인 토큰, CSS, 아이콘, Svelte UI 컴포넌트 경계를 고정
 - `CHANGELOG.md`
 - `docs/CONSUMER_CONTRACT.md`
 
+## Storybook 검토 기준
+
+- Controls는 `Button`처럼 public props가 있는 컴포넌트의 라벨, 크기, 상태를 직접 바꿔보는 story에만 붙인다.
+- Viewports는 ZDP Mobile, Tablet, Desktop, Wide 프리셋으로 mobile/tablet/desktop 폭을 확인한다.
+- Accessibility addon은 컴포넌트 검토 패널로 켜두되, broad adoption 전에 위반 항목을 정리한 뒤 CI 실패 게이트로 승격한다.
+- Interaction play는 `Tabs`, `Dialog`, `ConfirmAction`처럼 키보드와 상태 전이가 중요한 컴포넌트에 먼저 붙인다.
+
 ## 패키지 표면
 
 웹 소비 저장소는 공통 CSS 토큰을 먼저 불러온다.
@@ -117,7 +124,7 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
     <Breadcrumb
       ariaLabel="현재 위치"
       items={[
-        { label: '홈', href: '/' },
+        { label: '홈 화면', href: '/' },
         { label: '플랫폼', href: '/platform' },
         { label: '디자인 시스템' }
       ]}
@@ -185,6 +192,7 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
       </svelte:fragment>
     </EmptyState>
     <Tabs
+      idPrefix="project-tabs"
       ariaLabel="프로젝트 섹션"
       items={[
         { id: 'overview', label: '개요' },
@@ -320,14 +328,15 @@ preview/index.html
 - Grid는 반복되는 카드, 요약, 선택지 묶음의 responsive columns와 gap만 제공하며 각 항목의 의미, 데이터 로딩, 권한 판단은 소비 앱에 남긴다.
 - Toolbar는 가까운 화면 도구와 액션 묶음의 wrapping, main/action 배치만 제공하며 저장, 삭제, 필터, 권한 판단은 소비 앱에 남긴다.
 - CommandField는 검색 입력의 frame, focus-within, shortcut keycap만 제공하며 검색 인덱스, 결과 정렬, 라우팅, 권한 판단은 소비 앱에 남긴다.
-- Kbd와 ShortcutHint는 `/`, `T`, `Esc`, `Ctrl K` 같은 키캡 힌트만 제공한다.
-- DS는 실제 keydown dispatcher를 만들지 않는다. 전역 검색, 저장, 파일 이동, 닫기 단축키의 충돌 처리와 입력창 focus 예외는 소비 앱이 소유한다.
+- Kbd와 ShortcutHint는 `/`, `Shift ?`, `T`, `Enter`, `Esc` 같은 키캡 힌트만 제공한다.
+- DS는 실제 keydown dispatcher를 만들지 않는다. 전역 검색, 단축키 안내, 파일 이동, 선택, 닫기 단축키의 충돌 처리와 입력창 focus 예외는 소비 앱이 소유한다.
+- `Ctrl+K`, `Ctrl+S`처럼 Chrome과 브라우저가 기본 동작으로 가져가는 조합은 소비 앱이 실제로 가로채고 검증한 경우가 아니면 예시나 UI 힌트로 보여주지 않는다.
 - `ariaKeyShortcuts`는 실제 단축키가 동작하는 버튼, 아이콘 버튼, 링크에만 붙인다.
 - Table은 표 형식 정보의 semantic table, caption, row/column header, overflow wrapper만 제공하며 정렬, 필터, 페이지네이션, 데이터 로딩 판단은 소비 앱에 남긴다.
 - KeyValue는 용어와 값의 description list 구조만 제공하며 원장, 보안, 결제, 권한의 실제 판단은 소비 앱에 남긴다.
 - EmptyState는 비어 있는 상태의 surface, 제목 연결, 액션 배치만 제공하며 어떤 상태가 비었는지와 다음 액션의 가능 여부는 소비 앱에 남긴다.
 - Breadcrumb는 현재 위치를 `nav`, `ol`, `aria-current="page"`로 표현하되 라우팅, SEO, 권한, 데이터 로딩 결정을 갖지 않는다.
-- Tabs는 가까운 정보 묶음 전환을 표현하되 라우팅, 권한, 데이터 로딩 결정을 갖지 않는다.
+- Tabs는 가까운 정보 묶음 전환을 표현하되 라우팅, 권한, 데이터 로딩 결정을 갖지 않는다. 같은 페이지에 여러 Tabs가 있으면 `idPrefix`를 넘겨 tab/panel id가 충돌하지 않게 한다.
 - Dialog는 모달 레이어, backdrop, 닫기, focus trap, `role="dialog"`와 `aria-modal` 구조만 제공하고 저장/삭제/권한/결제 판단은 소비 앱에 남긴다.
 - 본문 텍스트의 기본 line-height는 `1.6`으로 두어 장식 대신 읽기 리듬으로 밀도를 만든다.
 - `success`, `warning`, `danger`는 감성 팔레트 이름이 아니라 상태 의미를 가진 semantic color로 쓴다. 긍정/완료는 `success`, 주의/보류는 `warning`, 삭제/오류/위험은 `danger`에 묶는다.

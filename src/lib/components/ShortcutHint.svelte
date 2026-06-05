@@ -6,9 +6,14 @@
   export let ariaLabel: string | null = null;
 
   $: resolvedAriaLabel = ariaLabel ?? keys.join(' ');
+  $: labelledGroupRole = resolvedAriaLabel ? 'group' : undefined;
 </script>
 
-<span class={`zdp-shortcut-hint zdp-shortcut-hint--${size}`} aria-label={resolvedAriaLabel}>
+<span
+  class={`zdp-shortcut-hint zdp-shortcut-hint--${size}`}
+  role={labelledGroupRole}
+  aria-label={resolvedAriaLabel || undefined}
+>
   {#each keys as key, index}
     {#if index > 0}
       <span class="zdp-shortcut-hint__separator" aria-hidden="true">+</span>

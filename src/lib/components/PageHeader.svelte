@@ -3,12 +3,15 @@
   export let align: 'start' | 'center' = 'start';
   export let id: string | null = null;
   export let labelledBy: string | null = null;
+
+  $: labelledHeaderRole = labelledBy ? 'group' : undefined;
 </script>
 
 <svelte:element
   this={as}
   class={`zdp-page-header zdp-page-header--align-${align}`}
   {id}
+  role={labelledHeaderRole}
   aria-labelledby={labelledBy ?? undefined}
 >
   <div class="zdp-page-header__body">

@@ -53,11 +53,13 @@ const componentPaths = [
   'src/lib/components/Toolbar.svelte',
   'src/lib/components/VisuallyHidden.svelte',
   'stories/Buttons.svelte',
+  'stories/ButtonPlayground.svelte',
   'stories/DataDisplay.svelte',
   'stories/DesignSystemOverview.svelte',
   'stories/Feedback.svelte',
   'stories/Forms.svelte',
   'stories/Interaction.svelte',
+  'stories/InteractionProbe.svelte',
   'stories/Layout.svelte',
   'stories/Navigation.svelte'
 ] as const;

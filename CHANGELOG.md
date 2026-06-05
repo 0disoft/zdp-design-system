@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+- Fixed Overview story a11y addon findings by removing decorative ARIA labels from preview layout wrappers, avoiding repeated named `section` landmarks, and hiding the decorative motif strip.
+- Fixed a11y addon findings by using an SVG ConfirmAction thumb glyph, labelled shortcut groups, unique Tabs id prefixes, and roles for labelled div-based layout primitives.
+- Fixed remaining Storybook a11y addon findings by giving labelled PageHeader roots a valid role and separating Kbd visible keycaps from screen-reader labels.
+- Fixed Storybook navigation a11y findings by moving resting Link and Breadcrumb text to ink tokens and giving repeated breadcrumb landmarks unique sample labels.
+- Fixed Feedback story a11y findings by giving primary badges and surface kickers readable ink text and separating repeated callout landmark names.
+- Replaced one-character breadcrumb sample labels with longer review text so Storybook color-contrast checks can classify link contrast reliably.
+- Fixed light-theme `ConfirmAction` progress fill so slide progress stays visible against the hover background while preserving the existing dark-theme contrast.
+- Fixed ShareDock anchor hover states so platform share links use the same icon color and focus rules as button share actions instead of inheriting generic link hover colors.
+- Replaced browser-reserved shortcut examples with browser-safe key hints and documented that consumers must not show shortcuts swallowed by the browser or OS.
+- Added Storybook a11y addon wiring, ZDP viewport presets, a Button controls playground, and interaction play coverage for Tabs, Dialog, and ConfirmAction.
+
 ## 0.31.0
 
 - Added `Kbd` and `ShortcutHint` Svelte primitives plus static `.zdp-kbd` and `.zdp-shortcut-hint` utilities for visible shortcut hints.

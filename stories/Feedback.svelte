@@ -76,12 +76,12 @@
         <Surface padding="lg">
           <Stack gap="md">
             <Callout tone="info" labelledBy="feedback-dark-info" semanticRole="note">
-              <strong id="feedback-dark-info">다음 단계가 준비됐습니다.</strong>
+              <strong id="feedback-dark-info">작업 흐름이 준비됐습니다.</strong>
               <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
             </Callout>
             <Divider />
             <Callout tone="danger" labelledBy="feedback-dark-danger" semanticRole="alert">
-              <strong id="feedback-dark-danger">삭제 전에 다시 확인하세요.</strong>
+              <strong id="feedback-dark-danger">위험 작업 전에 다시 확인하세요.</strong>
               <p>어두운 표면에서도 위험 상태는 같은 의미를 유지합니다.</p>
             </Callout>
           </Stack>
@@ -171,7 +171,7 @@
   }
 
   .surface-kicker {
-    color: var(--zdp-color-accent-danger);
+    color: var(--zdp-color-ink-normal);
     display: block;
     font-size: var(--zdp-type-caption-size);
     font-weight: var(--zdp-font-weight-medium);

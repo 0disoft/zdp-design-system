@@ -3,11 +3,14 @@
   export let gap: 'sm' | 'md' | 'lg' = 'md';
   export let align: 'start' | 'center' | 'end' = 'center';
   export let labelledBy: string | null = null;
+
+  $: labelledGroupRole = as === 'div' && labelledBy ? 'group' : undefined;
 </script>
 
 <svelte:element
   this={as}
   class={`zdp-toolbar zdp-toolbar--gap-${gap} zdp-toolbar--align-${align}`}
+  role={labelledGroupRole}
   aria-labelledby={labelledBy ?? undefined}
 >
   <div class="zdp-toolbar__main">

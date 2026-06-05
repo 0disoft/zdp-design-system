@@ -34,7 +34,7 @@
 <style>
   .zdp-link {
     border-bottom: var(--zdp-control-focus-underline-width) solid transparent;
-    color: var(--zdp-color-accent-primary-strong);
+    color: var(--zdp-color-ink-normal);
     font-family: var(--zdp-font-family-sans);
     font-weight: var(--zdp-font-weight-medium);
     overflow-wrap: var(--zdp-i18n-overflow-wrap);
@@ -61,7 +61,7 @@
   }
 
   .zdp-link--primary {
-    color: var(--zdp-color-accent-primary-strong);
+    color: var(--zdp-color-ink-normal);
   }
 
   .zdp-link--muted {

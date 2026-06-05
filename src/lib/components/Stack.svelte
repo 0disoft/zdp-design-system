@@ -3,11 +3,14 @@
   export let gap: 'xs' | 'sm' | 'md' | 'lg' | 'xl' = 'md';
   export let align: 'stretch' | 'start' | 'center' | 'end' = 'stretch';
   export let labelledBy: string | null = null;
+
+  $: labelledGroupRole = as === 'div' && labelledBy ? 'group' : undefined;
 </script>
 
 <svelte:element
   this={as}
   class={`zdp-stack zdp-stack--gap-${gap} zdp-stack--align-${align}`}
+  role={labelledGroupRole}
   aria-labelledby={labelledBy ?? undefined}
 >
   <slot />

@@ -4,11 +4,14 @@
   export let align: 'stretch' | 'start' | 'center' | 'end' | 'baseline' = 'center';
   export let justify: 'start' | 'center' | 'end' | 'between' = 'start';
   export let labelledBy: string | null = null;
+
+  $: labelledGroupRole = as === 'div' && labelledBy ? 'group' : undefined;
 </script>
 
 <svelte:element
   this={as}
   class={`zdp-inline zdp-inline--gap-${gap} zdp-inline--align-${align} zdp-inline--justify-${justify}`}
+  role={labelledGroupRole}
   aria-labelledby={labelledBy ?? undefined}
 >
   <slot />

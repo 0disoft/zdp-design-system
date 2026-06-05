@@ -17,6 +17,7 @@ const storyPath = join(root, 'stories', 'DesignSystemOverview.stories.ts');
 const componentPath = join(root, 'stories', 'DesignSystemOverview.svelte');
 const buttonsStoryPath = join(root, 'stories', 'Buttons.stories.ts');
 const buttonsComponentPath = join(root, 'stories', 'Buttons.svelte');
+const buttonPlaygroundPath = join(root, 'stories', 'ButtonPlayground.svelte');
 const dataDisplayStoryPath = join(root, 'stories', 'DataDisplay.stories.ts');
 const dataDisplayComponentPath = join(root, 'stories', 'DataDisplay.svelte');
 const feedbackStoryPath = join(root, 'stories', 'Feedback.stories.ts');
@@ -25,6 +26,7 @@ const formsStoryPath = join(root, 'stories', 'Forms.stories.ts');
 const formsComponentPath = join(root, 'stories', 'Forms.svelte');
 const interactionStoryPath = join(root, 'stories', 'Interaction.stories.ts');
 const interactionComponentPath = join(root, 'stories', 'Interaction.svelte');
+const interactionProbePath = join(root, 'stories', 'InteractionProbe.svelte');
 const layoutStoryPath = join(root, 'stories', 'Layout.stories.ts');
 const layoutComponentPath = join(root, 'stories', 'Layout.svelte');
 const navigationStoryPath = join(root, 'stories', 'Navigation.stories.ts');
@@ -76,6 +78,7 @@ const [
   component,
   buttonsStory,
   buttonsComponent,
+  buttonPlayground,
   dataDisplayStory,
   dataDisplayComponent,
   feedbackStory,
@@ -84,6 +87,7 @@ const [
   formsComponent,
   interactionStory,
   interactionComponent,
+  interactionProbe,
   layoutStory,
   layoutComponent,
   navigationStory,
@@ -134,6 +138,7 @@ const [
     readFile(componentPath, 'utf8'),
     readFile(buttonsStoryPath, 'utf8'),
     readFile(buttonsComponentPath, 'utf8'),
+    readFile(buttonPlaygroundPath, 'utf8'),
     readFile(dataDisplayStoryPath, 'utf8'),
     readFile(dataDisplayComponentPath, 'utf8'),
     readFile(feedbackStoryPath, 'utf8'),
@@ -142,6 +147,7 @@ const [
     readFile(formsComponentPath, 'utf8'),
     readFile(interactionStoryPath, 'utf8'),
     readFile(interactionComponentPath, 'utf8'),
+    readFile(interactionProbePath, 'utf8'),
     readFile(layoutStoryPath, 'utf8'),
     readFile(layoutComponentPath, 'utf8'),
     readFile(navigationStoryPath, 'utf8'),
@@ -209,7 +215,7 @@ if (!packageJson.sideEffects?.includes('./src/styles/locale-fonts.css')) {
   failures.push('Package sideEffects must keep ./src/styles/locale-fonts.css.');
 }
 
-for (const dependencyName of ['@storybook/svelte-vite', 'storybook', 'svelte', 'vite']) {
+for (const dependencyName of ['@storybook/addon-a11y', '@storybook/svelte-vite', 'storybook', 'svelte', 'vite']) {
   if (!packageJson.devDependencies?.[dependencyName]) {
     failures.push(`Missing devDependency ${dependencyName}.`);
   }
@@ -223,6 +229,7 @@ for (const requiredText of [
   "import { svelte } from '@sveltejs/vite-plugin-svelte'",
   "import type { StorybookConfig } from '@storybook/svelte-vite'",
   "'../stories/**/*.stories.@(js|ts|svelte)'",
+  "addons: ['@storybook/addon-a11y']",
   "name: '@storybook/svelte-vite'",
   'docgen: false',
   'async viteFinal(config)',
@@ -235,6 +242,28 @@ for (const requiredText of [
 
 if (!preview.includes("import '../src/styles/index.css';")) {
   failures.push('Storybook preview must import the shared style entry.');
+}
+
+for (const requiredText of [
+  'viewport',
+  'zdpMobile',
+  'ZDP Mobile',
+  '390px',
+  'zdpTablet',
+  'ZDP Tablet',
+  '768px',
+  'zdpDesktop',
+  'ZDP Desktop',
+  '1280px',
+  'zdpWide',
+  'ZDP Wide',
+  '1440px',
+  'a11y',
+  "test: 'todo'"
+]) {
+  if (!preview.includes(requiredText)) {
+    failures.push(`Storybook preview config is missing ${requiredText}.`);
+  }
 }
 
 for (const requiredText of [
@@ -255,7 +284,14 @@ for (const [storyName, source, requiredTexts] of [
       "title: 'Design System/Components/Button'",
       'Buttons',
       "layout: 'fullscreen'",
-      'States'
+      'States',
+      'ButtonPlayground',
+      'Playground',
+      "name: 'Controls'",
+      'argTypes',
+      "control: 'radio'",
+      "control: 'boolean'",
+      "control: 'text'"
     ]
   ],
   [
@@ -295,7 +331,15 @@ for (const [storyName, source, requiredTexts] of [
       "title: 'Design System/Components/Interaction'",
       'Interaction',
       "layout: 'fullscreen'",
-      'States'
+      'States',
+      'InteractionProbe',
+      'Probe',
+      "name: 'Interaction tests'",
+      'play: async',
+      'tabs move selected state',
+      'dialog opens and closes with Escape',
+      'ConfirmAction confirms after keyboard hold',
+      "fireEvent.keyDown(confirmButton, { key: 'Enter' })"
     ]
   ],
   [
@@ -445,6 +489,21 @@ for (const requiredText of [
   }
 }
 
+for (const forbiddenText of [
+  'storybook-preview__grid" aria-label=',
+  '<section class="preview-section" aria-labelledby=',
+  '<section class="motif-strip"',
+  'motif-strip" aria-label='
+]) {
+  if (component.includes(forbiddenText)) {
+    failures.push(`Storybook overview must not expose decorative preview structure through ${forbiddenText}.`);
+  }
+}
+
+if (!component.includes('<div class="motif-strip" aria-hidden="true">')) {
+  failures.push('Storybook overview decorative motif must be hidden from assistive technology.');
+}
+
 for (const requiredText of [
   '../src/lib/components/Button.svelte',
   '../src/lib/components/ConfirmAction.svelte',
@@ -501,6 +560,53 @@ for (const requiredText of [
 }
 
 for (const requiredText of [
+  '../src/lib/components/Button.svelte',
+  '../src/lib/components/Icon.svelte',
+  '../src/lib/components/Stack.svelte',
+  '../src/lib/components/Surface.svelte',
+  '../src/lib/components/VisuallyHidden.svelte',
+  'export let variant',
+  'export let size',
+  'export let label',
+  'export let disabled',
+  'export let showIcon',
+  'export let ariaKeyShortcuts',
+  'Button playground',
+  'Controls에서 라벨, 크기, 상태를 바꿔',
+  'ariaDescribedBy="button-playground-status"',
+  'onclick={() => (clickCount += 1)}',
+  'button-playground__control',
+  'button-playground__status',
+  'zdp-surface-reset'
+]) {
+  if (!buttonPlayground.includes(requiredText)) {
+    failures.push(`Button controls story surface is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  '../src/lib/components/Button.svelte',
+  '../src/lib/components/ConfirmAction.svelte',
+  '../src/lib/components/Dialog.svelte',
+  '../src/lib/components/Tabs.svelte',
+  'Interaction probe',
+  'ariaLabel="검토 섹션"',
+  "selectedId = 'overview'",
+  '기록이 선택되었습니다.',
+  'ariaControls="interaction-probe-dialog"',
+  'ariaExpanded={dialogOpen}',
+  'onClose={() => (dialogOpen = false)}',
+  'durationMs={600}',
+  'onconfirm={() => (confirmCount += 1)}',
+  '확인 {confirmCount}회',
+  'zdp-surface-reset'
+]) {
+  if (!interactionProbe.includes(requiredText)) {
+    failures.push(`Interaction probe story surface is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
   '../src/lib/components/Badge.svelte',
   '../src/lib/components/Button.svelte',
   '../src/lib/components/EmptyState.svelte',
@@ -547,6 +653,8 @@ for (const requiredText of [
   '주의',
   '다음 단계가 준비됐습니다.',
   '삭제 전에 다시 확인하세요.',
+  '작업 흐름이 준비됐습니다.',
+  '위험 작업 전에 다시 확인하세요.',
   '<Divider />',
   'surface-pair',
   'Parchment',
@@ -657,19 +765,23 @@ for (const requiredText of [
   'keydown 처리는 각 화면에 남깁니다',
   'Light shortcut hints',
   'Dark shortcut hints',
+  'role="group" aria-label="Light shortcut hints"',
+  'role="group" aria-label="Dark shortcut hints"',
   'Search',
-  'Command',
+  'Shortcuts',
   'Go to file',
-  'Save',
+  'Select',
   'Close',
   "keys={['/']}",
-  "keys={['Ctrl', 'K']}",
-  "keys={['Ctrl', 'S']}",
+  "keys={['Shift', '?']}",
   'label="T"',
+  'label="Enter"',
   'label="Esc"',
   'Dialog',
   'Light interaction sections',
   'Dark interaction sections',
+  'idPrefix="interaction-light-tabs"',
+  'idPrefix="interaction-dark-tabs"',
   'selectedId="overview"',
   'let:selectedId',
   'disabled: true',
@@ -740,6 +852,7 @@ for (const requiredText of [
   '.zdp-badge--success',
   '.zdp-badge--warning',
   '.zdp-badge--danger',
+  'color: var(--zdp-color-ink-strong)',
   'font-weight: var(--zdp-font-weight-medium)',
   'border-radius: var(--zdp-control-radius)',
   'background: var(--zdp-color-surface-panel)'
@@ -801,9 +914,11 @@ for (const requiredText of [
   '<kbd',
   'label: string | null = null',
   "size: 'sm' | 'md' = 'md'",
-  'aria-label={ariaLabel ?? undefined}',
+  '<span class="zdp-kbd__sr-label">{ariaLabel}</span>',
+  "aria-hidden={ariaLabel ? 'true' : undefined}",
   'title={title ?? undefined}',
   'class={`zdp-kbd zdp-kbd--${size}`}',
+  '.zdp-kbd__sr-label',
   'box-sizing: border-box',
   'place-items: center',
   'vertical-align: middle',
@@ -820,8 +935,10 @@ for (const requiredText of [
   "size: 'sm' | 'md' = 'md'",
   'ariaLabel: string | null = null',
   "keys.join(' ')",
+  'labelledGroupRole',
   'class={`zdp-shortcut-hint zdp-shortcut-hint--${size}`}',
-  'aria-label={resolvedAriaLabel}',
+  'role={labelledGroupRole}',
+  'aria-label={resolvedAriaLabel || undefined}',
   'class="zdp-shortcut-hint__separator"',
   'aria-hidden="true"',
   '<Kbd label={key} {size} />',
@@ -942,6 +1059,8 @@ for (const requiredText of [
   '.zdp-page-header',
   'as:',
   'align:',
+  'labelledHeaderRole',
+  'role={labelledHeaderRole}',
   'aria-labelledby={labelledBy ?? undefined}',
   'slot name="eyebrow"',
   'class="zdp-page-header__title"',
@@ -1213,6 +1332,8 @@ for (const requiredText of [
   'onpointerdown={handlePointerDown}',
   'onpointermove={handlePointerMove}',
   'onkeydown={handleKeydown}',
+  'class="zdp-confirm-action__glyph"',
+  'stroke-width: 2.25',
   '--zdp-confirm-action-progress: 0',
   'width: calc(var(--zdp-confirm-action-progress) * 100%)',
   'touch-action: none',
@@ -1410,6 +1531,9 @@ for (const requiredText of [
 
 for (const requiredText of [
   'export interface TabItem',
+  'export let idPrefix: string | null = null',
+  'fallbackIdPrefix',
+  'resolvedIdPrefix',
   'role="tablist"',
   'tabindex="-1"',
   'role="tab"',
@@ -1513,10 +1637,12 @@ assertNoDecorativeEffects(failures, 'IconButton component', iconButton);
 assertNoDecorativeEffects(failures, 'Surface component', surface);
 assertNoDecorativeEffects(failures, 'Storybook overview', component);
 assertNoDecorativeEffects(failures, 'Buttons story', buttonsComponent);
+assertNoDecorativeEffects(failures, 'Button controls story', buttonPlayground);
 assertNoDecorativeEffects(failures, 'Data display story', dataDisplayComponent);
 assertNoDecorativeEffects(failures, 'Feedback story', feedbackComponent);
 assertNoDecorativeEffects(failures, 'Forms story', formsComponent);
 assertNoDecorativeEffects(failures, 'Interaction story', interactionComponent);
+assertNoDecorativeEffects(failures, 'Interaction probe story', interactionProbe);
 assertNoDecorativeEffects(failures, 'Navigation story', navigationComponent);
 assertNoOverRoundedUsage(failures, 'Button component', button);
 assertNoOverRoundedUsage(failures, 'Icon component', icon);
@@ -1524,10 +1650,12 @@ assertNoOverRoundedUsage(failures, 'IconButton component', iconButton);
 assertNoOverRoundedUsage(failures, 'Surface component', surface);
 assertNoOverRoundedUsage(failures, 'Storybook overview', component);
 assertNoOverRoundedUsage(failures, 'Buttons story', buttonsComponent);
+assertNoOverRoundedUsage(failures, 'Button controls story', buttonPlayground);
 assertNoOverRoundedUsage(failures, 'Data display story', dataDisplayComponent);
 assertNoOverRoundedUsage(failures, 'Feedback story', feedbackComponent);
 assertNoOverRoundedUsage(failures, 'Forms story', formsComponent);
 assertNoOverRoundedUsage(failures, 'Interaction story', interactionComponent);
+assertNoOverRoundedUsage(failures, 'Interaction probe story', interactionProbe);
 assertNoOverRoundedUsage(failures, 'Navigation story', navigationComponent);
 
 if (failures.length > 0) {

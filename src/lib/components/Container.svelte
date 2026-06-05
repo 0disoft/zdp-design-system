@@ -4,12 +4,15 @@
   export let padding: 'none' | 'sm' | 'md' | 'lg' = 'md';
   export let id: string | null = null;
   export let labelledBy: string | null = null;
+
+  $: labelledGroupRole = as === 'div' && labelledBy ? 'group' : undefined;
 </script>
 
 <svelte:element
   this={as}
   class={`zdp-container zdp-container--${size} zdp-container--padding-${padding}`}
   {id}
+  role={labelledGroupRole}
   aria-labelledby={labelledBy ?? undefined}
 >
   <slot />

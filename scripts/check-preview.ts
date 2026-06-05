@@ -151,10 +151,14 @@ for (const requiredText of [
   'Search Design System',
   'Light shortcut hints',
   'Dark shortcut hints',
+  'role="group" aria-label="Light shortcut hints"',
+  'role="group" aria-label="Dark shortcut hints"',
+  'role="group" aria-label="Search shortcut slash"',
+  'role="group" aria-label="Shortcut guide Shift question mark"',
   'Search shortcut slash',
-  'Command shortcut Control K',
+  'Shortcut guide Shift question mark',
   'Go to file shortcut T',
-  'Save shortcut Control S',
+  'Select shortcut Enter',
   'Close shortcut Escape',
   '화면의 첫 장면',
   '반복되는 요약',
@@ -189,11 +193,28 @@ for (const requiredText of [
   '검토 중',
   '정상',
   '삭제 전에 다시 확인하세요.',
+  '작업 흐름이 준비됐습니다.',
+  '위험 작업 전에 다시 확인하세요.',
   '탭은 페이지 안의 가까운 정보 묶음을 바꿀 때 사용합니다.'
 ]) {
   if (!preview.includes(requiredText)) {
     failures.push(`Preview is missing ${requiredText}.`);
   }
+}
+
+for (const forbiddenText of [
+  'preview-stage" aria-label=',
+  '<section class="preview-section" aria-labelledby=',
+  '<section class="motif-strip"',
+  'motif-strip" aria-label='
+]) {
+  if (preview.includes(forbiddenText)) {
+    failures.push(`Preview must not expose decorative preview structure through ${forbiddenText}.`);
+  }
+}
+
+if (!preview.includes('<div class="motif-strip" aria-hidden="true">')) {
+  failures.push('Preview decorative motif must be hidden from assistive technology.');
 }
 
 for (const [iconName, expectedPath] of [
@@ -213,7 +234,7 @@ for (const [iconName, expectedPath] of [
 }
 
 for (const requiredText of [
-  '.zdp-surface-reset a:not(.zdp-button):not(.zdp-icon-button)',
+  '.zdp-surface-reset a:not(.zdp-button):not(.zdp-icon-button):not(.zdp-share-action)',
   'font-family: var(--zdp-font-family-sans)',
   'Pretendard Variable',
   '--zdp-font-family-latin',
@@ -264,6 +285,7 @@ for (const requiredText of [
   '.zdp-confirm-action',
   '.zdp-confirm-action__fill',
   '.zdp-confirm-action__thumb',
+  '.zdp-confirm-action__glyph',
   '.zdp-confirm-action__label',
   '.zdp-confirm-action__hint',
   '.zdp-confirm-action--danger',
@@ -283,6 +305,7 @@ for (const requiredText of [
   '.zdp-icon-button--solid:active:not(:disabled)',
   '.zdp-badge',
   '.zdp-badge--primary',
+  'color: var(--zdp-color-ink-strong)',
   '.zdp-badge--success',
   '.zdp-badge--warning',
   '.zdp-badge--danger',
@@ -321,6 +344,7 @@ for (const requiredText of [
   '.zdp-toolbar__main',
   '.zdp-toolbar__actions',
   '.zdp-kbd',
+  '.zdp-kbd__sr-label',
   '.zdp-kbd--sm',
   '.zdp-kbd--md',
   '.zdp-shortcut-hint',

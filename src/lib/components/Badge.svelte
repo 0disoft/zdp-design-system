@@ -41,7 +41,7 @@
   .zdp-badge--primary {
     background: var(--zdp-color-accent-primary-soft);
     border-color: var(--zdp-color-accent-primary-strong);
-    color: var(--zdp-color-accent-primary-strong);
+    color: var(--zdp-color-ink-strong);
   }
 
   .zdp-badge--success {

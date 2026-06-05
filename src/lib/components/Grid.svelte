@@ -3,11 +3,14 @@
   export let columns: 'one' | 'two' | 'three' | 'four' | 'auto' = 'auto';
   export let gap: 'sm' | 'md' | 'lg' | 'xl' = 'md';
   export let labelledBy: string | null = null;
+
+  $: labelledGroupRole = as === 'div' && labelledBy ? 'group' : undefined;
 </script>
 
 <svelte:element
   this={as}
   class={`zdp-grid zdp-grid--columns-${columns} zdp-grid--gap-${gap}`}
+  role={labelledGroupRole}
   aria-labelledby={labelledBy ?? undefined}
 >
   <slot />

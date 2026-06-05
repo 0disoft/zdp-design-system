@@ -131,6 +131,7 @@ function checkConsumerContractDocument(documentText: string): void {
     'focus trap',
     'keyboard focus',
     '실제 keydown',
+    'Chrome과 브라우저가 기본 동작으로 가져가는 조합',
     'public export',
     'opt-in',
     'zdp-design-system/src/...'
@@ -157,6 +158,7 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'CommandField는 검색',
     'Kbd와 ShortcutHint',
     '실제 keydown',
+    'Chrome과 브라우저가 기본 동작으로 가져가는 조합',
     'SkipLink는 키보드',
     'VisuallyHidden은 스크린리더',
     'Stack',
@@ -200,6 +202,7 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'CommandField는 검색',
     'Kbd와 ShortcutHint',
     '실제 keydown',
+    'Chrome과 브라우저가 기본 동작으로 가져가는 조합',
     'Table은 표 형식 정보',
     'KeyValue는 용어와 값',
     'EmptyState는 비어 있는 상태',

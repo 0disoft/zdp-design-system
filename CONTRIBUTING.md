@@ -74,6 +74,7 @@
 - Kbd와 ShortcutHint는 키캡과 단축키 힌트 표면만 담당하며 실제 keydown dispatcher, command palette, 검색 focus 이동, 저장, 닫기, 파일 이동 판단을 직접 수행하지 않는다.
 - Kbd, ShortcutHint, `.zdp-kbd`, `.zdp-shortcut-hint`는 그림자, 그라데이션, hover 장식을 만들지 않고 framed keycap과 간격 규칙만 유지한다.
 - `ariaKeyShortcuts`와 `aria-keyshortcuts`는 실제 단축키가 소비 앱에서 구현된 경우에만 사용한다. 입력창 focus 중 `/`를 가로채는 예외 처리와 브라우저/페이지 단축키 충돌 판단은 소비 앱이 소유한다.
+- `Ctrl+K`, `Ctrl+S`처럼 Chrome과 브라우저가 기본 동작으로 가져가는 조합은 소비 앱에서 실제로 가로채고 검증한 경우가 아니면 Storybook, preview, README 예시나 UI 힌트로 보여주지 않는다.
 - Icon은 glyph 크기, inline-flex 중앙정렬, svg sizing만 담당하며 라우팅, 저장, 삭제, 상태 의미, 권한 판단을 직접 수행하지 않는다.
 - Icon과 `.zdp-icon`은 그림자, 그라데이션, hover 상태를 만들지 않고 `control.glyphSm|Md`, `line-height: 1`, `text-align: center` 계약만 유지한다.
 - Table은 표 형식 정보의 native table, caption, row/column header, overflow wrapper만 담당하며 정렬, 필터, 페이지네이션, 데이터 로딩 판단을 직접 수행하지 않는다.
@@ -86,7 +87,7 @@
 - Breadcrumb는 `nav`, ordered list, link, separator, `aria-current="page"` 구조를 유지하고 라우팅, SEO, 권한, 데이터 로딩 판단을 직접 수행하지 않는다.
 - Breadcrumb link focus는 sunlit gold 배경과 어두운 하단선을 유지한다.
 - Tabs는 페이지 안의 가까운 정보 묶음 전환에만 사용하고 라우팅, 권한, 데이터 로딩 판단을 직접 수행하지 않는다.
-- Tabs는 `tablist`, `tab`, `tabpanel`, roving tabindex, focus-visible 상태를 유지한다.
+- Tabs는 `tablist`, `tab`, `tabpanel`, roving tabindex, focus-visible 상태를 유지하고, 여러 Tabs 인스턴스가 같은 페이지에 있어도 tab/panel id가 충돌하지 않게 한다.
 - Dialog는 `role="dialog"`, `aria-modal`, `aria-labelledby`, 선택적 `aria-describedby`, Escape 닫기, backdrop 닫기, focus trap, focus-visible 상태를 유지한다.
 - Dialog는 저장, 삭제, 인증, 결제, 권한 판단을 직접 수행하지 않고 소비 앱의 확인 흐름을 담는 레이어 표면으로만 둔다.
 - 본문 텍스트 line-height는 `1.6`을 기준으로 하며, compact control line-height와 섞지 않는다.
@@ -94,6 +95,10 @@
 - 일반 문서와 앱의 페이지 제목은 `type.pageTitleSize`와 `type.pageTitleCompactSize` 토큰 범위로 유지하고, `3rem` 이상의 대형 제목은 브랜드 히어로나 캠페인 표면에서만 소비 저장소 예외로 둔다.
 - 컴포넌트가 인증, 결제, 권한 판단을 직접 수행하지 않는다.
 - 시각 변경은 Storybook의 `Design System/Overview`와 `preview/index.html`에서 light/dark 상태를 확인한다.
+- Storybook Controls는 public props가 있는 단일 컴포넌트 playground에만 붙이고, 전체 갤러리 story에는 억지 args를 만들지 않는다.
+- Storybook Viewport 프리셋은 ZDP Mobile, Tablet, Desktop, Wide 폭을 유지한다.
+- Storybook Accessibility addon은 검토 표면으로 유지하고, CI 실패 게이트 승격은 전체 컴포넌트 위반 항목을 정리한 뒤 진행한다.
+- Storybook interaction play는 Tabs, Dialog, ConfirmAction처럼 키보드, focus, 상태 전이가 중요한 컴포넌트부터 유지한다.
 - Workduck 개발 서버와 빌드 액션이 깨지지 않도록 `dev`와 `build` 스크립트를 유지한다.
 - 패키지 export가 안정된 뒤에는 변경 내역을 `CHANGELOG.md`에 남긴다.
 - 토큰 JSON, CSS 변수, public export, Svelte 컴포넌트, Storybook, preview 변경 뒤에는 `bun run check`를 실행한다.

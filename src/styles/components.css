@@ -121,6 +121,7 @@
 
 .zdp-confirm-action {
   --zdp-confirm-action-progress: 0;
+  --zdp-confirm-action-fill: var(--zdp-color-accent-primary);
 
   align-items: center;
   background: var(--zdp-color-surface-panel);
@@ -145,7 +146,7 @@
 }
 
 .zdp-confirm-action__fill {
-  background: var(--zdp-color-accent-primary-soft);
+  background: var(--zdp-confirm-action-fill);
   bottom: 0;
   left: 0;
   position: absolute;
@@ -169,8 +170,23 @@
   width: var(--zdp-control-height-sm);
 }
 
+.zdp-confirm-action__glyph {
+  display: block;
+  fill: none;
+  height: var(--zdp-control-glyph-sm);
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.25;
+  width: var(--zdp-control-glyph-sm);
+}
+
 [data-zdp-theme="dark"] .zdp-confirm-action__thumb {
   color: var(--zdp-color-ink-inverse);
+}
+
+[data-zdp-theme="dark"] .zdp-confirm-action {
+  --zdp-confirm-action-fill: var(--zdp-color-accent-primary-soft);
 }
 
 .zdp-confirm-action__body {
@@ -266,7 +282,7 @@
 .zdp-badge--primary {
   background: var(--zdp-color-accent-primary-soft);
   border-color: var(--zdp-color-accent-primary-strong);
-  color: var(--zdp-color-accent-primary-strong);
+  color: var(--zdp-color-ink-strong);
 }
 
 .zdp-badge--success {
@@ -286,7 +302,7 @@
 
 .zdp-link {
   border-bottom: var(--zdp-control-focus-underline-width) solid transparent;
-  color: var(--zdp-color-accent-primary-strong);
+  color: var(--zdp-color-ink-normal);
   font-family: var(--zdp-font-family-sans);
   font-weight: var(--zdp-font-weight-medium);
   overflow-wrap: var(--zdp-i18n-overflow-wrap);
@@ -313,7 +329,7 @@
 }
 
 .zdp-link--primary {
-  color: var(--zdp-color-accent-primary-strong);
+  color: var(--zdp-color-ink-normal);
 }
 
 .zdp-link--muted {
@@ -736,6 +752,18 @@
   font-weight: var(--zdp-font-weight-medium);
   line-height: 1;
   vertical-align: middle;
+  white-space: nowrap;
+}
+
+.zdp-kbd__sr-label {
+  block-size: 1px;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  inline-size: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
   white-space: nowrap;
 }
 
@@ -1347,7 +1375,7 @@
 
 .zdp-breadcrumb__link {
   border-bottom: var(--zdp-control-focus-underline-width) solid transparent;
-  color: var(--zdp-color-accent-primary-strong);
+  color: var(--zdp-color-ink-normal);
   overflow-wrap: var(--zdp-i18n-overflow-wrap);
   text-decoration-line: none;
   transition:

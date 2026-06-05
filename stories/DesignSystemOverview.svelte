@@ -87,14 +87,14 @@
     <span>Storybook</span>
   </header>
 
-  <div class="storybook-preview__grid" aria-label="Theme previews">
+  <div class="storybook-preview__grid">
     <section class="theme-panel theme-panel--light" data-zdp-theme="light" aria-labelledby="storybook-light-title">
       <div class="theme-panel__header">
         <h2 id="storybook-light-title">Light</h2>
         <span>OKLCH</span>
       </div>
 
-      <section class="preview-section" aria-labelledby="storybook-light-color">
+      <section class="preview-section">
         <h3 id="storybook-light-color">Color</h3>
         <div class="swatches">
           <span class="swatch">
@@ -116,7 +116,7 @@
         </div>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-light-type">
+      <section class="preview-section">
         <h3 id="storybook-light-type">Type</h3>
         <p class="type-sample">
           <strong>마을 광장처럼 밝고 단단하게</strong>
@@ -125,7 +125,7 @@
         </p>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-light-focus">
+      <section class="preview-section">
         <h3 id="storybook-light-focus">Focus</h3>
         <div class="focus-demo">
           <Link href="#foundation-tokens">출시 노트 보기</Link>
@@ -136,7 +136,7 @@
         </div>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-light-actions">
+      <section class="preview-section">
         <h3 id="storybook-light-actions">Actions</h3>
         <Inline gap="sm" align="center">
           <Button variant="primary">저장</Button>
@@ -146,19 +146,19 @@
         </Inline>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-light-breadcrumb">
+      <section class="preview-section">
         <h3 id="storybook-light-breadcrumb">Breadcrumb</h3>
         <Breadcrumb
-          ariaLabel="현재 위치"
+          ariaLabel="밝은 화면 현재 위치"
           items={[
-            { label: '홈', href: '/' },
+            { label: '홈 화면', href: '/' },
             { label: '플랫폼', href: '/platform' },
             { label: '디자인 시스템' }
           ]}
         />
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-light-feedback">
+      <section class="preview-section">
         <h3 id="storybook-light-feedback">Feedback</h3>
         <div class="feedback-stack">
           <Stack gap="md" align="start">
@@ -181,7 +181,7 @@
         </div>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-light-dialog">
+      <section class="preview-section">
         <h3 id="storybook-light-dialog">Dialog</h3>
         <div class="dialog-demo">
           <Button
@@ -208,7 +208,7 @@
         </Dialog>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-light-share">
+      <section class="preview-section">
         <h3 id="storybook-light-share">Share</h3>
         <Surface tone="panel" padding="lg">
           <Stack gap="sm">
@@ -219,9 +219,10 @@
         </Surface>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-light-tabs">
+      <section class="preview-section">
         <h3 id="storybook-light-tabs">Tabs</h3>
         <Tabs
+          idPrefix="overview-light-tabs"
           ariaLabel="Light theme sections"
           items={[
             { id: 'overview', label: '개요' },
@@ -236,7 +237,7 @@
         </Tabs>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-light-data">
+      <section class="preview-section">
         <h3 id="storybook-light-data">Data</h3>
         <Stack gap="md">
           <Table caption="보안 점검 목록" density="compact">
@@ -273,7 +274,7 @@
         </Stack>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-light-forms">
+      <section class="preview-section">
         <h3 id="storybook-light-forms">Forms</h3>
         <div class="form-grid">
           <Field>
@@ -363,7 +364,7 @@
         </div>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-light-surfaces">
+      <section class="preview-section">
         <h3 id="storybook-light-surfaces">Surfaces</h3>
         <div class="surface-grid">
           <Surface tone="panel" padding="lg">
@@ -386,7 +387,7 @@
         <span>OKLCH</span>
       </div>
 
-      <section class="preview-section" aria-labelledby="storybook-dark-color">
+      <section class="preview-section">
         <h3 id="storybook-dark-color">Color</h3>
         <div class="swatches">
           <span class="swatch">
@@ -408,7 +409,7 @@
         </div>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-dark-type">
+      <section class="preview-section">
         <h3 id="storybook-dark-type">Type</h3>
         <p class="type-sample">
           <strong>밤에도 종이결은 남기기</strong>
@@ -417,7 +418,7 @@
         </p>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-dark-focus">
+      <section class="preview-section">
         <h3 id="storybook-dark-focus">Focus</h3>
         <div class="focus-demo">
           <Link href="#foundation-tokens">업데이트 보기</Link>
@@ -428,7 +429,7 @@
         </div>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-dark-actions">
+      <section class="preview-section">
         <h3 id="storybook-dark-actions">Actions</h3>
         <Inline gap="sm" align="center">
           <Button variant="primary">저장</Button>
@@ -438,19 +439,19 @@
         </Inline>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-dark-breadcrumb">
+      <section class="preview-section">
         <h3 id="storybook-dark-breadcrumb">Breadcrumb</h3>
         <Breadcrumb
-          ariaLabel="현재 위치"
+          ariaLabel="어두운 화면 현재 위치"
           items={[
-            { label: '홈', href: '/' },
+            { label: '홈 화면', href: '/' },
             { label: '플랫폼', href: '/platform' },
             { label: '디자인 시스템' }
           ]}
         />
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-dark-feedback">
+      <section class="preview-section">
         <h3 id="storybook-dark-feedback">Feedback</h3>
         <div class="feedback-stack">
           <Stack gap="md" align="start">
@@ -461,19 +462,19 @@
               <Badge tone="danger">주의</Badge>
             </Inline>
             <Callout tone="info" labelledBy="storybook-dark-callout-info" semanticRole="note">
-              <strong id="storybook-dark-callout-info">다음 단계가 준비됐습니다.</strong>
+              <strong id="storybook-dark-callout-info">작업 흐름이 준비됐습니다.</strong>
               <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
             </Callout>
             <Divider />
             <Callout tone="danger" labelledBy="storybook-dark-callout-danger" semanticRole="alert">
-              <strong id="storybook-dark-callout-danger">삭제 전에 다시 확인하세요.</strong>
+              <strong id="storybook-dark-callout-danger">위험 작업 전에 다시 확인하세요.</strong>
               <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
             </Callout>
           </Stack>
         </div>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-dark-dialog">
+      <section class="preview-section">
         <h3 id="storybook-dark-dialog">Dialog</h3>
         <div class="dialog-demo">
           <Button
@@ -500,7 +501,7 @@
         </Dialog>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-dark-share">
+      <section class="preview-section">
         <h3 id="storybook-dark-share">Share</h3>
         <Surface tone="panel" padding="lg">
           <Stack gap="sm">
@@ -511,9 +512,10 @@
         </Surface>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-dark-tabs">
+      <section class="preview-section">
         <h3 id="storybook-dark-tabs">Tabs</h3>
         <Tabs
+          idPrefix="overview-dark-tabs"
           ariaLabel="Dark theme sections"
           items={[
             { id: 'overview', label: '개요' },
@@ -528,7 +530,7 @@
         </Tabs>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-dark-data">
+      <section class="preview-section">
         <h3 id="storybook-dark-data">Data</h3>
         <Stack gap="md">
           <Table caption="보안 점검 목록" density="compact">
@@ -565,7 +567,7 @@
         </Stack>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-dark-forms">
+      <section class="preview-section">
         <h3 id="storybook-dark-forms">Forms</h3>
         <div class="form-grid">
           <Field>
@@ -655,7 +657,7 @@
         </div>
       </section>
 
-      <section class="preview-section" aria-labelledby="storybook-dark-surfaces">
+      <section class="preview-section">
         <h3 id="storybook-dark-surfaces">Surfaces</h3>
         <div class="surface-grid">
           <Surface tone="panel" padding="lg">
@@ -692,11 +694,11 @@
     </article>
   </section>
 
-  <section class="motif-strip" aria-label="Decorative motif samples">
+  <div class="motif-strip" aria-hidden="true">
     <span class="motif-strip__line"></span>
     <span class="motif-strip__mark">✦</span>
     <span class="motif-strip__line"></span>
-  </section>
+  </div>
 </main>
 
 <style>
@@ -952,7 +954,7 @@
   }
 
   .surface-kicker {
-    color: var(--zdp-color-accent-danger);
+    color: var(--zdp-color-ink-normal);
     display: block;
     font-size: var(--zdp-font-size-xs);
     font-weight: var(--zdp-font-weight-semibold);

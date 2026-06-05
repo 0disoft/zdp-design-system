@@ -63,7 +63,7 @@
 
   .zdp-breadcrumb__link {
     border-bottom: var(--zdp-control-focus-underline-width) solid transparent;
-    color: var(--zdp-color-accent-primary-strong);
+    color: var(--zdp-color-ink-normal);
     overflow-wrap: var(--zdp-i18n-overflow-wrap);
     text-decoration-line: none;
     transition:

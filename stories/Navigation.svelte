@@ -24,9 +24,9 @@
           <Stack gap="md">
             <h3>페이지 위치</h3>
             <Breadcrumb
-              ariaLabel="현재 위치"
+              ariaLabel="밝은 화면 현재 위치"
               items={[
-                { label: '홈', href: '/' },
+                { label: '홈 화면', href: '/' },
                 { label: '플랫폼', href: '/platform' },
                 { label: '디자인 시스템' }
               ]}
@@ -49,6 +49,7 @@
           <Stack gap="md">
             <h3>가까운 섹션</h3>
             <Tabs
+              idPrefix="navigation-light-tabs"
               ariaLabel="Light navigation sections"
               items={[
                 { id: 'overview', label: '개요' },
@@ -73,9 +74,9 @@
           <Stack gap="md">
             <h3>페이지 위치</h3>
             <Breadcrumb
-              ariaLabel="현재 위치"
+              ariaLabel="어두운 화면 현재 위치"
               items={[
-                { label: '홈', href: '/' },
+                { label: '홈 화면', href: '/' },
                 { label: '플랫폼', href: '/platform' },
                 { label: '디자인 시스템' }
               ]}
@@ -98,6 +99,7 @@
           <Stack gap="md">
             <h3>가까운 섹션</h3>
             <Tabs
+              idPrefix="navigation-dark-tabs"
               ariaLabel="Dark navigation sections"
               items={[
                 { id: 'overview', label: '개요' },

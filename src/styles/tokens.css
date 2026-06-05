@@ -322,18 +322,18 @@
   box-sizing: inherit;
 }
 
-.zdp-surface-reset a:not(.zdp-button):not(.zdp-icon-button) {
-  color: var(--zdp-color-accent-primary-strong);
+.zdp-surface-reset a:not(.zdp-button):not(.zdp-icon-button):not(.zdp-share-action) {
+  color: var(--zdp-color-ink-normal);
   font-weight: var(--zdp-font-weight-semibold);
   text-decoration-line: none;
   transition: color var(--zdp-motion-fast) ease;
 }
 
-.zdp-surface-reset a:not(.zdp-button):not(.zdp-icon-button):hover {
-  color: var(--zdp-color-accent-primary);
+.zdp-surface-reset a:not(.zdp-button):not(.zdp-icon-button):not(.zdp-share-action):hover {
+  color: var(--zdp-color-ink-strong);
 }
 
-.zdp-surface-reset a:not(.zdp-button):not(.zdp-icon-button):focus-visible {
+.zdp-surface-reset a:not(.zdp-button):not(.zdp-icon-button):not(.zdp-share-action):focus-visible {
   background: var(--zdp-color-focus-surface);
   border-bottom: var(--zdp-control-focus-underline-width) solid var(--zdp-color-focus-line);
   border-radius: var(--zdp-radius-none);
@@ -345,14 +345,14 @@
   -webkit-box-decoration-break: clone;
 }
 
-[data-zdp-theme="dark"].zdp-surface-reset a:not(.zdp-button):not(.zdp-icon-button),
-[data-zdp-theme="dark"] .zdp-surface-reset a:not(.zdp-button):not(.zdp-icon-button) {
-  color: var(--zdp-color-accent-primary);
+[data-zdp-theme="dark"].zdp-surface-reset a:not(.zdp-button):not(.zdp-icon-button):not(.zdp-share-action),
+[data-zdp-theme="dark"] .zdp-surface-reset a:not(.zdp-button):not(.zdp-icon-button):not(.zdp-share-action) {
+  color: var(--zdp-color-ink-normal);
 }
 
-[data-zdp-theme="dark"].zdp-surface-reset a:not(.zdp-button):not(.zdp-icon-button):hover,
-[data-zdp-theme="dark"] .zdp-surface-reset a:not(.zdp-button):not(.zdp-icon-button):hover {
-  color: var(--zdp-color-accent-primary-strong);
+[data-zdp-theme="dark"].zdp-surface-reset a:not(.zdp-button):not(.zdp-icon-button):not(.zdp-share-action):hover,
+[data-zdp-theme="dark"] .zdp-surface-reset a:not(.zdp-button):not(.zdp-icon-button):not(.zdp-share-action):hover {
+  color: var(--zdp-color-ink-strong);
 }
 
 .zdp-surface-reset :where(input, textarea, select) {
