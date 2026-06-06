@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fixed `Table` overflow wrappers so they no longer reserve a permanent scrollbar gutter that can leave a mismatched stripe beside header rows.
+- Aligned `TermTrigger` with inline interactive text guidance by keeping text selectable, preserving inherited text color on hover, and reserving subtle inline padding.
 - Added exported shortcut policy helpers for consumer-owned keydown dispatchers so apps can ignore text entry, IME composition, and browser-reserved shortcuts before wiring visible `Kbd` or `ShortcutHint` affordances.
 - Added `ThemeToggle` plus static `.zdp-theme-toggle` utilities for light/dark mode controls while keeping initial theme selection, storage, system preference, and SSR paint decisions in consuming apps.
 - Added `TermTrigger`, `TermSheet`, and matching static `.zdp-term-*` utilities for click-open glossary explanations with right/bottom sheet placement, backdrop/Escape close, focus handling, and an explicit `data-zdp-ad-exclude` boundary while keeping glossary manifests, locale fallback, routing, monetization, and detail-page decisions in consuming apps.

@@ -235,7 +235,7 @@
                 </div>
               {/each}
             </div>
-            <div class="shortcut-policy" aria-label="Light shortcut guard examples">
+            <div class="shortcut-policy" role="group" aria-label="Light shortcut guard examples">
               <span>Typing</span>
               <Kbd label="off" ariaLabel="Global shortcuts off while typing" />
               <span>IME</span>
@@ -491,7 +491,7 @@
                 </div>
               {/each}
             </div>
-            <div class="shortcut-policy" aria-label="Dark shortcut guard examples">
+            <div class="shortcut-policy" role="group" aria-label="Dark shortcut guard examples">
               <span>Typing</span>
               <Kbd label="off" ariaLabel="Global shortcuts off while typing" />
               <span>IME</span>

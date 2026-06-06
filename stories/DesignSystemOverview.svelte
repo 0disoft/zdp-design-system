@@ -1089,8 +1089,8 @@
   .storybook-preview__header h1 {
     color: var(--zdp-color-ink-strong);
     font-family: var(--zdp-font-family-brand);
-    font-size: calc(var(--zdp-type-page-title-size) - 0.6rem);
-    font-weight: var(--zdp-font-weight-medium);
+    font-size: calc(var(--zdp-type-page-title-size) - 0.8rem);
+    font-weight: var(--zdp-font-weight-semibold);
     line-height: var(--zdp-type-page-title-line-height);
     margin: 0;
   }
@@ -1481,7 +1481,7 @@
     }
 
     .storybook-preview__header h1 {
-      font-size: calc(var(--zdp-type-page-title-compact-size) - 0.35rem);
+      font-size: calc(var(--zdp-type-page-title-compact-size) - 0.5rem);
     }
 
     .storybook-preview__grid,

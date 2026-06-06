@@ -594,7 +594,7 @@ for (const requiredText of [
   'zdp-brand-wordmark',
   '8ailors',
   'font-family: var(--zdp-font-family-brand)',
-  'font-weight: var(--zdp-font-weight-medium)',
+  'font-weight: var(--zdp-font-weight-semibold)',
   'type-specimen--script',
   '.type-specimen--script strong',
   'font-weight: var(--zdp-font-weight-bold)',
@@ -625,8 +625,8 @@ for (const requiredText of [
   '--zdp-control-focus-outline-width',
   '--zdp-i18n-overflow-wrap',
   'line-height: var(--zdp-type-title-line-height)',
-  'font-size: calc(var(--zdp-type-page-title-size) - 0.6rem)',
-  'font-size: calc(var(--zdp-type-page-title-compact-size) - 0.35rem)',
+  'font-size: calc(var(--zdp-type-page-title-size) - 0.8rem)',
+  'font-size: calc(var(--zdp-type-page-title-compact-size) - 0.5rem)',
   'line-height: var(--zdp-type-page-title-line-height)',
   'Search Design System',
   'CommandField',
@@ -1207,6 +1207,8 @@ for (const requiredText of [
   'IME',
   'Reserved',
   'shortcut-policy',
+  'role="group" aria-label="Light shortcut guard examples"',
+  'role="group" aria-label="Dark shortcut guard examples"',
   'Global shortcuts off while typing',
   'Global shortcuts off during IME composition',
   'text="새 항목"',
@@ -1763,7 +1765,10 @@ for (const requiredText of [
   'tabindex="0"',
   'class="zdp-code-block__code"',
   '.zdp-code-block',
+  '--zdp-code-block-surface: var(--zdp-color-surface-panel)',
+  '--zdp-code-block-surface: var(--zdp-color-surface-raised)',
   '.zdp-code-block__copy:focus-visible',
+  'background: var(--zdp-code-block-surface)',
   '.zdp-code-block__scroller:focus-visible',
   '.zdp-code-block[data-wrap="true"] .zdp-code-block__pre',
   'font-family: var(--zdp-font-family-mono)',
@@ -2315,7 +2320,6 @@ for (const requiredText of [
   '.zdp-table :global(thead th)',
   'overflow-x: auto',
   'overscroll-behavior-inline: contain',
-  'scrollbar-gutter: stable',
   'touch-action: pan-x pan-y',
   'overflow-wrap: normal',
   'white-space: nowrap',
@@ -2324,6 +2328,10 @@ for (const requiredText of [
   if (!table.includes(requiredText)) {
     failures.push(`Table component is missing ${requiredText}.`);
   }
+}
+
+if (/\.zdp-table-wrap\s*\{[\s\S]{0,360}scrollbar-gutter:\s*stable;/.test(table)) {
+  failures.push('Table component must not reserve a permanent scrollbar gutter beside header rows.');
 }
 
 assertNoDecorativeEffects(failures, 'Table component', table);
@@ -2874,20 +2882,29 @@ for (const requiredText of [
   'export let expanded = false',
   'export let disabled = false',
   'onopen: ((termId: string) => void) | null = null',
+  '$: resolvedControls = controls !== null && expanded ? controls : null',
   'data-term-id={termId}',
-  'aria-controls={controls ?? undefined}',
+  'aria-controls={resolvedControls ?? undefined}',
   'aria-expanded={controls === null ? undefined : expanded}',
   'aria-haspopup="dialog"',
   'onclick={handleClick}',
   '.zdp-term-trigger',
+  'background: transparent',
+  'padding: 0 0.2rem',
   '.zdp-term-trigger:hover:not(:disabled)',
+  'background: var(--zdp-color-accent-primary-soft)',
+  'color: inherit',
   '.zdp-term-trigger:focus-visible',
-  '-webkit-user-select: none',
-  'user-select: none'
+  'background: var(--zdp-color-focus-surface)',
+  'color: var(--zdp-color-focus-text)'
 ]) {
   if (!termTrigger.includes(requiredText)) {
     failures.push(`TermTrigger component is missing ${requiredText}.`);
   }
+}
+
+if (termTrigger.includes('-webkit-user-select: none') || termTrigger.includes('user-select: none')) {
+  failures.push('TermTrigger component must keep inline term text selectable.');
 }
 
 assertNoDecorativeEffects(failures, 'TermSheet component', termSheet);
@@ -2963,7 +2980,6 @@ for (const [surfaceLabel, source] of [
   ['Switch component', switchComponent],
   ['Tabs component tab', tabs],
   ['TermSheet component controls', termSheet],
-  ['TermTrigger component', termTrigger],
   ['ThemeToggle component', themeToggle],
   ['Toast component controls', toast],
   ['Tooltip component content', tooltip]
@@ -2976,7 +2992,8 @@ for (const [surfaceLabel, source] of [
   ['Table component readable cells', table],
   ['Toast component readable message', toast],
   ['IdentityChip component readable text', identityChip],
-  ['KeyValue component readable values', keyValue]
+  ['KeyValue component readable values', keyValue],
+  ['TermTrigger component readable inline text', termTrigger]
 ] as const) {
   assertNoReadableSelectionBlocking(surfaceLabel, source);
 }

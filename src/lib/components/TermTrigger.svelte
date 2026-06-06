@@ -6,6 +6,8 @@
   export let ariaLabel: string | null = null;
   export let onopen: ((termId: string) => void) | null = null;
 
+  $: resolvedControls = controls !== null && expanded ? controls : null;
+
   function handleClick(): void {
     if (disabled) {
       return;
@@ -20,7 +22,7 @@
   type="button"
   data-term-id={termId}
   aria-label={ariaLabel ?? undefined}
-  aria-controls={controls ?? undefined}
+  aria-controls={resolvedControls ?? undefined}
   aria-expanded={controls === null ? undefined : expanded}
   aria-haspopup="dialog"
   disabled={disabled}
@@ -36,27 +38,27 @@
     background: transparent;
     border: 0;
     border-block-end: var(--zdp-control-border-width) solid var(--zdp-color-focus-line);
-    border-radius: 0;
+    border-radius: var(--zdp-radius-sm);
     color: inherit;
     cursor: pointer;
     display: inline;
     font: inherit;
     line-height: inherit;
     margin: 0;
-    padding: 0;
+    padding: 0 0.2rem;
     text-align: inherit;
     text-decoration: none;
     text-underline-offset: 0.14em;
-    -webkit-user-select: none;
-    user-select: none;
   }
 
   .zdp-term-trigger:hover:not(:disabled) {
-    color: var(--zdp-color-ink-strong);
+    background: var(--zdp-color-accent-primary-soft);
+    color: inherit;
   }
 
   .zdp-term-trigger:focus-visible {
-    border-radius: var(--zdp-radius-sm);
+    background: var(--zdp-color-focus-surface);
+    color: var(--zdp-color-focus-text);
     outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
     outline-offset: var(--zdp-control-focus-outline-offset);
   }

@@ -56,8 +56,8 @@ const tokenVariables = collectCssVariableNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
 
-if (packageJson.version !== '0.41.12') {
-  failures.push('package.json version must be 0.41.12 for the shortcut policy contract.');
+if (packageJson.version !== '0.41.15') {
+  failures.push('package.json version must be 0.41.15 for the Storybook accessibility contract.');
 }
 
 if (tokenDocument.version !== '0.6.10') {

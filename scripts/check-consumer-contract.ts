@@ -40,8 +40,8 @@ if (failures.length > 0) {
 }
 
 function checkPackageSurface(packageJson: PackageJson): void {
-  if (packageJson.version !== '0.41.12') {
-    failures.push('package.json version must be 0.41.12 for the shortcut policy contract.');
+  if (packageJson.version !== '0.41.15') {
+    failures.push('package.json version must be 0.41.15 for the Storybook accessibility contract.');
   }
 
   if (packageJson.exports?.['./brand-fonts.css'] !== './src/styles/brand-fonts.css') {
@@ -139,7 +139,9 @@ function checkConsumerContractDocument(documentText: string): void {
     '.zdp-brand-lockup',
     '.zdp-brand-wordmark',
     '.zdp-surface-reset .zdp-brand-wordmark',
-    'font-weight: var(--zdp-font-weight-medium)',
+    'font-size: calc(var(--zdp-type-page-title-size) - 0.8rem)',
+    'font-size: calc(var(--zdp-type-page-title-compact-size) - 0.5rem)',
+    'font-weight: var(--zdp-font-weight-semibold)',
     '.zdp-share-dock',
     '.zdp-visually-hidden',
     '.zdp-avatar',
@@ -286,6 +288,7 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'Table, KeyValue, EmptyState',
     'SortHeader와 TableToolbar는 sortable column affordance',
     'TermTrigger와 TermSheet는 용어 설명',
+    'TermTrigger는 본문 안 의미 있는 단어',
     'stable `term_id`',
     'TermSheet에는 광고 slot을 넣지 않는다',
     'Dialog는 모달 레이어',

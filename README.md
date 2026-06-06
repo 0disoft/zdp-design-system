@@ -68,7 +68,7 @@ import 'zdp-design-system/styles.css';
 import 'zdp-design-system/locale-fonts.css';
 ```
 
-브랜드 워드마크를 렌더링하는 표면은 선택형 브랜드 폰트 CSS를 추가로 불러온다. 이 entry는 body나 일반 heading을 바꾸지 않고 `font.family.brand`, `.zdp-brand-lockup`, `.zdp-brand-wordmark`에 필요한 Playwrite AU VIC Guides font face만 제공한다. 워드마크 텍스트에는 `.zdp-brand-wordmark`를 직접 붙여 locale font override가 브랜드 스택을 덮지 않게 하고, 브랜드명이 너무 가늘게 보이지 않도록 `medium` weight를 쓴다.
+브랜드 워드마크를 렌더링하는 표면은 선택형 브랜드 폰트 CSS를 추가로 불러온다. 이 entry는 body나 일반 heading을 바꾸지 않고 `font.family.brand`, `.zdp-brand-lockup`, `.zdp-brand-wordmark`에 필요한 Playwrite AU VIC Guides font face만 제공한다. 워드마크 텍스트에는 `.zdp-brand-wordmark`를 직접 붙여 locale font override가 브랜드 스택을 덮지 않게 하고, 브랜드명이 너무 가늘게 보이지 않도록 `semibold` weight와 절제된 전용 크기를 쓴다.
 
 ```ts
 import 'zdp-design-system/styles.css';
@@ -108,7 +108,7 @@ import 'zdp-design-system/expressive-fonts.css';
 - SkipLink는 키보드 반복 탐색을 줄이는 첫 번째 탈출구다.
 - VisuallyHidden은 스크린리더에 필요한 텍스트를 시각적으로 숨길 때만 쓴다.
 - Table, KeyValue, EmptyState는 업무 데이터, 용어-값, 비어 있는 상태를 표현한다.
-- TermTrigger와 TermSheet는 용어 설명을 click-open sheet로 연결하며, TermSheet root에는 stable `term_id`와 `data-zdp-ad-exclude`를 남긴다. TermSheet에는 광고 slot을 넣지 않는다.
+- TermTrigger와 TermSheet는 용어 설명을 click-open sheet로 연결하며, TermTrigger는 sheet가 열린 동안에만 `aria-controls`를 연결한다. TermTrigger는 본문 안 의미 있는 단어이므로 hover에서 글자색을 바꾸지 않고 배경만 살짝 강조하며, 좌우 최소 padding과 focus token을 유지하고, 텍스트 선택을 막지 않는다. TermSheet root에는 stable `term_id`와 `data-zdp-ad-exclude`를 남긴다. TermSheet에는 광고 slot을 넣지 않는다.
 - Dialog는 모달 레이어이며 닫기, focus trap, `describedBy`에 id 배열, `errorMessageId`로 `aria-errormessage` 연결을 명확히 한다.
 - Page, Container, Section, PageHeader는 페이지 폭, 섹션 rhythm, 제목 구조를 정리한다.
 - Flutter는 Svelte 컴포넌트를 직접 쓰지 않고 `tokens/zdp.tokens.json`과 필요한 platform adapter를 통해 시각 토큰만 소비한다.

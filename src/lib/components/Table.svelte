@@ -29,7 +29,6 @@
     min-width: 0;
     overscroll-behavior-inline: contain;
     overflow-x: auto;
-    scrollbar-gutter: stable;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-x pan-y;
   }

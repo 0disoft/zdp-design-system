@@ -100,11 +100,12 @@
 - Icon은 glyph 크기, inline-flex 중앙정렬, svg sizing만 담당하며 라우팅, 저장, 삭제, 상태 의미, 권한 판단을 직접 수행하지 않는다.
 - Icon과 `.zdp-icon`은 그림자, 그라데이션, hover 상태를 만들지 않고 `control.glyphSm|Md`, `line-height: 1`, `text-align: center` 계약만 유지한다.
 - Table은 표 형식 정보의 native table, caption, row/column header, overflow wrapper만 담당하며 정렬, 필터, 데이터 로딩 판단을 직접 수행하지 않는다.
-- Table과 `.zdp-table`은 그림자, 그라데이션, sticky 장식 없이 border, spacing, typography, horizontal overflow 계약만 유지한다. 좁은 폭에서 table wrapper가 overflow를 소유하고 cell/header 텍스트가 한 글자씩 쪼개지지 않게 한다.
+- Table과 `.zdp-table`은 그림자, 그라데이션, sticky 장식 없이 border, spacing, typography, horizontal overflow 계약만 유지한다. 좁은 폭에서 table wrapper가 overflow를 소유하고 cell/header 텍스트가 한 글자씩 쪼개지지 않게 한다. Table wrapper는 header 오른쪽에 빈 gutter stripe를 만들 수 있는 상시 `scrollbar-gutter: stable`을 기본값으로 쓰지 않는다.
 - SortHeader와 TableToolbar는 sortable column affordance, 선택 행 액션 자리, 밀도 전환 표면만 담당하며 실제 정렬 계산, 선택 상태, 필터, 권한, 데이터 로딩 판단을 직접 수행하지 않는다.
 - SortHeader는 `aria-sort`를 직접 소유하지 않는다. 소비 화면은 정렬 중인 owning `th` 또는 columnheader에 `aria-sort`를 둔다.
 - SortHeader와 `.zdp-sort-header`, TableToolbar와 `.zdp-table-toolbar`는 그림자, 그라데이션, hover 이동 없이 focus-visible, wrapping, density control 배치 계약만 유지한다.
 - TermTrigger와 TermSheet는 용어 설명을 클릭으로 여는 trigger, right sheet, bottom sheet 표면만 담당하며 Escape 닫기, backdrop 닫기, Tab 순환, 이전 focus 복귀를 유지하고 glossary manifest, locale fallback, 공개 가능 여부, detail page 라우팅 판단을 직접 수행하지 않는다.
+- TermTrigger는 inline interactive text다. 본문 안 의미 있는 단어와 짧은 구문은 선택 가능해야 하므로 `user-select: none`을 쓰지 않고, hover는 배경만 강조하며 글자색은 주변 문장색을 상속한다. 좌우 padding은 너무 붙어 보이지 않게 최소 여백을 두고, focus-visible은 focus token으로만 강조한다.
 - TermSheet root에는 stable `term_id`를 `data-term-id`와 `data-zdp-term-id`로 남기고, placement와 sheet surface도 data attribute로 노출해 소비 앱, QA, linter가 같은 용어 identity를 확인할 수 있게 한다.
 - TermSheet에는 광고 slot을 넣지 않는다. root의 `data-zdp-ad-exclude`를 유지하고 광고가 필요한 긴 설명은 별도 detail page에서 처리한다.
 - Pagination은 목록 페이지 이동의 `nav`, ordered list, link/button, ellipsis, `aria-current="page"` 구조만 담당하며 전체 개수, 현재 페이지 상태, 페이지 크기, 쿼리 라우팅, 필터, 정렬, 데이터 로딩 판단을 직접 수행하지 않는다.

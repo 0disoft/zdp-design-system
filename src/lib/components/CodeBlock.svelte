@@ -108,6 +108,8 @@
 
 <style>
   .zdp-code-block {
+    --zdp-code-block-surface: var(--zdp-color-surface-panel);
+
     background: var(--zdp-color-surface-panel);
     border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
     border-radius: var(--zdp-control-radius);
@@ -121,6 +123,8 @@
   }
 
   .zdp-code-block--muted {
+    --zdp-code-block-surface: var(--zdp-color-surface-raised);
+
     background: var(--zdp-color-surface-raised);
   }
 
@@ -185,6 +189,7 @@
   }
 
   .zdp-code-block__scroller {
+    background: var(--zdp-code-block-surface);
     color: var(--zdp-color-ink-strong);
     min-width: 0;
     overscroll-behavior-inline: contain;
@@ -201,6 +206,7 @@
   }
 
   .zdp-code-block__pre {
+    background: var(--zdp-code-block-surface);
     font-family: var(--zdp-font-family-mono);
     font-size: var(--zdp-type-data-size);
     line-height: var(--zdp-font-line-height-normal);
@@ -211,6 +217,8 @@
   }
 
   .zdp-code-block__code {
+    background: var(--zdp-code-block-surface);
+    color: inherit;
     font: inherit;
   }
 
