@@ -38,6 +38,8 @@ const root = process.cwd();
 const packagePath = join(root, 'package.json');
 const tokenPath = join(root, 'tokens', 'zdp.tokens.json');
 const cssPath = join(root, 'src', 'styles', 'tokens.css');
+const brandFontsPath = join(root, 'src', 'styles', 'brand-fonts.css');
+const expressiveFontsPath = join(root, 'src', 'styles', 'expressive-fonts.css');
 const localeFontsPath = join(root, 'src', 'styles', 'locale-fonts.css');
 const publicEntryPath = join(root, 'src', 'lib', 'index.ts');
 const hexColorPattern = /^#[0-9a-fA-F]{6}$/;
@@ -46,18 +48,36 @@ const oklchColorPattern = /^oklch\([^)]+\)$/;
 const packageJson = await readPackageJson(packagePath);
 const tokenDocument = await readTokenDocument(tokenPath);
 const css = await readFile(cssPath, 'utf8');
+const brandFonts = await readFile(brandFontsPath, 'utf8');
+const expressiveFonts = await readFile(expressiveFontsPath, 'utf8');
 const localeFonts = await readFile(localeFontsPath, 'utf8');
 const publicEntry = await readFile(publicEntryPath, 'utf8');
 const tokenVariables = collectCssVariableNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
 
-if (packageJson.version !== '0.31.0') {
-  failures.push('package.json version must be 0.31.0 for the shared shortcut hint contract.');
+if (packageJson.version !== '0.41.12') {
+  failures.push('package.json version must be 0.41.12 for the shortcut policy contract.');
 }
 
-if (tokenDocument.version !== '0.6.7') {
-  failures.push('Token document version must be 0.6.7 for the moderated page title contract.');
+if (tokenDocument.version !== '0.6.10') {
+  failures.push('Token document version must be 0.6.10 for the expressive font token contract.');
+}
+
+if (packageJson.exports?.['./brand-fonts.css'] !== './src/styles/brand-fonts.css') {
+  failures.push('package.json must export ./brand-fonts.css.');
+}
+
+if (!packageJson.sideEffects?.includes('./src/styles/brand-fonts.css')) {
+  failures.push('package.json sideEffects must include ./src/styles/brand-fonts.css.');
+}
+
+if (packageJson.exports?.['./expressive-fonts.css'] !== './src/styles/expressive-fonts.css') {
+  failures.push('package.json must export ./expressive-fonts.css.');
+}
+
+if (!packageJson.sideEffects?.includes('./src/styles/expressive-fonts.css')) {
+  failures.push('package.json sideEffects must include ./src/styles/expressive-fonts.css.');
 }
 
 if (packageJson.exports?.['./locale-fonts.css'] !== './src/styles/locale-fonts.css') {
@@ -85,13 +105,18 @@ for (const { variable, token } of colorTokens) {
 }
 
 for (const component of [
+  'Accordion',
+  'Avatar',
   'Badge',
   'Breadcrumb',
   'Button',
   'Callout',
   'Checkbox',
+  'CodeBlock',
+  'CommandField',
   'ConfirmAction',
   'Dialog',
+  'Disclosure',
   'Divider',
   'ErrorText',
   'Field',
@@ -100,19 +125,34 @@ for (const component of [
   'Icon',
   'IconButton',
   'Inline',
+  'InlineCode',
   'Input',
+  'IdentityChip',
   'Kbd',
   'Label',
   'Link',
+  'Menu',
+  'Pagination',
   'Radio',
   'Select',
+  'SegmentedControl',
+  'Popover',
+  'Progress',
   'ShortcutHint',
+  'Skeleton',
   'SkipLink',
+  'SortHeader',
   'Stack',
+  'StatusToast',
+  'Spinner',
   'Surface',
   'Switch',
   'Tabs',
+  'Table',
   'Textarea',
+  'TableToolbar',
+  'Tooltip',
+  'Toast',
   'Toolbar',
   'VisuallyHidden'
 ]) {
@@ -141,13 +181,31 @@ if (
   failures.push('font.family.display must be a Pretendard Variable-first stack.');
 }
 
+if (
+  !tokenDocument.font.family.brand?.startsWith(
+    '"Playwrite AU VIC Guides", "Pretendard Variable", Pretendard, '
+  )
+) {
+  failures.push('font.family.brand must be a Playwrite AU VIC Guides-first wordmark stack.');
+}
+
+if (tokenDocument.font.family.display.includes('Playwrite AU VIC Guides')) {
+  failures.push('font.family.display must not use the brand wordmark font.');
+}
+
 for (const [familyName, expectedText] of Object.entries({
   latin: '"Manrope Variable", Manrope, "Inter Variable", Inter',
   korean: '"Pretendard Variable", Pretendard, "Apple SD Gothic Neo"',
   chinese: '"Noto Sans SC Variable", "Noto Sans SC", "PingFang SC"',
   devanagari: '"Noto Sans Devanagari Variable", "Noto Sans Devanagari", "Nirmala UI"',
   japanese: '"Noto Sans JP Variable", "Noto Sans JP", "Hiragino Sans"',
-  multiscript: '"Pretendard Variable", Pretendard, "Manrope Variable", Manrope'
+  multiscript: '"Pretendard Variable", Pretendard, "Manrope Variable", Manrope',
+  expressionScript: 'Tangerine, "Playwrite AU VIC Guides", cursive',
+  expressionInscription: '"Caesar Dressing", "Fredericka the Great", fantasy',
+  expressionSketch: '"Fredericka the Great", "Caesar Dressing", fantasy',
+  expressionEditorial: 'Merriweather, Copse, Cardo, Georgia',
+  expressionSans: '"Google Sans", Cabin, "Pretendard Variable", Pretendard',
+  expressionKeyboard: '"Libertinus Keyboard", "JetBrains Mono"'
 })) {
   if (!tokenDocument.font.family[familyName]?.includes(expectedText)) {
     failures.push(`font.family.${familyName} must include ${expectedText}.`);
@@ -166,6 +224,38 @@ if (!css.includes('font-family: var(--zdp-font-family-sans);')) {
   failures.push('Surface reset must use the sans font family by default.');
 }
 
+if (!css.includes('--zdp-font-family-brand: "Playwrite AU VIC Guides"')) {
+  failures.push('Token CSS must expose --zdp-font-family-brand.');
+}
+
+for (const requiredText of [
+  'font-family: "Playwrite AU VIC Guides"',
+  'font-display: swap',
+  'fontsource/fonts/playwrite-au-vic-guides@5.2.6/latin-400-normal.woff2',
+  'fontsource/fonts/playwrite-au-vic-guides@5.2.6/latin-400-normal.woff'
+]) {
+  if (!brandFonts.includes(requiredText)) {
+    failures.push(`Brand font CSS export is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  'https://fonts.googleapis.com/css2?',
+  'family=Cabin:ital,wght@0,400..700;1,400..700',
+  'family=Caesar+Dressing',
+  'family=Copse',
+  'family=Fredericka+the+Great',
+  'family=Google+Sans',
+  'family=Libertinus+Keyboard',
+  'family=Merriweather:ital,wght@0,400;0,700;1,400',
+  'family=Tangerine:wght@400;700',
+  'display=swap'
+]) {
+  if (!expressiveFonts.includes(requiredText)) {
+    failures.push(`Expressive font CSS export is missing ${requiredText}.`);
+  }
+}
+
 for (const requiredText of [
   '--zdp-font-family-latin',
   '--zdp-font-family-korean',
@@ -173,6 +263,12 @@ for (const requiredText of [
   '--zdp-font-family-devanagari',
   '--zdp-font-family-japanese',
   '--zdp-font-family-multiscript',
+  '--zdp-font-family-expression-script',
+  '--zdp-font-family-expression-inscription',
+  '--zdp-font-family-expression-sketch',
+  '--zdp-font-family-expression-editorial',
+  '--zdp-font-family-expression-sans',
+  '--zdp-font-family-expression-keyboard',
   '.zdp-surface-reset:lang(en)',
   '.zdp-surface-reset:lang(ko)',
   '.zdp-surface-reset:lang(zh)',
@@ -274,6 +370,15 @@ for (const [tokenName, expectedValue] of Object.entries({
 })) {
   if (tokenDocument.color.scrollbar?.[tokenName]?.hex !== expectedValue) {
     failures.push(`color.scrollbar.${tokenName}.hex must stay ${expectedValue}.`);
+  }
+}
+
+for (const [tokenName, expectedValue] of Object.entries({
+  surface: '#e7c97a',
+  text: '#1f160d'
+})) {
+  if (tokenDocument.color.selection?.[tokenName]?.hex !== expectedValue) {
+    failures.push(`color.selection.${tokenName}.hex must stay ${expectedValue}.`);
   }
 }
 

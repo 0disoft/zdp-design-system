@@ -44,6 +44,8 @@
     grid-template-columns: var(--zdp-control-choice-size) minmax(0, 1fr);
     line-height: var(--zdp-type-body-small-line-height);
     min-width: 0;
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   .zdp-choice__input {
@@ -65,6 +67,8 @@
     height: var(--zdp-control-choice-size);
     justify-content: center;
     margin-top: var(--zdp-control-switch-thumb-offset);
+    -webkit-user-select: none;
+    user-select: none;
     transition:
       background-color var(--zdp-motion-fast) ease,
       border-color var(--zdp-motion-fast) ease,

@@ -53,6 +53,8 @@
       background-color var(--zdp-motion-fast) ease,
       border-color var(--zdp-motion-fast) ease,
       color var(--zdp-motion-fast) ease;
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   .zdp-icon-button--sm {
@@ -134,6 +136,8 @@
     justify-content: center;
     line-height: 1;
     text-align: center;
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   .zdp-icon--sm {

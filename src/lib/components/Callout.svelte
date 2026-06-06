@@ -38,6 +38,8 @@
     border-radius: var(--zdp-radius-sm);
     display: block;
     height: calc(var(--zdp-type-body-small-size) * var(--zdp-type-body-small-line-height));
+    -webkit-user-select: none;
+    user-select: none;
     width: var(--zdp-space-2);
   }
 

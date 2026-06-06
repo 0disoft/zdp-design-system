@@ -196,6 +196,7 @@
     position: relative;
     text-align: start;
     touch-action: none;
+    -webkit-user-select: none;
     user-select: none;
     vertical-align: middle;
   }

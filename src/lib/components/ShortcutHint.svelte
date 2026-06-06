@@ -31,6 +31,8 @@
     gap: var(--zdp-space-1);
     line-height: 1;
     min-width: 0;
+    -webkit-user-select: none;
+    user-select: none;
     white-space: nowrap;
   }
 

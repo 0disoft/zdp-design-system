@@ -19,6 +19,8 @@
   --zdp-color-scrollbar-track: #f1e4cc;
   --zdp-color-scrollbar-thumb: #b89a6a;
   --zdp-color-scrollbar-thumb-hover: #8b6f45;
+  --zdp-color-selection-surface: #e7c97a;
+  --zdp-color-selection-text: #1f160d;
   --zdp-color-accent-primary: #d8c8ac;
   --zdp-color-accent-primary-strong: #b89a6a;
   --zdp-color-accent-primary-soft: #f1e4cc;
@@ -49,6 +51,13 @@
   --zdp-font-family-multiscript: "Pretendard Variable", Pretendard, "Manrope Variable", Manrope, "Inter Variable", Inter, "Noto Sans SC Variable", "Noto Sans SC", "Noto Sans JP Variable", "Noto Sans JP", "Noto Sans Devanagari Variable", "Noto Sans Devanagari", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "PingFang SC", "Microsoft YaHei", "Hiragino Sans", "Yu Gothic", "Meiryo", "Nirmala UI", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --zdp-font-family-serif: Cardo, Georgia, "Times New Roman", ui-serif, serif;
   --zdp-font-family-display: "Pretendard Variable", Pretendard, "Manrope Variable", Manrope, "Inter Variable", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --zdp-font-family-brand: "Playwrite AU VIC Guides", "Pretendard Variable", Pretendard, "Manrope Variable", Manrope, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --zdp-font-family-expression-script: Tangerine, "Playwrite AU VIC Guides", cursive;
+  --zdp-font-family-expression-inscription: "Caesar Dressing", "Fredericka the Great", fantasy;
+  --zdp-font-family-expression-sketch: "Fredericka the Great", "Caesar Dressing", fantasy;
+  --zdp-font-family-expression-editorial: Merriweather, Copse, Cardo, Georgia, "Times New Roman", ui-serif, serif;
+  --zdp-font-family-expression-sans: "Google Sans", Cabin, "Pretendard Variable", Pretendard, "Manrope Variable", Manrope, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --zdp-font-family-expression-keyboard: "Libertinus Keyboard", "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
   --zdp-font-family-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
   --zdp-font-size-xs: 0.875rem;
   --zdp-font-size-sm: 1rem;
@@ -133,6 +142,8 @@
   --zdp-color-scrollbar-track: #44321f;
   --zdp-color-scrollbar-thumb: #b89a6a;
   --zdp-color-scrollbar-thumb-hover: #d8c8ac;
+  --zdp-color-selection-surface: #e7c97a;
+  --zdp-color-selection-text: #1f160d;
   --zdp-color-accent-primary: #d8c8ac;
   --zdp-color-accent-primary-strong: #e7c97a;
   --zdp-color-accent-primary-soft: #68553a;
@@ -161,6 +172,8 @@
     --zdp-color-scrollbar-track: oklch(91% 0.045 82);
     --zdp-color-scrollbar-thumb: oklch(70% 0.08 76);
     --zdp-color-scrollbar-thumb-hover: oklch(55% 0.075 76);
+    --zdp-color-selection-surface: oklch(84% 0.1 86);
+    --zdp-color-selection-text: oklch(20% 0.035 70);
     --zdp-color-accent-primary: oklch(82% 0.045 82);
     --zdp-color-accent-primary-strong: oklch(70% 0.08 76);
     --zdp-color-accent-primary-soft: oklch(91% 0.045 82);
@@ -187,6 +200,8 @@
     --zdp-color-scrollbar-track: oklch(34% 0.05 70);
     --zdp-color-scrollbar-thumb: oklch(70% 0.08 76);
     --zdp-color-scrollbar-thumb-hover: oklch(82% 0.045 82);
+    --zdp-color-selection-surface: oklch(84% 0.1 86);
+    --zdp-color-selection-text: oklch(20% 0.035 70);
     --zdp-color-accent-primary: oklch(82% 0.045 82);
     --zdp-color-accent-primary-strong: oklch(84% 0.1 86);
     --zdp-color-accent-primary-soft: oklch(43% 0.055 76);
@@ -236,6 +251,12 @@
 .zdp-surface-reset::-webkit-scrollbar-thumb:hover,
 .zdp-surface-reset *::-webkit-scrollbar-thumb:hover {
   background-color: var(--zdp-color-scrollbar-thumb-hover);
+}
+
+.zdp-surface-reset::selection,
+.zdp-surface-reset *::selection {
+  background: var(--zdp-color-selection-surface);
+  color: var(--zdp-color-selection-text);
 }
 
 .zdp-surface-reset::-webkit-scrollbar-corner,

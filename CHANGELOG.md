@@ -2,6 +2,103 @@
 
 ## Unreleased
 
+- Added exported shortcut policy helpers for consumer-owned keydown dispatchers so apps can ignore text entry, IME composition, and browser-reserved shortcuts before wiring visible `Kbd` or `ShortcutHint` affordances.
+- Added `ThemeToggle` plus static `.zdp-theme-toggle` utilities for light/dark mode controls while keeping initial theme selection, storage, system preference, and SSR paint decisions in consuming apps.
+- Added `TermTrigger`, `TermSheet`, and matching static `.zdp-term-*` utilities for click-open glossary explanations with right/bottom sheet placement, backdrop/Escape close, focus handling, and an explicit `data-zdp-ad-exclude` boundary while keeping glossary manifests, locale fallback, routing, monetization, and detail-page decisions in consuming apps.
+- Strengthened `TermSheet` with stable term identity data attributes and more reliable focusable-element detection so glossary QA, linter checks, and keyboard focus behavior stay aligned.
+
+## 0.41.10
+
+- Fixed Storybook a11y addon findings for Data Display, Feedback, Interaction, and Overview by giving scrollable CodeBlock regions unique focusable labels, removing repeated toolbar/disclosure landmarks, using valid Toast live-region elements, and moving decorative sort/menu glyph text into CSS pseudo content.
+- Added optional `ariaLabel` passthrough on `Button` so icon-like Button usage can expose an accessible name without switching primitives.
+
+## 0.41.9
+
+- Added the optional `expressive-fonts.css` public export and `font.family.expression*` token stacks for Tangerine, Caesar Dressing, Google Sans, Merriweather, Fredericka the Great, Copse, Cabin, and Libertinus Keyboard without changing default product typography.
+
+## 0.41.8
+
+- Increased `.zdp-brand-wordmark` to the shared `medium` font weight so the Playwrite AU VIC Guides wordmark keeps a sturdier brand stroke in Storybook, static preview, and locale reset surfaces.
+
+## 0.41.7
+
+- Fixed `Pagination` horizontal scroll surfaces so focus outlines keep their top and bottom edges visible in Theme / Locale Stress and narrow overflow containers.
+
+## 0.41.6
+
+- Fixed `.zdp-brand-wordmark` so it keeps the Playwrite AU VIC Guides brand stack inside `.zdp-surface-reset` locale surfaces, including Korean pages where `:lang(ko)` switches normal content back to Pretendard.
+
+## 0.41.5
+
+- Fixed the Theme / Locale Stress story so table, pagination, and code examples keep fixed-format content on horizontal scroll surfaces instead of breaking Korean, Chinese, Hindi, and code strings into one-character columns.
+- Added touch-friendly horizontal overflow contracts for `Table`, `Pagination`, and `CodeBlock` while keeping readable table cells and code text selectable.
+- Updated `TableToolbar` wrapping so narrow embedded review frames collapse actions by component width instead of relying only on viewport media queries.
+
+## 0.41.4
+
+- Added the optional `brand-fonts.css` public export and `font.family.brand` token for the `8ailors` Playwrite AU VIC Guides wordmark without replacing Pretendard-first product typography.
+- Added `.zdp-brand-lockup`, `.zdp-brand-lockup__mark`, and `.zdp-brand-wordmark` utilities plus Storybook/static preview wordmark coverage.
+- Updated the token document to `0.6.9` and aligned token, preview, Storybook, package, and consumer checks with the brand font contract.
+
+## 0.41.3
+
+- Added scoped text-selection behavior utilities and control/decorative `user-select: none` coverage while keeping document, data, table cell, toast body, and code text selectable.
+- Documented the rule that drag surfaces should use `.zdp-user-select-dragging` only while drag is active, never as a broad page/root selection block.
+
+## 0.41.2
+
+- Added themed text selection tokens and shared `::selection` styling so dragged text inside ZDP surfaces uses the parchment selection surface instead of the browser-default blue highlight.
+- Updated the token document to `0.6.8` and aligned token, preview, Storybook, and consumer checks with the themed text selection contract.
+
+## 0.41.1
+
+- Added a `Design System/QA/Theme Locale Stress` Storybook surface for light/dark, narrow mobile width, long Korean, English, Chinese, and Hindi text, and forced focus-ring review without adding a new public component API.
+
+## 0.41.0
+
+- Added `InlineCode` and `CodeBlock` primitives plus static `.zdp-inline-code` and `.zdp-code-block` utilities for document, security, and architecture code snippets with optional copy feedback while keeping syntax highlighting, code execution, secret scanning, security classification, and command-palette behavior in consuming apps.
+
+## 0.40.0
+
+- Added `SortHeader` and `TableToolbar` primitives plus static `.zdp-sort-header` and `.zdp-table-toolbar` utilities for sortable column affordances, selected-row actions, and table density controls while keeping sorting, selection state, filtering, permissions, routing, and data loading in consuming apps.
+- Added Storybook, static preview, public export, package check, and consumer contract coverage for table-adjacent tool surfaces and `aria-sort` guidance.
+
+## 0.39.0
+
+- Added `CommandField` as the Svelte primitive for search, quick navigation, and command entry inputs while keeping search indexes, result ordering, command palettes, routing, keyboard dispatch, permissions, and server-state decisions in consuming apps.
+- Added Storybook, static preview, public export, package check, and consumer contract coverage for command field label, help/error id wiring, shortcut keycap, invalid, disabled, readonly, and focus-within states.
+
+## 0.38.0
+
+- Added `Avatar` and `IdentityChip` plus static `.zdp-avatar` and `.zdp-identity-chip` utilities for compact person, team, and organization identity surfaces while keeping account resolution, profile routing, presence, permissions, invitations, and server-state decisions in consuming apps.
+- Added Storybook, static preview, public export, package check, and consumer contract coverage for avatar image/initial and identity chip label/meta accessibility.
+
+## 0.37.0
+
+- Added `SegmentedControl` plus static `.zdp-segmented-control` utilities for compact single-choice view, mode, density, and period selection while keeping filter meaning, URL state, sorting, data loading, permissions, and server-state decisions in consuming apps.
+- Added Storybook, interaction probe, static preview, public export, package check, and consumer contract coverage for segmented control radiogroup/radio accessibility.
+
+## 0.36.0
+
+- Added `Accordion` and `Disclosure` primitives plus static `.zdp-disclosure` and `.zdp-accordion` utilities for folded guidance while keeping FAQ copy, settings values, item visibility, permissions, data fetch, and server-state decisions in consuming apps.
+- Added Storybook, interaction probe, static preview, public export, package check, and consumer contract coverage for accordion/disclosure trigger-panel accessibility.
+
+## 0.35.0
+
+- Added `Pagination` plus static `.zdp-pagination` utilities for page movement while keeping total counts, current page state, page-size decisions, query routing, filtering, sorting, data fetch, permissions, and server-state decisions in consuming apps.
+
+## 0.34.0
+
+- Added `Progress`, `Spinner`, and `Skeleton` primitives plus static utilities for loading, waiting, and layout reservation while keeping loading conditions, progress calculation, completion/failure transitions, data fetch, retry, permissions, and server-state decisions in consuming apps.
+
+## 0.33.0
+
+- Added `Toast` and `StatusToast` primitives plus static utilities for save, sync, failure, and warning feedback while keeping notification triggers, queue order, timers, dedupe, retry policy, permissions, and server-state decisions in consuming apps.
+
+## 0.32.0
+
+- Added `Popover` and `Menu` primitives plus static utilities for settings, more, filter, and account surfaces while keeping item visibility, permissions, routing, filter meaning, and account state decisions in consuming apps.
+- Added a reusable `Tooltip` primitive and moved ShareDock hints onto it so icon buttons, shortcut hints, and status affordances can share the same compact help surface.
 - Fixed remaining Overview a11y addon findings by keeping labelled Inline sections out of landmark navigation and hiding the decorative motif mark itself.
 - Fixed Overview story a11y addon findings by removing decorative ARIA labels from preview layout wrappers, avoiding repeated named `section` landmarks, and hiding the decorative motif strip.
 - Fixed a11y addon findings by using an SVG ConfirmAction thumb glyph, labelled shortcut groups, unique Tabs id prefixes, and roles for labelled div-based layout primitives.
@@ -228,6 +325,10 @@
 - Added an optional `zdp-design-system/locale-fonts.css` package export for explicit Latin, Chinese, and Devanagari webfont loading.
 - Kept the default `styles.css` path Pretendard-first so consumers can avoid heavy non-Korean locale font loads unless they opt in.
 - Strengthened package export and side-effect checks for the optional locale font CSS surface.
+
+## 0.6.9
+
+- Added `font.family.brand` for Playwrite AU VIC Guides wordmarks while keeping sans/display typography Pretendard-first.
 
 ## 0.6.8
 

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { zdpShareIcons, type ZdpShareDockItem } from '../share.ts';
+  import Tooltip from './Tooltip.svelte';
 
   export let items: readonly ZdpShareDockItem[] = [];
   export let ariaLabel = '공유';
@@ -17,6 +18,8 @@
 
     return item.target === '_blank' ? 'noopener noreferrer' : undefined;
   }
+
+  $: tooltipPlacement = (placement === 'side' || placement === 'rail' ? 'left' : 'top') as 'left' | 'top';
 </script>
 
 <aside
@@ -28,98 +31,100 @@
     {#each items as item (item.id)}
       {@const icon = zdpShareIcons[item.icon]}
       {#if item.href}
-        <a
-          class="zdp-share-action"
-          href={item.href}
-          target={item.target ?? undefined}
-          rel={resolvedRel(item)}
-          aria-label={item.ariaLabel ?? item.label}
-          data-share-id={item.id}
-          onclick={(event) => handleClick(event, item)}
-        >
-          <span class="zdp-share-action__mark" aria-hidden="true">
-            <svg class={`zdp-share-icon zdp-share-icon--${item.icon}`} viewBox={icon.viewBox} focusable="false">
-              {#each icon.lines ?? [] as line}
-                <line
-                  x1={line.x1}
-                  y1={line.y1}
-                  x2={line.x2}
-                  y2={line.y2}
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-width={line.strokeWidth ?? '2'}
-                />
-              {/each}
-              {#each icon.paths ?? [] as path}
-                <path
-                  d={path.d}
-                  fill={path.fill === false ? 'none' : 'currentColor'}
-                  stroke={path.stroke ? 'currentColor' : undefined}
-                  stroke-linecap={path.strokeLinecap}
-                  stroke-linejoin={path.strokeLinejoin}
-                  stroke-width={path.strokeWidth}
-                />
-              {/each}
-              {#each icon.circles ?? [] as circle}
-                <circle
-                  cx={circle.cx}
-                  cy={circle.cy}
-                  r={circle.r}
-                  fill={circle.fill === false || circle.stroke ? 'none' : 'currentColor'}
-                  stroke={circle.stroke ? 'currentColor' : undefined}
-                  stroke-width={circle.strokeWidth}
-                />
-              {/each}
-            </svg>
-          </span>
-          <span class="zdp-share-action__tooltip" aria-hidden="true">{item.label}</span>
-        </a>
+        <Tooltip text={item.label} placement={tooltipPlacement}>
+          <a
+            class="zdp-share-action"
+            href={item.href}
+            target={item.target ?? undefined}
+            rel={resolvedRel(item)}
+            aria-label={item.ariaLabel ?? item.label}
+            data-share-id={item.id}
+            onclick={(event) => handleClick(event, item)}
+          >
+            <span class="zdp-share-action__mark" aria-hidden="true">
+              <svg class={`zdp-share-icon zdp-share-icon--${item.icon}`} viewBox={icon.viewBox} focusable="false">
+                {#each icon.lines ?? [] as line}
+                  <line
+                    x1={line.x1}
+                    y1={line.y1}
+                    x2={line.x2}
+                    y2={line.y2}
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-width={line.strokeWidth ?? '2'}
+                  />
+                {/each}
+                {#each icon.paths ?? [] as path}
+                  <path
+                    d={path.d}
+                    fill={path.fill === false ? 'none' : 'currentColor'}
+                    stroke={path.stroke ? 'currentColor' : undefined}
+                    stroke-linecap={path.strokeLinecap}
+                    stroke-linejoin={path.strokeLinejoin}
+                    stroke-width={path.strokeWidth}
+                  />
+                {/each}
+                {#each icon.circles ?? [] as circle}
+                  <circle
+                    cx={circle.cx}
+                    cy={circle.cy}
+                    r={circle.r}
+                    fill={circle.fill === false || circle.stroke ? 'none' : 'currentColor'}
+                    stroke={circle.stroke ? 'currentColor' : undefined}
+                    stroke-width={circle.strokeWidth}
+                  />
+                {/each}
+              </svg>
+            </span>
+          </a>
+        </Tooltip>
       {:else}
-        <button
-          class="zdp-share-action"
-          type="button"
-          disabled={item.disabled}
-          aria-label={item.ariaLabel ?? item.label}
-          data-share-id={item.id}
-          onclick={(event) => handleClick(event, item)}
-        >
-          <span class="zdp-share-action__mark" aria-hidden="true">
-            <svg class={`zdp-share-icon zdp-share-icon--${item.icon}`} viewBox={icon.viewBox} focusable="false">
-              {#each icon.lines ?? [] as line}
-                <line
-                  x1={line.x1}
-                  y1={line.y1}
-                  x2={line.x2}
-                  y2={line.y2}
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-width={line.strokeWidth ?? '2'}
-                />
-              {/each}
-              {#each icon.paths ?? [] as path}
-                <path
-                  d={path.d}
-                  fill={path.fill === false ? 'none' : 'currentColor'}
-                  stroke={path.stroke ? 'currentColor' : undefined}
-                  stroke-linecap={path.strokeLinecap}
-                  stroke-linejoin={path.strokeLinejoin}
-                  stroke-width={path.strokeWidth}
-                />
-              {/each}
-              {#each icon.circles ?? [] as circle}
-                <circle
-                  cx={circle.cx}
-                  cy={circle.cy}
-                  r={circle.r}
-                  fill={circle.fill === false || circle.stroke ? 'none' : 'currentColor'}
-                  stroke={circle.stroke ? 'currentColor' : undefined}
-                  stroke-width={circle.strokeWidth}
-                />
-              {/each}
-            </svg>
-          </span>
-          <span class="zdp-share-action__tooltip" aria-hidden="true">{item.label}</span>
-        </button>
+        <Tooltip text={item.label} placement={tooltipPlacement} disabled={item.disabled}>
+          <button
+            class="zdp-share-action"
+            type="button"
+            disabled={item.disabled}
+            aria-label={item.ariaLabel ?? item.label}
+            data-share-id={item.id}
+            onclick={(event) => handleClick(event, item)}
+          >
+            <span class="zdp-share-action__mark" aria-hidden="true">
+              <svg class={`zdp-share-icon zdp-share-icon--${item.icon}`} viewBox={icon.viewBox} focusable="false">
+                {#each icon.lines ?? [] as line}
+                  <line
+                    x1={line.x1}
+                    y1={line.y1}
+                    x2={line.x2}
+                    y2={line.y2}
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-width={line.strokeWidth ?? '2'}
+                  />
+                {/each}
+                {#each icon.paths ?? [] as path}
+                  <path
+                    d={path.d}
+                    fill={path.fill === false ? 'none' : 'currentColor'}
+                    stroke={path.stroke ? 'currentColor' : undefined}
+                    stroke-linecap={path.strokeLinecap}
+                    stroke-linejoin={path.strokeLinejoin}
+                    stroke-width={path.strokeWidth}
+                  />
+                {/each}
+                {#each icon.circles ?? [] as circle}
+                  <circle
+                    cx={circle.cx}
+                    cy={circle.cy}
+                    r={circle.r}
+                    fill={circle.fill === false || circle.stroke ? 'none' : 'currentColor'}
+                    stroke={circle.stroke ? 'currentColor' : undefined}
+                    stroke-width={circle.strokeWidth}
+                  />
+                {/each}
+              </svg>
+            </span>
+          </button>
+        </Tooltip>
       {/if}
     {/each}
   </div>
@@ -161,8 +166,8 @@
     border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
     border-radius: var(--zdp-radius-lg);
     display: grid;
-    gap: var(--zdp-space-2);
-    padding: var(--zdp-space-2);
+    gap: var(--zdp-space-1);
+    padding: var(--zdp-space-1);
   }
 
   .zdp-share-dock--bottom .zdp-share-dock__list,
@@ -174,8 +179,8 @@
 
   .zdp-share-action {
     align-items: center;
-    background: var(--zdp-color-surface-panel);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+    background: transparent;
+    border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-muted);
@@ -189,13 +194,15 @@
       background-color var(--zdp-motion-fast) ease,
       border-color var(--zdp-motion-fast) ease,
       color var(--zdp-motion-fast) ease;
+    -webkit-user-select: none;
+    user-select: none;
     width: var(--zdp-control-icon-sm);
   }
 
   .zdp-share-action:hover:not(:disabled),
   .zdp-share-action:focus-visible {
     background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    border-color: var(--zdp-color-line-subtle);
     color: var(--zdp-color-ink-strong);
   }
 
@@ -222,43 +229,13 @@
     flex: 0 0 auto;
     justify-content: center;
     line-height: 1;
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   .zdp-share-icon {
     display: block;
     overflow: visible;
-  }
-
-  .zdp-share-action__tooltip {
-    background: var(--zdp-color-ink-strong);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
-    border-radius: var(--zdp-radius-xs);
-    color: var(--zdp-color-surface-panel);
-    font-size: var(--zdp-type-caption-size);
-    line-height: var(--zdp-type-caption-line-height);
-    opacity: 0;
-    padding: var(--zdp-space-1) var(--zdp-space-2);
-    pointer-events: none;
-    position: absolute;
-    white-space: nowrap;
-    z-index: 1;
-  }
-
-  .zdp-share-dock--side .zdp-share-action__tooltip,
-  .zdp-share-dock--rail .zdp-share-action__tooltip {
-    right: calc(100% + var(--zdp-space-2));
-    top: 0;
-  }
-
-  .zdp-share-dock--bottom .zdp-share-action__tooltip,
-  .zdp-share-dock--inline .zdp-share-action__tooltip {
-    bottom: calc(100% + var(--zdp-space-2));
-    left: 0;
-  }
-
-  .zdp-share-action:hover .zdp-share-action__tooltip,
-  .zdp-share-action:focus-visible .zdp-share-action__tooltip {
-    opacity: 1;
   }
 
   @media (max-width: 57.5rem) {
@@ -276,19 +253,38 @@
       max-inline-size: calc(100vw - var(--zdp-space-6));
     }
 
+    .zdp-share-dock--rail {
+      inline-size: 100%;
+    }
+
     .zdp-share-dock--rail .zdp-share-dock__list {
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-start;
+      justify-content: center;
     }
 
-    .zdp-share-dock--side .zdp-share-action__tooltip,
-    .zdp-share-dock--rail .zdp-share-action__tooltip {
-      bottom: calc(100% + var(--zdp-space-2));
-      left: 0;
-      right: auto;
-      top: auto;
+    :global(.zdp-share-dock--side .zdp-tooltip.zdp-tooltip--left),
+    :global(.zdp-share-dock--rail .zdp-tooltip.zdp-tooltip--left) {
+      --zdp-tooltip-bottom: calc(100% + var(--zdp-space-2));
+      --zdp-tooltip-left: 50%;
+      --zdp-tooltip-right: auto;
+      --zdp-tooltip-top: auto;
+      --zdp-tooltip-transform: translateX(-50%);
     }
+
+    :global(.zdp-share-dock--side .zdp-tooltip:first-child),
+    :global(.zdp-share-dock--rail .zdp-tooltip:first-child) {
+      --zdp-tooltip-left: 0;
+      --zdp-tooltip-transform: none;
+    }
+
+    :global(.zdp-share-dock--side .zdp-tooltip:last-child),
+    :global(.zdp-share-dock--rail .zdp-tooltip:last-child) {
+      --zdp-tooltip-left: auto;
+      --zdp-tooltip-right: 0;
+      --zdp-tooltip-transform: none;
+    }
+
   }
 
   @media (max-width: 42rem) {

@@ -1,12 +1,23 @@
 <script lang="ts">
+  import Avatar from '../src/lib/components/Avatar.svelte';
   import Badge from '../src/lib/components/Badge.svelte';
   import Button from '../src/lib/components/Button.svelte';
+  import CodeBlock from '../src/lib/components/CodeBlock.svelte';
   import EmptyState from '../src/lib/components/EmptyState.svelte';
+  import IdentityChip from '../src/lib/components/IdentityChip.svelte';
   import Inline from '../src/lib/components/Inline.svelte';
+  import InlineCode from '../src/lib/components/InlineCode.svelte';
   import KeyValue from '../src/lib/components/KeyValue.svelte';
   import Stack from '../src/lib/components/Stack.svelte';
+  import SortHeader from '../src/lib/components/SortHeader.svelte';
   import Surface from '../src/lib/components/Surface.svelte';
   import Table from '../src/lib/components/Table.svelte';
+  import TableToolbar from '../src/lib/components/TableToolbar.svelte';
+
+  const lightCodeExample =
+    "const requiredEvidence = ['owner', 'budget', 'audit-log'];\nconst canPromote = requiredEvidence.every((item) => status[item] === 'ready');";
+  const darkCodeExample =
+    "const policy = {\n  secrets: 'server-only',\n  logs: 'reviewed-before-release'\n};";
 </script>
 
 <main class="component-story zdp-surface-reset" lang="ko">
@@ -25,11 +36,30 @@
               <h3 id="data-light-table-title">보안 점검</h3>
               <Badge tone="success">정상</Badge>
             </div>
+            <TableToolbar
+              title="점검 목록"
+              summary="권한과 감사 항목을 확인합니다."
+              selectedCount={2}
+              density="compact"
+              densityLabel="표 밀도"
+              labelledBy="data-light-table-title"
+            >
+              <svelte:fragment slot="selection-actions">
+                <Button variant="secondary">선택 해제</Button>
+              </svelte:fragment>
+              <svelte:fragment slot="actions">
+                <Button>새로 고침</Button>
+              </svelte:fragment>
+            </TableToolbar>
             <Table caption="보안 점검 목록" labelledBy="data-light-table-title" density="compact">
               <thead>
                 <tr>
-                  <th scope="col">항목</th>
-                  <th scope="col">상태</th>
+                  <th scope="col" aria-sort="ascending">
+                    <SortHeader label="항목" direction="ascending" />
+                  </th>
+                  <th scope="col">
+                    <SortHeader label="상태" direction="none" />
+                  </th>
                   <th scope="col">다음 확인</th>
                 </tr>
               </thead>
@@ -56,6 +86,23 @@
 
         <Surface padding="lg">
           <Stack gap="md">
+            <h3 id="data-light-identity-title">담당자</h3>
+            <Inline gap="sm" align="center">
+              <Avatar label="홍길동" initials="홍" />
+              <Avatar label="플랫폼 팀" initials="플" tone="primary" />
+              <IdentityChip
+                label="홍길동"
+                description="검토 담당"
+                initials="홍"
+                href="#data-light-key-value-title"
+                ariaCurrent="page"
+              />
+            </Inline>
+          </Stack>
+        </Surface>
+
+        <Surface padding="lg">
+          <Stack gap="md">
             <h3 id="data-light-key-value-title">원장 경계</h3>
             <KeyValue columns="two" labelledBy="data-light-key-value-title">
               <dt>소유 저장소</dt>
@@ -65,6 +112,21 @@
               <dt>승격 조건</dt>
               <dd>예산, 소유자, 운영 증거가 모두 확인된 뒤 이동</dd>
             </KeyValue>
+          </Stack>
+        </Surface>
+
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3 id="data-light-code-title">문서 조각</h3>
+            <p class="story-code-copy">
+              배포 값은 <InlineCode text="readonly" /> 상태로 남깁니다.
+            </p>
+            <CodeBlock
+              label="승격 조건"
+              language="ts"
+              code={lightCodeExample}
+              labelledBy="data-light-code-title"
+            />
           </Stack>
         </Surface>
 
@@ -87,11 +149,30 @@
               <h3 id="data-dark-table-title">보안 점검</h3>
               <Badge tone="warning">대기</Badge>
             </div>
+            <TableToolbar
+              title="점검 목록"
+              summary="대기 항목을 먼저 확인합니다."
+              selectedCount={1}
+              density="default"
+              densityLabel="표 밀도"
+              labelledBy="data-dark-table-title"
+            >
+              <svelte:fragment slot="selection-actions">
+                <Button variant="secondary">보류</Button>
+              </svelte:fragment>
+              <svelte:fragment slot="actions">
+                <Button>검토</Button>
+              </svelte:fragment>
+            </TableToolbar>
             <Table caption="보안 점검 목록" labelledBy="data-dark-table-title" density="compact">
               <thead>
                 <tr>
-                  <th scope="col">항목</th>
-                  <th scope="col">상태</th>
+                  <th scope="col">
+                    <SortHeader label="항목" direction="none" />
+                  </th>
+                  <th scope="col" aria-sort="descending">
+                    <SortHeader label="상태" direction="descending" />
+                  </th>
                   <th scope="col">다음 확인</th>
                 </tr>
               </thead>
@@ -118,6 +199,23 @@
 
         <Surface padding="lg">
           <Stack gap="md">
+            <h3 id="data-dark-identity-title">담당자</h3>
+            <Inline gap="sm" align="center">
+              <Avatar label="김하늘" initials="김" />
+              <Avatar label="운영 팀" initials="운" tone="primary" />
+              <IdentityChip
+                label="김하늘"
+                description="운영 담당"
+                initials="김"
+                href="#data-dark-key-value-title"
+                ariaCurrent="page"
+              />
+            </Inline>
+          </Stack>
+        </Surface>
+
+        <Surface padding="lg">
+          <Stack gap="md">
             <h3 id="data-dark-key-value-title">원장 경계</h3>
             <KeyValue columns="two" labelledBy="data-dark-key-value-title">
               <dt>소유 저장소</dt>
@@ -127,6 +225,23 @@
               <dt>승격 조건</dt>
               <dd>예산, 소유자, 운영 증거가 모두 확인된 뒤 이동</dd>
             </KeyValue>
+          </Stack>
+        </Surface>
+
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3 id="data-dark-code-title">문서 조각</h3>
+            <p class="story-code-copy">
+              비밀값은 <InlineCode text="server-only" /> 경계에 둡니다.
+            </p>
+            <CodeBlock
+              label="보안 기준"
+              language="ts"
+              code={darkCodeExample}
+              tone="muted"
+              wrap
+              labelledBy="data-dark-code-title"
+            />
           </Stack>
         </Surface>
 
@@ -218,6 +333,13 @@
     gap: var(--zdp-space-2);
     justify-content: space-between;
     min-width: 0;
+  }
+
+  .story-code-copy {
+    color: var(--zdp-color-ink-muted);
+    font-size: var(--zdp-type-body-small-size);
+    line-height: var(--zdp-type-body-small-line-height);
+    margin: 0;
   }
 
   @media (max-width: 860px) {

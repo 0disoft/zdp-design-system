@@ -35,6 +35,8 @@
     min-width: 1.45em;
     padding: 0 0.35em;
     place-items: center;
+    -webkit-user-select: none;
+    user-select: none;
     vertical-align: middle;
     white-space: nowrap;
   }

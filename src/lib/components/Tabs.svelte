@@ -161,6 +161,8 @@
       background-color var(--zdp-motion-fast) ease,
       border-color var(--zdp-motion-fast) ease,
       color var(--zdp-motion-fast) ease;
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   .zdp-tabs__tab:hover:not(:disabled) {

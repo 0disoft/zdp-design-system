@@ -1,14 +1,61 @@
 <script lang="ts">
+  import Accordion from '../src/lib/components/Accordion.svelte';
   import Button from '../src/lib/components/Button.svelte';
   import ConfirmAction from '../src/lib/components/ConfirmAction.svelte';
+  import Disclosure from '../src/lib/components/Disclosure.svelte';
   import Dialog from '../src/lib/components/Dialog.svelte';
+  import Menu from '../src/lib/components/Menu.svelte';
+  import SegmentedControl from '../src/lib/components/SegmentedControl.svelte';
   import Stack from '../src/lib/components/Stack.svelte';
   import Surface from '../src/lib/components/Surface.svelte';
   import Tabs from '../src/lib/components/Tabs.svelte';
+  import TermSheet from '../src/lib/components/TermSheet.svelte';
+  import TermTrigger from '../src/lib/components/TermTrigger.svelte';
+  import type { ZdpAccordionItem } from '../src/lib/disclosure.ts';
+  import type { ZdpMenuItem } from '../src/lib/menu.ts';
+  import type { ZdpSegmentedControlItem } from '../src/lib/segmented.ts';
+  import type { ZdpTermSheetTerm } from '../src/lib/term.ts';
 
   let selectedId = 'overview';
   let dialogOpen = false;
+  let disclosureState = '닫힘';
+  let accordionState = '선택 범위';
+  let segmentedState = '목록';
+  let menuSelection = '선택 없음';
+  let termOpen = false;
   let confirmCount = 0;
+  const menuItems: readonly ZdpMenuItem[] = [
+    { id: 'settings', label: '설정 열기' },
+    { id: 'filter', label: '필터 저장' },
+    { id: 'archive', label: '보관함 이동', disabled: true }
+  ];
+  const accordionItems: readonly ZdpAccordionItem[] = [
+    {
+      id: 'interaction-probe-scope',
+      title: '범위',
+      content: '화면 흐름은 소비 앱에서 정합니다.',
+      open: true
+    },
+    {
+      id: 'interaction-probe-owner',
+      title: '소유자',
+      content: '권한과 데이터 판단은 제품 저장소가 연결합니다.'
+    }
+  ];
+  const segmentedItems: readonly ZdpSegmentedControlItem[] = [
+    { id: 'list', label: '목록' },
+    { id: 'cards', label: '카드' },
+    { id: 'summary', label: '요약' },
+    { id: 'locked', label: '잠김', disabled: true }
+  ];
+  const termExample: ZdpTermSheetTerm = {
+    id: 'operational-resilience',
+    label: '운영 복원력',
+    short: '장애가 나도 서비스가 완전히 멈추지 않게 버티고 회복하는 능력입니다.',
+    long: '복구 절차, fallback, 관측 기준을 함께 갖춰야 합니다.',
+    example: '읽기 화면은 유지하고 쓰기 작업만 잠시 막습니다.',
+    relatedTerms: [{ id: 'fallback', label: 'fallback' }]
+  };
 </script>
 
 <main class="interaction-probe zdp-surface-reset" lang="ko">
@@ -59,6 +106,82 @@
               <Button variant="secondary" onclick={() => (dialogOpen = false)}>닫기</Button>
             </svelte:fragment>
           </Dialog>
+        </Stack>
+      </section>
+
+      <section aria-labelledby="interaction-probe-disclosure-title">
+        <Stack gap="md">
+          <h2 id="interaction-probe-disclosure-title">Accordion</h2>
+          <Disclosure
+            id="interaction-probe-disclosure"
+            title="검토 기준"
+            headingLevel={3}
+            onOpenChange={(open) => (disclosureState = open ? '열림' : '닫힘')}
+          >
+            <p>필요한 기준만 펼쳐서 확인합니다.</p>
+          </Disclosure>
+          <p id="interaction-probe-disclosure-state">{disclosureState}</p>
+          <Accordion
+            ariaLabel="검토 안내"
+            items={accordionItems}
+            mode="single"
+            headingLevel={3}
+            onOpenChange={(item) => (accordionState = `선택 ${item.title}`)}
+          />
+          <p id="interaction-probe-accordion-state">{accordionState}</p>
+        </Stack>
+      </section>
+
+      <section aria-labelledby="interaction-probe-segmented-title">
+        <Stack gap="md">
+          <h2 id="interaction-probe-segmented-title">Segmented Control</h2>
+          <SegmentedControl
+            ariaLabel="보기 방식"
+            idPrefix="interaction-probe-segmented"
+            items={segmentedItems}
+            selectedId="list"
+            onChange={(_, item) => (segmentedState = item.label)}
+          />
+          <p id="interaction-probe-segmented-state">보기 {segmentedState}</p>
+        </Stack>
+      </section>
+
+      <section aria-labelledby="interaction-probe-menu-title">
+        <Stack gap="md">
+          <h2 id="interaction-probe-menu-title">Menu</h2>
+          <Menu
+            idPrefix="interaction-probe-menu"
+            triggerLabel="더보기"
+            items={menuItems}
+            onSelect={(_, item) => (menuSelection = item.label)}
+          >
+            <svelte:fragment slot="trigger">더보기</svelte:fragment>
+          </Menu>
+          <p id="interaction-probe-menu-state">{menuSelection}</p>
+        </Stack>
+      </section>
+
+      <section aria-labelledby="interaction-probe-term-title">
+        <Stack gap="md">
+          <h2 id="interaction-probe-term-title">Term Sheet</h2>
+          <p>
+            <TermTrigger
+              termId={termExample.id}
+              controls="interaction-probe-term-sheet"
+              expanded={termOpen}
+              onopen={() => (termOpen = true)}
+            >
+              운영 복원력
+            </TermTrigger>
+          </p>
+          <p id="interaction-probe-term-state">{termOpen ? '용어 열림' : '용어 닫힘'}</p>
+          <TermSheet
+            open={termOpen}
+            id="interaction-probe-term-sheet"
+            term={termExample}
+            placement="right"
+            onClose={() => (termOpen = false)}
+          />
         </Stack>
       </section>
 

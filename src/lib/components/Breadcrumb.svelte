@@ -91,6 +91,7 @@
 
   .zdp-breadcrumb__separator {
     color: var(--zdp-color-line-strong);
+    -webkit-user-select: none;
     user-select: none;
   }
 </style>

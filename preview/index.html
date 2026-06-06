@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ZDP Design System Preview</title>
     <link rel="stylesheet" href="../src/styles/index.css" />
+    <link rel="stylesheet" href="../src/styles/brand-fonts.css" />
+    <link rel="stylesheet" href="../src/styles/expressive-fonts.css" />
     <style>
       body {
         background: var(--zdp-color-surface-canvas);
@@ -40,8 +42,8 @@
 
       .preview-title {
         color: var(--zdp-color-ink-strong);
-        font-family: var(--zdp-font-family-display);
-        font-size: var(--zdp-type-page-title-size);
+        font-family: var(--zdp-font-family-brand);
+        font-size: calc(var(--zdp-type-page-title-size) - 0.6rem);
         font-weight: var(--zdp-font-weight-medium);
         line-height: var(--zdp-type-page-title-line-height);
         margin: 0;
@@ -58,6 +60,62 @@
         display: grid;
         gap: var(--zdp-space-6);
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .type-specimens {
+        display: grid;
+        gap: var(--zdp-space-3);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .type-specimen {
+        background: var(--zdp-color-surface-panel);
+        border: 1px solid var(--zdp-color-line-subtle);
+        border-radius: var(--zdp-radius-md);
+        color: var(--zdp-color-ink-strong);
+        display: grid;
+        gap: var(--zdp-space-1);
+        min-width: 0;
+        padding: var(--zdp-space-3);
+      }
+
+      .type-specimen small {
+        color: var(--zdp-color-ink-muted);
+        font-family: var(--zdp-font-family-sans);
+        font-size: var(--zdp-font-size-xs);
+      }
+
+      .type-specimen strong {
+        font-size: var(--zdp-font-size-xl);
+        font-weight: var(--zdp-font-weight-regular);
+        line-height: var(--zdp-font-line-height-tight);
+      }
+
+      .type-specimen--script strong {
+        font-family: var(--zdp-font-family-expression-script);
+        font-size: calc(var(--zdp-font-size-xl) * 1.35);
+        font-weight: var(--zdp-font-weight-bold);
+      }
+
+      .type-specimen--inscription strong {
+        font-family: var(--zdp-font-family-expression-inscription);
+      }
+
+      .type-specimen--sketch strong {
+        font-family: var(--zdp-font-family-expression-sketch);
+      }
+
+      .type-specimen--editorial strong {
+        font-family: var(--zdp-font-family-expression-editorial);
+      }
+
+      .type-specimen--sans strong {
+        font-family: var(--zdp-font-family-expression-sans);
+        font-weight: var(--zdp-font-weight-medium);
+      }
+
+      .type-specimen--keyboard strong {
+        font-family: var(--zdp-font-family-expression-keyboard);
       }
 
       .layout-preview {
@@ -217,6 +275,19 @@
         max-width: 34rem;
       }
 
+      .loading-preview {
+        display: grid;
+        gap: var(--zdp-space-3);
+        min-width: 0;
+      }
+
+      .loading-title {
+        color: var(--zdp-color-ink-strong);
+        font-size: var(--zdp-type-body-small-size);
+        font-weight: var(--zdp-font-weight-medium);
+        line-height: var(--zdp-type-body-small-line-height);
+      }
+
       .badge-row {
         max-width: 100%;
       }
@@ -351,6 +422,7 @@
         .preview-header,
         .preview-stage,
         .foundation-strip,
+        .type-specimens,
         .surface-grid {
           grid-template-columns: 1fr;
         }
@@ -361,7 +433,7 @@
         }
 
         .preview-title {
-          font-size: var(--zdp-type-page-title-compact-size);
+          font-size: calc(var(--zdp-type-page-title-compact-size) - 0.35rem);
         }
       }
 
@@ -378,11 +450,46 @@
       <header class="preview-header">
         <div>
           <p class="preview-eyebrow">Sunlit parchment kit</p>
-          <h1 class="preview-title">ZDP Design System</h1>
+          <div class="zdp-brand-lockup">
+            <span class="zdp-brand-lockup__mark" aria-hidden="true">
+              <svg viewBox="0 0 48 48" fill="none" focusable="false">
+                <path d="M24 5v29" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                <path d="M24 7 12 31h12Z" stroke="currentColor" stroke-width="3" stroke-linejoin="round" />
+                <path d="M25 13v18h13Z" stroke="currentColor" stroke-width="3" stroke-linejoin="round" />
+                <path d="M10 37h28" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                <path d="M15 42h18" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity="0.48" />
+              </svg>
+            </span>
+            <h1 class="preview-title zdp-brand-wordmark">8ailors</h1>
+          </div>
           <p class="preview-meta">Bright town-square surfaces, soft heraldic color, and quiet working controls.</p>
         </div>
         <a class="zdp-button zdp-button--secondary zdp-button--md" href="../README.md">README</a>
       </header>
+
+      <section class="zdp-section zdp-section--spacing-md zdp-section--panel" aria-labelledby="expressive-fonts-title">
+        <div class="zdp-container zdp-container--lg zdp-container--padding-md">
+          <header class="zdp-page-header" aria-labelledby="expressive-fonts-title">
+            <div class="zdp-page-header__body">
+              <span class="layout-preview__eyebrow">Type</span>
+              <div class="zdp-page-header__title">
+                <h2 id="expressive-fonts-title">표현용 폰트</h2>
+              </div>
+              <div class="zdp-page-header__summary">
+                <p>필요한 화면에서만 불러와 쓰는 제목, 캠페인, 짧은 안내용 글꼴 묶음.</p>
+              </div>
+            </div>
+          </header>
+          <div class="type-specimens" role="group" aria-label="표현용 폰트 샘플">
+            <span class="type-specimen type-specimen--script"><small>Script</small><strong>Sunlit routes</strong></span>
+            <span class="type-specimen type-specimen--inscription"><small>Inscription</small><strong>Gate Mark</strong></span>
+            <span class="type-specimen type-specimen--sketch"><small>Sketch</small><strong>Field Notes</strong></span>
+            <span class="type-specimen type-specimen--editorial"><small>Editorial</small><strong>Quiet policy</strong></span>
+            <span class="type-specimen type-specimen--sans"><small>Sans</small><strong>Campaign line</strong></span>
+            <span class="type-specimen type-specimen--keyboard"><small>Keyboard</small><strong>⌘ K</strong></span>
+          </div>
+        </div>
+      </section>
 
       <section class="zdp-section zdp-section--spacing-lg zdp-section--panel layout-preview" aria-labelledby="layout-preview-title">
         <div class="zdp-container zdp-container--lg zdp-container--padding-lg">
@@ -459,8 +566,80 @@
             <p class="type-sample">
               <strong>마을 광장처럼 밝고 단단하게</strong>
               <span>Pretendard-first multiscript text with warm contrast and enough air for product work.</span>
+              <span>
+                본문 안
+                <button
+                  class="zdp-term-trigger"
+                  type="button"
+                  data-term-id="operational-resilience"
+                  aria-haspopup="dialog"
+                  aria-controls="light-term-sheet"
+                  aria-expanded="false"
+                >운영 복원력</button>
+                은 클릭해서 확인합니다.
+              </span>
               <a class="zdp-link" href="#foundation-tokens">자세히 보기</a>
             </p>
+            <div hidden>
+              <button class="zdp-term-sheet__backdrop" type="button" aria-label="닫기" tabindex="-1"></button>
+              <aside
+                class="zdp-term-sheet zdp-term-sheet--right"
+                id="light-term-sheet"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="light-term-sheet-title"
+                aria-describedby="light-term-sheet-description"
+                tabindex="-1"
+                data-zdp-ad-exclude="true"
+              >
+                <header class="zdp-term-sheet__header">
+                  <div class="zdp-term-sheet__heading">
+                    <p class="zdp-term-sheet__eyebrow">용어</p>
+                    <h4 class="zdp-term-sheet__title" id="light-term-sheet-title">운영 복원력</h4>
+                  </div>
+                  <button class="zdp-term-sheet__close" type="button" aria-label="닫기">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </header>
+                <div class="zdp-term-sheet__body">
+                  <p class="zdp-term-sheet__short" id="light-term-sheet-description">장애가 나도 서비스가 완전히 멈추지 않게 버티고 회복하는 능력입니다.</p>
+                  <section class="zdp-term-sheet__section" aria-label="예시">
+                    <h5>예시</h5>
+                    <p>결제 화면은 읽기 전용 상태로 낮추고, 원장 기록은 재시도 큐로 이어갑니다.</p>
+                  </section>
+                  <section class="zdp-term-sheet__section" aria-label="관련 용어">
+                    <h5>관련 용어</h5>
+                    <div class="zdp-term-sheet__related">
+                      <button class="zdp-term-sheet__related-button" type="button" data-term-id="fallback">fallback</button>
+                      <button class="zdp-term-sheet__related-button" type="button" data-term-id="runbook">runbook</button>
+                    </div>
+                  </section>
+                </div>
+                <footer class="zdp-term-sheet__footer">
+                  <a class="zdp-term-sheet__detail-link" href="#term-operational-resilience">자세히 보기</a>
+                </footer>
+              </aside>
+            </div>
+          </section>
+
+          <section class="preview-section">
+            <h3 class="preview-section__title" id="light-code-title">Code</h3>
+            <div class="zdp-stack zdp-stack--gap-sm">
+              <p class="surface-copy">배포 값은 <code class="zdp-inline-code">readonly</code> 상태로 남깁니다.</p>
+              <div class="zdp-code-block" role="group" aria-labelledby="light-code-title">
+                <div class="zdp-code-block__header">
+                  <div class="zdp-code-block__meta">
+                    <span class="zdp-code-block__title">릴리스 기준</span>
+                    <span class="zdp-code-block__language">ts</span>
+                  </div>
+                  <button class="zdp-code-block__copy" type="button">복사</button>
+                </div>
+                <div class="zdp-code-block__scroller" role="region" aria-label="릴리스 기준 ts 코드" tabindex="0">
+                  <pre class="zdp-code-block__pre"><code class="zdp-code-block__code">const releaseGate = ['owner', 'budget', 'audit-log'];
+const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></pre>
+                </div>
+              </div>
+            </div>
           </section>
 
           <section class="preview-section">
@@ -475,19 +654,47 @@
           </section>
 
           <section class="preview-section">
+            <h3 class="preview-section__title" id="light-command-title">Command Field</h3>
+            <label class="zdp-command-field-shell" for="light-command-search">
+              <span class="zdp-command-field__label">빠른 이동</span>
+              <span class="zdp-command-field zdp-command-field--md">
+                <input
+                  class="zdp-command-field__input"
+                  id="light-command-search"
+                  name="light-command-search"
+                  type="search"
+                  placeholder="프로젝트, 문서, 설정 검색"
+                  autocomplete="off"
+                  aria-describedby="light-command-help"
+                />
+                <span class="zdp-command-field__shortcut" aria-hidden="true">
+                  <span class="zdp-shortcut-hint zdp-shortcut-hint--md">
+                    <kbd class="zdp-kbd zdp-kbd--md">/</kbd>
+                  </span>
+                </span>
+              </span>
+            </label>
+            <p class="zdp-help-text" id="light-command-help">이 화면에서 찾을 항목을 입력하세요.</p>
+          </section>
+
+          <section class="preview-section">
             <h3 class="preview-section__title" id="light-shortcut-title">Shortcuts</h3>
             <div class="zdp-inline zdp-inline--gap-sm zdp-inline--align-center" role="group" aria-label="Light shortcut hints">
               <span class="zdp-shortcut-hint" role="group" aria-label="Search shortcut slash">
                 <kbd class="zdp-kbd zdp-kbd--md">/</kbd>
               </span>
-              <span class="zdp-shortcut-hint" role="group" aria-label="Shortcut guide Shift question mark">
-                <kbd class="zdp-kbd zdp-kbd--md">Shift</kbd>
-                <span class="zdp-shortcut-hint__separator" aria-hidden="true">+</span>
+              <span class="zdp-shortcut-hint" role="group" aria-label="Shortcut guide question mark">
                 <kbd class="zdp-kbd zdp-kbd--md">?</kbd>
               </span>
-              <kbd class="zdp-kbd zdp-kbd--md" title="Go to file shortcut T">T</kbd>
-              <kbd class="zdp-kbd zdp-kbd--md" title="Select shortcut Enter">Enter</kbd>
               <kbd class="zdp-kbd zdp-kbd--md" title="Close shortcut Escape">Esc</kbd>
+              <kbd class="zdp-kbd zdp-kbd--md" title="Open shortcut Enter">Enter</kbd>
+              <kbd class="zdp-kbd zdp-kbd--md" title="Previous shortcut ArrowUp">↑</kbd>
+              <kbd class="zdp-kbd zdp-kbd--md" title="Next shortcut ArrowDown">↓</kbd>
+              <span class="zdp-shortcut-hint" role="group" aria-label="Submit shortcut Mod Enter">
+                <kbd class="zdp-kbd zdp-kbd--md">Ctrl/⌘</kbd>
+                <span class="zdp-shortcut-hint__separator" aria-hidden="true">+</span>
+                <kbd class="zdp-kbd zdp-kbd--md">Enter</kbd>
+              </span>
             </div>
           </section>
 
@@ -507,6 +714,30 @@
           </section>
 
           <section class="preview-section">
+            <h3 class="preview-section__title" id="light-theme-toggle-title">Theme Toggle</h3>
+            <button
+              class="zdp-theme-toggle zdp-theme-toggle--md"
+              type="button"
+              aria-label="다크 모드로 전환"
+              aria-pressed="false"
+              data-zdp-theme-toggle
+              data-zdp-theme-state="light"
+            >
+              <span class="zdp-theme-toggle__icon zdp-theme-toggle__icon--sun" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <circle cx="12" cy="12" r="3.6"></circle>
+                  <path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6"></path>
+                </svg>
+              </span>
+              <span class="zdp-theme-toggle__icon zdp-theme-toggle__icon--moon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path d="M17.8 15.4A7 7 0 0 1 8.6 6.2 7.4 7.4 0 1 0 17.8 15.4Z"></path>
+                </svg>
+              </span>
+            </button>
+          </section>
+
+          <section class="preview-section">
             <h3 class="preview-section__title" id="light-breadcrumb-title">Breadcrumb</h3>
             <nav class="zdp-breadcrumb" aria-label="밝은 화면 현재 위치">
               <ol class="zdp-breadcrumb__list">
@@ -520,6 +751,41 @@
                 <li class="zdp-breadcrumb__item">
                   <span class="zdp-breadcrumb__separator" aria-hidden="true">/</span>
                   <span class="zdp-breadcrumb__current" aria-current="page">디자인 시스템</span>
+                </li>
+              </ol>
+            </nav>
+          </section>
+
+          <section class="preview-section">
+            <h3 class="preview-section__title" id="light-pagination-title">Pagination</h3>
+            <nav class="zdp-pagination" aria-label="밝은 화면 목록 페이지">
+              <ol class="zdp-pagination__list">
+                <li class="zdp-pagination__item">
+                  <a class="zdp-pagination__link zdp-pagination__link--control" href="#light-page-4" aria-label="이전">이전</a>
+                </li>
+                <li class="zdp-pagination__item">
+                  <a class="zdp-pagination__link" href="#light-page-1" aria-label="1페이지">1</a>
+                </li>
+                <li class="zdp-pagination__item">
+                  <span class="zdp-pagination__ellipsis" aria-hidden="true">...</span>
+                </li>
+                <li class="zdp-pagination__item">
+                  <a class="zdp-pagination__link" href="#light-page-4" aria-label="4페이지">4</a>
+                </li>
+                <li class="zdp-pagination__item">
+                  <button class="zdp-pagination__link" type="button" aria-label="현재 5페이지" aria-current="page" disabled>5</button>
+                </li>
+                <li class="zdp-pagination__item">
+                  <a class="zdp-pagination__link" href="#light-page-6" aria-label="6페이지">6</a>
+                </li>
+                <li class="zdp-pagination__item">
+                  <span class="zdp-pagination__ellipsis" aria-hidden="true">...</span>
+                </li>
+                <li class="zdp-pagination__item">
+                  <a class="zdp-pagination__link" href="#light-page-12" aria-label="12페이지">12</a>
+                </li>
+                <li class="zdp-pagination__item">
+                  <a class="zdp-pagination__link zdp-pagination__link--control" href="#light-page-6" aria-label="다음">다음</a>
                 </li>
               </ol>
             </nav>
@@ -549,6 +815,271 @@
                   <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
                 </div>
               </section>
+              <div
+                class="zdp-toast zdp-toast--success"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+                aria-labelledby="light-toast-title"
+                aria-describedby="light-toast-message"
+              >
+                <span class="zdp-toast__mark" aria-hidden="true"></span>
+                <div class="zdp-toast__body">
+                  <strong class="zdp-toast__title" id="light-toast-title">초안이 준비됐습니다.</strong>
+                  <p class="zdp-toast__message" id="light-toast-message">검토할 수 있는 상태로 바뀌었습니다.</p>
+                </div>
+                <button class="zdp-toast__close" type="button" aria-label="알림 닫기">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="zdp-status-toast zdp-status-toast--inline" role="group" aria-label="상태 알림">
+                <div
+                  class="zdp-toast zdp-toast--success"
+                  role="status"
+                  aria-live="polite"
+                  aria-atomic="true"
+                  aria-labelledby="light-status-toast-saved-title"
+                  aria-describedby="light-status-toast-saved-message"
+                >
+                  <span class="zdp-toast__mark" aria-hidden="true"></span>
+                  <div class="zdp-toast__body">
+                    <strong class="zdp-toast__title" id="light-status-toast-saved-title">저장됐습니다.</strong>
+                    <p class="zdp-toast__message" id="light-status-toast-saved-message">변경 내역이 목록에 반영됐습니다.</p>
+                    <a class="zdp-toast__action" href="#light-data-title">기록 보기</a>
+                  </div>
+                </div>
+                <div
+                  class="zdp-toast zdp-toast--warning"
+                  role="status"
+                  aria-live="polite"
+                  aria-atomic="true"
+                  aria-labelledby="light-status-toast-warning-title"
+                  aria-describedby="light-status-toast-warning-message"
+                >
+                  <span class="zdp-toast__mark" aria-hidden="true"></span>
+                  <div class="zdp-toast__body">
+                    <strong class="zdp-toast__title" id="light-status-toast-warning-title">확인이 필요합니다.</strong>
+                    <p class="zdp-toast__message" id="light-status-toast-warning-message">다음 단계 전에 비어 있는 값을 확인하세요.</p>
+                  </div>
+                  <button class="zdp-toast__close" type="button" aria-label="알림 닫기">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+              </div>
+              <strong class="loading-title" id="light-progress-title">진행</strong>
+              <div
+                class="zdp-progress zdp-progress--primary zdp-progress--md"
+                role="progressbar"
+                aria-labelledby="light-progress-title"
+                aria-describedby="light-progress-desc"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="72"
+                style="--zdp-progress-value: 72%;"
+              >
+                <span class="zdp-progress__track" aria-hidden="true">
+                  <span class="zdp-progress__bar"></span>
+                </span>
+              </div>
+              <p class="status-note" id="light-progress-desc">자료를 불러오는 중입니다.</p>
+              <div class="zdp-inline zdp-inline--gap-sm zdp-inline--align-center">
+                <span class="zdp-spinner zdp-spinner--primary zdp-spinner--sm" role="status" aria-label="목록 확인 중">
+                  <span class="zdp-spinner__mark" aria-hidden="true"></span>
+                </span>
+                <span class="status-note">목록 확인 중</span>
+              </div>
+              <div class="loading-preview" role="group" aria-labelledby="light-progress-title">
+                <div class="zdp-skeleton zdp-skeleton--text" data-animated="true" aria-hidden="true">
+                  <span class="zdp-skeleton__line" aria-hidden="true"></span>
+                  <span class="zdp-skeleton__line" aria-hidden="true"></span>
+                  <span class="zdp-skeleton__line zdp-skeleton__line--last" aria-hidden="true"></span>
+                </div>
+                <div class="zdp-skeleton zdp-skeleton--block" data-animated="true" aria-hidden="true">
+                  <span class="zdp-skeleton__line zdp-skeleton__line--last" aria-hidden="true"></span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="preview-section">
+            <h3 class="preview-section__title" id="light-identity-title">Identity</h3>
+            <div class="zdp-inline zdp-inline--gap-sm zdp-inline--align-center">
+              <span class="zdp-avatar zdp-avatar--sm zdp-avatar--neutral" role="img" aria-label="홍길동">
+                <span class="zdp-avatar__initials" aria-hidden="true">홍</span>
+              </span>
+              <span class="zdp-avatar zdp-avatar--md zdp-avatar--primary" role="img" aria-label="플랫폼 팀">
+                <span class="zdp-avatar__initials" aria-hidden="true">플</span>
+              </span>
+              <a
+                class="zdp-identity-chip zdp-identity-chip--md zdp-identity-chip--link"
+                href="#light-data-title"
+                aria-current="page"
+              >
+                <span class="zdp-avatar zdp-avatar--md zdp-avatar--neutral" aria-hidden="true">
+                  <span class="zdp-avatar__initials" aria-hidden="true">홍</span>
+                </span>
+                <span class="zdp-identity-chip__body">
+                  <span class="zdp-identity-chip__label">홍길동</span>
+                  <span class="zdp-identity-chip__description">검토 담당</span>
+                </span>
+              </a>
+            </div>
+          </section>
+
+          <section class="preview-section">
+            <h3 class="preview-section__title" id="light-disclosure-title">Disclosure</h3>
+            <div class="zdp-stack zdp-stack--gap-md">
+              <div class="zdp-disclosure" data-open="true">
+                <div class="zdp-disclosure__heading" role="heading" aria-level="4">
+                  <button
+                    class="zdp-disclosure__trigger"
+                    id="light-disclosure-trigger"
+                    type="button"
+                    aria-expanded="true"
+                    aria-controls="light-disclosure-panel"
+                  >
+                    <span class="zdp-disclosure__title">검토 기준</span>
+                    <span class="zdp-disclosure__mark" aria-hidden="true">-</span>
+                  </button>
+                </div>
+                <div
+                  class="zdp-disclosure__panel"
+                  id="light-disclosure-panel"
+                  role="group"
+                  aria-labelledby="light-disclosure-trigger"
+                >
+                  <p>필요한 기준만 펼쳐서 확인합니다.</p>
+                </div>
+              </div>
+              <div class="zdp-accordion" role="list" aria-label="밝은 화면 접힌 안내">
+                <div class="zdp-accordion__item" role="listitem">
+                  <div class="zdp-disclosure" data-open="true">
+                    <div class="zdp-disclosure__heading" role="heading" aria-level="4">
+                      <button
+                        class="zdp-disclosure__trigger"
+                        id="light-accordion-scope-trigger"
+                        type="button"
+                        aria-expanded="true"
+                        aria-controls="light-accordion-scope-panel"
+                      >
+                        <span class="zdp-disclosure__title">범위</span>
+                        <span class="zdp-disclosure__mark" aria-hidden="true">-</span>
+                      </button>
+                    </div>
+                    <div
+                      class="zdp-disclosure__panel"
+                      id="light-accordion-scope-panel"
+                      role="group"
+                      aria-labelledby="light-accordion-scope-trigger"
+                    >
+                      <p>화면 흐름과 데이터 판단은 소비 앱에서 정합니다.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="zdp-accordion__item" role="listitem">
+                  <div class="zdp-disclosure" data-open="false">
+                    <div class="zdp-disclosure__heading" role="heading" aria-level="4">
+                      <button
+                        class="zdp-disclosure__trigger"
+                        id="light-accordion-owner-trigger"
+                        type="button"
+                        aria-expanded="false"
+                        aria-controls="light-accordion-owner-panel"
+                      >
+                        <span class="zdp-disclosure__title">소유자</span>
+                        <span class="zdp-disclosure__mark" aria-hidden="true">+</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="preview-section">
+            <h3 class="preview-section__title" id="light-segmented-control-title">Segmented Control</h3>
+            <div
+              class="zdp-segmented-control zdp-segmented-control--md"
+              role="radiogroup"
+              aria-label="밝은 화면 보기 방식"
+            >
+              <button
+                class="zdp-segmented-control__item zdp-segmented-control__item--selected"
+                type="button"
+                role="radio"
+                aria-checked="true"
+                tabindex="0"
+              >목록</button>
+              <button
+                class="zdp-segmented-control__item"
+                type="button"
+                role="radio"
+                aria-checked="false"
+                tabindex="-1"
+              >카드</button>
+              <button
+                class="zdp-segmented-control__item"
+                type="button"
+                role="radio"
+                aria-checked="false"
+                tabindex="-1"
+              >요약</button>
+              <button
+                class="zdp-segmented-control__item"
+                type="button"
+                role="radio"
+                aria-checked="false"
+                tabindex="-1"
+                disabled
+              >잠김</button>
+            </div>
+          </section>
+
+          <section class="preview-section">
+            <h3 class="preview-section__title" id="light-popover-title">Popover and Menu</h3>
+            <div class="zdp-inline zdp-inline--gap-sm zdp-inline--align-center">
+              <span class="zdp-popover zdp-popover--bottom zdp-popover--align-start" data-open="true">
+                <span class="zdp-popover__trigger" id="light-popover-trigger">
+                  <button
+                    class="zdp-button zdp-button--secondary zdp-button--md"
+                    type="button"
+                    aria-controls="light-popover-panel"
+                    aria-expanded="true"
+                  >필터</button>
+                </span>
+                <span
+                  class="zdp-popover__panel"
+                  id="light-popover-panel"
+                  role="dialog"
+                  aria-labelledby="light-popover-trigger"
+                  tabindex="-1"
+                >
+                  <strong>상태</strong>
+                  <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">검토 중</button>
+                  <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">완료됨</button>
+                </span>
+              </span>
+              <span class="zdp-menu zdp-menu--bottom zdp-menu--align-end" data-open="true">
+                <button
+                  class="zdp-menu__trigger"
+                  id="light-menu-trigger"
+                  type="button"
+                  aria-label="더보기"
+                  aria-haspopup="menu"
+                  aria-expanded="true"
+                  aria-controls="light-menu-panel"
+                >
+                  <span class="zdp-menu__trigger-label">더보기</span>
+                  <span class="zdp-menu__trigger-mark" aria-hidden="true"></span>
+                </button>
+                <span class="zdp-menu__panel" id="light-menu-panel" role="menu" aria-labelledby="light-menu-trigger" tabindex="-1">
+                  <button class="zdp-menu__item" type="button" role="menuitem" tabindex="0">설정 열기</button>
+                  <button class="zdp-menu__item" type="button" role="menuitem" tabindex="-1">필터 저장</button>
+                  <button class="zdp-menu__item" type="button" role="menuitem" disabled tabindex="-1">보관함 이동</button>
+                  <span class="zdp-menu__separator" role="separator" aria-hidden="true"></span>
+                  <button class="zdp-menu__item zdp-menu__item--danger" type="button" role="menuitem" tabindex="-1">연결 끊기</button>
+                </span>
+              </span>
             </div>
           </section>
 
@@ -704,13 +1235,43 @@
           <section class="preview-section">
             <h3 class="preview-section__title" id="light-data-title">Data</h3>
             <div class="zdp-stack zdp-stack--gap-md">
+              <div class="zdp-table-toolbar" role="group" aria-labelledby="light-data-title">
+                <div class="zdp-table-toolbar__body">
+                  <strong class="zdp-table-toolbar__title">점검 목록</strong>
+                  <p class="zdp-table-toolbar__summary">권한과 감사 항목을 확인합니다.</p>
+                  <p class="zdp-table-toolbar__selection">2개 선택됨</p>
+                </div>
+                <div class="zdp-table-toolbar__controls">
+                  <div class="zdp-table-toolbar__density">
+                    <span class="zdp-table-toolbar__density-label">표 밀도</span>
+                    <div class="zdp-segmented-control zdp-segmented-control--sm" role="radiogroup" aria-label="표 밀도">
+                      <button class="zdp-segmented-control__item" type="button" role="radio" aria-checked="false" tabindex="-1">기본</button>
+                      <button class="zdp-segmented-control__item zdp-segmented-control__item--selected" type="button" role="radio" aria-checked="true" tabindex="0">촘촘히</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="zdp-table-toolbar__actions">
+                  <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">선택 해제</button>
+                  <button class="zdp-button zdp-button--primary zdp-button--md" type="button">새로 고침</button>
+                </div>
+              </div>
               <div class="zdp-table-wrap">
                 <table class="zdp-table zdp-table--density-compact" aria-labelledby="light-data-title">
                   <caption class="zdp-table__caption">보안 점검 목록</caption>
                   <thead>
                     <tr>
-                      <th scope="col">항목</th>
-                      <th scope="col">상태</th>
+                      <th scope="col" aria-sort="ascending">
+                        <button class="zdp-sort-header zdp-sort-header--ascending" type="button" aria-label="항목 오름차순" data-sort-direction="ascending">
+                          <span class="zdp-sort-header__label">항목</span>
+                          <span class="zdp-sort-header__mark" aria-hidden="true"></span>
+                        </button>
+                      </th>
+                      <th scope="col">
+                        <button class="zdp-sort-header zdp-sort-header--none" type="button" aria-label="상태 정렬 없음" data-sort-direction="none">
+                          <span class="zdp-sort-header__label">상태</span>
+                          <span class="zdp-sort-header__mark" aria-hidden="true"></span>
+                        </button>
+                      </th>
                       <th scope="col">다음 확인</th>
                     </tr>
                   </thead>
@@ -925,6 +1486,28 @@
           </section>
 
           <section class="preview-section">
+            <h3 class="preview-section__title" id="dark-code-title">Code</h3>
+            <div class="zdp-stack zdp-stack--gap-sm">
+              <p class="surface-copy">비밀값은 <code class="zdp-inline-code">server-only</code> 경계에 둡니다.</p>
+              <div class="zdp-code-block zdp-code-block--muted" data-wrap="true" role="group" aria-labelledby="dark-code-title">
+                <div class="zdp-code-block__header">
+                  <div class="zdp-code-block__meta">
+                    <span class="zdp-code-block__title">보안 경계</span>
+                    <span class="zdp-code-block__language">ts</span>
+                  </div>
+                  <button class="zdp-code-block__copy" type="button">복사</button>
+                </div>
+                <div class="zdp-code-block__scroller" role="region" aria-label="보안 경계 ts 코드" tabindex="0">
+                  <pre class="zdp-code-block__pre"><code class="zdp-code-block__code">const securityBoundary = {
+  secrets: 'server-only',
+  audit: 'required'
+};</code></pre>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="preview-section">
             <h3 class="preview-section__title" id="dark-focus-title">Focus</h3>
             <div class="focus-demo">
               <a class="zdp-link" href="#foundation-tokens">업데이트 보기</a>
@@ -936,19 +1519,47 @@
           </section>
 
           <section class="preview-section">
+            <h3 class="preview-section__title" id="dark-command-title">Command Field</h3>
+            <label class="zdp-command-field-shell" for="dark-command-search">
+              <span class="zdp-command-field__label">빠른 이동</span>
+              <span class="zdp-command-field zdp-command-field--md">
+                <input
+                  class="zdp-command-field__input"
+                  id="dark-command-search"
+                  name="dark-command-search"
+                  type="search"
+                  placeholder="프로젝트, 문서, 설정 검색"
+                  autocomplete="off"
+                  aria-describedby="dark-command-help"
+                />
+                <span class="zdp-command-field__shortcut" aria-hidden="true">
+                  <span class="zdp-shortcut-hint zdp-shortcut-hint--md">
+                    <kbd class="zdp-kbd zdp-kbd--md">/</kbd>
+                  </span>
+                </span>
+              </span>
+            </label>
+            <p class="zdp-help-text" id="dark-command-help">필요한 항목으로 바로 이동하세요.</p>
+          </section>
+
+          <section class="preview-section">
             <h3 class="preview-section__title" id="dark-shortcut-title">Shortcuts</h3>
             <div class="zdp-inline zdp-inline--gap-sm zdp-inline--align-center" role="group" aria-label="Dark shortcut hints">
               <span class="zdp-shortcut-hint" role="group" aria-label="Search shortcut slash">
                 <kbd class="zdp-kbd zdp-kbd--md">/</kbd>
               </span>
-              <span class="zdp-shortcut-hint" role="group" aria-label="Shortcut guide Shift question mark">
-                <kbd class="zdp-kbd zdp-kbd--md">Shift</kbd>
-                <span class="zdp-shortcut-hint__separator" aria-hidden="true">+</span>
+              <span class="zdp-shortcut-hint" role="group" aria-label="Shortcut guide question mark">
                 <kbd class="zdp-kbd zdp-kbd--md">?</kbd>
               </span>
-              <kbd class="zdp-kbd zdp-kbd--md" title="Go to file shortcut T">T</kbd>
-              <kbd class="zdp-kbd zdp-kbd--md" title="Select shortcut Enter">Enter</kbd>
               <kbd class="zdp-kbd zdp-kbd--md" title="Close shortcut Escape">Esc</kbd>
+              <kbd class="zdp-kbd zdp-kbd--md" title="Open shortcut Enter">Enter</kbd>
+              <kbd class="zdp-kbd zdp-kbd--md" title="Previous shortcut ArrowUp">↑</kbd>
+              <kbd class="zdp-kbd zdp-kbd--md" title="Next shortcut ArrowDown">↓</kbd>
+              <span class="zdp-shortcut-hint" role="group" aria-label="Submit shortcut Mod Enter">
+                <kbd class="zdp-kbd zdp-kbd--md">Ctrl/⌘</kbd>
+                <span class="zdp-shortcut-hint__separator" aria-hidden="true">+</span>
+                <kbd class="zdp-kbd zdp-kbd--md">Enter</kbd>
+              </span>
             </div>
           </section>
 
@@ -968,6 +1579,30 @@
           </section>
 
           <section class="preview-section">
+            <h3 class="preview-section__title" id="dark-theme-toggle-title">Theme Toggle</h3>
+            <button
+              class="zdp-theme-toggle zdp-theme-toggle--md"
+              type="button"
+              aria-label="라이트 모드로 전환"
+              aria-pressed="true"
+              data-zdp-theme-toggle
+              data-zdp-theme-state="dark"
+            >
+              <span class="zdp-theme-toggle__icon zdp-theme-toggle__icon--sun" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <circle cx="12" cy="12" r="3.6"></circle>
+                  <path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6"></path>
+                </svg>
+              </span>
+              <span class="zdp-theme-toggle__icon zdp-theme-toggle__icon--moon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path d="M17.8 15.4A7 7 0 0 1 8.6 6.2 7.4 7.4 0 1 0 17.8 15.4Z"></path>
+                </svg>
+              </span>
+            </button>
+          </section>
+
+          <section class="preview-section">
             <h3 class="preview-section__title" id="dark-breadcrumb-title">Breadcrumb</h3>
             <nav class="zdp-breadcrumb" aria-label="어두운 화면 현재 위치">
               <ol class="zdp-breadcrumb__list">
@@ -981,6 +1616,41 @@
                 <li class="zdp-breadcrumb__item">
                   <span class="zdp-breadcrumb__separator" aria-hidden="true">/</span>
                   <span class="zdp-breadcrumb__current" aria-current="page">디자인 시스템</span>
+                </li>
+              </ol>
+            </nav>
+          </section>
+
+          <section class="preview-section">
+            <h3 class="preview-section__title" id="dark-pagination-title">Pagination</h3>
+            <nav class="zdp-pagination" aria-label="어두운 화면 목록 페이지">
+              <ol class="zdp-pagination__list">
+                <li class="zdp-pagination__item">
+                  <a class="zdp-pagination__link zdp-pagination__link--control" href="#dark-page-8" aria-label="이전">이전</a>
+                </li>
+                <li class="zdp-pagination__item">
+                  <a class="zdp-pagination__link" href="#dark-page-1" aria-label="1페이지">1</a>
+                </li>
+                <li class="zdp-pagination__item">
+                  <span class="zdp-pagination__ellipsis" aria-hidden="true">...</span>
+                </li>
+                <li class="zdp-pagination__item">
+                  <a class="zdp-pagination__link" href="#dark-page-8" aria-label="8페이지">8</a>
+                </li>
+                <li class="zdp-pagination__item">
+                  <button class="zdp-pagination__link" type="button" aria-label="현재 9페이지" aria-current="page" disabled>9</button>
+                </li>
+                <li class="zdp-pagination__item">
+                  <a class="zdp-pagination__link" href="#dark-page-10" aria-label="10페이지">10</a>
+                </li>
+                <li class="zdp-pagination__item">
+                  <span class="zdp-pagination__ellipsis" aria-hidden="true">...</span>
+                </li>
+                <li class="zdp-pagination__item">
+                  <a class="zdp-pagination__link" href="#dark-page-18" aria-label="18페이지">18</a>
+                </li>
+                <li class="zdp-pagination__item">
+                  <a class="zdp-pagination__link zdp-pagination__link--control" href="#dark-page-10" aria-label="다음">다음</a>
                 </li>
               </ol>
             </nav>
@@ -1010,6 +1680,256 @@
                   <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
                 </div>
               </section>
+              <div
+                class="zdp-toast zdp-toast--info"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+                aria-labelledby="dark-toast-title"
+                aria-describedby="dark-toast-message"
+              >
+                <span class="zdp-toast__mark" aria-hidden="true"></span>
+                <div class="zdp-toast__body">
+                  <strong class="zdp-toast__title" id="dark-toast-title">작업이 저장됐습니다.</strong>
+                  <p class="zdp-toast__message" id="dark-toast-message">다음 화면에서도 같은 상태를 볼 수 있습니다.</p>
+                </div>
+                <button class="zdp-toast__close" type="button" aria-label="알림 닫기">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="zdp-status-toast zdp-status-toast--inline" role="group" aria-label="상태 알림">
+                <div
+                  class="zdp-toast zdp-toast--info"
+                  role="status"
+                  aria-live="assertive"
+                  aria-atomic="true"
+                  aria-labelledby="dark-status-toast-synced-title"
+                  aria-describedby="dark-status-toast-synced-message"
+                >
+                  <span class="zdp-toast__mark" aria-hidden="true"></span>
+                  <div class="zdp-toast__body">
+                    <strong class="zdp-toast__title" id="dark-status-toast-synced-title">동기화가 끝났습니다.</strong>
+                    <p class="zdp-toast__message" id="dark-status-toast-synced-message">열려 있는 화면에서 최신 상태를 볼 수 있습니다.</p>
+                  </div>
+                </div>
+                <div
+                  class="zdp-toast zdp-toast--danger"
+                  role="alert"
+                  aria-live="polite"
+                  aria-atomic="true"
+                  aria-labelledby="dark-status-toast-danger-title"
+                  aria-describedby="dark-status-toast-danger-message"
+                >
+                  <span class="zdp-toast__mark" aria-hidden="true"></span>
+                  <div class="zdp-toast__body">
+                    <strong class="zdp-toast__title" id="dark-status-toast-danger-title">연결이 끊겼습니다.</strong>
+                    <p class="zdp-toast__message" id="dark-status-toast-danger-message">다시 연결한 뒤 작업을 이어가세요.</p>
+                    <button class="zdp-toast__action" type="button">다시 연결</button>
+                  </div>
+                </div>
+              </div>
+              <strong class="loading-title" id="dark-progress-title">진행</strong>
+              <div
+                class="zdp-progress zdp-progress--warning zdp-progress--md"
+                role="progressbar"
+                aria-labelledby="dark-progress-title"
+                aria-describedby="dark-progress-desc"
+                data-indeterminate="true"
+              >
+                <span class="zdp-progress__track" aria-hidden="true">
+                  <span class="zdp-progress__bar"></span>
+                </span>
+              </div>
+              <p class="status-note" id="dark-progress-desc">응답을 기다리고 있습니다.</p>
+              <div class="zdp-inline zdp-inline--gap-sm zdp-inline--align-center">
+                <span class="zdp-spinner zdp-spinner--warning zdp-spinner--md" role="status" aria-label="응답 대기 중">
+                  <span class="zdp-spinner__mark" aria-hidden="true"></span>
+                </span>
+                <span class="status-note">응답 대기 중</span>
+              </div>
+              <div class="loading-preview" role="group" aria-labelledby="dark-progress-title">
+                <div class="zdp-skeleton zdp-skeleton--text" data-animated="true" aria-hidden="true">
+                  <span class="zdp-skeleton__line" aria-hidden="true"></span>
+                  <span class="zdp-skeleton__line zdp-skeleton__line--last" aria-hidden="true"></span>
+                </div>
+                <div class="zdp-skeleton zdp-skeleton--avatar" data-animated="true" aria-hidden="true">
+                  <span class="zdp-skeleton__line zdp-skeleton__line--last" aria-hidden="true"></span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="preview-section">
+            <h3 class="preview-section__title" id="dark-identity-title">Identity</h3>
+            <div class="zdp-inline zdp-inline--gap-sm zdp-inline--align-center">
+              <span class="zdp-avatar zdp-avatar--sm zdp-avatar--neutral" role="img" aria-label="김하늘">
+                <span class="zdp-avatar__initials" aria-hidden="true">김</span>
+              </span>
+              <span class="zdp-avatar zdp-avatar--md zdp-avatar--primary" role="img" aria-label="운영 팀">
+                <span class="zdp-avatar__initials" aria-hidden="true">운</span>
+              </span>
+              <a
+                class="zdp-identity-chip zdp-identity-chip--md zdp-identity-chip--link"
+                href="#dark-data-title"
+                aria-current="page"
+              >
+                <span class="zdp-avatar zdp-avatar--md zdp-avatar--neutral" aria-hidden="true">
+                  <span class="zdp-avatar__initials" aria-hidden="true">김</span>
+                </span>
+                <span class="zdp-identity-chip__body">
+                  <span class="zdp-identity-chip__label">김하늘</span>
+                  <span class="zdp-identity-chip__description">운영 담당</span>
+                </span>
+              </a>
+            </div>
+          </section>
+
+          <section class="preview-section">
+            <h3 class="preview-section__title" id="dark-disclosure-title">Disclosure</h3>
+            <div class="zdp-stack zdp-stack--gap-md">
+              <div class="zdp-disclosure" data-open="true">
+                <div class="zdp-disclosure__heading" role="heading" aria-level="4">
+                  <button
+                    class="zdp-disclosure__trigger"
+                    id="dark-disclosure-trigger"
+                    type="button"
+                    aria-expanded="true"
+                    aria-controls="dark-disclosure-panel"
+                  >
+                    <span class="zdp-disclosure__title">검토 기준</span>
+                    <span class="zdp-disclosure__mark" aria-hidden="true">-</span>
+                  </button>
+                </div>
+                <div
+                  class="zdp-disclosure__panel"
+                  id="dark-disclosure-panel"
+                  role="group"
+                  aria-labelledby="dark-disclosure-trigger"
+                >
+                  <p>긴 문장은 패널 안에서 줄바꿈으로 이어집니다.</p>
+                </div>
+              </div>
+              <div class="zdp-accordion" role="list" aria-label="어두운 화면 접힌 안내">
+                <div class="zdp-accordion__item" role="listitem">
+                  <div class="zdp-disclosure" data-open="true">
+                    <div class="zdp-disclosure__heading" role="heading" aria-level="4">
+                      <button
+                        class="zdp-disclosure__trigger"
+                        id="dark-accordion-scope-trigger"
+                        type="button"
+                        aria-expanded="true"
+                        aria-controls="dark-accordion-scope-panel"
+                      >
+                        <span class="zdp-disclosure__title">검토</span>
+                        <span class="zdp-disclosure__mark" aria-hidden="true">-</span>
+                      </button>
+                    </div>
+                    <div
+                      class="zdp-disclosure__panel"
+                      id="dark-accordion-scope-panel"
+                      role="group"
+                      aria-labelledby="dark-accordion-scope-trigger"
+                    >
+                      <p>긴 안내는 같은 자리에서 접고 펼칩니다.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="zdp-accordion__item" role="listitem">
+                  <div class="zdp-disclosure" data-open="false">
+                    <div class="zdp-disclosure__heading" role="heading" aria-level="4">
+                      <button
+                        class="zdp-disclosure__trigger"
+                        id="dark-accordion-owner-trigger"
+                        type="button"
+                        aria-expanded="false"
+                        aria-controls="dark-accordion-owner-panel"
+                      >
+                        <span class="zdp-disclosure__title">연결</span>
+                        <span class="zdp-disclosure__mark" aria-hidden="true">+</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="preview-section">
+            <h3 class="preview-section__title" id="dark-segmented-control-title">Segmented Control</h3>
+            <div
+              class="zdp-segmented-control zdp-segmented-control--md"
+              role="radiogroup"
+              aria-label="어두운 화면 보기 방식"
+            >
+              <button
+                class="zdp-segmented-control__item zdp-segmented-control__item--selected"
+                type="button"
+                role="radio"
+                aria-checked="true"
+                tabindex="0"
+              >요약</button>
+              <button
+                class="zdp-segmented-control__item"
+                type="button"
+                role="radio"
+                aria-checked="false"
+                tabindex="-1"
+              >기록</button>
+              <button
+                class="zdp-segmented-control__item"
+                type="button"
+                role="radio"
+                aria-checked="false"
+                tabindex="-1"
+              >설정</button>
+            </div>
+          </section>
+
+          <section class="preview-section">
+            <h3 class="preview-section__title" id="dark-popover-title">Popover and Menu</h3>
+            <div class="zdp-inline zdp-inline--gap-sm zdp-inline--align-center">
+              <span class="zdp-popover zdp-popover--bottom zdp-popover--align-start" data-open="true">
+                <span class="zdp-popover__trigger" id="dark-popover-trigger">
+                  <button
+                    class="zdp-button zdp-button--secondary zdp-button--md"
+                    type="button"
+                    aria-controls="dark-popover-panel"
+                    aria-expanded="true"
+                  >필터</button>
+                </span>
+                <span
+                  class="zdp-popover__panel"
+                  id="dark-popover-panel"
+                  role="dialog"
+                  aria-labelledby="dark-popover-trigger"
+                  tabindex="-1"
+                >
+                  <strong>상태</strong>
+                  <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">대기</button>
+                  <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">완료됨</button>
+                </span>
+              </span>
+              <span class="zdp-menu zdp-menu--bottom zdp-menu--align-end" data-open="true">
+                <button
+                  class="zdp-menu__trigger"
+                  id="dark-menu-trigger"
+                  type="button"
+                  aria-label="더보기"
+                  aria-haspopup="menu"
+                  aria-expanded="true"
+                  aria-controls="dark-menu-panel"
+                >
+                  <span class="zdp-menu__trigger-label">더보기</span>
+                  <span class="zdp-menu__trigger-mark" aria-hidden="true"></span>
+                </button>
+                <span class="zdp-menu__panel" id="dark-menu-panel" role="menu" aria-labelledby="dark-menu-trigger" tabindex="-1">
+                  <button class="zdp-menu__item" type="button" role="menuitem" tabindex="0">설정 열기</button>
+                  <button class="zdp-menu__item" type="button" role="menuitem" tabindex="-1">필터 저장</button>
+                  <button class="zdp-menu__item" type="button" role="menuitem" disabled tabindex="-1">보관함 이동</button>
+                  <span class="zdp-menu__separator" role="separator" aria-hidden="true"></span>
+                  <button class="zdp-menu__item zdp-menu__item--danger" type="button" role="menuitem" tabindex="-1">연결 끊기</button>
+                </span>
+              </span>
             </div>
           </section>
 
@@ -1129,13 +2049,43 @@
           <section class="preview-section">
             <h3 class="preview-section__title" id="dark-data-title">Data</h3>
             <div class="zdp-stack zdp-stack--gap-md">
+              <div class="zdp-table-toolbar" role="group" aria-labelledby="dark-data-title">
+                <div class="zdp-table-toolbar__body">
+                  <strong class="zdp-table-toolbar__title">점검 목록</strong>
+                  <p class="zdp-table-toolbar__summary">대기 항목을 먼저 확인합니다.</p>
+                  <p class="zdp-table-toolbar__selection">1개 선택됨</p>
+                </div>
+                <div class="zdp-table-toolbar__controls">
+                  <div class="zdp-table-toolbar__density">
+                    <span class="zdp-table-toolbar__density-label">표 밀도</span>
+                    <div class="zdp-segmented-control zdp-segmented-control--sm" role="radiogroup" aria-label="표 밀도">
+                      <button class="zdp-segmented-control__item zdp-segmented-control__item--selected" type="button" role="radio" aria-checked="true" tabindex="0">기본</button>
+                      <button class="zdp-segmented-control__item" type="button" role="radio" aria-checked="false" tabindex="-1">촘촘히</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="zdp-table-toolbar__actions">
+                  <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">보류</button>
+                  <button class="zdp-button zdp-button--primary zdp-button--md" type="button">검토</button>
+                </div>
+              </div>
               <div class="zdp-table-wrap">
                 <table class="zdp-table zdp-table--density-compact" aria-labelledby="dark-data-title">
                   <caption class="zdp-table__caption">보안 점검 목록</caption>
                   <thead>
                     <tr>
-                      <th scope="col">항목</th>
-                      <th scope="col">상태</th>
+                      <th scope="col">
+                        <button class="zdp-sort-header zdp-sort-header--none" type="button" aria-label="항목 정렬 없음" data-sort-direction="none">
+                          <span class="zdp-sort-header__label">항목</span>
+                          <span class="zdp-sort-header__mark" aria-hidden="true"></span>
+                        </button>
+                      </th>
+                      <th scope="col" aria-sort="descending">
+                        <button class="zdp-sort-header zdp-sort-header--descending" type="button" aria-label="상태 내림차순" data-sort-direction="descending">
+                          <span class="zdp-sort-header__label">상태</span>
+                          <span class="zdp-sort-header__mark" aria-hidden="true"></span>
+                        </button>
+                      </th>
                       <th scope="col">다음 확인</th>
                     </tr>
                   </thead>

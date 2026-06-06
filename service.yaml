@@ -253,6 +253,7 @@ exit:
   success_criteria:
     - web, app, lab, and game surfaces can share token names without product-specific forks
     - UI package changes are reviewable before consumers adopt them
+    - term explanation surfaces can preserve stable term_id identity without moving glossary manifest, locale, routing, or ad decisions into the design package
   kill_criteria:
     - product-specific screens or business rules move into the design package
   sunset_plan: null
@@ -265,3 +266,4 @@ exit:
 notes:
   - This repository starts as a package boundary, not as a full component implementation.
   - service.id must be registered in zdp-architecture/catalogs/services.yaml before repository validation.
+  - TermSheet keeps stable term_id data attributes and data-zdp-ad-exclude while glossary source, localization, routing, analytics, and ad-supported detail pages remain consumer-owned.

@@ -21,14 +21,21 @@
 
 <style>
   .zdp-table-wrap {
+    background: var(--zdp-color-surface-panel);
     border: 1px solid var(--zdp-color-line-subtle);
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     max-width: 100%;
+    min-width: 0;
+    overscroll-behavior-inline: contain;
     overflow-x: auto;
+    scrollbar-gutter: stable;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
   }
 
   .zdp-table {
+    background: var(--zdp-color-surface-panel);
     border-collapse: collapse;
     color: var(--zdp-color-ink-normal);
     font-family: var(--zdp-font-family-sans);
@@ -62,10 +69,14 @@
 
   .zdp-table :global(th),
   .zdp-table :global(td) {
+    background: var(--zdp-color-surface-panel);
     border-block-start: 1px solid var(--zdp-color-line-subtle);
+    overflow-wrap: normal;
     padding: var(--zdp-space-3) var(--zdp-space-4);
     text-align: start;
     vertical-align: top;
+    white-space: nowrap;
+    word-break: normal;
   }
 
   .zdp-table :global(th) {

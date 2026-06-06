@@ -2,6 +2,7 @@
   import Breadcrumb from '../src/lib/components/Breadcrumb.svelte';
   import Inline from '../src/lib/components/Inline.svelte';
   import Link from '../src/lib/components/Link.svelte';
+  import Pagination from '../src/lib/components/Pagination.svelte';
   import SkipLink from '../src/lib/components/SkipLink.svelte';
   import Stack from '../src/lib/components/Stack.svelte';
   import Surface from '../src/lib/components/Surface.svelte';
@@ -42,6 +43,18 @@
               <Link href="#navigation-main" tone="muted">기록 보기</Link>
               <Link href="#navigation-main" ariaCurrent="page">현재 페이지</Link>
             </Inline>
+          </Stack>
+        </Surface>
+
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3>목록 페이지</h3>
+            <Pagination
+              currentPage={5}
+              totalPages={12}
+              ariaLabel="밝은 화면 목록 페이지"
+              hrefForPage={(page) => `#light-page-${page}`}
+            />
           </Stack>
         </Surface>
 
@@ -92,6 +105,18 @@
               <Link href="#navigation-main" tone="muted">기록 보기</Link>
               <Link href="#navigation-main" ariaCurrent="page">현재 페이지</Link>
             </Inline>
+          </Stack>
+        </Surface>
+
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3>목록 페이지</h3>
+            <Pagination
+              currentPage={9}
+              totalPages={18}
+              ariaLabel="어두운 화면 목록 페이지"
+              hrefForPage={(page) => `#dark-page-${page}`}
+            />
           </Stack>
         </Surface>
 

@@ -3,8 +3,55 @@
   import Callout from '../src/lib/components/Callout.svelte';
   import Divider from '../src/lib/components/Divider.svelte';
   import Inline from '../src/lib/components/Inline.svelte';
+  import Progress from '../src/lib/components/Progress.svelte';
+  import Skeleton from '../src/lib/components/Skeleton.svelte';
   import Stack from '../src/lib/components/Stack.svelte';
+  import StatusToast from '../src/lib/components/StatusToast.svelte';
+  import Spinner from '../src/lib/components/Spinner.svelte';
   import Surface from '../src/lib/components/Surface.svelte';
+  import Toast from '../src/lib/components/Toast.svelte';
+  import type { ZdpStatusToastItem } from '../src/lib/toast.ts';
+
+  let lightToastStatus = '대기 중';
+  let darkToastStatus = '대기 중';
+
+  const lightToastItems: readonly ZdpStatusToastItem[] = [
+    {
+      id: 'saved',
+      tone: 'success',
+      title: '저장됐습니다.',
+      message: '변경 내역이 목록에 반영됐습니다.',
+      actionLabel: '기록 보기',
+      onclick: () => {
+        lightToastStatus = '기록 보기';
+      }
+    },
+    {
+      id: 'warning',
+      tone: 'warning',
+      title: '확인이 필요합니다.',
+      message: '다음 단계 전에 비어 있는 값을 확인하세요.'
+    }
+  ];
+
+  const darkToastItems: readonly ZdpStatusToastItem[] = [
+    {
+      id: 'synced',
+      tone: 'info',
+      title: '동기화가 끝났습니다.',
+      message: '열려 있는 화면에서 최신 상태를 볼 수 있습니다.'
+    },
+    {
+      id: 'danger',
+      tone: 'danger',
+      title: '연결이 끊겼습니다.',
+      message: '다시 연결한 뒤 작업을 이어가세요.',
+      actionLabel: '다시 연결',
+      onclick: () => {
+        darkToastStatus = '다시 연결';
+      }
+    }
+  ];
 </script>
 
 <main class="component-story zdp-surface-reset" lang="ko">
@@ -40,6 +87,46 @@
               <strong id="feedback-light-danger">삭제 전에 다시 확인하세요.</strong>
               <p>되돌릴 수 없는 작업은 별도 확인 흐름과 함께 사용합니다.</p>
             </Callout>
+          </Stack>
+        </Surface>
+
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3>알림</h3>
+            <Toast
+              tone="info"
+              labelledBy="feedback-light-toast-title"
+              describedBy="feedback-light-toast-message"
+              onClose={() => (lightToastStatus = '닫힘')}
+            >
+              <strong id="feedback-light-toast-title">초안이 준비됐습니다.</strong>
+              <p id="feedback-light-toast-message">검토할 수 있는 상태로 바뀌었습니다.</p>
+            </Toast>
+            <StatusToast
+              placement="inline"
+              idPrefix="feedback-light-status-toast"
+              items={lightToastItems}
+              onDismiss={(_, item) => (lightToastStatus = `${item.title ?? item.id} 닫힘`)}
+            />
+            <p class="story-status">{lightToastStatus}</p>
+          </Stack>
+        </Surface>
+
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3 id="feedback-light-progress-title">진행</h3>
+            <Progress
+              value={64}
+              labelledBy="feedback-light-progress-title"
+              describedBy="feedback-light-progress-desc"
+            />
+            <p class="story-status" id="feedback-light-progress-desc">자료를 불러오는 중입니다.</p>
+            <Inline gap="sm" align="center">
+              <Spinner size="sm" label="목록 확인 중" />
+              <span class="story-status">목록 확인 중</span>
+            </Inline>
+            <Skeleton variant="text" lines={3} />
+            <Skeleton variant="block" />
           </Stack>
         </Surface>
 
@@ -84,6 +171,46 @@
               <strong id="feedback-dark-danger">위험 작업 전에 다시 확인하세요.</strong>
               <p>어두운 표면에서도 위험 상태는 같은 의미를 유지합니다.</p>
             </Callout>
+          </Stack>
+        </Surface>
+
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3>알림</h3>
+            <Toast
+              tone="success"
+              labelledBy="feedback-dark-toast-title"
+              describedBy="feedback-dark-toast-message"
+              onClose={() => (darkToastStatus = '닫힘')}
+            >
+              <strong id="feedback-dark-toast-title">작업이 저장됐습니다.</strong>
+              <p id="feedback-dark-toast-message">다음 화면에서도 같은 상태를 볼 수 있습니다.</p>
+            </Toast>
+            <StatusToast
+              placement="inline"
+              idPrefix="feedback-dark-status-toast"
+              items={darkToastItems}
+              onDismiss={(_, item) => (darkToastStatus = `${item.title ?? item.id} 닫힘`)}
+            />
+            <p class="story-status">{darkToastStatus}</p>
+          </Stack>
+        </Surface>
+
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3 id="feedback-dark-progress-title">진행</h3>
+            <Progress
+              tone="warning"
+              labelledBy="feedback-dark-progress-title"
+              describedBy="feedback-dark-progress-desc"
+            />
+            <p class="story-status" id="feedback-dark-progress-desc">응답을 기다리고 있습니다.</p>
+            <Inline gap="sm" align="center">
+              <Spinner size="md" tone="warning" label="응답 대기 중" />
+              <span class="story-status">응답 대기 중</span>
+            </Inline>
+            <Skeleton variant="text" lines={2} />
+            <Skeleton variant="avatar" />
           </Stack>
         </Surface>
 
@@ -177,6 +304,13 @@
     font-weight: var(--zdp-font-weight-medium);
     line-height: var(--zdp-type-caption-line-height);
     margin-bottom: var(--zdp-space-2);
+  }
+
+  .story-status {
+    color: var(--zdp-color-ink-muted);
+    font-size: var(--zdp-type-caption-size);
+    line-height: var(--zdp-type-caption-line-height);
+    margin: 0;
   }
 
   .surface-pair strong {

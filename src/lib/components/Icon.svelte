@@ -20,6 +20,8 @@
     justify-content: center;
     line-height: 1;
     text-align: center;
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   .zdp-icon--sm {

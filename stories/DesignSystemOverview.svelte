@@ -1,11 +1,16 @@
 <script lang="ts">
+  import Accordion from '../src/lib/components/Accordion.svelte';
+  import Avatar from '../src/lib/components/Avatar.svelte';
   import Badge from '../src/lib/components/Badge.svelte';
   import Breadcrumb from '../src/lib/components/Breadcrumb.svelte';
   import Button from '../src/lib/components/Button.svelte';
   import Callout from '../src/lib/components/Callout.svelte';
   import Checkbox from '../src/lib/components/Checkbox.svelte';
+  import CodeBlock from '../src/lib/components/CodeBlock.svelte';
+  import CommandField from '../src/lib/components/CommandField.svelte';
   import Container from '../src/lib/components/Container.svelte';
   import Dialog from '../src/lib/components/Dialog.svelte';
+  import Disclosure from '../src/lib/components/Disclosure.svelte';
   import Divider from '../src/lib/components/Divider.svelte';
   import EmptyState from '../src/lib/components/EmptyState.svelte';
   import ErrorText from '../src/lib/components/ErrorText.svelte';
@@ -15,24 +20,38 @@
   import IconButton from '../src/lib/components/IconButton.svelte';
   import Inline from '../src/lib/components/Inline.svelte';
   import Input from '../src/lib/components/Input.svelte';
+  import IdentityChip from '../src/lib/components/IdentityChip.svelte';
+  import InlineCode from '../src/lib/components/InlineCode.svelte';
   import KeyValue from '../src/lib/components/KeyValue.svelte';
   import Label from '../src/lib/components/Label.svelte';
   import Link from '../src/lib/components/Link.svelte';
   import Page from '../src/lib/components/Page.svelte';
   import PageHeader from '../src/lib/components/PageHeader.svelte';
+  import Pagination from '../src/lib/components/Pagination.svelte';
+  import Progress from '../src/lib/components/Progress.svelte';
   import Radio from '../src/lib/components/Radio.svelte';
   import Section from '../src/lib/components/Section.svelte';
   import Select from '../src/lib/components/Select.svelte';
+  import SegmentedControl from '../src/lib/components/SegmentedControl.svelte';
   import ShareDock from '../src/lib/components/ShareDock.svelte';
+  import Skeleton from '../src/lib/components/Skeleton.svelte';
   import SkipLink from '../src/lib/components/SkipLink.svelte';
+  import SortHeader from '../src/lib/components/SortHeader.svelte';
   import Stack from '../src/lib/components/Stack.svelte';
+  import StatusToast from '../src/lib/components/StatusToast.svelte';
+  import Spinner from '../src/lib/components/Spinner.svelte';
   import Surface from '../src/lib/components/Surface.svelte';
   import Switch from '../src/lib/components/Switch.svelte';
   import Tabs from '../src/lib/components/Tabs.svelte';
   import Table from '../src/lib/components/Table.svelte';
+  import TableToolbar from '../src/lib/components/TableToolbar.svelte';
   import Textarea from '../src/lib/components/Textarea.svelte';
+  import Toast from '../src/lib/components/Toast.svelte';
   import VisuallyHidden from '../src/lib/components/VisuallyHidden.svelte';
+  import type { ZdpAccordionItem } from '../src/lib/disclosure.ts';
+  import type { ZdpSegmentedControlItem } from '../src/lib/segmented.ts';
   import type { ZdpShareDockItem } from '../src/lib/share.ts';
+  import type { ZdpStatusToastItem } from '../src/lib/toast.ts';
 
   let lightDialogOpen = false;
   let darkDialogOpen = false;
@@ -73,6 +92,85 @@
         }
       : item
   );
+
+  const lightToastItems: readonly ZdpStatusToastItem[] = [
+    {
+      id: 'saved',
+      tone: 'success',
+      title: '저장됐습니다.',
+      message: '변경 내역이 목록에 반영됐습니다.',
+      actionLabel: '기록 보기',
+      href: '#storybook-light-data'
+    },
+    {
+      id: 'warning',
+      tone: 'warning',
+      title: '확인이 필요합니다.',
+      message: '다음 단계 전에 비어 있는 값을 확인하세요.'
+    }
+  ];
+
+  const darkToastItems: readonly ZdpStatusToastItem[] = [
+    {
+      id: 'synced',
+      tone: 'info',
+      title: '동기화가 끝났습니다.',
+      message: '열려 있는 화면에서 최신 상태를 볼 수 있습니다.'
+    },
+    {
+      id: 'danger',
+      tone: 'danger',
+      title: '연결이 끊겼습니다.',
+      message: '다시 연결한 뒤 작업을 이어가세요.',
+      actionLabel: '다시 연결',
+      href: '#storybook-dark-actions'
+    }
+  ];
+
+  const lightAccordionItems: readonly ZdpAccordionItem[] = [
+    {
+      id: 'storybook-light-disclosure-scope',
+      title: '범위',
+      content: '화면 흐름과 데이터 판단은 소비 앱에서 정합니다.',
+      open: true
+    },
+    {
+      id: 'storybook-light-disclosure-owner',
+      title: '소유자',
+      content: '표시할 항목과 권한 판단은 제품 저장소가 연결합니다.'
+    }
+  ];
+
+  const darkAccordionItems: readonly ZdpAccordionItem[] = [
+    {
+      id: 'storybook-dark-disclosure-scope',
+      title: '검토',
+      content: '긴 안내는 같은 자리에서 접고 펼칩니다.',
+      open: true
+    },
+    {
+      id: 'storybook-dark-disclosure-owner',
+      title: '연결',
+      content: '저장, 권한, 데이터 fetch는 소비 화면의 상태와 함께 움직입니다.'
+    }
+  ];
+
+  const lightSegmentedItems: readonly ZdpSegmentedControlItem[] = [
+    { id: 'list', label: '목록' },
+    { id: 'cards', label: '카드' },
+    { id: 'summary', label: '요약' }
+  ];
+
+  const darkSegmentedItems: readonly ZdpSegmentedControlItem[] = [
+    { id: 'summary', label: '요약' },
+    { id: 'history', label: '기록' },
+    { id: 'settings', label: '설정' }
+  ];
+
+  const lightCodeExample =
+    "const releaseGate = ['owner', 'budget', 'audit-log'];\nconst ready = releaseGate.every((key) => evidence[key] === 'ready');";
+  const darkCodeExample =
+    "const securityBoundary = {\n  secrets: 'server-only',\n  audit: 'required'\n};";
 </script>
 
 <SkipLink href="#foundation-tokens">본문으로 건너뛰기</SkipLink>
@@ -81,11 +179,38 @@
   <header class="storybook-preview__header">
     <div>
       <p class="eyebrow">Sunlit parchment kit</p>
-      <h1>ZDP Design System</h1>
+      <div class="zdp-brand-lockup">
+        <span class="zdp-brand-lockup__mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" focusable="false">
+            <path d="M24 5v29" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+            <path d="M24 7 12 31h12Z" stroke="currentColor" stroke-width="3" stroke-linejoin="round" />
+            <path d="M25 13v18h13Z" stroke="currentColor" stroke-width="3" stroke-linejoin="round" />
+            <path d="M10 37h28" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+            <path d="M15 42h18" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity="0.48" />
+          </svg>
+        </span>
+        <h1 class="zdp-brand-wordmark">8ailors</h1>
+      </div>
       <p>Bright town-square surfaces, soft heraldic color, and quiet working controls.</p>
     </div>
     <span>Storybook</span>
   </header>
+
+  <section class="expression-panel" aria-labelledby="storybook-expression-title">
+    <div>
+      <p class="eyebrow">Type</p>
+      <h2 id="storybook-expression-title">표현용 폰트</h2>
+      <p>필요한 화면에서만 불러와 쓰는 제목, 캠페인, 짧은 안내용 글꼴 묶음.</p>
+    </div>
+    <div class="type-specimens" role="group" aria-label="표현용 폰트 샘플">
+      <span class="type-specimen type-specimen--script"><small>Script</small><strong>Sunlit routes</strong></span>
+      <span class="type-specimen type-specimen--inscription"><small>Inscription</small><strong>Gate Mark</strong></span>
+      <span class="type-specimen type-specimen--sketch"><small>Sketch</small><strong>Field Notes</strong></span>
+      <span class="type-specimen type-specimen--editorial"><small>Editorial</small><strong>Quiet policy</strong></span>
+      <span class="type-specimen type-specimen--sans"><small>Sans</small><strong>Campaign line</strong></span>
+      <span class="type-specimen type-specimen--keyboard"><small>Keyboard</small><strong>⌘ K</strong></span>
+    </div>
+  </section>
 
   <div class="storybook-preview__grid">
     <section class="theme-panel theme-panel--light" data-zdp-theme="light" aria-labelledby="storybook-light-title">
@@ -126,13 +251,33 @@
       </section>
 
       <section class="preview-section">
+        <h3 id="storybook-light-code">Code</h3>
+        <Stack gap="sm">
+          <p class="code-note">
+            설정 값은 <InlineCode text="readonly" /> 상태로 남깁니다.
+          </p>
+          <CodeBlock
+            label="릴리스 기준"
+            language="ts"
+            code={lightCodeExample}
+            labelledBy="storybook-light-code"
+          />
+        </Stack>
+      </section>
+
+      <section class="preview-section">
         <h3 id="storybook-light-focus">Focus</h3>
         <div class="focus-demo">
           <Link href="#foundation-tokens">출시 노트 보기</Link>
-          <label class="focus-demo__field" for="storybook-light-focus-search">
-            <span>검색</span>
-            <input id="storybook-light-focus-search" type="search" placeholder="Search Design System" />
-          </label>
+          <CommandField
+            id="storybook-light-focus-search"
+            name="storybook-light-focus-search"
+            label="검색"
+            labelVisible
+            placeholder="Search Design System"
+            describedBy="storybook-light-command-help"
+          />
+          <p class="status-note" id="storybook-light-command-help">이 화면에서 찾을 항목을 입력하세요.</p>
         </div>
       </section>
 
@@ -177,8 +322,51 @@
               <strong id="storybook-light-callout-danger">삭제 전에 다시 확인하세요.</strong>
               <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
             </Callout>
+            <Toast
+              tone="success"
+              labelledBy="storybook-light-toast-title"
+              describedBy="storybook-light-toast-message"
+            >
+              <strong id="storybook-light-toast-title">초안이 준비됐습니다.</strong>
+              <p id="storybook-light-toast-message">검토할 수 있는 상태로 바뀌었습니다.</p>
+            </Toast>
+            <StatusToast
+              placement="inline"
+              idPrefix="storybook-light-status-toast"
+              items={lightToastItems}
+            />
+            <strong class="loading-title" id="storybook-light-progress-title">진행</strong>
+            <Progress
+              value={72}
+              labelledBy="storybook-light-progress-title"
+              describedBy="storybook-light-progress-desc"
+            />
+            <p class="status-note" id="storybook-light-progress-desc">자료를 불러오는 중입니다.</p>
+            <Inline gap="sm" align="center">
+              <Spinner size="sm" label="목록 확인 중" />
+              <span class="status-note">목록 확인 중</span>
+            </Inline>
+            <div class="loading-preview" role="group" aria-labelledby="storybook-light-progress-title">
+              <Skeleton variant="text" lines={3} />
+              <Skeleton variant="block" />
+            </div>
           </Stack>
         </div>
+      </section>
+
+      <section class="preview-section">
+        <h3 id="storybook-light-identity">Identity</h3>
+        <Inline gap="sm" align="center">
+          <Avatar label="홍길동" initials="홍" />
+          <Avatar label="플랫폼 팀" initials="플" tone="primary" />
+          <IdentityChip
+            label="홍길동"
+            description="검토 담당"
+            initials="홍"
+            href="#storybook-light-data"
+            ariaCurrent="page"
+          />
+        </Inline>
       </section>
 
       <section class="preview-section">
@@ -238,13 +426,60 @@
       </section>
 
       <section class="preview-section">
+        <h3 id="storybook-light-disclosure">Disclosure</h3>
+        <Stack gap="md">
+          <Disclosure id="storybook-light-disclosure-panel" title="검토 기준" open headingLevel={4}>
+            <p>필요한 기준만 펼쳐서 확인합니다.</p>
+          </Disclosure>
+          <Accordion
+            ariaLabel="밝은 화면 접힌 안내"
+            items={lightAccordionItems}
+            mode="multiple"
+            headingLevel={4}
+          />
+        </Stack>
+      </section>
+
+      <section class="preview-section">
+        <h3 id="storybook-light-segmented-control">Segmented Control</h3>
+        <Stack gap="sm">
+          <strong>보기 방식</strong>
+          <SegmentedControl
+            ariaLabel="밝은 화면 보기 방식"
+            idPrefix="storybook-light-segmented"
+            items={lightSegmentedItems}
+            selectedId="list"
+          />
+        </Stack>
+      </section>
+
+      <section class="preview-section">
         <h3 id="storybook-light-data">Data</h3>
         <Stack gap="md">
+          <TableToolbar
+            title="점검 목록"
+            summary="권한과 감사 항목을 확인합니다."
+            selectedCount={2}
+            density="compact"
+            densityLabel="표 밀도"
+            labelledBy="storybook-light-data"
+          >
+            <svelte:fragment slot="selection-actions">
+              <Button variant="secondary">선택 해제</Button>
+            </svelte:fragment>
+            <svelte:fragment slot="actions">
+              <Button>새로 고침</Button>
+            </svelte:fragment>
+          </TableToolbar>
           <Table caption="보안 점검 목록" density="compact">
             <thead>
               <tr>
-                <th scope="col">항목</th>
-                <th scope="col">상태</th>
+                <th scope="col" aria-sort="ascending">
+                  <SortHeader label="항목" direction="ascending" />
+                </th>
+                <th scope="col">
+                  <SortHeader label="상태" direction="none" />
+                </th>
                 <th scope="col">다음 확인</th>
               </tr>
             </thead>
@@ -261,6 +496,12 @@
               </tr>
             </tbody>
           </Table>
+          <Pagination
+            currentPage={2}
+            totalPages={8}
+            ariaLabel="밝은 화면 점검 목록 페이지"
+            hrefForPage={(page) => `#storybook-light-page-${page}`}
+          />
           <KeyValue columns="two">
             <dt>소유 저장소</dt>
             <dd>zdp-money-platform</dd>
@@ -419,13 +660,35 @@
       </section>
 
       <section class="preview-section">
+        <h3 id="storybook-dark-code">Code</h3>
+        <Stack gap="sm">
+          <p class="code-note">
+            비밀값은 <InlineCode text="server-only" /> 경계에 둡니다.
+          </p>
+          <CodeBlock
+            label="보안 경계"
+            language="ts"
+            code={darkCodeExample}
+            tone="muted"
+            wrap
+            labelledBy="storybook-dark-code"
+          />
+        </Stack>
+      </section>
+
+      <section class="preview-section">
         <h3 id="storybook-dark-focus">Focus</h3>
         <div class="focus-demo">
           <Link href="#foundation-tokens">업데이트 보기</Link>
-          <label class="focus-demo__field" for="storybook-dark-focus-search">
-            <span>검색</span>
-            <input id="storybook-dark-focus-search" type="search" placeholder="Search Design System" />
-          </label>
+          <CommandField
+            id="storybook-dark-focus-search"
+            name="storybook-dark-focus-search"
+            label="검색"
+            labelVisible
+            placeholder="Search Design System"
+            describedBy="storybook-dark-command-help"
+          />
+          <p class="status-note" id="storybook-dark-command-help">필요한 항목으로 바로 이동하세요.</p>
         </div>
       </section>
 
@@ -470,8 +733,51 @@
               <strong id="storybook-dark-callout-danger">위험 작업 전에 다시 확인하세요.</strong>
               <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
             </Callout>
+            <Toast
+              tone="info"
+              labelledBy="storybook-dark-toast-title"
+              describedBy="storybook-dark-toast-message"
+            >
+              <strong id="storybook-dark-toast-title">작업이 저장됐습니다.</strong>
+              <p id="storybook-dark-toast-message">다음 화면에서도 같은 상태를 볼 수 있습니다.</p>
+            </Toast>
+            <StatusToast
+              placement="inline"
+              idPrefix="storybook-dark-status-toast"
+              items={darkToastItems}
+            />
+            <strong class="loading-title" id="storybook-dark-progress-title">진행</strong>
+            <Progress
+              tone="warning"
+              labelledBy="storybook-dark-progress-title"
+              describedBy="storybook-dark-progress-desc"
+            />
+            <p class="status-note" id="storybook-dark-progress-desc">응답을 기다리고 있습니다.</p>
+            <Inline gap="sm" align="center">
+              <Spinner size="md" tone="warning" label="응답 대기 중" />
+              <span class="status-note">응답 대기 중</span>
+            </Inline>
+            <div class="loading-preview" role="group" aria-labelledby="storybook-dark-progress-title">
+              <Skeleton variant="text" lines={2} />
+              <Skeleton variant="avatar" />
+            </div>
           </Stack>
         </div>
+      </section>
+
+      <section class="preview-section">
+        <h3 id="storybook-dark-identity">Identity</h3>
+        <Inline gap="sm" align="center">
+          <Avatar label="김하늘" initials="김" />
+          <Avatar label="운영 팀" initials="운" tone="primary" />
+          <IdentityChip
+            label="김하늘"
+            description="운영 담당"
+            initials="김"
+            href="#storybook-dark-data"
+            ariaCurrent="page"
+          />
+        </Inline>
       </section>
 
       <section class="preview-section">
@@ -531,13 +837,60 @@
       </section>
 
       <section class="preview-section">
+        <h3 id="storybook-dark-disclosure">Disclosure</h3>
+        <Stack gap="md">
+          <Disclosure id="storybook-dark-disclosure-panel" title="검토 기준" open headingLevel={4}>
+            <p>긴 문장은 패널 안에서 줄바꿈으로 이어집니다.</p>
+          </Disclosure>
+          <Accordion
+            ariaLabel="어두운 화면 접힌 안내"
+            items={darkAccordionItems}
+            mode="single"
+            headingLevel={4}
+          />
+        </Stack>
+      </section>
+
+      <section class="preview-section">
+        <h3 id="storybook-dark-segmented-control">Segmented Control</h3>
+        <Stack gap="sm">
+          <strong>보기 방식</strong>
+          <SegmentedControl
+            ariaLabel="어두운 화면 보기 방식"
+            idPrefix="storybook-dark-segmented"
+            items={darkSegmentedItems}
+            selectedId="summary"
+          />
+        </Stack>
+      </section>
+
+      <section class="preview-section">
         <h3 id="storybook-dark-data">Data</h3>
         <Stack gap="md">
+          <TableToolbar
+            title="점검 목록"
+            summary="대기 항목을 먼저 확인합니다."
+            selectedCount={1}
+            density="default"
+            densityLabel="표 밀도"
+            labelledBy="storybook-dark-data"
+          >
+            <svelte:fragment slot="selection-actions">
+              <Button variant="secondary">보류</Button>
+            </svelte:fragment>
+            <svelte:fragment slot="actions">
+              <Button>검토</Button>
+            </svelte:fragment>
+          </TableToolbar>
           <Table caption="보안 점검 목록" density="compact">
             <thead>
               <tr>
-                <th scope="col">항목</th>
-                <th scope="col">상태</th>
+                <th scope="col">
+                  <SortHeader label="항목" direction="none" />
+                </th>
+                <th scope="col" aria-sort="descending">
+                  <SortHeader label="상태" direction="descending" />
+                </th>
                 <th scope="col">다음 확인</th>
               </tr>
             </thead>
@@ -554,6 +907,12 @@
               </tr>
             </tbody>
           </Table>
+          <Pagination
+            currentPage={6}
+            totalPages={14}
+            ariaLabel="어두운 화면 점검 목록 페이지"
+            hrefForPage={(page) => `#storybook-dark-page-${page}`}
+          />
           <KeyValue columns="two">
             <dt>소유 저장소</dt>
             <dd>zdp-money-platform</dd>
@@ -682,7 +1041,7 @@
     </article>
     <article>
       <span>Control</span>
-      <strong>2.25rem / 2.75rem / --zdp-control-choice-size / --zdp-control-switch-width / --zdp-control-scrollbar-size</strong>
+      <strong>2.25rem / 2.75rem / --zdp-control-choice-size / --zdp-control-switch-width / --zdp-control-scrollbar-size / --zdp-color-selection-surface / --zdp-color-selection-text</strong>
     </article>
     <article>
       <span>Responsive</span>
@@ -729,8 +1088,8 @@
 
   .storybook-preview__header h1 {
     color: var(--zdp-color-ink-strong);
-    font-family: var(--zdp-font-family-display);
-    font-size: var(--zdp-type-page-title-size);
+    font-family: var(--zdp-font-family-brand);
+    font-size: calc(var(--zdp-type-page-title-size) - 0.6rem);
     font-weight: var(--zdp-font-weight-medium);
     line-height: var(--zdp-type-page-title-line-height);
     margin: 0;
@@ -758,6 +1117,84 @@
     display: grid;
     gap: var(--zdp-space-6);
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .expression-panel {
+    background: var(--zdp-color-surface-panel);
+    border: 1px solid var(--zdp-color-line-subtle);
+    border-radius: var(--zdp-radius-lg);
+    display: grid;
+    gap: var(--zdp-space-4);
+    padding: var(--zdp-space-6);
+  }
+
+  .expression-panel h2 {
+    color: var(--zdp-color-ink-strong);
+    font-family: var(--zdp-font-family-display);
+    font-size: var(--zdp-type-title-size);
+    line-height: var(--zdp-type-title-line-height);
+    margin: 0;
+  }
+
+  .expression-panel p:not(.eyebrow) {
+    color: var(--zdp-color-ink-muted);
+    margin: var(--zdp-space-2) 0 0;
+  }
+
+  .type-specimens {
+    display: grid;
+    gap: var(--zdp-space-3);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .type-specimen {
+    background: var(--zdp-color-surface-canvas);
+    border: 1px solid var(--zdp-color-line-subtle);
+    border-radius: var(--zdp-radius-md);
+    color: var(--zdp-color-ink-strong);
+    display: grid;
+    gap: var(--zdp-space-1);
+    min-width: 0;
+    padding: var(--zdp-space-3);
+  }
+
+  .type-specimen small {
+    color: var(--zdp-color-ink-muted);
+    font-family: var(--zdp-font-family-sans);
+    font-size: var(--zdp-font-size-xs);
+  }
+
+  .type-specimen strong {
+    font-size: var(--zdp-font-size-xl);
+    font-weight: var(--zdp-font-weight-regular);
+    line-height: var(--zdp-font-line-height-tight);
+  }
+
+  .type-specimen--script strong {
+    font-family: var(--zdp-font-family-expression-script);
+    font-size: calc(var(--zdp-font-size-xl) * 1.35);
+    font-weight: var(--zdp-font-weight-bold);
+  }
+
+  .type-specimen--inscription strong {
+    font-family: var(--zdp-font-family-expression-inscription);
+  }
+
+  .type-specimen--sketch strong {
+    font-family: var(--zdp-font-family-expression-sketch);
+  }
+
+  .type-specimen--editorial strong {
+    font-family: var(--zdp-font-family-expression-editorial);
+  }
+
+  .type-specimen--sans strong {
+    font-family: var(--zdp-font-family-expression-sans);
+    font-weight: var(--zdp-font-weight-medium);
+  }
+
+  .type-specimen--keyboard strong {
+    font-family: var(--zdp-font-family-expression-keyboard);
   }
 
   .theme-panel {
@@ -887,22 +1324,30 @@
     max-width: 28rem;
   }
 
-  .focus-demo__field {
-    display: grid;
-    gap: var(--zdp-space-2);
-  }
-
-  .focus-demo__field span {
-    color: var(--zdp-color-ink-strong);
-    font-size: var(--zdp-type-label-size);
-    font-weight: var(--zdp-font-weight-medium);
-    line-height: var(--zdp-type-label-line-height);
-  }
-
   .feedback-stack {
     display: grid;
     gap: var(--zdp-space-3);
     max-width: 34rem;
+  }
+
+  .code-note {
+    color: var(--zdp-color-ink-muted);
+    font-size: var(--zdp-type-body-small-size);
+    line-height: var(--zdp-type-body-small-line-height);
+    margin: 0;
+  }
+
+  .loading-preview {
+    display: grid;
+    gap: var(--zdp-space-3);
+    min-width: 0;
+  }
+
+  .loading-title {
+    color: var(--zdp-color-ink-strong);
+    font-size: var(--zdp-type-body-small-size);
+    font-weight: var(--zdp-font-weight-medium);
+    line-height: var(--zdp-type-body-small-line-height);
   }
 
   .dialog-demo {
@@ -1036,11 +1481,12 @@
     }
 
     .storybook-preview__header h1 {
-      font-size: var(--zdp-type-page-title-compact-size);
+      font-size: calc(var(--zdp-type-page-title-compact-size) - 0.35rem);
     }
 
     .storybook-preview__grid,
     .foundation-strip,
+    .type-specimens,
     .surface-grid {
       grid-template-columns: 1fr;
     }

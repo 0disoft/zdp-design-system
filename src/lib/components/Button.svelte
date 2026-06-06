@@ -7,6 +7,7 @@
   export let name: string | null = null;
   export let value: string | null = null;
   export let form: string | null = null;
+  export let ariaLabel: string | null = null;
   export let ariaControls: string | null = null;
   export let ariaDescribedBy: string | null = null;
   export let ariaExpanded: boolean | null = null;
@@ -24,6 +25,7 @@
   {type}
   {disabled}
   aria-disabled={disabled}
+  aria-label={ariaLabel ?? undefined}
   aria-controls={ariaControls ?? undefined}
   aria-describedby={ariaDescribedBy ?? undefined}
   aria-expanded={ariaExpanded ?? undefined}
@@ -54,6 +56,8 @@
       background-color var(--zdp-motion-fast) ease,
       border-color var(--zdp-motion-fast) ease,
       color var(--zdp-motion-fast) ease;
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   .zdp-button--sm {

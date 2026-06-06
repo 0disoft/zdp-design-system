@@ -24,6 +24,8 @@
   .zdp-label__required {
     color: var(--zdp-color-accent-danger);
     margin-left: var(--zdp-space-1);
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   .zdp-label__required-text {

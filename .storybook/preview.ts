@@ -1,5 +1,8 @@
 import type { Preview } from '@storybook/svelte-vite';
 import '../src/styles/index.css';
+import '../src/styles/brand-fonts.css';
+import '../src/styles/expressive-fonts.css';
+import './preview.css';
 
 const preview: Preview = {
   parameters: {

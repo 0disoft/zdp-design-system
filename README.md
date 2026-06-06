@@ -24,6 +24,8 @@ ZDP의 디자인 토큰, CSS, 아이콘, Svelte UI 컴포넌트 경계를 고정
 - `breakpoint`: mobile, tablet, desktop, wide 기준 폭
 - `control`: 버튼, 아이콘 버튼, 입력류가 공유할 높이, radius, border width, hit target, 선택 컨트롤 전용 mark, indicator, switch, scrollbar 크기
 - `focus`: 키보드 사용자가 현재 위치를 놓치지 않도록 하는 sunlit focus highlight, dark text, dark line
+- `selection`: 드래그로 선택한 텍스트가 브라우저 기본 파란색 대신 theme surface와 readable text로 보이게 하는 selection 색
+- `brand`: `8ailors` 워드마크 같은 브랜드 표면에만 쓰는 Playwrite AU VIC Guides 기반 폰트 스택
 - `i18n`: 긴 텍스트와 CJK/영문/힌디어 혼합 문장이 UI를 밀어내지 않게 하는 wrapping 및 언어별 폰트 기본값
 
 ## 현재 제외
@@ -49,6 +51,7 @@ ZDP의 디자인 토큰, CSS, 아이콘, Svelte UI 컴포넌트 경계를 고정
 - Viewports는 ZDP Mobile, Tablet, Desktop, Wide 프리셋으로 mobile/tablet/desktop 폭을 확인한다.
 - Accessibility addon은 컴포넌트 검토 패널로 켜두되, broad adoption 전에 위반 항목을 정리한 뒤 CI 실패 게이트로 승격한다.
 - Interaction play는 `Tabs`, `Dialog`, `ConfirmAction`처럼 키보드와 상태 전이가 중요한 컴포넌트에 먼저 붙인다.
+- Theme / Locale Stress story는 light/dark, ZDP Mobile 폭, 긴 한국어/영어/중국어/힌디어 문장, focus-visible 상태를 한 번에 확인한다.
 
 ## 패키지 표면
 
@@ -65,19 +68,69 @@ import 'zdp-design-system/styles.css';
 import 'zdp-design-system/locale-fonts.css';
 ```
 
+브랜드 워드마크를 렌더링하는 표면은 선택형 브랜드 폰트 CSS를 추가로 불러온다. 이 entry는 body나 일반 heading을 바꾸지 않고 `font.family.brand`, `.zdp-brand-lockup`, `.zdp-brand-wordmark`에 필요한 Playwrite AU VIC Guides font face만 제공한다. 워드마크 텍스트에는 `.zdp-brand-wordmark`를 직접 붙여 locale font override가 브랜드 스택을 덮지 않게 하고, 브랜드명이 너무 가늘게 보이지 않도록 `medium` weight를 쓴다.
+
+```ts
+import 'zdp-design-system/styles.css';
+import 'zdp-design-system/brand-fonts.css';
+```
+
+캠페인형 섹션 제목, 짧은 마케팅 문구, 장식적 안내처럼 표현력이 필요한 표면은 선택형 expressive font CSS를 추가로 불러온다. 이 entry는 일반 제품 UI를 바꾸지 않고 `font.family.expression*` 토큰에 필요한 Tangerine, Caesar Dressing, Google Sans, Merriweather, Fredericka the Great, Copse, Cabin, Libertinus Keyboard font face만 제공한다.
+
+```ts
+import 'zdp-design-system/styles.css';
+import 'zdp-design-system/expressive-fonts.css';
+```
+
+## 소비 컴포넌트 계약
+
+- Breadcrumb는 현재 위치 탐색을 `nav`로 표현하고, 제품 라우팅 판단은 소비 앱이 한다.
+- Button과 IconButton은 `onclick` 실행 표면이며 권한, 저장, 네트워크 재시도 판단을 소유하지 않는다.
+- 단축키 표기는 `ariaKeyShortcuts`와 실제 keydown 처리를 분리한다. Chrome과 브라우저가 기본 동작으로 가져가는 조합은 제품 단축키로 덮어쓰지 않는다. 소비 앱의 전역 단축키 dispatcher는 `shouldZdpIgnoreShortcutEvent`, `isZdpTextEntryTarget`, `isZdpBrowserReservedShortcut`, `zdpShortcutRecommendations` 같은 shortcut policy helper로 입력창, IME 조합, 브라우저 예약 조합을 먼저 걸러낸다.
+- ConfirmAction은 중요한 액션 앞의 확인 흐름만 제공하고, 실제 삭제나 권한 검사는 소비 앱이 한다.
+- Avatar와 IdentityChip은 사람, 팀, 계정의 짧은 식별 표면이다.
+- CommandField는 검색 입력 primitive이며 실제 검색 로직이나 command palette 결과는 소비 앱이 소유한다.
+- InlineCode와 CodeBlock은 문서, 보안, 아키텍처 화면의 코드 표면이다.
+- Icon은 장식용 glyph 기본값을 갖고, 의미 있는 아이콘은 소비 컴포넌트가 접근성 이름을 제공한다.
+- Link는 일반 텍스트 링크이며 버튼처럼 보이는 destructive action으로 쓰지 않는다.
+- ShareDock은 공유 도크와 아이콘 shape를 제공하고 URL 조립과 플랫폼 정책은 소비 앱이 정한다.
+- Kbd와 ShortcutHint는 입력 힌트를 표시할 뿐, 단축키 실행을 등록하지 않는다. 화면에 보이는 힌트는 `/`, `?`, `Esc`, `Enter`, `ArrowUp/ArrowDown`, `Ctrl/⌘+Enter`처럼 자주 쓰고 맥락이 분명한 키만 남긴다.
+- ThemeToggle은 light/dark 전환 버튼의 pressed 상태와 glyph만 제공하고 초기 테마, 저장소, 시스템 선호도 판단은 소비 앱이 정한다.
+- Tooltip은 짧은 보조 설명만 맡고, 긴 안내나 상태 설명은 Popover, Disclosure, 문서 본문으로 보낸다.
+- Accordion과 Disclosure는 접힌 안내와 점진적 정보 공개를 담당한다.
+- SegmentedControl은 보기 방식이나 단일 모드 전환을 표현한다.
+- SortHeader와 TableToolbar는 sortable column affordance, 선택 행 액션, 밀도 조절 같은 표 주변 도구를 맡는다.
+- Popover와 Menu는 설정, 더보기, 필터, 계정 메뉴 표면을 제공하지만 메뉴 항목 권한 판단은 소비 앱이 한다.
+- Pagination은 목록 페이지 이동을 표현하고 데이터 범위 계산은 소비 앱이 한다.
+- Progress, Spinner, Skeleton은 작업 진행, 대기, 자리 예약 상태를 보여주며 실제 작업 큐를 소유하지 않는다.
+- Toast와 StatusToast는 저장, 동기화, 연결 같은 짧은 상태 피드백을 제공한다.
+- Text selection의 기본값은 선택 가능이다. 조작 컴포넌트와 장식 요소만 선택을 막고, 드래그 중에는 `zdp-user-select-dragging` 같은 임시 상태로 제한한다.
+- SkipLink는 키보드 반복 탐색을 줄이는 첫 번째 탈출구다.
+- VisuallyHidden은 스크린리더에 필요한 텍스트를 시각적으로 숨길 때만 쓴다.
+- Table, KeyValue, EmptyState는 업무 데이터, 용어-값, 비어 있는 상태를 표현한다.
+- TermTrigger와 TermSheet는 용어 설명을 click-open sheet로 연결하며, TermSheet root에는 stable `term_id`와 `data-zdp-ad-exclude`를 남긴다. TermSheet에는 광고 slot을 넣지 않는다.
+- Dialog는 모달 레이어이며 닫기, focus trap, `describedBy`에 id 배열, `errorMessageId`로 `aria-errormessage` 연결을 명확히 한다.
+- Page, Container, Section, PageHeader는 페이지 폭, 섹션 rhythm, 제목 구조를 정리한다.
+- Flutter는 Svelte 컴포넌트를 직접 쓰지 않고 `tokens/zdp.tokens.json`과 필요한 platform adapter를 통해 시각 토큰만 소비한다.
+
 Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
 
 ```svelte
 <script lang="ts">
   import {
+    Accordion,
+    Avatar,
     Badge,
     Breadcrumb,
     Button,
     Callout,
     Checkbox,
+    CodeBlock,
+    CommandField,
     ConfirmAction,
     Container,
     Dialog,
+    Disclosure,
     Divider,
     EmptyState,
     Field,
@@ -85,15 +138,26 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
     HelpText,
     Icon,
     Input,
+    IdentityChip,
     Inline,
+    InlineCode,
     Kbd,
     KeyValue,
     Label,
     Link,
+    Menu,
     Page,
     PageHeader,
+    Pagination,
+    Popover,
+    Progress,
     SkipLink,
+    SegmentedControl,
+    Skeleton,
     Stack,
+    SortHeader,
+    StatusToast,
+    Spinner,
     Section,
     ShareDock,
     ShortcutHint,
@@ -101,6 +165,12 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
     Switch,
     Tabs,
     Table,
+    TableToolbar,
+    TermSheet,
+    TermTrigger,
+    ThemeToggle,
+    Tooltip,
+    Toast,
     Toolbar,
     VisuallyHidden
   } from 'zdp-design-system';
@@ -130,6 +200,13 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
       ]}
     />
     <Badge tone="success">정상</Badge>
+    <IdentityChip
+      label="홍길동"
+      description="검토 담당"
+      initials="홍"
+      href="/people/hong"
+    />
+    <Avatar label="플랫폼 팀" initials="플" tone="primary" />
     <Link href="/design">자세히 보기</Link>
     <ShareDock
       placement="inline"
@@ -144,6 +221,48 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
       <strong>다음 단계가 준비됐습니다.</strong>
       <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
     </Callout>
+    <Divider />
+    <Disclosure title="검토 기준" open headingLevel={2}>
+      <p>필요한 기준만 펼쳐서 확인합니다.</p>
+    </Disclosure>
+    <Accordion
+      ariaLabel="접힌 안내"
+      items={[
+        {
+          id: 'scope',
+          title: '범위',
+          content: '화면 흐름과 데이터 판단은 소비 앱에서 정합니다.',
+          open: true
+        },
+        {
+          id: 'owner',
+          title: '소유자',
+          content: '표시할 항목과 권한 판단은 제품 저장소가 연결합니다.'
+        }
+      ]}
+    />
+    <SegmentedControl
+      ariaLabel="보기 방식"
+      items={[
+        { id: 'list', label: '목록' },
+        { id: 'cards', label: '카드' },
+        { id: 'summary', label: '요약' }
+      ]}
+      selectedId="list"
+    />
+    <CommandField
+      label="빠른 이동"
+      labelVisible
+      placeholder="프로젝트, 문서, 설정 검색"
+      describedBy="command-field-help"
+    />
+    <HelpText id="command-field-help">이 화면에서 찾을 항목을 입력하세요.</HelpText>
+    <p>배포 값은 <InlineCode text="readonly" /> 상태로 남깁니다.</p>
+    <CodeBlock
+      label="검토 규칙"
+      language="ts"
+      code={"const requiredEvidence = ['owner', 'budget', 'audit-log'];\nconst ready = requiredEvidence.every((item) => status[item] === 'ready');"}
+    />
     <Divider />
     <Grid columns="two" gap="md">
       <Surface padding="lg">
@@ -162,11 +281,29 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
         <Button>검토 요청</Button>
       </svelte:fragment>
     </Toolbar>
+    <TableToolbar
+      title="점검 목록"
+      summary="권한과 감사 항목을 확인합니다."
+      selectedCount={2}
+      density="compact"
+      ariaLabel="점검 목록 도구"
+    >
+      <svelte:fragment slot="selection-actions">
+        <Button variant="secondary">선택 해제</Button>
+      </svelte:fragment>
+      <svelte:fragment slot="actions">
+        <Button>새로 고침</Button>
+      </svelte:fragment>
+    </TableToolbar>
     <Table caption="보안 점검 목록" density="compact">
       <thead>
         <tr>
-          <th scope="col">항목</th>
-          <th scope="col">상태</th>
+          <th scope="col" aria-sort="ascending">
+            <SortHeader label="항목" direction="ascending" />
+          </th>
+          <th scope="col">
+            <SortHeader label="상태" direction="none" />
+          </th>
           <th scope="col">다음 확인</th>
         </tr>
       </thead>
@@ -178,6 +315,12 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
         </tr>
       </tbody>
     </Table>
+    <Pagination
+      currentPage={2}
+      totalPages={8}
+      ariaLabel="점검 목록 페이지"
+      hrefForPage={(page) => `?page=${page}`}
+    />
     <KeyValue columns="two">
       <dt>소유 저장소</dt>
       <dd>zdp-money-platform</dd>
@@ -253,12 +396,37 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
 </Page>
 ```
 
-Astro는 `styles.css`를 전역으로 쓰고, Svelte island가 필요한 부분에서 같은 Svelte 컴포넌트를 소비한다. Flutter는 Svelte 컴포넌트를 직접 쓰지 않고 `tokens/zdp.tokens.json`을 Dart theme adapter의 입력으로 사용한다.
-정적 HTML 소비처는 `.zdp-page`, `.zdp-container`, `.zdp-section`, `.zdp-page-header` utility로 기본 페이지 폭, 섹션 리듬, 헤더 액션 배치를 맞출 수 있다. 가까운 요소의 세로 흐름은 `.zdp-stack`과 `.zdp-stack--gap-*` utility로 적용하고, `.zdp-inline`과 `.zdp-inline--gap-*` utility로 가까운 가로 흐름을 맞출 수 있다. 얇은 구분선은 `.zdp-divider`와 `.zdp-divider--horizontal` utility로 받는다. 반복 카드나 요약 묶음은 `.zdp-grid`, 가까운 화면 도구와 액션 묶음은 `.zdp-toolbar` utility로 맞춘다. 검색, 빠른 이동, 명령 팔레트 진입 같은 짧은 입력은 `.zdp-command-field`, `.zdp-command-field__input`, `.zdp-kbd`, `.zdp-shortcut-hint` utility로 받는다. 작은 glyph는 `.zdp-icon`과 `.zdp-icon--sm|md` utility로 중앙정렬한다. 표 형식 정보는 `.zdp-table-wrap`과 `.zdp-table`, 용어와 값 목록은 `.zdp-key-value`, 빈 목록이나 대기 상태는 `.zdp-empty-state` utility로 받는다. 공유 표면은 `.zdp-share-dock`, `.zdp-share-dock--side|rail|bottom|inline`, `.zdp-share-action`, `.zdp-share-icon`, `.zdp-share-action__tooltip` utility로 받되, 제품별 라우팅, SEO, visibility, URL 생성, 데이터 판단은 소비처가 정한다.
-Svelte island 없이 공유 아이콘 shape만 필요한 Astro 표면은 `zdp-design-system/share`에서 `zdpShareIcons`와 `ZdpShareIconName`을 가져온다.
-플랫폼 브랜드 공유 아이콘은 Simple Icons path를 기준으로 고정하고 임의 outline glyph로 대체하지 않는다.
+Astro는 `styles.css`를 전역으로 불러오고, Svelte island가 필요한 부분에서 Svelte 컴포넌트를 소비한다. Flutter는 `tokens/zdp.tokens.json`을 Dart theme adapter 입력으로 쓴다.
 
-소비 저장소별 적용 순서와 금지 경계는 `docs/CONSUMER_CONTRACT.md`를 기준으로 맞춘다. Astro, Svelte, Tauri, Flutter 소비처는 public export와 token name을 유지하고 내부 `src/` deep import를 만들지 않는다.
+정적 HTML 소비처에서 쓸 수 있는 주요 utility class:
+
+| 용도 | utility |
+|---|---|
+| 페이지 폭, 섹션 리듬, 헤더 | `.zdp-page` `.zdp-container` `.zdp-section` `.zdp-page-header` |
+| 세로 흐름 | `.zdp-stack` `.zdp-stack--gap-*` |
+| 가로 흐름 | `.zdp-inline` `.zdp-inline--gap-*` |
+| 구분선 | `.zdp-divider` `.zdp-divider--horizontal` |
+| 카드 그리드, 액션 묶음 | `.zdp-grid` `.zdp-toolbar` |
+| 검색 / 명령 팔레트 입력 | `.zdp-command-field-shell` `.zdp-command-field` `.zdp-kbd` `.zdp-shortcut-hint` |
+| 사람 / 팀 표기 | `.zdp-avatar` `.zdp-identity-chip` |
+| 테마 전환 | `.zdp-theme-toggle` `.zdp-theme-toggle__icon` |
+| 보조 설명 | `.zdp-tooltip` `.zdp-tooltip__trigger` `.zdp-tooltip__content` |
+| 접힌 안내 | `.zdp-disclosure` `.zdp-accordion` |
+| 단일 선택 | `.zdp-segmented-control` |
+| 팝오버 / 메뉴 | `.zdp-popover` `.zdp-menu` |
+| 상태 알림 | `.zdp-toast` `.zdp-status-toast` |
+| 로딩 / 진행 | `.zdp-progress` `.zdp-spinner` `.zdp-skeleton` |
+| 아이콘 | `.zdp-icon` `.zdp-icon--sm|md` |
+| 표 | `.zdp-table-wrap` `.zdp-table` `.zdp-sort-header` `.zdp-table-toolbar` |
+| 페이지네이션 | `.zdp-pagination` |
+| 용어/값 목록, 빈 상태 | `.zdp-key-value` `.zdp-empty-state` |
+| 용어 설명 | `.zdp-term-trigger` `.zdp-term-sheet` |
+| 공유 도크 | `.zdp-share-dock` `.zdp-share-action` `.zdp-share-icon` |
+| 코드 | `.zdp-inline-code` `.zdp-code-block` |
+
+Svelte island 없이 공유 아이콘 shape만 필요한 Astro 표면은 `zdp-design-system/share`에서 `zdpShareIcons`와 `ZdpShareIconName`을 가져온다. 플랫폼 브랜드 아이콘은 Simple Icons path를 유지하고 임의 outline glyph로 대체하지 않는다.
+
+소비처별 적용 순서와 금지 경계는 `docs/CONSUMER_CONTRACT.md`를 따른다. 내부 `src/` 경로 직접 import 금지.
 
 ## Storybook
 
@@ -269,9 +437,14 @@ bun install
 bun run dev
 ```
 
-Storybook은 Svelte/Vite 기반이며 `Design System/Overview` story에서 light/dark 테마, 색상, 타이포그래피, 버튼, 아이콘 버튼, form, surface 상태를 함께 확인한다. 개별 피드백은 `Design System/Components/Button`, `Design System/Components/Data Display`, `Design System/Components/Form Controls`, `Design System/Components/Navigation`, `Design System/Components/Feedback`, `Design System/Components/Interaction` story에서 상태별로 좁혀 확인한다.
-Workduck의 개발 서버 터미널은 `bun run dev`를, 빌드 터미널은 `bun run build`를 표준 진입점으로 사용한다. `bun run storybook`과 `bun run storybook:build`는 같은 명령을 가리키는 별칭이다.
-정적 HTML이 필요할 때는 fallback으로 `preview/index.html`을 그대로 열 수 있다.
+Storybook은 Svelte/Vite 기반이다.
+
+- `Design System/Overview` — light/dark 테마, 색상, 타이포그래피, 버튼, 아이콘 버튼, form, surface 상태
+- `Design System/Components/*` — 컴포넌트별 상태 확인 (Button, Data Display, Form Controls, Navigation, Feedback, Interaction)
+- `Design System/QA/Theme Locale Stress` — 긴 다국어 문장, 좁은 모바일 폭, focus-visible 상태를 한 번에 확인하는 QA 표면
+
+`bun run storybook`과 `bun run storybook:build`는 `bun run dev` / `bun run build`의 별칭이다.
+정적 HTML이 필요하면 `preview/index.html`을 브라우저에서 바로 열면 된다.
 
 ## 정적 미리보기
 
@@ -286,67 +459,54 @@ preview/index.html
 ## 토큰 원칙
 
 - 토큰 이름은 제품명이나 캠페인명이 아니라 역할을 기준으로 둔다.
-- 색상, 간격, radius, typography, responsive, control, focus, i18n, shadow, motion은 `tokens/zdp.tokens.json`이 원천이다.
+- 색상, 간격, radius, typography, responsive, control, focus, selection, i18n, shadow, motion은 `tokens/zdp.tokens.json`이 원천이다.
 - 색상 토큰은 `hex` fallback과 `oklch` 의도값을 함께 가진다.
 - `src/styles/tokens.css`는 웹과 Tauri WebView가 쓰는 CSS 변수 표면이다.
 - CSS는 hex를 먼저 선언하고 OKLCH 지원 브라우저에서만 `@supports`로 덮어쓴다.
 - `styles.css`는 Pretendard Variable dynamic subset을 로드하고, sans/display stack은 `"Pretendard Variable", Pretendard`를 최우선으로 둔다.
+- `brand-fonts.css`는 선택형 public export이며 `font.family.brand`와 `.zdp-brand-wordmark`가 쓰는 Playwrite AU VIC Guides를 로드한다. 일반 문서 제목, 제품 UI heading, 표, 본문에는 `brand` stack을 쓰지 않는다.
+- `expressive-fonts.css`는 선택형 public export이며 `font.family.expressionScript`, `font.family.expressionInscription`, `font.family.expressionSketch`, `font.family.expressionEditorial`, `font.family.expressionSans`, `font.family.expressionKeyboard`가 쓰는 표현용 Google Fonts를 로드한다. 기본 앱 UI, 표, 긴 본문, 일반 Tooltip에는 자동 적용하지 않는다.
 - `locale-fonts.css`는 선택형 public export이며 Manrope, Noto Sans SC, Noto Sans Devanagari, Noto Sans JP 웹폰트를 로드한다. 모든 소비 앱이 반드시 가져갈 필요는 없다.
 - `:lang(en|es|fr|de|pt|id)`는 Manrope/Inter 라틴 스택, `:lang(ko)`는 Pretendard 한국어 스택, `:lang(zh)`는 Noto Sans SC/시스템 중국어 스택, `:lang(hi)`는 Noto Sans Devanagari/시스템 데바나가리 스택, `:lang(ja)`는 Noto Sans JP/시스템 일본어 스택으로 덮어쓴다.
 - Flutter, native shell, 문서 생성기는 JSON 토큰의 hex 값을 기본 입력으로 쓰고 필요할 때 OKLCH를 별도 변환한다.
 
 ## Flat UI 계약
 
-기본 컴포넌트는 그림자, 그라데이션, 반짝임, 이동형 hover 장식을 쓰지 않는다. 깊이는 `surface` 색상 단계, 1px framed border, 명확한 타이포그래피, 충분한 여백으로 표현한다.
+그림자, 그라데이션, 반짝임, 이동형 hover 장식을 쓰지 않는다. 깊이는 `surface` 색상 단계, 1px framed border, 타이포그래피, 여백으로 만든다.
 
-- `shadow.focus`, `shadow.sm`, `shadow.md`는 의도적으로 `none`이다.
-- core 토큰에는 `gradient` 그룹을 만들지 않는다.
-- 버튼 hover는 위치 이동이나 빛 반사가 아니라 배경색, 테두리색, 글자색의 짧은 상태 변화만 쓴다.
-- Button과 IconButton hover는 light/dark 모두 배경색과 border 색이 함께 변한다.
-- 버튼 active도 위치 이동이나 그림자 없이 배경색, 테두리색, 글자색만 바꾼다.
-- focus는 그림자가 아니라 `focus.surface` outline, `focus.line` border, 링크의 하단선으로 표시한다.
-- Button, IconButton, ConfirmAction, Field, Label, Input, Textarea, Select, Checkbox, Radio, Switch는 `0.375rem` control radius를 기준으로 보고 pill 형태를 쓰지 않는다.
-- Surface, Badge, Callout, Breadcrumb, Tabs, Grid, Toolbar, Table, KeyValue, EmptyState, Page, Container, Section, PageHeader, preview panel은 `0.5rem` large surface radius를 상한으로 삼아 그림자 없이도 포함 관계가 보이게 한다.
-- Secondary Button과 ghost IconButton은 resting border를 `line-subtle`로 낮추고 hover/active에서만 `line-strong`으로 올려, 평소에는 조용하지만 상호작용 시에는 같은 방향으로 반응하게 한다.
-- Button과 IconButton은 `1px` border width를 기준으로 하는 thin framed control 방향을 유지한다.
-- Icon은 장식용 glyph 또는 짧은 보조 기호의 박스, 크기, 중앙정렬만 제공하며 의미, 라벨 문구, 상태 판단은 소비 앱에 남긴다.
-- Button과 IconButton은 `onclick`, `ariaControls`, `ariaExpanded`, `ariaPressed`, `ariaDescribedBy`, `ariaKeyShortcuts` 같은 실제 앱 액션 연결 props를 native button에 전달한다.
-- ConfirmAction은 중요한 액션을 밀기 또는 길게 누르기로 확인하는 표면만 제공하고 결제, 삭제, 권한, 환불 판단은 소비 앱에 남긴다.
-- Input, Textarea, Select는 Button과 같은 framed control 방향을 쓰고, help/error text는 id와 `aria-describedby`로 연결한다. 도움말과 에러가 함께 있을 때는 `describedBy`에 id 배열을 넘기고, invalid 상태에서는 `errorMessageId`로 `aria-errormessage`를 연결한다.
-- Input과 Textarea의 `readonly` 상태는 제출과 포커스를 유지하는 읽기 전용 값에 사용하고, `disabled` 상태와 혼동하지 않는다.
-- Checkbox, Radio, Switch는 native input을 유지하고 `checked`, `focus-visible`, `disabled`, `invalid` 상태를 토큰으로 표현한다. 선택 mark와 switch track은 버튼 hit area가 아니라 `choice`/`switch` 전용 control token을 쓴다.
-- Checkbox, Radio, Switch hover는 checked 상태를 덮지 않는다. 이미 선택된 컨트롤은 hover 중에도 선택된 색과 mark 위치를 유지한다.
-- Scrollbar는 얇은 track과 thumb을 `color.scrollbar.*`, `control.scrollbarSize`로 고정해 브라우저 기본 회색 UI가 shared surface 안에 노출되지 않게 한다.
-- Badge와 Callout은 짧은 상태와 페이지 안 피드백을 표현하되 제품 판단 로직을 갖지 않는다.
-- Link는 일반 텍스트 이동을 표현하되 라우팅, SEO, 권한, 데이터 로딩 결정을 갖지 않는다.
-- Link는 실제 단축키가 구현된 화면에서만 `ariaKeyShortcuts`를 전달할 수 있다.
-- SkipLink는 키보드 사용자가 반복되는 상단 탐색을 건너뛰도록 돕되 페이지 레이아웃, 라우팅, 본문 id 소유는 소비 앱에 남긴다.
-- VisuallyHidden은 스크린리더 전용 보조 텍스트 숨김만 제공하며 라벨 문구, 번역, 권한, 데이터 판단은 소비 앱에 남긴다.
-- ShareDock은 공유 도크의 위치, 아이콘, tooltip, focus-visible 표면만 제공하고 URL 생성, clipboard, navigator.share, 플랫폼별 공유 링크, 권한 판단은 소비 앱에 남긴다. 긴 문서의 본문 옆 공유 레일은 `rail` placement를 쓴다.
-- ShareDock의 플랫폼 브랜드 아이콘은 Simple Icons path 기준을 유지하고, 링크 복사와 기기 공유처럼 플랫폼이 아닌 액션만 ZDP 선형 glyph를 쓴다.
-- Page, Container, Section, PageHeader는 페이지 폭, 섹션 리듬, 헤더 액션 배치만 제공하며 라우팅, SEO, visibility, 데이터, 권한 판단은 소비 앱에 남긴다.
-- Grid는 반복되는 카드, 요약, 선택지 묶음의 responsive columns와 gap만 제공하며 각 항목의 의미, 데이터 로딩, 권한 판단은 소비 앱에 남긴다.
-- Toolbar는 가까운 화면 도구와 액션 묶음의 wrapping, main/action 배치만 제공하며 저장, 삭제, 필터, 권한 판단은 소비 앱에 남긴다.
-- CommandField는 검색 입력의 frame, focus-within, shortcut keycap만 제공하며 검색 인덱스, 결과 정렬, 라우팅, 권한 판단은 소비 앱에 남긴다.
-- Kbd와 ShortcutHint는 `/`, `Shift ?`, `T`, `Enter`, `Esc` 같은 키캡 힌트만 제공한다.
-- DS는 실제 keydown dispatcher를 만들지 않는다. 전역 검색, 단축키 안내, 파일 이동, 선택, 닫기 단축키의 충돌 처리와 입력창 focus 예외는 소비 앱이 소유한다.
-- `Ctrl+K`, `Ctrl+S`처럼 Chrome과 브라우저가 기본 동작으로 가져가는 조합은 소비 앱이 실제로 가로채고 검증한 경우가 아니면 예시나 UI 힌트로 보여주지 않는다.
-- `ariaKeyShortcuts`는 실제 단축키가 동작하는 버튼, 아이콘 버튼, 링크에만 붙인다.
-- Table은 표 형식 정보의 semantic table, caption, row/column header, overflow wrapper만 제공하며 정렬, 필터, 페이지네이션, 데이터 로딩 판단은 소비 앱에 남긴다.
-- KeyValue는 용어와 값의 description list 구조만 제공하며 원장, 보안, 결제, 권한의 실제 판단은 소비 앱에 남긴다.
-- EmptyState는 비어 있는 상태의 surface, 제목 연결, 액션 배치만 제공하며 어떤 상태가 비었는지와 다음 액션의 가능 여부는 소비 앱에 남긴다.
-- Breadcrumb는 현재 위치를 `nav`, `ol`, `aria-current="page"`로 표현하되 라우팅, SEO, 권한, 데이터 로딩 결정을 갖지 않는다.
-- Tabs는 가까운 정보 묶음 전환을 표현하되 라우팅, 권한, 데이터 로딩 결정을 갖지 않는다. 같은 페이지에 여러 Tabs가 있으면 `idPrefix`를 넘겨 tab/panel id가 충돌하지 않게 한다.
-- Dialog는 모달 레이어, backdrop, 닫기, focus trap, `role="dialog"`와 `aria-modal` 구조만 제공하고 저장/삭제/권한/결제 판단은 소비 앱에 남긴다.
-- 본문 텍스트의 기본 line-height는 `1.6`으로 두어 장식 대신 읽기 리듬으로 밀도를 만든다.
-- `success`, `warning`, `danger`는 감성 팔레트 이름이 아니라 상태 의미를 가진 semantic color로 쓴다. 긍정/완료는 `success`, 주의/보류는 `warning`, 삭제/오류/위험은 `danger`에 묶는다.
-- `primary`, `success`, `warning`, `danger`는 서로 다른 브랜드색처럼 튀지 않게 같은 parchment/brass/umber 계열 안에서 채도를 낮춘다.
-- `focus.surface`, `focus.text`, `focus.line`은 브랜드 장식색이 아니라 접근성 기능색이다. 링크 focus는 sunlit gold 배경과 어두운 하단선, 입력류와 framed controls focus는 sunlit gold outline과 어두운 border를 쓴다.
-- `bodySmall`, `caption`, `data` 타입 토큰은 대시보드, 상세 화면, 수치 표시에 필요한 작은 텍스트를 제품마다 임의 크기로 쪼개지 않게 막는다.
-- 일반 문서와 앱의 페이지 제목은 `type.pageTitleSize`와 `type.pageTitleCompactSize` 범위 안에 둔다. 브랜드 히어로나 캠페인형 대형 제목은 소비 저장소에서 별도 예외로 다루며 디자인 시스템 preview/storybook 기본 제목으로 쓰지 않는다.
-- Button 라벨은 bold가 아니라 `medium` weight를 사용한다.
-- spacing은 `space` 토큰을 사용하고, 일반 레이아웃 구분은 선이나 장식보다 `0.5rem`, `1rem`, `1.5rem`, `2rem`, `3rem` 리듬을 우선한다.
-- 예외가 필요한 hero/brand art는 제품 저장소에서 별도 검토하며 이 패키지의 Button, IconButton, Surface 기본값으로 들여오지 않는다.
+**Shadow / Gradient**
+- `shadow.focus`, `shadow.sm`, `shadow.md`는 `none`이다.
+- core 토큰에 `gradient` 그룹을 만들지 않는다.
+
+**Hover / Active**
+- 버튼 hover/active는 배경색, 테두리색, 글자색만 바꾼다. 위치 이동·빛 반사 없음.
+- Secondary Button과 ghost IconButton의 resting border는 `line-subtle`, hover/active는 `line-strong`.
+- Focus는 `focus.surface` outline + `focus.line` border로 표시한다.
+
+**Radius**
+- controls (Button, Input 등): `0.375rem`
+- 카드, 패널 등 큰 surface: `0.5rem` 상한. pill 형태 기본 금지.
+
+**User select**
+- 버튼, 아이콘, 페이지네이션 컨트롤, separator처럼 조작·장식 목적인 표면만 선택 막기.
+- 카드 텍스트, 표 셀, 코드, toast 문장, 문서 본문, ID, 이메일, 날짜, 가격은 선택 가능 유지.
+- 앱 root나 큰 컨테이너에 `user-select: none` 걸지 않는다. 보안 이유로 선택만 막는 것도 금지.
+- drag surface는 drag start~end까지만 `.zdp-user-select-dragging`을 붙인다.
+
+**색상**
+- `success`, `warning`, `danger`는 상태 의미 기준. 모두 parchment/brass/umber 계열에서 채도를 낮춰 튀지 않게 유지.
+- `focus.surface/text/line`은 접근성 기능색. 브랜드 장식색·hover 색으로 재사용 금지.
+- `selection.surface/text`는 드래그 선택 전용. focus, hover, selected control과 이름 섞지 않기.
+
+**폰트**
+- 브랜드 워드마크(`font.family.brand`)는 로고·헤더 워드마크에만. 제품 UI heading·CTA에 쓰지 않는다.
+- Expressive 폰트는 짧은 캠페인 문구나 장식 표면에만. 긴 본문, 표, form label에 쓰지 않는다.
+- Button 라벨은 `medium` weight.
+
+**Line height**
+- 본문 기본 `1.6`. compact control과 섞지 않는다.
+
+컴포넌트별 세부 경계 규칙은 `CONTRIBUTING.md`를 따른다.
 
 ## 검증
 

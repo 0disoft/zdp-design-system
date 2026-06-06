@@ -264,6 +264,8 @@
       background-color var(--zdp-motion-fast) ease,
       border-color var(--zdp-motion-fast) ease,
       color var(--zdp-motion-fast) ease;
+    -webkit-user-select: none;
+    user-select: none;
     width: var(--zdp-control-icon-sm);
   }
 

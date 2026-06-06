@@ -14,14 +14,19 @@ interface PackageJson {
 const root = process.cwd();
 const packagePath = join(root, 'package.json');
 const componentPaths = [
+  'src/lib/components/Accordion.svelte',
+  'src/lib/components/Avatar.svelte',
   'src/lib/components/Badge.svelte',
   'src/lib/components/Breadcrumb.svelte',
   'src/lib/components/Button.svelte',
   'src/lib/components/Callout.svelte',
   'src/lib/components/Checkbox.svelte',
+  'src/lib/components/CodeBlock.svelte',
+  'src/lib/components/CommandField.svelte',
   'src/lib/components/ConfirmAction.svelte',
   'src/lib/components/Container.svelte',
   'src/lib/components/Dialog.svelte',
+  'src/lib/components/Disclosure.svelte',
   'src/lib/components/Divider.svelte',
   'src/lib/components/EmptyState.svelte',
   'src/lib/components/ErrorText.svelte',
@@ -31,25 +36,42 @@ const componentPaths = [
   'src/lib/components/Icon.svelte',
   'src/lib/components/IconButton.svelte',
   'src/lib/components/Inline.svelte',
+  'src/lib/components/InlineCode.svelte',
   'src/lib/components/Input.svelte',
+  'src/lib/components/IdentityChip.svelte',
   'src/lib/components/Kbd.svelte',
   'src/lib/components/KeyValue.svelte',
   'src/lib/components/Label.svelte',
   'src/lib/components/Link.svelte',
+  'src/lib/components/Menu.svelte',
   'src/lib/components/Page.svelte',
   'src/lib/components/PageHeader.svelte',
+  'src/lib/components/Pagination.svelte',
+  'src/lib/components/Popover.svelte',
+  'src/lib/components/Progress.svelte',
   'src/lib/components/Radio.svelte',
   'src/lib/components/Section.svelte',
   'src/lib/components/Select.svelte',
+  'src/lib/components/SegmentedControl.svelte',
   'src/lib/components/ShareDock.svelte',
   'src/lib/components/ShortcutHint.svelte',
+  'src/lib/components/Skeleton.svelte',
   'src/lib/components/SkipLink.svelte',
+  'src/lib/components/SortHeader.svelte',
   'src/lib/components/Stack.svelte',
+  'src/lib/components/StatusToast.svelte',
+  'src/lib/components/Spinner.svelte',
   'src/lib/components/Surface.svelte',
   'src/lib/components/Switch.svelte',
   'src/lib/components/Tabs.svelte',
   'src/lib/components/Table.svelte',
+  'src/lib/components/TableToolbar.svelte',
+  'src/lib/components/TermSheet.svelte',
+  'src/lib/components/TermTrigger.svelte',
   'src/lib/components/Textarea.svelte',
+  'src/lib/components/ThemeToggle.svelte',
+  'src/lib/components/Tooltip.svelte',
+  'src/lib/components/Toast.svelte',
   'src/lib/components/Toolbar.svelte',
   'src/lib/components/VisuallyHidden.svelte',
   'stories/Buttons.svelte',
@@ -61,11 +83,14 @@ const componentPaths = [
   'stories/Interaction.svelte',
   'stories/InteractionProbe.svelte',
   'stories/Layout.svelte',
-  'stories/Navigation.svelte'
+  'stories/Navigation.svelte',
+  'stories/ThemeLocaleStress.svelte'
 ] as const;
 const expectedRootExport = './src/lib/index.ts';
 const expectedSubpathExports = {
   './styles.css': './src/styles/index.css',
+  './brand-fonts.css': './src/styles/brand-fonts.css',
+  './expressive-fonts.css': './src/styles/expressive-fonts.css',
   './locale-fonts.css': './src/styles/locale-fonts.css',
   './tokens': './tokens/zdp.tokens.json'
 } as const;
@@ -85,6 +110,8 @@ const expectedPackageFiles = [
 ] as const;
 const expectedSideEffects = [
   './src/styles/index.css',
+  './src/styles/brand-fonts.css',
+  './src/styles/expressive-fonts.css',
   './src/styles/locale-fonts.css',
   './src/styles/tokens.css',
   './src/styles/components.css'
@@ -103,6 +130,7 @@ checkPackageExports(packageJson);
 checkPackageFiles(packageJson);
 checkPackageSideEffects(packageJson);
 await checkSvelteCompilation();
+await checkTermSheetContract();
 
 if (failures.length > 0) {
   throw new Error(`Package check failed:\n- ${failures.join('\n- ')}`);
@@ -228,6 +256,31 @@ async function checkSvelteCompilation(): Promise<void> {
         failures.push(`${relativePath} has Svelte warning ${warning.code}: ${warning.message}`);
       }
     }
+  }
+}
+
+async function checkTermSheetContract(): Promise<void> {
+  const relativePath = 'src/lib/components/TermSheet.svelte';
+  const source = await readFile(join(root, relativePath), 'utf8');
+
+  for (const requiredText of [
+    'data-zdp-ad-exclude="true"',
+    'data-term-id={term.id}',
+    'data-zdp-term-id={term.id}',
+    'data-zdp-term-placement={resolvedPlacement}',
+    'data-zdp-term-surface="sheet"',
+    'data-zdp-term-id={relatedTerm.id}',
+    'focusableSelector',
+    'getClientRects().length > 0',
+    "closest('[hidden], [aria-hidden=\"true\"], [inert]')"
+  ]) {
+    if (!source.includes(requiredText)) {
+      failures.push(`${relativePath} is missing TermSheet contract text ${requiredText}.`);
+    }
+  }
+
+  if (source.includes('offsetParent')) {
+    failures.push(`${relativePath} must not use offsetParent to decide sheet focusability.`);
   }
 }
 

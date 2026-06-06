@@ -11,7 +11,9 @@
 - 토큰 이름이 특정 제품이나 캠페인에 묶이지 않는다.
 - 색상 토큰은 `hex` fallback과 `oklch` 값을 함께 추가하거나 함께 변경한다.
 - sans/display 폰트 스택은 `"Pretendard Variable", Pretendard`를 우선하고, CSS는 Pretendard Variable dynamic subset 로드를 유지한다.
+- `font.family.brand`는 Playwrite AU VIC Guides 기반 워드마크 전용 스택으로 유지하고, body/display stack을 대체하지 않는다.
 - `font.family.latin`, `font.family.korean`, `font.family.chinese`, `font.family.devanagari`, `font.family.japanese`, `font.family.multiscript`는 `:lang()` CSS 계약과 함께 변경한다.
+- 선택형 `brand-fonts.css` public export를 바꾸면 `package.json` export, sideEffects, README, consumer contract, token/preview/storybook/package check를 함께 맞춘다.
 - 선택형 `locale-fonts.css` public export를 바꾸면 `package.json` export, sideEffects, README, token/preview/storybook check를 함께 맞춘다.
 - 소비 저장소 적용 방식은 `docs/CONSUMER_CONTRACT.md`와 함께 변경한다.
 - Astro, Svelte, Tauri, Flutter 소비처는 public export만 사용하게 하고 내부 `src/` deep import를 문서나 예제로 만들지 않는다.
@@ -19,6 +21,7 @@
 - `success`, `warning`, `danger` 상태 색은 각각 긍정/완료, 주의/보류, 삭제/오류/위험 의미로 유지한다.
 - `primary`, `success`, `warning`, `danger` 상태 색은 parchment/brass/umber 계열 안에서 채도를 낮춰 사용하고, 푸른색이나 원색 경고색이 기본 액션과 상태 배지에서 독립적으로 튀어나오지 않게 한다.
 - `focus.surface`, `focus.text`, `focus.line`은 keyboard focus 전용 기능 색으로 유지하고 일반 hover, 브랜드 장식, 상태 색으로 재사용하지 않는다.
+- `selection.surface`, `selection.text`는 드래그 text selection 전용 기능 색으로 유지하고 focus, hover, selected control 상태 색과 이름을 섞지 않는다.
 - 카드, 버튼, 아이콘 버튼, preview 패널은 그림자와 그라데이션 없이 surface 색상, framed border, typography, spacing으로만 위계를 만든다.
 - 버튼 hover는 빛 반사, 위치 이동, 커지는 그림자를 쓰지 않고 색상과 border 상태만 바꾼다.
 - 버튼과 아이콘 버튼 hover는 light/dark 모두 배경색과 border 색을 함께 바꾼다.
@@ -30,6 +33,8 @@
 - Button과 IconButton은 `onclick`, `ariaControls`, `ariaExpanded`, `ariaPressed`, `ariaDescribedBy`, `ariaKeyShortcuts` 같은 native button 연결 props를 유지하되 저장, 삭제, 권한, 결제 판단을 직접 수행하지 않는다.
 - ConfirmAction은 `onconfirm` 콜백만 호출하고 결제, 삭제, 권한, 환불 판단이나 서버 요청을 직접 수행하지 않는다.
 - ConfirmAction은 밀기와 길게 누르기를 모두 지원하고 keyboard Enter/Space hold 흐름을 유지한다.
+- Avatar와 IdentityChip은 사람, 팀, 조직의 visual identity, 이니셜, 이름, 보조 텍스트, 선택적 링크 표면만 담당하며 실제 계정 식별, 프로필 라우팅, 온라인 상태, 권한, 초대 가능 여부 판단을 직접 수행하지 않는다.
+- Avatar와 `.zdp-avatar`, IdentityChip과 `.zdp-identity-chip`은 그림자, 그라데이션, 상태 배지 자동 삽입 없이 image/initials frame, label/meta, selected/current, focus-visible 계약만 유지한다.
 - Icon은 glyph 박스와 중앙정렬만 담당하며 의미, 라벨 문구, 상태 판단을 직접 수행하지 않는다.
 - 링크 focus는 sunlit gold 배경과 어두운 하단선, 입력류 focus는 sunlit gold outline과 어두운 border가 함께 보여야 한다.
 - Field, Label, Input, Textarea, Select, HelpText, ErrorText는 form public surface로 유지하고 help/error/id/aria 연결을 끊지 않는다.
@@ -69,17 +74,46 @@
 - Grid와 `.zdp-grid`는 색상, 그림자, 그라데이션, hover 상태를 만들지 않고 `grid-template-columns`, `gap`, `min-width`, responsive collapse 계약만 유지한다.
 - Toolbar는 가까운 화면 도구와 액션 묶음의 wrapping, main/action 배치만 담당하며 저장, 삭제, 필터, 권한 판단을 직접 수행하지 않는다.
 - Toolbar와 `.zdp-toolbar`는 색상, 그림자, 그라데이션, hover 상태를 만들지 않고 `flex-wrap`, `gap`, `justify-content`, action wrapping 계약만 유지한다.
-- CommandField는 검색, 빠른 이동, 명령 팔레트 진입의 frame, focus-within, shortcut keycap만 담당하며 검색 인덱스, 결과 정렬, 라우팅, 권한 판단을 직접 수행하지 않는다.
+- CommandField는 검색, 빠른 이동, 명령 팔레트 진입의 label, frame, focus-within, shortcut keycap, help/error id 연결만 담당하며 검색 인덱스, 결과 정렬, command palette, 라우팅, 권한 판단을 직접 수행하지 않는다.
 - CommandField와 `.zdp-command-field`는 그림자, 그라데이션, hover 장식을 만들지 않고 입력 focus와 `/` 같은 단축키 표시를 같은 테두리/키캡 규칙으로 유지한다.
+- CommandField는 결과 목록, keyboard dispatcher, command 실행 상태를 직접 만들지 않는다.
+- InlineCode와 CodeBlock은 문서, 보안, 아키텍처 페이지의 코드 표시, language label, horizontal overflow, 선택적 복사 버튼만 담당하며 syntax highlighting, 코드 실행, 비밀값 탐지, 보안 분류, command palette를 직접 수행하지 않는다.
+- InlineCode, CodeBlock, `.zdp-inline-code`, `.zdp-code-block`은 그림자, 그라데이션, 실행 버튼 없이 mono font, framed surface, focus-visible, 복사 feedback, wrapping/overflow 계약만 유지한다. 긴 코드는 기본 horizontal overflow로 두고, code body에는 `user-select: none`을 적용하지 않는다.
 - Kbd와 ShortcutHint는 키캡과 단축키 힌트 표면만 담당하며 실제 keydown dispatcher, command palette, 검색 focus 이동, 저장, 닫기, 파일 이동 판단을 직접 수행하지 않는다.
 - Kbd, ShortcutHint, `.zdp-kbd`, `.zdp-shortcut-hint`는 그림자, 그라데이션, hover 장식을 만들지 않고 framed keycap과 간격 규칙만 유지한다.
+- ThemeToggle은 light/dark 전환 버튼의 `aria-pressed`, 접근성 이름, glyph, focus-visible 표면만 담당하며 초기 테마 결정, storage key, system preference, SSR/초기 paint 처리는 소비 앱이 소유한다.
+- Tooltip은 짧은 보조 설명 표면만 담당하며 popover, tour, validation, 긴 도움말, 권한 판단을 직접 수행하지 않는다.
+- Tooltip과 `.zdp-tooltip`은 hover와 focus-within에서 같은 표면을 열고, 설명이 접근성 이름을 보강해야 할 때만 `id`와 `aria-describedby`로 연결한다.
+- Accordion과 Disclosure는 접힌 안내, 설정 묶음, FAQ형 설명의 trigger/panel/`aria-expanded`/`aria-controls` 구조만 담당하며 실제 FAQ 문구, 설정 값, 항목 노출, 권한, 데이터 fetch 판단을 직접 수행하지 않는다.
+- Accordion과 `.zdp-accordion`, Disclosure와 `.zdp-disclosure`는 그림자, 그라데이션, hover 이동 없이 framed trigger, panel border, disabled, focus-visible 계약만 유지한다.
+- SegmentedControl은 보기 방식, 밀도, 기간처럼 가까운 단일 선택의 `radiogroup`/`radio`/`aria-checked` 구조만 담당하며 실제 필터 의미, URL state, 정렬, 데이터 로딩, 권한 판단을 직접 수행하지 않는다.
+- SegmentedControl과 `.zdp-segmented-control`은 그림자, 그라데이션, hover 이동 없이 framed group, selected, disabled, focus-visible 계약만 유지한다.
+- Popover와 Menu는 설정, 더보기, 필터, 계정 메뉴처럼 가까운 트리거에서 짧게 펼치는 표면만 담당하며 항목 노출, 권한, 라우팅, 필터 의미, 계정 상태 판단을 직접 수행하지 않는다.
+- Popover와 Menu는 Escape 닫기, outside click, focus 복귀, menu keyboard movement 같은 기본 상호작용만 유지하고 tour, validation, modal decision, floating collision engine 역할을 직접 수행하지 않는다.
+- Toast와 StatusToast는 저장, 동기화, 실패, 경고처럼 짧은 상태 알림 표면과 dismiss/action/live-region 연결만 담당하며 알림 발생 조건, 큐 순서, 자동 닫힘 타이머, 중복 제거, 재시도 정책, 권한, 서버 상태 판단을 직접 수행하지 않는다.
+- Toast와 StatusToast는 페이지 안 피드백이나 modal decision을 대체하지 않고, 오래 읽어야 하는 안내는 Callout 또는 소비 앱의 별도 흐름으로 남긴다.
+- Progress, Spinner, Skeleton은 작업 진행, 응답 대기, 콘텐츠 자리 예약 표면만 담당하며 로딩 조건, 진행률 계산, 완료/실패 전환, 데이터 fetch, 재시도, 권한, 서버 상태 판단을 직접 수행하지 않는다.
+- Skeleton은 최종 레이아웃 크기를 예약하는 용도로 쓰고, 실제 텍스트 의미나 빈 상태 판단은 EmptyState 또는 소비 앱의 상태 흐름에 남긴다.
 - `ariaKeyShortcuts`와 `aria-keyshortcuts`는 실제 단축키가 소비 앱에서 구현된 경우에만 사용한다. 입력창 focus 중 `/`를 가로채는 예외 처리와 브라우저/페이지 단축키 충돌 판단은 소비 앱이 소유한다.
-- `Ctrl+K`, `Ctrl+S`처럼 Chrome과 브라우저가 기본 동작으로 가져가는 조합은 소비 앱에서 실제로 가로채고 검증한 경우가 아니면 Storybook, preview, README 예시나 UI 힌트로 보여주지 않는다.
+- 소비 앱이 전역 단축키 dispatcher를 만들 때는 shortcut policy helper의 `shouldZdpIgnoreShortcutEvent`를 먼저 통과시킨다. `input, textarea, select, contenteditable`, `role="textbox"`, `role="searchbox"` 안에서는 전역 단축키를 꺼두고, `event.isComposing` 또는 `keyCode === 229`인 IME 조합 입력도 무시한다.
+- `Ctrl+K`, `Ctrl+S`처럼 Chrome과 브라우저가 기본 동작으로 가져가는 조합은 소비 앱에서 실제로 가로채고 검증한 경우가 아니면 Storybook, preview, README 예시나 UI 힌트로 보여주지 않는다. 기본 권장 세트는 `zdpShortcutRecommendations`에 맞춰 검색, 도움말, 닫기, 선택, 목록 이동, 제출, 새 항목, 편집, 필터, 2단 이동처럼 되돌리기 쉽고 화면 맥락이 분명한 액션으로 제한한다.
 - Icon은 glyph 크기, inline-flex 중앙정렬, svg sizing만 담당하며 라우팅, 저장, 삭제, 상태 의미, 권한 판단을 직접 수행하지 않는다.
 - Icon과 `.zdp-icon`은 그림자, 그라데이션, hover 상태를 만들지 않고 `control.glyphSm|Md`, `line-height: 1`, `text-align: center` 계약만 유지한다.
-- Table은 표 형식 정보의 native table, caption, row/column header, overflow wrapper만 담당하며 정렬, 필터, 페이지네이션, 데이터 로딩 판단을 직접 수행하지 않는다.
-- Table과 `.zdp-table`은 그림자, 그라데이션, sticky 장식 없이 border, spacing, typography, overflow 계약만 유지한다.
+- Table은 표 형식 정보의 native table, caption, row/column header, overflow wrapper만 담당하며 정렬, 필터, 데이터 로딩 판단을 직접 수행하지 않는다.
+- Table과 `.zdp-table`은 그림자, 그라데이션, sticky 장식 없이 border, spacing, typography, horizontal overflow 계약만 유지한다. 좁은 폭에서 table wrapper가 overflow를 소유하고 cell/header 텍스트가 한 글자씩 쪼개지지 않게 한다.
+- SortHeader와 TableToolbar는 sortable column affordance, 선택 행 액션 자리, 밀도 전환 표면만 담당하며 실제 정렬 계산, 선택 상태, 필터, 권한, 데이터 로딩 판단을 직접 수행하지 않는다.
+- SortHeader는 `aria-sort`를 직접 소유하지 않는다. 소비 화면은 정렬 중인 owning `th` 또는 columnheader에 `aria-sort`를 둔다.
+- SortHeader와 `.zdp-sort-header`, TableToolbar와 `.zdp-table-toolbar`는 그림자, 그라데이션, hover 이동 없이 focus-visible, wrapping, density control 배치 계약만 유지한다.
+- TermTrigger와 TermSheet는 용어 설명을 클릭으로 여는 trigger, right sheet, bottom sheet 표면만 담당하며 Escape 닫기, backdrop 닫기, Tab 순환, 이전 focus 복귀를 유지하고 glossary manifest, locale fallback, 공개 가능 여부, detail page 라우팅 판단을 직접 수행하지 않는다.
+- TermSheet root에는 stable `term_id`를 `data-term-id`와 `data-zdp-term-id`로 남기고, placement와 sheet surface도 data attribute로 노출해 소비 앱, QA, linter가 같은 용어 identity를 확인할 수 있게 한다.
+- TermSheet에는 광고 slot을 넣지 않는다. root의 `data-zdp-ad-exclude`를 유지하고 광고가 필요한 긴 설명은 별도 detail page에서 처리한다.
+- Pagination은 목록 페이지 이동의 `nav`, ordered list, link/button, ellipsis, `aria-current="page"` 구조만 담당하며 전체 개수, 현재 페이지 상태, 페이지 크기, 쿼리 라우팅, 필터, 정렬, 데이터 로딩 판단을 직접 수행하지 않는다.
+- Pagination과 `.zdp-pagination`은 그림자, 그라데이션, hover 이동 없이 framed control, current page, disabled, focus-visible, horizontal overflow 계약만 유지한다. 페이지 버튼은 컨트롤 표면이라 선택을 막되, nav 전체를 세로로 무너뜨리지 않는다.
 - Scrollbar는 `.zdp-surface-reset` 안에서 얇은 theme token으로만 표현하고 브라우저 기본 회색 track, 그림자, 그라데이션, hover 이동 효과를 쓰지 않는다.
+- Text selection은 `.zdp-surface-reset::selection`과 `.zdp-surface-reset *::selection`에서 `color.selection.*` token으로만 표현하고 브라우저 기본 파란 highlight를 shared surface 안에 남기지 않는다.
+- Selection blocking은 text color가 아니라 interaction policy다. `.zdp-user-select-control`, `.zdp-user-select-decorative`, `.zdp-user-select-dragging`은 버튼류, 메뉴 항목, pagination control, sort header, copy button, icon, separator, spinner, skeleton처럼 누르거나 장식으로 쓰는 표면에만 적용한다.
+- Document body, code body, toast message, table cell, card data, identity text, 주소, 이메일, 주문번호, 에러 메시지, 가격, 날짜처럼 사용자가 복사할 수 있는 정보에는 `user-select: none`을 적용하지 않는다.
+- Drag surface는 평소에 선택 가능하게 두고 drag start부터 end/cancel/pointer release까지만 `.zdp-user-select-dragging`을 붙인다. 앱 root, page root, 큰 card/list/table container에 상시 `user-select: none`을 거는 방식과 `selectstart` 차단은 금지한다.
 - KeyValue는 용어와 값의 description list 구조만 담당하며 원장, 보안, 결제, 권한 판단을 직접 수행하지 않는다.
 - KeyValue와 `.zdp-key-value`는 `dt`와 `dd` 구조, responsive columns, border rhythm만 유지한다.
 - EmptyState는 비어 있는 상태의 surface, 제목 연결, 액션 배치만 담당하며 어떤 상태가 비었는지와 다음 액션 가능 여부를 직접 판단하지 않는다.
@@ -99,6 +133,7 @@
 - Storybook Viewport 프리셋은 ZDP Mobile, Tablet, Desktop, Wide 폭을 유지한다.
 - Storybook Accessibility addon은 검토 표면으로 유지하고, CI 실패 게이트 승격은 전체 컴포넌트 위반 항목을 정리한 뒤 진행한다.
 - Storybook interaction play는 Tabs, Dialog, ConfirmAction처럼 키보드, focus, 상태 전이가 중요한 컴포넌트부터 유지한다.
+- Theme / Locale Stress story는 light/dark, ZDP Mobile 폭, 긴 한국어/영어/중국어/힌디어 문장, focus-visible 상태를 한 번에 확인하는 QA 표면으로 유지한다.
 - Workduck 개발 서버와 빌드 액션이 깨지지 않도록 `dev`와 `build` 스크립트를 유지한다.
 - 패키지 export가 안정된 뒤에는 변경 내역을 `CHANGELOG.md`에 남긴다.
 - 토큰 JSON, CSS 변수, public export, Svelte 컴포넌트, Storybook, preview 변경 뒤에는 `bun run check`를 실행한다.

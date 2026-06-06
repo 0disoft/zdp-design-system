@@ -13,6 +13,9 @@ const root = process.cwd();
 const packagePath = join(root, 'package.json');
 const mainPath = join(root, '.storybook', 'main.ts');
 const previewPath = join(root, '.storybook', 'preview.ts');
+const previewStylePath = join(root, '.storybook', 'preview.css');
+const brandFontStylePath = join(root, 'src', 'styles', 'brand-fonts.css');
+const expressiveFontStylePath = join(root, 'src', 'styles', 'expressive-fonts.css');
 const storyPath = join(root, 'stories', 'DesignSystemOverview.stories.ts');
 const componentPath = join(root, 'stories', 'DesignSystemOverview.svelte');
 const buttonsStoryPath = join(root, 'stories', 'Buttons.stories.ts');
@@ -31,14 +34,21 @@ const layoutStoryPath = join(root, 'stories', 'Layout.stories.ts');
 const layoutComponentPath = join(root, 'stories', 'Layout.svelte');
 const navigationStoryPath = join(root, 'stories', 'Navigation.stories.ts');
 const navigationComponentPath = join(root, 'stories', 'Navigation.svelte');
+const themeLocaleStressStoryPath = join(root, 'stories', 'ThemeLocaleStress.stories.ts');
+const themeLocaleStressComponentPath = join(root, 'stories', 'ThemeLocaleStress.svelte');
+const accordionPath = join(root, 'src', 'lib', 'components', 'Accordion.svelte');
+const avatarPath = join(root, 'src', 'lib', 'components', 'Avatar.svelte');
 const badgePath = join(root, 'src', 'lib', 'components', 'Badge.svelte');
 const breadcrumbPath = join(root, 'src', 'lib', 'components', 'Breadcrumb.svelte');
 const buttonPath = join(root, 'src', 'lib', 'components', 'Button.svelte');
 const calloutPath = join(root, 'src', 'lib', 'components', 'Callout.svelte');
 const checkboxPath = join(root, 'src', 'lib', 'components', 'Checkbox.svelte');
+const codeBlockPath = join(root, 'src', 'lib', 'components', 'CodeBlock.svelte');
+const commandFieldPath = join(root, 'src', 'lib', 'components', 'CommandField.svelte');
 const confirmActionPath = join(root, 'src', 'lib', 'components', 'ConfirmAction.svelte');
 const containerPath = join(root, 'src', 'lib', 'components', 'Container.svelte');
 const dialogPath = join(root, 'src', 'lib', 'components', 'Dialog.svelte');
+const disclosurePath = join(root, 'src', 'lib', 'components', 'Disclosure.svelte');
 const dividerPath = join(root, 'src', 'lib', 'components', 'Divider.svelte');
 const emptyStatePath = join(root, 'src', 'lib', 'components', 'EmptyState.svelte');
 const errorTextPath = join(root, 'src', 'lib', 'components', 'ErrorText.svelte');
@@ -49,25 +59,43 @@ const kbdPath = join(root, 'src', 'lib', 'components', 'Kbd.svelte');
 const keyValuePath = join(root, 'src', 'lib', 'components', 'KeyValue.svelte');
 const labelPath = join(root, 'src', 'lib', 'components', 'Label.svelte');
 const linkPath = join(root, 'src', 'lib', 'components', 'Link.svelte');
+const menuPath = join(root, 'src', 'lib', 'components', 'Menu.svelte');
 const pagePath = join(root, 'src', 'lib', 'components', 'Page.svelte');
 const pageHeaderPath = join(root, 'src', 'lib', 'components', 'PageHeader.svelte');
+const paginationPath = join(root, 'src', 'lib', 'components', 'Pagination.svelte');
+const popoverPath = join(root, 'src', 'lib', 'components', 'Popover.svelte');
+const progressPath = join(root, 'src', 'lib', 'components', 'Progress.svelte');
 const radioPath = join(root, 'src', 'lib', 'components', 'Radio.svelte');
 const sectionPath = join(root, 'src', 'lib', 'components', 'Section.svelte');
 const selectPath = join(root, 'src', 'lib', 'components', 'Select.svelte');
+const segmentedControlPath = join(root, 'src', 'lib', 'components', 'SegmentedControl.svelte');
 const shareDockPath = join(root, 'src', 'lib', 'components', 'ShareDock.svelte');
 const shortcutHintPath = join(root, 'src', 'lib', 'components', 'ShortcutHint.svelte');
+const skeletonPath = join(root, 'src', 'lib', 'components', 'Skeleton.svelte');
 const skipLinkPath = join(root, 'src', 'lib', 'components', 'SkipLink.svelte');
+const sortHeaderPath = join(root, 'src', 'lib', 'components', 'SortHeader.svelte');
 const stackPath = join(root, 'src', 'lib', 'components', 'Stack.svelte');
+const statusToastPath = join(root, 'src', 'lib', 'components', 'StatusToast.svelte');
+const spinnerPath = join(root, 'src', 'lib', 'components', 'Spinner.svelte');
 const switchPath = join(root, 'src', 'lib', 'components', 'Switch.svelte');
 const tabsPath = join(root, 'src', 'lib', 'components', 'Tabs.svelte');
 const tablePath = join(root, 'src', 'lib', 'components', 'Table.svelte');
+const tableToolbarPath = join(root, 'src', 'lib', 'components', 'TableToolbar.svelte');
+const termSheetPath = join(root, 'src', 'lib', 'components', 'TermSheet.svelte');
+const termTriggerPath = join(root, 'src', 'lib', 'components', 'TermTrigger.svelte');
 const textareaPath = join(root, 'src', 'lib', 'components', 'Textarea.svelte');
+const themeTogglePath = join(root, 'src', 'lib', 'components', 'ThemeToggle.svelte');
+const tooltipPath = join(root, 'src', 'lib', 'components', 'Tooltip.svelte');
+const toastPath = join(root, 'src', 'lib', 'components', 'Toast.svelte');
 const toolbarPath = join(root, 'src', 'lib', 'components', 'Toolbar.svelte');
 const visuallyHiddenPath = join(root, 'src', 'lib', 'components', 'VisuallyHidden.svelte');
 const iconPath = join(root, 'src', 'lib', 'components', 'Icon.svelte');
 const iconButtonPath = join(root, 'src', 'lib', 'components', 'IconButton.svelte');
 const inlinePath = join(root, 'src', 'lib', 'components', 'Inline.svelte');
+const inlineCodePath = join(root, 'src', 'lib', 'components', 'InlineCode.svelte');
+const identityChipPath = join(root, 'src', 'lib', 'components', 'IdentityChip.svelte');
 const surfacePath = join(root, 'src', 'lib', 'components', 'Surface.svelte');
+const shortcutsPath = join(root, 'src', 'lib', 'shortcuts.ts');
 const failures: string[] = [];
 
 const [
@@ -92,14 +120,21 @@ const [
   layoutComponent,
   navigationStory,
   navigationComponent,
+  themeLocaleStressStory,
+  themeLocaleStressComponent,
+  accordion,
+  avatar,
   badge,
   breadcrumb,
   button,
   callout,
   checkbox,
+  codeBlock,
+  commandField,
   confirmAction,
   container,
   dialog,
+  disclosure,
   divider,
   emptyState,
   errorText,
@@ -110,24 +145,42 @@ const [
   keyValue,
   label,
   link,
+  menu,
   page,
   pageHeader,
+  pagination,
+  popover,
+  progress,
   radio,
   section,
   select,
+  segmentedControl,
   shareDock,
   shortcutHint,
+  shortcuts,
+  skeleton,
+  tooltip,
   skipLink,
+  sortHeader,
   stack,
+  statusToast,
+  spinner,
   switchComponent,
   tabs,
   table,
+  tableToolbar,
+  termSheet,
+  termTrigger,
   textarea,
+  themeToggle,
+  toast,
   toolbar,
   visuallyHidden,
   icon,
   iconButton,
   inline,
+  inlineCode,
+  identityChip,
   surface
 ] =
   await Promise.all([
@@ -152,14 +205,21 @@ const [
     readFile(layoutComponentPath, 'utf8'),
     readFile(navigationStoryPath, 'utf8'),
     readFile(navigationComponentPath, 'utf8'),
+    readFile(themeLocaleStressStoryPath, 'utf8'),
+    readFile(themeLocaleStressComponentPath, 'utf8'),
+    readFile(accordionPath, 'utf8'),
+    readFile(avatarPath, 'utf8'),
     readFile(badgePath, 'utf8'),
     readFile(breadcrumbPath, 'utf8'),
     readFile(buttonPath, 'utf8'),
     readFile(calloutPath, 'utf8'),
     readFile(checkboxPath, 'utf8'),
+    readFile(codeBlockPath, 'utf8'),
+    readFile(commandFieldPath, 'utf8'),
     readFile(confirmActionPath, 'utf8'),
     readFile(containerPath, 'utf8'),
     readFile(dialogPath, 'utf8'),
+    readFile(disclosurePath, 'utf8'),
     readFile(dividerPath, 'utf8'),
     readFile(emptyStatePath, 'utf8'),
     readFile(errorTextPath, 'utf8'),
@@ -170,26 +230,47 @@ const [
     readFile(keyValuePath, 'utf8'),
     readFile(labelPath, 'utf8'),
     readFile(linkPath, 'utf8'),
+    readFile(menuPath, 'utf8'),
     readFile(pagePath, 'utf8'),
     readFile(pageHeaderPath, 'utf8'),
+    readFile(paginationPath, 'utf8'),
+    readFile(popoverPath, 'utf8'),
+    readFile(progressPath, 'utf8'),
     readFile(radioPath, 'utf8'),
     readFile(sectionPath, 'utf8'),
     readFile(selectPath, 'utf8'),
+    readFile(segmentedControlPath, 'utf8'),
     readFile(shareDockPath, 'utf8'),
     readFile(shortcutHintPath, 'utf8'),
+    readFile(shortcutsPath, 'utf8'),
+    readFile(skeletonPath, 'utf8'),
+    readFile(tooltipPath, 'utf8'),
     readFile(skipLinkPath, 'utf8'),
+    readFile(sortHeaderPath, 'utf8'),
     readFile(stackPath, 'utf8'),
+    readFile(statusToastPath, 'utf8'),
+    readFile(spinnerPath, 'utf8'),
     readFile(switchPath, 'utf8'),
     readFile(tabsPath, 'utf8'),
     readFile(tablePath, 'utf8'),
+    readFile(tableToolbarPath, 'utf8'),
+    readFile(termSheetPath, 'utf8'),
+    readFile(termTriggerPath, 'utf8'),
     readFile(textareaPath, 'utf8'),
+    readFile(themeTogglePath, 'utf8'),
+    readFile(toastPath, 'utf8'),
     readFile(toolbarPath, 'utf8'),
     readFile(visuallyHiddenPath, 'utf8'),
     readFile(iconPath, 'utf8'),
     readFile(iconButtonPath, 'utf8'),
     readFile(inlinePath, 'utf8'),
+    readFile(inlineCodePath, 'utf8'),
+    readFile(identityChipPath, 'utf8'),
     readFile(surfacePath, 'utf8')
   ]);
+const previewStyle = await readFile(previewStylePath, 'utf8');
+const brandFontStyle = await readFile(brandFontStylePath, 'utf8');
+const expressiveFontStyle = await readFile(expressiveFontStylePath, 'utf8');
 
 for (const [scriptName, expectedCommand] of Object.entries({
   dev: 'storybook dev -p 6006',
@@ -213,6 +294,22 @@ if (packageJson.exports?.['./locale-fonts.css'] !== './src/styles/locale-fonts.c
 
 if (!packageJson.sideEffects?.includes('./src/styles/locale-fonts.css')) {
   failures.push('Package sideEffects must keep ./src/styles/locale-fonts.css.');
+}
+
+if (packageJson.exports?.['./brand-fonts.css'] !== './src/styles/brand-fonts.css') {
+  failures.push('Package must expose ./brand-fonts.css for optional brand wordmark font loading.');
+}
+
+if (!packageJson.sideEffects?.includes('./src/styles/brand-fonts.css')) {
+  failures.push('Package sideEffects must keep ./src/styles/brand-fonts.css.');
+}
+
+if (packageJson.exports?.['./expressive-fonts.css'] !== './src/styles/expressive-fonts.css') {
+  failures.push('Package must expose ./expressive-fonts.css for optional expressive font loading.');
+}
+
+if (!packageJson.sideEffects?.includes('./src/styles/expressive-fonts.css')) {
+  failures.push('Package sideEffects must keep ./src/styles/expressive-fonts.css.');
 }
 
 for (const dependencyName of ['@storybook/addon-a11y', '@storybook/svelte-vite', 'storybook', 'svelte', 'vite']) {
@@ -242,6 +339,64 @@ for (const requiredText of [
 
 if (!preview.includes("import '../src/styles/index.css';")) {
   failures.push('Storybook preview must import the shared style entry.');
+}
+
+if (!preview.includes("import '../src/styles/brand-fonts.css';")) {
+  failures.push('Storybook preview must import the brand font entry for wordmark review.');
+}
+
+if (!preview.includes("import '../src/styles/expressive-fonts.css';")) {
+  failures.push('Storybook preview must import the expressive font entry for type specimen review.');
+}
+
+if (!preview.includes("import './preview.css';")) {
+  failures.push('Storybook preview must import the Storybook-only preview CSS.');
+}
+
+for (const requiredText of [
+  'font-family: "Playwrite AU VIC Guides"',
+  'font-display: swap',
+  'fontsource/fonts/playwrite-au-vic-guides@5.2.6/latin-400-normal.woff2'
+]) {
+  if (!brandFontStyle.includes(requiredText)) {
+    failures.push(`Brand font style is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  'family=Cabin:ital,wght@0,400..700;1,400..700',
+  'family=Caesar+Dressing',
+  'family=Copse',
+  'family=Fredericka+the+Great',
+  'family=Google+Sans',
+  'family=Libertinus+Keyboard',
+  'family=Merriweather:ital,wght@0,400;0,700;1,400',
+  'family=Tangerine:wght@400;700'
+]) {
+  if (!expressiveFontStyle.includes(requiredText)) {
+    failures.push(`Expressive font style is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  'html,',
+  'body,',
+  '#storybook-root',
+  'scrollbar-color: var(--zdp-color-scrollbar-thumb) var(--zdp-color-scrollbar-track)',
+  'scrollbar-width: thin',
+  'html::-webkit-scrollbar',
+  'body::-webkit-scrollbar',
+  '#storybook-root::-webkit-scrollbar',
+  'height: var(--zdp-control-scrollbar-size)',
+  'width: var(--zdp-control-scrollbar-size)',
+  'background: var(--zdp-color-scrollbar-track)',
+  'background-color: var(--zdp-color-scrollbar-thumb)',
+  'background-color: var(--zdp-color-scrollbar-thumb-hover)',
+  '::-webkit-scrollbar-corner'
+]) {
+  if (!previewStyle.includes(requiredText)) {
+    failures.push(`Storybook preview CSS is missing themed root scrollbar contract ${requiredText}.`);
+  }
 }
 
 for (const requiredText of [
@@ -338,6 +493,9 @@ for (const [storyName, source, requiredTexts] of [
       'play: async',
       'tabs move selected state',
       'dialog opens and closes with Escape',
+      'disclosure and accordion expose expanded state',
+      'segmented control changes selected option',
+      'menu opens and selects an item',
       'ConfirmAction confirms after keyboard hold',
       "fireEvent.keyDown(confirmButton, { key: 'Enter' })"
     ]
@@ -361,6 +519,16 @@ for (const [storyName, source, requiredTexts] of [
       "layout: 'fullscreen'",
       'States'
     ]
+  ],
+  [
+    'Theme locale stress story definition',
+    themeLocaleStressStory,
+    [
+      "title: 'Design System/QA/Theme Locale Stress'",
+      'ThemeLocaleStress',
+      "layout: 'fullscreen'",
+      'Stress'
+    ]
   ]
 ] as const) {
   for (const requiredText of requiredTexts) {
@@ -371,13 +539,18 @@ for (const [storyName, source, requiredTexts] of [
 }
 
 for (const requiredText of [
+  '../src/lib/components/Accordion.svelte',
+  '../src/lib/components/Avatar.svelte',
   '../src/lib/components/Badge.svelte',
   '../src/lib/components/Breadcrumb.svelte',
   '../src/lib/components/Button.svelte',
   '../src/lib/components/Callout.svelte',
   '../src/lib/components/Checkbox.svelte',
+  '../src/lib/components/CodeBlock.svelte',
+  '../src/lib/components/CommandField.svelte',
   '../src/lib/components/Container.svelte',
   '../src/lib/components/Dialog.svelte',
+  '../src/lib/components/Disclosure.svelte',
   '../src/lib/components/Divider.svelte',
   '../src/lib/components/EmptyState.svelte',
   '../src/lib/components/ErrorText.svelte',
@@ -387,24 +560,44 @@ for (const requiredText of [
   '../src/lib/components/IconButton.svelte',
   '../src/lib/components/Inline.svelte',
   '../src/lib/components/Input.svelte',
+  '../src/lib/components/IdentityChip.svelte',
+  '../src/lib/components/InlineCode.svelte',
   '../src/lib/components/KeyValue.svelte',
   '../src/lib/components/Label.svelte',
   '../src/lib/components/Link.svelte',
   '../src/lib/components/Page.svelte',
   '../src/lib/components/PageHeader.svelte',
+  '../src/lib/components/Pagination.svelte',
+  '../src/lib/components/Progress.svelte',
   '../src/lib/components/Radio.svelte',
   '../src/lib/components/Section.svelte',
   '../src/lib/components/Select.svelte',
+  '../src/lib/components/SegmentedControl.svelte',
   '../src/lib/components/ShareDock.svelte',
+  '../src/lib/components/Skeleton.svelte',
   '../src/lib/components/SkipLink.svelte',
+  '../src/lib/components/SortHeader.svelte',
   '../src/lib/components/Stack.svelte',
+  '../src/lib/components/StatusToast.svelte',
+  '../src/lib/components/Spinner.svelte',
   '../src/lib/components/Surface.svelte',
   '../src/lib/components/Switch.svelte',
   '../src/lib/components/Tabs.svelte',
   '../src/lib/components/Table.svelte',
+  '../src/lib/components/TableToolbar.svelte',
   '../src/lib/components/Textarea.svelte',
+  '../src/lib/components/Toast.svelte',
   '../src/lib/components/VisuallyHidden.svelte',
   '<main class="storybook-preview zdp-surface-reset" lang="ko">',
+  'zdp-brand-lockup',
+  'zdp-brand-lockup__mark',
+  'zdp-brand-wordmark',
+  '8ailors',
+  'font-family: var(--zdp-font-family-brand)',
+  'font-weight: var(--zdp-font-weight-medium)',
+  'type-specimen--script',
+  '.type-specimen--script strong',
+  'font-weight: var(--zdp-font-weight-bold)',
   'data-zdp-theme="light"',
   'data-zdp-theme="dark"',
   'Pretendard-first multiscript text',
@@ -427,17 +620,48 @@ for (const requiredText of [
   '--zdp-control-choice-size',
   '--zdp-control-switch-width',
   '--zdp-control-scrollbar-size',
+  '--zdp-color-selection-surface',
+  '--zdp-color-selection-text',
   '--zdp-control-focus-outline-width',
   '--zdp-i18n-overflow-wrap',
   'line-height: var(--zdp-type-title-line-height)',
-  'font-size: var(--zdp-type-page-title-size)',
-  'font-size: var(--zdp-type-page-title-compact-size)',
+  'font-size: calc(var(--zdp-type-page-title-size) - 0.6rem)',
+  'font-size: calc(var(--zdp-type-page-title-compact-size) - 0.35rem)',
   'line-height: var(--zdp-type-page-title-line-height)',
   'Search Design System',
+  'CommandField',
+  'storybook-light-command-help',
+  'storybook-dark-command-help',
+  '이 화면에서 찾을 항목을 입력하세요.',
+  '필요한 항목으로 바로 이동하세요.',
+  'storybook-light-code',
+  'storybook-dark-code',
+  '릴리스 기준',
+  '보안 경계',
+  '<InlineCode text="readonly" />',
+  '<InlineCode text="server-only" />',
+  '<CodeBlock',
+  'code={lightCodeExample}',
+  'code={darkCodeExample}',
   '본문으로 건너뛰기',
   'VisuallyHidden',
   'ShareDock',
   'Stack',
+  'StatusToast',
+  'Accordion',
+  'Avatar',
+  'CodeBlock',
+  'Disclosure',
+  'IdentityChip',
+  'InlineCode',
+  'Pagination',
+  'Progress',
+  'Spinner',
+  'Skeleton',
+  'SortHeader',
+  'TableToolbar',
+  'SegmentedControl',
+  'Toast',
   'Inline',
   'Divider',
   '<Divider />',
@@ -450,21 +674,50 @@ for (const requiredText of [
   '이미 발급된 값은 그대로 둡니다.',
   'readonly',
   '다음 단계 전에 기준을 확인하세요.',
+  '저장됐습니다.',
+  '초안이 준비됐습니다.',
+  '확인이 필요합니다.',
+  '연결이 끊겼습니다.',
+  'idPrefix="storybook-light-status-toast"',
+  'idPrefix="storybook-dark-status-toast"',
+  'storybook-light-progress-title',
+  'storybook-dark-progress-title',
+  'class="type-specimens" role="group" aria-label="표현용 폰트 샘플"',
+  'class="loading-preview" role="group" aria-labelledby="storybook-light-progress-title"',
+  'class="loading-preview" role="group" aria-labelledby="storybook-dark-progress-title"',
+  '자료를 불러오는 중입니다.',
+  '목록 확인 중',
+  '응답을 기다리고 있습니다.',
+  '응답 대기 중',
   '업데이트 받기',
   '알림 주기',
   '자동 저장',
   '작성 중인 내용을 임시 보관합니다.',
   'storybook-light-feedback',
   'storybook-dark-feedback',
+  'storybook-light-identity',
+  'storybook-dark-identity',
   'storybook-light-breadcrumb',
   'storybook-dark-breadcrumb',
   '현재 위치',
   'storybook-light-tabs',
   'storybook-dark-tabs',
+  'storybook-light-disclosure',
+  'storybook-dark-disclosure',
+  'storybook-light-segmented-control',
+  'storybook-dark-segmented-control',
   'storybook-light-data',
   'storybook-dark-data',
+  '밝은 화면 점검 목록 페이지',
+  '어두운 화면 점검 목록 페이지',
   '보안 점검 목록',
-  '<th scope="col">항목</th>',
+  'aria-sort="ascending"',
+  'aria-sort="descending"',
+  '<SortHeader label="항목" direction="ascending" />',
+  '<SortHeader label="상태" direction="descending" />',
+  '<TableToolbar',
+  'selectedCount={2}',
+  '표 밀도',
   '<th scope="row">권한 분리</th>',
   '<KeyValue columns="two">',
   '아직 공개할 변경이 없습니다.',
@@ -481,8 +734,17 @@ for (const requiredText of [
   '변경 내용을 저장할까요?',
   '검토 중',
   '정상',
+  'Identity',
+  '홍길동',
+  '김하늘',
+  '검토 담당',
+  '운영 담당',
   '삭제 전에 다시 확인하세요.',
-  '탭은 페이지 안의 가까운 정보 묶음을 바꿀 때 사용합니다.'
+  '탭은 페이지 안의 가까운 정보 묶음을 바꿀 때 사용합니다.',
+  '검토 기준',
+  '접힌 안내',
+  '보기 방식',
+  '목록'
 ]) {
   if (!component.includes(requiredText)) {
     failures.push(`Storybook overview is missing ${requiredText}.`);
@@ -567,6 +829,74 @@ for (const requiredText of [
 }
 
 for (const requiredText of [
+  '../src/lib/components/Badge.svelte',
+  '../src/lib/components/Button.svelte',
+  '../src/lib/components/Callout.svelte',
+  '../src/lib/components/CodeBlock.svelte',
+  '../src/lib/components/CommandField.svelte',
+  '../src/lib/components/InlineCode.svelte',
+  '../src/lib/components/Pagination.svelte',
+  '../src/lib/components/Progress.svelte',
+  '../src/lib/components/Skeleton.svelte',
+  '../src/lib/components/SortHeader.svelte',
+  '../src/lib/components/Spinner.svelte',
+  '../src/lib/components/Table.svelte',
+  '../src/lib/components/TableToolbar.svelte',
+  '../src/lib/components/Toast.svelte',
+  '../src/lib/components/Tooltip.svelte',
+  'Theme / Locale Stress',
+  '긴 문장과 초점 확인',
+  "id: 'light'",
+  "id: 'dark'",
+  'data-zdp-theme={theme.id}',
+  '24.375rem',
+  "lang: 'ko'",
+  "lang: 'en'",
+  "lang: 'zh'",
+  "lang: 'hi'",
+  '승인대기중인긴프로젝트이름',
+  'Super-long audit trail names',
+  '这是一个非常长的状态说明',
+  'लंबे समीक्षा संदेश',
+  'stress-force-focus',
+  'stress-device',
+  'stress-locale-card',
+  'stress-focus-grid',
+  'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
+  'border-color: var(--zdp-color-focus-line)',
+  '.stress-force-focus :global(.zdp-button)',
+  '.stress-force-focus :global(.zdp-command-field)',
+  '.stress-force-focus :global(.zdp-pagination__link:not(:disabled))',
+  'aria-sort={theme.id ===',
+  '<SortHeader',
+  '<TableToolbar',
+  '<Pagination',
+  '<CommandField',
+  '<Tooltip',
+  '<Toast',
+  '<Skeleton variant="text" lines={3} />',
+  '<CodeBlock',
+  'horizontalOverflowProbe',
+  'overflow-wrap: var(--zdp-i18n-overflow-wrap)',
+  'Tab으로 이동했을 때 테두리와 outline이 잘리지 않아야 합니다.',
+  'A long status toast should stay readable without pretending to own queue timing.'
+]) {
+  if (!themeLocaleStressComponent.includes(requiredText)) {
+    failures.push(`Theme locale stress story surface is missing ${requiredText}.`);
+  }
+}
+
+for (const forbiddenText of [
+  'code={codeExample}\n                  wrap',
+  '.stress-panel :global(th)',
+  '.stress-panel :global(td)'
+]) {
+  if (themeLocaleStressComponent.includes(forbiddenText)) {
+    failures.push(`Theme locale stress story must not force fixed-format table/code content into wrapping: ${forbiddenText}.`);
+  }
+}
+
+for (const requiredText of [
   '../src/lib/components/Button.svelte',
   '../src/lib/components/Icon.svelte',
   '../src/lib/components/Stack.svelte',
@@ -595,7 +925,9 @@ for (const requiredText of [
   '../src/lib/components/Button.svelte',
   '../src/lib/components/ConfirmAction.svelte',
   '../src/lib/components/Dialog.svelte',
+  '../src/lib/components/Menu.svelte',
   '../src/lib/components/Tabs.svelte',
+  '../src/lib/menu.ts',
   'Interaction probe',
   'ariaLabel="검토 섹션"',
   "selectedId = 'overview'",
@@ -603,6 +935,11 @@ for (const requiredText of [
   'ariaControls="interaction-probe-dialog"',
   'ariaExpanded={dialogOpen}',
   'onClose={() => (dialogOpen = false)}',
+  'menuSelection',
+  'interaction-probe-menu',
+  'interaction-probe-menu-state',
+  'onSelect={(_, item) => (menuSelection = item.label)}',
+  '필터 저장',
   'durationMs={600}',
   'onconfirm={() => (confirmCount += 1)}',
   '확인 {confirmCount}회',
@@ -615,19 +952,43 @@ for (const requiredText of [
 
 for (const requiredText of [
   '../src/lib/components/Badge.svelte',
+  '../src/lib/components/Avatar.svelte',
   '../src/lib/components/Button.svelte',
+  '../src/lib/components/CodeBlock.svelte',
   '../src/lib/components/EmptyState.svelte',
+  '../src/lib/components/IdentityChip.svelte',
   '../src/lib/components/Inline.svelte',
+  '../src/lib/components/InlineCode.svelte',
   '../src/lib/components/KeyValue.svelte',
   '../src/lib/components/Stack.svelte',
+  '../src/lib/components/SortHeader.svelte',
   '../src/lib/components/Surface.svelte',
   '../src/lib/components/Table.svelte',
+  '../src/lib/components/TableToolbar.svelte',
   'Operational information',
   'data-zdp-theme="light"',
   'data-zdp-theme="dark"',
   '보안 점검',
   '보안 점검 목록',
-  '<th scope="col">항목</th>',
+  '담당자',
+  '홍길동',
+  '김하늘',
+  '검토 담당',
+  '운영 담당',
+  '문서 조각',
+  '승격 조건',
+  '보안 기준',
+  '<InlineCode text="readonly" />',
+  '<InlineCode text="server-only" />',
+  '<CodeBlock',
+  'code={lightCodeExample}',
+  'code={darkCodeExample}',
+  '<TableToolbar',
+  'selectedCount={2}',
+  'aria-sort="ascending"',
+  'aria-sort="descending"',
+  '<SortHeader label="항목" direction="ascending" />',
+  '<SortHeader label="상태" direction="descending" />',
   '<th scope="row">권한 분리</th>',
   '<KeyValue columns="two"',
   '원장 경계',
@@ -648,8 +1009,14 @@ for (const requiredText of [
   '../src/lib/components/Callout.svelte',
   '../src/lib/components/Divider.svelte',
   '../src/lib/components/Inline.svelte',
+  '../src/lib/components/Progress.svelte',
+  '../src/lib/components/Skeleton.svelte',
   '../src/lib/components/Stack.svelte',
+  '../src/lib/components/StatusToast.svelte',
+  '../src/lib/components/Spinner.svelte',
   '../src/lib/components/Surface.svelte',
+  '../src/lib/components/Toast.svelte',
+  '../src/lib/toast.ts',
   'Status and surfaces',
   'data-zdp-theme="light"',
   'data-zdp-theme="dark"',
@@ -662,6 +1029,25 @@ for (const requiredText of [
   '삭제 전에 다시 확인하세요.',
   '작업 흐름이 준비됐습니다.',
   '위험 작업 전에 다시 확인하세요.',
+  '초안이 준비됐습니다.',
+  '작업이 저장됐습니다.',
+  '저장됐습니다.',
+  '동기화가 끝났습니다.',
+  '확인이 필요합니다.',
+  '연결이 끊겼습니다.',
+  'feedback-light-progress-title',
+  'feedback-dark-progress-title',
+  '자료를 불러오는 중입니다.',
+  '목록 확인 중',
+  '응답을 기다리고 있습니다.',
+  '응답 대기 중',
+  'variant="text"',
+  'variant="block"',
+  'variant="avatar"',
+  'placement="inline"',
+  'idPrefix="feedback-light-status-toast"',
+  'idPrefix="feedback-dark-status-toast"',
+  'onDismiss={(_, item) =>',
   '<Divider />',
   'surface-pair',
   'Parchment',
@@ -748,17 +1134,33 @@ assertNoDecorativeEffects(failures, 'Layout story surface', layoutComponent);
 assertNoOverRoundedUsage(failures, 'Layout story surface', layoutComponent);
 
 for (const requiredText of [
+  '../src/lib/components/Accordion.svelte',
   '../src/lib/components/Button.svelte',
+  '../src/lib/components/Disclosure.svelte',
   '../src/lib/components/Dialog.svelte',
   '../src/lib/components/Divider.svelte',
   '../src/lib/components/Inline.svelte',
   '../src/lib/components/Kbd.svelte',
+  '../src/lib/components/CommandField.svelte',
+  '../src/lib/components/Menu.svelte',
+  '../src/lib/components/Popover.svelte',
+  '../src/lib/components/SegmentedControl.svelte',
   '../src/lib/components/ShareDock.svelte',
   '../src/lib/components/ShortcutHint.svelte',
   '../src/lib/components/Stack.svelte',
   '../src/lib/components/Surface.svelte',
   '../src/lib/components/Tabs.svelte',
+  '../src/lib/components/TermSheet.svelte',
+  '../src/lib/components/TermTrigger.svelte',
+  '../src/lib/components/ThemeToggle.svelte',
+  '../src/lib/components/Tooltip.svelte',
+  '../src/lib/disclosure.ts',
+  '../src/lib/menu.ts',
+  '../src/lib/segmented.ts',
   '../src/lib/share.ts',
+  '../src/lib/shortcuts.ts',
+  '../src/lib/term.ts',
+  '../src/lib/theme.ts',
   'Interaction states',
   'id="interaction-main"',
   'tabindex="-1"',
@@ -766,24 +1168,92 @@ for (const requiredText of [
   'data-zdp-theme="dark"',
   'line-height: var(--zdp-type-title-line-height)',
   'Tabs',
+  'Command Field',
+  'interaction-light-command',
+  'interaction-dark-command',
+  '프로젝트, 문서, 설정 검색',
+  '검색어 없음',
   'Shortcut hints',
+  'Theme Toggle',
+  '<ThemeToggle',
+  'lightTheme',
+  'darkTheme',
+  "lightTheme === 'dark' ? 'light' : 'dark'",
+  "darkTheme === 'dark' ? 'light' : 'dark'",
+  'Tooltip',
+  'Accordion and Disclosure',
+  'Segmented Control',
+  'Popover and Menu',
+  'Term Sheet',
   'Kbd',
   'ShortcutHint',
+  'zdpShortcutRecommendations',
+  'zdpShortcutReservedExamples',
+  'visibleShortcutRecommendations',
+  'reservedShortcutPreview',
   'keydown 처리는 각 화면에 남깁니다',
   'Light shortcut hints',
   'Dark shortcut hints',
   'role="group" aria-label="Light shortcut hints"',
   'role="group" aria-label="Dark shortcut hints"',
   'Search',
-  'Shortcuts',
-  'Go to file',
-  'Select',
+  'Guide',
+  'Open',
+  'Previous',
+  'Next',
+  'Submit',
   'Close',
-  "keys={['/']}",
-  "keys={['Shift', '?']}",
-  'label="T"',
-  'label="Enter"',
-  'label="Esc"',
+  'Typing',
+  'IME',
+  'Reserved',
+  'shortcut-policy',
+  'Global shortcuts off while typing',
+  'Global shortcuts off during IME composition',
+  'text="새 항목"',
+  'text="닫기"',
+  'placement="right"',
+  'let:describedBy',
+  'ariaDescribedBy={describedBy}',
+  'lightAccordionItems',
+  'darkAccordionItems',
+  'headingLevel={4}',
+  'ariaLabel="Light disclosure sections"',
+  'ariaLabel="Dark disclosure sections"',
+  'lightSegmentedSelection',
+  'darkSegmentedSelection',
+  'lightTermOpen',
+  'darkTermOpen',
+  'lightSegmentedItems',
+  'darkSegmentedItems',
+  'termExample',
+  'ZdpTermSheetTerm',
+  'ariaLabel="Light view mode"',
+  'ariaLabel="Dark view mode"',
+  '보기 방식',
+  '목록',
+  '검토 기준',
+  '접힌 안내',
+  'idPrefix="interaction-light-popover"',
+  'idPrefix="interaction-dark-popover"',
+  'idPrefix="interaction-light-menu"',
+  'idPrefix="interaction-dark-menu"',
+  'triggerLabel="더보기"',
+  'onSelect={(_, item) => (lightMenuSelection = item.label)}',
+  'onSelect={(_, item) => (darkMenuSelection = item.label)}',
+  '<TermTrigger',
+  '<TermSheet',
+  'controls="interaction-light-term-sheet"',
+  'controls="interaction-dark-term-sheet"',
+  'id="interaction-light-term-sheet"',
+  'id="interaction-dark-term-sheet"',
+  'onClose={() => (lightTermOpen = false)}',
+  'onClose={() => (darkTermOpen = false)}',
+  '운영 복원력',
+  '용어 열림',
+  '용어 닫힘',
+  '설정 열기',
+  '필터 저장',
+  '연결 끊기',
   'Dialog',
   'Light interaction sections',
   'Dark interaction sections',
@@ -823,9 +1293,32 @@ for (const requiredText of [
 }
 
 for (const requiredText of [
+  "import type { ZdpThemeMode, ZdpThemeToggleSize }",
+  'theme: ZdpThemeMode',
+  'size: ZdpThemeToggleSize',
+  "lightLabel = '라이트 모드로 전환'",
+  "darkLabel = '다크 모드로 전환'",
+  'aria-pressed={isDark}',
+  'data-zdp-theme-toggle',
+  'data-zdp-theme-state={theme}',
+  'class={`zdp-theme-toggle zdp-theme-toggle--${size}`}',
+  'zdp-theme-toggle__icon--sun',
+  'zdp-theme-toggle__icon--moon',
+  '.zdp-theme-toggle',
+  '.zdp-theme-toggle:focus-visible',
+  '.zdp-theme-toggle[data-zdp-theme-state=',
+  'user-select: none'
+]) {
+  if (!themeToggle.includes(requiredText)) {
+    failures.push(`ThemeToggle component is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
   '../src/lib/components/Breadcrumb.svelte',
   '../src/lib/components/Inline.svelte',
   '../src/lib/components/Link.svelte',
+  '../src/lib/components/Pagination.svelte',
   '../src/lib/components/SkipLink.svelte',
   '../src/lib/components/Stack.svelte',
   '../src/lib/components/Surface.svelte',
@@ -839,6 +1332,9 @@ for (const requiredText of [
   'line-height: var(--zdp-type-title-line-height)',
   '페이지 위치',
   '텍스트 이동',
+  '목록 페이지',
+  '밝은 화면 목록 페이지',
+  '어두운 화면 목록 페이지',
   '가까운 섹션',
   '자세히 보기',
   '기록 보기',
@@ -852,6 +1348,42 @@ for (const requiredText of [
     failures.push(`Navigation story surface is missing ${requiredText}.`);
   }
 }
+
+for (const requiredText of [
+  'ZdpAvatarSize',
+  'ZdpAvatarTone',
+  'label: string | null = null',
+  'initials: string | null = null',
+  'imageSrc: string | null = null',
+  "size: ZdpAvatarSize = 'md'",
+  "tone: ZdpAvatarTone = 'neutral'",
+  'decorative = false',
+  'resolvedLabel',
+  'resolvedInitials',
+  'accessibilityLabel',
+  'class={`zdp-avatar zdp-avatar--${size} zdp-avatar--${tone}`}',
+  "role={decorative ? undefined : 'img'}",
+  'aria-label={accessibilityLabel}',
+  'aria-hidden={decorative ?',
+  'class="zdp-avatar__image"',
+  'alt=""',
+  'class="zdp-avatar__initials"',
+  '.zdp-avatar',
+  '.zdp-avatar--sm',
+  '.zdp-avatar--md',
+  '.zdp-avatar--lg',
+  '.zdp-avatar--primary',
+  '.zdp-avatar__image',
+  '.zdp-avatar__initials',
+  'border-radius: 50%'
+]) {
+  if (!avatar.includes(requiredText)) {
+    failures.push(`Avatar component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Avatar component', avatar);
+assertNoOverRoundedUsage(failures, 'Avatar component', avatar);
 
 for (const requiredText of [
   '.zdp-badge',
@@ -868,6 +1400,48 @@ for (const requiredText of [
     failures.push(`Badge component is missing ${requiredText}.`);
   }
 }
+
+for (const requiredText of [
+  "import Avatar from './Avatar.svelte'",
+  'ZdpIdentityChipAriaCurrent',
+  'ZdpIdentityChipSize',
+  "label = '사용자'",
+  'description: string | null = null',
+  'initials: string | null = null',
+  'imageSrc: string | null = null',
+  'href: string | null = null',
+  "size: ZdpIdentityChipSize = 'md'",
+  'selected = false',
+  'ariaLabel: string | null = null',
+  'ariaCurrent: ZdpIdentityChipAriaCurrent | null = null',
+  'chipClass',
+  '{#if href}',
+  'aria-current={ariaCurrent ?? undefined}',
+  'data-selected={selected ?',
+  '<Avatar label={label} initials={initials} imageSrc={imageSrc} size={size} decorative />',
+  'class="zdp-identity-chip__body"',
+  'class="zdp-identity-chip__label"',
+  'class="zdp-identity-chip__description"',
+  '.zdp-identity-chip',
+  '.zdp-identity-chip--sm',
+  '.zdp-identity-chip--md',
+  '.zdp-identity-chip--link',
+  '.zdp-identity-chip--link:hover',
+  '.zdp-identity-chip--link:focus-visible',
+  ".zdp-identity-chip[data-selected='true']",
+  '.zdp-identity-chip[aria-current]',
+  '.zdp-identity-chip__body',
+  '.zdp-identity-chip__label',
+  '.zdp-identity-chip__description',
+  'overflow-wrap: var(--zdp-i18n-overflow-wrap)'
+]) {
+  if (!identityChip.includes(requiredText)) {
+    failures.push(`IdentityChip component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'IdentityChip component', identityChip);
+assertNoOverRoundedUsage(failures, 'IdentityChip component', identityChip);
 
 for (const requiredText of [
   '.zdp-callout',
@@ -888,7 +1462,153 @@ for (const requiredText of [
   }
 }
 
-for (const source of [badge, callout]) {
+for (const requiredText of [
+  'import type { ZdpToastTone }',
+  'tone: ZdpToastTone',
+  'semanticRole:',
+  'live:',
+  'atomic = true',
+  'dismissLabel =',
+  'onClose:',
+  'aria-live={resolvedLive}',
+  'aria-atomic={resolvedAtomic}',
+  'role={resolvedRole ?? undefined}',
+  'class={`zdp-toast zdp-toast--${tone}`}',
+  'class="zdp-toast__mark"',
+  'class="zdp-toast__body"',
+  'class="zdp-toast__close"',
+  '.zdp-toast',
+  '.zdp-toast__mark',
+  '.zdp-toast__body',
+  '.zdp-toast__title',
+  '.zdp-toast__message',
+  '.zdp-toast__action',
+  '.zdp-toast__body :global(.zdp-toast__action) {\n    align-items: center;',
+  'margin-block-start: var(--zdp-space-3)',
+  '.zdp-toast__action:focus-visible',
+  '.zdp-toast__close',
+  '.zdp-toast__close:focus-visible',
+  '.zdp-toast--success .zdp-toast__mark',
+  '.zdp-toast--warning .zdp-toast__mark',
+  '.zdp-toast--danger .zdp-toast__mark'
+]) {
+  if (!toast.includes(requiredText)) {
+    failures.push(`Toast component is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  "import Toast from './Toast.svelte'",
+  'import type { ZdpStatusToastItem }',
+  'items: readonly ZdpStatusToastItem[] = []',
+  'placement:',
+  'idPrefix =',
+  'ariaLabel =',
+  'onDismiss:',
+  'function handleDismiss',
+  'function handleAction',
+  'function resolvedRel',
+  'class={`zdp-status-toast zdp-status-toast--${placement}`}',
+  'aria-label={labelledBy ? undefined : ariaLabel}',
+  'aria-labelledby={labelledBy ?? undefined}',
+  'onClose={onDismiss ?',
+  'class="zdp-toast__title"',
+  'class="zdp-toast__message"',
+  'class="zdp-toast__action"',
+  '.zdp-status-toast',
+  '.zdp-status-toast :global(.zdp-toast)',
+  '.zdp-status-toast--inline',
+  '.zdp-status-toast--top-end',
+  '.zdp-status-toast--bottom-end'
+]) {
+  if (!statusToast.includes(requiredText)) {
+    failures.push(`StatusToast component is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  'import type { ZdpProgressSize, ZdpProgressTone }',
+  'value: number | null = null',
+  'min = 0',
+  'max = 100',
+  'ariaLabel =',
+  'valueText:',
+  'Number.isFinite',
+  'role="progressbar"',
+  'aria-valuemin={hasRange ? min : undefined}',
+  'aria-valuemax={hasRange ? max : undefined}',
+  'aria-valuenow={hasValue ? clampedValue : undefined}',
+  'aria-valuetext={valueText ?? undefined}',
+  "data-indeterminate={hasValue ? undefined : 'true'}",
+  'style={progressStyle}',
+  'class="zdp-progress__track"',
+  'class="zdp-progress__bar"',
+  '.zdp-progress',
+  '.zdp-progress__track',
+  '.zdp-progress__bar',
+  '.zdp-progress[data-indeterminate="true"] .zdp-progress__bar',
+  '.zdp-progress--success',
+  '.zdp-progress--warning',
+  '.zdp-progress--danger',
+  'prefers-reduced-motion'
+]) {
+  if (!progress.includes(requiredText)) {
+    failures.push(`Progress component is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  'import type { ZdpProgressTone, ZdpSpinnerSize }',
+  'size: ZdpSpinnerSize',
+  'tone: ZdpProgressTone',
+  'decorative = false',
+  'semanticRole:',
+  'aria-hidden={decorative ?',
+  'aria-label={decorative ? undefined : label}',
+  'role={decorative ? undefined : semanticRole ?? undefined}',
+  'class="zdp-spinner__mark"',
+  '.zdp-spinner',
+  '.zdp-spinner__mark',
+  'border-block-start-color: currentColor',
+  'border-inline-end-color: currentColor',
+  '.zdp-spinner--sm',
+  '.zdp-spinner--md',
+  '.zdp-spinner--lg',
+  '.zdp-spinner--warning',
+  '.zdp-spinner--danger'
+]) {
+  if (!spinner.includes(requiredText)) {
+    failures.push(`Spinner component is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  'import type { ZdpSkeletonVariant }',
+  'variant: ZdpSkeletonVariant',
+  'lines = 1',
+  'animated = true',
+  'decorative = true',
+  'lineCount = Math.max',
+  "variant === 'text' ? lineCount : 1",
+  'aria-hidden={decorative ?',
+  'aria-label={!decorative && !labelledBy ? ariaLabel : undefined}',
+  "role={decorative ? undefined : 'status'}",
+  'data-animated={animated ?',
+  'class={`zdp-skeleton zdp-skeleton--${variant}`}',
+  'class={`zdp-skeleton__line',
+  '.zdp-skeleton',
+  '.zdp-skeleton__line',
+  '.zdp-skeleton--text .zdp-skeleton__line',
+  '.zdp-skeleton--block .zdp-skeleton__line',
+  '.zdp-skeleton--avatar .zdp-skeleton__line',
+  '.zdp-skeleton[data-animated="false"] .zdp-skeleton__line'
+]) {
+  if (!skeleton.includes(requiredText)) {
+    failures.push(`Skeleton component is missing ${requiredText}.`);
+  }
+}
+
+for (const source of [badge, callout, toast, statusToast, progress, spinner, skeleton]) {
   assertNoDecorativeEffects(failures, 'Feedback component', source);
   assertNoOverRoundedUsage(failures, 'Feedback component', source);
 }
@@ -957,10 +1677,392 @@ for (const requiredText of [
   }
 }
 
+for (const requiredText of [
+  'export type ZdpShortcutIntent',
+  'export type ZdpShortcutRisk',
+  'export interface ZdpShortcutRecommendation',
+  'export interface ZdpShortcutGuardOptions',
+  'export const zdpShortcutRecommendations',
+  'export const zdpShortcutReservedExamples',
+  'export function isZdpTextEntryTarget',
+  'export function isZdpBrowserReservedShortcut',
+  'export function shouldZdpIgnoreShortcutEvent',
+  'input',
+  'textarea',
+  'select',
+  'contenteditable',
+  'role="textbox"',
+  'role="searchbox"',
+  'event.isComposing',
+  'event.keyCode === 229',
+  'reservedModifierKeys',
+  'Ctrl+S',
+  'Cmd+Q',
+  'Alt+ArrowLeft',
+  'Backspace'
+]) {
+  if (!shortcuts.includes(requiredText)) {
+    failures.push(`Shortcut policy helper is missing ${requiredText}.`);
+  }
+}
+
 assertNoDecorativeEffects(failures, 'Kbd component', kbd);
 assertNoDecorativeEffects(failures, 'ShortcutHint component', shortcutHint);
 assertNoOverRoundedUsage(failures, 'Kbd component', kbd);
 assertNoOverRoundedUsage(failures, 'ShortcutHint component', shortcutHint);
+
+for (const requiredText of [
+  '<code class="zdp-inline-code"',
+  'text: string | null = null',
+  'aria-label={ariaLabel ?? undefined}',
+  '.zdp-inline-code',
+  'font-family: var(--zdp-font-family-mono)',
+  'box-decoration-break: clone',
+  'word-break: break-word'
+]) {
+  if (!inlineCode.includes(requiredText)) {
+    failures.push(`InlineCode component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'InlineCode component', inlineCode);
+assertNoOverRoundedUsage(failures, 'InlineCode component', inlineCode);
+
+for (const requiredText of [
+  "import { onDestroy } from 'svelte'",
+  "import type { ZdpCodeBlockSize, ZdpCodeBlockTone }",
+  'export let code =',
+  'language: string | null = null',
+  'label: string | null = null',
+  'caption: string | null = null',
+  "size: ZdpCodeBlockSize = 'md'",
+  "tone: ZdpCodeBlockTone = 'default'",
+  'wrap = false',
+  'showCopy = true',
+  "copyLabel = '복사'",
+  "copiedLabel = '복사됨'",
+  "copyFailedLabel = '복사 실패'",
+  '$: canCopy = showCopy && code.length > 0',
+  'navigator.clipboard.writeText(code)',
+  'onDestroy(() =>',
+  'class={`zdp-code-block zdp-code-block--${size} zdp-code-block--${tone}`}',
+  'data-wrap={wrap ?',
+  'role="group"',
+  'aria-labelledby={labelledBy ?? undefined}',
+  'class="zdp-code-block__header"',
+  'class="zdp-code-block__meta"',
+  'class="zdp-code-block__title"',
+  'class="zdp-code-block__language"',
+  'class="zdp-code-block__copy"',
+  'onclick={handleCopy}',
+  'codeRegionLabel',
+  'svelte-ignore a11y_no_noninteractive_tabindex',
+  'class="zdp-code-block__scroller"',
+  'class="zdp-code-block__pre"',
+  'role="region"',
+  'tabindex="0"',
+  'class="zdp-code-block__code"',
+  '.zdp-code-block',
+  '.zdp-code-block__copy:focus-visible',
+  '.zdp-code-block__scroller:focus-visible',
+  '.zdp-code-block[data-wrap="true"] .zdp-code-block__pre',
+  'font-family: var(--zdp-font-family-mono)',
+  'overflow-x: auto',
+  'overscroll-behavior-inline: contain',
+  'scrollbar-gutter: stable',
+  'touch-action: pan-x pan-y'
+]) {
+  if (!codeBlock.includes(requiredText)) {
+    failures.push(`CodeBlock component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'CodeBlock component', codeBlock);
+assertNoOverRoundedUsage(failures, 'CodeBlock component', codeBlock);
+
+for (const requiredText of [
+  "import type { ZdpCommandFieldSize }",
+  "import ShortcutHint from './ShortcutHint.svelte'",
+  'type DescribedBy = string | readonly string[] | null',
+  'id: string | null = null',
+  'name: string | null = null',
+  "type = 'search'",
+  "label: string | null = '검색'",
+  'labelVisible = false',
+  "placeholder: string | null = '검색어 입력'",
+  "autocomplete: string | null = 'off'",
+  'describedBy: DescribedBy = null',
+  'errorMessageId: string | null = null',
+  'invalid = false',
+  'disabled = false',
+  'readonly = false',
+  'required = false',
+  "size: ZdpCommandFieldSize = 'md'",
+  "shortcutKeys: readonly string[] = ['/']",
+  'ariaControls: string | null = null',
+  'ariaExpanded: boolean | null = null',
+  'ariaActivedescendant: string | null = null',
+  'normalizeIdRefs',
+  'aria-describedby={ariaDescribedBy ?? undefined}',
+  'aria-errormessage={resolvedErrorMessageId ?? undefined}',
+  "aria-invalid={invalid ? 'true' : undefined}",
+  'aria-controls={ariaControls ?? undefined}',
+  'aria-expanded={ariaExpanded ?? undefined}',
+  'aria-activedescendant={ariaActivedescendant ?? undefined}',
+  'oninput={handleInput}',
+  'class={`zdp-command-field-shell zdp-command-field-shell--${size}`}',
+  "data-invalid={invalid ? 'true' : undefined}",
+  "data-disabled={disabled ? 'true' : undefined}",
+  'zdp-command-field__label--hidden',
+  'class={`zdp-command-field zdp-command-field--${size}`}',
+  'class="zdp-command-field__input"',
+  'class="zdp-command-field__shortcut"',
+  'aria-hidden="true"',
+  '<ShortcutHint keys={shortcutKeys} size={size} />',
+  '.zdp-command-field-shell',
+  '.zdp-command-field-shell--sm',
+  '.zdp-command-field-shell--md',
+  '.zdp-command-field__label',
+  '.zdp-command-field__label--hidden',
+  '.zdp-command-field',
+  '.zdp-command-field--sm',
+  '.zdp-command-field--md',
+  '.zdp-command-field:hover',
+  '.zdp-command-field:focus-within',
+  '.zdp-command-field-shell[data-invalid="true"] .zdp-command-field',
+  '.zdp-command-field-shell[data-disabled="true"] .zdp-command-field',
+  '.zdp-command-field__input',
+  '.zdp-command-field--sm .zdp-command-field__input',
+  '.zdp-command-field__input::placeholder',
+  '.zdp-command-field__input:focus',
+  '.zdp-command-field__shortcut',
+  'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
+  'border-color: var(--zdp-color-focus-line)',
+  'clip-path: inset(50%)'
+]) {
+  if (!commandField.includes(requiredText)) {
+    failures.push(`CommandField component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'CommandField component', commandField);
+assertNoOverRoundedUsage(failures, 'CommandField component', commandField);
+
+for (const requiredText of [
+  "placement: 'top' | 'right' | 'bottom' | 'left' = 'top'",
+  'disabled = false',
+  '$: describedBy = disabled ? null : id',
+  '<slot describedBy={describedBy} />',
+  'role={describedBy ?',
+  'aria-hidden={describedBy ? undefined :',
+  '.zdp-tooltip',
+  '.zdp-tooltip__trigger',
+  '.zdp-tooltip__content',
+  '.zdp-tooltip--top .zdp-tooltip__content',
+  '.zdp-tooltip--right .zdp-tooltip__content',
+  '.zdp-tooltip--bottom .zdp-tooltip__content',
+  '.zdp-tooltip--left .zdp-tooltip__content',
+  '.zdp-tooltip:hover .zdp-tooltip__content',
+  '.zdp-tooltip:focus-within .zdp-tooltip__content',
+  'pointer-events: none',
+  'white-space: nowrap'
+]) {
+  if (!tooltip.includes(requiredText)) {
+    failures.push(`Tooltip component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Tooltip component', tooltip);
+assertNoOverRoundedUsage(failures, 'Tooltip component', tooltip);
+
+for (const requiredText of [
+  "import type { ZdpDisclosureHeadingLevel }",
+  'export let open = false',
+  'export let disabled = false',
+  "export let title = '자세히 보기'",
+  'headingLevel: ZdpDisclosureHeadingLevel | null = null',
+  'onOpenChange: ((open: boolean) => void) | null = null',
+  'resolvedId',
+  'triggerId',
+  'panelId',
+  'aria-expanded={open}',
+  'aria-controls={panelId}',
+  'disabled={disabled}',
+  'onclick={handleToggle}',
+  'role="heading"',
+  'aria-level={headingLevel}',
+  'class="zdp-disclosure__trigger"',
+  'class="zdp-disclosure__title"',
+  'class="zdp-disclosure__mark"',
+  'class="zdp-disclosure__panel"',
+  'role="group"',
+  'aria-labelledby={triggerId}',
+  '.zdp-disclosure',
+  '.zdp-disclosure__trigger',
+  '.zdp-disclosure__trigger:focus-visible',
+  '.zdp-disclosure__panel',
+  'overflow-wrap: var(--zdp-i18n-overflow-wrap)'
+]) {
+  if (!disclosure.includes(requiredText)) {
+    failures.push(`Disclosure component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Disclosure component', disclosure);
+assertNoOverRoundedUsage(failures, 'Disclosure component', disclosure);
+
+for (const requiredText of [
+  "import Disclosure from './Disclosure.svelte'",
+  'ZdpAccordionItem',
+  'ZdpAccordionMode',
+  'ZdpDisclosureHeadingLevel',
+  'items: readonly ZdpAccordionItem[] = []',
+  "mode: ZdpAccordionMode = 'multiple'",
+  "ariaLabel = '접힌 목록'",
+  'headingLevel: ZdpDisclosureHeadingLevel | null = 3',
+  'onOpenChange',
+  'openIds: readonly string[] = []',
+  'nextItemOpenSignature',
+  'normalizeInitialOpenIds',
+  'isItemOpen',
+  'handleItemOpenChange',
+  'resolveNextOpenIds',
+  'role="list"',
+  'aria-label={ariaLabel}',
+  'class="zdp-accordion__item"',
+  'role="listitem"',
+  '<Disclosure',
+  'open={isItemOpen(item.id)}',
+  'disabled={item.disabled ?? false}',
+  'onOpenChange={(nextOpen) => handleItemOpenChange(item, nextOpen)}',
+  '.zdp-accordion',
+  '.zdp-accordion__item'
+]) {
+  if (!accordion.includes(requiredText)) {
+    failures.push(`Accordion component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Accordion component', accordion);
+assertNoOverRoundedUsage(failures, 'Accordion component', accordion);
+
+for (const requiredText of [
+  'ZdpSegmentedControlItem',
+  'ZdpSegmentedControlSize',
+  'items: readonly ZdpSegmentedControlItem[] = []',
+  'selectedId: string | null = null',
+  "ariaLabel = '선택 전환'",
+  'idPrefix: string | null = null',
+  "size: ZdpSegmentedControlSize = 'md'",
+  'onChange',
+  'selectedItem',
+  'activeId',
+  'selectItem',
+  'handleKeydown',
+  "['ArrowLeft', 'ArrowRight', 'Home', 'End']",
+  'getNextIndex',
+  'role="radiogroup"',
+  'aria-label={ariaLabel}',
+  'class={`zdp-segmented-control zdp-segmented-control--${size}`}',
+  'class={`zdp-segmented-control__item',
+  'role="radio"',
+  'aria-checked={item.id === activeId}',
+  'tabindex={item.id === activeId ? 0 : -1}',
+  'disabled={item.disabled}',
+  'onclick={(event) => selectItem(event, item)}',
+  '.zdp-segmented-control',
+  '.zdp-segmented-control__item',
+  '.zdp-segmented-control--sm .zdp-segmented-control__item',
+  '.zdp-segmented-control--md .zdp-segmented-control__item',
+  '.zdp-segmented-control__item:focus-visible',
+  '.zdp-segmented-control__item--selected',
+  'overflow-wrap: var(--zdp-i18n-overflow-wrap)'
+]) {
+  if (!segmentedControl.includes(requiredText)) {
+    failures.push(`SegmentedControl component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'SegmentedControl component', segmentedControl);
+assertNoOverRoundedUsage(failures, 'SegmentedControl component', segmentedControl);
+
+for (const requiredText of [
+  "placement: 'top' | 'right' | 'bottom' | 'left' = 'bottom'",
+  "align: 'start' | 'center' | 'end' = 'start'",
+  "role: 'dialog' | 'group' | null = 'dialog'",
+  'closeOnEscape',
+  'closeOnOutside',
+  'onOpenChange',
+  '<svelte:document onclick={handleDocumentClick} onkeydown={handleDocumentKeydown} />',
+  'data-open={open ?',
+  'slot name="trigger"',
+  'panelId={panelId}',
+  'role={role ?? undefined}',
+  'aria-labelledby={labelledBy ?? triggerId}',
+  '.zdp-popover',
+  '.zdp-popover__trigger',
+  '.zdp-popover__panel',
+  '.zdp-popover__panel:focus-visible',
+  '.zdp-popover--bottom .zdp-popover__panel',
+  '.zdp-popover--align-start .zdp-popover__panel',
+  'max-inline-size: min(22rem, calc(100vw - var(--zdp-space-6)))',
+  'translate: -50% 0',
+  'translate: 0 -50%'
+]) {
+  if (!popover.includes(requiredText)) {
+    failures.push(`Popover component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Popover component', popover);
+assertNoOverRoundedUsage(failures, 'Popover component', popover);
+
+for (const requiredText of [
+  'import type { ZdpMenuItem }',
+  'items: readonly ZdpMenuItem[] = []',
+  'triggerLabel =',
+  'onOpenChange',
+  'onSelect',
+  'handleTriggerKeydown',
+  'handlePanelKeydown',
+  'moveActiveItem',
+  'focusActiveItem',
+  'resolvedRel',
+  '<svelte:document onclick={handleDocumentClick} />',
+  'aria-haspopup="menu"',
+  'aria-expanded={open}',
+  'aria-controls={open ? panelId : undefined}',
+  'role="menu"',
+  'aria-labelledby={triggerId}',
+  'role="menuitem"',
+  'aria-disabled={item.disabled ?',
+  'tabindex={item.id === activeItemId && !item.disabled ? 0 : -1}',
+  'data-menu-item-id={item.id}',
+  'role="separator"',
+  'class="zdp-menu__trigger-mark"',
+  '.zdp-menu__trigger-mark::before',
+  '.zdp-menu',
+  '.zdp-menu__trigger',
+  '.zdp-menu__trigger:focus-visible',
+  '.zdp-menu__panel',
+  '.zdp-menu__panel:focus-visible',
+  '.zdp-menu__item',
+  '.zdp-menu__item:hover:not(:disabled):not([aria-disabled="true"])',
+  '.zdp-menu__item--danger',
+  '.zdp-menu__separator',
+  '.zdp-menu--bottom .zdp-menu__panel',
+  '.zdp-menu--align-end .zdp-menu__panel',
+  'max-inline-size: min(18rem, calc(100vw - var(--zdp-space-6)))',
+  'translate: -50% 0',
+  'translate: 0 -50%'
+]) {
+  if (!menu.includes(requiredText)) {
+    failures.push(`Menu component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Menu component', menu);
+assertNoOverRoundedUsage(failures, 'Menu component', menu);
 
 for (const requiredText of [
   '.zdp-skip-link',
@@ -1211,7 +2313,13 @@ for (const requiredText of [
   '.zdp-table :global(th)',
   '.zdp-table :global(td)',
   '.zdp-table :global(thead th)',
-  'overflow-x: auto'
+  'overflow-x: auto',
+  'overscroll-behavior-inline: contain',
+  'scrollbar-gutter: stable',
+  'touch-action: pan-x pan-y',
+  'overflow-wrap: normal',
+  'white-space: nowrap',
+  'word-break: normal'
 ]) {
   if (!table.includes(requiredText)) {
     failures.push(`Table component is missing ${requiredText}.`);
@@ -1220,6 +2328,67 @@ for (const requiredText of [
 
 assertNoDecorativeEffects(failures, 'Table component', table);
 assertNoOverRoundedUsage(failures, 'Table component', table);
+
+for (const requiredText of [
+  "import type { ZdpSortDirection }",
+  "direction: ZdpSortDirection = 'none'",
+  'onSort:',
+  'nextDirection',
+  'aria-label={resolvedAriaLabel}',
+  'data-sort-direction={normalizedDirection}',
+  'class="zdp-sort-header__label"',
+  'class="zdp-sort-header__mark"',
+  '.zdp-sort-header__mark::before',
+  '.zdp-sort-header--ascending .zdp-sort-header__mark::before',
+  '.zdp-sort-header--descending .zdp-sort-header__mark::before',
+  '.zdp-sort-header',
+  '.zdp-sort-header:hover:not(:disabled)',
+  '.zdp-sort-header:focus-visible',
+  '.zdp-sort-header--ascending .zdp-sort-header__mark'
+]) {
+  if (!sortHeader.includes(requiredText)) {
+    failures.push(`SortHeader component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'SortHeader component', sortHeader);
+assertNoOverRoundedUsage(failures, 'SortHeader component', sortHeader);
+
+for (const requiredText of [
+  "import SegmentedControl from './SegmentedControl.svelte'",
+  "ZdpTableDensity",
+  "ZdpTableToolbarDensityItem",
+  "selectedCount: number | null = null",
+  "density: ZdpTableDensity = 'default'",
+  'onDensityChange:',
+  'normalizeCount',
+  'normalizeDensity',
+  '<div',
+  'class="zdp-table-toolbar"',
+  'role="group"',
+  'aria-labelledby={labelledBy ?? undefined}',
+  'class="zdp-table-toolbar__body"',
+  'class="zdp-table-toolbar__controls"',
+  'class="zdp-table-toolbar__actions"',
+  'class="zdp-table-toolbar__density"',
+  '<SegmentedControl',
+  '.zdp-table-toolbar',
+  'display: flex',
+  'flex-wrap: wrap',
+  'justify-content: space-between',
+  'flex: 1 1 16rem',
+  'min-inline-size: min(100%, 16rem)',
+  '.zdp-table-toolbar__actions',
+  'margin-inline-start: auto',
+  '@media (max-width: 48rem)'
+]) {
+  if (!tableToolbar.includes(requiredText)) {
+    failures.push(`TableToolbar component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'TableToolbar component', tableToolbar);
+assertNoOverRoundedUsage(failures, 'TableToolbar component', tableToolbar);
 
 for (const requiredText of [
   '.zdp-key-value',
@@ -1286,6 +2455,58 @@ assertNoDecorativeEffects(failures, 'Breadcrumb component', breadcrumb);
 assertNoOverRoundedUsage(failures, 'Breadcrumb component', breadcrumb);
 
 for (const requiredText of [
+  "import type { ZdpPaginationItem }",
+  'export let currentPage = 1',
+  'export let totalPages = 1',
+  'export let siblingCount = 1',
+  "export let ariaLabel = '페이지 이동'",
+  "export let previousLabel = '이전'",
+  "export let nextLabel = '다음'",
+  'hrefForPage: ((page: number) => string | null) | null = null',
+  'onPageChange: ((event: MouseEvent, page: number) => void) | null = null',
+  'normalizePositiveInteger',
+  'clampPage',
+  'clampSiblingCount',
+  'buildPaginationItems',
+  '<nav class="zdp-pagination" aria-label={ariaLabel}>',
+  '<ol class="zdp-pagination__list">',
+  'class="zdp-pagination__item"',
+  'class="zdp-pagination__link zdp-pagination__link--control"',
+  'class="zdp-pagination__link"',
+  'class="zdp-pagination__ellipsis"',
+  'aria-current={item.page === activePage ? \'page\' : undefined}',
+  'disabled={item.page === activePage}',
+  '.zdp-pagination',
+  '.zdp-pagination__list',
+  '.zdp-pagination__item',
+  '.zdp-pagination__link',
+  '.zdp-pagination__link--control',
+  'overflow-x: auto',
+  'overscroll-behavior-inline: contain',
+  '--zdp-pagination-focus-bleed',
+  'padding-block: var(--zdp-pagination-focus-bleed)',
+  'padding-inline: var(--zdp-pagination-focus-bleed)',
+  'scrollbar-gutter: stable',
+  'scroll-padding-inline: var(--zdp-pagination-focus-bleed)',
+  'touch-action: pan-x pan-y',
+  'flex-wrap: nowrap',
+  'width: max-content',
+  'flex: 0 0 auto',
+  'white-space: nowrap',
+  '.zdp-pagination__link:focus-visible',
+  '.zdp-pagination__link[aria-current=\'page\']',
+  '.zdp-pagination__link:disabled',
+  '.zdp-pagination__ellipsis'
+]) {
+  if (!pagination.includes(requiredText)) {
+    failures.push(`Pagination component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Pagination component', pagination);
+assertNoOverRoundedUsage(failures, 'Pagination component', pagination);
+
+for (const requiredText of [
   'export let size: \'sm\' | \'md\' = \'md\'',
   'export let label: string | null = null',
   'role={label ? \'img\' : undefined}',
@@ -1306,13 +2527,16 @@ for (const requiredText of [
 for (const requiredText of [
   'zdpShareIcons',
   'ZdpShareDockItem',
+  "import Tooltip from './Tooltip.svelte'",
   "placement: 'side' | 'rail' | 'bottom' | 'inline' = 'side'",
+  'tooltipPlacement',
   'class={`zdp-share-dock zdp-share-dock--${placement}`}',
   'class="zdp-share-dock__list"',
+  '<Tooltip text={item.label} placement={tooltipPlacement}',
+  'disabled={item.disabled}',
   'class="zdp-share-action"',
   'class="zdp-share-action__mark"',
   'class={`zdp-share-icon zdp-share-icon--${item.icon}`}',
-  'class="zdp-share-action__tooltip"',
   'aria-label={item.ariaLabel ?? item.label}',
   'data-share-id={item.id}',
   '.zdp-share-dock--side',
@@ -1358,11 +2582,13 @@ for (const requiredText of [
 
 for (const requiredText of [
   'onclick: ((event: MouseEvent) => void) | null = null',
+  'ariaLabel: string | null = null',
   'ariaControls: string | null = null',
   'ariaDescribedBy: string | null = null',
   'ariaExpanded: boolean | null = null',
   'ariaPressed: boolean | null = null',
   'ariaKeyShortcuts: string | null = null',
+  'aria-label={ariaLabel ?? undefined}',
   'aria-controls={ariaControls ?? undefined}',
   'aria-describedby={ariaDescribedBy ?? undefined}',
   'aria-expanded={ariaExpanded ?? undefined}',
@@ -1601,6 +2827,74 @@ for (const requiredText of [
 assertNoDecorativeEffects(failures, 'Dialog component', dialog);
 assertNoOverRoundedUsage(failures, 'Dialog component', dialog);
 
+for (const requiredText of [
+  "import type { ZdpTermSheetPlacement, ZdpTermSheetTerm }",
+  'export let open = false',
+  "export let id = 'zdp-term-sheet'",
+  'export let term: ZdpTermSheetTerm | null = null',
+  "export let placement: ZdpTermSheetPlacement = 'right'",
+  'export let closeOnEscape = true',
+  'export let closeOnBackdrop = true',
+  'onClose: (() => void) | null = null',
+  'onRelatedTerm: ((termId: string) => void) | null = null',
+  'handleSheetOpened',
+  'restorePreviousFocus',
+  'handleBackdropClick',
+  'getFocusableElements',
+  'class="zdp-term-sheet__backdrop"',
+  'class={`zdp-term-sheet zdp-term-sheet--${resolvedPlacement}`}',
+  'role="dialog"',
+  'aria-modal="true"',
+  'aria-labelledby={titleId}',
+  'aria-describedby={descriptionId}',
+  'data-zdp-ad-exclude="true"',
+  'onkeydown={handleKeydown}',
+  'class="zdp-term-sheet__close"',
+  'class="zdp-term-sheet__related-button"',
+  'data-term-id={relatedTerm.id}',
+  'class="zdp-term-sheet__detail-link"',
+  '.zdp-term-sheet__backdrop',
+  '.zdp-term-sheet--right',
+  '.zdp-term-sheet--bottom',
+  '.zdp-term-sheet:focus-visible',
+  '.zdp-term-sheet__close:focus-visible',
+  '.zdp-term-sheet__related-button:focus-visible',
+  '-webkit-user-select: none',
+  'user-select: none',
+  '@media (max-width: 720px)'
+]) {
+  if (!termSheet.includes(requiredText)) {
+    failures.push(`TermSheet component is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  'export let termId: string',
+  'export let controls: string | null = null',
+  'export let expanded = false',
+  'export let disabled = false',
+  'onopen: ((termId: string) => void) | null = null',
+  'data-term-id={termId}',
+  'aria-controls={controls ?? undefined}',
+  'aria-expanded={controls === null ? undefined : expanded}',
+  'aria-haspopup="dialog"',
+  'onclick={handleClick}',
+  '.zdp-term-trigger',
+  '.zdp-term-trigger:hover:not(:disabled)',
+  '.zdp-term-trigger:focus-visible',
+  '-webkit-user-select: none',
+  'user-select: none'
+]) {
+  if (!termTrigger.includes(requiredText)) {
+    failures.push(`TermTrigger component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'TermSheet component', termSheet);
+assertNoDecorativeEffects(failures, 'TermTrigger component', termTrigger);
+assertNoOverRoundedUsage(failures, 'TermSheet component', termSheet);
+assertNoOverRoundedUsage(failures, 'TermTrigger component', termTrigger);
+
 for (const source of [checkbox, field, input, label, radio, select, switchComponent, textarea]) {
   assertNoDecorativeEffects(failures, 'Form component', source);
   assertNoOverRoundedUsage(failures, 'Form component', source);
@@ -1640,11 +2934,60 @@ for (const requiredText of [
   }
 }
 
+for (const [surfaceLabel, source] of [
+  ['Avatar component initials', avatar],
+  ['Breadcrumb component separator', breadcrumb],
+  ['Button component', button],
+  ['Checkbox component', checkbox],
+  ['Callout component mark', callout],
+  ['CodeBlock component copy action', codeBlock],
+  ['CommandField component shortcut', commandField],
+  ['ConfirmAction component', confirmAction],
+  ['Dialog component close button', dialog],
+  ['Disclosure component trigger', disclosure],
+  ['Icon component', icon],
+  ['IconButton component', iconButton],
+  ['Kbd component', kbd],
+  ['Label component required mark', label],
+  ['Menu component controls', menu],
+  ['Pagination component controls', pagination],
+  ['Popover component trigger', popover],
+  ['Progress component marks', progress],
+  ['Radio component', radio],
+  ['SegmentedControl component items', segmentedControl],
+  ['ShareDock component actions', shareDock],
+  ['ShortcutHint component', shortcutHint],
+  ['Skeleton component', skeleton],
+  ['SortHeader component', sortHeader],
+  ['Spinner component', spinner],
+  ['Switch component', switchComponent],
+  ['Tabs component tab', tabs],
+  ['TermSheet component controls', termSheet],
+  ['TermTrigger component', termTrigger],
+  ['ThemeToggle component', themeToggle],
+  ['Toast component controls', toast],
+  ['Tooltip component content', tooltip]
+] as const) {
+  assertScopedSelectionBlocking(surfaceLabel, source);
+}
+
+for (const [surfaceLabel, source] of [
+  ['CodeBlock component readable code', codeBlock],
+  ['Table component readable cells', table],
+  ['Toast component readable message', toast],
+  ['IdentityChip component readable text', identityChip],
+  ['KeyValue component readable values', keyValue]
+] as const) {
+  assertNoReadableSelectionBlocking(surfaceLabel, source);
+}
+
 assertNoDecorativeEffects(failures, 'Button component', button);
 assertNoDecorativeEffects(failures, 'Icon component', icon);
 assertNoDecorativeEffects(failures, 'IconButton component', iconButton);
+assertNoDecorativeEffects(failures, 'ThemeToggle component', themeToggle);
 assertNoDecorativeEffects(failures, 'Surface component', surface);
 assertNoDecorativeEffects(failures, 'Storybook overview', component);
+assertNoDecorativeEffects(failures, 'Storybook preview CSS', previewStyle);
 assertNoDecorativeEffects(failures, 'Buttons story', buttonsComponent);
 assertNoDecorativeEffects(failures, 'Button controls story', buttonPlayground);
 assertNoDecorativeEffects(failures, 'Data display story', dataDisplayComponent);
@@ -1653,11 +2996,13 @@ assertNoDecorativeEffects(failures, 'Forms story', formsComponent);
 assertNoDecorativeEffects(failures, 'Interaction story', interactionComponent);
 assertNoDecorativeEffects(failures, 'Interaction probe story', interactionProbe);
 assertNoDecorativeEffects(failures, 'Navigation story', navigationComponent);
+assertNoDecorativeEffects(failures, 'Theme locale stress story', themeLocaleStressComponent);
 assertNoOverRoundedUsage(failures, 'Button component', button);
 assertNoOverRoundedUsage(failures, 'Icon component', icon);
 assertNoOverRoundedUsage(failures, 'IconButton component', iconButton);
 assertNoOverRoundedUsage(failures, 'Surface component', surface);
 assertNoOverRoundedUsage(failures, 'Storybook overview', component);
+assertNoOverRoundedUsage(failures, 'Storybook preview CSS', previewStyle);
 assertNoOverRoundedUsage(failures, 'Buttons story', buttonsComponent);
 assertNoOverRoundedUsage(failures, 'Button controls story', buttonPlayground);
 assertNoOverRoundedUsage(failures, 'Data display story', dataDisplayComponent);
@@ -1666,6 +3011,7 @@ assertNoOverRoundedUsage(failures, 'Forms story', formsComponent);
 assertNoOverRoundedUsage(failures, 'Interaction story', interactionComponent);
 assertNoOverRoundedUsage(failures, 'Interaction probe story', interactionProbe);
 assertNoOverRoundedUsage(failures, 'Navigation story', navigationComponent);
+assertNoOverRoundedUsage(failures, 'Theme locale stress story', themeLocaleStressComponent);
 
 if (failures.length > 0) {
   for (const failure of failures) {
@@ -1673,6 +3019,31 @@ if (failures.length > 0) {
   }
 
   process.exitCode = 1;
+}
+
+function assertScopedSelectionBlocking(label: string, source: string): void {
+  if (!source.includes('-webkit-user-select: none') || !source.includes('user-select: none')) {
+    failures.push(`${label} must include prefixed and standard scoped user-select blocking for control/decorative surfaces.`);
+  }
+}
+
+function assertNoReadableSelectionBlocking(label: string, source: string): void {
+  for (const forbiddenText of [
+    '.zdp-code-block__pre {\n    -webkit-user-select: none',
+    '.zdp-code-block__pre {\n    user-select: none',
+    '.zdp-table td {\n    -webkit-user-select: none',
+    '.zdp-table td {\n    user-select: none',
+    '.zdp-toast__message) {\n    -webkit-user-select: none',
+    '.zdp-toast__message) {\n    user-select: none',
+    '.zdp-identity-chip__label {\n    -webkit-user-select: none',
+    '.zdp-identity-chip__label {\n    user-select: none',
+    '.zdp-key-value dd {\n    -webkit-user-select: none',
+    '.zdp-key-value dd {\n    user-select: none'
+  ]) {
+    if (source.includes(forbiddenText)) {
+      failures.push(`${label} must remain selectable and must not include ${forbiddenText}.`);
+    }
+  }
 }
 
 async function readPackageJson(path: string): Promise<PackageJson> {
