@@ -297,7 +297,9 @@
 
 <style>
   .zdp-menu {
+    align-self: start;
     display: inline-flex;
+    justify-self: start;
     min-width: 0;
     position: relative;
     vertical-align: middle;
@@ -318,7 +320,8 @@
     justify-content: center;
     line-height: var(--zdp-type-control-line-height);
     min-height: var(--zdp-control-height-md);
-    min-width: 0;
+    min-inline-size: 12rem;
+    min-width: 12rem;
     padding: 0 var(--zdp-space-3);
     transition:
       background-color var(--zdp-motion-fast) ease,
@@ -346,14 +349,23 @@
   }
 
   .zdp-menu__trigger-mark {
+    align-items: center;
+    display: inline-flex;
     flex: 0 0 auto;
+    justify-content: center;
     line-height: 1;
     -webkit-user-select: none;
     user-select: none;
   }
 
   .zdp-menu__trigger-mark::before {
-    content: '⌄';
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid currentColor;
+    content: '';
+    display: inline-block;
+    height: 0;
+    width: 0;
   }
 
   .zdp-menu__panel {
@@ -470,5 +482,10 @@
   .zdp-menu--left.zdp-menu--align-center .zdp-menu__panel {
     top: 50%;
     translate: 0 -50%;
+  }
+
+  .zdp-menu--bottom .zdp-menu__panel,
+  .zdp-menu--top .zdp-menu__panel {
+    inline-size: 100%;
   }
 </style>

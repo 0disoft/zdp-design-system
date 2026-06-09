@@ -40,8 +40,8 @@ if (failures.length > 0) {
 }
 
 function checkPackageSurface(packageJson: PackageJson): void {
-  if (packageJson.version !== '0.41.15') {
-    failures.push('package.json version must be 0.41.15 for the Storybook accessibility contract.');
+  if (packageJson.version !== '0.42.0') {
+    failures.push('package.json version must be 0.42.0 for the Storybook accessibility contract.');
   }
 
   if (packageJson.exports?.['./brand-fonts.css'] !== './src/styles/brand-fonts.css') {

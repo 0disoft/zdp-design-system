@@ -4,6 +4,8 @@ export { default as Badge } from './components/Badge.svelte';
 export { default as Breadcrumb } from './components/Breadcrumb.svelte';
 export { default as Button } from './components/Button.svelte';
 export { default as Callout } from './components/Callout.svelte';
+export { default as Card } from './components/Card.svelte';
+export { default as CardHeader } from './components/CardHeader.svelte';
 export { default as Checkbox } from './components/Checkbox.svelte';
 export { default as CodeBlock } from './components/CodeBlock.svelte';
 export { default as CommandField } from './components/CommandField.svelte';
