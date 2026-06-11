@@ -66,28 +66,28 @@ if (tokenDocument.version !== '0.6.10') {
   failures.push('Token document version must be 0.6.10 for the expressive font token contract.');
 }
 
-if (packageJson.exports?.['./brand-fonts.css'] !== './src/styles/brand-fonts.css') {
+if (packageJson.exports?.['./brand-fonts.css'] !== './dist/styles/brand-fonts.css') {
   failures.push('package.json must export ./brand-fonts.css.');
 }
 
-if (!packageJson.sideEffects?.includes('./src/styles/brand-fonts.css')) {
-  failures.push('package.json sideEffects must include ./src/styles/brand-fonts.css.');
+if (!packageJson.sideEffects?.includes('./dist/styles/brand-fonts.css')) {
+  failures.push('package.json sideEffects must include ./dist/styles/brand-fonts.css.');
 }
 
-if (packageJson.exports?.['./expressive-fonts.css'] !== './src/styles/expressive-fonts.css') {
+if (packageJson.exports?.['./expressive-fonts.css'] !== './dist/styles/expressive-fonts.css') {
   failures.push('package.json must export ./expressive-fonts.css.');
 }
 
-if (!packageJson.sideEffects?.includes('./src/styles/expressive-fonts.css')) {
-  failures.push('package.json sideEffects must include ./src/styles/expressive-fonts.css.');
+if (!packageJson.sideEffects?.includes('./dist/styles/expressive-fonts.css')) {
+  failures.push('package.json sideEffects must include ./dist/styles/expressive-fonts.css.');
 }
 
-if (packageJson.exports?.['./locale-fonts.css'] !== './src/styles/locale-fonts.css') {
+if (packageJson.exports?.['./locale-fonts.css'] !== './dist/styles/locale-fonts.css') {
   failures.push('package.json must export ./locale-fonts.css.');
 }
 
-if (!packageJson.sideEffects?.includes('./src/styles/locale-fonts.css')) {
-  failures.push('package.json sideEffects must include ./src/styles/locale-fonts.css.');
+if (!packageJson.sideEffects?.includes('./dist/styles/locale-fonts.css')) {
+  failures.push('package.json sideEffects must include ./dist/styles/locale-fonts.css.');
 }
 
 for (const variable of tokenVariables) {

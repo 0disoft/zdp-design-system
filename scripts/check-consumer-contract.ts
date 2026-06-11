@@ -44,20 +44,20 @@ function checkPackageSurface(packageJson: PackageJson): void {
     failures.push('package.json version must be 0.42.0 for the Storybook accessibility contract.');
   }
 
-  if (packageJson.exports?.['./brand-fonts.css'] !== './src/styles/brand-fonts.css') {
+  if (packageJson.exports?.['./brand-fonts.css'] !== './dist/styles/brand-fonts.css') {
     failures.push('package.json exports must include ./brand-fonts.css.');
   }
 
-  if (!packageJson.sideEffects?.includes('./src/styles/brand-fonts.css')) {
-    failures.push('package.json sideEffects must include ./src/styles/brand-fonts.css.');
+  if (!packageJson.sideEffects?.includes('./dist/styles/brand-fonts.css')) {
+    failures.push('package.json sideEffects must include ./dist/styles/brand-fonts.css.');
   }
 
-  if (packageJson.exports?.['./expressive-fonts.css'] !== './src/styles/expressive-fonts.css') {
+  if (packageJson.exports?.['./expressive-fonts.css'] !== './dist/styles/expressive-fonts.css') {
     failures.push('package.json exports must include ./expressive-fonts.css.');
   }
 
-  if (!packageJson.sideEffects?.includes('./src/styles/expressive-fonts.css')) {
-    failures.push('package.json sideEffects must include ./src/styles/expressive-fonts.css.');
+  if (!packageJson.sideEffects?.includes('./dist/styles/expressive-fonts.css')) {
+    failures.push('package.json sideEffects must include ./dist/styles/expressive-fonts.css.');
   }
 
   if (!packageJson.files?.includes('docs/')) {
@@ -68,7 +68,7 @@ function checkPackageSurface(packageJson: PackageJson): void {
     failures.push('package.json scripts.consumer:check must run the consumer contract checker.');
   }
 
-  if (!packageJson.scripts?.check?.includes('bun scripts/check-consumer-contract.ts')) {
+  if (!packageJson.scripts?.check?.includes('bun run consumer:check')) {
     failures.push('package.json check script must include the consumer contract checker.');
   }
 }

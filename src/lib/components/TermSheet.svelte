@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { tick } from 'svelte';
+  import { onDestroy, tick } from 'svelte';
   import { isZdpFocusableElement, zdpFocusableSelector } from '../focusable.ts';
+  import { createZdpModalLayer } from '../modal-layer.ts';
   import type { ZdpTermSheetPlacement, ZdpTermSheetTerm } from '../term.ts';
 
   export let open = false;
@@ -18,8 +19,16 @@
   export let onRelatedTerm: ((termId: string) => void) | null = null;
 
   let panelElement: HTMLElement | null = null;
+  let layerElement: HTMLElement | null = null;
   let previousFocusElement: HTMLElement | null = null;
   let knownOpenState = false;
+  const modalLayer = createZdpModalLayer();
+
+  $: modalLayer.setActive(open && term !== null, layerElement);
+
+  onDestroy(() => {
+    modalLayer.destroy();
+  });
 
   $: titleId = `${id}-title`;
   $: descriptionId = `${id}-description`;
@@ -118,82 +127,88 @@
 </script>
 
 {#if open && term !== null}
-  <button
-    class="zdp-term-sheet__backdrop"
-    type="button"
-    aria-label={closeLabel}
-    tabindex="-1"
-    onclick={handleBackdropClick}
-  ></button>
-  <div
-    class={`zdp-term-sheet zdp-term-sheet--${resolvedPlacement}`}
-    id={id}
-    bind:this={panelElement}
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby={titleId}
-    aria-describedby={descriptionId}
-    tabindex="-1"
-    data-term-id={term.id}
-    data-zdp-ad-exclude="true"
-    data-zdp-term-id={term.id}
-    data-zdp-term-placement={resolvedPlacement}
-    data-zdp-term-surface="sheet"
-    onkeydown={handleKeydown}
-  >
-    <header class="zdp-term-sheet__header">
-      <div class="zdp-term-sheet__heading">
-        <p class="zdp-term-sheet__eyebrow">{eyebrow}</p>
-        <h2 id={titleId} class="zdp-term-sheet__title">{term.label}</h2>
+  <div class="zdp-term-layer" bind:this={layerElement}>
+    <button
+      class="zdp-term-sheet__backdrop"
+      type="button"
+      aria-label={closeLabel}
+      tabindex="-1"
+      onclick={handleBackdropClick}
+    ></button>
+    <div
+      class={`zdp-term-sheet zdp-term-sheet--${resolvedPlacement}`}
+      id={id}
+      bind:this={panelElement}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+      aria-describedby={descriptionId}
+      tabindex="-1"
+      data-term-id={term.id}
+      data-zdp-ad-exclude="true"
+      data-zdp-term-id={term.id}
+      data-zdp-term-placement={resolvedPlacement}
+      data-zdp-term-surface="sheet"
+      onkeydown={handleKeydown}
+    >
+      <header class="zdp-term-sheet__header">
+        <div class="zdp-term-sheet__heading">
+          <p class="zdp-term-sheet__eyebrow">{eyebrow}</p>
+          <h2 id={titleId} class="zdp-term-sheet__title">{term.label}</h2>
+        </div>
+        <button class="zdp-term-sheet__close" type="button" aria-label={closeLabel} onclick={requestClose}>
+          <span aria-hidden="true">×</span>
+        </button>
+      </header>
+
+      <div class="zdp-term-sheet__body">
+        <p id={descriptionId} class="zdp-term-sheet__short">{term.short}</p>
+
+        {#if term.long}
+          <p>{term.long}</p>
+        {/if}
+
+        {#if term.example}
+          <section class="zdp-term-sheet__section" aria-label={exampleLabel}>
+            <h3>{exampleLabel}</h3>
+            <p>{term.example}</p>
+          </section>
+        {/if}
+
+        {#if term.relatedTerms && term.relatedTerms.length > 0}
+          <section class="zdp-term-sheet__section" aria-label={relatedLabel}>
+            <h3>{relatedLabel}</h3>
+            <div class="zdp-term-sheet__related">
+              {#each term.relatedTerms as relatedTerm}
+                <button
+                  class="zdp-term-sheet__related-button"
+                  type="button"
+                  data-term-id={relatedTerm.id}
+                  data-zdp-term-id={relatedTerm.id}
+                  onclick={() => onRelatedTerm?.(relatedTerm.id)}
+                >
+                  {relatedTerm.label}
+                </button>
+              {/each}
+            </div>
+          </section>
+        {/if}
       </div>
-      <button class="zdp-term-sheet__close" type="button" aria-label={closeLabel} onclick={requestClose}>
-        <span aria-hidden="true">×</span>
-      </button>
-    </header>
 
-    <div class="zdp-term-sheet__body">
-      <p id={descriptionId} class="zdp-term-sheet__short">{term.short}</p>
-
-      {#if term.long}
-        <p>{term.long}</p>
-      {/if}
-
-      {#if term.example}
-        <section class="zdp-term-sheet__section" aria-label={exampleLabel}>
-          <h3>{exampleLabel}</h3>
-          <p>{term.example}</p>
-        </section>
-      {/if}
-
-      {#if term.relatedTerms && term.relatedTerms.length > 0}
-        <section class="zdp-term-sheet__section" aria-label={relatedLabel}>
-          <h3>{relatedLabel}</h3>
-          <div class="zdp-term-sheet__related">
-            {#each term.relatedTerms as relatedTerm}
-              <button
-                class="zdp-term-sheet__related-button"
-                type="button"
-                data-term-id={relatedTerm.id}
-                data-zdp-term-id={relatedTerm.id}
-                onclick={() => onRelatedTerm?.(relatedTerm.id)}
-              >
-                {relatedTerm.label}
-              </button>
-            {/each}
-          </div>
-        </section>
+      {#if term.canonicalPath}
+        <footer class="zdp-term-sheet__footer">
+          <a class="zdp-term-sheet__detail-link" href={term.canonicalPath}>{detailLabel}</a>
+        </footer>
       {/if}
     </div>
-
-    {#if term.canonicalPath}
-      <footer class="zdp-term-sheet__footer">
-        <a class="zdp-term-sheet__detail-link" href={term.canonicalPath}>{detailLabel}</a>
-      </footer>
-    {/if}
   </div>
 {/if}
 
 <style>
+  .zdp-term-layer {
+    display: contents;
+  }
+
   .zdp-term-sheet {
     background: var(--zdp-color-surface-panel);
     border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);

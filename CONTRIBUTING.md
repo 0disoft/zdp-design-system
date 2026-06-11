@@ -17,6 +17,8 @@
 - 선택형 `locale-fonts.css` public export를 바꾸면 `package.json` export, sideEffects, README, token/preview/storybook check를 함께 맞춘다.
 - 소비 저장소 적용 방식은 `docs/CONSUMER_CONTRACT.md`와 함께 변경한다.
 - Astro, Svelte, Tauri, Flutter 소비처는 public export만 사용하게 하고 내부 `src/` deep import를 문서나 예제로 만들지 않는다.
+- `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`가 원천이고 `dist/`는 `bun run package:build`로 다시 만드는 소비자 package surface다.
+- `zdpTokenNames`, `share.js`, `share.d.ts`를 손으로 고치지 않는다. 토큰은 `tokens:generate`, 공유 아이콘 산출물은 `share-icons:generate`로 갱신한다.
 - 새 디자인 시스템 버전은 대표 소비처에서 build와 시각 QA를 확인한 뒤 broad adoption한다.
 - `success`, `warning`, `danger` 상태 색은 각각 긍정/완료, 주의/보류, 삭제/오류/위험 의미로 유지한다.
 - `primary`, `success`, `warning`, `danger` 상태 색은 parchment/brass/umber 계열 안에서 채도를 낮춰 사용하고, 푸른색이나 원색 경고색이 기본 액션과 상태 배지에서 독립적으로 튀어나오지 않게 한다.
@@ -123,7 +125,7 @@
 - Breadcrumb link focus는 sunlit gold 배경과 어두운 하단선을 유지한다.
 - Tabs는 페이지 안의 가까운 정보 묶음 전환에만 사용하고 라우팅, 권한, 데이터 로딩 판단을 직접 수행하지 않는다.
 - Tabs는 `tablist`, `tab`, `tabpanel`, roving tabindex, focus-visible 상태를 유지하고, 여러 Tabs 인스턴스가 같은 페이지에 있어도 tab/panel id가 충돌하지 않게 한다.
-- Dialog는 `role="dialog"`, `aria-modal`, `aria-labelledby`, 선택적 `aria-describedby`, Escape 닫기, backdrop 닫기, focus trap, focus-visible 상태를 유지한다.
+- Dialog는 `role="dialog"`, `aria-modal`, `aria-labelledby`, 선택적 `aria-describedby`, Escape 닫기, backdrop 닫기, modal layer scroll lock, focus trap, focus-visible 상태를 유지한다.
 - Dialog는 저장, 삭제, 인증, 결제, 권한 판단을 직접 수행하지 않고 소비 앱의 확인 흐름을 담는 레이어 표면으로만 둔다.
 - 본문 텍스트 line-height는 `1.6`을 기준으로 하며, compact control line-height와 섞지 않는다.
 - 작은 본문, 캡션, 데이터 숫자 표시는 `bodySmall`, `caption`, `data` 타입 토큰을 우선 사용한다.
@@ -132,7 +134,7 @@
 - 시각 변경은 Storybook의 `Design System/Overview`와 `preview/index.html`에서 light/dark 상태를 확인한다.
 - Storybook Controls는 public props가 있는 단일 컴포넌트 playground에만 붙이고, 전체 갤러리 story에는 억지 args를 만들지 않는다.
 - Storybook Viewport 프리셋은 ZDP Mobile, Tablet, Desktop, Wide 폭을 유지한다.
-- Storybook Accessibility addon은 검토 표면으로 유지하고, CI 실패 게이트 승격은 전체 컴포넌트 위반 항목을 정리한 뒤 진행한다.
+- Storybook Accessibility addon은 `error` 테스트 모드로 유지하고, 새 story는 CI 실패 게이트를 통과해야 한다.
 - Storybook interaction play는 Tabs, Dialog, ConfirmAction처럼 키보드, focus, 상태 전이가 중요한 컴포넌트부터 유지한다.
 - Theme / Locale Stress story는 light/dark, ZDP Mobile 폭, 긴 한국어/영어/중국어/힌디어 문장, focus-visible 상태를 한 번에 확인하는 QA 표면으로 유지한다.
 - Workduck 개발 서버와 빌드 액션이 깨지지 않도록 `dev`와 `build` 스크립트를 유지한다.

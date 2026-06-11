@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { tick } from 'svelte';
+  import { onDestroy, tick } from 'svelte';
   import { isZdpFocusableElement, zdpFocusableSelector } from '../focusable.ts';
+  import { createZdpModalLayer } from '../modal-layer.ts';
 
   export let open = false;
   export let id: string | null = null;
@@ -13,8 +14,16 @@
   export let onClose: (() => void) | null = null;
 
   let panelElement: HTMLElement | null = null;
+  let layerElement: HTMLElement | null = null;
   let previousFocusElement: HTMLElement | null = null;
   let knownOpenState = false;
+  const modalLayer = createZdpModalLayer();
+
+  $: modalLayer.setActive(open, layerElement);
+
+  onDestroy(() => {
+    modalLayer.destroy();
+  });
 
   $: if (open !== knownOpenState) {
     knownOpenState = open;
@@ -109,7 +118,7 @@
 </script>
 
 {#if open}
-  <div class="zdp-dialog">
+  <div class="zdp-dialog" bind:this={layerElement}>
     <button
       class="zdp-dialog__backdrop"
       type="button"

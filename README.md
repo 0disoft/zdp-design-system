@@ -49,7 +49,7 @@ ZDP의 디자인 토큰, CSS, 아이콘, Svelte UI 컴포넌트 경계를 고정
 
 - Controls는 `Button`처럼 public props가 있는 컴포넌트의 라벨, 크기, 상태를 직접 바꿔보는 story에만 붙인다.
 - Viewports는 ZDP Mobile, Tablet, Desktop, Wide 프리셋으로 mobile/tablet/desktop 폭을 확인한다.
-- Accessibility addon은 컴포넌트 검토 패널로 켜두되, broad adoption 전에 위반 항목을 정리한 뒤 CI 실패 게이트로 승격한다.
+- Accessibility addon은 CI 실패 게이트로 유지한다. 새 story는 a11y 위반을 남긴 채 merge하지 않는다.
 - Interaction play는 `Tabs`, `Dialog`, `ConfirmAction`처럼 키보드와 상태 전이가 중요한 컴포넌트에 먼저 붙인다.
 - Theme / Locale Stress story는 light/dark, ZDP Mobile 폭, 긴 한국어/영어/중국어/힌디어 문장, focus-visible 상태를 한 번에 확인한다.
 
@@ -82,6 +82,8 @@ import 'zdp-design-system/styles.css';
 import 'zdp-design-system/expressive-fonts.css';
 ```
 
+패키지 export는 `dist/` 산출물을 가리킨다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `bun run package:build`가 소비자용 `dist/` 표면을 다시 만든다. 소비 저장소와 문서 예시는 `zdp-design-system` public export만 쓰고 내부 `src/` 경로를 직접 import하지 않는다.
+
 ## 소비 컴포넌트 계약
 
 - Breadcrumb는 현재 위치 탐색을 `nav`로 표현하고, 제품 라우팅 판단은 소비 앱이 한다.
@@ -109,7 +111,7 @@ import 'zdp-design-system/expressive-fonts.css';
 - VisuallyHidden은 스크린리더에 필요한 텍스트를 시각적으로 숨길 때만 쓴다.
 - Table, KeyValue, EmptyState는 업무 데이터, 용어-값, 비어 있는 상태를 표현한다.
 - TermTrigger와 TermSheet는 용어 설명을 click-open sheet로 연결하며, TermTrigger는 sheet가 열린 동안에만 `aria-controls`를 연결한다. TermTrigger는 본문 안 의미 있는 단어이므로 hover에서 글자색을 바꾸지 않고 배경만 살짝 강조하며, 좌우 최소 padding과 focus token을 유지하고, 텍스트 선택을 막지 않는다. TermSheet root에는 stable `term_id`와 `data-zdp-ad-exclude`를 남긴다. TermSheet에는 광고 slot을 넣지 않는다.
-- Dialog는 모달 레이어이며 닫기, focus trap, `describedBy`에 id 배열, `errorMessageId`로 `aria-errormessage` 연결을 명확히 한다.
+- Dialog는 모달 레이어이며 닫기, scroll lock, focus trap, `describedBy`에 id 배열, `errorMessageId`로 `aria-errormessage` 연결을 명확히 한다.
 - Page, Container, Section, PageHeader는 페이지 폭, 섹션 rhythm, 제목 구조를 정리한다.
 - Flutter는 Svelte 컴포넌트를 직접 쓰지 않고 `tokens/zdp.tokens.json`과 필요한 platform adapter를 통해 시각 토큰만 소비한다.
 
@@ -515,8 +517,13 @@ bun run tokens:check
 ```
 
 `tokens:check`는 토큰 JSON, CSS 변수, public component export가 함께 맞는지 확인한다.
+`tokens:generate`는 `tokens/zdp.tokens.json`에서 `zdpTokenNames`를 다시 만든다.
+`share-icons:generate`는 `src/lib/share.ts`에서 소비자용 `share.js`와 `share.d.ts`를 다시 만든다.
 색상 토큰은 JSON의 `hex`와 `oklch` 값이 CSS fallback 및 OKLCH override에 모두 존재해야 통과한다.
 `preview:check`는 정적 미리보기 페이지가 공통 스타일 entry와 핵심 토큰/컴포넌트 표면을 참조하는지 확인한다.
 `storybook:check`는 Storybook 설정, scripts, devDependencies, overview story가 함께 유지되는지 확인한다.
+`a11y:check`는 Storybook Accessibility addon이 `error` 게이트로 유지되는지 확인한다.
+`package:build`는 `dist/` package surface를 생성한다.
 `package:check`는 package export, files, sideEffects, Svelte 컴포넌트 compile 결과가 함께 맞는지 확인한다.
+`fixtures:check`는 소비자 Svelte/Vite fixture가 public package export만으로 build되는지 확인한다.
 `preview:check`와 `storybook:check`는 shared CSS, Svelte 컴포넌트, Storybook, 정적 preview에 장식성 그림자, 그라데이션, 반짝임 pseudo-element, hover 이동 효과, 과한 pill radius가 다시 들어오지 않는지도 확인한다.

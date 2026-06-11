@@ -284,32 +284,32 @@ for (const [scriptName, expectedCommand] of Object.entries({
   }
 }
 
-if (!packageJson.scripts?.check?.includes('bun scripts/check-storybook.ts')) {
+if (!packageJson.scripts?.check?.includes('bun run storybook:check')) {
   failures.push('Package check script must include Storybook contract validation.');
 }
 
-if (packageJson.exports?.['./locale-fonts.css'] !== './src/styles/locale-fonts.css') {
+if (packageJson.exports?.['./locale-fonts.css'] !== './dist/styles/locale-fonts.css') {
   failures.push('Package must expose ./locale-fonts.css for optional locale font loading.');
 }
 
-if (!packageJson.sideEffects?.includes('./src/styles/locale-fonts.css')) {
-  failures.push('Package sideEffects must keep ./src/styles/locale-fonts.css.');
+if (!packageJson.sideEffects?.includes('./dist/styles/locale-fonts.css')) {
+  failures.push('Package sideEffects must keep ./dist/styles/locale-fonts.css.');
 }
 
-if (packageJson.exports?.['./brand-fonts.css'] !== './src/styles/brand-fonts.css') {
+if (packageJson.exports?.['./brand-fonts.css'] !== './dist/styles/brand-fonts.css') {
   failures.push('Package must expose ./brand-fonts.css for optional brand wordmark font loading.');
 }
 
-if (!packageJson.sideEffects?.includes('./src/styles/brand-fonts.css')) {
-  failures.push('Package sideEffects must keep ./src/styles/brand-fonts.css.');
+if (!packageJson.sideEffects?.includes('./dist/styles/brand-fonts.css')) {
+  failures.push('Package sideEffects must keep ./dist/styles/brand-fonts.css.');
 }
 
-if (packageJson.exports?.['./expressive-fonts.css'] !== './src/styles/expressive-fonts.css') {
+if (packageJson.exports?.['./expressive-fonts.css'] !== './dist/styles/expressive-fonts.css') {
   failures.push('Package must expose ./expressive-fonts.css for optional expressive font loading.');
 }
 
-if (!packageJson.sideEffects?.includes('./src/styles/expressive-fonts.css')) {
-  failures.push('Package sideEffects must keep ./src/styles/expressive-fonts.css.');
+if (!packageJson.sideEffects?.includes('./dist/styles/expressive-fonts.css')) {
+  failures.push('Package sideEffects must keep ./dist/styles/expressive-fonts.css.');
 }
 
 for (const dependencyName of ['@storybook/addon-a11y', '@storybook/svelte-vite', 'storybook', 'svelte', 'vite']) {
@@ -414,7 +414,7 @@ for (const requiredText of [
   'ZDP Wide',
   '1440px',
   'a11y',
-  "test: 'todo'"
+  "test: 'error'"
 ]) {
   if (!preview.includes(requiredText)) {
     failures.push(`Storybook preview config is missing ${requiredText}.`);

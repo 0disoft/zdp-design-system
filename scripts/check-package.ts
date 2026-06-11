@@ -86,40 +86,43 @@ const componentPaths = [
   'stories/Navigation.svelte',
   'stories/ThemeLocaleStress.svelte'
 ] as const;
-const expectedRootExport = './src/lib/index.ts';
+const expectedRootExport = './dist/index.ts';
 const expectedSubpathExports = {
-  './styles.css': './src/styles/index.css',
-  './brand-fonts.css': './src/styles/brand-fonts.css',
-  './expressive-fonts.css': './src/styles/expressive-fonts.css',
-  './locale-fonts.css': './src/styles/locale-fonts.css',
-  './tokens': './tokens/zdp.tokens.json'
+  './styles.css': './dist/styles/index.css',
+  './brand-fonts.css': './dist/styles/brand-fonts.css',
+  './expressive-fonts.css': './dist/styles/expressive-fonts.css',
+  './locale-fonts.css': './dist/styles/locale-fonts.css',
+  './tokens': './dist/tokens/zdp.tokens.json'
 } as const;
 const expectedShareExport = {
-  types: './share.d.ts',
-  import: './share.js',
-  default: './share.js'
+  types: './dist/share.d.ts',
+  import: './dist/share.js',
+  default: './dist/share.js'
 } as const;
 const expectedPackageFiles = [
-  'src/',
-  'tokens/',
+  'dist/',
   'docs/',
-  'share.js',
-  'share.d.ts',
   'README.md',
   'CHANGELOG.md'
 ] as const;
 const expectedSideEffects = [
-  './src/styles/index.css',
-  './src/styles/brand-fonts.css',
-  './src/styles/expressive-fonts.css',
-  './src/styles/locale-fonts.css',
-  './src/styles/tokens.css',
-  './src/styles/components.css'
+  './dist/styles/index.css',
+  './dist/styles/brand-fonts.css',
+  './dist/styles/expressive-fonts.css',
+  './dist/styles/locale-fonts.css',
+  './dist/styles/tokens.css',
+  './dist/styles/components.css'
 ] as const;
 const expectedScripts = {
   'consumer:check': 'bun scripts/check-consumer-contract.ts',
-  'share-icons:check': 'bun scripts/check-share-icons.ts',
-  'package:check': 'bun scripts/check-package.ts'
+  'share-icons:generate': 'bun scripts/generate-share.ts',
+  'share-icons:check': 'bun scripts/generate-share.ts --check && bun scripts/check-share-icons.ts',
+  'tokens:generate': 'bun scripts/generate-tokens.ts',
+  'tokens:check': 'bun scripts/generate-tokens.ts --check && bun scripts/check-tokens.ts',
+  'a11y:check': 'bun scripts/check-storybook-a11y.ts',
+  'package:build': 'bun scripts/generate-tokens.ts && bun scripts/generate-share.ts && bun scripts/build-package.ts',
+  'package:check': 'bun scripts/check-package.ts',
+  'fixtures:check': 'bun scripts/check-consumer-fixtures.ts'
 } as const;
 const failures: string[] = [];
 
@@ -133,6 +136,7 @@ await checkSvelteCompilation();
 await checkShareContract();
 await checkButtonContract();
 await checkSharedFocusContract();
+await checkModalLayerContract();
 await checkDialogFocusContract();
 await checkTermSheetContract();
 
@@ -147,16 +151,24 @@ function checkPackageScripts(packageJson: PackageJson): void {
     }
   }
 
-  if (!packageJson.scripts?.check?.includes('bun scripts/check-package.ts')) {
+  if (!packageJson.scripts?.check?.includes('bun run package:check')) {
     failures.push('package.json check script must include package artifact validation.');
   }
 
-  if (!packageJson.scripts?.check?.includes('bun scripts/check-consumer-contract.ts')) {
+  if (!packageJson.scripts?.check?.includes('bun run consumer:check')) {
     failures.push('package.json check script must include consumer contract validation.');
   }
 
-  if (!packageJson.scripts?.check?.includes('bun scripts/check-share-icons.ts')) {
+  if (!packageJson.scripts?.check?.includes('bun run share-icons:check')) {
     failures.push('package.json check script must include share icon brand validation.');
+  }
+
+  if (!packageJson.scripts?.check?.includes('bun run package:build')) {
+    failures.push('package.json check script must build the dist package before package validation.');
+  }
+
+  if (!packageJson.scripts?.check?.includes('bun run fixtures:check')) {
+    failures.push('package.json check script must build the consumer fixture against dist exports.');
   }
 }
 
@@ -268,6 +280,9 @@ async function checkTermSheetContract(): Promise<void> {
   const source = await readFile(join(root, relativePath), 'utf8');
 
   for (const requiredText of [
+    'createZdpModalLayer',
+    'modalLayer.setActive(open && term !== null, layerElement)',
+    '<div class="zdp-term-layer" bind:this={layerElement}>',
     'data-zdp-ad-exclude="true"',
     'data-term-id={term.id}',
     'data-zdp-term-id={term.id}',
@@ -284,6 +299,25 @@ async function checkTermSheetContract(): Promise<void> {
 
   if (source.includes('offsetParent')) {
     failures.push(`${relativePath} must not use offsetParent to decide sheet focusability.`);
+  }
+}
+
+async function checkModalLayerContract(): Promise<void> {
+  const relativePath = 'src/lib/modal-layer.ts';
+  const source = await readFile(join(root, relativePath), 'utf8');
+
+  for (const requiredText of [
+    'zdpModalLayerRootAttribute',
+    'zdpModalLayerActiveAttribute',
+    'zdpModalLayerLevelAttribute',
+    'createZdpModalLayer',
+    'activeLayerIds',
+    'body.style.overflow =',
+    "root.setAttribute('data-zdp-modal-layer-count'"
+  ]) {
+    if (!source.includes(requiredText)) {
+      failures.push(`${relativePath} is missing modal layer contract text ${requiredText}.`);
+    }
   }
 }
 
@@ -353,7 +387,13 @@ async function checkDialogFocusContract(): Promise<void> {
   const relativePath = 'src/lib/components/Dialog.svelte';
   const source = await readFile(join(root, relativePath), 'utf8');
 
-  for (const requiredText of ['zdpFocusableSelector', 'isZdpFocusableElement']) {
+  for (const requiredText of [
+    'zdpFocusableSelector',
+    'isZdpFocusableElement',
+    'createZdpModalLayer',
+    'modalLayer.setActive(open, layerElement)',
+    '<div class="zdp-dialog" bind:this={layerElement}>'
+  ]) {
     if (!source.includes(requiredText)) {
       failures.push(`${relativePath} is missing shared focusability contract text ${requiredText}.`);
     }

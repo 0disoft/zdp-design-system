@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Switched package exports to generated `dist/` artifacts and added a Svelte/Vite consumer fixture so public imports are checked before release.
+- Added token and share icon generation scripts for `zdpTokenNames`, `share.js`, and `share.d.ts` to keep generated consumer artifacts aligned with their source files.
+- Promoted Storybook addon-a11y to the `error` gate and added CI coverage for `bun run check` and `bun run build`.
+- Added a shared modal layer helper for `Dialog` and `TermSheet` so modal scroll locking and layer markers stay consistent.
 - Hardened token/package checks so `zdpTokenNames`, share dock type declarations, Button label weight, and shared focusability behavior cannot drift from the public contract.
 - Fixed `Tooltip` to generate a stable fallback tooltip id and wired `ShareDock` triggers to the slot-provided `aria-describedby` value when visual tooltips are enabled.
 - Shared dialog focusable-element detection between `Dialog` and `TermSheet` without relying on `offsetParent`, so fixed-position and transformed controls stay reachable by keyboard.
