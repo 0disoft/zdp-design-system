@@ -31,13 +31,14 @@
     {#each items as item (item.id)}
       {@const icon = zdpShareIcons[item.icon]}
       {#if item.href}
-        <Tooltip text={item.label} placement={tooltipPlacement}>
+        <Tooltip text={item.label} placement={tooltipPlacement} let:describedBy>
           <a
             class="zdp-share-action"
             href={item.href}
             target={item.target ?? undefined}
             rel={resolvedRel(item)}
             aria-label={item.ariaLabel ?? item.label}
+            aria-describedby={describedBy ?? undefined}
             data-share-id={item.id}
             onclick={(event) => handleClick(event, item)}
           >
@@ -79,12 +80,13 @@
           </a>
         </Tooltip>
       {:else}
-        <Tooltip text={item.label} placement={tooltipPlacement} disabled={item.disabled}>
+        <Tooltip text={item.label} placement={tooltipPlacement} disabled={item.disabled} let:describedBy>
           <button
             class="zdp-share-action"
             type="button"
             disabled={item.disabled}
             aria-label={item.ariaLabel ?? item.label}
+            aria-describedby={describedBy ?? undefined}
             data-share-id={item.id}
             onclick={(event) => handleClick(event, item)}
           >

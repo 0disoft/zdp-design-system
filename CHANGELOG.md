@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Hardened token/package checks so `zdpTokenNames`, share dock type declarations, Button label weight, and shared focusability behavior cannot drift from the public contract.
+- Fixed `Tooltip` to generate a stable fallback tooltip id and wired `ShareDock` triggers to the slot-provided `aria-describedby` value when visual tooltips are enabled.
+- Shared dialog focusable-element detection between `Dialog` and `TermSheet` without relying on `offsetParent`, so fixed-position and transformed controls stay reachable by keyboard.
 - Fixed `Table` overflow wrappers so they no longer reserve a permanent scrollbar gutter that can leave a mismatched stripe beside header rows.
 - Aligned `TermTrigger` with inline interactive text guidance by keeping text selectable, preserving inherited text color on hover, and reserving subtle inline padding.
 - Added exported shortcut policy helpers for consumer-owned keydown dispatchers so apps can ignore text entry, IME composition, and browser-reserved shortcuts before wiring visible `Kbd` or `ShortcutHint` affordances.

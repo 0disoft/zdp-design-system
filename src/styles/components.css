@@ -59,7 +59,7 @@
   cursor: pointer;
   display: inline-flex;
   font-family: var(--zdp-font-family-sans);
-  font-weight: var(--zdp-font-weight-regular);
+  font-weight: var(--zdp-font-weight-medium);
   gap: var(--zdp-space-2);
   justify-content: center;
   font-size: var(--zdp-type-control-size);

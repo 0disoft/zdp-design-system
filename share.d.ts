@@ -38,7 +38,7 @@ export interface ZdpShareDockItem {
   readonly label: string;
   readonly icon: ZdpShareIconName;
   readonly href?: string;
-  readonly target?: string;
+  readonly target?: '_blank' | '_self' | '_parent' | '_top';
   readonly rel?: string;
   readonly disabled?: boolean;
   readonly ariaLabel?: string;

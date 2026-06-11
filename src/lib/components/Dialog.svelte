@@ -1,5 +1,6 @@
 <script lang="ts">
   import { tick } from 'svelte';
+  import { isZdpFocusableElement, zdpFocusableSelector } from '../focusable.ts';
 
   export let open = false;
   export let id: string | null = null;
@@ -101,11 +102,9 @@
       return [];
     }
 
-    return Array.from(
-      panelElement.querySelectorAll<HTMLElement>(
-        'a[href], button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])'
-      )
-    ).filter((element) => element.offsetParent !== null);
+    return Array.from(panelElement.querySelectorAll<HTMLElement>(zdpFocusableSelector)).filter(
+      isZdpFocusableElement
+    );
   }
 </script>
 

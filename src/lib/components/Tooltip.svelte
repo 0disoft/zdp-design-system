@@ -1,10 +1,17 @@
+<script context="module" lang="ts">
+  let tooltipIdCounter = 0;
+</script>
+
 <script lang="ts">
   export let text: string;
   export let placement: 'top' | 'right' | 'bottom' | 'left' = 'top';
   export let id: string | null = null;
   export let disabled = false;
 
-  $: describedBy = disabled ? null : id;
+  const fallbackId = `zdp-tooltip-${++tooltipIdCounter}`;
+
+  $: tooltipId = id ?? fallbackId;
+  $: describedBy = disabled ? null : tooltipId;
 </script>
 
 <span class={`zdp-tooltip zdp-tooltip--${placement}`} data-disabled={disabled ? 'true' : undefined}>
@@ -13,10 +20,9 @@
   </span>
   {#if !disabled}
     <span
-      id={describedBy ?? undefined}
+      id={tooltipId}
       class="zdp-tooltip__content"
-      role={describedBy ? 'tooltip' : undefined}
-      aria-hidden={describedBy ? undefined : 'true'}
+      role="tooltip"
     >
       {text}
     </span>

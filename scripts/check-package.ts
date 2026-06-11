@@ -130,6 +130,10 @@ checkPackageExports(packageJson);
 checkPackageFiles(packageJson);
 checkPackageSideEffects(packageJson);
 await checkSvelteCompilation();
+await checkShareContract();
+await checkButtonContract();
+await checkSharedFocusContract();
+await checkDialogFocusContract();
 await checkTermSheetContract();
 
 if (failures.length > 0) {
@@ -270,9 +274,8 @@ async function checkTermSheetContract(): Promise<void> {
     'data-zdp-term-placement={resolvedPlacement}',
     'data-zdp-term-surface="sheet"',
     'data-zdp-term-id={relatedTerm.id}',
-    'focusableSelector',
-    'getClientRects().length > 0',
-    "closest('[hidden], [aria-hidden=\"true\"], [inert]')"
+    'zdpFocusableSelector',
+    'isZdpFocusableElement'
   ]) {
     if (!source.includes(requiredText)) {
       failures.push(`${relativePath} is missing TermSheet contract text ${requiredText}.`);
@@ -281,6 +284,83 @@ async function checkTermSheetContract(): Promise<void> {
 
   if (source.includes('offsetParent')) {
     failures.push(`${relativePath} must not use offsetParent to decide sheet focusability.`);
+  }
+}
+
+async function checkShareContract(): Promise<void> {
+  const shareTypesPath = 'share.d.ts';
+  const shareSourcePath = 'src/lib/share.ts';
+  const shareRuntimePath = 'share.js';
+  const shareTypes = await readFile(join(root, shareTypesPath), 'utf8');
+  const shareSource = await readFile(join(root, shareSourcePath), 'utf8');
+  const shareRuntime = await readFile(join(root, shareRuntimePath), 'utf8');
+  const targetContract = "readonly target?: '_blank' | '_self' | '_parent' | '_top';";
+
+  if (!shareTypes.includes(targetContract)) {
+    failures.push(`${shareTypesPath} must keep ZdpShareDockItem.target aligned with src/lib/share.ts.`);
+  }
+
+  if (!shareSource.includes(targetContract)) {
+    failures.push(`${shareSourcePath} must keep the constrained share target contract.`);
+  }
+
+  if (shareRuntime.includes('src/lib/share') || shareRuntime.includes('from ')) {
+    failures.push(`${shareRuntimePath} must stay a self-contained runtime export with no TypeScript source import.`);
+  }
+}
+
+async function checkButtonContract(): Promise<void> {
+  const buttonPath = 'src/lib/components/Button.svelte';
+  const componentCssPath = 'src/styles/components.css';
+  const button = await readFile(join(root, buttonPath), 'utf8');
+  const componentCss = await readFile(join(root, componentCssPath), 'utf8');
+
+  if (!button.includes('font-weight: var(--zdp-font-weight-medium);')) {
+    failures.push(`${buttonPath} must use medium label weight.`);
+  }
+
+  if (!componentCss.includes('.zdp-button {\n')) {
+    failures.push(`${componentCssPath} must keep static .zdp-button styles.`);
+  }
+
+  if (!componentCss.includes('font-weight: var(--zdp-font-weight-medium);')) {
+    failures.push(`${componentCssPath} must expose medium .zdp-button label weight.`);
+  }
+}
+
+async function checkSharedFocusContract(): Promise<void> {
+  const focusablePath = 'src/lib/focusable.ts';
+  const source = await readFile(join(root, focusablePath), 'utf8');
+
+  for (const requiredText of [
+    'zdpFocusableSelector',
+    'isZdpFocusableElement',
+    'getClientRects().length > 0',
+    "closest('[hidden], [aria-hidden=\"true\"], [inert]')",
+    "window.getComputedStyle(element)"
+  ]) {
+    if (!source.includes(requiredText)) {
+      failures.push(`${focusablePath} is missing shared focusability contract text ${requiredText}.`);
+    }
+  }
+
+  if (source.includes('offsetParent')) {
+    failures.push(`${focusablePath} must not use offsetParent to decide focusability.`);
+  }
+}
+
+async function checkDialogFocusContract(): Promise<void> {
+  const relativePath = 'src/lib/components/Dialog.svelte';
+  const source = await readFile(join(root, relativePath), 'utf8');
+
+  for (const requiredText of ['zdpFocusableSelector', 'isZdpFocusableElement']) {
+    if (!source.includes(requiredText)) {
+      failures.push(`${relativePath} is missing shared focusability contract text ${requiredText}.`);
+    }
+  }
+
+  if (source.includes('offsetParent')) {
+    failures.push(`${relativePath} must not use offsetParent to decide dialog focusability.`);
   }
 }
 

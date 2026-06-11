@@ -1,5 +1,6 @@
 <script lang="ts">
   import { tick } from 'svelte';
+  import { isZdpFocusableElement, zdpFocusableSelector } from '../focusable.ts';
   import type { ZdpTermSheetPlacement, ZdpTermSheetTerm } from '../term.ts';
 
   export let open = false;
@@ -15,21 +16,6 @@
   export let closeOnBackdrop = true;
   export let onClose: (() => void) | null = null;
   export let onRelatedTerm: ((termId: string) => void) | null = null;
-
-  const focusableSelector = [
-    'a[href]',
-    'area[href]',
-    'button',
-    'input',
-    'select',
-    'textarea',
-    'iframe',
-    'object',
-    'embed',
-    'details > summary:first-of-type',
-    '[contenteditable="true"]',
-    '[tabindex]'
-  ].join(', ');
 
   let panelElement: HTMLElement | null = null;
   let previousFocusElement: HTMLElement | null = null;
@@ -125,29 +111,9 @@
       return [];
     }
 
-    return Array.from(panelElement.querySelectorAll<HTMLElement>(focusableSelector)).filter(isFocusableElement);
-  }
-
-  function isFocusableElement(element: HTMLElement): boolean {
-    if (element.tabIndex < 0) {
-      return false;
-    }
-
-    if (element.matches('[disabled], [hidden], [aria-hidden="true"]')) {
-      return false;
-    }
-
-    if (element.closest('[hidden], [aria-hidden="true"], [inert]') !== null) {
-      return false;
-    }
-
-    const style = window.getComputedStyle(element);
-
-    if (style.display === 'none' || style.visibility === 'hidden') {
-      return false;
-    }
-
-    return element.getClientRects().length > 0;
+    return Array.from(panelElement.querySelectorAll<HTMLElement>(zdpFocusableSelector)).filter(
+      isZdpFocusableElement
+    );
   }
 </script>
 

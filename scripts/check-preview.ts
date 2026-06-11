@@ -542,7 +542,7 @@ for (const requiredText of [
   '-webkit-user-select: none',
   'user-select: none',
   'font-family: var(--zdp-font-family-sans)',
-  'font-weight: var(--zdp-font-weight-regular)',
+  'font-weight: var(--zdp-font-weight-medium)',
   'border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong)',
   'border-color: var(--zdp-color-line-subtle)',
   '.zdp-confirm-action',

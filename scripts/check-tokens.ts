@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { zdpTokenNames } from '../src/lib/tokens.ts';
 
 interface TokenDocument {
   readonly name: string;
@@ -53,6 +54,7 @@ const expressiveFonts = await readFile(expressiveFontsPath, 'utf8');
 const localeFonts = await readFile(localeFontsPath, 'utf8');
 const publicEntry = await readFile(publicEntryPath, 'utf8');
 const tokenVariables = collectCssVariableNames(tokenDocument);
+const publicTokenNames = collectPublicTokenNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
 
@@ -91,6 +93,18 @@ if (!packageJson.sideEffects?.includes('./src/styles/locale-fonts.css')) {
 for (const variable of tokenVariables) {
   if (!css.includes(`--${variable}:`)) {
     failures.push(`Missing CSS variable --${variable}.`);
+  }
+}
+
+for (const tokenName of publicTokenNames) {
+  if (!(zdpTokenNames as readonly string[]).includes(tokenName)) {
+    failures.push(`Missing public zdpTokenNames entry ${tokenName}.`);
+  }
+}
+
+for (const tokenName of zdpTokenNames) {
+  if (!publicTokenNames.includes(tokenName)) {
+    failures.push(`Public zdpTokenNames entry ${tokenName} does not exist in tokens/zdp.tokens.json.`);
   }
 }
 
@@ -489,6 +503,24 @@ function collectCssVariableNames(tokens: TokenDocument): readonly string[] {
   ];
 }
 
+function collectPublicTokenNames(tokens: TokenDocument): readonly string[] {
+  return [
+    ...collectNestedDotNames('color', tokens.color),
+    ...collectDotNames('space', tokens.space),
+    ...collectDotNames('radius', tokens.radius),
+    ...collectDotNames('font.family', tokens.font.family),
+    ...collectDotNames('font.size', tokens.font.size),
+    ...collectDotNames('font.weight', tokens.font.weight),
+    ...collectDotNames('font.lineHeight', tokens.font.lineHeight),
+    ...collectDotNames('type', tokens.type),
+    ...collectDotNames('breakpoint', tokens.breakpoint),
+    ...collectDotNames('control', tokens.control),
+    ...collectDotNames('i18n', tokens.i18n),
+    ...collectDotNames('shadow', tokens.shadow),
+    ...collectDotNames('motion', tokens.motion)
+  ];
+}
+
 function collectColorTokens(
   tokens: TokenDocument
 ): readonly { readonly variable: string; readonly token: ColorTokenValue }[] {
@@ -502,6 +534,19 @@ function collectColorTokens(
 
 function collectNames(prefix: string, values: Record<string, string>): readonly string[] {
   return Object.keys(values).map((key) => `zdp-${prefix}-${toKebabCase(key)}`);
+}
+
+function collectDotNames(prefix: string, values: Record<string, string>): readonly string[] {
+  return Object.keys(values).map((key) => `${prefix}.${key}`);
+}
+
+function collectNestedDotNames(
+  prefix: string,
+  values: Record<string, Record<string, unknown>>
+): readonly string[] {
+  return Object.entries(values).flatMap(([group, entries]) =>
+    Object.keys(entries).map((key) => `${prefix}.${group}.${key}`)
+  );
 }
 
 function collectNestedNames(
