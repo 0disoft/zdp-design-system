@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added external UI adoption and third-party notice contracts so shadcn-svelte, Bits UI, Skeleton, Flowbite, daisyUI, Ark UI, Motion, SmoothUI, and Tailwind Plus-style sources are handled through explicit reference, porting, dependency, and prohibition rules.
 - Switched package exports to generated `dist/` artifacts and added a Svelte/Vite consumer fixture so public imports are checked before release.
 - Added token and share icon generation scripts for `zdpTokenNames`, `share.js`, and `share.d.ts` to keep generated consumer artifacts aligned with their source files.
 - Promoted Storybook addon-a11y to the `error` gate and added CI coverage for `bun run check` and `bun run build`.

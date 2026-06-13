@@ -44,6 +44,18 @@ ZDP의 디자인 토큰, CSS, 아이콘, Svelte UI 컴포넌트 경계를 고정
 - `CONTRIBUTING.md`
 - `CHANGELOG.md`
 - `docs/CONSUMER_CONTRACT.md`
+- `docs/EXTERNAL_UI_ADOPTION.md`
+- `THIRD_PARTY_NOTICES.md`
+
+## 외부 UI 흡수 기준
+
+외부 UI 라이브러리는 ZDP의 dependency source가 아니라 검증 source로 다룬다.
+Bits UI와 shadcn-svelte는 Select, Combobox, Dialog, Popover, Menu, Command 같은 고난도 interactive primitive의 동작 명세와 접근성 테스트 후보로만 검토한다.
+내부 구현 의존성은 허용할 수 있지만 public API, CSS token, class, DOM 노출 정책은 ZDP가 소유하고 외부 타입이나 Tailwind/shadcn 구조가 package surface로 새면 실패다.
+Skeleton, Flowbite Svelte, daisyUI는 패턴 카탈로그로만 보고 core primitive에 직접 유입하지 않는다.
+Motion과 SmoothUI류는 marketing recipe로 격리하고 reduced motion 대체를 갖춘다.
+Tailwind Plus와 Tailwind UI 계열은 파생/재배포 리스크 때문에 ZDP package 재료로 쓰지 않는다.
+외부 source를 참고, 포팅, 복사, 런타임 의존성으로 다루는 기준은 `docs/EXTERNAL_UI_ADOPTION.md`와 `THIRD_PARTY_NOTICES.md`를 따른다.
 
 ## Storybook 검토 기준
 

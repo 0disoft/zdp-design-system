@@ -13,6 +13,8 @@
 - 새 버전은 소비 저장소가 opt-in으로 채택한다. broad adoption 전에는 대표 소비처에서 시각과 build를 확인한다.
 - keyboard focus, flat UI, framed control, Pretendard-first font stack은 소비처에서 임의로 낮추지 않는다.
 - 브랜드 워드마크는 `font.family.brand`와 `brand-fonts.css`를 쓰되, 본문과 제품 UI heading은 Pretendard-first sans/display stack을 유지한다.
+- 소비 저장소는 `zdp-design-system`을 쓰기 위해 Tailwind, UnoCSS, shadcn registry, daisyUI theme, Skeleton preset, Flowbite theme, external `cn()` helper를 알 필요가 없어야 한다.
+- 외부 headless primitive가 내부 구현에 쓰이더라도 public API, CSS class, token, dist export는 ZDP 계약으로만 노출한다.
 
 ## Astro 소비 표면
 

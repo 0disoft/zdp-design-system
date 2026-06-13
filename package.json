@@ -25,7 +25,8 @@
     "dist/",
     "docs/",
     "README.md",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "THIRD_PARTY_NOTICES.md"
   ],
   "sideEffects": [
     "./dist/styles/index.css",

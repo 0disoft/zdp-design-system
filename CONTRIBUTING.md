@@ -16,6 +16,12 @@
 - 선택형 `brand-fonts.css` public export를 바꾸면 `package.json` export, sideEffects, README, consumer contract, token/preview/storybook/package check를 함께 맞춘다.
 - 선택형 `locale-fonts.css` public export를 바꾸면 `package.json` export, sideEffects, README, token/preview/storybook check를 함께 맞춘다.
 - 소비 저장소 적용 방식은 `docs/CONSUMER_CONTRACT.md`와 함께 변경한다.
+- 외부 UI 라이브러리는 `docs/EXTERNAL_UI_ADOPTION.md`의 흡수 등급을 먼저 정하고, reference, behavior spec, ported structure, source adapted, runtime dependency, prohibited를 섞어 쓰지 않는다.
+- Bits UI, shadcn-svelte, Ark UI 같은 headless 계열은 고난도 interaction primitive의 동작 명세와 내부 구현 후보로만 검토하며 외부 타입, prop 이름, store shape, Tailwind class, registry 구조를 public API로 노출하지 않는다.
+- Skeleton, Flowbite Svelte, daisyUI 같은 Tailwind 계열 시각 컴포넌트는 패턴 카탈로그로만 보고 ZDP-native Svelte/CSS와 token mapping으로 다시 작성한다.
+- Motion, SmoothUI류 animation recipe는 core component가 아니라 marketing/campaign recipe로 격리하고 reduced motion 대체와 별도 provenance를 남긴다.
+- Tailwind Plus와 Tailwind UI 계열은 shared package, template, starter, registry, component source로 쓰지 않는다.
+- 외부 source code를 복사, 포팅, 의미 있게 변형하면 같은 변경에서 `THIRD_PARTY_NOTICES.md`와 component provenance를 갱신한다.
 - Astro, Svelte, Tauri, Flutter 소비처는 public export만 사용하게 하고 내부 `src/` deep import를 문서나 예제로 만들지 않는다.
 - `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`가 원천이고 `dist/`는 `bun run package:build`로 다시 만드는 소비자 package surface다.
 - `zdpTokenNames`, `share.js`, `share.d.ts`를 손으로 고치지 않는다. 토큰은 `tokens:generate`, 공유 아이콘 산출물은 `share-icons:generate`로 갱신한다.

@@ -103,7 +103,8 @@ const expectedPackageFiles = [
   'dist/',
   'docs/',
   'README.md',
-  'CHANGELOG.md'
+  'CHANGELOG.md',
+  'THIRD_PARTY_NOTICES.md'
 ] as const;
 const expectedSideEffects = [
   './dist/styles/index.css',
@@ -138,6 +139,7 @@ await checkButtonContract();
 await checkSharedFocusContract();
 await checkModalLayerContract();
 await checkDialogFocusContract();
+await checkExternalAdoptionContract();
 await checkTermSheetContract();
 
 if (failures.length > 0) {
@@ -401,6 +403,39 @@ async function checkDialogFocusContract(): Promise<void> {
 
   if (source.includes('offsetParent')) {
     failures.push(`${relativePath} must not use offsetParent to decide dialog focusability.`);
+  }
+}
+
+async function checkExternalAdoptionContract(): Promise<void> {
+  const adoptionPath = 'docs/EXTERNAL_UI_ADOPTION.md';
+  const noticesPath = 'THIRD_PARTY_NOTICES.md';
+  const adoption = await readFile(join(root, adoptionPath), 'utf8');
+  const notices = await readFile(join(root, noticesPath), 'utf8');
+
+  for (const requiredText of [
+    '외부 UI 라이브러리는 ZDP의 dependency source가 아니라 검증 source다.',
+    'Runtime Dependency',
+    'Source Adapted',
+    'Prohibited',
+    'bits-ui` 타입, prop 이름, store shape, Tailwind class, shadcn registry 파일 구조가 ZDP public export로 새면 실패다.',
+    'Tailwind Plus / Tailwind UI',
+    'Provenance Template',
+    'consumer fixture build'
+  ]) {
+    if (!adoption.includes(requiredText)) {
+      failures.push(`${adoptionPath} is missing external adoption contract text ${requiredText}.`);
+    }
+  }
+
+  for (const requiredText of [
+    'No third-party source code is currently copied or adapted into the package source.',
+    'docs/EXTERNAL_UI_ADOPTION.md',
+    'Tailwind Plus and Tailwind UI',
+    'If any third-party source code is copied, ported, or meaningfully adapted later, update this file in the same change.'
+  ]) {
+    if (!notices.includes(requiredText)) {
+      failures.push(`${noticesPath} is missing third-party notice contract text ${requiredText}.`);
+    }
   }
 }
 
