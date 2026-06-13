@@ -127,6 +127,7 @@ for (const component of [
   'Callout',
   'Checkbox',
   'CodeBlock',
+  'Combobox',
   'CommandField',
   'ConfirmAction',
   'Dialog',

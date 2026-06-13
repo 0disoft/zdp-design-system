@@ -44,6 +44,7 @@ const buttonPath = join(root, 'src', 'lib', 'components', 'Button.svelte');
 const calloutPath = join(root, 'src', 'lib', 'components', 'Callout.svelte');
 const checkboxPath = join(root, 'src', 'lib', 'components', 'Checkbox.svelte');
 const codeBlockPath = join(root, 'src', 'lib', 'components', 'CodeBlock.svelte');
+const comboboxPath = join(root, 'src', 'lib', 'components', 'Combobox.svelte');
 const commandFieldPath = join(root, 'src', 'lib', 'components', 'CommandField.svelte');
 const confirmActionPath = join(root, 'src', 'lib', 'components', 'ConfirmAction.svelte');
 const containerPath = join(root, 'src', 'lib', 'components', 'Container.svelte');
@@ -130,6 +131,7 @@ const [
   callout,
   checkbox,
   codeBlock,
+  combobox,
   commandField,
   confirmAction,
   container,
@@ -215,6 +217,7 @@ const [
     readFile(calloutPath, 'utf8'),
     readFile(checkboxPath, 'utf8'),
     readFile(codeBlockPath, 'utf8'),
+    readFile(comboboxPath, 'utf8'),
     readFile(commandFieldPath, 'utf8'),
     readFile(confirmActionPath, 'utf8'),
     readFile(containerPath, 'utf8'),
@@ -505,6 +508,11 @@ for (const [storyName, source, requiredTexts] of [
       "const popoverTrigger = canvas.getByRole('button', { name: '필터 열기' })",
       "await expect(popoverTrigger).toHaveFocus()",
       "const outsideButton = canvas.getByRole('button', { name: '바깥 액션' })",
+      'combobox supports listbox navigation, disabled skip, selection, and Escape close',
+      "const comboboxInput = canvas.getByRole('combobox', { name: '빠른 이동' })",
+      "await userEvent.keyboard('{ArrowDown}')",
+      "await userEvent.keyboard('{Enter}')",
+      "await userEvent.keyboard('{Escape}')",
       'ConfirmAction confirms after keyboard hold',
       "fireEvent.keyDown(confirmButton, { key: 'Enter' })"
     ]
@@ -939,6 +947,12 @@ for (const requiredText of [
   '../src/lib/components/Tabs.svelte',
   '../src/lib/menu.ts',
   'Interaction probe',
+  'comboboxOptions',
+  'filteredComboboxOptions',
+  'interaction-probe-combobox',
+  'interaction-probe-combobox-state',
+  'onQueryChange={(nextQuery) => (comboboxQuery = nextQuery)}',
+  'onValueChange={(nextValue, option) =>',
   'ariaLabel="검토 섹션"',
   "selectedId = 'overview'",
   '기록이 선택되었습니다.',
@@ -1079,6 +1093,7 @@ for (const requiredText of [
 
 for (const requiredText of [
   '../src/lib/components/Checkbox.svelte',
+  '../src/lib/components/Combobox.svelte',
   '../src/lib/components/ErrorText.svelte',
   '../src/lib/components/Field.svelte',
   '../src/lib/components/HelpText.svelte',
@@ -1098,6 +1113,11 @@ for (const requiredText of [
   'forms-dark-id',
   'forms-light-email',
   'forms-dark-email',
+  'forms-light-owner',
+  'forms-dark-owner',
+  '<Combobox',
+  '담당 팀 찾기',
+  '가장 가까운 담당 팀을 선택하세요.',
   'readonly',
   'disabled',
   '이미 발급된 값은 그대로 둡니다.',
@@ -1870,6 +1890,77 @@ for (const requiredText of [
 
 assertNoDecorativeEffects(failures, 'CommandField component', commandField);
 assertNoOverRoundedUsage(failures, 'CommandField component', commandField);
+
+for (const requiredText of [
+  "import type { ZdpComboboxOption, ZdpComboboxSize }",
+  'type DescribedBy = string | readonly string[] | null',
+  'id: string | null = null',
+  'name: string | null = null',
+  'value =',
+  'query =',
+  'options: readonly ZdpComboboxOption[] = []',
+  "label: string | null = '검색'",
+  'labelVisible = false',
+  'ariaLabel: string | null = null',
+  "placeholder: string | null = '검색어 입력'",
+  "autocomplete: string | null = 'off'",
+  'describedBy: DescribedBy = null',
+  'errorMessageId: string | null = null',
+  'invalid = false',
+  'disabled = false',
+  'readonly = false',
+  'required = false',
+  "size: ZdpComboboxSize = 'md'",
+  'onQueryChange: ((query: string) => void) | null = null',
+  'onValueChange: ((value: string, option: ZdpComboboxOption | null) => void) | null = null',
+  'onOpenChange: ((open: boolean) => void) | null = null',
+  'enabledOptions = options.filter((option) => !option.disabled)',
+  'role="combobox"',
+  'aria-autocomplete="list"',
+  'aria-haspopup="listbox"',
+  'aria-expanded={open}',
+  'aria-controls={open && hasOptions ? listboxId : undefined}',
+  'aria-activedescendant={activeOptionDomId ?? undefined}',
+  'aria-describedby={ariaDescribedBy ?? undefined}',
+  'aria-errormessage={resolvedErrorMessageId ?? undefined}',
+  "aria-invalid={invalid ? 'true' : undefined}",
+  '<input type="hidden" {name} {value} />',
+  'role="listbox"',
+  'aria-label={listboxLabel}',
+  'role="option"',
+  'aria-selected={option.value === value}',
+  'aria-disabled={option.disabled ?',
+  'tabindex="-1"',
+  'handleInputKeydown',
+  'moveActiveOption',
+  'selectOption',
+  'resolveActiveOptionId',
+  "event.key === 'ArrowDown'",
+  "event.key === 'ArrowUp'",
+  "event.key === 'Enter'",
+  "event.key === 'Escape'",
+  '.zdp-combobox',
+  '.zdp-combobox__control',
+  '.zdp-combobox__control:focus-within',
+  '.zdp-combobox__input',
+  '.zdp-combobox__toggle',
+  '.zdp-combobox__panel',
+  '.zdp-combobox__listbox',
+  '.zdp-combobox__option',
+  '.zdp-combobox__option[data-active="true"]',
+  '.zdp-combobox__option[data-selected="true"]',
+  'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
+  'border-color: var(--zdp-color-focus-line)',
+  '-webkit-user-select: none',
+  'user-select: none'
+]) {
+  if (!combobox.includes(requiredText)) {
+    failures.push(`Combobox component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Combobox component', combobox);
+assertNoOverRoundedUsage(failures, 'Combobox component', combobox);
 
 for (const requiredText of [
   "placement: 'top' | 'right' | 'bottom' | 'left' = 'top'",
@@ -2978,6 +3069,7 @@ for (const [surfaceLabel, source] of [
   ['Checkbox component', checkbox],
   ['Callout component mark', callout],
   ['CodeBlock component copy action', codeBlock],
+  ['Combobox component controls', combobox],
   ['CommandField component shortcut', commandField],
   ['ConfirmAction component', confirmAction],
   ['Dialog component close button', dialog],

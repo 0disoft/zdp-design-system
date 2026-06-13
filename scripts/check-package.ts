@@ -22,6 +22,7 @@ const componentPaths = [
   'src/lib/components/Callout.svelte',
   'src/lib/components/Checkbox.svelte',
   'src/lib/components/CodeBlock.svelte',
+  'src/lib/components/Combobox.svelte',
   'src/lib/components/CommandField.svelte',
   'src/lib/components/ConfirmAction.svelte',
   'src/lib/components/Container.svelte',
@@ -141,6 +142,7 @@ await checkModalLayerContract();
 await checkDialogFocusContract();
 await checkExternalAdoptionContract();
 await checkInteractivePrimitiveAuditContract();
+await checkComboboxContract();
 await checkMenuPopoverInteractionContract();
 await checkTermSheetContract();
 
@@ -447,10 +449,13 @@ async function checkInteractivePrimitiveAuditContract(): Promise<void> {
 
   for (const requiredText of [
     '`Select`와 `CommandField`는 native element를 중심으로 둔 현재 구현을 유지한다.',
+    '`Combobox`는 searchable single-select를 ZDP-native로 제공하되 filtering, async search, command execution, permissions는 소비 앱에 남긴다.',
+    '| Combobox | ZDP custom combobox/listbox | Medium |',
     '`Menu`와 `Popover`는 가장 높은 위험군이다.',
     '| Menu | ZDP custom menu | High |',
     '| Popover | ZDP custom non-modal overlay | High |',
     'InteractionProbe는 ArrowDown open, roving focus, disabled skip, Home/End, Escape close, focus return, click select를 계속 확인한다.',
+    'InteractionProbe는 ArrowDown open, disabled skip, Enter select, Escape close, listbox label, selected value sync를 계속 확인한다.',
     'InteractionProbe는 trigger focus 유지, Escape close, focus return, outside click close를 계속 확인한다.',
     'Headless Spike Trigger',
     'public API, class, token, consumer setup에 외부 철학이 새면 spike는 실패다.',
@@ -460,6 +465,58 @@ async function checkInteractivePrimitiveAuditContract(): Promise<void> {
   ]) {
     if (!audit.includes(requiredText)) {
       failures.push(`${auditPath} is missing interactive primitive audit text ${requiredText}.`);
+    }
+  }
+}
+
+async function checkComboboxContract(): Promise<void> {
+  const relativePath = 'src/lib/components/Combobox.svelte';
+  const source = await readFile(join(root, relativePath), 'utf8');
+  const publicEntry = await readFile(join(root, 'src/lib/index.ts'), 'utf8');
+  const consumerContract = await readFile(join(root, 'docs/CONSUMER_CONTRACT.md'), 'utf8');
+
+  for (const requiredText of [
+    "import type { ZdpComboboxOption, ZdpComboboxSize }",
+    'role="combobox"',
+    'aria-autocomplete="list"',
+    'aria-haspopup="listbox"',
+    'aria-activedescendant={activeOptionDomId ?? undefined}',
+    'role="listbox"',
+    'role="option"',
+    'aria-selected={option.value === value}',
+    'aria-disabled={option.disabled ?',
+    'handleInputKeydown',
+    'moveActiveOption',
+    'resolveActiveOptionId',
+    'onQueryChange?.(query)',
+    'onValueChange?.(value, option)',
+    '<input type="hidden" {name} {value} />',
+    '.zdp-combobox',
+    '.zdp-combobox__control:focus-within',
+    '.zdp-combobox__option[data-active="true"]',
+    '-webkit-user-select: none',
+    'user-select: none'
+  ]) {
+    if (!source.includes(requiredText)) {
+      failures.push(`${relativePath} is missing combobox contract text ${requiredText}.`);
+    }
+  }
+
+  for (const requiredText of [
+    'export { default as Combobox }',
+    'export type { ZdpComboboxOption'
+  ]) {
+    if (!publicEntry.includes(requiredText)) {
+      failures.push(`src/lib/index.ts is missing Combobox public entry ${requiredText}.`);
+    }
+  }
+
+  for (const requiredText of [
+    'Combobox는 검색 가능한 단일 선택',
+    '실제 필터링, async search, command 실행, 권한 판단은 소비 앱이 계속 소유한다.'
+  ]) {
+    if (!consumerContract.includes(requiredText)) {
+      failures.push(`docs/CONSUMER_CONTRACT.md is missing Combobox consumer contract text ${requiredText}.`);
     }
   }
 }

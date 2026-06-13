@@ -7,6 +7,7 @@
 
 - 지금 당장 Bits UI, shadcn-svelte, Ark UI를 package dependency로 추가하지 않는다.
 - `Select`와 `CommandField`는 native element를 중심으로 둔 현재 구현을 유지한다.
+- `Combobox`는 searchable single-select를 ZDP-native로 제공하되 filtering, async search, command execution, permissions는 소비 앱에 남긴다.
 - `Dialog`와 `TermSheet`는 ZDP modal layer, focusable helper, scroll lock, focus return을 유지하되 nested modal, inert sibling, portal 요구가 커지면 headless 후보로 다시 평가한다.
 - `Menu`와 `Popover`는 가장 높은 위험군이다. 단순 더보기와 짧은 필터 표면은 현재 구현으로 유지하되, typeahead, submenu, collision detection, portal, nested overlay가 필요해지면 Bits UI 내부 의존성 후보로 올린다.
 - `Tooltip`은 짧은 non-interactive label로만 유지한다. 긴 안내, 클릭 가능한 내용, mobile-first 설명은 Popover, Disclosure, Dialog, 소비 앱 flow로 보낸다.
@@ -17,6 +18,7 @@
 | --- | --- | --- | --- | --- |
 | Select | Native `select` | Low | label/id/error/describedBy, invalid, disabled, required, focus-visible | Custom select나 combobox 요구 전까지 유지 |
 | CommandField | Native `input` | Low | label, shortcut hint, aria-controls/expanded/activedescendant passthrough | result list, dispatcher, command palette는 별도 primitive로 분리 |
+| Combobox | ZDP custom combobox/listbox | Medium | input combobox role, listbox/option roles, ArrowUp/ArrowDown, Enter select, Escape close, disabled skip, hidden value, InteractionProbe play coverage | grouped options, virtualized list, async option loading, multi-select, portal/collision 요구 시 headless spike |
 | Tooltip | CSS hover/focus label | Low | role tooltip, slot-provided `describedBy`, pointer-events none | interactive content 금지 유지 |
 | Dialog | ZDP custom modal | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, modal layer | nested modal, portal, inert sibling 요구가 생기면 headless spike |
 | TermSheet | ZDP custom modal sheet | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, stable term attributes | right/bottom sheet 외 변형이 늘면 headless spike |
@@ -36,6 +38,14 @@ custom trigger, searchable option, grouped option, virtualized list, async optio
 `CommandField`는 input frame과 shortcut hint만 맡는다.
 검색 결과, listbox, command execution, 전역 keydown dispatcher를 직접 만들지 않는다.
 `aria-controls`, `aria-expanded`, `aria-activedescendant`는 소비 앱이 result surface를 붙일 때만 전달한다.
+
+### Combobox
+
+`Combobox`는 검색 가능한 단일 선택 입력이다.
+ZDP는 label, input frame, listbox, active option, disabled option skip, hidden submitted value, keyboard navigation만 소유한다.
+소비 앱은 option source, filtering, async search, result ranking, command execution, permission visibility를 계속 소유한다.
+단순 상태 선택은 native `Select`를 유지하고, 사용자가 입력으로 후보를 좁혀야 하는 단일 선택에만 `Combobox`를 쓴다.
+InteractionProbe는 ArrowDown open, disabled skip, Enter select, Escape close, listbox label, selected value sync를 계속 확인한다.
 
 ### Tooltip
 

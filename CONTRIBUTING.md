@@ -22,7 +22,7 @@
 - Motion, SmoothUI류 animation recipe는 core component가 아니라 marketing/campaign recipe로 격리하고 reduced motion 대체와 별도 provenance를 남긴다.
 - Tailwind Plus와 Tailwind UI 계열은 shared package, template, starter, registry, component source로 쓰지 않는다.
 - 외부 source code를 복사, 포팅, 의미 있게 변형하면 같은 변경에서 `THIRD_PARTY_NOTICES.md`와 component provenance를 갱신한다.
-- Select, CommandField, Tooltip, Dialog, TermSheet, Menu, Popover 같은 고난도 primitive는 `docs/INTERACTIVE_PRIMITIVE_AUDIT.md`의 risk와 spike trigger를 먼저 확인한다.
+- Select, CommandField, Combobox, Tooltip, Dialog, TermSheet, Menu, Popover 같은 고난도 primitive는 `docs/INTERACTIVE_PRIMITIVE_AUDIT.md`의 risk와 spike trigger를 먼저 확인한다.
 - typeahead, submenu, collision/flip/shift, portal target, nested overlay, draggable sheet, sibling inert, mobile keyboard 대응이 반복되면 직접 구현 확장 대신 headless spike를 연다.
 - Astro, Svelte, Tauri, Flutter 소비처는 public export만 사용하게 하고 내부 `src/` deep import를 문서나 예제로 만들지 않는다.
 - `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`가 원천이고 `dist/`는 `bun run package:build`로 다시 만드는 소비자 package surface다.
@@ -87,6 +87,9 @@
 - CommandField는 검색, 빠른 이동, 명령 팔레트 진입의 label, frame, focus-within, shortcut keycap, help/error id 연결만 담당하며 검색 인덱스, 결과 정렬, command palette, 라우팅, 권한 판단을 직접 수행하지 않는다.
 - CommandField와 `.zdp-command-field`는 그림자, 그라데이션, hover 장식을 만들지 않고 입력 focus와 `/` 같은 단축키 표시를 같은 테두리/키캡 규칙으로 유지한다.
 - CommandField는 결과 목록, keyboard dispatcher, command 실행 상태를 직접 만들지 않는다.
+- Combobox는 검색 가능한 단일 선택의 label, input frame, listbox, active option, disabled option skip, hidden submitted value만 담당하며 실제 필터링, async search, command 실행, 권한 판단은 소비 앱이 계속 소유한다.
+- Combobox와 `.zdp-combobox`는 native Select를 대체하지 않는다. 단순 상태 선택은 `Select`를 유지하고, 사용자가 입력으로 후보를 좁히는 단일 선택에만 Combobox를 쓴다.
+- Combobox option button, toggle, mark만 선택을 막고 input 값과 주변 설명 텍스트는 선택 가능성을 오염시키지 않는다.
 - InlineCode와 CodeBlock은 문서, 보안, 아키텍처 페이지의 코드 표시, language label, horizontal overflow, 선택적 복사 버튼만 담당하며 syntax highlighting, 코드 실행, 비밀값 탐지, 보안 분류, command palette를 직접 수행하지 않는다.
 - InlineCode, CodeBlock, `.zdp-inline-code`, `.zdp-code-block`은 그림자, 그라데이션, 실행 버튼 없이 mono font, framed surface, focus-visible, 복사 feedback, wrapping/overflow 계약만 유지한다. 긴 코드는 기본 horizontal overflow로 두고, code body에는 `user-select: none`을 적용하지 않는다.
 - Kbd와 ShortcutHint는 키캡과 단축키 힌트 표면만 담당하며 실제 keydown dispatcher, command palette, 검색 focus 이동, 저장, 닫기, 파일 이동 판단을 직접 수행하지 않는다.

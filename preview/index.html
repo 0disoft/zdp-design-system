@@ -678,6 +678,48 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
           </section>
 
           <section class="preview-section">
+            <h3 class="preview-section__title" id="light-combobox-title">Combobox</h3>
+            <div class="zdp-combobox zdp-combobox--md" data-open="true">
+              <label class="zdp-combobox__label" for="light-owner-combobox">담당</label>
+              <span class="zdp-combobox__control">
+                <input
+                  class="zdp-combobox__input"
+                  id="light-owner-combobox"
+                  name="light-owner-query"
+                  type="text"
+                  role="combobox"
+                  value="플랫폼"
+                  placeholder="담당 팀 찾기"
+                  autocomplete="off"
+                  aria-autocomplete="list"
+                  aria-haspopup="listbox"
+                  aria-expanded="true"
+                  aria-controls="light-owner-listbox"
+                  aria-activedescendant="light-owner-option-platform"
+                  aria-describedby="light-owner-help"
+                />
+                <input type="hidden" name="light-owner" value="platform" />
+                <button class="zdp-combobox__toggle" type="button" aria-label="선택 닫기" aria-controls="light-owner-listbox" aria-expanded="true">
+                  <span class="zdp-combobox__mark" aria-hidden="true"></span>
+                </button>
+              </span>
+              <span class="zdp-combobox__panel">
+                <span class="zdp-combobox__listbox" id="light-owner-listbox" role="listbox" aria-label="담당 목록">
+                  <button class="zdp-combobox__option" id="light-owner-option-platform" type="button" role="option" aria-selected="true" data-active="true" data-selected="true" tabindex="-1">
+                    <span class="zdp-combobox__option-label">플랫폼 운영</span>
+                    <span class="zdp-combobox__option-description">서비스 상태를 확인합니다.</span>
+                  </button>
+                  <button class="zdp-combobox__option" id="light-owner-option-security" type="button" role="option" aria-selected="false" tabindex="-1">
+                    <span class="zdp-combobox__option-label">보안 검토</span>
+                    <span class="zdp-combobox__option-description">접근 기준을 살핍니다.</span>
+                  </button>
+                </span>
+              </span>
+              <p class="zdp-help-text" id="light-owner-help">가장 가까운 담당 팀을 선택하세요.</p>
+            </div>
+          </section>
+
+          <section class="preview-section">
             <h3 class="preview-section__title" id="light-shortcut-title">Shortcuts</h3>
             <div class="zdp-inline zdp-inline--gap-sm zdp-inline--align-center" role="group" aria-label="Light shortcut hints">
               <span class="zdp-shortcut-hint" role="group" aria-label="Search shortcut slash">
@@ -1540,6 +1582,48 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
               </span>
             </label>
             <p class="zdp-help-text" id="dark-command-help">필요한 항목으로 바로 이동하세요.</p>
+          </section>
+
+          <section class="preview-section">
+            <h3 class="preview-section__title" id="dark-combobox-title">Combobox</h3>
+            <div class="zdp-combobox zdp-combobox--md" data-open="true">
+              <label class="zdp-combobox__label" for="dark-owner-combobox">담당</label>
+              <span class="zdp-combobox__control">
+                <input
+                  class="zdp-combobox__input"
+                  id="dark-owner-combobox"
+                  name="dark-owner-query"
+                  type="text"
+                  role="combobox"
+                  value="보안"
+                  placeholder="담당 팀 찾기"
+                  autocomplete="off"
+                  aria-autocomplete="list"
+                  aria-haspopup="listbox"
+                  aria-expanded="true"
+                  aria-controls="dark-owner-listbox"
+                  aria-activedescendant="dark-owner-option-security"
+                  aria-describedby="dark-owner-help"
+                />
+                <input type="hidden" name="dark-owner" value="security" />
+                <button class="zdp-combobox__toggle" type="button" aria-label="선택 닫기" aria-controls="dark-owner-listbox" aria-expanded="true">
+                  <span class="zdp-combobox__mark" aria-hidden="true"></span>
+                </button>
+              </span>
+              <span class="zdp-combobox__panel">
+                <span class="zdp-combobox__listbox" id="dark-owner-listbox" role="listbox" aria-label="담당 목록">
+                  <button class="zdp-combobox__option" id="dark-owner-option-platform" type="button" role="option" aria-selected="false" tabindex="-1">
+                    <span class="zdp-combobox__option-label">플랫폼 운영</span>
+                    <span class="zdp-combobox__option-description">서비스 상태를 확인합니다.</span>
+                  </button>
+                  <button class="zdp-combobox__option" id="dark-owner-option-security" type="button" role="option" aria-selected="true" data-active="true" data-selected="true" tabindex="-1">
+                    <span class="zdp-combobox__option-label">보안 검토</span>
+                    <span class="zdp-combobox__option-description">접근 기준을 살핍니다.</span>
+                  </button>
+                </span>
+              </span>
+              <p class="zdp-help-text" id="dark-owner-help">가장 가까운 담당 팀을 선택하세요.</p>
+            </div>
           </section>
 
           <section class="preview-section">

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added `Combobox` as a searchable single-select primitive with listbox keyboard navigation, disabled option skipping, hidden submitted value support, and consumer-owned filtering/search/permission boundaries.
 - Hardened `InteractionProbe` coverage for `Menu` and `Popover` keyboard, focus return, Escape close, and outside close contracts.
 - Added an interactive primitive audit for Select, CommandField, Tooltip, Dialog, TermSheet, Menu, and Popover so headless dependency spikes happen only after concrete focus, keyboard, overlay, or collision requirements repeat.
 - Added external UI adoption and third-party notice contracts so shadcn-svelte, Bits UI, Skeleton, Flowbite, daisyUI, Ark UI, Motion, SmoothUI, and Tailwind Plus-style sources are handled through explicit reference, porting, dependency, and prohibition rules.

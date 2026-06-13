@@ -64,6 +64,43 @@ export const Probe: StoryObj<typeof InteractionProbe> = {
       await expect(canvas.getByText('보기 요약')).toBeVisible();
     });
 
+    await step('combobox supports listbox navigation, disabled skip, selection, and Escape close', async () => {
+      const comboboxInput = canvas.getByRole('combobox', { name: '빠른 이동' });
+
+      await userEvent.click(comboboxInput);
+      await expect(canvas.getByRole('listbox', { name: '빠른 이동 목록' })).toBeVisible();
+      await expect(comboboxInput).toHaveAttribute('aria-expanded', 'true');
+
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(comboboxInput).toHaveAttribute(
+        'aria-activedescendant',
+        'interaction-probe-combobox-option-settings'
+      );
+
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(comboboxInput).toHaveAttribute(
+        'aria-activedescendant',
+        'interaction-probe-combobox-option-project'
+      );
+
+      await userEvent.keyboard('{End}');
+      await expect(comboboxInput).toHaveAttribute(
+        'aria-activedescendant',
+        'interaction-probe-combobox-option-settings'
+      );
+
+      await userEvent.keyboard('{Enter}');
+      await waitFor(() => expect(canvas.queryByRole('listbox')).not.toBeInTheDocument());
+      await expect(comboboxInput).toHaveValue('설정');
+      await expect(canvas.getByText('선택 설정')).toBeVisible();
+
+      await userEvent.click(comboboxInput);
+      await expect(canvas.getByRole('listbox', { name: '빠른 이동 목록' })).toBeVisible();
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(canvas.queryByRole('listbox')).not.toBeInTheDocument());
+      await expect(comboboxInput).toHaveFocus();
+    });
+
     await step('menu supports keyboard open, roving focus, disabled skip, and Escape focus return', async () => {
       const menuTrigger = canvas.getByRole('button', { name: '더보기' });
 

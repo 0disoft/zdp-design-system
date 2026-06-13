@@ -1,5 +1,6 @@
 <script lang="ts">
   import Checkbox from '../src/lib/components/Checkbox.svelte';
+  import Combobox from '../src/lib/components/Combobox.svelte';
   import ErrorText from '../src/lib/components/ErrorText.svelte';
   import Field from '../src/lib/components/Field.svelte';
   import HelpText from '../src/lib/components/HelpText.svelte';
@@ -11,6 +12,13 @@
   import Surface from '../src/lib/components/Surface.svelte';
   import Switch from '../src/lib/components/Switch.svelte';
   import Textarea from '../src/lib/components/Textarea.svelte';
+  import type { ZdpComboboxOption } from '../src/lib/combobox.ts';
+
+  const ownerOptions: readonly ZdpComboboxOption[] = [
+    { id: 'platform', label: '플랫폼 운영', value: 'platform', description: '공개 표면 검토' },
+    { id: 'security', label: '보안 검토', value: 'security', description: '권한과 로그 확인' },
+    { id: 'locale', label: 'Locale Quality', value: 'locale', description: '다국어 표시 확인' }
+  ];
 </script>
 
 <main class="component-story zdp-surface-reset" lang="ko">
@@ -51,6 +59,20 @@
             </Select>
             <HelpText id="forms-light-status-help">현재 작업 상태를 선택하세요.</HelpText>
             <ErrorText id="forms-light-status-error">다음 단계 전에 기준을 확인하세요.</ErrorText>
+          </Field>
+
+          <Field>
+            <Label forId="forms-light-owner">담당</Label>
+            <Combobox
+              id="forms-light-owner"
+              name="forms-light-owner"
+              label={null}
+              ariaLabel="담당"
+              placeholder="담당 팀 찾기"
+              options={ownerOptions}
+              describedBy="forms-light-owner-help"
+            />
+            <HelpText id="forms-light-owner-help">가장 가까운 담당 팀을 선택하세요.</HelpText>
           </Field>
 
           <Field>
@@ -122,6 +144,20 @@
             </Select>
             <HelpText id="forms-dark-status-help">현재 작업 상태를 선택하세요.</HelpText>
             <ErrorText id="forms-dark-status-error">다음 단계 전에 기준을 확인하세요.</ErrorText>
+          </Field>
+
+          <Field>
+            <Label forId="forms-dark-owner">담당</Label>
+            <Combobox
+              id="forms-dark-owner"
+              name="forms-dark-owner"
+              label={null}
+              ariaLabel="담당"
+              placeholder="담당 팀 찾기"
+              options={ownerOptions}
+              describedBy="forms-dark-owner-help"
+            />
+            <HelpText id="forms-dark-owner-help">가장 가까운 담당 팀을 선택하세요.</HelpText>
           </Field>
 
           <Field>

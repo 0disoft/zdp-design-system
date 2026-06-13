@@ -106,6 +106,7 @@ import 'zdp-design-system/expressive-fonts.css';
 - ConfirmAction은 중요한 액션 앞의 확인 흐름만 제공하고, 실제 삭제나 권한 검사는 소비 앱이 한다.
 - Avatar와 IdentityChip은 사람, 팀, 계정의 짧은 식별 표면이다.
 - CommandField는 검색 입력 primitive이며 실제 검색 로직이나 command palette 결과는 소비 앱이 소유한다.
+- Combobox는 검색 가능한 단일 선택 입력의 frame, listbox, keyboard navigation, disabled option skip, hidden submitted value만 제공한다. 실제 필터링, async search, command 실행, 권한 판단은 소비 앱이 계속 소유한다.
 - InlineCode와 CodeBlock은 문서, 보안, 아키텍처 화면의 코드 표면이다.
 - Icon은 장식용 glyph 기본값을 갖고, 의미 있는 아이콘은 소비 컴포넌트가 접근성 이름을 제공한다.
 - Link는 일반 텍스트 링크이며 버튼처럼 보이는 destructive action으로 쓰지 않는다.
@@ -120,6 +121,7 @@ import 'zdp-design-system/expressive-fonts.css';
 - Pagination은 목록 페이지 이동을 표현하고 데이터 범위 계산은 소비 앱이 한다.
 - Progress, Spinner, Skeleton은 작업 진행, 대기, 자리 예약 상태를 보여주며 실제 작업 큐를 소유하지 않는다.
 - Toast와 StatusToast는 저장, 동기화, 연결 같은 짧은 상태 피드백을 제공한다.
+- `.zdp-combobox`, `.zdp-combobox__control`, `.zdp-combobox__input`, `.zdp-combobox__listbox`, `.zdp-combobox__option`은 검색 가능한 단일 선택의 정적 표면만 제공하고 option source, filtering, async loading은 소비처가 소유한다.
 - Text selection의 기본값은 선택 가능이다. 조작 컴포넌트와 장식 요소만 선택을 막고, 드래그 중에는 `zdp-user-select-dragging` 같은 임시 상태로 제한한다.
 - SkipLink는 키보드 반복 탐색을 줄이는 첫 번째 탈출구다.
 - VisuallyHidden은 스크린리더에 필요한 텍스트를 시각적으로 숨길 때만 쓴다.
@@ -142,6 +144,7 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
     Callout,
     Checkbox,
     CodeBlock,
+    Combobox,
     CommandField,
     ConfirmAction,
     Container,
@@ -273,6 +276,16 @@ Svelte 또는 Tauri(Svelte) 표면은 컴포넌트를 직접 가져온다.
       describedBy="command-field-help"
     />
     <HelpText id="command-field-help">이 화면에서 찾을 항목을 입력하세요.</HelpText>
+    <Combobox
+      name="owner"
+      label="담당"
+      labelVisible
+      placeholder="담당 팀 찾기"
+      options={[
+        { id: 'platform', value: 'platform', label: '플랫폼 운영' },
+        { id: 'security', value: 'security', label: '보안 검토' }
+      ]}
+    />
     <p>배포 값은 <InlineCode text="readonly" /> 상태로 남깁니다.</p>
     <CodeBlock
       label="검토 규칙"

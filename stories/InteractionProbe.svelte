@@ -1,6 +1,7 @@
 <script lang="ts">
   import Accordion from '../src/lib/components/Accordion.svelte';
   import Button from '../src/lib/components/Button.svelte';
+  import Combobox from '../src/lib/components/Combobox.svelte';
   import ConfirmAction from '../src/lib/components/ConfirmAction.svelte';
   import Disclosure from '../src/lib/components/Disclosure.svelte';
   import Dialog from '../src/lib/components/Dialog.svelte';
@@ -13,6 +14,7 @@
   import TermSheet from '../src/lib/components/TermSheet.svelte';
   import TermTrigger from '../src/lib/components/TermTrigger.svelte';
   import type { ZdpAccordionItem } from '../src/lib/disclosure.ts';
+  import type { ZdpComboboxOption } from '../src/lib/combobox.ts';
   import type { ZdpMenuItem } from '../src/lib/menu.ts';
   import type { ZdpSegmentedControlItem } from '../src/lib/segmented.ts';
   import type { ZdpTermSheetTerm } from '../src/lib/term.ts';
@@ -22,6 +24,9 @@
   let disclosureState = '닫힘';
   let accordionState = '선택 범위';
   let segmentedState = '목록';
+  let comboboxValue = '';
+  let comboboxQuery = '';
+  let comboboxState = '선택 없음';
   let menuSelection = '선택 없음';
   let popoverState = '닫힘';
   let termOpen = false;
@@ -50,6 +55,11 @@
     { id: 'summary', label: '요약' },
     { id: 'locked', label: '잠김', disabled: true }
   ];
+  const comboboxOptions: readonly ZdpComboboxOption[] = [
+    { id: 'project', label: '프로젝트', value: 'project', description: '작업 범위' },
+    { id: 'settings', label: '설정', value: 'settings', description: '환경과 권한' },
+    { id: 'locked', label: '잠김', value: 'locked', description: '선택할 수 없음', disabled: true }
+  ];
   const termExample: ZdpTermSheetTerm = {
     id: 'operational-resilience',
     label: '운영 복원력',
@@ -58,6 +68,11 @@
     example: '읽기 화면은 유지하고 쓰기 작업만 잠시 막습니다.',
     relatedTerms: [{ id: 'fallback', label: 'fallback' }]
   };
+
+  $: filteredComboboxOptions =
+    comboboxQuery.trim().length === 0
+      ? comboboxOptions
+      : comboboxOptions.filter((option) => option.label.toLowerCase().includes(comboboxQuery.trim().toLowerCase()));
 </script>
 
 <main class="interaction-probe zdp-surface-reset" lang="ko">
@@ -145,6 +160,29 @@
             onChange={(_, item) => (segmentedState = item.label)}
           />
           <p id="interaction-probe-segmented-state">보기 {segmentedState}</p>
+        </Stack>
+      </section>
+
+      <section aria-labelledby="interaction-probe-combobox-title">
+        <Stack gap="md">
+          <h2 id="interaction-probe-combobox-title">Combobox</h2>
+          <Combobox
+            id="interaction-probe-combobox"
+            name="interaction-probe-combobox"
+            label="빠른 이동"
+            labelVisible
+            placeholder="항목 찾기"
+            value={comboboxValue}
+            query={comboboxQuery}
+            options={filteredComboboxOptions}
+            onQueryChange={(nextQuery) => (comboboxQuery = nextQuery)}
+            onValueChange={(nextValue, option) => {
+              comboboxValue = nextValue;
+              comboboxQuery = option?.label ?? comboboxQuery;
+              comboboxState = option?.label ?? '선택 없음';
+            }}
+          />
+          <p id="interaction-probe-combobox-state">선택 {comboboxState}</p>
         </Stack>
       </section>
 
