@@ -482,7 +482,15 @@ for (const [storyName, source, requiredTexts] of [
       "title: 'Design System/Components/Form Controls'",
       'Forms',
       "layout: 'fullscreen'",
-      'States'
+      'States',
+      'play: async',
+      'select keeps error linkage and native change',
+      'combobox keeps hidden submitted value in form story',
+      "const statusSelect = lightPanel.getByLabelText('상태')",
+      "await expect(statusSelect).toHaveAttribute('aria-errormessage', 'forms-light-status-error')",
+      "await userEvent.selectOptions(statusSelect, 'ready')",
+      "input[type=\"hidden\"][name=\"forms-light-owner\"]",
+      "await expect(hiddenValue).toHaveValue('security')"
     ]
   ],
   [
@@ -517,9 +525,18 @@ for (const [storyName, source, requiredTexts] of [
       "await expect(sheetTrigger).toHaveFocus()",
       'combobox supports listbox navigation, disabled skip, selection, and Escape close',
       "const comboboxInput = canvas.getByRole('combobox', { name: '빠른 이동' })",
+      "input[type=\"hidden\"][name=\"interaction-probe-combobox\"]",
+      "await expect(comboboxInput).toHaveAttribute('aria-controls', 'interaction-probe-combobox-listbox')",
+      "await userEvent.type(comboboxInput, '프로')",
+      "await expect(canvas.queryByRole('option', { name: /설정/ })).not.toBeInTheDocument()",
+      "await userEvent.type(comboboxInput, '없는 항목')",
+      "await expect(canvas.getByRole('status')).toHaveTextContent('결과 없음')",
+      "await expect(comboboxInput).not.toHaveAttribute('aria-controls')",
       "await userEvent.keyboard('{ArrowDown}')",
       "await userEvent.keyboard('{Enter}')",
+      "await expect(hiddenValue).toHaveValue('settings')",
       "await userEvent.keyboard('{Escape}')",
+      "await expect(comboboxInput).toHaveValue('설정')",
       'ConfirmAction confirms after keyboard hold',
       "fireEvent.keyDown(confirmButton, { key: 'Enter' })"
     ]
