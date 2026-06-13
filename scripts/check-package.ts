@@ -140,6 +140,7 @@ await checkSharedFocusContract();
 await checkModalLayerContract();
 await checkDialogFocusContract();
 await checkExternalAdoptionContract();
+await checkInteractivePrimitiveAuditContract();
 await checkTermSheetContract();
 
 if (failures.length > 0) {
@@ -435,6 +436,27 @@ async function checkExternalAdoptionContract(): Promise<void> {
   ]) {
     if (!notices.includes(requiredText)) {
       failures.push(`${noticesPath} is missing third-party notice contract text ${requiredText}.`);
+    }
+  }
+}
+
+async function checkInteractivePrimitiveAuditContract(): Promise<void> {
+  const auditPath = 'docs/INTERACTIVE_PRIMITIVE_AUDIT.md';
+  const audit = await readFile(join(root, auditPath), 'utf8');
+
+  for (const requiredText of [
+    '`Select`와 `CommandField`는 native element를 중심으로 둔 현재 구현을 유지한다.',
+    '`Menu`와 `Popover`는 가장 높은 위험군이다.',
+    '| Menu | ZDP custom menu | High |',
+    '| Popover | ZDP custom non-modal overlay | High |',
+    'Headless Spike Trigger',
+    'public API, class, token, consumer setup에 외부 철학이 새면 spike는 실패다.',
+    'typeahead',
+    'collision detection, flip, shift',
+    'portal target'
+  ]) {
+    if (!audit.includes(requiredText)) {
+      failures.push(`${auditPath} is missing interactive primitive audit text ${requiredText}.`);
     }
   }
 }

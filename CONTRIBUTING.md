@@ -22,6 +22,8 @@
 - Motion, SmoothUI류 animation recipe는 core component가 아니라 marketing/campaign recipe로 격리하고 reduced motion 대체와 별도 provenance를 남긴다.
 - Tailwind Plus와 Tailwind UI 계열은 shared package, template, starter, registry, component source로 쓰지 않는다.
 - 외부 source code를 복사, 포팅, 의미 있게 변형하면 같은 변경에서 `THIRD_PARTY_NOTICES.md`와 component provenance를 갱신한다.
+- Select, CommandField, Tooltip, Dialog, TermSheet, Menu, Popover 같은 고난도 primitive는 `docs/INTERACTIVE_PRIMITIVE_AUDIT.md`의 risk와 spike trigger를 먼저 확인한다.
+- typeahead, submenu, collision/flip/shift, portal target, nested overlay, draggable sheet, sibling inert, mobile keyboard 대응이 반복되면 직접 구현 확장 대신 headless spike를 연다.
 - Astro, Svelte, Tauri, Flutter 소비처는 public export만 사용하게 하고 내부 `src/` deep import를 문서나 예제로 만들지 않는다.
 - `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`가 원천이고 `dist/`는 `bun run package:build`로 다시 만드는 소비자 package surface다.
 - `zdpTokenNames`, `share.js`, `share.d.ts`를 손으로 고치지 않는다. 토큰은 `tokens:generate`, 공유 아이콘 산출물은 `share-icons:generate`로 갱신한다.

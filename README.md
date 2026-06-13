@@ -45,6 +45,7 @@ ZDP의 디자인 토큰, CSS, 아이콘, Svelte UI 컴포넌트 경계를 고정
 - `CHANGELOG.md`
 - `docs/CONSUMER_CONTRACT.md`
 - `docs/EXTERNAL_UI_ADOPTION.md`
+- `docs/INTERACTIVE_PRIMITIVE_AUDIT.md`
 - `THIRD_PARTY_NOTICES.md`
 
 ## 외부 UI 흡수 기준
@@ -56,6 +57,7 @@ Skeleton, Flowbite Svelte, daisyUI는 패턴 카탈로그로만 보고 core prim
 Motion과 SmoothUI류는 marketing recipe로 격리하고 reduced motion 대체를 갖춘다.
 Tailwind Plus와 Tailwind UI 계열은 파생/재배포 리스크 때문에 ZDP package 재료로 쓰지 않는다.
 외부 source를 참고, 포팅, 복사, 런타임 의존성으로 다루는 기준은 `docs/EXTERNAL_UI_ADOPTION.md`와 `THIRD_PARTY_NOTICES.md`를 따른다.
+현재 고난도 primitive의 위험도와 headless dependency 후보 전환 기준은 `docs/INTERACTIVE_PRIMITIVE_AUDIT.md`를 따른다.
 
 ## Storybook 검토 기준
 
