@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Fixed controlled `Combobox` Escape dismissal so filtered no-result text restores the selected label through `onQueryChange` while preserving the hidden submitted value.
 - Strengthened Select and Combobox Storybook play coverage for invalid error linkage, native select value changes, consumer-owned combobox filtering, empty results, `aria-controls` cleanup, Escape restoration, and hidden submitted values.
 - Fixed the generated package surface so Svelte/Vite consumers can type-check public component exports without `.ts` import-extension or loose HTML attribute type failures.
 - Added `Sheet` as a shared right, left, and bottom modal edge panel primitive for settings, filters, and drawer-style auxiliary flows while keeping save, permission, data fetch, and routing decisions in consuming apps.

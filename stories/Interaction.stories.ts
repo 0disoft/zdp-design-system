@@ -66,12 +66,13 @@ export const Probe: StoryObj<typeof InteractionProbe> = {
 
     await step('combobox supports listbox navigation, disabled skip, selection, and Escape close', async () => {
       const comboboxInput = canvas.getByRole('combobox', { name: '빠른 이동' });
+      const comboboxToggle = canvas.getByRole('button', { name: '선택 열기' });
       const hiddenValue = canvasElement.querySelector<HTMLInputElement>(
         'input[type="hidden"][name="interaction-probe-combobox"]'
       );
 
-      await userEvent.click(comboboxInput);
-      await expect(canvas.getByRole('listbox', { name: '빠른 이동 목록' })).toBeVisible();
+      await userEvent.click(comboboxToggle);
+      await waitFor(() => expect(canvas.getByRole('listbox', { name: '빠른 이동 목록' })).toBeVisible());
       await expect(comboboxInput).toHaveAttribute('aria-expanded', 'true');
       await expect(comboboxInput).toHaveAttribute('aria-controls', 'interaction-probe-combobox-listbox');
 
@@ -85,7 +86,7 @@ export const Probe: StoryObj<typeof InteractionProbe> = {
       await expect(comboboxInput).not.toHaveAttribute('aria-controls');
 
       await userEvent.clear(comboboxInput);
-      await expect(canvas.getByRole('listbox', { name: '빠른 이동 목록' })).toBeVisible();
+      await waitFor(() => expect(canvas.getByRole('listbox', { name: '빠른 이동 목록' })).toBeVisible());
 
       await userEvent.keyboard('{ArrowDown}');
       await expect(comboboxInput).toHaveAttribute(
@@ -113,8 +114,8 @@ export const Probe: StoryObj<typeof InteractionProbe> = {
       await expect(hiddenValue).toHaveValue('settings');
       await expect(comboboxInput).not.toHaveAttribute('aria-controls');
 
-      await userEvent.click(comboboxInput);
-      await expect(canvas.getByRole('listbox', { name: '빠른 이동 목록' })).toBeVisible();
+      await userEvent.click(canvas.getByRole('button', { name: '선택 열기' }));
+      await waitFor(() => expect(canvas.getByRole('listbox', { name: '빠른 이동 목록' })).toBeVisible());
       await userEvent.clear(comboboxInput);
       await userEvent.type(comboboxInput, '없는 항목');
       await expect(canvas.getByRole('status')).toHaveTextContent('결과 없음');

@@ -37,9 +37,16 @@
   let open = false;
   let activeOptionId = '';
   let lastSyncedValue = value;
+  let lastSelectedValue = '';
+  let lastSelectedLabel = '';
 
   $: enabledOptions = options.filter((option) => !option.disabled);
   $: selectedOption = options.find((option) => option.value === value) ?? null;
+  $: if (selectedOption) {
+    lastSelectedValue = selectedOption.value;
+    lastSelectedLabel = selectedOption.label;
+  }
+  $: selectedOptionLabel = selectedOption?.label ?? (value === lastSelectedValue ? lastSelectedLabel : '');
   $: resolvedIdPrefix = toDomId(id ?? fallbackIdPrefix);
   $: inputId = id ?? `${resolvedIdPrefix}-input`;
   $: listboxId = `${resolvedIdPrefix}-listbox`;
@@ -52,7 +59,7 @@
   $: listboxLabel = `${label ?? ariaLabel ?? '선택'} 목록`;
 
   $: if (value !== lastSyncedValue) {
-    query = selectedOption?.label ?? '';
+    query = selectedOptionLabel;
     lastSyncedValue = value;
   }
 
@@ -122,7 +129,9 @@
 
     if (event.key === 'Escape' && open) {
       event.preventDefault();
-      query = selectedOption?.label ?? query;
+      const nextQuery = selectedOptionLabel || query;
+      query = nextQuery;
+      onQueryChange?.(nextQuery);
       setOpen(false);
     }
   }
@@ -154,6 +163,9 @@
     value = option.value;
     query = option.label;
     lastSyncedValue = value;
+    lastSelectedValue = option.value;
+    lastSelectedLabel = option.label;
+    onQueryChange?.(query);
     onValueChange?.(value, option);
     setOpen(false);
     inputElement?.focus();
