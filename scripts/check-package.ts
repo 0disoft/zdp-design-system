@@ -141,6 +141,7 @@ await checkModalLayerContract();
 await checkDialogFocusContract();
 await checkExternalAdoptionContract();
 await checkInteractivePrimitiveAuditContract();
+await checkMenuPopoverInteractionContract();
 await checkTermSheetContract();
 
 if (failures.length > 0) {
@@ -449,6 +450,8 @@ async function checkInteractivePrimitiveAuditContract(): Promise<void> {
     '`Menu`와 `Popover`는 가장 높은 위험군이다.',
     '| Menu | ZDP custom menu | High |',
     '| Popover | ZDP custom non-modal overlay | High |',
+    'InteractionProbe는 ArrowDown open, roving focus, disabled skip, Home/End, Escape close, focus return, click select를 계속 확인한다.',
+    'InteractionProbe는 trigger focus 유지, Escape close, focus return, outside click close를 계속 확인한다.',
     'Headless Spike Trigger',
     'public API, class, token, consumer setup에 외부 철학이 새면 spike는 실패다.',
     'typeahead',
@@ -457,6 +460,51 @@ async function checkInteractivePrimitiveAuditContract(): Promise<void> {
   ]) {
     if (!audit.includes(requiredText)) {
       failures.push(`${auditPath} is missing interactive primitive audit text ${requiredText}.`);
+    }
+  }
+}
+
+async function checkMenuPopoverInteractionContract(): Promise<void> {
+  const menuPath = 'src/lib/components/Menu.svelte';
+  const popoverPath = 'src/lib/components/Popover.svelte';
+  const menu = await readFile(join(root, menuPath), 'utf8');
+  const popover = await readFile(join(root, popoverPath), 'utf8');
+
+  for (const requiredText of [
+    'handleTriggerKeydown',
+    "event.key === 'ArrowDown'",
+    "event.key === 'ArrowUp'",
+    "event.key === 'Escape'",
+    "event.key === 'Tab'",
+    "'ArrowDown', 'ArrowUp', 'Home', 'End'",
+    'moveActiveItem',
+    'focusActiveItem',
+    'restorePreviousFocus',
+    'enabledItems = items.filter((item) => !item.disabled)',
+    'tabindex={item.id === activeItemId && !item.disabled ? 0 : -1}',
+    '<svelte:document onclick={handleDocumentClick} />'
+  ]) {
+    if (!menu.includes(requiredText)) {
+      failures.push(`${menuPath} is missing menu interaction contract text ${requiredText}.`);
+    }
+  }
+
+  for (const requiredText of [
+    'closeOnEscape = true',
+    'closeOnOutside = true',
+    'capturePreviousFocus',
+    'restorePreviousFocus',
+    'handleDocumentClick',
+    'handleDocumentKeydown',
+    "event.key === 'Escape'",
+    '<svelte:document onclick={handleDocumentClick} onkeydown={handleDocumentKeydown} />',
+    'slot name="trigger" open={open} toggle={toggle} close={close} panelId={panelId} triggerId={triggerId}',
+    'role={role ?? undefined}',
+    'aria-labelledby={labelledBy ?? triggerId}',
+    'tabindex="-1"'
+  ]) {
+    if (!popover.includes(requiredText)) {
+      failures.push(`${popoverPath} is missing popover interaction contract text ${requiredText}.`);
     }
   }
 }

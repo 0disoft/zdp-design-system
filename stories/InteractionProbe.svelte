@@ -5,6 +5,7 @@
   import Disclosure from '../src/lib/components/Disclosure.svelte';
   import Dialog from '../src/lib/components/Dialog.svelte';
   import Menu from '../src/lib/components/Menu.svelte';
+  import Popover from '../src/lib/components/Popover.svelte';
   import SegmentedControl from '../src/lib/components/SegmentedControl.svelte';
   import Stack from '../src/lib/components/Stack.svelte';
   import Surface from '../src/lib/components/Surface.svelte';
@@ -22,6 +23,7 @@
   let accordionState = '선택 범위';
   let segmentedState = '목록';
   let menuSelection = '선택 없음';
+  let popoverState = '닫힘';
   let termOpen = false;
   let confirmCount = 0;
   const menuItems: readonly ZdpMenuItem[] = [
@@ -158,6 +160,32 @@
             <svelte:fragment slot="trigger">더보기</svelte:fragment>
           </Menu>
           <p id="interaction-probe-menu-state">{menuSelection}</p>
+        </Stack>
+      </section>
+
+      <section aria-labelledby="interaction-probe-popover-title">
+        <Stack gap="md">
+          <h2 id="interaction-probe-popover-title">Popover</h2>
+          <Popover
+            idPrefix="interaction-probe-popover"
+            placement="bottom"
+            align="start"
+            onOpenChange={(open) => (popoverState = open ? '열림' : '닫힘')}
+            let:close
+          >
+            <svelte:fragment slot="trigger" let:open let:toggle let:panelId>
+              <Button variant="secondary" onclick={toggle} ariaControls={panelId} ariaExpanded={open}>
+                필터 열기
+              </Button>
+            </svelte:fragment>
+            <Stack gap="sm">
+              <strong>상태</strong>
+              <Button variant="secondary" onclick={() => close()}>검토 중</Button>
+              <Button variant="secondary" onclick={() => close()}>완료됨</Button>
+            </Stack>
+          </Popover>
+          <Button variant="secondary">바깥 액션</Button>
+          <p id="interaction-probe-popover-state">Popover {popoverState}</p>
         </Stack>
       </section>
 

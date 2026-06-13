@@ -64,12 +64,57 @@ export const Probe: StoryObj<typeof InteractionProbe> = {
       await expect(canvas.getByText('보기 요약')).toBeVisible();
     });
 
-    await step('menu opens and selects an item', async () => {
-      await userEvent.click(canvas.getByRole('button', { name: '더보기' }));
+    await step('menu supports keyboard open, roving focus, disabled skip, and Escape focus return', async () => {
+      const menuTrigger = canvas.getByRole('button', { name: '더보기' });
+
+      menuTrigger.focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(canvas.getByRole('menu', { name: '더보기' })).toBeVisible();
+      await expect(canvas.getByRole('menuitem', { name: '설정 열기' })).toHaveFocus();
+
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(canvas.getByRole('menuitem', { name: '필터 저장' })).toHaveFocus();
+
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(canvas.getByRole('menuitem', { name: '설정 열기' })).toHaveFocus();
+
+      await userEvent.keyboard('{End}');
+      await expect(canvas.getByRole('menuitem', { name: '필터 저장' })).toHaveFocus();
+
+      await userEvent.keyboard('{Home}');
+      await expect(canvas.getByRole('menuitem', { name: '설정 열기' })).toHaveFocus();
+
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(canvas.queryByRole('menu')).not.toBeInTheDocument());
+      await expect(menuTrigger).toHaveFocus();
+
+      await userEvent.click(menuTrigger);
       await expect(canvas.getByRole('menu', { name: '더보기' })).toBeVisible();
       await userEvent.click(canvas.getByRole('menuitem', { name: '필터 저장' }));
-      await expect(canvas.getByText('필터 저장')).toBeVisible();
       await waitFor(() => expect(canvas.queryByRole('menu')).not.toBeInTheDocument());
+      await expect(canvas.getByText('필터 저장')).toBeVisible();
+    });
+
+    await step('popover keeps trigger focus policy and closes on Escape and outside click', async () => {
+      const popoverTrigger = canvas.getByRole('button', { name: '필터 열기' });
+      const outsideButton = canvas.getByRole('button', { name: '바깥 액션' });
+
+      popoverTrigger.focus();
+      await userEvent.click(popoverTrigger);
+      await expect(canvas.getByRole('dialog', { name: '필터 열기' })).toBeVisible();
+      await expect(popoverTrigger).toHaveFocus();
+      await expect(canvas.getByText('Popover 열림')).toBeVisible();
+
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(canvas.queryByRole('dialog', { name: '필터 열기' })).not.toBeInTheDocument());
+      await expect(popoverTrigger).toHaveFocus();
+      await expect(canvas.getByText('Popover 닫힘')).toBeVisible();
+
+      await userEvent.click(popoverTrigger);
+      await expect(canvas.getByRole('dialog', { name: '필터 열기' })).toBeVisible();
+      await userEvent.click(outsideButton);
+      await waitFor(() => expect(canvas.queryByRole('dialog', { name: '필터 열기' })).not.toBeInTheDocument());
+      await expect(canvas.getByText('Popover 닫힘')).toBeVisible();
     });
 
     await step('term sheet opens and closes with Escape', async () => {
