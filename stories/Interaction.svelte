@@ -11,6 +11,7 @@
   import Popover from '../src/lib/components/Popover.svelte';
   import SegmentedControl from '../src/lib/components/SegmentedControl.svelte';
   import ShareDock from '../src/lib/components/ShareDock.svelte';
+  import Sheet from '../src/lib/components/Sheet.svelte';
   import ShortcutHint from '../src/lib/components/ShortcutHint.svelte';
   import Stack from '../src/lib/components/Stack.svelte';
   import Surface from '../src/lib/components/Surface.svelte';
@@ -33,6 +34,8 @@
 
   let lightDialogOpen = false;
   let darkDialogOpen = false;
+  let lightSheetOpen = false;
+  let darkSheetOpen = false;
   let lightShareCount = 0;
   let darkShareCount = 0;
   let lightCommandQuery = '';
@@ -419,6 +422,41 @@
 
         <Surface padding="lg">
           <Stack gap="md">
+            <h3>Sheet</h3>
+            <p>설정처럼 긴 선택지는 화면 가장자리에서 열고, 실제 저장은 각 화면에 남깁니다.</p>
+            <Inline gap="md" align="center">
+              <Button
+                variant="secondary"
+                onclick={() => (lightSheetOpen = true)}
+                ariaControls="interaction-light-sheet"
+                ariaExpanded={lightSheetOpen}
+              >
+                화면 설정
+              </Button>
+              <span class="story-status">{lightSheetOpen ? '열림' : '닫힘'}</span>
+            </Inline>
+            <Sheet
+              open={lightSheetOpen}
+              id="interaction-light-sheet"
+              labelledBy="interaction-light-sheet-title"
+              describedBy="interaction-light-sheet-desc"
+              placement="right"
+              onClose={() => (lightSheetOpen = false)}
+            >
+              <h2 slot="title" id="interaction-light-sheet-title">화면 설정</h2>
+              <p id="interaction-light-sheet-desc">표시 방식과 알림 범위를 확인합니다.</p>
+              <svelte:fragment slot="footer">
+                <Button variant="secondary" onclick={() => (lightSheetOpen = false)}>닫기</Button>
+                <Button variant="primary" onclick={() => (lightSheetOpen = false)}>적용</Button>
+              </svelte:fragment>
+            </Sheet>
+          </Stack>
+        </Surface>
+
+        <Divider />
+
+        <Surface padding="lg">
+          <Stack gap="md">
             <h3>ShareDock</h3>
             <p>긴 라벨은 숨기고, 아이콘 focus와 툴팁으로 공유 경로를 보여줍니다.</p>
             <ShareDock placement="inline" ariaLabel="Light share actions" items={shareItems} />
@@ -668,6 +706,42 @@
                 <Button variant="danger" onclick={() => (darkDialogOpen = false)}>삭제</Button>
               </svelte:fragment>
             </Dialog>
+          </Stack>
+        </Surface>
+
+        <Divider />
+
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3>Sheet</h3>
+            <p>하단 sheet는 좁은 화면에서도 같은 닫기와 focus 흐름을 유지합니다.</p>
+            <Inline gap="md" align="center">
+              <Button
+                variant="secondary"
+                onclick={() => (darkSheetOpen = true)}
+                ariaControls="interaction-dark-sheet"
+                ariaExpanded={darkSheetOpen}
+              >
+                필터 열기
+              </Button>
+              <span class="story-status">{darkSheetOpen ? '열림' : '닫힘'}</span>
+            </Inline>
+            <Sheet
+              open={darkSheetOpen}
+              id="interaction-dark-sheet"
+              labelledBy="interaction-dark-sheet-title"
+              describedBy="interaction-dark-sheet-desc"
+              placement="bottom"
+              size="lg"
+              onClose={() => (darkSheetOpen = false)}
+            >
+              <h2 slot="title" id="interaction-dark-sheet-title">필터</h2>
+              <p id="interaction-dark-sheet-desc">상태와 기간을 확인합니다.</p>
+              <svelte:fragment slot="footer">
+                <Button variant="secondary" onclick={() => (darkSheetOpen = false)}>닫기</Button>
+                <Button variant="primary" onclick={() => (darkSheetOpen = false)}>적용</Button>
+              </svelte:fragment>
+            </Sheet>
           </Stack>
         </Surface>
 

@@ -55,6 +55,7 @@ const componentPaths = [
   'src/lib/components/Select.svelte',
   'src/lib/components/SegmentedControl.svelte',
   'src/lib/components/ShareDock.svelte',
+  'src/lib/components/Sheet.svelte',
   'src/lib/components/ShortcutHint.svelte',
   'src/lib/components/Skeleton.svelte',
   'src/lib/components/SkipLink.svelte',
@@ -140,6 +141,7 @@ await checkButtonContract();
 await checkSharedFocusContract();
 await checkModalLayerContract();
 await checkDialogFocusContract();
+await checkSheetContract();
 await checkExternalAdoptionContract();
 await checkInteractivePrimitiveAuditContract();
 await checkComboboxContract();
@@ -407,6 +409,72 @@ async function checkDialogFocusContract(): Promise<void> {
 
   if (source.includes('offsetParent')) {
     failures.push(`${relativePath} must not use offsetParent to decide dialog focusability.`);
+  }
+}
+
+async function checkSheetContract(): Promise<void> {
+  const relativePath = 'src/lib/components/Sheet.svelte';
+  const source = await readFile(join(root, relativePath), 'utf8');
+  const publicEntry = await readFile(join(root, 'src/lib/index.ts'), 'utf8');
+  const consumerContract = await readFile(join(root, 'docs/CONSUMER_CONTRACT.md'), 'utf8');
+
+  for (const requiredText of [
+    "import type { ZdpSheetPlacement, ZdpSheetSize }",
+    'createZdpModalLayer',
+    'modalLayer.setActive(open, layerElement)',
+    '<div class="zdp-sheet-layer" bind:this={layerElement}>',
+    'class="zdp-sheet__backdrop"',
+    'class={`zdp-sheet zdp-sheet--${placement} zdp-sheet--${size}`}',
+    'role="dialog"',
+    'aria-modal="true"',
+    'aria-labelledby={labelledBy}',
+    'aria-describedby={describedBy ?? undefined}',
+    'data-zdp-sheet-placement={placement}',
+    'data-zdp-sheet-size={size}',
+    'data-zdp-sheet-surface="sheet"',
+    'zdpFocusableSelector',
+    'isZdpFocusableElement',
+    'closeOnEscape',
+    'closeOnBackdrop',
+    'restorePreviousFocus',
+    'handleBackdropClick',
+    'getFocusableElements',
+    '.zdp-sheet__backdrop',
+    '.zdp-sheet--right',
+    '.zdp-sheet--left',
+    '.zdp-sheet--bottom',
+    '.zdp-sheet:focus-visible',
+    '.zdp-sheet__close:focus-visible',
+    '-webkit-user-select: none',
+    'user-select: none',
+    '@media (max-width: 720px)'
+  ]) {
+    if (!source.includes(requiredText)) {
+      failures.push(`${relativePath} is missing Sheet contract text ${requiredText}.`);
+    }
+  }
+
+  for (const requiredText of [
+    'export { default as Sheet }',
+    'export type { ZdpSheetPlacement'
+  ]) {
+    if (!publicEntry.includes(requiredText)) {
+      failures.push(`src/lib/index.ts is missing Sheet public entry ${requiredText}.`);
+    }
+  }
+
+  for (const requiredText of [
+    'Sheet는 right, left, bottom edge panel',
+    '설정, 필터, 보조 흐름',
+    '저장, 권한, 데이터 fetch, 라우팅 판단은 소비 앱이 계속 소유한다.'
+  ]) {
+    if (!consumerContract.includes(requiredText)) {
+      failures.push(`docs/CONSUMER_CONTRACT.md is missing Sheet consumer contract text ${requiredText}.`);
+    }
+  }
+
+  if (source.includes('offsetParent')) {
+    failures.push(`${relativePath} must not use offsetParent to decide sheet focusability.`);
   }
 }
 

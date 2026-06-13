@@ -8,6 +8,7 @@
   import Menu from '../src/lib/components/Menu.svelte';
   import Popover from '../src/lib/components/Popover.svelte';
   import SegmentedControl from '../src/lib/components/SegmentedControl.svelte';
+  import Sheet from '../src/lib/components/Sheet.svelte';
   import Stack from '../src/lib/components/Stack.svelte';
   import Surface from '../src/lib/components/Surface.svelte';
   import Tabs from '../src/lib/components/Tabs.svelte';
@@ -29,6 +30,7 @@
   let comboboxState = '선택 없음';
   let menuSelection = '선택 없음';
   let popoverState = '닫힘';
+  let sheetOpen = false;
   let termOpen = false;
   let confirmCount = 0;
   const menuItems: readonly ZdpMenuItem[] = [
@@ -224,6 +226,35 @@
           </Popover>
           <Button variant="secondary">바깥 액션</Button>
           <p id="interaction-probe-popover-state">Popover {popoverState}</p>
+        </Stack>
+      </section>
+
+      <section aria-labelledby="interaction-probe-sheet-title">
+        <Stack gap="md">
+          <h2 id="interaction-probe-sheet-title">Sheet</h2>
+          <Button
+            variant="secondary"
+            ariaControls="interaction-probe-sheet"
+            ariaExpanded={sheetOpen}
+            onclick={() => (sheetOpen = true)}
+          >
+            설정 열기
+          </Button>
+          <p id="interaction-probe-sheet-state">{sheetOpen ? 'Sheet 열림' : 'Sheet 닫힘'}</p>
+          <Sheet
+            open={sheetOpen}
+            id="interaction-probe-sheet"
+            labelledBy="interaction-probe-sheet-heading"
+            describedBy="interaction-probe-sheet-desc"
+            placement="right"
+            onClose={() => (sheetOpen = false)}
+          >
+            <h3 slot="title" id="interaction-probe-sheet-heading">화면 설정</h3>
+            <p id="interaction-probe-sheet-desc">표시 방식과 알림 범위를 확인합니다.</p>
+            <svelte:fragment slot="footer">
+              <Button variant="secondary" onclick={() => (sheetOpen = false)}>닫기</Button>
+            </svelte:fragment>
+          </Sheet>
         </Stack>
       </section>
 

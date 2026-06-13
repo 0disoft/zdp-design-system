@@ -22,7 +22,7 @@
 - Motion, SmoothUI류 animation recipe는 core component가 아니라 marketing/campaign recipe로 격리하고 reduced motion 대체와 별도 provenance를 남긴다.
 - Tailwind Plus와 Tailwind UI 계열은 shared package, template, starter, registry, component source로 쓰지 않는다.
 - 외부 source code를 복사, 포팅, 의미 있게 변형하면 같은 변경에서 `THIRD_PARTY_NOTICES.md`와 component provenance를 갱신한다.
-- Select, CommandField, Combobox, Tooltip, Dialog, TermSheet, Menu, Popover 같은 고난도 primitive는 `docs/INTERACTIVE_PRIMITIVE_AUDIT.md`의 risk와 spike trigger를 먼저 확인한다.
+- Select, CommandField, Combobox, Tooltip, Dialog, TermSheet, Sheet, Menu, Popover 같은 고난도 primitive는 `docs/INTERACTIVE_PRIMITIVE_AUDIT.md`의 risk와 spike trigger를 먼저 확인한다.
 - typeahead, submenu, collision/flip/shift, portal target, nested overlay, draggable sheet, sibling inert, mobile keyboard 대응이 반복되면 직접 구현 확장 대신 headless spike를 연다.
 - Astro, Svelte, Tauri, Flutter 소비처는 public export만 사용하게 하고 내부 `src/` deep import를 문서나 예제로 만들지 않는다.
 - `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`가 원천이고 `dist/`는 `bun run package:build`로 다시 만드는 소비자 package surface다.
@@ -103,6 +103,9 @@
 - SegmentedControl과 `.zdp-segmented-control`은 그림자, 그라데이션, hover 이동 없이 framed group, selected, disabled, focus-visible 계약만 유지한다.
 - Popover와 Menu는 설정, 더보기, 필터, 계정 메뉴처럼 가까운 트리거에서 짧게 펼치는 표면만 담당하며 항목 노출, 권한, 라우팅, 필터 의미, 계정 상태 판단을 직접 수행하지 않는다.
 - Popover와 Menu는 Escape 닫기, outside click, focus 복귀, menu keyboard movement 같은 기본 상호작용만 유지하고 tour, validation, modal decision, floating collision engine 역할을 직접 수행하지 않는다.
+- Sheet는 설정, 필터, 보조 흐름처럼 현재 화면 가장자리에서 확인하는 modal edge panel만 담당하며 저장, 권한, 데이터 fetch, 라우팅 판단을 직접 수행하지 않는다.
+- Sheet는 right, left, bottom placement, Escape 닫기, backdrop 닫기, Tab 순환, 이전 focus 복귀, modal layer scroll lock, focus-visible 상태를 유지한다. Drawer는 별도 컴포넌트가 아니라 Sheet placement/use case로 먼저 다룬다.
+- Sheet root에는 `data-zdp-sheet-placement`, `data-zdp-sheet-size`, `data-zdp-sheet-surface="sheet"`를 남겨 QA와 소비 앱이 surface identity를 확인할 수 있게 한다.
 - Toast와 StatusToast는 저장, 동기화, 실패, 경고처럼 짧은 상태 알림 표면과 dismiss/action/live-region 연결만 담당하며 알림 발생 조건, 큐 순서, 자동 닫힘 타이머, 중복 제거, 재시도 정책, 권한, 서버 상태 판단을 직접 수행하지 않는다.
 - Toast와 StatusToast는 페이지 안 피드백이나 modal decision을 대체하지 않고, 오래 읽어야 하는 안내는 Callout 또는 소비 앱의 별도 흐름으로 남긴다.
 - Progress, Spinner, Skeleton은 작업 진행, 응답 대기, 콘텐츠 자리 예약 표면만 담당하며 로딩 조건, 진행률 계산, 완료/실패 전환, 데이터 fetch, 재시도, 권한, 서버 상태 판단을 직접 수행하지 않는다.

@@ -41,6 +41,7 @@ export { default as Section } from './components/Section.svelte';
 export { default as Select } from './components/Select.svelte';
 export { default as SegmentedControl } from './components/SegmentedControl.svelte';
 export { default as ShareDock } from './components/ShareDock.svelte';
+export { default as Sheet } from './components/Sheet.svelte';
 export { default as ShortcutHint } from './components/ShortcutHint.svelte';
 export { default as Skeleton } from './components/Skeleton.svelte';
 export { default as SkipLink } from './components/SkipLink.svelte';
@@ -75,6 +76,7 @@ export type { ZdpMenuItem } from './menu.ts';
 export type { ZdpPaginationItem } from './pagination.ts';
 export type { ZdpProgressSize, ZdpProgressTone, ZdpSkeletonVariant, ZdpSpinnerSize } from './progress.ts';
 export type { ZdpSegmentedControlItem, ZdpSegmentedControlSize } from './segmented.ts';
+export type { ZdpSheetPlacement, ZdpSheetSize } from './sheet.ts';
 export {
   isZdpBrowserReservedShortcut,
   isZdpTextEntryTarget,

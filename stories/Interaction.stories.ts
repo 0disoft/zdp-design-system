@@ -154,6 +154,26 @@ export const Probe: StoryObj<typeof InteractionProbe> = {
       await expect(canvas.getByText('Popover 닫힘')).toBeVisible();
     });
 
+    await step('sheet opens as modal edge surface and restores trigger focus', async () => {
+      const sheetTrigger = canvas.getByRole('button', { name: '설정 열기' });
+
+      sheetTrigger.focus();
+      await userEvent.click(sheetTrigger);
+      await expect(canvas.getByRole('dialog', { name: '화면 설정' })).toBeVisible();
+      await expect(canvas.getByText('Sheet 열림')).toBeVisible();
+
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(canvas.queryByRole('dialog', { name: '화면 설정' })).not.toBeInTheDocument());
+      await expect(sheetTrigger).toHaveFocus();
+      await expect(canvas.getByText('Sheet 닫힘')).toBeVisible();
+
+      await userEvent.click(sheetTrigger);
+      await expect(canvas.getByRole('dialog', { name: '화면 설정' })).toBeVisible();
+      await userEvent.click(canvas.getAllByRole('button', { name: '닫기' })[0]);
+      await waitFor(() => expect(canvas.queryByRole('dialog', { name: '화면 설정' })).not.toBeInTheDocument());
+      await expect(canvas.getByText('Sheet 닫힘')).toBeVisible();
+    });
+
     await step('term sheet opens and closes with Escape', async () => {
       await userEvent.click(canvas.getByRole('button', { name: '운영 복원력' }));
       await expect(canvas.getByRole('dialog', { name: '운영 복원력' })).toBeVisible();

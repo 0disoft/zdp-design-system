@@ -1161,6 +1161,44 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
           </section>
 
           <section class="preview-section">
+            <h3 class="preview-section__title" id="light-sheet-title">Sheet</h3>
+            <div class="dialog-demo">
+              <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">화면 설정</button>
+              <p>세부 설정은 가장자리에서 짧게 확인한다.</p>
+            </div>
+            <div class="zdp-sheet-layer" hidden>
+              <button class="zdp-sheet__backdrop" type="button" aria-label="닫기" tabindex="-1"></button>
+              <div
+                class="zdp-sheet zdp-sheet--right zdp-sheet--md"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="light-sheet-sample-title"
+                aria-describedby="light-sheet-sample-desc"
+                data-zdp-sheet-placement="right"
+                data-zdp-sheet-size="md"
+                data-zdp-sheet-surface="sheet"
+                tabindex="-1"
+              >
+                <header class="zdp-sheet__header">
+                  <div class="zdp-sheet__title">
+                    <h4 id="light-sheet-sample-title">화면 설정</h4>
+                  </div>
+                  <button class="zdp-sheet__close" type="button" aria-label="닫기">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </header>
+                <div class="zdp-sheet__body">
+                  <p id="light-sheet-sample-desc">표시 방식과 알림 범위를 확인합니다.</p>
+                </div>
+                <div class="zdp-sheet__footer">
+                  <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">닫기</button>
+                  <button class="zdp-button zdp-button--primary zdp-button--md" type="button">적용</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="preview-section">
             <h3 class="preview-section__title" id="light-share-title">Share</h3>
             <aside class="zdp-share-dock zdp-share-dock--inline" aria-label="공유">
               <div class="zdp-share-dock__list">
@@ -2047,6 +2085,44 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
                 <div class="zdp-dialog__footer">
                   <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">취소</button>
                   <button class="zdp-button zdp-button--danger zdp-button--md" type="button">삭제</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="preview-section">
+            <h3 class="preview-section__title" id="dark-sheet-title">Sheet</h3>
+            <div class="dialog-demo">
+              <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">필터 열기</button>
+              <p>하단 sheet는 좁은 화면에서도 같은 흐름을 유지한다.</p>
+            </div>
+            <div class="zdp-sheet-layer" hidden>
+              <button class="zdp-sheet__backdrop" type="button" aria-label="닫기" tabindex="-1"></button>
+              <div
+                class="zdp-sheet zdp-sheet--bottom zdp-sheet--lg"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="dark-sheet-sample-title"
+                aria-describedby="dark-sheet-sample-desc"
+                data-zdp-sheet-placement="bottom"
+                data-zdp-sheet-size="lg"
+                data-zdp-sheet-surface="sheet"
+                tabindex="-1"
+              >
+                <header class="zdp-sheet__header">
+                  <div class="zdp-sheet__title">
+                    <h4 id="dark-sheet-sample-title">필터</h4>
+                  </div>
+                  <button class="zdp-sheet__close" type="button" aria-label="닫기">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </header>
+                <div class="zdp-sheet__body">
+                  <p id="dark-sheet-sample-desc">상태와 기간을 확인합니다.</p>
+                </div>
+                <div class="zdp-sheet__footer">
+                  <button class="zdp-button zdp-button--secondary zdp-button--md" type="button">닫기</button>
+                  <button class="zdp-button zdp-button--primary zdp-button--md" type="button">적용</button>
                 </div>
               </div>
             </div>

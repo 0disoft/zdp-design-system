@@ -71,6 +71,7 @@ const sectionPath = join(root, 'src', 'lib', 'components', 'Section.svelte');
 const selectPath = join(root, 'src', 'lib', 'components', 'Select.svelte');
 const segmentedControlPath = join(root, 'src', 'lib', 'components', 'SegmentedControl.svelte');
 const shareDockPath = join(root, 'src', 'lib', 'components', 'ShareDock.svelte');
+const sheetPath = join(root, 'src', 'lib', 'components', 'Sheet.svelte');
 const shortcutHintPath = join(root, 'src', 'lib', 'components', 'ShortcutHint.svelte');
 const skeletonPath = join(root, 'src', 'lib', 'components', 'Skeleton.svelte');
 const skipLinkPath = join(root, 'src', 'lib', 'components', 'SkipLink.svelte');
@@ -158,6 +159,7 @@ const [
   select,
   segmentedControl,
   shareDock,
+  sheet,
   shortcutHint,
   shortcuts,
   skeleton,
@@ -244,6 +246,7 @@ const [
     readFile(selectPath, 'utf8'),
     readFile(segmentedControlPath, 'utf8'),
     readFile(shareDockPath, 'utf8'),
+    readFile(sheetPath, 'utf8'),
     readFile(shortcutHintPath, 'utf8'),
     readFile(shortcutsPath, 'utf8'),
     readFile(skeletonPath, 'utf8'),
@@ -508,6 +511,10 @@ for (const [storyName, source, requiredTexts] of [
       "const popoverTrigger = canvas.getByRole('button', { name: '필터 열기' })",
       "await expect(popoverTrigger).toHaveFocus()",
       "const outsideButton = canvas.getByRole('button', { name: '바깥 액션' })",
+      'sheet opens as modal edge surface and restores trigger focus',
+      "const sheetTrigger = canvas.getByRole('button', { name: '설정 열기' })",
+      "await expect(canvas.getByRole('dialog', { name: '화면 설정' })).toBeVisible()",
+      "await expect(sheetTrigger).toHaveFocus()",
       'combobox supports listbox navigation, disabled skip, selection, and Escape close',
       "const comboboxInput = canvas.getByRole('combobox', { name: '빠른 이동' })",
       "await userEvent.keyboard('{ArrowDown}')",
@@ -2947,6 +2954,51 @@ assertNoDecorativeEffects(failures, 'Dialog component', dialog);
 assertNoOverRoundedUsage(failures, 'Dialog component', dialog);
 
 for (const requiredText of [
+  "import type { ZdpSheetPlacement, ZdpSheetSize }",
+  'export let open = false',
+  'export let id: string | null = null',
+  'export let labelledBy: string',
+  "export let placement: ZdpSheetPlacement = 'right'",
+  "export let size: ZdpSheetSize = 'md'",
+  'export let closeOnEscape = true',
+  'export let closeOnBackdrop = true',
+  'onClose: (() => void) | null = null',
+  'createZdpModalLayer',
+  'modalLayer.setActive(open, layerElement)',
+  'handleSheetOpened',
+  'restorePreviousFocus',
+  'handleBackdropClick',
+  'getFocusableElements',
+  'class="zdp-sheet__backdrop"',
+  'class={`zdp-sheet zdp-sheet--${placement} zdp-sheet--${size}`}',
+  'role="dialog"',
+  'aria-modal="true"',
+  'aria-labelledby={labelledBy}',
+  'aria-describedby={describedBy ?? undefined}',
+  'data-zdp-sheet-placement={placement}',
+  'data-zdp-sheet-size={size}',
+  'data-zdp-sheet-surface="sheet"',
+  'onkeydown={handleKeydown}',
+  'class="zdp-sheet__close"',
+  '.zdp-sheet__backdrop',
+  '.zdp-sheet--right',
+  '.zdp-sheet--left',
+  '.zdp-sheet--bottom',
+  '.zdp-sheet:focus-visible',
+  '.zdp-sheet__close:focus-visible',
+  '-webkit-user-select: none',
+  'user-select: none',
+  '@media (max-width: 720px)'
+]) {
+  if (!sheet.includes(requiredText)) {
+    failures.push(`Sheet component is missing ${requiredText}.`);
+  }
+}
+
+assertNoDecorativeEffects(failures, 'Sheet component', sheet);
+assertNoOverRoundedUsage(failures, 'Sheet component', sheet);
+
+for (const requiredText of [
   "import type { ZdpTermSheetPlacement, ZdpTermSheetTerm }",
   'export let open = false',
   "export let id = 'zdp-term-sheet'",
@@ -3085,6 +3137,7 @@ for (const [surfaceLabel, source] of [
   ['Radio component', radio],
   ['SegmentedControl component items', segmentedControl],
   ['ShareDock component actions', shareDock],
+  ['Sheet component controls', sheet],
   ['ShortcutHint component', shortcutHint],
   ['Skeleton component', skeleton],
   ['SortHeader component', sortHeader],
