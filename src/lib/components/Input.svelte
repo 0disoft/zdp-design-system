@@ -1,12 +1,14 @@
 <script lang="ts">
+  import type { HTMLInputAttributes } from 'svelte/elements';
+
   type DescribedBy = string | readonly string[] | null;
 
   export let id: string | null = null;
   export let name: string | null = null;
-  export let type = 'text';
+  export let type: HTMLInputAttributes['type'] = 'text';
   export let value = '';
   export let placeholder: string | null = null;
-  export let autocomplete: string | null = null;
+  export let autocomplete: HTMLInputAttributes['autocomplete'] | null = null;
   export let describedBy: DescribedBy = null;
   export let errorMessageId: string | null = null;
   export let invalid = false;
@@ -22,13 +24,17 @@
   }
 
   function normalizeIdRefs(value: DescribedBy): string | null {
-    if (Array.isArray(value)) {
-      const normalized = value.map((entry) => entry.trim()).filter(Boolean);
-      return normalized.length > 0 ? normalized.join(' ') : null;
+    if (value === null) {
+      return null;
     }
 
-    const normalized = value?.trim();
-    return normalized ? normalized : null;
+    if (typeof value === 'string') {
+      const normalized = value.trim();
+      return normalized ? normalized : null;
+    }
+
+    const normalized = value.map((entry) => entry.trim()).filter(Boolean);
+    return normalized.length > 0 ? normalized.join(' ') : null;
   }
 </script>
 

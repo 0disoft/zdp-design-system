@@ -1836,11 +1836,11 @@ for (const requiredText of [
   'type DescribedBy = string | readonly string[] | null',
   'id: string | null = null',
   'name: string | null = null',
-  "type = 'search'",
+  "type: HTMLInputAttributes['type'] = 'search'",
   "label: string | null = '검색'",
   'labelVisible = false',
   "placeholder: string | null = '검색어 입력'",
-  "autocomplete: string | null = 'off'",
+  "autocomplete: HTMLInputAttributes['autocomplete'] | null = 'off'",
   'describedBy: DescribedBy = null',
   'errorMessageId: string | null = null',
   'invalid = false',
@@ -1910,7 +1910,7 @@ for (const requiredText of [
   'labelVisible = false',
   'ariaLabel: string | null = null',
   "placeholder: string | null = '검색어 입력'",
-  "autocomplete: string | null = 'off'",
+  "autocomplete: HTMLInputAttributes['autocomplete'] | null = 'off'",
   'describedBy: DescribedBy = null',
   'errorMessageId: string | null = null',
   'invalid = false',
@@ -2555,7 +2555,7 @@ assertNoDecorativeEffects(failures, 'EmptyState component', emptyState);
 assertNoOverRoundedUsage(failures, 'EmptyState component', emptyState);
 
 for (const requiredText of [
-  'export interface BreadcrumbItem',
+  'interface BreadcrumbItem',
   'readonly href?: string',
   'readonly current?: boolean',
   '<nav class="zdp-breadcrumb" aria-label={ariaLabel}>',
@@ -2891,7 +2891,7 @@ for (const requiredText of [
 }
 
 for (const requiredText of [
-  'export interface TabItem',
+  'interface TabItem',
   'export let idPrefix: string | null = null',
   'fallbackIdPrefix',
   'resolvedIdPrefix',

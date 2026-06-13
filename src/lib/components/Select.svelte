@@ -18,13 +18,17 @@
   }
 
   function normalizeIdRefs(value: DescribedBy): string | null {
-    if (Array.isArray(value)) {
-      const normalized = value.map((entry) => entry.trim()).filter(Boolean);
-      return normalized.length > 0 ? normalized.join(' ') : null;
+    if (value === null) {
+      return null;
     }
 
-    const normalized = value?.trim();
-    return normalized ? normalized : null;
+    if (typeof value === 'string') {
+      const normalized = value.trim();
+      return normalized ? normalized : null;
+    }
+
+    const normalized = value.map((entry) => entry.trim()).filter(Boolean);
+    return normalized.length > 0 ? normalized.join(' ') : null;
   }
 </script>
 

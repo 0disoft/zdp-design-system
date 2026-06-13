@@ -1,6 +1,6 @@
 <script lang="ts">
   import Toast from './Toast.svelte';
-  import type { ZdpStatusToastItem } from '../toast.ts';
+  import type { ZdpStatusToastItem } from '../toast';
 
   export let items: readonly ZdpStatusToastItem[] = [];
   export let placement:

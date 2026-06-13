@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ZdpAvatarSize, ZdpAvatarTone } from '../identity.ts';
+  import type { ZdpAvatarSize, ZdpAvatarTone } from '../identity';
 
   export let label: string | null = null;
   export let initials: string | null = null;

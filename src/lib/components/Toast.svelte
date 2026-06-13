@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ZdpToastTone } from '../toast.ts';
+  import type { ZdpToastTone } from '../toast';
 
   export let tone: ZdpToastTone = 'neutral';
   export let labelledBy: string | null = null;

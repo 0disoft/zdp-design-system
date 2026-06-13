@@ -62,35 +62,35 @@ export { default as Tooltip } from './components/Tooltip.svelte';
 export { default as Toast } from './components/Toast.svelte';
 export { default as Toolbar } from './components/Toolbar.svelte';
 export { default as VisuallyHidden } from './components/VisuallyHidden.svelte';
-export type { ZdpComboboxOption, ZdpComboboxSize } from './combobox.ts';
-export type { ZdpCommandFieldSize } from './command.ts';
-export type { ZdpCodeBlockSize, ZdpCodeBlockTone } from './code.ts';
-export type { ZdpAccordionItem, ZdpAccordionMode, ZdpDisclosureHeadingLevel } from './disclosure.ts';
+export type { ZdpComboboxOption, ZdpComboboxSize } from './combobox';
+export type { ZdpCommandFieldSize } from './command';
+export type { ZdpCodeBlockSize, ZdpCodeBlockTone } from './code';
+export type { ZdpAccordionItem, ZdpAccordionMode, ZdpDisclosureHeadingLevel } from './disclosure';
 export type {
   ZdpAvatarSize,
   ZdpAvatarTone,
   ZdpIdentityChipAriaCurrent,
   ZdpIdentityChipSize
-} from './identity.ts';
-export type { ZdpMenuItem } from './menu.ts';
-export type { ZdpPaginationItem } from './pagination.ts';
-export type { ZdpProgressSize, ZdpProgressTone, ZdpSkeletonVariant, ZdpSpinnerSize } from './progress.ts';
-export type { ZdpSegmentedControlItem, ZdpSegmentedControlSize } from './segmented.ts';
-export type { ZdpSheetPlacement, ZdpSheetSize } from './sheet.ts';
+} from './identity';
+export type { ZdpMenuItem } from './menu';
+export type { ZdpPaginationItem } from './pagination';
+export type { ZdpProgressSize, ZdpProgressTone, ZdpSkeletonVariant, ZdpSpinnerSize } from './progress';
+export type { ZdpSegmentedControlItem, ZdpSegmentedControlSize } from './segmented';
+export type { ZdpSheetPlacement, ZdpSheetSize } from './sheet';
 export {
   isZdpBrowserReservedShortcut,
   isZdpTextEntryTarget,
   shouldZdpIgnoreShortcutEvent,
   zdpShortcutRecommendations,
   zdpShortcutReservedExamples
-} from './shortcuts.ts';
-export type { ZdpShortcutGuardOptions, ZdpShortcutIntent, ZdpShortcutRecommendation, ZdpShortcutRisk } from './shortcuts.ts';
-export type { ZdpStatusToastItem } from './toast.ts';
-export type { ZdpToastTone } from './toast.ts';
-export type { ZdpThemeMode, ZdpThemeToggleSize } from './theme.ts';
-export type { ZdpSortDirection, ZdpTableDensity, ZdpTableToolbarDensityItem } from './table-tools.ts';
-export type { ZdpTermRelatedTerm, ZdpTermSheetPlacement, ZdpTermSheetTerm } from './term.ts';
-export { zdpShareIcons } from './share.ts';
-export type { ZdpShareDockItem, ZdpShareIconName, ZdpShareIconShape } from './share.ts';
-export { zdpTokenNames } from './tokens.ts';
-export type { ZdpTokenName } from './tokens.ts';
+} from './shortcuts';
+export type { ZdpShortcutGuardOptions, ZdpShortcutIntent, ZdpShortcutRecommendation, ZdpShortcutRisk } from './shortcuts';
+export type { ZdpStatusToastItem } from './toast';
+export type { ZdpToastTone } from './toast';
+export type { ZdpThemeMode, ZdpThemeToggleSize } from './theme';
+export type { ZdpSortDirection, ZdpTableDensity, ZdpTableToolbarDensityItem } from './table-tools';
+export type { ZdpTermRelatedTerm, ZdpTermSheetPlacement, ZdpTermSheetTerm } from './term';
+export { zdpShareIcons } from './share';
+export type { ZdpShareDockItem, ZdpShareIconName, ZdpShareIconShape } from './share';
+export { zdpTokenNames } from './tokens';
+export type { ZdpTokenName } from './tokens';

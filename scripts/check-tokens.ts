@@ -58,8 +58,8 @@ const publicTokenNames = collectPublicTokenNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
 
-if (packageJson.version !== '0.42.0') {
-  failures.push('package.json version must be 0.42.0 for the Storybook accessibility contract.');
+if (packageJson.version !== '0.43.1') {
+  failures.push('package.json version must be 0.43.1 for the current design-system package contract.');
 }
 
 if (tokenDocument.version !== '0.6.10') {

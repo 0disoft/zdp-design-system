@@ -1,7 +1,7 @@
 <script lang="ts">
   import SegmentedControl from './SegmentedControl.svelte';
-  import type { ZdpSegmentedControlItem } from '../segmented.ts';
-  import type { ZdpTableDensity, ZdpTableToolbarDensityItem } from '../table-tools.ts';
+  import type { ZdpSegmentedControlItem } from '../segmented';
+  import type { ZdpTableDensity, ZdpTableToolbarDensityItem } from '../table-tools';
 
   const defaultDensityItems: readonly ZdpTableToolbarDensityItem[] = [
     { id: 'default', label: '기본' },

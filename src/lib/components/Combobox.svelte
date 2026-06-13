@@ -3,7 +3,8 @@
 </script>
 
 <script lang="ts">
-  import type { ZdpComboboxOption, ZdpComboboxSize } from '../combobox.ts';
+  import type { HTMLInputAttributes } from 'svelte/elements';
+  import type { ZdpComboboxOption, ZdpComboboxSize } from '../combobox';
 
   type DescribedBy = string | readonly string[] | null;
 
@@ -16,7 +17,7 @@
   export let labelVisible = false;
   export let ariaLabel: string | null = null;
   export let placeholder: string | null = '검색어 입력';
-  export let autocomplete: string | null = 'off';
+  export let autocomplete: HTMLInputAttributes['autocomplete'] | null = 'off';
   export let describedBy: DescribedBy = null;
   export let errorMessageId: string | null = null;
   export let invalid = false;
@@ -190,13 +191,17 @@
   }
 
   function normalizeIdRefs(value: DescribedBy): string | null {
-    if (Array.isArray(value)) {
-      const normalized = value.map((entry) => entry.trim()).filter(Boolean);
-      return normalized.length > 0 ? normalized.join(' ') : null;
+    if (value === null) {
+      return null;
     }
 
-    const normalized = value?.trim();
-    return normalized ? normalized : null;
+    if (typeof value === 'string') {
+      const normalized = value.trim();
+      return normalized ? normalized : null;
+    }
+
+    const normalized = value.map((entry) => entry.trim()).filter(Boolean);
+    return normalized.length > 0 ? normalized.join(' ') : null;
   }
 
   function toDomId(id: string): string {

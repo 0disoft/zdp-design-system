@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ZdpSkeletonVariant } from '../progress.ts';
+  import type { ZdpSkeletonVariant } from '../progress';
 
   export let variant: ZdpSkeletonVariant = 'block';
   export let lines = 1;

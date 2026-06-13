@@ -4,7 +4,7 @@
     ZdpAccordionItem,
     ZdpAccordionMode,
     ZdpDisclosureHeadingLevel
-  } from '../disclosure.ts';
+  } from '../disclosure';
 
   export let items: readonly ZdpAccordionItem[] = [];
   export let mode: ZdpAccordionMode = 'multiple';

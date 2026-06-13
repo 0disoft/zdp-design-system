@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ZdpSortDirection } from '../table-tools.ts';
+  import type { ZdpSortDirection } from '../table-tools';
 
   export let label = '정렬';
   export let direction: ZdpSortDirection = 'none';
@@ -10,7 +10,7 @@
     | null = null;
 
   $: normalizedDirection = normalizeDirection(direction);
-  $: nextDirection = normalizedDirection === 'ascending' ? 'descending' : 'ascending';
+  $: nextDirection = getNextDirection(normalizedDirection);
   $: directionLabel =
     normalizedDirection === 'ascending'
       ? '오름차순'
@@ -33,6 +33,10 @@
     }
 
     return 'none';
+  }
+
+  function getNextDirection(value: ZdpSortDirection): Exclude<ZdpSortDirection, 'none'> {
+    return value === 'ascending' ? 'descending' : 'ascending';
   }
 </script>
 

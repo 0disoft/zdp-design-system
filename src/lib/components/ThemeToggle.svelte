@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ZdpThemeMode, ZdpThemeToggleSize } from '../theme.ts';
+  import type { ZdpThemeMode, ZdpThemeToggleSize } from '../theme';
 
   export let theme: ZdpThemeMode = 'light';
   export let size: ZdpThemeToggleSize = 'md';

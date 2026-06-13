@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onDestroy, tick } from 'svelte';
-  import { isZdpFocusableElement, zdpFocusableSelector } from '../focusable.ts';
-  import { createZdpModalLayer } from '../modal-layer.ts';
-  import type { ZdpTermSheetPlacement, ZdpTermSheetTerm } from '../term.ts';
+  import { isZdpFocusableElement, zdpFocusableSelector } from '../focusable';
+  import { createZdpModalLayer } from '../modal-layer';
+  import type { ZdpTermSheetPlacement, ZdpTermSheetTerm } from '../term';
 
   export let open = false;
   export let id = 'zdp-term-sheet';

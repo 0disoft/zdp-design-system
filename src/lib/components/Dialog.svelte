@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onDestroy, tick } from 'svelte';
-  import { isZdpFocusableElement, zdpFocusableSelector } from '../focusable.ts';
-  import { createZdpModalLayer } from '../modal-layer.ts';
+  import { isZdpFocusableElement, zdpFocusableSelector } from '../focusable';
+  import { createZdpModalLayer } from '../modal-layer';
 
   export let open = false;
   export let id: string | null = null;

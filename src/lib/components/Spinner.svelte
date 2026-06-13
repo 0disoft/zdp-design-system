@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ZdpProgressTone, ZdpSpinnerSize } from '../progress.ts';
+  import type { ZdpProgressTone, ZdpSpinnerSize } from '../progress';
 
   export let size: ZdpSpinnerSize = 'md';
   export let tone: ZdpProgressTone = 'primary';

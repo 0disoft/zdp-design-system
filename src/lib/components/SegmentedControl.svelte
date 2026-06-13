@@ -3,7 +3,7 @@
 </script>
 
 <script lang="ts">
-  import type { ZdpSegmentedControlItem, ZdpSegmentedControlSize } from '../segmented.ts';
+  import type { ZdpSegmentedControlItem, ZdpSegmentedControlSize } from '../segmented';
 
   export let items: readonly ZdpSegmentedControlItem[] = [];
   export let selectedId: string | null = null;

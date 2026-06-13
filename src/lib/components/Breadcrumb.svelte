@@ -1,5 +1,5 @@
 <script lang="ts">
-  export interface BreadcrumbItem {
+  interface BreadcrumbItem {
     readonly label: string;
     readonly href?: string;
     readonly current?: boolean;

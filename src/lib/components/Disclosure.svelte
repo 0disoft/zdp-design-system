@@ -3,7 +3,7 @@
 </script>
 
 <script lang="ts">
-  import type { ZdpDisclosureHeadingLevel } from '../disclosure.ts';
+  import type { ZdpDisclosureHeadingLevel } from '../disclosure';
 
   export let open = false;
   export let disabled = false;

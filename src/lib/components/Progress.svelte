@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ZdpProgressSize, ZdpProgressTone } from '../progress.ts';
+  import type { ZdpProgressSize, ZdpProgressTone } from '../progress';
 
   export let value: number | null = null;
   export let min = 0;

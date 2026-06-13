@@ -4,7 +4,7 @@
 
 <script lang="ts">
   import { tick } from 'svelte';
-  import type { ZdpMenuItem } from '../menu.ts';
+  import type { ZdpMenuItem } from '../menu';
 
   export let items: readonly ZdpMenuItem[] = [];
   export let open = false;
