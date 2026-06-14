@@ -18,7 +18,7 @@
 | Primitive | Current Base | Risk | Current Coverage | Do Next |
 | --- | --- | --- | --- | --- |
 | Select | Native `select` | Low | label/id/error/describedBy, invalid, disabled, required, focus-visible | Custom select나 combobox 요구 전까지 유지 |
-| CommandField | Native `input` | Low | label, shortcut hint, aria-controls/expanded/activedescendant passthrough | result list, dispatcher, command palette는 별도 primitive로 분리 |
+| CommandField | Native `input` | Low | label, shortcut hint, aria-keyshortcuts/autocomplete/controls/expanded/activedescendant passthrough, input keydown callback | result list, dispatcher, command palette는 별도 primitive로 분리 |
 | Combobox | ZDP custom combobox/listbox | Medium | input combobox role, listbox/option roles, ArrowUp/ArrowDown, Enter select, Escape close, disabled skip, hidden value, InteractionProbe play coverage | grouped options, virtualized list, async option loading, multi-select, portal/collision 요구 시 headless spike |
 | Tooltip | CSS hover/focus label | Low | role tooltip, slot-provided `describedBy`, pointer-events none | interactive content 금지 유지 |
 | Dialog | ZDP custom modal | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, modal layer | nested modal, portal, inert sibling 요구가 생기면 headless spike |
@@ -39,7 +39,7 @@ custom trigger, searchable option, grouped option, virtualized list, async optio
 
 `CommandField`는 input frame과 shortcut hint만 맡는다.
 검색 결과, listbox, command execution, 전역 keydown dispatcher를 직접 만들지 않는다.
-`aria-controls`, `aria-expanded`, `aria-activedescendant`는 소비 앱이 result surface를 붙일 때만 전달한다.
+`aria-keyshortcuts`, `aria-autocomplete`, `aria-controls`, `aria-expanded`, `aria-activedescendant`, `onkeydown`은 소비 앱이 실제 shortcut focus, result surface, keyboard behavior를 붙일 때만 전달한다.
 
 ### Combobox
 

@@ -105,13 +105,13 @@ import 'zdp-design-system/expressive-fonts.css';
 - 단축키 표기는 `ariaKeyShortcuts`와 실제 keydown 처리를 분리한다. Chrome과 브라우저가 기본 동작으로 가져가는 조합은 제품 단축키로 덮어쓰지 않는다. 소비 앱의 전역 단축키 dispatcher는 `shouldZdpIgnoreShortcutEvent`, `isZdpTextEntryTarget`, `isZdpBrowserReservedShortcut`, `zdpShortcutRecommendations` 같은 shortcut policy helper로 입력창, IME 조합, 브라우저 예약 조합을 먼저 걸러낸다.
 - ConfirmAction은 중요한 액션 앞의 확인 흐름만 제공하고, 실제 삭제나 권한 검사는 소비 앱이 한다.
 - Avatar와 IdentityChip은 사람, 팀, 계정의 짧은 식별 표면이다.
-- CommandField는 검색 입력 primitive이며 실제 검색 로직이나 command palette 결과는 소비 앱이 소유한다.
+- CommandField는 검색 입력 primitive이며 shortcut keycap, `ariaKeyShortcuts`, `ariaAutocomplete`, result id 연결, 입력 keydown callback은 제공하되 실제 검색 로직, 결과 목록, command palette 실행은 소비 앱이 소유한다.
 - Combobox는 검색 가능한 단일 선택 입력의 frame, listbox, keyboard navigation, disabled option skip, hidden submitted value만 제공한다. 실제 필터링, async search, command 실행, 권한 판단은 소비 앱이 계속 소유한다.
 - InlineCode와 CodeBlock은 문서, 보안, 아키텍처 화면의 코드 표면이다.
 - Icon은 장식용 glyph 기본값을 갖고, 의미 있는 아이콘은 소비 컴포넌트가 접근성 이름을 제공한다.
 - Link는 일반 텍스트 링크이며 버튼처럼 보이는 destructive action으로 쓰지 않는다.
 - ShareDock은 공유 도크와 아이콘 shape를 제공하고 URL 조립과 플랫폼 정책은 소비 앱이 정한다.
-- Kbd와 ShortcutHint는 입력 힌트를 표시할 뿐, 단축키 실행을 등록하지 않는다. 화면에 보이는 힌트는 `/`, `?`, `Esc`, `Enter`, `ArrowUp/ArrowDown`, `Ctrl/⌘+Enter`처럼 자주 쓰고 맥락이 분명한 키만 남긴다.
+- Kbd와 ShortcutHint는 입력 힌트를 표시할 뿐, 단축키 실행을 등록하지 않는다. 화면에 보이는 힌트는 `/`, `?`, `Esc`, `Enter`, `ArrowUp/ArrowDown`, `Ctrl/⌘+Enter`처럼 자주 쓰고 맥락이 분명한 키만 남긴다. `ariaKeyShortcuts`는 실제 단축키가 소비 앱에서 구현된 control이나 CommandField에만 붙인다.
 - ThemeToggle은 light/dark 전환 버튼의 pressed 상태와 glyph만 제공하고 초기 테마, 저장소, 시스템 선호도 판단은 소비 앱이 정한다.
 - Tooltip은 짧은 보조 설명만 맡고, 긴 안내나 상태 설명은 Popover, Disclosure, 문서 본문으로 보낸다.
 - Accordion과 Disclosure는 접힌 안내와 점진적 정보 공개를 담당한다.

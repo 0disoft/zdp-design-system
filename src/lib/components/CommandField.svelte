@@ -4,6 +4,7 @@
   import ShortcutHint from './ShortcutHint.svelte';
 
   type DescribedBy = string | readonly string[] | null;
+  type AriaAutocomplete = 'none' | 'inline' | 'list' | 'both';
 
   export let id: string | null = null;
   export let name: string | null = null;
@@ -22,6 +23,8 @@
   export let required = false;
   export let size: ZdpCommandFieldSize = 'md';
   export let shortcutKeys: readonly string[] = ['/'];
+  export let ariaKeyShortcuts: string | null = null;
+  export let ariaAutocomplete: AriaAutocomplete | null = null;
   export let ariaControls: string | null = null;
   export let ariaExpanded: boolean | null = null;
   export let ariaActivedescendant: string | null = null;
@@ -30,6 +33,7 @@
   export let oninput: ((event: Event) => void) | null = null;
   export let onfocus: ((event: FocusEvent) => void) | null = null;
   export let onblur: ((event: FocusEvent) => void) | null = null;
+  export let onkeydown: ((event: KeyboardEvent) => void) | null = null;
 
   $: ariaDescribedBy = normalizeIdRefs(describedBy);
   $: resolvedErrorMessageId = invalid && errorMessageId ? errorMessageId : null;
@@ -79,6 +83,8 @@
       aria-describedby={ariaDescribedBy ?? undefined}
       aria-errormessage={resolvedErrorMessageId ?? undefined}
       aria-invalid={invalid ? 'true' : undefined}
+      aria-keyshortcuts={ariaKeyShortcuts ?? undefined}
+      aria-autocomplete={ariaAutocomplete ?? undefined}
       aria-controls={ariaControls ?? undefined}
       aria-expanded={ariaExpanded ?? undefined}
       aria-activedescendant={ariaActivedescendant ?? undefined}
@@ -90,6 +96,7 @@
       oninput={handleInput}
       onfocus={onfocus ?? undefined}
       onblur={onblur ?? undefined}
+      onkeydown={onkeydown ?? undefined}
     />
     {#if hasShortcut}
       <span class="zdp-command-field__shortcut" aria-hidden="true">

@@ -2,6 +2,7 @@
   import Accordion from '../src/lib/components/Accordion.svelte';
   import Button from '../src/lib/components/Button.svelte';
   import Combobox from '../src/lib/components/Combobox.svelte';
+  import CommandField from '../src/lib/components/CommandField.svelte';
   import ConfirmAction from '../src/lib/components/ConfirmAction.svelte';
   import Disclosure from '../src/lib/components/Disclosure.svelte';
   import Dialog from '../src/lib/components/Dialog.svelte';
@@ -25,6 +26,8 @@
   let disclosureState = '닫힘';
   let accordionState = '선택 범위';
   let segmentedState = '목록';
+  let commandQuery = '';
+  let commandKeyState = '키 없음';
   let comboboxValue = '';
   let comboboxQuery = '';
   let comboboxState = '선택 없음';
@@ -162,6 +165,43 @@
             onChange={(_, item) => (segmentedState = item.label)}
           />
           <p id="interaction-probe-segmented-state">보기 {segmentedState}</p>
+        </Stack>
+      </section>
+
+      <section aria-labelledby="interaction-probe-command-title">
+        <Stack gap="md">
+          <h2 id="interaction-probe-command-title">Command Field</h2>
+          <CommandField
+            id="interaction-probe-command"
+            name="interaction-probe-command"
+            label="빠른 이동"
+            labelVisible
+            placeholder="문서와 설정 검색"
+            value={commandQuery}
+            describedBy={['interaction-probe-command-help', 'interaction-probe-command-state']}
+            ariaKeyShortcuts="/"
+            ariaAutocomplete="list"
+            ariaControls={commandQuery ? 'interaction-probe-command-results' : null}
+            ariaExpanded={commandQuery ? true : false}
+            ariaActivedescendant={commandQuery ? 'interaction-probe-command-result-settings' : null}
+            oninput={(event) => (commandQuery = (event.currentTarget as HTMLInputElement).value)}
+            onkeydown={(event) => {
+              if (event.key === 'Enter' || event.key === 'Escape') {
+                commandKeyState = `키 ${event.key}`;
+              }
+            }}
+          />
+          <p id="interaction-probe-command-help">결과 표면과 이동 판단은 소비 화면이 연결합니다.</p>
+          {#if commandQuery}
+            <div id="interaction-probe-command-results" class="command-results" role="listbox" aria-label="빠른 이동 결과">
+              <div id="interaction-probe-command-result-settings" role="option" aria-selected="true">
+                설정
+              </div>
+            </div>
+          {/if}
+          <p id="interaction-probe-command-state">
+            Command {commandQuery || '비어 있음'} · {commandKeyState}
+          </p>
         </Stack>
       </section>
 
@@ -331,6 +371,13 @@
   .interaction-probe h3 {
     font-size: var(--zdp-type-body-size);
     line-height: var(--zdp-type-body-line-height);
+  }
+
+  .command-results {
+    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+    border-radius: var(--zdp-radius-md);
+    color: var(--zdp-color-ink-normal);
+    padding: var(--zdp-space-2);
   }
 
   @media (max-width: 640px) {

@@ -84,7 +84,7 @@
 - Grid와 `.zdp-grid`는 색상, 그림자, 그라데이션, hover 상태를 만들지 않고 `grid-template-columns`, `gap`, `min-width`, responsive collapse 계약만 유지한다.
 - Toolbar는 가까운 화면 도구와 액션 묶음의 wrapping, main/action 배치만 담당하며 저장, 삭제, 필터, 권한 판단을 직접 수행하지 않는다.
 - Toolbar와 `.zdp-toolbar`는 색상, 그림자, 그라데이션, hover 상태를 만들지 않고 `flex-wrap`, `gap`, `justify-content`, action wrapping 계약만 유지한다.
-- CommandField는 검색, 빠른 이동, 명령 팔레트 진입의 label, frame, focus-within, shortcut keycap, help/error id 연결만 담당하며 검색 인덱스, 결과 정렬, command palette, 라우팅, 권한 판단을 직접 수행하지 않는다.
+- CommandField는 검색, 빠른 이동, 명령 팔레트 진입의 label, frame, focus-within, shortcut keycap, help/error id, `ariaKeyShortcuts`, `ariaAutocomplete`, result id 연결, 입력 keydown callback만 담당하며 검색 인덱스, 결과 정렬, command palette, 라우팅, 권한 판단을 직접 수행하지 않는다.
 - CommandField와 `.zdp-command-field`는 그림자, 그라데이션, hover 장식을 만들지 않고 입력 focus와 `/` 같은 단축키 표시를 같은 테두리/키캡 규칙으로 유지한다.
 - CommandField는 결과 목록, keyboard dispatcher, command 실행 상태를 직접 만들지 않는다.
 - Combobox는 검색 가능한 단일 선택의 label, input frame, listbox, active option, disabled option skip, hidden submitted value만 담당하며 실제 필터링, async search, command 실행, 권한 판단은 소비 앱이 계속 소유한다.
@@ -110,7 +110,7 @@
 - Toast와 StatusToast는 페이지 안 피드백이나 modal decision을 대체하지 않고, 오래 읽어야 하는 안내는 Callout 또는 소비 앱의 별도 흐름으로 남긴다.
 - Progress, Spinner, Skeleton은 작업 진행, 응답 대기, 콘텐츠 자리 예약 표면만 담당하며 로딩 조건, 진행률 계산, 완료/실패 전환, 데이터 fetch, 재시도, 권한, 서버 상태 판단을 직접 수행하지 않는다.
 - Skeleton은 최종 레이아웃 크기를 예약하는 용도로 쓰고, 실제 텍스트 의미나 빈 상태 판단은 EmptyState 또는 소비 앱의 상태 흐름에 남긴다.
-- `ariaKeyShortcuts`와 `aria-keyshortcuts`는 실제 단축키가 소비 앱에서 구현된 경우에만 사용한다. 입력창 focus 중 `/`를 가로채는 예외 처리와 브라우저/페이지 단축키 충돌 판단은 소비 앱이 소유한다.
+- `ariaKeyShortcuts`와 `aria-keyshortcuts`는 실제 단축키가 소비 앱에서 구현된 control이나 CommandField에만 사용한다. 입력창 focus 중 `/`를 가로채는 예외 처리와 브라우저/페이지 단축키 충돌 판단은 소비 앱이 소유한다.
 - 소비 앱이 전역 단축키 dispatcher를 만들 때는 shortcut policy helper의 `shouldZdpIgnoreShortcutEvent`를 먼저 통과시킨다. `input, textarea, select, contenteditable`, `role="textbox"`, `role="searchbox"` 안에서는 전역 단축키를 꺼두고, `event.isComposing` 또는 `keyCode === 229`인 IME 조합 입력도 무시한다.
 - `Ctrl+K`, `Ctrl+S`처럼 Chrome과 브라우저가 기본 동작으로 가져가는 조합은 소비 앱에서 실제로 가로채고 검증한 경우가 아니면 Storybook, preview, README 예시나 UI 힌트로 보여주지 않는다. 기본 권장 세트는 `zdpShortcutRecommendations`에 맞춰 검색, 도움말, 닫기, 선택, 목록 이동, 제출, 새 항목, 편집, 필터, 2단 이동처럼 되돌리기 쉽고 화면 맥락이 분명한 액션으로 제한한다.
 - Icon은 glyph 크기, inline-flex 중앙정렬, svg sizing만 담당하며 라우팅, 저장, 삭제, 상태 의미, 권한 판단을 직접 수행하지 않는다.

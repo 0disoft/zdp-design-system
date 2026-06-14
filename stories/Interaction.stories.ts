@@ -64,6 +64,36 @@ export const Probe: StoryObj<typeof InteractionProbe> = {
       await expect(canvas.getByText('보기 요약')).toBeVisible();
     });
 
+    await step('command field exposes shortcut and consumer-owned result linkage', async () => {
+      const commandField = canvas.getByRole('searchbox', { name: '빠른 이동' });
+
+      await expect(commandField).toHaveAttribute('aria-keyshortcuts', '/');
+      await expect(commandField).toHaveAttribute('aria-autocomplete', 'list');
+      await expect(commandField).toHaveAttribute(
+        'aria-describedby',
+        'interaction-probe-command-help interaction-probe-command-state'
+      );
+      await expect(commandField).toHaveAttribute('aria-expanded', 'false');
+      await expect(commandField).not.toHaveAttribute('aria-controls');
+      await expect(commandField).not.toHaveAttribute('aria-activedescendant');
+
+      await userEvent.type(commandField, '설정');
+      await expect(commandField).toHaveValue('설정');
+      await expect(commandField).toHaveAttribute('aria-expanded', 'true');
+      await expect(commandField).toHaveAttribute('aria-controls', 'interaction-probe-command-results');
+      await expect(commandField).toHaveAttribute(
+        'aria-activedescendant',
+        'interaction-probe-command-result-settings'
+      );
+      await expect(canvas.getByRole('listbox', { name: '빠른 이동 결과' })).toBeVisible();
+      await expect(canvas.getByRole('option', { name: '설정' })).toHaveAttribute('aria-selected', 'true');
+
+      await userEvent.keyboard('{Enter}');
+      await expect(canvas.getByText('Command 설정 · 키 Enter')).toBeVisible();
+      await userEvent.keyboard('{Escape}');
+      await expect(canvas.getByText('Command 설정 · 키 Escape')).toBeVisible();
+    });
+
     await step('combobox supports listbox navigation, disabled skip, selection, and Escape close', async () => {
       const comboboxInput = canvas.getByRole('combobox', { name: '빠른 이동' });
       const comboboxToggle = canvas.getByRole('button', { name: '선택 열기' });
