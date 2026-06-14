@@ -95,6 +95,7 @@
 - Kbd와 ShortcutHint는 키캡과 단축키 힌트 표면만 담당하며 실제 keydown dispatcher, command palette, 검색 focus 이동, 저장, 닫기, 파일 이동 판단을 직접 수행하지 않는다.
 - Kbd, ShortcutHint, `.zdp-kbd`, `.zdp-shortcut-hint`는 그림자, 그라데이션, hover 장식을 만들지 않고 framed keycap과 간격 규칙만 유지한다.
 - ThemeToggle은 light/dark 전환 버튼의 `aria-pressed`, 접근성 이름, glyph, focus-visible 표면만 담당하며 초기 테마 결정, storage key, system preference, SSR/초기 paint 처리는 소비 앱이 소유한다.
+- TextScaleControl은 글자 크기 선택의 `radiogroup`/`radio`/`aria-checked`, focus-visible, keyboard 이동 표면만 담당하며 실제 document root 배율, storage key, locale별 보정, 사용자 선호도 판단은 소비 앱이 소유한다.
 - Tooltip은 짧은 보조 설명 표면만 담당하며 popover, tour, validation, 긴 도움말, 권한 판단을 직접 수행하지 않는다.
 - Tooltip과 `.zdp-tooltip`은 hover와 focus-within에서 같은 표면을 열고, 설명이 접근성 이름을 보강해야 할 때만 `id`와 `aria-describedby`로 연결한다.
 - Accordion과 Disclosure는 접힌 안내, 설정 묶음, FAQ형 설명의 trigger/panel/`aria-expanded`/`aria-controls` 구조만 담당하며 실제 FAQ 문구, 설정 값, 항목 노출, 권한, 데이터 fetch 판단을 직접 수행하지 않는다.

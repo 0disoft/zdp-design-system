@@ -18,6 +18,7 @@
   import Tabs from '../src/lib/components/Tabs.svelte';
   import TermSheet from '../src/lib/components/TermSheet.svelte';
   import TermTrigger from '../src/lib/components/TermTrigger.svelte';
+  import TextScaleControl from '../src/lib/components/TextScaleControl.svelte';
   import ThemeToggle from '../src/lib/components/ThemeToggle.svelte';
   import Tooltip from '../src/lib/components/Tooltip.svelte';
   import type { ZdpAccordionItem } from '../src/lib/disclosure.ts';
@@ -29,6 +30,7 @@
     zdpShortcutReservedExamples,
     type ZdpShortcutIntent
   } from '../src/lib/shortcuts.ts';
+  import type { ZdpTextScale } from '../src/lib/preferences.ts';
   import type { ZdpTermSheetTerm } from '../src/lib/term.ts';
   import type { ZdpThemeMode } from '../src/lib/theme.ts';
 
@@ -46,6 +48,8 @@
   let darkSegmentedSelection = '요약';
   let lightTermOpen = false;
   let darkTermOpen = false;
+  let lightTextScale: ZdpTextScale = 'base';
+  let darkTextScale: ZdpTextScale = 'large';
   let lightTheme: ZdpThemeMode = 'light';
   let darkTheme: ZdpThemeMode = 'dark';
   const visibleShortcutIntents: readonly ZdpShortcutIntent[] = [
@@ -261,6 +265,23 @@
                 onclick={() => (lightTheme = lightTheme === 'dark' ? 'light' : 'dark')}
               />
               <span class="story-status">{lightTheme === 'dark' ? '다크' : '라이트'}</span>
+            </Inline>
+          </Stack>
+        </Surface>
+
+        <Divider />
+
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3>Text Scale Control</h3>
+            <p>읽기 배율 선택 표면만 제공하고, 실제 문서 크기 반영은 소비 화면이 정합니다.</p>
+            <Inline gap="sm" align="center">
+              <TextScaleControl
+                value={lightTextScale}
+                ariaLabel="Light text scale"
+                onChange={(_, option) => (lightTextScale = option.value)}
+              />
+              <span class="story-status">{lightTextScale}</span>
             </Inline>
           </Stack>
         </Surface>
@@ -552,6 +573,23 @@
                 onclick={() => (darkTheme = darkTheme === 'dark' ? 'light' : 'dark')}
               />
               <span class="story-status">{darkTheme === 'dark' ? '다크' : '라이트'}</span>
+            </Inline>
+          </Stack>
+        </Surface>
+
+        <Divider />
+
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3>Text Scale Control</h3>
+            <p>배율 값과 키보드 이동만 공유하고, 저장과 루트 반영은 소비 화면이 처리합니다.</p>
+            <Inline gap="sm" align="center">
+              <TextScaleControl
+                value={darkTextScale}
+                ariaLabel="Dark text scale"
+                onChange={(_, option) => (darkTextScale = option.value)}
+              />
+              <span class="story-status">{darkTextScale}</span>
             </Inline>
           </Stack>
         </Surface>

@@ -780,6 +780,51 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
           </section>
 
           <section class="preview-section">
+            <h3 class="preview-section__title" id="light-text-scale-control-title">Text Scale Control</h3>
+            <div
+              class="zdp-text-scale-control zdp-text-scale-control--md"
+              role="radiogroup"
+              aria-label="밝은 화면 글자 크기"
+              data-zdp-text-scale-control
+              data-zdp-text-scale-value="base"
+            >
+              <button
+                class="zdp-text-scale-control__item zdp-text-scale-control__item--selected"
+                type="button"
+                role="radio"
+                aria-label="기본 글자 크기"
+                aria-checked="true"
+                data-zdp-text-scale-option
+                data-zdp-text-scale-option-value="base"
+              >
+                <span class="zdp-text-scale-control__sample" aria-hidden="true">가</span>
+              </button>
+              <button
+                class="zdp-text-scale-control__item"
+                type="button"
+                role="radio"
+                aria-label="큰 글자 크기"
+                aria-checked="false"
+                data-zdp-text-scale-option
+                data-zdp-text-scale-option-value="large"
+              >
+                <span class="zdp-text-scale-control__sample" aria-hidden="true">가+</span>
+              </button>
+              <button
+                class="zdp-text-scale-control__item"
+                type="button"
+                role="radio"
+                aria-label="더 큰 글자 크기"
+                aria-checked="false"
+                data-zdp-text-scale-option
+                data-zdp-text-scale-option-value="larger"
+              >
+                <span class="zdp-text-scale-control__sample" aria-hidden="true">가++</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="preview-section">
             <h3 class="preview-section__title" id="light-breadcrumb-title">Breadcrumb</h3>
             <nav class="zdp-breadcrumb" aria-label="밝은 화면 현재 위치">
               <ol class="zdp-breadcrumb__list">
@@ -1722,6 +1767,51 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
                 </svg>
               </span>
             </button>
+          </section>
+
+          <section class="preview-section">
+            <h3 class="preview-section__title" id="dark-text-scale-control-title">Text Scale Control</h3>
+            <div
+              class="zdp-text-scale-control zdp-text-scale-control--md"
+              role="radiogroup"
+              aria-label="어두운 화면 글자 크기"
+              data-zdp-text-scale-control
+              data-zdp-text-scale-value="large"
+            >
+              <button
+                class="zdp-text-scale-control__item"
+                type="button"
+                role="radio"
+                aria-label="기본 글자 크기"
+                aria-checked="false"
+                data-zdp-text-scale-option
+                data-zdp-text-scale-option-value="base"
+              >
+                <span class="zdp-text-scale-control__sample" aria-hidden="true">가</span>
+              </button>
+              <button
+                class="zdp-text-scale-control__item zdp-text-scale-control__item--selected"
+                type="button"
+                role="radio"
+                aria-label="큰 글자 크기"
+                aria-checked="true"
+                data-zdp-text-scale-option
+                data-zdp-text-scale-option-value="large"
+              >
+                <span class="zdp-text-scale-control__sample" aria-hidden="true">가+</span>
+              </button>
+              <button
+                class="zdp-text-scale-control__item"
+                type="button"
+                role="radio"
+                aria-label="더 큰 글자 크기"
+                aria-checked="false"
+                data-zdp-text-scale-option
+                data-zdp-text-scale-option-value="larger"
+              >
+                <span class="zdp-text-scale-control__sample" aria-hidden="true">가++</span>
+              </button>
+            </div>
           </section>
 
           <section class="preview-section">

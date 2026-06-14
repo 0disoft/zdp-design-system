@@ -71,6 +71,7 @@ const componentPaths = [
   'src/lib/components/TermSheet.svelte',
   'src/lib/components/TermTrigger.svelte',
   'src/lib/components/Textarea.svelte',
+  'src/lib/components/TextScaleControl.svelte',
   'src/lib/components/ThemeToggle.svelte',
   'src/lib/components/Tooltip.svelte',
   'src/lib/components/Toast.svelte',

@@ -86,6 +86,7 @@ const tableToolbarPath = join(root, 'src', 'lib', 'components', 'TableToolbar.sv
 const termSheetPath = join(root, 'src', 'lib', 'components', 'TermSheet.svelte');
 const termTriggerPath = join(root, 'src', 'lib', 'components', 'TermTrigger.svelte');
 const textareaPath = join(root, 'src', 'lib', 'components', 'Textarea.svelte');
+const textScaleControlPath = join(root, 'src', 'lib', 'components', 'TextScaleControl.svelte');
 const themeTogglePath = join(root, 'src', 'lib', 'components', 'ThemeToggle.svelte');
 const tooltipPath = join(root, 'src', 'lib', 'components', 'Tooltip.svelte');
 const toastPath = join(root, 'src', 'lib', 'components', 'Toast.svelte');
@@ -176,6 +177,7 @@ const [
   termSheet,
   termTrigger,
   textarea,
+  textScaleControl,
   themeToggle,
   toast,
   toolbar,
@@ -263,6 +265,7 @@ const [
     readFile(termSheetPath, 'utf8'),
     readFile(termTriggerPath, 'utf8'),
     readFile(textareaPath, 'utf8'),
+    readFile(textScaleControlPath, 'utf8'),
     readFile(themeTogglePath, 'utf8'),
     readFile(toastPath, 'utf8'),
     readFile(toolbarPath, 'utf8'),
@@ -1243,6 +1246,7 @@ for (const requiredText of [
   '../src/lib/components/Tabs.svelte',
   '../src/lib/components/TermSheet.svelte',
   '../src/lib/components/TermTrigger.svelte',
+  '../src/lib/components/TextScaleControl.svelte',
   '../src/lib/components/ThemeToggle.svelte',
   '../src/lib/components/Tooltip.svelte',
   '../src/lib/disclosure.ts',
@@ -1267,6 +1271,12 @@ for (const requiredText of [
   'Shortcut hints',
   'Theme Toggle',
   '<ThemeToggle',
+  'Text Scale Control',
+  '<TextScaleControl',
+  'lightTextScale',
+  'darkTextScale',
+  'ariaLabel="Light text scale"',
+  'ariaLabel="Dark text scale"',
   'lightTheme',
   'darkTheme',
   "lightTheme === 'dark' ? 'light' : 'dark'",
@@ -1382,6 +1392,28 @@ for (const requiredText of [
 ]) {
   if (!interactionComponent.includes(requiredText)) {
     failures.push(`Interaction story surface is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  "type ZdpTextScale,",
+  "value: ZdpTextScale",
+  "type ZdpTextScaleControlOption",
+  "type ZdpTextScaleControlSize",
+  'role="radiogroup"',
+  'role="radio"',
+  'aria-checked={option.value === activeValue}',
+  'data-zdp-text-scale-control',
+  'data-zdp-text-scale-value={activeValue}',
+  'data-zdp-text-scale-option-value={option.value}',
+  'class={`zdp-text-scale-control zdp-text-scale-control--${size}`}',
+  '.zdp-text-scale-control',
+  '.zdp-text-scale-control__item:focus-visible',
+  '.zdp-text-scale-control__item[data-zdp-text-scale-option-value=',
+  'user-select: none'
+]) {
+  if (!textScaleControl.includes(requiredText)) {
+    failures.push(`TextScaleControl component is missing ${requiredText}.`);
   }
 }
 
@@ -3204,6 +3236,7 @@ for (const [surfaceLabel, source] of [
   ['Switch component', switchComponent],
   ['Tabs component tab', tabs],
   ['TermSheet component controls', termSheet],
+  ['TextScaleControl component controls', textScaleControl],
   ['ThemeToggle component', themeToggle],
   ['Toast component controls', toast],
   ['Tooltip component content', tooltip]
@@ -3225,6 +3258,7 @@ for (const [surfaceLabel, source] of [
 assertNoDecorativeEffects(failures, 'Button component', button);
 assertNoDecorativeEffects(failures, 'Icon component', icon);
 assertNoDecorativeEffects(failures, 'IconButton component', iconButton);
+assertNoDecorativeEffects(failures, 'TextScaleControl component', textScaleControl);
 assertNoDecorativeEffects(failures, 'ThemeToggle component', themeToggle);
 assertNoDecorativeEffects(failures, 'Surface component', surface);
 assertNoDecorativeEffects(failures, 'Storybook overview', component);

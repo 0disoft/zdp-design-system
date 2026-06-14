@@ -57,6 +57,7 @@ export { default as TableToolbar } from './components/TableToolbar.svelte';
 export { default as TermSheet } from './components/TermSheet.svelte';
 export { default as TermTrigger } from './components/TermTrigger.svelte';
 export { default as Textarea } from './components/Textarea.svelte';
+export { default as TextScaleControl } from './components/TextScaleControl.svelte';
 export { default as ThemeToggle } from './components/ThemeToggle.svelte';
 export { default as Tooltip } from './components/Tooltip.svelte';
 export { default as Toast } from './components/Toast.svelte';
@@ -74,6 +75,8 @@ export type {
 } from './identity';
 export type { ZdpMenuItem } from './menu';
 export type { ZdpPaginationItem } from './pagination';
+export { isZdpTextScale, zdpTextScaleControlOptions } from './preferences';
+export type { ZdpTextScale, ZdpTextScaleControlOption, ZdpTextScaleControlSize } from './preferences';
 export type { ZdpProgressSize, ZdpProgressTone, ZdpSkeletonVariant, ZdpSpinnerSize } from './progress';
 export type { ZdpSegmentedControlItem, ZdpSegmentedControlSize } from './segmented';
 export type { ZdpSheetPlacement, ZdpSheetSize } from './sheet';
