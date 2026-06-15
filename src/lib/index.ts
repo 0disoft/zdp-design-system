@@ -30,6 +30,7 @@ export { default as Kbd } from './components/Kbd.svelte';
 export { default as KeyValue } from './components/KeyValue.svelte';
 export { default as Label } from './components/Label.svelte';
 export { default as Link } from './components/Link.svelte';
+export { default as LocaleSwitcher } from './components/LocaleSwitcher.svelte';
 export { default as Menu } from './components/Menu.svelte';
 export { default as Page } from './components/Page.svelte';
 export { default as PageHeader } from './components/PageHeader.svelte';
@@ -75,8 +76,14 @@ export type {
 } from './identity';
 export type { ZdpMenuItem } from './menu';
 export type { ZdpPaginationItem } from './pagination';
-export { isZdpTextScale, zdpTextScaleControlOptions } from './preferences';
-export type { ZdpTextScale, ZdpTextScaleControlOption, ZdpTextScaleControlSize } from './preferences';
+export { isZdpTextScale, zdpLocaleSwitcherOptions, zdpTextScaleControlOptions } from './preferences';
+export type {
+  ZdpLocaleSwitcherOption,
+  ZdpLocaleSwitcherSize,
+  ZdpTextScale,
+  ZdpTextScaleControlOption,
+  ZdpTextScaleControlSize
+} from './preferences';
 export type { ZdpProgressSize, ZdpProgressTone, ZdpSkeletonVariant, ZdpSpinnerSize } from './progress';
 export type { ZdpSegmentedControlItem, ZdpSegmentedControlSize } from './segmented';
 export type { ZdpSheetPlacement, ZdpSheetSize } from './sheet';

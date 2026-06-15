@@ -7,6 +7,7 @@
   import Divider from '../src/lib/components/Divider.svelte';
   import Inline from '../src/lib/components/Inline.svelte';
   import Kbd from '../src/lib/components/Kbd.svelte';
+  import LocaleSwitcher from '../src/lib/components/LocaleSwitcher.svelte';
   import Menu from '../src/lib/components/Menu.svelte';
   import Popover from '../src/lib/components/Popover.svelte';
   import SegmentedControl from '../src/lib/components/SegmentedControl.svelte';
@@ -30,7 +31,7 @@
     zdpShortcutReservedExamples,
     type ZdpShortcutIntent
   } from '../src/lib/shortcuts.ts';
-  import type { ZdpTextScale } from '../src/lib/preferences.ts';
+  import type { ZdpLocaleSwitcherOption, ZdpTextScale } from '../src/lib/preferences.ts';
   import type { ZdpTermSheetTerm } from '../src/lib/term.ts';
   import type { ZdpThemeMode } from '../src/lib/theme.ts';
 
@@ -48,6 +49,8 @@
   let darkSegmentedSelection = '요약';
   let lightTermOpen = false;
   let darkTermOpen = false;
+  let lightLocale = 'ko';
+  let darkLocale = 'en';
   let lightTextScale: ZdpTextScale = 'base';
   let darkTextScale: ZdpTextScale = 'large';
   let lightTheme: ZdpThemeMode = 'light';
@@ -65,6 +68,11 @@
     visibleShortcutIntents.includes(shortcut.intent)
   );
   const reservedShortcutPreview = zdpShortcutReservedExamples.slice(0, 6);
+  const localeOptions: readonly ZdpLocaleSwitcherOption[] = [
+    { value: 'ko', label: '한국어', shortLabel: 'KO', lang: 'ko', ariaLabel: '한국어' },
+    { value: 'en', label: 'English', shortLabel: 'EN', lang: 'en', ariaLabel: 'English' },
+    { value: 'ja', label: '日本語', shortLabel: 'JA', lang: 'ja', ariaLabel: '日本語', disabled: true }
+  ];
   const menuItems: readonly ZdpMenuItem[] = [
     { id: 'settings', label: '설정 열기' },
     { id: 'filter', label: '필터 저장' },
@@ -250,6 +258,24 @@
               <span>Reserved</span>
               <span class="shortcut-reserved">{reservedShortcutPreview.join(', ')}</span>
             </div>
+          </Stack>
+        </Surface>
+
+        <Divider />
+
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3>Locale Switcher</h3>
+            <p>언어 선택 표면과 keyboard 이동만 제공하고, 라우팅과 번역 catalog는 소비 화면이 정합니다.</p>
+            <Inline gap="sm" align="center">
+              <LocaleSwitcher
+                value={lightLocale}
+                options={localeOptions}
+                ariaLabel="Light locale"
+                onChange={(_, option) => (lightLocale = option.value)}
+              />
+              <span class="story-status">{lightLocale}</span>
+            </Inline>
           </Stack>
         </Surface>
 
@@ -558,6 +584,24 @@
               <span>Reserved</span>
               <span class="shortcut-reserved">{reservedShortcutPreview.join(', ')}</span>
             </div>
+          </Stack>
+        </Surface>
+
+        <Divider />
+
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3>Locale Switcher</h3>
+            <p>어두운 표면에서도 같은 선택 상태와 focus-visible 기준을 유지합니다.</p>
+            <Inline gap="sm" align="center">
+              <LocaleSwitcher
+                value={darkLocale}
+                options={localeOptions}
+                ariaLabel="Dark locale"
+                onChange={(_, option) => (darkLocale = option.value)}
+              />
+              <span class="story-status">{darkLocale}</span>
+            </Inline>
           </Stack>
         </Surface>
 

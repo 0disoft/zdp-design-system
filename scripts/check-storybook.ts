@@ -60,6 +60,7 @@ const kbdPath = join(root, 'src', 'lib', 'components', 'Kbd.svelte');
 const keyValuePath = join(root, 'src', 'lib', 'components', 'KeyValue.svelte');
 const labelPath = join(root, 'src', 'lib', 'components', 'Label.svelte');
 const linkPath = join(root, 'src', 'lib', 'components', 'Link.svelte');
+const localeSwitcherPath = join(root, 'src', 'lib', 'components', 'LocaleSwitcher.svelte');
 const menuPath = join(root, 'src', 'lib', 'components', 'Menu.svelte');
 const pagePath = join(root, 'src', 'lib', 'components', 'Page.svelte');
 const pageHeaderPath = join(root, 'src', 'lib', 'components', 'PageHeader.svelte');
@@ -149,6 +150,7 @@ const [
   keyValue,
   label,
   link,
+  localeSwitcher,
   menu,
   page,
   pageHeader,
@@ -237,6 +239,7 @@ const [
     readFile(keyValuePath, 'utf8'),
     readFile(labelPath, 'utf8'),
     readFile(linkPath, 'utf8'),
+    readFile(localeSwitcherPath, 'utf8'),
     readFile(menuPath, 'utf8'),
     readFile(pagePath, 'utf8'),
     readFile(pageHeaderPath, 'utf8'),
@@ -1235,6 +1238,7 @@ for (const requiredText of [
   '../src/lib/components/Divider.svelte',
   '../src/lib/components/Inline.svelte',
   '../src/lib/components/Kbd.svelte',
+  '../src/lib/components/LocaleSwitcher.svelte',
   '../src/lib/components/CommandField.svelte',
   '../src/lib/components/Menu.svelte',
   '../src/lib/components/Popover.svelte',
@@ -1269,6 +1273,13 @@ for (const requiredText of [
   '프로젝트, 문서, 설정 검색',
   '검색어 없음',
   'Shortcut hints',
+  'Locale Switcher',
+  '<LocaleSwitcher',
+  'lightLocale',
+  'darkLocale',
+  'localeOptions',
+  'ariaLabel="Light locale"',
+  'ariaLabel="Dark locale"',
   'Theme Toggle',
   '<ThemeToggle',
   'Text Scale Control',
@@ -1392,6 +1403,26 @@ for (const requiredText of [
 ]) {
   if (!interactionComponent.includes(requiredText)) {
     failures.push(`Interaction story surface is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  "type ZdpLocaleSwitcherOption",
+  "type ZdpLocaleSwitcherSize",
+  'role="radiogroup"',
+  'role="radio"',
+  'aria-checked={option.value === activeValue}',
+  'data-zdp-locale-switcher',
+  'data-zdp-locale-value={activeValue}',
+  'data-zdp-locale-option-value={option.value}',
+  'class={`zdp-locale-switcher zdp-locale-switcher--${size}`}',
+  '.zdp-locale-switcher',
+  '.zdp-locale-switcher__item:focus-visible',
+  '.zdp-locale-switcher__label',
+  'user-select: none'
+]) {
+  if (!localeSwitcher.includes(requiredText)) {
+    failures.push(`LocaleSwitcher component is missing ${requiredText}.`);
   }
 }
 
@@ -3221,6 +3252,7 @@ for (const [surfaceLabel, source] of [
   ['IconButton component', iconButton],
   ['Kbd component', kbd],
   ['Label component required mark', label],
+  ['LocaleSwitcher component controls', localeSwitcher],
   ['Menu component controls', menu],
   ['Pagination component controls', pagination],
   ['Popover component trigger', popover],
@@ -3258,6 +3290,7 @@ for (const [surfaceLabel, source] of [
 assertNoDecorativeEffects(failures, 'Button component', button);
 assertNoDecorativeEffects(failures, 'Icon component', icon);
 assertNoDecorativeEffects(failures, 'IconButton component', iconButton);
+assertNoDecorativeEffects(failures, 'LocaleSwitcher component', localeSwitcher);
 assertNoDecorativeEffects(failures, 'TextScaleControl component', textScaleControl);
 assertNoDecorativeEffects(failures, 'ThemeToggle component', themeToggle);
 assertNoDecorativeEffects(failures, 'Surface component', surface);

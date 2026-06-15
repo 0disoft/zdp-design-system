@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added `LocaleSwitcher` plus static `.zdp-locale-switcher` utilities for locale preference controls while keeping message catalogs, routing, fallback locale, root language, storage, and user preference policy in consuming apps.
 - Added `TextScaleControl` plus static `.zdp-text-scale-control` utilities for reader text-size preference controls while keeping document root scaling, storage, locale compensation, and user preference policy in consuming apps.
 - Strengthened `CommandField` with shortcut, autocomplete, result-linkage, and keydown passthrough plus `InteractionProbe` coverage for consumer-owned command results.
 - Fixed controlled `Combobox` Escape dismissal so filtered no-result text restores the selected label through `onQueryChange` while preserving the hidden submitted value.

@@ -94,6 +94,7 @@
 - InlineCode, CodeBlock, `.zdp-inline-code`, `.zdp-code-block`은 그림자, 그라데이션, 실행 버튼 없이 mono font, framed surface, focus-visible, 복사 feedback, wrapping/overflow 계약만 유지한다. 긴 코드는 기본 horizontal overflow로 두고, code body에는 `user-select: none`을 적용하지 않는다.
 - Kbd와 ShortcutHint는 키캡과 단축키 힌트 표면만 담당하며 실제 keydown dispatcher, command palette, 검색 focus 이동, 저장, 닫기, 파일 이동 판단을 직접 수행하지 않는다.
 - Kbd, ShortcutHint, `.zdp-kbd`, `.zdp-shortcut-hint`는 그림자, 그라데이션, hover 장식을 만들지 않고 framed keycap과 간격 규칙만 유지한다.
+- LocaleSwitcher는 언어 선택의 `radiogroup`/`radio`/`aria-checked`, focus-visible, keyboard 이동 표면만 담당하며 실제 message catalog, routing, fallback locale, storage key, `<html lang>` 반영, 사용자 선호도 판단은 소비 앱이 소유한다.
 - ThemeToggle은 light/dark 전환 버튼의 `aria-pressed`, 접근성 이름, glyph, focus-visible 표면만 담당하며 초기 테마 결정, storage key, system preference, SSR/초기 paint 처리는 소비 앱이 소유한다.
 - TextScaleControl은 글자 크기 선택의 `radiogroup`/`radio`/`aria-checked`, focus-visible, keyboard 이동 표면만 담당하며 실제 document root 배율, storage key, locale별 보정, 사용자 선호도 판단은 소비 앱이 소유한다.
 - Tooltip은 짧은 보조 설명 표면만 담당하며 popover, tour, validation, 긴 도움말, 권한 판단을 직접 수행하지 않는다.

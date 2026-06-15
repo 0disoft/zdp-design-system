@@ -166,6 +166,7 @@ for (const component of [
   'Table',
   'Textarea',
   'TableToolbar',
+  'LocaleSwitcher',
   'TextScaleControl',
   'Tooltip',
   'Toast',

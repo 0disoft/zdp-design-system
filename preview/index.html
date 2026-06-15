@@ -756,6 +756,42 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
           </section>
 
           <section class="preview-section">
+            <h3 class="preview-section__title" id="light-locale-switcher-title">Locale Switcher</h3>
+            <div
+              class="zdp-locale-switcher zdp-locale-switcher--md"
+              role="radiogroup"
+              aria-label="밝은 화면 언어"
+              data-zdp-locale-switcher
+              data-zdp-locale-value="ko"
+            >
+              <button
+                class="zdp-locale-switcher__item zdp-locale-switcher__item--selected"
+                type="button"
+                role="radio"
+                lang="ko"
+                aria-label="한국어"
+                aria-checked="true"
+                data-zdp-locale-option
+                data-zdp-locale-option-value="ko"
+              >
+                <span class="zdp-locale-switcher__label" aria-hidden="true">KO</span>
+              </button>
+              <button
+                class="zdp-locale-switcher__item"
+                type="button"
+                role="radio"
+                lang="en"
+                aria-label="English"
+                aria-checked="false"
+                data-zdp-locale-option
+                data-zdp-locale-option-value="en"
+              >
+                <span class="zdp-locale-switcher__label" aria-hidden="true">EN</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="preview-section">
             <h3 class="preview-section__title" id="light-theme-toggle-title">Theme Toggle</h3>
             <button
               class="zdp-theme-toggle zdp-theme-toggle--md"
@@ -1741,6 +1777,42 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
               <button class="zdp-button zdp-button--danger zdp-button--md">삭제</button>
               <button class="zdp-icon-button zdp-icon-button--ghost zdp-icon-button--md" aria-label="추가">
                 <span class="zdp-icon zdp-icon--md zdp-icon-button__glyph" aria-hidden="true">+</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="preview-section">
+            <h3 class="preview-section__title" id="dark-locale-switcher-title">Locale Switcher</h3>
+            <div
+              class="zdp-locale-switcher zdp-locale-switcher--md"
+              role="radiogroup"
+              aria-label="어두운 화면 언어"
+              data-zdp-locale-switcher
+              data-zdp-locale-value="en"
+            >
+              <button
+                class="zdp-locale-switcher__item"
+                type="button"
+                role="radio"
+                lang="ko"
+                aria-label="한국어"
+                aria-checked="false"
+                data-zdp-locale-option
+                data-zdp-locale-option-value="ko"
+              >
+                <span class="zdp-locale-switcher__label" aria-hidden="true">KO</span>
+              </button>
+              <button
+                class="zdp-locale-switcher__item zdp-locale-switcher__item--selected"
+                type="button"
+                role="radio"
+                lang="en"
+                aria-label="English"
+                aria-checked="true"
+                data-zdp-locale-option
+                data-zdp-locale-option-value="en"
+              >
+                <span class="zdp-locale-switcher__label" aria-hidden="true">EN</span>
               </button>
             </div>
           </section>

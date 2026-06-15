@@ -44,6 +44,7 @@ const componentPaths = [
   'src/lib/components/KeyValue.svelte',
   'src/lib/components/Label.svelte',
   'src/lib/components/Link.svelte',
+  'src/lib/components/LocaleSwitcher.svelte',
   'src/lib/components/Menu.svelte',
   'src/lib/components/Page.svelte',
   'src/lib/components/PageHeader.svelte',
