@@ -1460,6 +1460,7 @@ for (const requiredText of [
   'class={`zdp-theme-toggle zdp-theme-toggle--${size}`}',
   'zdp-theme-toggle__icon--sun',
   'zdp-theme-toggle__icon--moon',
+  'transform: translate(0.08rem, -0.04rem)',
   '.zdp-theme-toggle',
   '.zdp-theme-toggle:focus-visible',
   '.zdp-theme-toggle[data-zdp-theme-state=',

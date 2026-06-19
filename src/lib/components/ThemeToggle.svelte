@@ -132,6 +132,7 @@
   .zdp-theme-toggle__icon--moon svg {
     fill: currentColor;
     stroke: currentColor;
+    transform: translate(0.08rem, -0.04rem);
   }
 
   .zdp-theme-toggle[data-zdp-theme-state='light'] .zdp-theme-toggle__icon--moon,

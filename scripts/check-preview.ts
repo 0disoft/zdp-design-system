@@ -724,6 +724,7 @@ for (const requiredText of [
   '.zdp-theme-toggle:focus-visible',
   '.zdp-theme-toggle__icon',
   '.zdp-theme-toggle__icon--moon svg',
+  'transform: translate(0.08rem, -0.04rem)',
   '.zdp-theme-toggle[data-zdp-theme-state="light"] .zdp-theme-toggle__icon--moon',
   '.zdp-theme-toggle[data-zdp-theme-state="dark"]',
   '.zdp-locale-switcher',

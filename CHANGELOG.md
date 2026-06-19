@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Optically centered the dark-mode moon glyph in `ThemeToggle` so it aligns visually with the sun glyph while keeping the same control frame.
 - Added `LocaleSwitcher` plus static `.zdp-locale-switcher` utilities for locale preference controls while keeping message catalogs, routing, fallback locale, root language, storage, and user preference policy in consuming apps.
 - Added `TextScaleControl` plus static `.zdp-text-scale-control` utilities for reader text-size preference controls while keeping document root scaling, storage, locale compensation, and user preference policy in consuming apps.
 - Strengthened `CommandField` with shortcut, autocomplete, result-linkage, and keydown passthrough plus `InteractionProbe` coverage for consumer-owned command results.
