@@ -15,7 +15,7 @@
     | undefined = undefined;
   export let ariaKeyShortcuts: string | null = null;
 
-  $: resolvedRel = target === '_blank' ? rel ?? 'noreferrer' : rel;
+  $: resolvedRel = target === '_blank' ? rel ?? 'noopener noreferrer' : rel;
   $: resolvedAriaCurrent =
     ariaCurrent === true ? 'true' : ariaCurrent === false ? undefined : ariaCurrent;
 </script>

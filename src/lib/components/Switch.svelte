@@ -1,17 +1,38 @@
 <script lang="ts">
+  type DescribedBy = string | readonly string[] | null;
+
   export let id: string | null = null;
   export let name: string | null = null;
   export let checked = false;
-  export let describedBy: string | null = null;
+  export let describedBy: DescribedBy = null;
+  export let errorMessageId: string | null = null;
+  export let invalid = false;
   export let disabled = false;
   export let required = false;
+
+  $: ariaDescribedBy = normalizeIdRefs(describedBy);
+  $: resolvedErrorMessageId = invalid && errorMessageId ? errorMessageId : null;
 
   function handleChange(event: Event): void {
     checked = (event.currentTarget as HTMLInputElement).checked;
   }
+
+  function normalizeIdRefs(value: DescribedBy): string | null {
+    if (value === null) {
+      return null;
+    }
+
+    if (typeof value === 'string') {
+      const normalized = value.trim();
+      return normalized ? normalized : null;
+    }
+
+    const normalized = value.map((entry) => entry.trim()).filter(Boolean);
+    return normalized.length > 0 ? normalized.join(' ') : null;
+  }
 </script>
 
-<label class="zdp-switch">
+<label class="zdp-switch" data-invalid={invalid ? 'true' : undefined}>
   <input
     class="zdp-switch__input"
     id={id ?? undefined}
@@ -19,7 +40,9 @@
     type="checkbox"
     role="switch"
     {checked}
-    aria-describedby={describedBy ?? undefined}
+    aria-describedby={ariaDescribedBy ?? undefined}
+    aria-errormessage={resolvedErrorMessageId ?? undefined}
+    aria-invalid={invalid ? 'true' : undefined}
     {disabled}
     {required}
     onchange={handleChange}
@@ -104,6 +127,10 @@
     border-color: var(--zdp-color-focus-line);
     outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
     outline-offset: var(--zdp-control-focus-outline-offset);
+  }
+
+  .zdp-switch__input[aria-invalid="true"] + .zdp-switch__track {
+    border-color: var(--zdp-color-accent-danger);
   }
 
   .zdp-switch:has(.zdp-switch__input:disabled) {

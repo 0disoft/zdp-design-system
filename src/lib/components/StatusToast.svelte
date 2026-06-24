@@ -31,7 +31,7 @@
   }
 
   function resolvedRel(item: ZdpStatusToastItem): string | undefined {
-    return item.target === '_blank' ? item.rel ?? 'noreferrer' : item.rel;
+    return item.target === '_blank' ? item.rel ?? 'noopener noreferrer' : item.rel;
   }
 </script>
 

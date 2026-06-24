@@ -115,7 +115,7 @@ import 'zdp-design-system/expressive-fonts.css';
 - LocaleSwitcher는 언어 선택 표면과 keyboard 이동만 제공하고 실제 message catalog, 라우팅, fallback locale, 저장소, `<html lang>` 반영은 소비 앱이 정한다.
 - ThemeToggle은 light/dark 전환 버튼의 pressed 상태와 glyph만 제공하고 초기 테마, 저장소, 시스템 선호도 판단은 소비 앱이 정한다.
 - TextScaleControl은 읽기 배율 선택 표면과 keyboard 이동만 제공하고 실제 문서 크기 반영, 저장소, 사용자 선호도 판단은 소비 앱이 정한다.
-- Tooltip은 짧은 보조 설명만 맡고, 긴 안내나 상태 설명은 Popover, Disclosure, 문서 본문으로 보낸다.
+- Tooltip은 짧은 보조 설명만 맡고, Escape dismiss를 유지하며, 긴 안내나 상태 설명은 Popover, Disclosure, 문서 본문으로 보낸다.
 - Accordion과 Disclosure는 접힌 안내와 점진적 정보 공개를 담당한다.
 - SegmentedControl은 보기 방식이나 단일 모드 전환을 표현한다.
 - SortHeader와 TableToolbar는 sortable column affordance, 선택 행 액션, 밀도 조절 같은 표 주변 도구를 맡는다.
@@ -131,6 +131,7 @@ import 'zdp-design-system/expressive-fonts.css';
 - Table, KeyValue, EmptyState는 업무 데이터, 용어-값, 비어 있는 상태를 표현한다.
 - TermTrigger와 TermSheet는 용어 설명을 click-open sheet로 연결하며, TermTrigger는 sheet가 열린 동안에만 `aria-controls`를 연결한다. TermTrigger는 본문 안 의미 있는 단어이므로 hover에서 글자색을 바꾸지 않고 배경만 살짝 강조하며, 좌우 최소 padding과 focus token을 유지하고, 텍스트 선택을 막지 않는다. TermSheet root에는 stable `term_id`와 `data-zdp-ad-exclude`를 남긴다. TermSheet에는 광고 slot을 넣지 않는다.
 - Dialog는 모달 레이어이며 닫기, scroll lock, focus trap, `describedBy`에 id 배열, `errorMessageId`로 `aria-errormessage` 연결을 명확히 한다.
+- Checkbox와 Switch는 native input에 invalid 상태를 노출하고, Radio는 native radio role 제약 때문에 wrapper invalid styling과 `describedBy` 연결을 유지한다. Switch는 `describedBy` id 배열과 `errorMessageId`로 에러 설명을 연결한다.
 - Page, Container, Section, PageHeader는 페이지 폭, 섹션 rhythm, 제목 구조를 정리한다.
 - Flutter는 Svelte 컴포넌트를 직접 쓰지 않고 `tokens/zdp.tokens.json`과 필요한 platform adapter를 통해 시각 토큰만 소비한다.
 

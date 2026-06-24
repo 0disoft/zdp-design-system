@@ -40,8 +40,8 @@ if (failures.length > 0) {
 }
 
 function checkPackageSurface(packageJson: PackageJson): void {
-  if (packageJson.version !== '0.43.1') {
-    failures.push('package.json version must be 0.43.1 for the current design-system package contract.');
+  if (packageJson.version !== '0.43.2') {
+    failures.push('package.json version must be 0.43.2 for the current design-system package contract.');
   }
 
   if (packageJson.exports?.['./brand-fonts.css'] !== './dist/styles/brand-fonts.css') {

@@ -1020,6 +1020,7 @@ for (const requiredText of [
   '.zdp-choice__input:focus-visible + .zdp-choice__mark',
   '.zdp-switch__input:focus-visible + .zdp-switch__track',
   '.zdp-choice__input[aria-invalid="true"] + .zdp-choice__mark',
+  '.zdp-switch__input[aria-invalid="true"] + .zdp-switch__track',
   'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
   'border-color: var(--zdp-color-focus-line)',
   '.zdp-icon',

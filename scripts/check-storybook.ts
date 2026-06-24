@@ -1665,6 +1665,7 @@ for (const requiredText of [
   'function handleDismiss',
   'function handleAction',
   'function resolvedRel',
+  "item.rel ?? 'noopener noreferrer'",
   'class={`zdp-status-toast zdp-status-toast--${placement}`}',
   'aria-label={labelledBy ? undefined : ariaLabel}',
   'aria-labelledby={labelledBy ?? undefined}',
@@ -1778,6 +1779,7 @@ for (const requiredText of [
   'ariaKeyShortcuts: string | null = null',
   'aria-current={resolvedAriaCurrent}',
   'aria-keyshortcuts={ariaKeyShortcuts ?? undefined}',
+  "rel ?? 'noopener noreferrer'",
   'border-bottom: var(--zdp-control-focus-underline-width) solid transparent',
   'text-decoration-line: none',
   '.zdp-link:hover',
@@ -2096,8 +2098,14 @@ for (const requiredText of [
   "placement: 'top' | 'right' | 'bottom' | 'left' = 'top'",
   'disabled = false',
   'const fallbackId = `zdp-tooltip-${++tooltipIdCounter}`',
+  'dismissed = false',
+  'pointerInside = false',
   '$: tooltipId = id ?? fallbackId',
   '$: describedBy = disabled ? null : tooltipId',
+  'handleKeydown',
+  "event.key !== 'Escape'",
+  'document.activeElement.blur()',
+  'data-dismissed={dismissed ?',
   '<slot describedBy={describedBy} />',
   'id={tooltipId}',
   'role="tooltip"',
@@ -2110,6 +2118,7 @@ for (const requiredText of [
   '.zdp-tooltip--left .zdp-tooltip__content',
   '.zdp-tooltip:hover .zdp-tooltip__content',
   '.zdp-tooltip:focus-within .zdp-tooltip__content',
+  '.zdp-tooltip[data-dismissed="true"] .zdp-tooltip__content',
   'pointer-events: none',
   'white-space: nowrap'
 ]) {
@@ -2988,11 +2997,15 @@ if (!checkbox.includes('.zdp-choice__input[aria-invalid="true"] + .zdp-choice__m
 }
 
 if (!radio.includes('.zdp-choice[data-invalid="true"] .zdp-choice__mark')) {
-  failures.push('Radio component must express invalid state on the wrapper, not the native radio input.');
+  failures.push('Radio component must keep wrapper invalid styling because the native radio role does not support aria-invalid.');
 }
 
 for (const requiredText of [
   'role="switch"',
+  'type DescribedBy = string | readonly string[] | null',
+  'errorMessageId: string | null = null',
+  'invalid = false',
+  'normalizeIdRefs',
   'class="zdp-switch__input"',
   'class="zdp-switch__track"',
   'class="zdp-switch__body"',
@@ -3000,11 +3013,14 @@ for (const requiredText of [
   'grid-template-columns: var(--zdp-control-switch-width) minmax(0, 1fr)',
   'height: var(--zdp-control-switch-height)',
   'width: var(--zdp-control-switch-width)',
-  'aria-describedby={describedBy ?? undefined}',
+  'aria-describedby={ariaDescribedBy ?? undefined}',
+  'aria-errormessage={resolvedErrorMessageId ?? undefined}',
+  "aria-invalid={invalid ? 'true' : undefined}",
   'onchange={handleChange}',
   '.zdp-switch:hover .zdp-switch__input:not(:checked):not(:disabled) + .zdp-switch__track',
   '.zdp-switch__input:checked + .zdp-switch__track',
   '.zdp-switch__input:focus-visible + .zdp-switch__track',
+  '.zdp-switch__input[aria-invalid="true"] + .zdp-switch__track',
   'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
   'border-color: var(--zdp-color-focus-line)'
 ]) {

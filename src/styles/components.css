@@ -2860,7 +2860,8 @@
 }
 
 .zdp-choice__input[aria-invalid="true"] + .zdp-choice__mark,
-.zdp-choice[data-invalid="true"] .zdp-choice__mark {
+.zdp-choice[data-invalid="true"] .zdp-choice__mark,
+.zdp-switch__input[aria-invalid="true"] + .zdp-switch__track {
   border-color: var(--zdp-color-accent-danger);
 }
 

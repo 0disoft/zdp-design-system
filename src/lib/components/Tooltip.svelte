@@ -3,18 +3,85 @@
 </script>
 
 <script lang="ts">
+  import { onMount } from 'svelte';
+
   export let text: string;
   export let placement: 'top' | 'right' | 'bottom' | 'left' = 'top';
   export let id: string | null = null;
   export let disabled = false;
 
+  let rootElement: HTMLElement | null = null;
   const fallbackId = `zdp-tooltip-${++tooltipIdCounter}`;
+
+  let dismissed = false;
+  let pointerInside = false;
 
   $: tooltipId = id ?? fallbackId;
   $: describedBy = disabled ? null : tooltipId;
+
+  onMount(() => {
+    const root = rootElement;
+
+    if (!root) {
+      return;
+    }
+
+    root.addEventListener('mouseenter', handleMouseenter);
+    root.addEventListener('mouseleave', handleMouseleave);
+    root.addEventListener('focusin', handleFocusin);
+    root.addEventListener('focusout', handleFocusout);
+    root.addEventListener('keydown', handleKeydown);
+
+    return () => {
+      root.removeEventListener('mouseenter', handleMouseenter);
+      root.removeEventListener('mouseleave', handleMouseleave);
+      root.removeEventListener('focusin', handleFocusin);
+      root.removeEventListener('focusout', handleFocusout);
+      root.removeEventListener('keydown', handleKeydown);
+    };
+  });
+
+  function handleMouseenter(): void {
+    pointerInside = true;
+    dismissed = false;
+  }
+
+  function handleMouseleave(): void {
+    pointerInside = false;
+    dismissed = false;
+  }
+
+  function handleFocusin(): void {
+    if (!pointerInside) {
+      dismissed = false;
+    }
+  }
+
+  function handleFocusout(): void {
+    if (!pointerInside) {
+      dismissed = false;
+    }
+  }
+
+  function handleKeydown(event: KeyboardEvent): void {
+    if (event.key !== 'Escape' || disabled) {
+      return;
+    }
+
+    dismissed = true;
+
+    if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+  }
 </script>
 
-<span class={`zdp-tooltip zdp-tooltip--${placement}`} data-disabled={disabled ? 'true' : undefined}>
+<span
+  class={`zdp-tooltip zdp-tooltip--${placement}`}
+  data-disabled={disabled ? 'true' : undefined}
+  data-dismissed={dismissed ? 'true' : undefined}
+  bind:this={rootElement}
+>
   <span class="zdp-tooltip__trigger">
     <slot describedBy={describedBy} />
   </span>
@@ -120,6 +187,10 @@
   .zdp-tooltip:hover .zdp-tooltip__content,
   .zdp-tooltip:focus-within .zdp-tooltip__content {
     opacity: 1;
+  }
+
+  .zdp-tooltip[data-dismissed="true"] .zdp-tooltip__content {
+    opacity: 0;
   }
 
   .zdp-tooltip[data-disabled="true"] {

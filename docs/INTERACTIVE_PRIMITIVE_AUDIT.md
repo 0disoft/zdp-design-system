@@ -20,7 +20,7 @@
 | Select | Native `select` | Low | label/id/error/describedBy, invalid, disabled, required, focus-visible | Custom select나 combobox 요구 전까지 유지 |
 | CommandField | Native `input` | Low | label, shortcut hint, aria-keyshortcuts/autocomplete/controls/expanded/activedescendant passthrough, input keydown callback | result list, dispatcher, command palette는 별도 primitive로 분리 |
 | Combobox | ZDP custom combobox/listbox | Medium | input combobox role, listbox/option roles, ArrowUp/ArrowDown, Enter select, Escape close, disabled skip, hidden value, InteractionProbe play coverage | grouped options, virtualized list, async option loading, multi-select, portal/collision 요구 시 headless spike |
-| Tooltip | CSS hover/focus label | Low | role tooltip, slot-provided `describedBy`, pointer-events none | interactive content 금지 유지 |
+| Tooltip | CSS hover/focus label | Low | role tooltip, slot-provided `describedBy`, Escape dismiss, pointer-events none | interactive content 금지 유지 |
 | Dialog | ZDP custom modal | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, modal layer | nested modal, portal, inert sibling 요구가 생기면 headless spike |
 | Sheet | ZDP custom modal edge panel | Medium | right/left/bottom placement, Escape, backdrop close, focus trap, focus return, scroll lock, modal layer, InteractionProbe play coverage | draggable sheet, snap point, nested modal, portal, inert sibling 요구가 생기면 headless spike |
 | TermSheet | ZDP glossary sheet | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, stable term attributes | glossary 외 설정/필터/drawer 요구는 Sheet로 보낸다 |
@@ -53,6 +53,7 @@ InteractionProbe는 ArrowDown open, disabled skip, Enter select, Escape close, l
 
 `Tooltip`은 짧은 설명 text만 노출한다.
 Tooltip 안에 button, link, form field를 넣지 않는다.
+Escape로 현재 tooltip을 dismiss할 수 있어야 한다.
 viewport collision과 mobile long-press를 해결하려고 floating engine으로 키우지 않는다.
 그 요구는 Popover나 별도 help surface로 보낸다.
 

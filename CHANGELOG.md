@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fixed Switch invalid-state accessibility so the native switch input exposes `aria-invalid` and can wire `errorMessageId` to `aria-errormessage`.
+- Added Escape dismissal to `Tooltip` and aligned `_blank` link defaults on `Link` and `StatusToast` to `noopener noreferrer`.
 - Optically centered the dark-mode moon glyph in `ThemeToggle` so it aligns visually with the sun glyph while keeping the same control frame.
 - Added `LocaleSwitcher` plus static `.zdp-locale-switcher` utilities for locale preference controls while keeping message catalogs, routing, fallback locale, root language, storage, and user preference policy in consuming apps.
 - Added `TextScaleControl` plus static `.zdp-text-scale-control` utilities for reader text-size preference controls while keeping document root scaling, storage, locale compensation, and user preference policy in consuming apps.

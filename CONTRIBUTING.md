@@ -53,7 +53,7 @@
 - ErrorText는 동적으로 나타나는 에러를 읽을 수 있도록 live-region 기본값을 유지한다.
 - 입력류 hover, focus, invalid, disabled 상태는 light/dark 모두 같은 토큰 계열로 움직이며 그림자나 이동 효과를 쓰지 않는다.
 - Input과 Textarea의 readonly 상태는 disabled처럼 흐리지 않고 포커스 가능한 읽기 전용 값으로 유지한다.
-- Checkbox, Radio, Switch는 native input을 유지하고 label, checked, focus-visible, disabled 상태가 키보드와 스크린리더에서 끊기지 않게 한다.
+- Checkbox, Radio, Switch는 native input을 유지하고 label, checked, focus-visible, invalid, disabled 상태가 키보드에서 끊기지 않게 한다. Checkbox와 Switch는 `aria-invalid`를 native input에 두고, Radio는 native radio role 제약 때문에 wrapper invalid styling과 `describedBy` 연결을 유지한다.
 - 선택 컨트롤도 framed border와 surface 색상만 사용하며 hover 장식, 그림자, 그라데이션, pill switch를 기본값으로 만들지 않는다.
 - Checkbox, Radio, Switch의 hover 상태는 checked 상태를 덮어 선택 해제처럼 보이게 만들지 않는다.
 - Badge와 Callout은 상태 전달용 표면이며 제품 판단, 권한, 결제, 보안 결정을 직접 수행하지 않는다.
@@ -98,7 +98,7 @@
 - ThemeToggle은 light/dark 전환 버튼의 `aria-pressed`, 접근성 이름, glyph, focus-visible 표면만 담당하며 초기 테마 결정, storage key, system preference, SSR/초기 paint 처리는 소비 앱이 소유한다.
 - TextScaleControl은 글자 크기 선택의 `radiogroup`/`radio`/`aria-checked`, focus-visible, keyboard 이동 표면만 담당하며 실제 document root 배율, storage key, locale별 보정, 사용자 선호도 판단은 소비 앱이 소유한다.
 - Tooltip은 짧은 보조 설명 표면만 담당하며 popover, tour, validation, 긴 도움말, 권한 판단을 직접 수행하지 않는다.
-- Tooltip과 `.zdp-tooltip`은 hover와 focus-within에서 같은 표면을 열고, 설명이 접근성 이름을 보강해야 할 때만 `id`와 `aria-describedby`로 연결한다.
+- Tooltip과 `.zdp-tooltip`은 hover와 focus-within에서 같은 표면을 열고, Escape dismiss를 유지하며, 설명이 접근성 이름을 보강해야 할 때만 `id`와 `aria-describedby`로 연결한다.
 - Accordion과 Disclosure는 접힌 안내, 설정 묶음, FAQ형 설명의 trigger/panel/`aria-expanded`/`aria-controls` 구조만 담당하며 실제 FAQ 문구, 설정 값, 항목 노출, 권한, 데이터 fetch 판단을 직접 수행하지 않는다.
 - Accordion과 `.zdp-accordion`, Disclosure와 `.zdp-disclosure`는 그림자, 그라데이션, hover 이동 없이 framed trigger, panel border, disabled, focus-visible 계약만 유지한다.
 - SegmentedControl은 보기 방식, 밀도, 기간처럼 가까운 단일 선택의 `radiogroup`/`radio`/`aria-checked` 구조만 담당하며 실제 필터 의미, URL state, 정렬, 데이터 로딩, 권한 판단을 직접 수행하지 않는다.
