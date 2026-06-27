@@ -138,6 +138,7 @@ const expectedScripts = {
   'type:check': 'svelte-check --tsconfig ./tsconfig.json',
   'package:build': 'bun scripts/generate-tokens.ts && bun scripts/generate-share.ts && bun scripts/build-package.ts',
   'package:check': 'bun scripts/check-package.ts',
+  'publish:check': 'bun scripts/check-publish-readiness.ts',
   'fixtures:check': 'bun scripts/check-consumer-fixtures.ts'
 } as const;
 const failures: string[] = [];
@@ -177,6 +178,10 @@ function checkPackageScripts(packageJson: PackageJson): void {
 
   if (!packageJson.scripts?.check?.includes('bun run package:check')) {
     failures.push('package.json check script must include package artifact validation.');
+  }
+
+  if (!packageJson.scripts?.check?.includes('bun run publish:check')) {
+    failures.push('package.json check script must include publish-readiness validation.');
   }
 
   if (!packageJson.scripts?.check?.includes('bun run consumer:check')) {

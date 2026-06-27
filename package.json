@@ -1,6 +1,6 @@
 {
   "name": "zdp-design-system",
-  "version": "0.43.7",
+  "version": "0.43.8",
   "private": false,
   "license": "MIT",
   "type": "module",
@@ -52,11 +52,12 @@
     "type:check": "svelte-check --tsconfig ./tsconfig.json",
     "package:build": "bun scripts/generate-tokens.ts && bun scripts/generate-share.ts && bun scripts/build-package.ts",
     "package:check": "bun scripts/check-package.ts",
+    "publish:check": "bun scripts/check-publish-readiness.ts",
     "fixtures:check": "bun scripts/check-consumer-fixtures.ts",
     "storybook": "bun run dev",
     "storybook:build": "bun run build",
     "storybook:check": "bun scripts/check-storybook.ts",
-    "check": "bun run tokens:check && bun run consumer:check && bun run share-icons:check && bun run preview:check && bun run storybook:check && bun run a11y:check && bun run type:check && bun run package:build && bun run package:check && bun run fixtures:check"
+    "check": "bun run tokens:check && bun run consumer:check && bun run share-icons:check && bun run preview:check && bun run storybook:check && bun run a11y:check && bun run type:check && bun run package:build && bun run package:check && bun run publish:check && bun run fixtures:check"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "10.4.2",
