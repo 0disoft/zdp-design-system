@@ -12,7 +12,7 @@ export default defineConfig({
     alias: [
       {
         find: /^zdp-design-system$/,
-        replacement: resolve(packageRoot, 'dist/index.ts')
+        replacement: resolve(packageRoot, 'dist/index.js')
       },
       {
         find: /^zdp-design-system\/styles\.css$/,

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Hardened the npm package root export with generated `dist/index.js` and `dist/index.d.ts` entries instead of a TypeScript source entry.
 - Changed component default user-facing text from Korean to English.
 - Added `svelte-check` type validation to the package check chain.
 - Replaced the design token `$schema` URL with a repo-local schema that is copied into package artifacts.

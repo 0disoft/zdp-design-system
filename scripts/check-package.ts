@@ -95,7 +95,8 @@ const defaultLocaleSourcePaths = [
   'src/lib/preferences.ts',
   ...componentPaths.filter((path) => path.startsWith('src/lib/components/'))
 ] as const;
-const expectedRootExport = './dist/index.ts';
+const expectedRootRuntimeExport = './dist/index.js';
+const expectedRootTypeExport = './dist/index.d.ts';
 const expectedSubpathExports = {
   './styles.css': './dist/styles/index.css',
   './brand-fonts.css': './dist/styles/brand-fonts.css',
@@ -213,9 +214,19 @@ function checkPackageExports(packageJson: PackageJson): void {
     return;
   }
 
-  for (const condition of ['svelte', 'types', 'default'] as const) {
-    if (rootExport[condition] !== expectedRootExport) {
-      failures.push(`package.json exports["."].${condition} must be ${expectedRootExport}.`);
+  for (const condition of ['svelte', 'import', 'default'] as const) {
+    if (rootExport[condition] !== expectedRootRuntimeExport) {
+      failures.push(`package.json exports["."].${condition} must be ${expectedRootRuntimeExport}.`);
+    }
+  }
+
+  if (rootExport.types !== expectedRootTypeExport) {
+    failures.push(`package.json exports["."].types must be ${expectedRootTypeExport}.`);
+  }
+
+  for (const [condition, target] of Object.entries(rootExport)) {
+    if (typeof target === 'string' && target.endsWith('.ts') && !target.endsWith('.d.ts')) {
+      failures.push(`package.json exports["."].${condition} must not point at a TypeScript source file.`);
     }
   }
 
@@ -228,7 +239,8 @@ function checkPackageExports(packageJson: PackageJson): void {
     assertExistingExportTarget(expectedPath);
   }
 
-  assertExistingExportTarget(expectedRootExport);
+  assertExistingExportTarget(expectedRootRuntimeExport);
+  assertExistingExportTarget(expectedRootTypeExport);
 }
 
 function checkPackageFiles(packageJson: PackageJson): void {
@@ -258,7 +270,8 @@ function checkPackageFiles(packageJson: PackageJson): void {
   }
 
   for (const exportTarget of [
-    expectedRootExport,
+    expectedRootRuntimeExport,
+    expectedRootTypeExport,
     ...Object.values(expectedSubpathExports),
     ...Object.values(expectedShareExport)
   ]) {
