@@ -4,8 +4,8 @@
   import type { ZdpTableDensity, ZdpTableToolbarDensityItem } from '../table-tools';
 
   const defaultDensityItems: readonly ZdpTableToolbarDensityItem[] = [
-    { id: 'default', label: '기본' },
-    { id: 'compact', label: '촘촘히' }
+    { id: 'default', label: 'Default' },
+    { id: 'compact', label: 'Compact' }
   ];
 
   export let title: string | null = null;
@@ -13,17 +13,17 @@
   export let selectedCount: number | null = null;
   export let selectedLabel: string | null = null;
   export let density: ZdpTableDensity = 'default';
-  export let densityLabel = '표 밀도';
+  export let densityLabel = 'Table density';
   export let densityItems: readonly ZdpTableToolbarDensityItem[] = defaultDensityItems;
   export let labelledBy: string | null = null;
-  export let ariaLabel = '표 도구';
+  export let ariaLabel = 'Table tools';
   export let onDensityChange:
     | ((event: MouseEvent | KeyboardEvent, density: ZdpTableDensity, item: ZdpTableToolbarDensityItem) => void)
     | null = null;
 
   $: normalizedSelectedCount = normalizeCount(selectedCount);
   $: resolvedSelectedLabel =
-    selectedLabel ?? (normalizedSelectedCount > 0 ? `${normalizedSelectedCount}개 선택됨` : null);
+    selectedLabel ?? (normalizedSelectedCount > 0 ? `${normalizedSelectedCount} selected` : null);
   $: segmentedDensityItems = densityItems.map((item) => ({
     id: item.id,
     label: item.label,

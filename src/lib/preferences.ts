@@ -21,13 +21,14 @@ export interface ZdpTextScaleControlOption {
 }
 
 export const zdpTextScaleControlOptions = [
-  { value: 'base', label: '가', ariaLabel: '기본 글자 크기' },
-  { value: 'large', label: '가+', ariaLabel: '큰 글자 크기' },
-  { value: 'larger', label: '가++', ariaLabel: '더 큰 글자 크기' }
+  { value: 'base', label: 'A', ariaLabel: 'Default text size' },
+  { value: 'large', label: 'A+', ariaLabel: 'Large text size' },
+  { value: 'larger', label: 'A++', ariaLabel: 'Larger text size' }
 ] as const satisfies readonly ZdpTextScaleControlOption[];
 
 export const zdpLocaleSwitcherOptions = [
-  { value: 'ko', label: '한국어', shortLabel: 'KO', lang: 'ko', ariaLabel: '한국어' }
+  { value: 'en', label: 'English', shortLabel: 'EN', lang: 'en', ariaLabel: 'English' },
+  { value: 'ko', label: 'Korean', shortLabel: 'KO', lang: 'ko', ariaLabel: 'Korean' }
 ] as const satisfies readonly ZdpLocaleSwitcherOption[];
 
 export function isZdpTextScale(value: string | null | undefined): value is ZdpTextScale {

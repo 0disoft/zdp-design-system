@@ -3,7 +3,7 @@
   import Tooltip from './Tooltip.svelte';
 
   export let items: readonly ZdpShareDockItem[] = [];
-  export let ariaLabel = '공유';
+  export let ariaLabel = 'Share';
   export let labelledBy: string | null = null;
   export let placement: 'side' | 'rail' | 'bottom' | 'inline' = 'side';
 

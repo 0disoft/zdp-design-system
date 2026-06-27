@@ -8,7 +8,7 @@
   export let tone: ZdpAvatarTone = 'neutral';
   export let decorative = false;
 
-  $: resolvedLabel = label?.trim() || '사용자';
+  $: resolvedLabel = label?.trim() || 'User';
   $: resolvedInitials = initials?.trim() ?? '';
   $: accessibilityLabel = decorative ? undefined : resolvedLabel;
 </script>

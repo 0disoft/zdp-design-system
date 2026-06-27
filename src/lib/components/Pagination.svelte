@@ -10,11 +10,11 @@
   export let currentPage = 1;
   export let totalPages = 1;
   export let siblingCount = 1;
-  export let ariaLabel = '페이지 이동';
-  export let previousLabel = '이전';
-  export let nextLabel = '다음';
-  export let pageLabel: (page: number) => string = (page) => `${page}페이지`;
-  export let currentLabel: (page: number) => string = (page) => `현재 ${page}페이지`;
+  export let ariaLabel = 'Pagination';
+  export let previousLabel = 'Previous';
+  export let nextLabel = 'Next';
+  export let pageLabel: (page: number) => string = (page) => `${page} page`;
+  export let currentLabel: (page: number) => string = (page) => `Current page, page ${page}`;
   export let hrefForPage: ((page: number) => string | null) | null = null;
   export let onPageChange: ((event: MouseEvent, page: number) => void) | null = null;
 

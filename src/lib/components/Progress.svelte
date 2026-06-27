@@ -6,7 +6,7 @@
   export let max = 100;
   export let tone: ZdpProgressTone = 'primary';
   export let size: ZdpProgressSize = 'md';
-  export let ariaLabel = '진행 상태';
+  export let ariaLabel = 'Progress';
   export let labelledBy: string | null = null;
   export let describedBy: string | null = null;
   export let valueText: string | null = null;

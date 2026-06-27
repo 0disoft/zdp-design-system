@@ -8,7 +8,7 @@
 
   export let items: readonly ZdpMenuItem[] = [];
   export let open = false;
-  export let triggerLabel = '메뉴';
+  export let triggerLabel = 'Menu';
   export let idPrefix: string | null = null;
   export let placement: 'top' | 'right' | 'bottom' | 'left' = 'bottom';
   export let align: 'start' | 'center' | 'end' = 'end';

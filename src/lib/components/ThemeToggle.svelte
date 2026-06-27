@@ -9,8 +9,8 @@
   export let form: string | null = null;
   export let disabled = false;
   export let type: 'button' | 'submit' | 'reset' = 'button';
-  export let lightLabel = '라이트 모드로 전환';
-  export let darkLabel = '다크 모드로 전환';
+  export let lightLabel = 'Switch to light mode';
+  export let darkLabel = 'Switch to dark mode';
   export let ariaControls: string | null = null;
   export let ariaDescribedBy: string | null = null;
   export let onclick: ((event: MouseEvent) => void) | null = null;

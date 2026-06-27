@@ -5,7 +5,7 @@
   export let lines = 1;
   export let animated = true;
   export let decorative = true;
-  export let ariaLabel = '내용을 불러오는 중';
+  export let ariaLabel = 'Loading content';
   export let labelledBy: string | null = null;
 
   $: lineCount = Math.max(1, Math.min(8, Math.floor(Number.isFinite(lines) ? lines : 1)));

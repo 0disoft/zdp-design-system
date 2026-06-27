@@ -1,7 +1,7 @@
 <script lang="ts">
   export let forId: string | null = null;
   export let required = false;
-  export let requiredLabel = '필수';
+  export let requiredLabel = 'Required';
 </script>
 
 <label class="zdp-label" for={forId ?? undefined}>

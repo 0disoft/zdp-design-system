@@ -2,7 +2,7 @@
   import Avatar from './Avatar.svelte';
   import type { ZdpIdentityChipAriaCurrent, ZdpIdentityChipSize } from '../identity';
 
-  export let label = '사용자';
+  export let label = 'User';
   export let description: string | null = null;
   export let initials: string | null = null;
   export let imageSrc: string | null = null;

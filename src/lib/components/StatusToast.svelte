@@ -10,7 +10,7 @@
     | 'bottom-start'
     | 'bottom-end' = 'bottom-end';
   export let idPrefix = 'zdp-status-toast';
-  export let ariaLabel = '상태 알림';
+  export let ariaLabel = 'Status notifications';
   export let labelledBy: string | null = null;
   export let onDismiss: ((event: MouseEvent, item: ZdpStatusToastItem) => void) | null = null;
 
@@ -46,7 +46,7 @@
       tone={item.tone ?? 'neutral'}
       labelledBy={titleId(item)}
       describedBy={messageId(item)}
-      dismissLabel={item.dismissLabel ?? '알림 닫기'}
+      dismissLabel={item.dismissLabel ?? 'Dismiss notification'}
       onClose={onDismiss ? (event) => handleDismiss(event, item) : null}
     >
       {#if item.title}

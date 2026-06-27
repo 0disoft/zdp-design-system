@@ -13,10 +13,10 @@
   export let value = '';
   export let query = '';
   export let options: readonly ZdpComboboxOption[] = [];
-  export let label: string | null = '검색';
+  export let label: string | null = 'Search';
   export let labelVisible = false;
   export let ariaLabel: string | null = null;
-  export let placeholder: string | null = '검색어 입력';
+  export let placeholder: string | null = 'Search query';
   export let autocomplete: HTMLInputAttributes['autocomplete'] | null = 'off';
   export let describedBy: DescribedBy = null;
   export let errorMessageId: string | null = null;
@@ -25,7 +25,7 @@
   export let readonly = false;
   export let required = false;
   export let size: ZdpComboboxSize = 'md';
-  export let noResultsText = '결과 없음';
+  export let noResultsText = 'No results';
   export let onQueryChange: ((query: string) => void) | null = null;
   export let onValueChange: ((value: string, option: ZdpComboboxOption | null) => void) | null = null;
   export let onOpenChange: ((open: boolean) => void) | null = null;
@@ -55,8 +55,8 @@
   $: hasOptions = options.length > 0;
   $: activeOptionId = resolveActiveOptionId(activeOptionId, enabledOptions);
   $: activeOptionDomId = open && activeOptionId ? optionDomId(activeOptionId) : null;
-  $: inputAriaLabel = label ? undefined : ariaLabel ?? '검색';
-  $: listboxLabel = `${label ?? ariaLabel ?? '선택'} 목록`;
+  $: inputAriaLabel = label ? undefined : ariaLabel ?? 'Search';
+  $: listboxLabel = `${label ?? ariaLabel ?? 'Selection'} list`;
 
   $: if (value !== lastSyncedValue) {
     query = selectedOptionLabel;
@@ -269,7 +269,7 @@
     <button
       class="zdp-combobox__toggle"
       type="button"
-      aria-label={open ? '선택 닫기' : '선택 열기'}
+      aria-label={open ? 'Close selection' : 'Open selection'}
       aria-controls={open && hasOptions ? listboxId : undefined}
       aria-expanded={open}
       disabled={disabled || readonly}

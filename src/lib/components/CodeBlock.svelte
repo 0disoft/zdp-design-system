@@ -10,9 +10,9 @@
   export let tone: ZdpCodeBlockTone = 'default';
   export let wrap = false;
   export let showCopy = true;
-  export let copyLabel = '복사';
-  export let copiedLabel = '복사됨';
-  export let copyFailedLabel = '복사 실패';
+  export let copyLabel = 'Copy';
+  export let copiedLabel = 'Copied';
+  export let copyFailedLabel = 'Copy failed';
   export let ariaLabel: string | null = null;
   export let labelledBy: string | null = null;
   export let describedBy: string | null = null;
@@ -24,7 +24,7 @@
 
   $: canCopy = showCopy && code.length > 0;
   $: resolvedAriaLabel = ariaLabel ?? (!labelledBy && label ? label : null);
-  $: codeRegionLabel = [label ?? ariaLabel, language ? `${language} 코드` : '코드'].filter(Boolean).join(' ');
+  $: codeRegionLabel = [label ?? ariaLabel, language ? `${language} code` : 'Code'].filter(Boolean).join(' ');
   $: resolvedCopyLabel =
     copyState === 'copied' ? copiedLabel : copyState === 'failed' ? copyFailedLabel : copyLabel;
 

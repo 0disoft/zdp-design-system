@@ -10,7 +10,7 @@
   export let describedBy: string | null = null;
   export let placement: ZdpSheetPlacement = 'right';
   export let size: ZdpSheetSize = 'md';
-  export let closeLabel = '닫기';
+  export let closeLabel = 'Close';
   export let closeOnEscape = true;
   export let closeOnBackdrop = true;
   export let onClose: (() => void) | null = null;

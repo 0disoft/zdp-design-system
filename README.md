@@ -19,6 +19,7 @@ ZDP의 디자인 토큰, CSS, 아이콘, Svelte UI 컴포넌트 경계를 고정
 ## Foundation 계약
 
 디자인 시스템은 각 제품의 번역, 라우팅, SEO, 페이지별 레이아웃을 소유하지 않는다. 대신 소비 표면이 깨지지 않도록 다음 공통 계약을 제공한다.
+Default component text is English. 제품별 화면은 필요한 모든 user-facing label, placeholder, aria-label, empty text, toast dismissal text를 prop으로 넘겨 각 locale에 맞게 override한다.
 
 - `type`: body, body small, page title, title, label, caption, control, data에 쓰는 기본 크기와 줄높이
 - `breakpoint`: mobile, tablet, desktop, wide 기준 폭

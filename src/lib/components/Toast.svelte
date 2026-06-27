@@ -7,7 +7,7 @@
   export let semanticRole: 'status' | 'alert' | 'note' | null = null;
   export let live: 'off' | 'polite' | 'assertive' | null = null;
   export let atomic = true;
-  export let dismissLabel = '알림 닫기';
+  export let dismissLabel = 'Dismiss notification';
   export let onClose: ((event: MouseEvent) => void) | null = null;
 
   $: resolvedRole = semanticRole ?? (tone === 'danger' ? 'alert' : 'status');

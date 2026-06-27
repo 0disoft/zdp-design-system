@@ -91,6 +91,10 @@ const componentPaths = [
   'stories/Navigation.svelte',
   'stories/ThemeLocaleStress.svelte'
 ] as const;
+const defaultLocaleSourcePaths = [
+  'src/lib/preferences.ts',
+  ...componentPaths.filter((path) => path.startsWith('src/lib/components/'))
+] as const;
 const expectedRootExport = './dist/index.ts';
 const expectedSubpathExports = {
   './styles.css': './dist/styles/index.css',
@@ -146,6 +150,7 @@ checkPackageFiles(packageJson);
 checkPackageArtifactFiles(packageJson);
 checkPackageSideEffects(packageJson);
 await checkSvelteCompilation();
+await checkEnglishDefaultTextContract();
 await checkShareContract();
 await checkButtonContract();
 await checkSharedFocusContract();
@@ -313,6 +318,18 @@ async function checkSvelteCompilation(): Promise<void> {
       for (const warning of warnings) {
         failures.push(`${relativePath} has Svelte warning ${warning.code}: ${warning.message}`);
       }
+    }
+  }
+}
+
+async function checkEnglishDefaultTextContract(): Promise<void> {
+  const hangulPattern = /[\uac00-\ud7af]/;
+
+  for (const relativePath of defaultLocaleSourcePaths) {
+    const source = await readFile(join(root, relativePath), 'utf8');
+
+    if (hangulPattern.test(source)) {
+      failures.push(`${relativePath} must keep component default user-facing text in English.`);
     }
   }
 }

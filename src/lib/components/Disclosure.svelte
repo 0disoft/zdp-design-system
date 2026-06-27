@@ -8,7 +8,7 @@
   export let open = false;
   export let disabled = false;
   export let id: string | null = null;
-  export let title = '자세히 보기';
+  export let title = 'View details';
   export let headingLevel: ZdpDisclosureHeadingLevel | null = null;
   export let onOpenChange: ((open: boolean) => void) | null = null;
 

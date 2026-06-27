@@ -3,7 +3,7 @@
 
   export let size: ZdpSpinnerSize = 'md';
   export let tone: ZdpProgressTone = 'primary';
-  export let label = '로딩 중';
+  export let label = 'Loading';
   export let decorative = false;
   export let semanticRole: 'status' | 'img' | null = 'status';
 </script>

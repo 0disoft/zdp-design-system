@@ -10,10 +10,10 @@
   export let name: string | null = null;
   export let value = '';
   export let type: HTMLInputAttributes['type'] = 'search';
-  export let label: string | null = '검색';
+  export let label: string | null = 'Search';
   export let labelVisible = false;
   export let ariaLabel: string | null = null;
-  export let placeholder: string | null = '검색어 입력';
+  export let placeholder: string | null = 'Search query';
   export let autocomplete: HTMLInputAttributes['autocomplete'] | null = 'off';
   export let describedBy: DescribedBy = null;
   export let errorMessageId: string | null = null;
@@ -38,7 +38,7 @@
   $: ariaDescribedBy = normalizeIdRefs(describedBy);
   $: resolvedErrorMessageId = invalid && errorMessageId ? errorMessageId : null;
   $: hasShortcut = shortcutKeys.length > 0;
-  $: inputAriaLabel = label ? undefined : ariaLabel ?? '검색';
+  $: inputAriaLabel = label ? undefined : ariaLabel ?? 'Search';
 
   function handleInput(event: Event): void {
     value = (event.currentTarget as HTMLInputElement).value;

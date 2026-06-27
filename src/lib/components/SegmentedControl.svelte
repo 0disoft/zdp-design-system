@@ -7,7 +7,7 @@
 
   export let items: readonly ZdpSegmentedControlItem[] = [];
   export let selectedId: string | null = null;
-  export let ariaLabel = '선택 전환';
+  export let ariaLabel = 'Selection toggle';
   export let idPrefix: string | null = null;
   export let size: ZdpSegmentedControlSize = 'md';
   export let onChange:

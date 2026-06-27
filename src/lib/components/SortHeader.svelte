@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { ZdpSortDirection } from '../table-tools';
 
-  export let label = '정렬';
+  export let label = 'Sort';
   export let direction: ZdpSortDirection = 'none';
   export let disabled = false;
   export let ariaLabel: string | null = null;
@@ -13,10 +13,10 @@
   $: nextDirection = getNextDirection(normalizedDirection);
   $: directionLabel =
     normalizedDirection === 'ascending'
-      ? '오름차순'
+      ? 'Ascending'
       : normalizedDirection === 'descending'
-        ? '내림차순'
-        : '정렬 없음';
+        ? 'Descending'
+        : 'Not sorted';
   $: resolvedAriaLabel = ariaLabel ?? `${label} ${directionLabel}`;
 
   function handleClick(event: MouseEvent): void {

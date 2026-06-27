@@ -9,9 +9,9 @@
     type ZdpLocaleSwitcherSize
   } from '../preferences';
 
-  export let value = 'ko';
+  export let value = 'en';
   export let options: readonly ZdpLocaleSwitcherOption[] = zdpLocaleSwitcherOptions;
-  export let ariaLabel = '언어';
+  export let ariaLabel = 'Language';
   export let idPrefix: string | null = null;
   export let size: ZdpLocaleSwitcherSize = 'md';
   export let disabled = false;

@@ -8,7 +8,7 @@
 
   export let items: readonly ZdpAccordionItem[] = [];
   export let mode: ZdpAccordionMode = 'multiple';
-  export let ariaLabel = '접힌 목록';
+  export let ariaLabel = 'Collapsed sections';
   export let headingLevel: ZdpDisclosureHeadingLevel | null = 3;
   export let onOpenChange:
     | ((

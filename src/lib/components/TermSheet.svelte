@@ -8,11 +8,11 @@
   export let id = 'zdp-term-sheet';
   export let term: ZdpTermSheetTerm | null = null;
   export let placement: ZdpTermSheetPlacement = 'right';
-  export let closeLabel = '닫기';
-  export let eyebrow = '용어';
-  export let detailLabel = '자세히 보기';
-  export let relatedLabel = '관련 용어';
-  export let exampleLabel = '예시';
+  export let closeLabel = 'Close';
+  export let eyebrow = 'Term';
+  export let detailLabel = 'View details';
+  export let relatedLabel = 'Related terms';
+  export let exampleLabel = 'Example';
   export let closeOnEscape = true;
   export let closeOnBackdrop = true;
   export let onClose: (() => void) | null = null;

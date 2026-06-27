@@ -12,7 +12,7 @@
 
   export let value: ZdpTextScale = 'base';
   export let options: readonly ZdpTextScaleControlOption[] = zdpTextScaleControlOptions;
-  export let ariaLabel = '글자 크기';
+  export let ariaLabel = 'Text size';
   export let idPrefix: string | null = null;
   export let size: ZdpTextScaleControlSize = 'md';
   export let disabled = false;

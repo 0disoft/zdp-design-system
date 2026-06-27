@@ -2,6 +2,7 @@
 
 이 문서는 `zdp-design-system`을 다른 ZDP 저장소에서 소비할 때의 기준이다.
 목표는 public web, app shell, product lab, game surface가 같은 토큰과 같은 접근성 기본값을 공유하게 만드는 것이다.
+Default component text is English. 소비 앱은 화면 locale에 맞춰 user-facing label, placeholder, aria-label, empty text, toast dismissal text를 prop으로 override한다.
 
 ## 공통 원칙
 

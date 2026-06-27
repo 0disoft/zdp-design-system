@@ -3,9 +3,9 @@
 
   export let id: string | null = null;
   export let tone: 'primary' | 'danger' = 'primary';
-  export let label = '밀어서 확인';
-  export let hint = '밀거나 2초간 누르기';
-  export let completeLabel = '확인됨';
+  export let label = 'Slide to confirm';
+  export let hint = 'Slide or hold for 2 seconds';
+  export let completeLabel = 'Confirmed';
   export let disabled = false;
   export let durationMs = 2000;
   export let onconfirm: (() => void) | null = null;
