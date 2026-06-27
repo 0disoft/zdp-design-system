@@ -5,6 +5,7 @@ import { compile, type Warning } from 'svelte/compiler';
 
 interface PackageJson {
   readonly version?: string;
+  readonly license?: string;
   readonly exports?: Record<string, unknown>;
   readonly files?: readonly string[];
   readonly sideEffects?: readonly string[];
@@ -107,6 +108,7 @@ const expectedPackageFiles = [
   'dist/',
   'docs/',
   'README.md',
+  'LICENSE',
   'CHANGELOG.md',
   'THIRD_PARTY_NOTICES.md'
 ] as const;
@@ -134,6 +136,7 @@ const failures: string[] = [];
 const packageJson = await readPackageJson(packagePath);
 
 checkPackageScripts(packageJson);
+checkPackageLicense(packageJson);
 checkPackageExports(packageJson);
 checkPackageFiles(packageJson);
 checkPackageSideEffects(packageJson);
@@ -179,6 +182,12 @@ function checkPackageScripts(packageJson: PackageJson): void {
 
   if (!packageJson.scripts?.check?.includes('bun run fixtures:check')) {
     failures.push('package.json check script must build the consumer fixture against dist exports.');
+  }
+}
+
+function checkPackageLicense(packageJson: PackageJson): void {
+  if (packageJson.license !== 'MIT') {
+    failures.push('package.json license must be MIT for public repository redistribution readiness.');
   }
 }
 
@@ -650,6 +659,7 @@ async function readPackageJson(path: string): Promise<PackageJson> {
 
   return {
     version: typeof parsed.version === 'string' ? parsed.version : undefined,
+    license: typeof parsed.license === 'string' ? parsed.license : undefined,
     exports: isRecord(parsed.exports) ? parsed.exports : undefined,
     files: isStringArray(parsed.files) ? parsed.files : undefined,
     sideEffects: isStringArray(parsed.sideEffects) ? parsed.sideEffects : undefined,

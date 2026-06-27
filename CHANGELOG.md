@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added MIT license metadata and package checks so public repository readiness keeps an explicit redistribution grant.
 - Fixed Switch invalid-state accessibility so the native switch input exposes `aria-invalid` and can wire `errorMessageId` to `aria-errormessage`.
 - Added Escape dismissal to `Tooltip` and aligned `_blank` link defaults on `Link` and `StatusToast` to `noopener noreferrer`.
 - Optically centered the dark-mode moon glyph in `ThemeToggle` so it aligns visually with the sun glyph while keeping the same control frame.

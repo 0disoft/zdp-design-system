@@ -1,7 +1,8 @@
 {
   "name": "zdp-design-system",
-  "version": "0.43.2",
+  "version": "0.43.3",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "description": "ZDP design tokens, CSS, icons, and Svelte UI package boundary.",
   "exports": {
@@ -25,6 +26,7 @@
     "dist/",
     "docs/",
     "README.md",
+    "LICENSE",
     "CHANGELOG.md",
     "THIRD_PARTY_NOTICES.md"
   ],
