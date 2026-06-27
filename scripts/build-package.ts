@@ -21,5 +21,6 @@ await mkdir(distRoot, { recursive: true });
 await cp(resolve(repoRoot, 'src/lib'), distRoot, { recursive: true });
 await cp(resolve(repoRoot, 'src/styles'), resolve(distRoot, 'styles'), { recursive: true });
 await cp(resolve(repoRoot, 'tokens'), resolve(distRoot, 'tokens'), { recursive: true });
+await cp(resolve(repoRoot, 'schemas'), resolve(distRoot, 'schemas'), { recursive: true });
 await cp(resolve(repoRoot, 'share.js'), resolve(distRoot, 'share.js'));
 await cp(resolve(repoRoot, 'share.d.ts'), resolve(distRoot, 'share.d.ts'));

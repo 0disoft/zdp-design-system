@@ -112,6 +112,9 @@ const expectedPackageFiles = [
   'CHANGELOG.md',
   'THIRD_PARTY_NOTICES.md'
 ] as const;
+const expectedDistArtifactFiles = [
+  './dist/schemas/design-tokens.schema.json'
+] as const;
 const expectedSideEffects = [
   './dist/styles/index.css',
   './dist/styles/brand-fonts.css',
@@ -139,6 +142,7 @@ checkPackageScripts(packageJson);
 checkPackageLicense(packageJson);
 checkPackageExports(packageJson);
 checkPackageFiles(packageJson);
+checkPackageArtifactFiles(packageJson);
 checkPackageSideEffects(packageJson);
 await checkSvelteCompilation();
 await checkShareContract();
@@ -250,6 +254,20 @@ function checkPackageFiles(packageJson: PackageJson): void {
   ]) {
     if (!isCoveredByPackageFiles(packageJson.files, exportTarget)) {
       failures.push(`package.json files does not include export target ${exportTarget}.`);
+    }
+  }
+}
+
+function checkPackageArtifactFiles(packageJson: PackageJson): void {
+  if (!Array.isArray(packageJson.files)) {
+    return;
+  }
+
+  for (const artifactPath of expectedDistArtifactFiles) {
+    assertExistingExportTarget(artifactPath);
+
+    if (!isCoveredByPackageFiles(packageJson.files, artifactPath)) {
+      failures.push(`package.json files does not include package artifact ${artifactPath}.`);
     }
   }
 }

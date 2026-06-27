@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { zdpTokenNames } from '../src/lib/tokens.ts';
 
 interface TokenDocument {
+  readonly $schema: string;
   readonly name: string;
   readonly version: string;
   readonly color: ColorTokenGroups;
@@ -38,6 +39,7 @@ type ColorTokenGroups = Record<string, Record<string, ColorTokenValue>>;
 const root = process.cwd();
 const packagePath = join(root, 'package.json');
 const tokenPath = join(root, 'tokens', 'zdp.tokens.json');
+const schemaPath = join(root, 'schemas', 'design-tokens.schema.json');
 const cssPath = join(root, 'src', 'styles', 'tokens.css');
 const brandFontsPath = join(root, 'src', 'styles', 'brand-fonts.css');
 const expressiveFontsPath = join(root, 'src', 'styles', 'expressive-fonts.css');
@@ -48,6 +50,7 @@ const oklchColorPattern = /^oklch\([^)]+\)$/;
 
 const packageJson = await readPackageJson(packagePath);
 const tokenDocument = await readTokenDocument(tokenPath);
+const schemaDocument = await readSchemaDocument(schemaPath);
 const css = await readFile(cssPath, 'utf8');
 const brandFonts = await readFile(brandFontsPath, 'utf8');
 const expressiveFonts = await readFile(expressiveFontsPath, 'utf8');
@@ -58,8 +61,16 @@ const publicTokenNames = collectPublicTokenNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
 
-if (packageJson.version !== '0.43.3') {
-  failures.push('package.json version must be 0.43.3 for the current design-system package contract.');
+if (packageJson.version !== '0.43.4') {
+  failures.push('package.json version must be 0.43.4 for the current design-system package contract.');
+}
+
+if (tokenDocument.$schema !== '../schemas/design-tokens.schema.json') {
+  failures.push('tokens/zdp.tokens.json must use the repo-local ../schemas/design-tokens.schema.json schema.');
+}
+
+if (schemaDocument.properties?.$schema?.const !== '../schemas/design-tokens.schema.json') {
+  failures.push('schemas/design-tokens.schema.json must enforce the repo-local token $schema value.');
 }
 
 if (tokenDocument.version !== '0.6.10') {
@@ -447,10 +458,12 @@ async function readTokenDocument(path: string): Promise<TokenDocument> {
     throw new Error('Token document must not define gradient tokens for core UI surfaces.');
   }
 
+  assertString(parsed.$schema, '$schema');
   assertString(parsed.name, 'name');
   assertString(parsed.version, 'version');
 
   return {
+    $schema: parsed.$schema,
     name: parsed.name,
     version: parsed.version,
     color: assertColorGroups(parsed.color, 'color'),
@@ -471,6 +484,35 @@ async function readTokenDocument(path: string): Promise<TokenDocument> {
     i18n: assertStringRecord(parsed.i18n, 'i18n'),
     shadow: assertStringRecord(parsed.shadow, 'shadow'),
     motion: assertStringRecord(parsed.motion, 'motion')
+  };
+}
+
+async function readSchemaDocument(path: string): Promise<{
+  readonly properties?: {
+    readonly $schema?: {
+      readonly const?: string;
+    };
+  };
+}> {
+  const parsed = JSON.parse(await readFile(path, 'utf8')) as unknown;
+
+  if (!isRecord(parsed)) {
+    throw new Error('schemas/design-tokens.schema.json must be a JSON object.');
+  }
+
+  const properties = isRecord(parsed.properties) ? parsed.properties : undefined;
+  const schemaProperty = isRecord(properties?.$schema)
+    ? properties.$schema
+    : undefined;
+
+  return {
+    properties: schemaProperty
+      ? {
+          $schema: {
+            const: typeof schemaProperty.const === 'string' ? schemaProperty.const : undefined
+          }
+        }
+      : undefined
   };
 }
 

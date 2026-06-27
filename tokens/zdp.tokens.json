@@ -1,5 +1,5 @@
 {
-  "$schema": "https://zdp.zerodi.dev/schemas/design-tokens.schema.json",
+  "$schema": "../schemas/design-tokens.schema.json",
   "name": "zdp-core",
   "version": "0.6.10",
   "color": {
