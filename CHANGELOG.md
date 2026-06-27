@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added `svelte-check` type validation to the package check chain.
 - Replaced the design token `$schema` URL with a repo-local schema that is copied into package artifacts.
 - Added MIT license metadata and package checks so public repository readiness keeps an explicit redistribution grant.
 - Fixed Switch invalid-state accessibility so the native switch input exposes `aria-invalid` and can wire `errorMessageId` to `aria-errormessage`.

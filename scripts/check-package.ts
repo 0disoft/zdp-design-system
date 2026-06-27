@@ -130,6 +130,7 @@ const expectedScripts = {
   'tokens:generate': 'bun scripts/generate-tokens.ts',
   'tokens:check': 'bun scripts/generate-tokens.ts --check && bun scripts/check-tokens.ts',
   'a11y:check': 'bun scripts/check-storybook-a11y.ts',
+  'type:check': 'svelte-check --tsconfig ./tsconfig.json',
   'package:build': 'bun scripts/generate-tokens.ts && bun scripts/generate-share.ts && bun scripts/build-package.ts',
   'package:check': 'bun scripts/check-package.ts',
   'fixtures:check': 'bun scripts/check-consumer-fixtures.ts'
@@ -182,6 +183,10 @@ function checkPackageScripts(packageJson: PackageJson): void {
 
   if (!packageJson.scripts?.check?.includes('bun run package:build')) {
     failures.push('package.json check script must build the dist package before package validation.');
+  }
+
+  if (!packageJson.scripts?.check?.includes('bun run type:check')) {
+    failures.push('package.json check script must include Svelte type validation.');
   }
 
   if (!packageJson.scripts?.check?.includes('bun run fixtures:check')) {

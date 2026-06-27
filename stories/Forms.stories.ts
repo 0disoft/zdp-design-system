@@ -1,15 +1,20 @@
 import { expect, userEvent, within } from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import Forms from './Forms.svelte';
 
-export default {
+const meta = {
   title: 'Design System/Components/Form Controls',
   component: Forms,
   parameters: {
     layout: 'fullscreen'
   }
-};
+} satisfies Meta<typeof Forms>;
 
-export const States = {
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const States: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const lightPanel = within(canvas.getByRole('region', { name: 'Light' }));

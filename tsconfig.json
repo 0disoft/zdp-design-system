@@ -1,0 +1,38 @@
+{
+  "extends": "@tsconfig/svelte/tsconfig.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "allowJs": true,
+    "checkJs": false,
+    "isolatedModules": true,
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "strict": false,
+    "types": [
+      "node",
+      "svelte"
+    ]
+  },
+  "include": [
+    ".storybook/**/*.ts",
+    "scripts/**/*.ts",
+    "src/**/*.svelte",
+    "src/**/*.ts",
+    "stories/**/*.svelte",
+    "stories/**/*.ts",
+    "svelte.config.js",
+    "vite.config.*"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "storybook-static",
+    "tmp"
+  ]
+}
