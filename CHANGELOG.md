@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.43.8
+
 - Added a publish-readiness check for package metadata, export targets, dist entries, and packaged public documents before npm release work.
 - Hardened the npm package root export with generated `dist/index.js` and `dist/index.d.ts` entries instead of a TypeScript source entry.
 - Changed component default user-facing text from Korean to English.
