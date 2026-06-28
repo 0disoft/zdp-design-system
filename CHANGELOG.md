@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Documented the dependency adoption policy: active ZDP sibling consumers may keep `file:../zdp-design-system`, while standalone consumers, public templates, and external examples should use the npm package from `^0.43.8`.
+- Added a single-component consumer fixture proof so the root barrel keeps tree-shaking unused component exports out of Button-only bundles.
 
 ## 0.43.8
 
