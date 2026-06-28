@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Documented the dependency adoption policy: active ZDP sibling consumers may keep `file:../zdp-design-system`, while standalone consumers, public templates, and external examples should use the npm package from `^0.43.8`.
+
 ## 0.43.8
 
 - Added a publish-readiness check for package metadata, export targets, dist entries, and packaged public documents before npm release work.
