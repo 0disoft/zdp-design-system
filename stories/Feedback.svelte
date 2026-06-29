@@ -1,4 +1,5 @@
 <script lang="ts">
+  import AdSlot from '../src/lib/components/AdSlot.svelte';
   import Badge from '../src/lib/components/Badge.svelte';
   import Callout from '../src/lib/components/Callout.svelte';
   import Divider from '../src/lib/components/Divider.svelte';
@@ -130,6 +131,21 @@
           </Stack>
         </Surface>
 
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3 id="feedback-light-ad-title">광고 자리</h3>
+            <AdSlot
+              placement="between-sections"
+              state="pending"
+              label="Advertisement"
+              describedBy="feedback-light-ad-desc"
+            />
+            <p class="story-status" id="feedback-light-ad-desc">
+              제공자, 동의, slot id는 소비 앱이 정하고 이 컴포넌트는 자리만 예약합니다.
+            </p>
+          </Stack>
+        </Surface>
+
         <div class="surface-pair">
           <Surface padding="lg">
             <span class="surface-kicker">Parchment</span>
@@ -211,6 +227,18 @@
             </Inline>
             <Skeleton variant="text" lines={2} />
             <Skeleton variant="avatar" />
+          </Stack>
+        </Surface>
+
+        <Surface padding="lg">
+          <Stack gap="md">
+            <h3 id="feedback-dark-ad-title">광고 자리</h3>
+            <AdSlot placement="rail" state="filled" label="Advertisement" minHeight="10rem">
+              <div class="story-ad-creative" aria-hidden="true">
+                <span>Reserved creative</span>
+              </div>
+            </AdSlot>
+            <AdSlot placement="inline" state="blocked" label="Advertisement" fallbackText="Ad unavailable" />
           </Stack>
         </Surface>
 
@@ -324,6 +352,19 @@
     color: var(--zdp-color-ink-muted);
     line-height: var(--zdp-type-body-line-height);
     margin: var(--zdp-space-2) 0 0;
+  }
+
+  .story-ad-creative {
+    align-items: center;
+    background: var(--zdp-color-surface-raised);
+    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+    color: var(--zdp-color-ink-muted);
+    display: grid;
+    font-size: var(--zdp-type-caption-size);
+    inline-size: 100%;
+    min-block-size: 10rem;
+    min-width: 0;
+    place-items: center;
   }
 
   @media (max-width: 860px) {

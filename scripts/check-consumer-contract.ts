@@ -40,8 +40,8 @@ if (failures.length > 0) {
 }
 
 function checkPackageSurface(packageJson: PackageJson): void {
-  if (packageJson.version !== '0.43.8') {
-    failures.push('package.json version must be 0.43.8 for the current design-system package contract.');
+  if (packageJson.version !== '0.44.0') {
+    failures.push('package.json version must be 0.44.0 for the current design-system package contract.');
   }
 
   if (packageJson.exports?.['./brand-fonts.css'] !== './dist/styles/brand-fonts.css') {
@@ -84,6 +84,7 @@ function checkConsumerContractDocument(documentText: string): void {
     "from 'zdp-design-system'",
     'zdp-design-system/share',
     'Accordion',
+    'AdSlot',
     'Avatar',
     'Breadcrumb',
     'CodeBlock',
@@ -180,6 +181,8 @@ function checkConsumerContractDocument(documentText: string): void {
     '.zdp-tooltip',
     '.zdp-disclosure',
     '.zdp-accordion',
+    '.zdp-ad-slot',
+    'data-zdp-ad-slot',
     '.zdp-segmented-control',
     '.zdp-sheet',
     '.zdp-popover',
@@ -234,6 +237,7 @@ function checkConsumerContractDocument(documentText: string): void {
     'aria-keyshortcuts',
     'ariaDescribedBy',
     'zdpShareIcons',
+    'provider script, consent, slot id, ads.txt, personalized ads 판단',
     'aria-current="page"',
     'focus trap',
     'keyboard focus',
@@ -291,6 +295,7 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'Popover와 Menu는 설정',
     'Sheet는 설정',
     'Pagination은 목록 페이지 이동',
+    'AdSlot은 광고나 후원 자리',
     'Progress, Spinner, Skeleton은 작업 진행',
     'Toast와 StatusToast는 저장',
     'brand-fonts.css',
@@ -373,6 +378,7 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
     'Popover와 Menu는 설정',
     'Sheet는 설정',
     'Pagination은 목록 페이지 이동',
+    'AdSlot은 광고나 후원 자리',
     'Progress, Spinner, Skeleton은 작업 진행',
     'Toast와 StatusToast는 저장',
     'Selection blocking은 text color가 아니라 interaction policy',
@@ -446,6 +452,7 @@ function checkTokenAndComponentSurface(tokenDocument: string, publicEntry: strin
 
   for (const requiredText of [
     'export { default as Accordion }',
+    'export { default as AdSlot }',
     'export { default as Avatar }',
     'export { default as Button }',
     'export { default as Breadcrumb }',
@@ -501,6 +508,7 @@ function checkTokenAndComponentSurface(tokenDocument: string, publicEntry: strin
     'export { default as VisuallyHidden }',
     'export { zdpShareIcons }',
     'export type { ZdpAccordionItem',
+    'export type { ZdpAdSlotPlacement',
     'export type { ZdpCodeBlockSize',
     'export type { ZdpComboboxOption',
     'export type { ZdpCommandFieldSize',

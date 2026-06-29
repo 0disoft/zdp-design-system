@@ -61,8 +61,8 @@ const publicTokenNames = collectPublicTokenNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
 
-if (packageJson.version !== '0.43.8') {
-  failures.push('package.json version must be 0.43.8 for the current design-system package contract.');
+if (packageJson.version !== '0.44.0') {
+  failures.push('package.json version must be 0.44.0 for the current design-system package contract.');
 }
 
 if (tokenDocument.$schema !== '../schemas/design-tokens.schema.json') {

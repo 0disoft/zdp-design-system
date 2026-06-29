@@ -16,6 +16,7 @@ const root = process.cwd();
 const packagePath = join(root, 'package.json');
 const componentPaths = [
   'src/lib/components/Accordion.svelte',
+  'src/lib/components/AdSlot.svelte',
   'src/lib/components/Avatar.svelte',
   'src/lib/components/Badge.svelte',
   'src/lib/components/Breadcrumb.svelte',
@@ -159,6 +160,7 @@ await checkSharedFocusContract();
 await checkModalLayerContract();
 await checkDialogFocusContract();
 await checkSheetContract();
+await checkAdSlotContract();
 await checkExternalAdoptionContract();
 await checkInteractivePrimitiveAuditContract();
 await checkComboboxContract();
@@ -544,6 +546,71 @@ async function checkSheetContract(): Promise<void> {
 
   if (source.includes('offsetParent')) {
     failures.push(`${relativePath} must not use offsetParent to decide sheet focusability.`);
+  }
+}
+
+async function checkAdSlotContract(): Promise<void> {
+  const relativePath = 'src/lib/components/AdSlot.svelte';
+  const source = await readFile(join(root, relativePath), 'utf8');
+  const publicEntry = await readFile(join(root, 'src/lib/index.ts'), 'utf8');
+  const consumerContract = await readFile(join(root, 'docs/CONSUMER_CONTRACT.md'), 'utf8');
+
+  for (const requiredText of [
+    "import type { ZdpAdSlotPlacement, ZdpAdSlotState }",
+    "export let placement: ZdpAdSlotPlacement = 'inline'",
+    "export let state: ZdpAdSlotState = 'pending'",
+    "export let label = 'Advertisement'",
+    'export let fallbackText: string | null = null',
+    'export let minHeight: string | null = null',
+    'export let reserved = true',
+    'data-zdp-ad-slot',
+    'data-zdp-ad-placement={placement}',
+    'data-zdp-ad-state={state}',
+    'data-zdp-ad-reserved={reserved ?',
+    'zdp-ad-slot--reserved',
+    '.zdp-ad-slot--between-sections',
+    '.zdp-ad-slot--rail',
+    '.zdp-ad-slot--filled',
+    '.zdp-ad-slot__fallback',
+    '.zdp-ad-slot--blocked',
+    'normalizeIdRefs'
+  ]) {
+    if (!source.includes(requiredText)) {
+      failures.push(`${relativePath} is missing AdSlot contract text ${requiredText}.`);
+    }
+  }
+
+  for (const forbiddenText of [
+    'adsbygoogle',
+    'data-ad-client',
+    'data-ad-slot',
+    'googlesyndication',
+    'ads.txt',
+    'PUBLIC_AD_CLIENT_ID',
+    'PUBLIC_AD_PROVIDER',
+    'consent'
+  ]) {
+    if (source.includes(forbiddenText)) {
+      failures.push(`${relativePath} must not own ad provider or consent contract text ${forbiddenText}.`);
+    }
+  }
+
+  for (const requiredText of [
+    'export { default as AdSlot }',
+    'export type { ZdpAdSlotPlacement'
+  ]) {
+    if (!publicEntry.includes(requiredText)) {
+      failures.push(`src/lib/index.ts is missing AdSlot public entry ${requiredText}.`);
+    }
+  }
+
+  for (const requiredText of [
+    'AdSlot은 광고나 후원 자리',
+    'provider script, consent, slot id, ads.txt, personalized ads 판단은 소비 앱이 계속 소유한다.'
+  ]) {
+    if (!consumerContract.includes(requiredText)) {
+      failures.push(`docs/CONSUMER_CONTRACT.md is missing AdSlot consumer contract text ${requiredText}.`);
+    }
   }
 }
 

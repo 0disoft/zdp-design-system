@@ -90,6 +90,8 @@
 - Combobox는 검색 가능한 단일 선택의 label, input frame, listbox, active option, disabled option skip, hidden submitted value만 담당하며 실제 필터링, async search, command 실행, 권한 판단은 소비 앱이 계속 소유한다.
 - Combobox와 `.zdp-combobox`는 native Select를 대체하지 않는다. 단순 상태 선택은 `Select`를 유지하고, 사용자가 입력으로 후보를 좁히는 단일 선택에만 Combobox를 쓴다.
 - Combobox option button, toggle, mark만 선택을 막고 input 값과 주변 설명 텍스트는 선택 가능성을 오염시키지 않는다.
+- AdSlot은 광고나 후원 자리의 reserved layout, accessible label, placement/state data attribute만 담당하며 provider script, consent, slot id, ads.txt, personalized ads 판단은 소비 앱이 계속 소유한다.
+- AdSlot과 `.zdp-ad-slot`은 provider markup을 slot 또는 소비처 HTML로 받을 수 있지만, Google/AdSense 전용 속성, script loading, 동의 판단, 자동 본문 삽입 정책을 직접 수행하지 않는다.
 - InlineCode와 CodeBlock은 문서, 보안, 아키텍처 페이지의 코드 표시, language label, horizontal overflow, 선택적 복사 버튼만 담당하며 syntax highlighting, 코드 실행, 비밀값 탐지, 보안 분류, command palette를 직접 수행하지 않는다.
 - InlineCode, CodeBlock, `.zdp-inline-code`, `.zdp-code-block`은 그림자, 그라데이션, 실행 버튼 없이 mono font, framed surface, focus-visible, 복사 feedback, wrapping/overflow 계약만 유지한다. 긴 코드는 기본 horizontal overflow로 두고, code body에는 `user-select: none`을 적용하지 않는다.
 - Kbd와 ShortcutHint는 키캡과 단축키 힌트 표면만 담당하며 실제 keydown dispatcher, command palette, 검색 focus 이동, 저장, 닫기, 파일 이동 판단을 직접 수행하지 않는다.

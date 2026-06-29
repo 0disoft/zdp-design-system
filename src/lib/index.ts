@@ -1,4 +1,5 @@
 export { default as Accordion } from './components/Accordion.svelte';
+export { default as AdSlot } from './components/AdSlot.svelte';
 export { default as Avatar } from './components/Avatar.svelte';
 export { default as Badge } from './components/Badge.svelte';
 export { default as Breadcrumb } from './components/Breadcrumb.svelte';
@@ -68,6 +69,7 @@ export type { ZdpComboboxOption, ZdpComboboxSize } from './combobox';
 export type { ZdpCommandFieldSize } from './command';
 export type { ZdpCodeBlockSize, ZdpCodeBlockTone } from './code';
 export type { ZdpAccordionItem, ZdpAccordionMode, ZdpDisclosureHeadingLevel } from './disclosure';
+export type { ZdpAdSlotPlacement, ZdpAdSlotState } from './ad-slot';
 export type {
   ZdpAvatarSize,
   ZdpAvatarTone,

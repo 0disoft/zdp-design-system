@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- Documented the dependency adoption policy: active ZDP sibling consumers may keep `file:../zdp-design-system`, while standalone consumers, public templates, and external examples should use the npm package from `^0.43.8`.
+- Added `AdSlot` plus static `.zdp-ad-slot` utilities for provider-neutral ad or sponsorship placement reservation while keeping provider scripts, consent, slot ids, `ads.txt`, personalized ads, and automatic content insertion in consuming apps.
+- Documented the dependency adoption policy: active ZDP sibling consumers may keep `file:../zdp-design-system`, while standalone consumers, public templates, and external examples should use the npm package from `^0.44.0`.
 - Added a single-component consumer fixture proof so the root barrel keeps tree-shaking unused component exports out of Button-only bundles.
 
 ## 0.43.8

@@ -288,6 +288,19 @@
         line-height: var(--zdp-type-body-small-line-height);
       }
 
+      .preview-ad-creative {
+        align-items: center;
+        background: var(--zdp-color-surface-raised);
+        border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+        color: var(--zdp-color-ink-muted);
+        display: grid;
+        font-size: var(--zdp-type-caption-size);
+        inline-size: 100%;
+        min-block-size: 8rem;
+        min-width: 0;
+        place-items: center;
+      }
+
       .badge-row {
         max-width: 100%;
       }
@@ -1021,6 +1034,17 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
                   <span class="zdp-skeleton__line zdp-skeleton__line--last" aria-hidden="true"></span>
                 </div>
               </div>
+              <aside
+                class="zdp-ad-slot zdp-ad-slot--between-sections zdp-ad-slot--pending zdp-ad-slot--reserved"
+                aria-label="Advertisement"
+                aria-describedby="light-ad-slot-desc"
+                data-zdp-ad-slot
+                data-zdp-ad-placement="between-sections"
+                data-zdp-ad-state="pending"
+                data-zdp-ad-reserved="true"
+                style="min-height: 4rem"
+              ></aside>
+              <p class="status-note" id="light-ad-slot-desc">Provider, consent, script, and slot id stay in the consuming app.</p>
             </div>
           </section>
 
@@ -2040,6 +2064,28 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
                   <span class="zdp-skeleton__line zdp-skeleton__line--last" aria-hidden="true"></span>
                 </div>
               </div>
+              <aside
+                class="zdp-ad-slot zdp-ad-slot--rail zdp-ad-slot--filled zdp-ad-slot--reserved"
+                aria-label="Advertisement"
+                data-zdp-ad-slot
+                data-zdp-ad-placement="rail"
+                data-zdp-ad-state="filled"
+                data-zdp-ad-reserved="true"
+                style="min-height: 10rem"
+              >
+                <div class="preview-ad-creative" aria-hidden="true">Reserved creative</div>
+              </aside>
+              <aside
+                class="zdp-ad-slot zdp-ad-slot--inline zdp-ad-slot--blocked zdp-ad-slot--reserved"
+                aria-label="Advertisement"
+                data-zdp-ad-slot
+                data-zdp-ad-placement="inline"
+                data-zdp-ad-state="blocked"
+                data-zdp-ad-reserved="true"
+                style="min-height: 4rem"
+              >
+                <p class="zdp-ad-slot__fallback">Ad unavailable</p>
+              </aside>
             </div>
           </section>
 
