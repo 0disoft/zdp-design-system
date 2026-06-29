@@ -27,7 +27,7 @@ Astro 정적 사이트는 전역 스타일로 기본 CSS를 먼저 불러온다.
 import 'zdp-design-system/styles.css';
 ```
 
-다국어 페이지가 라틴, 중국어, 데바나가리, 일본어 웹폰트를 명시적으로 써야 하면 선택형 locale font entry를 추가한다.
+다국어 페이지가 라틴, 중국어, 데바나가리, 일본어, 태국어 웹폰트를 명시적으로 써야 하면 선택형 locale font entry를 추가한다.
 
 ```ts
 import 'zdp-design-system/styles.css';
@@ -419,7 +419,7 @@ Flutter와 native shell은 Svelte 컴포넌트를 직접 소비하지 않는다.
 
 - `hex`는 기본 theme fallback이다.
 - `oklch`는 웹 또는 변환 가능한 렌더러에서 색 의도값으로 사용한다.
-- `font.family.korean`, `font.family.latin`, `font.family.chinese`, `font.family.devanagari`, `font.family.japanese`, `font.family.multiscript`는 locale별 fallback 순서의 source of truth다.
+- `font.family.korean`, `font.family.latin`, `font.family.chinese`, `font.family.devanagari`, `font.family.japanese`, `font.family.thai`, `font.family.multiscript`는 locale별 fallback 순서의 source of truth다.
 - `font.family.brand`는 브랜드 워드마크 전용 source of truth다. 일반 heading의 `font.family.display`와 섞지 않는다.
 - `font.family.expressionScript`, `font.family.expressionInscription`, `font.family.expressionSketch`, `font.family.expressionEditorial`, `font.family.expressionSans`, `font.family.expressionKeyboard`는 opt-in 표현용 source of truth다. `expressive-fonts.css`를 import한 표면에서만 캠페인, 섹션 제목, 짧은 보조 안내, 키보드 표식에 제한해서 쓴다.
 - `control.heightMd`, `control.glyphMd`, `control.choiceSize`, `control.choiceIndicatorSize`, `control.switchWidth`, `control.switchHeight`, `control.scrollbarSize`, `control.radius`, `control.borderWidth`, `control.hitTarget`은 native control size, icon glyph size, choice mark, switch track, scrollbar 두께를 맞출 때의 기준이다.
@@ -474,7 +474,7 @@ Flutter와 native shell은 Svelte 컴포넌트를 직접 소비하지 않는다.
 - Table cell, code body, toast message, document body, card data, identity label, 주소, 이메일, ID, 날짜, 가격, 에러 메시지는 계속 선택하고 복사할 수 있는지 확인한다.
 - Drag interaction은 drag start부터 end/cancel/pointer release까지만 `.zdp-user-select-dragging`을 붙이고, 앱 root나 page/card/list/table container에 상시 `user-select: none`이 남지 않는지 확인한다.
 - light/dark, keyboard focus, disabled, invalid 상태를 소비처 화면에서 확인한다.
-- Theme / Locale Stress story에서 light/dark, ZDP Mobile 폭, 긴 한국어/영어/중국어/힌디어 문장, focus-visible 상태가 함께 무너지지 않는지 확인한다.
+- Theme / Locale Stress story에서 light/dark, ZDP Mobile 폭, 긴 한국어/영어/중국어/힌디어/베트남어/러시아어/말레이어/태국어 문장, focus-visible 상태가 함께 무너지지 않는지 확인한다.
 - Dialog를 쓰는 화면은 Tab 순환, Escape 닫기, backdrop 닫기, 이전 focus 복귀를 확인한다.
 - 새 디자인 시스템 버전은 대표 소비처 한 곳에서 build와 시각 QA를 통과한 뒤 확산한다.
 

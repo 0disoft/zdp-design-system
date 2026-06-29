@@ -12,7 +12,7 @@
 - 색상 토큰은 `hex` fallback과 `oklch` 값을 함께 추가하거나 함께 변경한다.
 - sans/display 폰트 스택은 `"Pretendard Variable", Pretendard`를 우선하고, CSS는 Pretendard Variable dynamic subset 로드를 유지한다.
 - `font.family.brand`는 Playwrite AU VIC Guides 기반 워드마크 전용 스택으로 유지하고, body/display stack을 대체하지 않는다.
-- `font.family.latin`, `font.family.korean`, `font.family.chinese`, `font.family.devanagari`, `font.family.japanese`, `font.family.multiscript`는 `:lang()` CSS 계약과 함께 변경한다.
+- `font.family.latin`, `font.family.korean`, `font.family.chinese`, `font.family.devanagari`, `font.family.japanese`, `font.family.thai`, `font.family.multiscript`는 `:lang()` CSS 계약과 함께 변경한다.
 - 선택형 `brand-fonts.css` public export를 바꾸면 `package.json` export, sideEffects, README, consumer contract, token/preview/storybook/package check를 함께 맞춘다.
 - 선택형 `locale-fonts.css` public export를 바꾸면 `package.json` export, sideEffects, README, token/preview/storybook check를 함께 맞춘다.
 - 소비 저장소 적용 방식은 `docs/CONSUMER_CONTRACT.md`와 함께 변경한다.
@@ -154,7 +154,7 @@
 - Storybook Viewport 프리셋은 ZDP Mobile, Tablet, Desktop, Wide 폭을 유지한다.
 - Storybook Accessibility addon은 `error` 테스트 모드로 유지하고, 새 story는 CI 실패 게이트를 통과해야 한다.
 - Storybook interaction play는 Tabs, Dialog, ConfirmAction처럼 키보드, focus, 상태 전이가 중요한 컴포넌트부터 유지한다.
-- Theme / Locale Stress story는 light/dark, ZDP Mobile 폭, 긴 한국어/영어/중국어/힌디어 문장, focus-visible 상태를 한 번에 확인하는 QA 표면으로 유지한다.
+- Theme / Locale Stress story는 light/dark, ZDP Mobile 폭, 긴 한국어/영어/중국어/힌디어/베트남어/러시아어/말레이어/태국어 문장, focus-visible 상태를 한 번에 확인하는 QA 표면으로 유지한다.
 - Workduck 개발 서버와 빌드 액션이 깨지지 않도록 `dev`와 `build` 스크립트를 유지한다.
 - 패키지 export가 안정된 뒤에는 변경 내역을 `CHANGELOG.md`에 남긴다.
 - 토큰 JSON, CSS 변수, public export, Svelte 컴포넌트, Storybook, preview 변경 뒤에는 `bun run check`를 실행한다.

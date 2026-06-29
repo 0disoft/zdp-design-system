@@ -28,7 +28,7 @@
   };
 
   type LocaleSample = {
-    readonly lang: 'ko' | 'en' | 'zh' | 'hi';
+    readonly lang: 'ko' | 'en' | 'zh' | 'hi' | 'vi' | 'ru' | 'ms' | 'th';
     readonly label: string;
     readonly text: string;
   };
@@ -76,6 +76,30 @@
       label: 'हिन्दी',
       text:
         'लंबे समीक्षा संदेश और लगातार बदलती स्थिति संकरी स्क्रीन पर भी साफ दिखनी चाहिए और फोकस रिंग छिपनी नहीं चाहिए।'
+    },
+    {
+      lang: 'vi',
+      label: 'Tiếng Việt',
+      text:
+        'Chuỗi trạng thái rất dài với nhiều dấu tiếng Việt phải xuống dòng tự nhiên mà không che nút hoặc vòng focus.'
+    },
+    {
+      lang: 'ru',
+      label: 'Русский',
+      text:
+        'Очень длинное сообщение о проверке доступа должно переноситься без обрезки действий и видимого фокуса.'
+    },
+    {
+      lang: 'ms',
+      label: 'Bahasa Melayu',
+      text:
+        'Nama tugasan yang panjang dan status semakan perlu kekal jelas pada lebar mudah alih tanpa menolak tindakan.'
+    },
+    {
+      lang: 'th',
+      label: 'ไทย',
+      text:
+        'ข้อความสถานะภาษาไทยที่ยาวมากต้องอ่านได้ในหน้าจอแคบและไม่บังปุ่มหรือเส้นโฟกัส'
     }
   ];
 
@@ -94,11 +118,16 @@
       item: 'Hindi review note with देवनागरी text and long owner names',
       status: '준비',
       owner: 'Locale Quality'
+    },
+    {
+      item: 'Thai status note สำหรับตรวจสอบความกว้างบนมือถือ',
+      status: '대기',
+      owner: 'Locale QA'
     }
   ] as const;
 
   const codeExample =
-    "const labels = ['ko', 'en', 'zh', 'hi'];\nconst focusVisible = labels.every((locale) => viewport.width <= 390 || locale.length > 0);\nconst horizontalOverflowProbe = 'ko-승인대기-zh-非常长的中文项目名称-hi-देवनागरी-long-owner-name-without-manual-line-breaks';";
+    "const labels = ['ko', 'en', 'zh', 'hi', 'vi', 'ru', 'ms', 'th'];\nconst focusVisible = labels.every((locale) => viewport.width <= 390 || locale.length > 0);\nconst horizontalOverflowProbe = 'ko-승인대기-zh-非常长的中文项目名称-hi-देवनागरी-th-ข้อความยาวมาก-long-owner-name-without-manual-line-breaks';";
 </script>
 
 <main class="stress-story zdp-surface-reset" lang="ko">

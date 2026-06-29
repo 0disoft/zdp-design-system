@@ -45,6 +45,7 @@ export const zdpTokenNames = [
   'font.family.chinese',
   'font.family.devanagari',
   'font.family.japanese',
+  'font.family.thai',
   'font.family.multiscript',
   'font.family.serif',
   'font.family.display',

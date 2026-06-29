@@ -229,6 +229,7 @@ for (const [familyName, expectedText] of Object.entries({
   chinese: '"Noto Sans SC Variable", "Noto Sans SC", "PingFang SC"',
   devanagari: '"Noto Sans Devanagari Variable", "Noto Sans Devanagari", "Nirmala UI"',
   japanese: '"Noto Sans JP Variable", "Noto Sans JP", "Hiragino Sans"',
+  thai: '"Noto Sans Thai Variable", "Noto Sans Thai", "Leelawadee UI"',
   multiscript: '"Pretendard Variable", Pretendard, "Manrope Variable", Manrope',
   expressionScript: 'Tangerine, "Playwrite AU VIC Guides", cursive',
   expressionInscription: '"Caesar Dressing", "Fredericka the Great", fantasy',
@@ -292,6 +293,7 @@ for (const requiredText of [
   '--zdp-font-family-chinese',
   '--zdp-font-family-devanagari',
   '--zdp-font-family-japanese',
+  '--zdp-font-family-thai',
   '--zdp-font-family-multiscript',
   '--zdp-font-family-expression-script',
   '--zdp-font-family-expression-inscription',
@@ -304,6 +306,11 @@ for (const requiredText of [
   '.zdp-surface-reset:lang(zh)',
   '.zdp-surface-reset:lang(hi)',
   '.zdp-surface-reset:lang(ja)',
+  '.zdp-surface-reset:lang(vi)',
+  '.zdp-surface-reset:lang(ru)',
+  '.zdp-surface-reset:lang(id)',
+  '.zdp-surface-reset:lang(ms)',
+  '.zdp-surface-reset:lang(th)',
   'word-break: keep-all',
   'line-break: strict'
 ]) {
@@ -316,7 +323,8 @@ for (const requiredText of [
   '@fontsource-variable/manrope@5.2.8/index.css',
   '@fontsource-variable/noto-sans-sc@5.2.10/index.css',
   '@fontsource-variable/noto-sans-devanagari@5.2.8/index.css',
-  '@fontsource-variable/noto-sans-jp@5.2.10/index.css'
+  '@fontsource-variable/noto-sans-jp@5.2.10/index.css',
+  '@fontsource-variable/noto-sans-thai@5.2.8/index.css'
 ]) {
   if (!localeFonts.includes(requiredText)) {
     failures.push(`Locale font CSS export is missing ${requiredText}.`);

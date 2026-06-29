@@ -68,7 +68,7 @@ Tailwind Plus와 Tailwind UI 계열은 파생/재배포 리스크 때문에 ZDP 
 - Viewports는 ZDP Mobile, Tablet, Desktop, Wide 프리셋으로 mobile/tablet/desktop 폭을 확인한다.
 - Accessibility addon은 CI 실패 게이트로 유지한다. 새 story는 a11y 위반을 남긴 채 merge하지 않는다.
 - Interaction play는 `Tabs`, `Dialog`, `ConfirmAction`처럼 키보드와 상태 전이가 중요한 컴포넌트에 먼저 붙인다.
-- Theme / Locale Stress story는 light/dark, ZDP Mobile 폭, 긴 한국어/영어/중국어/힌디어 문장, focus-visible 상태를 한 번에 확인한다.
+- Theme / Locale Stress story는 light/dark, ZDP Mobile 폭, 긴 한국어/영어/중국어/힌디어/베트남어/러시아어/말레이어/태국어 문장, focus-visible 상태를 한 번에 확인한다.
 
 ## 패키지 표면
 
@@ -513,8 +513,8 @@ preview/index.html
 - `styles.css`는 Pretendard Variable dynamic subset을 로드하고, sans/display stack은 `"Pretendard Variable", Pretendard`를 최우선으로 둔다.
 - `brand-fonts.css`는 선택형 public export이며 `font.family.brand`와 `.zdp-brand-wordmark`가 쓰는 Playwrite AU VIC Guides를 로드한다. 일반 문서 제목, 제품 UI heading, 표, 본문에는 `brand` stack을 쓰지 않는다.
 - `expressive-fonts.css`는 선택형 public export이며 `font.family.expressionScript`, `font.family.expressionInscription`, `font.family.expressionSketch`, `font.family.expressionEditorial`, `font.family.expressionSans`, `font.family.expressionKeyboard`가 쓰는 표현용 Google Fonts를 로드한다. 기본 앱 UI, 표, 긴 본문, 일반 Tooltip에는 자동 적용하지 않는다.
-- `locale-fonts.css`는 선택형 public export이며 Manrope, Noto Sans SC, Noto Sans Devanagari, Noto Sans JP 웹폰트를 로드한다. 모든 소비 앱이 반드시 가져갈 필요는 없다.
-- `:lang(en|es|fr|de|pt|id)`는 Manrope/Inter 라틴 스택, `:lang(ko)`는 Pretendard 한국어 스택, `:lang(zh)`는 Noto Sans SC/시스템 중국어 스택, `:lang(hi)`는 Noto Sans Devanagari/시스템 데바나가리 스택, `:lang(ja)`는 Noto Sans JP/시스템 일본어 스택으로 덮어쓴다.
+- `locale-fonts.css`는 선택형 public export이며 Manrope, Noto Sans SC, Noto Sans Devanagari, Noto Sans JP, Noto Sans Thai 웹폰트를 로드한다. 모든 소비 앱이 반드시 가져갈 필요는 없다.
+- `:lang(en|es|fr|vi|ru|id|ms)`는 Manrope/Inter 라틴 스택, `:lang(ko)`는 Pretendard 한국어 스택, `:lang(zh)`는 Noto Sans SC/시스템 중국어 스택, `:lang(hi)`는 Noto Sans Devanagari/시스템 데바나가리 스택, `:lang(ja)`는 Noto Sans JP/시스템 일본어 스택, `:lang(th)`는 Noto Sans Thai/시스템 태국어 스택으로 덮어쓴다.
 - Flutter, native shell, 문서 생성기는 JSON 토큰의 hex 값을 기본 입력으로 쓰고 필요할 때 OKLCH를 별도 변환한다.
 
 ## Flat UI 계약
