@@ -11,6 +11,13 @@ let nextLayerId = 1;
 const activeLayerIds: number[] = [];
 let previousBodyOverflow: string | null = null;
 
+/**
+ * mf:anchor zdp.design-system.modal-layer-state
+ * purpose: Locate shared modal layer state for dialog, sheet, and term sheet surfaces.
+ * search: modal layer, scroll lock, active layer, dialog, sheet, focus trap
+ * invariant: Layer activation restores document overflow after the final active layer closes.
+ * risk: state
+ */
 export function createZdpModalLayer(): ZdpModalLayerHandle {
   const layerId = nextLayerId;
   nextLayerId += 1;

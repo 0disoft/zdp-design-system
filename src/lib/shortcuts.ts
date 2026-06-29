@@ -105,6 +105,13 @@ export const zdpShortcutReservedExamples = [
   'Backspace'
 ] as const;
 
+/**
+ * mf:anchor zdp.design-system.shortcut-guard
+ * purpose: Locate consumer-facing shortcut guard helpers for text entry, IME, and browser-reserved keys.
+ * search: shortcut guard, IME, browser reserved shortcut, text entry, command palette
+ * invariant: Visible shortcut hints stay separate from consumer-owned keydown dispatch.
+ * risk: state
+ */
 export function isZdpTextEntryTarget(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) {
     return false;

@@ -45,6 +45,13 @@ export interface ZdpShareDockItem {
   readonly onclick?: (event: MouseEvent, item: ZdpShareDockItem) => void;
 }
 
+/**
+ * mf:anchor zdp.design-system.share-icons-source
+ * purpose: Locate package-owned share icon shape data used by Svelte and static consumers.
+ * search: share icons, Simple Icons, ShareDock, static consumers, platform glyphs
+ * invariant: Platform icon shapes stay package-owned while URLs and share actions stay consumer-owned.
+ * risk: dependency
+ */
 export const zdpShareIcons: Record<ZdpShareIconName, ZdpShareIconShape> = {
   copy: {
     viewBox: '0 0 24 24',

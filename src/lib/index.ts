@@ -1,3 +1,10 @@
+/**
+ * mf:anchor zdp.design-system.public-barrel
+ * purpose: Locate the package public Svelte component and helper export surface.
+ * search: public exports, package surface, Svelte components, helper exports, barrel
+ * invariant: Consumers import through package exports instead of internal src paths.
+ * risk: config
+ */
 export { default as Accordion } from './components/Accordion.svelte';
 export { default as AdSlot } from './components/AdSlot.svelte';
 export { default as Avatar } from './components/Avatar.svelte';

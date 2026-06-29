@@ -9,6 +9,13 @@ const checkOnly = process.argv.includes('--check');
 
 type TokenTree = Record<string, unknown>;
 
+/**
+ * mf:anchor zdp.design-system.token-name-generation
+ * purpose: Locate the token JSON to generated token-name module boundary.
+ * search: tokens, zdpTokenNames, token generation, design token source
+ * invariant: Generated token names mirror tokens/zdp.tokens.json without hand edits.
+ * risk: data_consistency
+ */
 function isRecord(value: unknown): value is TokenTree {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }

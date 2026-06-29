@@ -28,6 +28,13 @@ await cp(resolve(repoRoot, 'share.d.ts'), resolve(distRoot, 'share.d.ts'));
 
 const publicEntrySource = await readFile(resolve(repoRoot, 'src/lib/index.ts'), 'utf8');
 
+/**
+ * mf:anchor zdp.design-system.package-entry-generation
+ * purpose: Locate generation of package runtime and type entrypoints from the public barrel.
+ * search: package build, dist index, public entry, runtime module, type entry
+ * invariant: Dist entrypoints preserve the public barrel contract and avoid exposing internal source paths.
+ * risk: config
+ */
 await writeFile(resolve(distRoot, 'index.js'), createPublicRuntimeEntry(publicEntrySource));
 await writeFile(resolve(distRoot, 'index.d.ts'), createPublicTypeEntry(publicEntrySource));
 
