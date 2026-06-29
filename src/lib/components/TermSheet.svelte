@@ -226,7 +226,7 @@
   }
 
   .zdp-term-sheet__backdrop {
-    background: rgb(47 36 24 / 0.28);
+    background: var(--zdp-color-backdrop-term-sheet);
     border: 0;
     cursor: pointer;
     inset: 0;
@@ -234,10 +234,6 @@
     padding: 0;
     position: fixed;
     z-index: var(--zdp-layer-term-sheet);
-  }
-
-  :global([data-zdp-theme="dark"]) .zdp-term-sheet__backdrop {
-    background: rgb(10 8 5 / 0.64);
   }
 
   .zdp-term-sheet--right {

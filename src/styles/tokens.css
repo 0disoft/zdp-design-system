@@ -21,6 +21,9 @@
   --zdp-color-scrollbar-thumb-hover: #8b6f45;
   --zdp-color-selection-surface: #e7c97a;
   --zdp-color-selection-text: #1f160d;
+  --zdp-color-backdrop-term-sheet: rgb(47 36 24 / 0.28);
+  --zdp-color-backdrop-sheet: rgb(47 36 24 / 0.32);
+  --zdp-color-backdrop-dialog: rgb(47 36 24 / 0.42);
   --zdp-color-accent-primary: #d8c8ac;
   --zdp-color-accent-primary-strong: #b89a6a;
   --zdp-color-accent-primary-soft: #f1e4cc;
@@ -173,6 +176,9 @@
   --zdp-color-scrollbar-thumb-hover: #d8c8ac;
   --zdp-color-selection-surface: #e7c97a;
   --zdp-color-selection-text: #1f160d;
+  --zdp-color-backdrop-term-sheet: rgb(10 8 5 / 0.64);
+  --zdp-color-backdrop-sheet: rgb(10 8 5 / 0.66);
+  --zdp-color-backdrop-dialog: rgb(10 8 5 / 0.72);
   --zdp-color-accent-primary: #d8c8ac;
   --zdp-color-accent-primary-strong: #e7c97a;
   --zdp-color-accent-primary-soft: #68553a;
@@ -203,6 +209,9 @@
     --zdp-color-scrollbar-thumb-hover: oklch(55% 0.075 76);
     --zdp-color-selection-surface: oklch(84% 0.1 86);
     --zdp-color-selection-text: oklch(20% 0.035 70);
+    --zdp-color-backdrop-term-sheet: oklch(27% 0.04 70 / 0.28);
+    --zdp-color-backdrop-sheet: oklch(27% 0.04 70 / 0.32);
+    --zdp-color-backdrop-dialog: oklch(27% 0.04 70 / 0.42);
     --zdp-color-accent-primary: oklch(82% 0.045 82);
     --zdp-color-accent-primary-strong: oklch(70% 0.08 76);
     --zdp-color-accent-primary-soft: oklch(91% 0.045 82);
@@ -231,6 +240,9 @@
     --zdp-color-scrollbar-thumb-hover: oklch(82% 0.045 82);
     --zdp-color-selection-surface: oklch(84% 0.1 86);
     --zdp-color-selection-text: oklch(20% 0.035 70);
+    --zdp-color-backdrop-term-sheet: oklch(8% 0.01 70 / 0.64);
+    --zdp-color-backdrop-sheet: oklch(8% 0.01 70 / 0.66);
+    --zdp-color-backdrop-dialog: oklch(8% 0.01 70 / 0.72);
     --zdp-color-accent-primary: oklch(82% 0.045 82);
     --zdp-color-accent-primary-strong: oklch(84% 0.1 86);
     --zdp-color-accent-primary-soft: oklch(43% 0.055 76);

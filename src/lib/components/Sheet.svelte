@@ -156,7 +156,7 @@
   }
 
   .zdp-sheet__backdrop {
-    background: rgb(47 36 24 / 0.32);
+    background: var(--zdp-color-backdrop-sheet);
     border: 0;
     cursor: pointer;
     inset: 0;
@@ -164,10 +164,6 @@
     padding: 0;
     position: fixed;
     z-index: var(--zdp-layer-sheet);
-  }
-
-  :global([data-zdp-theme="dark"]) .zdp-sheet__backdrop {
-    background: rgb(10 8 5 / 0.66);
   }
 
   .zdp-sheet {

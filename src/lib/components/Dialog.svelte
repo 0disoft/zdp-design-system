@@ -169,17 +169,13 @@
   }
 
   .zdp-dialog__backdrop {
-    background: rgb(47 36 24 / 0.42);
+    background: var(--zdp-color-backdrop-dialog);
     border: 0;
     cursor: pointer;
     inset: 0;
     margin: 0;
     padding: 0;
     position: fixed;
-  }
-
-  :global([data-zdp-theme="dark"]) .zdp-dialog__backdrop {
-    background: rgb(10 8 5 / 0.72);
   }
 
   .zdp-dialog__panel {

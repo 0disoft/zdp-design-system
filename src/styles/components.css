@@ -3952,7 +3952,7 @@
 }
 
 .zdp-term-sheet__backdrop {
-  background: rgb(47 36 24 / 0.28);
+  background: var(--zdp-color-backdrop-term-sheet);
   border: 0;
   cursor: pointer;
   inset: 0;
@@ -3960,10 +3960,6 @@
   padding: 0;
   position: fixed;
   z-index: var(--zdp-layer-term-sheet);
-}
-
-[data-zdp-theme="dark"] .zdp-term-sheet__backdrop {
-  background: rgb(10 8 5 / 0.64);
 }
 
 .zdp-term-sheet {
@@ -4146,7 +4142,7 @@
 }
 
 .zdp-sheet__backdrop {
-  background: rgb(47 36 24 / 0.32);
+  background: var(--zdp-color-backdrop-sheet);
   border: 0;
   cursor: pointer;
   inset: 0;
@@ -4154,10 +4150,6 @@
   padding: 0;
   position: fixed;
   z-index: var(--zdp-layer-sheet);
-}
-
-[data-zdp-theme="dark"] .zdp-sheet__backdrop {
-  background: rgb(10 8 5 / 0.66);
 }
 
 .zdp-sheet {
@@ -4332,17 +4324,13 @@
 }
 
 .zdp-dialog__backdrop {
-  background: rgb(47 36 24 / 0.42);
+  background: var(--zdp-color-backdrop-dialog);
   border: 0;
   cursor: pointer;
   inset: 0;
   margin: 0;
   padding: 0;
   position: fixed;
-}
-
-[data-zdp-theme="dark"] .zdp-dialog__backdrop {
-  background: rgb(10 8 5 / 0.72);
 }
 
 .zdp-dialog__panel {
