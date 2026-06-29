@@ -206,7 +206,7 @@
     color: var(--zdp-color-ink-normal);
     display: grid;
     gap: var(--zdp-space-8);
-    min-height: 100vh;
+    min-height: var(--zdp-viewport-block);
     padding: var(--zdp-space-8);
   }
 

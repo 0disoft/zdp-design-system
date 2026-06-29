@@ -47,7 +47,7 @@
   .button-playground {
     background: var(--zdp-color-surface-canvas);
     color: var(--zdp-color-ink-normal);
-    min-height: 100vh;
+    min-height: var(--zdp-viewport-block);
     padding: var(--zdp-space-8);
   }
 

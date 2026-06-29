@@ -86,7 +86,7 @@
 
 <style>
   .layout-story {
-    min-height: 100vh;
+    min-height: var(--zdp-viewport-block);
   }
 
   .layout-story__eyebrow {
