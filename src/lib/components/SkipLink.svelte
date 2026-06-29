@@ -28,7 +28,7 @@
       border-color var(--zdp-motion-fast) ease,
       color var(--zdp-motion-fast) ease,
       opacity var(--zdp-motion-fast) ease;
-    z-index: 10000;
+    z-index: var(--zdp-layer-skip-link);
   }
 
   .zdp-skip-link:focus-visible {

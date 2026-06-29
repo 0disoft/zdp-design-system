@@ -1,7 +1,7 @@
 {
   "$schema": "../schemas/design-tokens.schema.json",
   "name": "zdp-core",
-  "version": "0.6.10",
+  "version": "0.7.0",
   "color": {
     "ink": {
       "strong": {
@@ -200,6 +200,24 @@
     "tablet": "64rem",
     "desktop": "80rem",
     "wide": "96rem"
+  },
+  "layer": {
+    "behind": "-1",
+    "shareDock": "20",
+    "floating": "40",
+    "toast": "50",
+    "termSheet": "900",
+    "sheet": "940",
+    "dialog": "1000",
+    "skipLink": "10000"
+  },
+  "viewport": {
+    "block": "100vh",
+    "inline": "100vw",
+    "safeBlockStart": "env(safe-area-inset-top, 0px)",
+    "safeBlockEnd": "env(safe-area-inset-bottom, 0px)",
+    "safeInlineStart": "env(safe-area-inset-left, 0px)",
+    "safeInlineEnd": "env(safe-area-inset-right, 0px)"
   },
   "control": {
     "heightSm": "2.25rem",

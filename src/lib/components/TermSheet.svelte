@@ -217,11 +217,12 @@
     display: grid;
     font-family: var(--zdp-font-family-sans);
     gap: var(--zdp-space-4);
-    max-block-size: calc(100vh - var(--zdp-space-6));
+    max-block-size: calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end));
     overflow: auto;
-    padding: var(--zdp-space-5);
+    padding-block: var(--zdp-space-5) max(var(--zdp-space-5), var(--zdp-viewport-safe-block-end));
+    padding-inline: max(var(--zdp-space-5), var(--zdp-viewport-safe-inline-start)) max(var(--zdp-space-5), var(--zdp-viewport-safe-inline-end));
     position: fixed;
-    z-index: 901;
+    z-index: calc(var(--zdp-layer-term-sheet) + 1);
   }
 
   .zdp-term-sheet__backdrop {
@@ -232,7 +233,7 @@
     margin: 0;
     padding: 0;
     position: fixed;
-    z-index: 900;
+    z-index: var(--zdp-layer-term-sheet);
   }
 
   :global([data-zdp-theme="dark"]) .zdp-term-sheet__backdrop {
@@ -240,11 +241,11 @@
   }
 
   .zdp-term-sheet--right {
-    block-size: calc(100vh - var(--zdp-space-6));
+    block-size: calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end));
     border-radius: var(--zdp-control-radius);
-    inline-size: min(28rem, calc(100vw - var(--zdp-space-6)));
-    inset-block: var(--zdp-space-3);
-    inset-inline-end: var(--zdp-space-3);
+    inline-size: min(28rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6) - var(--zdp-viewport-safe-inline-start) - var(--zdp-viewport-safe-inline-end)));
+    inset-block: max(var(--zdp-space-3), var(--zdp-viewport-safe-block-start)) max(var(--zdp-space-3), var(--zdp-viewport-safe-block-end));
+    inset-inline-end: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-end));
   }
 
   .zdp-term-sheet--bottom {
@@ -253,7 +254,7 @@
     border-radius: var(--zdp-control-radius) var(--zdp-control-radius) 0 0;
     inset-block-end: 0;
     inset-inline: 0;
-    max-block-size: min(34rem, calc(100vh - var(--zdp-space-6)));
+    max-block-size: min(34rem, calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end)));
   }
 
   .zdp-term-sheet:focus-visible {
@@ -385,8 +386,9 @@
       inline-size: auto;
       inset-block: auto 0;
       inset-inline: 0;
-      max-block-size: min(34rem, calc(100vh - var(--zdp-space-6)));
-      padding: var(--zdp-space-4);
+      max-block-size: min(34rem, calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end)));
+      padding-block: var(--zdp-space-4) max(var(--zdp-space-4), var(--zdp-viewport-safe-block-end));
+      padding-inline: max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-start)) max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-end));
     }
   }
 </style>

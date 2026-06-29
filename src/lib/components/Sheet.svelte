@@ -163,7 +163,7 @@
     margin: 0;
     padding: 0;
     position: fixed;
-    z-index: 940;
+    z-index: var(--zdp-layer-sheet);
   }
 
   :global([data-zdp-theme="dark"]) .zdp-sheet__backdrop {
@@ -178,27 +178,28 @@
     display: grid;
     font-family: var(--zdp-font-family-sans);
     gap: var(--zdp-space-4);
-    max-block-size: calc(100vh - var(--zdp-space-6));
+    max-block-size: calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end));
     min-width: 0;
     overflow: auto;
-    padding: var(--zdp-space-5);
+    padding-block: var(--zdp-space-5) max(var(--zdp-space-5), var(--zdp-viewport-safe-block-end));
+    padding-inline: max(var(--zdp-space-5), var(--zdp-viewport-safe-inline-start)) max(var(--zdp-space-5), var(--zdp-viewport-safe-inline-end));
     position: fixed;
-    z-index: 941;
+    z-index: calc(var(--zdp-layer-sheet) + 1);
   }
 
   .zdp-sheet--right,
   .zdp-sheet--left {
-    block-size: calc(100vh - var(--zdp-space-6));
+    block-size: calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end));
     border-radius: var(--zdp-control-radius);
-    inset-block: var(--zdp-space-3);
+    inset-block: max(var(--zdp-space-3), var(--zdp-viewport-safe-block-start)) max(var(--zdp-space-3), var(--zdp-viewport-safe-block-end));
   }
 
   .zdp-sheet--right {
-    inset-inline-end: var(--zdp-space-3);
+    inset-inline-end: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-end));
   }
 
   .zdp-sheet--left {
-    inset-inline-start: var(--zdp-space-3);
+    inset-inline-start: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-start));
   }
 
   .zdp-sheet--bottom {
@@ -207,19 +208,19 @@
     border-radius: var(--zdp-control-radius) var(--zdp-control-radius) 0 0;
     inset-block-end: 0;
     inset-inline: 0;
-    max-block-size: min(34rem, calc(100vh - var(--zdp-space-6)));
+    max-block-size: min(34rem, calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end)));
   }
 
   .zdp-sheet--sm {
-    inline-size: min(24rem, calc(100vw - var(--zdp-space-6)));
+    inline-size: min(24rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6) - var(--zdp-viewport-safe-inline-start) - var(--zdp-viewport-safe-inline-end)));
   }
 
   .zdp-sheet--md {
-    inline-size: min(30rem, calc(100vw - var(--zdp-space-6)));
+    inline-size: min(30rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6) - var(--zdp-viewport-safe-inline-start) - var(--zdp-viewport-safe-inline-end)));
   }
 
   .zdp-sheet--lg {
-    inline-size: min(38rem, calc(100vw - var(--zdp-space-6)));
+    inline-size: min(38rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6) - var(--zdp-viewport-safe-inline-start) - var(--zdp-viewport-safe-inline-end)));
   }
 
   .zdp-sheet--bottom.zdp-sheet--sm,
@@ -229,7 +230,7 @@
   }
 
   .zdp-sheet--bottom.zdp-sheet--lg {
-    max-block-size: min(42rem, calc(100vh - var(--zdp-space-6)));
+    max-block-size: min(42rem, calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end)));
   }
 
   .zdp-sheet:focus-visible {
@@ -325,8 +326,9 @@
       inline-size: auto;
       inset-block: auto 0;
       inset-inline: 0;
-      max-block-size: min(34rem, calc(100vh - var(--zdp-space-6)));
-      padding: var(--zdp-space-4);
+      max-block-size: min(34rem, calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end)));
+      padding-block: var(--zdp-space-4) max(var(--zdp-space-4), var(--zdp-viewport-safe-block-end));
+      padding-inline: max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-start)) max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-end));
     }
   }
 </style>

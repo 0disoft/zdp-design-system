@@ -903,7 +903,7 @@ for (const requiredText of [
   '.zdp-share-icon',
   '.zdp-share-action__tooltip',
   '.zdp-share-action:hover .zdp-share-action__tooltip',
-  'max-inline-size: calc(100vw - var(--zdp-space-6))',
+  'max-inline-size: calc(var(--zdp-viewport-inline) - var(--zdp-space-6))',
   'border-block-start: 1px solid var(--zdp-color-line-subtle)',
   'display: flex',
   'flex-wrap: wrap',

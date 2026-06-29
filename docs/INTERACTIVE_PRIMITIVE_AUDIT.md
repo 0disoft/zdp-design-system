@@ -11,6 +11,7 @@
 - `Dialog`, `Sheet`, `TermSheet`는 ZDP modal layer, focusable helper, scroll lock, focus return을 유지하되 nested modal, inert sibling, portal 요구가 커지면 headless 후보로 다시 평가한다.
 - `Sheet`는 settings, filter, drawer형 보조 흐름의 공통 modal edge panel이다. Drawer를 별도 primitive로 복제하지 않고 Sheet placement/use case로 먼저 다룬다.
 - `Menu`와 `Popover`는 가장 높은 위험군이다. 단순 더보기와 짧은 필터 표면은 현재 구현으로 유지하되, typeahead, submenu, collision detection, portal, nested overlay가 필요해지면 Bits UI 내부 의존성 후보로 올린다.
+- 모바일 keyboard, 긴 옵션, async option, grouped option, virtualized list, collision 반복 요구는 `Menu`, `Popover`, `Combobox` 안에서 계속 키우지 않고 `Sheet` flow 또는 headless spike로 보낸다.
 - `Tooltip`은 짧은 non-interactive label로만 유지한다. 긴 안내, 클릭 가능한 내용, mobile-first 설명은 Popover, Disclosure, Dialog, 소비 앱 flow로 보낸다.
 
 ## 감사 매트릭스

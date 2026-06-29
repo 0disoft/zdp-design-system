@@ -79,10 +79,10 @@
     box-sizing: border-box;
     display: grid;
     gap: var(--zdp-space-3);
-    inline-size: min(28rem, calc(100vw - var(--zdp-space-6)));
+    inline-size: min(28rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6)));
     max-inline-size: 100%;
     pointer-events: none;
-    z-index: 50;
+    z-index: var(--zdp-layer-toast);
   }
 
   .zdp-status-toast :global(.zdp-toast) {
@@ -102,23 +102,23 @@
   }
 
   .zdp-status-toast--top-start {
-    left: var(--zdp-space-4);
-    top: var(--zdp-space-4);
+    left: max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-start));
+    top: max(var(--zdp-space-4), var(--zdp-viewport-safe-block-start));
   }
 
   .zdp-status-toast--top-end {
-    right: var(--zdp-space-4);
-    top: var(--zdp-space-4);
+    right: max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-end));
+    top: max(var(--zdp-space-4), var(--zdp-viewport-safe-block-start));
   }
 
   .zdp-status-toast--bottom-start {
-    bottom: var(--zdp-space-4);
-    left: var(--zdp-space-4);
+    bottom: max(var(--zdp-space-4), var(--zdp-viewport-safe-block-end));
+    left: max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-start));
   }
 
   .zdp-status-toast--bottom-end {
-    bottom: var(--zdp-space-4);
-    right: var(--zdp-space-4);
+    bottom: max(var(--zdp-space-4), var(--zdp-viewport-safe-block-end));
+    right: max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-end));
   }
 
   @media (max-width: 42rem) {
@@ -126,8 +126,8 @@
     .zdp-status-toast--top-end,
     .zdp-status-toast--bottom-start,
     .zdp-status-toast--bottom-end {
-      left: var(--zdp-space-3);
-      right: var(--zdp-space-3);
+      left: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-start));
+      right: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-end));
     }
   }
 </style>

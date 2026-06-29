@@ -377,13 +377,13 @@
     font-family: var(--zdp-font-family-sans);
     gap: var(--zdp-space-1);
     inline-size: max-content;
-    max-block-size: min(24rem, calc(100vh - var(--zdp-space-8)));
-    max-inline-size: min(18rem, calc(100vw - var(--zdp-space-6)));
+    max-block-size: min(24rem, calc(var(--zdp-viewport-block) - var(--zdp-space-8)));
+    max-inline-size: min(18rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6)));
     min-inline-size: 12rem;
     overflow: auto;
     padding: var(--zdp-space-1);
     position: absolute;
-    z-index: 40;
+    z-index: var(--zdp-layer-floating);
   }
 
   .zdp-menu__panel:focus-visible {

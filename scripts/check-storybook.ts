@@ -2260,7 +2260,7 @@ for (const requiredText of [
   '.zdp-popover__panel:focus-visible',
   '.zdp-popover--bottom .zdp-popover__panel',
   '.zdp-popover--align-start .zdp-popover__panel',
-  'max-inline-size: min(22rem, calc(100vw - var(--zdp-space-6)))',
+  'max-inline-size: min(22rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6)))',
   'translate: -50% 0',
   'translate: 0 -50%'
 ]) {
@@ -2307,7 +2307,7 @@ for (const requiredText of [
   '.zdp-menu__separator',
   '.zdp-menu--bottom .zdp-menu__panel',
   '.zdp-menu--align-end .zdp-menu__panel',
-  'max-inline-size: min(18rem, calc(100vw - var(--zdp-space-6)))',
+  'max-inline-size: min(18rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6)))',
   'translate: -50% 0',
   'translate: 0 -50%'
 ]) {
@@ -2806,7 +2806,7 @@ for (const requiredText of [
   '.zdp-share-action:hover:not(:disabled)',
   '.zdp-share-action:focus-visible',
   'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
-  'max-inline-size: calc(100vw - var(--zdp-space-6))'
+  'max-inline-size: calc(var(--zdp-viewport-inline) - var(--zdp-space-6))'
 ]) {
   if (!shareDock.includes(requiredText)) {
     failures.push(`ShareDock component is missing ${requiredText}.`);

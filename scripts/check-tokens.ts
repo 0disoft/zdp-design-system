@@ -17,6 +17,8 @@ interface TokenDocument {
   };
   readonly type: Record<string, string>;
   readonly breakpoint: Record<string, string>;
+  readonly layer: Record<string, string>;
+  readonly viewport: Record<string, string>;
   readonly control: Record<string, string>;
   readonly i18n: Record<string, string>;
   readonly shadow: Record<string, string>;
@@ -61,8 +63,8 @@ const publicTokenNames = collectPublicTokenNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
 
-if (packageJson.version !== '0.44.0') {
-  failures.push('package.json version must be 0.44.0 for the current design-system package contract.');
+if (packageJson.version !== '0.45.0') {
+  failures.push('package.json version must be 0.45.0 for the current design-system package contract.');
 }
 
 if (tokenDocument.$schema !== '../schemas/design-tokens.schema.json') {
@@ -73,8 +75,8 @@ if (schemaDocument.properties?.$schema?.const !== '../schemas/design-tokens.sche
   failures.push('schemas/design-tokens.schema.json must enforce the repo-local token $schema value.');
 }
 
-if (tokenDocument.version !== '0.6.10') {
-  failures.push('Token document version must be 0.6.10 for the expressive font token contract.');
+if (tokenDocument.version !== '0.7.0') {
+  failures.push('Token document version must be 0.7.0 for the layer and viewport token contract.');
 }
 
 if (packageJson.exports?.['./brand-fonts.css'] !== './dist/styles/brand-fonts.css') {
@@ -352,6 +354,45 @@ if (tokenDocument.radius.md !== '0.375rem') {
   failures.push('radius.md must stay 0.375rem to keep controls squared off.');
 }
 
+for (const [tokenName, expectedValue] of Object.entries({
+  behind: '-1',
+  shareDock: '20',
+  floating: '40',
+  toast: '50',
+  termSheet: '900',
+  sheet: '940',
+  dialog: '1000',
+  skipLink: '10000'
+})) {
+  if (tokenDocument.layer[tokenName] !== expectedValue) {
+    failures.push(`layer.${tokenName} must stay ${expectedValue} for the shared overlay stack.`);
+  }
+}
+
+for (const [tokenName, expectedValue] of Object.entries({
+  block: '100vh',
+  inline: '100vw',
+  safeBlockStart: 'env(safe-area-inset-top, 0px)',
+  safeBlockEnd: 'env(safe-area-inset-bottom, 0px)',
+  safeInlineStart: 'env(safe-area-inset-left, 0px)',
+  safeInlineEnd: 'env(safe-area-inset-right, 0px)'
+})) {
+  if (tokenDocument.viewport[tokenName] !== expectedValue) {
+    failures.push(`viewport.${tokenName} must stay ${expectedValue} for mobile-safe overlay sizing.`);
+  }
+}
+
+for (const requiredText of [
+  '@supports (height: 100svh)',
+  '--zdp-viewport-block: 100svh',
+  '@supports (width: 100svw)',
+  '--zdp-viewport-inline: 100svw'
+]) {
+  if (!css.includes(requiredText)) {
+    failures.push(`Token CSS viewport fallback contract is missing ${requiredText}.`);
+  }
+}
+
 if (tokenDocument.radius.lg !== '0.5rem') {
   failures.push('radius.lg must stay 0.5rem so flat card surfaces read as a higher layer without shadows.');
 }
@@ -480,6 +521,8 @@ async function readTokenDocument(path: string): Promise<TokenDocument> {
     },
     type: assertStringRecord(parsed.type, 'type'),
     breakpoint: assertStringRecord(parsed.breakpoint, 'breakpoint'),
+    layer: assertStringRecord(parsed.layer, 'layer'),
+    viewport: assertStringRecord(parsed.viewport, 'viewport'),
     control: assertStringRecord(parsed.control, 'control'),
     i18n: assertStringRecord(parsed.i18n, 'i18n'),
     shadow: assertStringRecord(parsed.shadow, 'shadow'),
@@ -541,6 +584,8 @@ function collectCssVariableNames(tokens: TokenDocument): readonly string[] {
     ...collectNames('font-line-height', tokens.font.lineHeight),
     ...collectNames('type', tokens.type),
     ...collectNames('breakpoint', tokens.breakpoint),
+    ...collectNames('layer', tokens.layer),
+    ...collectNames('viewport', tokens.viewport),
     ...collectNames('control', tokens.control),
     ...collectNames('i18n', tokens.i18n),
     ...collectNames('shadow', tokens.shadow),
@@ -559,6 +604,8 @@ function collectPublicTokenNames(tokens: TokenDocument): readonly string[] {
     ...collectDotNames('font.lineHeight', tokens.font.lineHeight),
     ...collectDotNames('type', tokens.type),
     ...collectDotNames('breakpoint', tokens.breakpoint),
+    ...collectDotNames('layer', tokens.layer),
+    ...collectDotNames('viewport', tokens.viewport),
     ...collectDotNames('control', tokens.control),
     ...collectDotNames('i18n', tokens.i18n),
     ...collectDotNames('shadow', tokens.shadow),

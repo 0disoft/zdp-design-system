@@ -92,6 +92,20 @@
   --zdp-breakpoint-tablet: 64rem;
   --zdp-breakpoint-desktop: 80rem;
   --zdp-breakpoint-wide: 96rem;
+  --zdp-layer-behind: -1;
+  --zdp-layer-share-dock: 20;
+  --zdp-layer-floating: 40;
+  --zdp-layer-toast: 50;
+  --zdp-layer-term-sheet: 900;
+  --zdp-layer-sheet: 940;
+  --zdp-layer-dialog: 1000;
+  --zdp-layer-skip-link: 10000;
+  --zdp-viewport-block: 100vh;
+  --zdp-viewport-inline: 100vw;
+  --zdp-viewport-safe-block-start: env(safe-area-inset-top, 0px);
+  --zdp-viewport-safe-block-end: env(safe-area-inset-bottom, 0px);
+  --zdp-viewport-safe-inline-start: env(safe-area-inset-left, 0px);
+  --zdp-viewport-safe-inline-end: env(safe-area-inset-right, 0px);
   --zdp-control-height-sm: 2.25rem;
   --zdp-control-height-md: 2.75rem;
   --zdp-control-icon-sm: 2.25rem;
@@ -122,6 +136,20 @@
   --zdp-shadow-md: none;
   --zdp-motion-fast: 120ms;
   --zdp-motion-normal: 180ms;
+}
+
+@supports (height: 100svh) {
+  :root,
+  [data-zdp-theme] {
+    --zdp-viewport-block: 100svh;
+  }
+}
+
+@supports (width: 100svw) {
+  :root,
+  [data-zdp-theme] {
+    --zdp-viewport-inline: 100svw;
+  }
 }
 
 [data-zdp-theme="dark"] {

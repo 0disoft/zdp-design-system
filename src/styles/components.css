@@ -215,7 +215,7 @@
   position: absolute;
   top: 0;
   width: calc(var(--zdp-confirm-action-progress) * 100%);
-  z-index: -1;
+  z-index: var(--zdp-layer-behind);
 }
 
 .zdp-confirm-action__thumb {
@@ -556,7 +556,7 @@
     border-color var(--zdp-motion-fast) ease,
     color var(--zdp-motion-fast) ease,
     opacity var(--zdp-motion-fast) ease;
-  z-index: 10000;
+  z-index: var(--zdp-layer-skip-link);
 }
 
 .zdp-skip-link:focus-visible {
@@ -1355,7 +1355,7 @@
   top: var(--zdp-tooltip-top, auto);
   transform: var(--zdp-tooltip-transform, none);
   white-space: nowrap;
-  z-index: 30;
+  z-index: var(--zdp-layer-floating);
 }
 
 .zdp-tooltip--top {
@@ -1620,12 +1620,12 @@
   display: grid;
   font-family: var(--zdp-font-family-sans);
   inline-size: max-content;
-  max-block-size: min(24rem, calc(100vh - var(--zdp-space-8)));
-  max-inline-size: min(22rem, calc(100vw - var(--zdp-space-6)));
+  max-block-size: min(24rem, calc(var(--zdp-viewport-block) - var(--zdp-space-8)));
+  max-inline-size: min(22rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6)));
   min-inline-size: 12rem;
   overflow: auto;
   position: absolute;
-  z-index: 40;
+  z-index: var(--zdp-layer-floating);
 }
 
 .zdp-popover__panel {
@@ -1635,7 +1635,7 @@
 
 .zdp-menu__panel {
   gap: var(--zdp-space-1);
-  max-inline-size: min(18rem, calc(100vw - var(--zdp-space-6)));
+  max-inline-size: min(18rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6)));
   padding: var(--zdp-space-1);
 }
 
@@ -2104,13 +2104,13 @@
   font-family: var(--zdp-font-family-sans);
   inline-size: 100%;
   left: 0;
-  max-block-size: min(18rem, calc(100vh - var(--zdp-space-8)));
+  max-block-size: min(18rem, calc(var(--zdp-viewport-block) - var(--zdp-space-8)));
   min-width: 0;
   overflow: auto;
   padding: var(--zdp-space-1);
   position: absolute;
   top: calc(100% + var(--zdp-space-2));
-  z-index: 40;
+  z-index: var(--zdp-layer-floating);
 }
 
 .zdp-combobox__listbox {
@@ -3087,10 +3087,10 @@
   box-sizing: border-box;
   display: grid;
   gap: var(--zdp-space-3);
-  inline-size: min(28rem, calc(100vw - var(--zdp-space-6)));
+  inline-size: min(28rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6)));
   max-inline-size: 100%;
   pointer-events: none;
-  z-index: 50;
+  z-index: var(--zdp-layer-toast);
 }
 
 .zdp-status-toast .zdp-toast {
@@ -3110,23 +3110,23 @@
 }
 
 .zdp-status-toast--top-start {
-  left: var(--zdp-space-4);
-  top: var(--zdp-space-4);
+  left: max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-start));
+  top: max(var(--zdp-space-4), var(--zdp-viewport-safe-block-start));
 }
 
 .zdp-status-toast--top-end {
-  right: var(--zdp-space-4);
-  top: var(--zdp-space-4);
+  right: max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-end));
+  top: max(var(--zdp-space-4), var(--zdp-viewport-safe-block-start));
 }
 
 .zdp-status-toast--bottom-start {
-  bottom: var(--zdp-space-4);
-  left: var(--zdp-space-4);
+  bottom: max(var(--zdp-space-4), var(--zdp-viewport-safe-block-end));
+  left: max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-start));
 }
 
 .zdp-status-toast--bottom-end {
-  bottom: var(--zdp-space-4);
-  right: var(--zdp-space-4);
+  bottom: max(var(--zdp-space-4), var(--zdp-viewport-safe-block-end));
+  right: max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-end));
 }
 
 @media (max-width: 42rem) {
@@ -3134,8 +3134,8 @@
   .zdp-status-toast--top-end,
   .zdp-status-toast--bottom-start,
   .zdp-status-toast--bottom-end {
-    left: var(--zdp-space-3);
-    right: var(--zdp-space-3);
+    left: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-start));
+    right: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-end));
   }
 }
 
@@ -3959,7 +3959,7 @@
   margin: 0;
   padding: 0;
   position: fixed;
-  z-index: 900;
+  z-index: var(--zdp-layer-term-sheet);
 }
 
 [data-zdp-theme="dark"] .zdp-term-sheet__backdrop {
@@ -3974,19 +3974,20 @@
   display: grid;
   font-family: var(--zdp-font-family-sans);
   gap: var(--zdp-space-4);
-  max-block-size: calc(100vh - var(--zdp-space-6));
+  max-block-size: calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end));
   overflow: auto;
-  padding: var(--zdp-space-5);
+  padding-block: var(--zdp-space-5) max(var(--zdp-space-5), var(--zdp-viewport-safe-block-end));
+  padding-inline: max(var(--zdp-space-5), var(--zdp-viewport-safe-inline-start)) max(var(--zdp-space-5), var(--zdp-viewport-safe-inline-end));
   position: fixed;
-  z-index: 901;
+  z-index: calc(var(--zdp-layer-term-sheet) + 1);
 }
 
 .zdp-term-sheet--right {
-  block-size: calc(100vh - var(--zdp-space-6));
+  block-size: calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end));
   border-radius: var(--zdp-control-radius);
-  inline-size: min(28rem, calc(100vw - var(--zdp-space-6)));
-  inset-block: var(--zdp-space-3);
-  inset-inline-end: var(--zdp-space-3);
+  inline-size: min(28rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6) - var(--zdp-viewport-safe-inline-start) - var(--zdp-viewport-safe-inline-end)));
+  inset-block: max(var(--zdp-space-3), var(--zdp-viewport-safe-block-start)) max(var(--zdp-space-3), var(--zdp-viewport-safe-block-end));
+  inset-inline-end: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-end));
 }
 
 .zdp-term-sheet--bottom {
@@ -3995,7 +3996,7 @@
   border-radius: var(--zdp-control-radius) var(--zdp-control-radius) 0 0;
   inset-block-end: 0;
   inset-inline: 0;
-  max-block-size: min(34rem, calc(100vh - var(--zdp-space-6)));
+  max-block-size: min(34rem, calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end)));
 }
 
 .zdp-term-sheet:focus-visible {
@@ -4134,8 +4135,9 @@
     inline-size: auto;
     inset-block: auto 0;
     inset-inline: 0;
-    max-block-size: min(34rem, calc(100vh - var(--zdp-space-6)));
-    padding: var(--zdp-space-4);
+    max-block-size: min(34rem, calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end)));
+    padding-block: var(--zdp-space-4) max(var(--zdp-space-4), var(--zdp-viewport-safe-block-end));
+    padding-inline: max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-start)) max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-end));
   }
 }
 
@@ -4151,7 +4153,7 @@
   margin: 0;
   padding: 0;
   position: fixed;
-  z-index: 940;
+  z-index: var(--zdp-layer-sheet);
 }
 
 [data-zdp-theme="dark"] .zdp-sheet__backdrop {
@@ -4166,27 +4168,28 @@
   display: grid;
   font-family: var(--zdp-font-family-sans);
   gap: var(--zdp-space-4);
-  max-block-size: calc(100vh - var(--zdp-space-6));
+  max-block-size: calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end));
   min-width: 0;
   overflow: auto;
-  padding: var(--zdp-space-5);
+  padding-block: var(--zdp-space-5) max(var(--zdp-space-5), var(--zdp-viewport-safe-block-end));
+  padding-inline: max(var(--zdp-space-5), var(--zdp-viewport-safe-inline-start)) max(var(--zdp-space-5), var(--zdp-viewport-safe-inline-end));
   position: fixed;
-  z-index: 941;
+  z-index: calc(var(--zdp-layer-sheet) + 1);
 }
 
 .zdp-sheet--right,
 .zdp-sheet--left {
-  block-size: calc(100vh - var(--zdp-space-6));
+  block-size: calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end));
   border-radius: var(--zdp-control-radius);
-  inset-block: var(--zdp-space-3);
+  inset-block: max(var(--zdp-space-3), var(--zdp-viewport-safe-block-start)) max(var(--zdp-space-3), var(--zdp-viewport-safe-block-end));
 }
 
 .zdp-sheet--right {
-  inset-inline-end: var(--zdp-space-3);
+  inset-inline-end: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-end));
 }
 
 .zdp-sheet--left {
-  inset-inline-start: var(--zdp-space-3);
+  inset-inline-start: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-start));
 }
 
 .zdp-sheet--bottom {
@@ -4195,19 +4198,19 @@
   border-radius: var(--zdp-control-radius) var(--zdp-control-radius) 0 0;
   inset-block-end: 0;
   inset-inline: 0;
-  max-block-size: min(34rem, calc(100vh - var(--zdp-space-6)));
+  max-block-size: min(34rem, calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end)));
 }
 
 .zdp-sheet--sm {
-  inline-size: min(24rem, calc(100vw - var(--zdp-space-6)));
+  inline-size: min(24rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6) - var(--zdp-viewport-safe-inline-start) - var(--zdp-viewport-safe-inline-end)));
 }
 
 .zdp-sheet--md {
-  inline-size: min(30rem, calc(100vw - var(--zdp-space-6)));
+  inline-size: min(30rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6) - var(--zdp-viewport-safe-inline-start) - var(--zdp-viewport-safe-inline-end)));
 }
 
 .zdp-sheet--lg {
-  inline-size: min(38rem, calc(100vw - var(--zdp-space-6)));
+  inline-size: min(38rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6) - var(--zdp-viewport-safe-inline-start) - var(--zdp-viewport-safe-inline-end)));
 }
 
 .zdp-sheet--bottom.zdp-sheet--sm,
@@ -4217,7 +4220,7 @@
 }
 
 .zdp-sheet--bottom.zdp-sheet--lg {
-  max-block-size: min(42rem, calc(100vh - var(--zdp-space-6)));
+  max-block-size: min(42rem, calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end)));
 }
 
 .zdp-sheet:focus-visible {
@@ -4311,7 +4314,7 @@
     inline-size: auto;
     inset-block: auto 0;
     inset-inline: 0;
-    max-block-size: min(34rem, calc(100vh - var(--zdp-space-6)));
+    max-block-size: min(34rem, calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end)));
     padding: var(--zdp-space-4);
   }
 }
@@ -4322,9 +4325,10 @@
   display: grid;
   inset: 0;
   justify-items: center;
-  padding: var(--zdp-space-4);
+  padding-block: max(var(--zdp-space-4), var(--zdp-viewport-safe-block-start)) max(var(--zdp-space-4), var(--zdp-viewport-safe-block-end));
+  padding-inline: max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-start)) max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-end));
   position: fixed;
-  z-index: 1000;
+  z-index: var(--zdp-layer-dialog);
 }
 
 .zdp-dialog__backdrop {
@@ -4349,7 +4353,7 @@
   color: var(--zdp-color-ink-normal);
   display: grid;
   gap: var(--zdp-space-4);
-  max-height: min(42rem, calc(100vh - var(--zdp-space-8)));
+  max-height: min(42rem, calc(var(--zdp-viewport-block) - var(--zdp-space-8)));
   min-width: 0;
   overflow: auto;
   padding: var(--zdp-space-5);
@@ -4450,11 +4454,12 @@
 @media (max-width: 520px) {
   .zdp-dialog {
     align-items: end;
-    padding: var(--zdp-space-3);
+    padding-block: max(var(--zdp-space-3), var(--zdp-viewport-safe-block-start)) max(var(--zdp-space-3), var(--zdp-viewport-safe-block-end));
+    padding-inline: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-start)) max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-end));
   }
 
   .zdp-dialog__panel {
-    max-height: calc(100vh - var(--zdp-space-6));
+    max-height: calc(var(--zdp-viewport-block) - var(--zdp-space-6));
     padding: var(--zdp-space-4);
   }
 }
@@ -4501,12 +4506,12 @@
 .zdp-share-dock {
   color: var(--zdp-color-ink-normal);
   font-family: var(--zdp-font-family-sans);
-  z-index: 20;
+  z-index: var(--zdp-layer-share-dock);
 }
 
 .zdp-share-dock--side {
   position: fixed;
-  right: max(var(--zdp-space-3), calc((100vw - var(--zdp-breakpoint-desktop)) / 2 + var(--zdp-space-4)));
+  right: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-end), calc((var(--zdp-viewport-inline) - var(--zdp-breakpoint-desktop)) / 2 + var(--zdp-space-4)));
   top: 40vh;
 }
 
@@ -4603,9 +4608,9 @@
 
 @media (max-width: 57.5rem) {
   .zdp-share-dock--side {
-    bottom: var(--zdp-space-3);
-    left: var(--zdp-space-3);
-    right: var(--zdp-space-3);
+    bottom: max(var(--zdp-space-3), var(--zdp-viewport-safe-block-end));
+    left: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-start));
+    right: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-end));
     top: auto;
   }
 
@@ -4613,7 +4618,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    max-inline-size: calc(100vw - var(--zdp-space-6));
+    max-inline-size: calc(var(--zdp-viewport-inline) - var(--zdp-space-6));
   }
 
   .zdp-share-dock--rail {
@@ -4675,7 +4680,7 @@
 @media (max-width: 42rem) {
   .zdp-share-dock--side,
   .zdp-share-dock--bottom {
-    bottom: var(--zdp-space-2);
+    bottom: max(var(--zdp-space-2), var(--zdp-viewport-safe-block-end));
   }
 
   .zdp-share-dock__list {

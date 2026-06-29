@@ -129,7 +129,7 @@
     -webkit-user-select: none;
     user-select: none;
     white-space: nowrap;
-    z-index: 30;
+    z-index: var(--zdp-layer-floating);
   }
 
   .zdp-tooltip--top {

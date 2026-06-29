@@ -136,12 +136,12 @@
   .zdp-share-dock {
     color: var(--zdp-color-ink-normal);
     font-family: var(--zdp-font-family-sans);
-    z-index: 20;
+    z-index: var(--zdp-layer-share-dock);
   }
 
   .zdp-share-dock--side {
     position: fixed;
-    right: max(var(--zdp-space-3), calc((100vw - var(--zdp-breakpoint-desktop)) / 2 + var(--zdp-space-4)));
+    right: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-end), calc((var(--zdp-viewport-inline) - var(--zdp-breakpoint-desktop)) / 2 + var(--zdp-space-4)));
     top: 40vh;
   }
 
@@ -242,9 +242,9 @@
 
   @media (max-width: 57.5rem) {
     .zdp-share-dock--side {
-      bottom: var(--zdp-space-3);
-      left: var(--zdp-space-3);
-      right: var(--zdp-space-3);
+      bottom: max(var(--zdp-space-3), var(--zdp-viewport-safe-block-end));
+      left: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-start));
+      right: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-end));
       top: auto;
     }
 
@@ -252,7 +252,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      max-inline-size: calc(100vw - var(--zdp-space-6));
+      max-inline-size: calc(var(--zdp-viewport-inline) - var(--zdp-space-6));
     }
 
     .zdp-share-dock--rail {
@@ -292,7 +292,7 @@
   @media (max-width: 42rem) {
     .zdp-share-dock--side,
     .zdp-share-dock--bottom {
-      bottom: var(--zdp-space-2);
+      bottom: max(var(--zdp-space-2), var(--zdp-viewport-safe-block-end));
     }
 
     .zdp-share-dock__list {

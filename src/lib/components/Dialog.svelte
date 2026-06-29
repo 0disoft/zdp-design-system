@@ -162,9 +162,10 @@
     display: grid;
     inset: 0;
     justify-items: center;
-    padding: var(--zdp-space-4);
+    padding-block: max(var(--zdp-space-4), var(--zdp-viewport-safe-block-start)) max(var(--zdp-space-4), var(--zdp-viewport-safe-block-end));
+    padding-inline: max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-start)) max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-end));
     position: fixed;
-    z-index: 1000;
+    z-index: var(--zdp-layer-dialog);
   }
 
   .zdp-dialog__backdrop {
@@ -189,7 +190,7 @@
     color: var(--zdp-color-ink-normal);
     display: grid;
     gap: var(--zdp-space-4);
-    max-height: min(42rem, calc(100vh - var(--zdp-space-8)));
+    max-height: min(42rem, calc(var(--zdp-viewport-block) - var(--zdp-space-8)));
     min-width: 0;
     overflow: auto;
     padding: var(--zdp-space-5);
@@ -292,11 +293,12 @@
   @media (max-width: 520px) {
     .zdp-dialog {
       align-items: end;
-      padding: var(--zdp-space-3);
+      padding-block: max(var(--zdp-space-3), var(--zdp-viewport-safe-block-start)) max(var(--zdp-space-3), var(--zdp-viewport-safe-block-end));
+      padding-inline: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-start)) max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-end));
     }
 
     .zdp-dialog__panel {
-      max-height: calc(100vh - var(--zdp-space-6));
+      max-height: calc(var(--zdp-viewport-block) - var(--zdp-space-6));
       padding: var(--zdp-space-4);
     }
   }

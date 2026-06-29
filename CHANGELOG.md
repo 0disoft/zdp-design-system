@@ -2,8 +2,11 @@
 
 ## Unreleased
 
+- Added layer and mobile-safe viewport tokens, then moved overlay z-index and `100vh`/`100vw` sizing to named token usage across Svelte components and static utilities.
+- Strengthened package checks for overlay token usage and overrideable default labels.
+- Documented that repeated mobile keyboard, long option, async option, grouped option, virtualized list, or collision pressure should move Menu, Popover, and Combobox flows to Sheet or a headless spike.
 - Added `AdSlot` plus static `.zdp-ad-slot` utilities for provider-neutral ad or sponsorship placement reservation while keeping provider scripts, consent, slot ids, `ads.txt`, personalized ads, and automatic content insertion in consuming apps.
-- Documented the dependency adoption policy: active ZDP sibling consumers may keep `file:../zdp-design-system`, while standalone consumers, public templates, and external examples should use the npm package from `^0.44.0`.
+- Documented the dependency adoption policy: active ZDP sibling consumers may keep `file:../zdp-design-system`, while standalone consumers, public templates, and external examples should use the npm package from `^0.45.0`.
 - Added a single-component consumer fixture proof so the root barrel keeps tree-shaking unused component exports out of Button-only bundles.
 
 ## 0.43.8

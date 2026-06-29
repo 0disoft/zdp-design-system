@@ -23,6 +23,8 @@ Default component text is English. 제품별 화면은 필요한 모든 user-fac
 
 - `type`: body, body small, page title, title, label, caption, control, data에 쓰는 기본 크기와 줄높이
 - `breakpoint`: mobile, tablet, desktop, wide 기준 폭
+- `layer`: behind, floating, toast, sheet, dialog, skip-link 계층 기준
+- `viewport`: mobile-safe overlay clamp와 safe-area inset 기준
 - `control`: 버튼, 아이콘 버튼, 입력류가 공유할 높이, radius, border width, hit target, 선택 컨트롤 전용 mark, indicator, switch, scrollbar 크기
 - `focus`: 키보드 사용자가 현재 위치를 놓치지 않도록 하는 sunlit focus highlight, dark text, dark line
 - `selection`: 드래그로 선택한 텍스트가 브라우저 기본 파란색 대신 theme surface와 readable text로 보이게 하는 selection 색
@@ -99,7 +101,7 @@ import 'zdp-design-system/expressive-fonts.css';
 
 패키지 export는 `dist/` 산출물을 가리킨다. root runtime entry는 `dist/index.js`, type entry는 `dist/index.d.ts`다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `bun run package:build`가 소비자용 `dist/` 표면을 다시 만든다. 소비 저장소와 문서 예시는 `zdp-design-system` public export만 쓰고 내부 `src/` 경로를 직접 import하지 않는다.
 
-ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.44.0`을 기본으로 쓴다.
+ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.45.0`을 기본으로 쓴다.
 
 ## 소비 컴포넌트 계약
 

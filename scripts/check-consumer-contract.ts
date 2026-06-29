@@ -40,8 +40,8 @@ if (failures.length > 0) {
 }
 
 function checkPackageSurface(packageJson: PackageJson): void {
-  if (packageJson.version !== '0.44.0') {
-    failures.push('package.json version must be 0.44.0 for the current design-system package contract.');
+  if (packageJson.version !== '0.45.0') {
+    failures.push('package.json version must be 0.45.0 for the current design-system package contract.');
   }
 
   if (packageJson.exports?.['./brand-fonts.css'] !== './dist/styles/brand-fonts.css') {
@@ -422,7 +422,9 @@ function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml
 
 function checkTokenAndComponentSurface(tokenDocument: string, publicEntry: string): void {
   for (const requiredText of [
-    '"version": "0.6.10"',
+    '"version": "0.7.0"',
+    '"layer"',
+    '"viewport"',
     '"brand"',
     '"expressionScript"',
     '"expressionSans"',

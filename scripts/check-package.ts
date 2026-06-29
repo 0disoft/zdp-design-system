@@ -154,6 +154,7 @@ checkPackageArtifactFiles(packageJson);
 checkPackageSideEffects(packageJson);
 await checkSvelteCompilation();
 await checkEnglishDefaultTextContract();
+await checkUserFacingLabelOverrideContract();
 await checkShareContract();
 await checkButtonContract();
 await checkSharedFocusContract();
@@ -166,6 +167,7 @@ await checkInteractivePrimitiveAuditContract();
 await checkComboboxContract();
 await checkMenuPopoverInteractionContract();
 await checkTermSheetContract();
+await checkOverlayTokenContract();
 
 if (failures.length > 0) {
   throw new Error(`Package check failed:\n- ${failures.join('\n- ')}`);
@@ -354,6 +356,130 @@ async function checkEnglishDefaultTextContract(): Promise<void> {
   }
 }
 
+async function checkUserFacingLabelOverrideContract(): Promise<void> {
+  const componentContracts: readonly {
+    readonly path: string;
+    readonly requiredTexts: readonly string[];
+  }[] = [
+    {
+      path: 'src/lib/components/AdSlot.svelte',
+      requiredTexts: [
+        "export let label = 'Advertisement'",
+        'export let fallbackText: string | null = null',
+        'aria-label={label}',
+        'resolvedFallbackText = fallbackText ?? label',
+        '{resolvedFallbackText}'
+      ]
+    },
+    {
+      path: 'src/lib/components/CodeBlock.svelte',
+      requiredTexts: [
+        "export let copyLabel = 'Copy'",
+        "export let copiedLabel = 'Copied'",
+        "export let copyFailedLabel = 'Copy failed'",
+        'copyState ===',
+        '{resolvedCopyLabel}'
+      ]
+    },
+    {
+      path: 'src/lib/components/Combobox.svelte',
+      requiredTexts: [
+        "export let label: string | null = 'Search'",
+        "export let placeholder: string | null = 'Search query'",
+        "export let noResultsText = 'No results'",
+        "aria-label={open ? 'Close selection' : 'Open selection'}",
+        'placeholder={placeholder ?? undefined}',
+        '{noResultsText}'
+      ]
+    },
+    {
+      path: 'src/lib/components/CommandField.svelte',
+      requiredTexts: [
+        "export let label: string | null = 'Search'",
+        "export let placeholder: string | null = 'Search query'",
+        'placeholder={placeholder ?? undefined}',
+        'aria-label={inputAriaLabel}'
+      ]
+    },
+    {
+      path: 'src/lib/components/Dialog.svelte',
+      requiredTexts: [
+        "export let closeLabel = 'Close'",
+        'aria-label={closeLabel}'
+      ]
+    },
+    {
+      path: 'src/lib/components/Pagination.svelte',
+      requiredTexts: [
+        "export let ariaLabel = 'Pagination'",
+        "export let previousLabel = 'Previous'",
+        "export let nextLabel = 'Next'",
+        'export let pageLabel: (page: number) => string',
+        'export let currentLabel: (page: number) => string',
+        'aria-label={ariaLabel}',
+        'aria-label={previousLabel}',
+        'aria-label={nextLabel}',
+        'aria-label={labelForPage(item.page)}'
+      ]
+    },
+    {
+      path: 'src/lib/components/Sheet.svelte',
+      requiredTexts: [
+        "export let closeLabel = 'Close'",
+        'aria-label={closeLabel}'
+      ]
+    },
+    {
+      path: 'src/lib/components/StatusToast.svelte',
+      requiredTexts: [
+        "export let ariaLabel = 'Status notifications'",
+        "dismissLabel={item.dismissLabel ?? 'Dismiss notification'}",
+        'aria-label={labelledBy ? undefined : ariaLabel}'
+      ]
+    },
+    {
+      path: 'src/lib/components/TermSheet.svelte',
+      requiredTexts: [
+        "export let closeLabel = 'Close'",
+        "export let eyebrow = 'Term'",
+        "export let detailLabel = 'View details'",
+        "export let relatedLabel = 'Related terms'",
+        "export let exampleLabel = 'Example'",
+        'aria-label={closeLabel}',
+        '{eyebrow}',
+        '{detailLabel}',
+        'aria-label={exampleLabel}',
+        'aria-label={relatedLabel}'
+      ]
+    },
+    {
+      path: 'src/lib/components/ThemeToggle.svelte',
+      requiredTexts: [
+        "export let lightLabel = 'Switch to light mode'",
+        "export let darkLabel = 'Switch to dark mode'",
+        'aria-label={ariaLabel}'
+      ]
+    },
+    {
+      path: 'src/lib/components/Toast.svelte',
+      requiredTexts: [
+        "export let dismissLabel = 'Dismiss notification'",
+        'aria-label={dismissLabel}'
+      ]
+    }
+  ];
+
+  for (const contract of componentContracts) {
+    const source = await readFile(join(root, contract.path), 'utf8');
+
+    for (const requiredText of contract.requiredTexts) {
+      if (!source.includes(requiredText)) {
+        failures.push(`${contract.path} is missing overrideable label contract text ${requiredText}.`);
+      }
+    }
+  }
+}
+
 async function checkTermSheetContract(): Promise<void> {
   const relativePath = 'src/lib/components/TermSheet.svelte';
   const source = await readFile(join(root, relativePath), 'utf8');
@@ -378,6 +504,35 @@ async function checkTermSheetContract(): Promise<void> {
 
   if (source.includes('offsetParent')) {
     failures.push(`${relativePath} must not use offsetParent to decide sheet focusability.`);
+  }
+}
+
+async function checkOverlayTokenContract(): Promise<void> {
+  const checkedPaths = [
+    'src/lib/components/Combobox.svelte',
+    'src/lib/components/ConfirmAction.svelte',
+    'src/lib/components/Dialog.svelte',
+    'src/lib/components/Menu.svelte',
+    'src/lib/components/Popover.svelte',
+    'src/lib/components/ShareDock.svelte',
+    'src/lib/components/Sheet.svelte',
+    'src/lib/components/SkipLink.svelte',
+    'src/lib/components/StatusToast.svelte',
+    'src/lib/components/TermSheet.svelte',
+    'src/lib/components/Tooltip.svelte',
+    'src/styles/components.css'
+  ] as const;
+
+  for (const relativePath of checkedPaths) {
+    const source = await readFile(join(root, relativePath), 'utf8');
+
+    if (/z-index:\s*-?\d+\s*;/.test(source)) {
+      failures.push(`${relativePath} must use named --zdp-layer-* tokens instead of raw z-index numbers.`);
+    }
+
+    if (/\b100v[hw]\b/.test(source)) {
+      failures.push(`${relativePath} must use --zdp-viewport-* tokens instead of raw 100vh/100vw sizing.`);
+    }
   }
 }
 
@@ -658,6 +813,7 @@ async function checkInteractivePrimitiveAuditContract(): Promise<void> {
     '`Menu`와 `Popover`는 가장 높은 위험군이다.',
     '| Menu | ZDP custom menu | High |',
     '| Popover | ZDP custom non-modal overlay | High |',
+    '모바일 keyboard, 긴 옵션, async option, grouped option, virtualized list, collision 반복 요구는 `Menu`, `Popover`, `Combobox` 안에서 계속 키우지 않고 `Sheet` flow 또는 headless spike로 보낸다.',
     'InteractionProbe는 ArrowDown open, roving focus, disabled skip, Home/End, Escape close, focus return, click select를 계속 확인한다.',
     'InteractionProbe는 ArrowDown open, disabled skip, Enter select, Escape close, listbox label, selected value sync를 계속 확인한다.',
     'InteractionProbe는 trigger focus 유지, Escape close, focus return, outside click close를 계속 확인한다.',

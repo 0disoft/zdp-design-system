@@ -208,7 +208,7 @@
     position: absolute;
     top: 0;
     width: calc(var(--zdp-confirm-action-progress) * 100%);
-    z-index: -1;
+    z-index: var(--zdp-layer-behind);
   }
 
   .zdp-confirm-action__thumb {

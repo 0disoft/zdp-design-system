@@ -11,7 +11,7 @@ Default component text is English. 소비 앱은 화면 locale에 맞춰 user-fa
 - 소비 저장소는 `zdp-design-system`의 public export만 사용하고 내부 `src/` deep import를 만들지 않는다.
 - package export는 `dist/` 산출물을 통해 소비한다. root runtime entry는 `dist/index.js`, type entry는 `dist/index.d.ts`다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `dist/`는 release 전 `bun run package:build`로 다시 만든다.
 - ZDP monorepo 안의 active sibling 소비처는 unpublished local changes와 package surface를 함께 검증하기 위해 `file:../zdp-design-system`을 유지할 수 있다. 이 경우 CI는 sibling `zdp-design-system`을 checkout하고 `bun run package:build`를 먼저 실행해야 한다.
-- standalone consumer, public template, external example처럼 sibling checkout을 전제로 하지 않는 표면은 npm registry package를 사용한다. 0.44.0 이상에서는 `zdp-design-system: ^0.44.0`을 기본 semver 범위로 쓰고, 재현 가능한 release proof가 필요한 곳만 exact version을 pin한다.
+- standalone consumer, public template, external example처럼 sibling checkout을 전제로 하지 않는 표면은 npm registry package를 사용한다. 0.45.0 이상에서는 `zdp-design-system: ^0.45.0`을 기본 semver 범위로 쓰고, 재현 가능한 release proof가 필요한 곳만 exact version을 pin한다.
 - `zdpTokenNames`, `share.js`, `share.d.ts`는 손으로 맞추지 않고 `tokens:generate`, `share-icons:generate` 산출물로 유지한다.
 - 새 버전은 소비 저장소가 opt-in으로 채택한다. broad adoption 전에는 대표 소비처에서 시각과 build를 확인한다.
 - keyboard focus, flat UI, framed control, Pretendard-first font stack은 소비처에서 임의로 낮추지 않는다.
@@ -378,7 +378,7 @@ TextScaleControl은 글자 크기 선택을 위한 radiogroup, 선택 상태, fo
 Tooltip은 짧은 보조 설명 표면만 제공하며 Escape dismiss를 유지하고, 긴 도움말, validation message, popover, tour, 권한 판단은 소비 앱이 계속 소유한다. 설명이 접근성 이름을 보강해야 할 때만 Tooltip `id`를 넘기고 trigger에 `aria-describedby`를 연결한다.
 Accordion과 Disclosure는 접힌 안내, 설정 묶음, FAQ형 설명의 trigger/panel/`aria-expanded`/`aria-controls` 구조만 제공하며 실제 FAQ 문구, 설정 값, 항목 노출, 권한, 데이터 fetch 판단은 소비 앱이 계속 소유한다. Accordion은 단일 또는 복수 열린 상태를 관리하지만 항목 visibility, 필터 의미, 서버 상태 판단으로 확장하지 않는다.
 SegmentedControl은 보기 방식, 밀도, 기간처럼 가까운 단일 선택의 `radiogroup`/`radio`/`aria-checked` 구조만 제공하며 실제 필터 의미, URL state, 정렬, 데이터 로딩, 권한 판단은 소비 앱이 계속 소유한다.
-Popover와 Menu는 설정, 더보기, 필터, 계정 메뉴처럼 가까운 트리거에서 짧게 펼치는 표면만 제공하며 항목 노출, 권한, 라우팅, 필터 의미, 계정 상태 판단은 소비 앱이 계속 소유한다. Popover와 Menu는 Escape 닫기, outside click, focus 복귀, menu keyboard movement 같은 기본 상호작용만 유지하고 tour, validation, modal decision, floating collision engine 역할로 확장하지 않는다.
+Popover와 Menu는 설정, 더보기, 필터, 계정 메뉴처럼 가까운 트리거에서 짧게 펼치는 표면만 제공하며 항목 노출, 권한, 라우팅, 필터 의미, 계정 상태 판단은 소비 앱이 계속 소유한다. Popover와 Menu는 Escape 닫기, outside click, focus 복귀, menu keyboard movement 같은 기본 상호작용만 유지하고 tour, validation, modal decision, floating collision engine 역할로 확장하지 않는다. 모바일 keyboard, 긴 옵션, async option, grouped option, virtualized list, collision 반복 요구는 Popover/Menu/Combobox 안에서 계속 키우지 않고 Sheet flow 또는 headless spike로 보낸다.
 Sheet는 right, left, bottom edge panel로 설정, 필터, 보조 흐름을 여는 modal surface만 제공한다. Escape 닫기, backdrop 닫기, Tab 순환, scroll lock, 이전 focus 복귀, `role="dialog"`, `aria-modal` 구조는 Sheet 표면의 기본 동작으로 유지한다. Drawer는 별도 컴포넌트로 복제하지 않고 Sheet placement/use case로 먼저 다룬다. 저장, 권한, 데이터 fetch, 라우팅 판단은 소비 앱이 계속 소유한다.
 Sheet root는 `data-zdp-sheet-placement`, `data-zdp-sheet-size`, `data-zdp-sheet-surface="sheet"`를 남겨 QA와 소비 앱이 surface identity를 확인할 수 있게 한다.
 Toast와 StatusToast는 저장, 동기화, 실패, 경고처럼 짧은 상태 알림 표면과 dismiss/action/live-region 연결만 제공하며 알림 발생 조건, 큐 순서, 자동 닫힘 타이머, 중복 제거, 재시도 정책, 권한, 서버 상태 판단은 소비 앱이 계속 소유한다. Toast와 StatusToast는 페이지 안 피드백이나 modal decision을 대체하지 않고, 오래 읽어야 하는 안내는 Callout 또는 소비 앱의 별도 흐름으로 남긴다.
@@ -423,6 +423,8 @@ Flutter와 native shell은 Svelte 컴포넌트를 직접 소비하지 않는다.
 - `font.family.brand`는 브랜드 워드마크 전용 source of truth다. 일반 heading의 `font.family.display`와 섞지 않는다.
 - `font.family.expressionScript`, `font.family.expressionInscription`, `font.family.expressionSketch`, `font.family.expressionEditorial`, `font.family.expressionSans`, `font.family.expressionKeyboard`는 opt-in 표현용 source of truth다. `expressive-fonts.css`를 import한 표면에서만 캠페인, 섹션 제목, 짧은 보조 안내, 키보드 표식에 제한해서 쓴다.
 - `control.heightMd`, `control.glyphMd`, `control.choiceSize`, `control.choiceIndicatorSize`, `control.switchWidth`, `control.switchHeight`, `control.scrollbarSize`, `control.radius`, `control.borderWidth`, `control.hitTarget`은 native control size, icon glyph size, choice mark, switch track, scrollbar 두께를 맞출 때의 기준이다.
+- `layer.*`는 skip link, floating overlay, toast, sheet, dialog처럼 겹침 순서가 필요한 surface의 기준이고, 소비처는 raw z-index 숫자를 직접 쌓지 않는다.
+- `viewport.*`는 overlay panel clamp, safe-area inset, mobile viewport fallback의 기준이고, 소비처는 modal/sheet/dropdown에 raw `100vh`/`100vw`를 직접 쓰지 않는다.
 - `color.scrollbar.track`, `color.scrollbar.thumb`, `color.scrollbar.thumbHover`는 overflow 영역의 light/dark scrollbar 색 기준이다.
 - `color.selection.surface`, `color.selection.text`는 `.zdp-surface-reset` 안의 drag text selection 색 기준이다.
 - `focus.surface`, `focus.text`, `focus.line`은 keyboard focus 또는 TV/desktop focus affordance의 기준색이다.

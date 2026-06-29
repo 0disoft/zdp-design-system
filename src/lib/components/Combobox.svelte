@@ -476,13 +476,13 @@
     font-family: var(--zdp-font-family-sans);
     inline-size: 100%;
     left: 0;
-    max-block-size: min(18rem, calc(100vh - var(--zdp-space-8)));
+    max-block-size: min(18rem, calc(var(--zdp-viewport-block) - var(--zdp-space-8)));
     min-width: 0;
     overflow: auto;
     padding: var(--zdp-space-1);
     position: absolute;
     top: calc(100% + var(--zdp-space-2));
-    z-index: 40;
+    z-index: var(--zdp-layer-floating);
   }
 
   .zdp-combobox__listbox {
