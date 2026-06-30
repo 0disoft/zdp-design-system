@@ -1,6 +1,6 @@
 {
   "name": "zdp-design-system",
-  "version": "0.45.0",
+  "version": "0.46.0",
   "private": false,
   "license": "MIT",
   "type": "module",
@@ -73,6 +73,6 @@
     "vite": "^7.3.5"
   },
   "peerDependencies": {
-    "svelte": "^5.0.0"
+    "svelte": "^5.56.0"
   }
 }

@@ -192,8 +192,8 @@ function checkRuntimeDependencyBoundary(): void {
     failures.push('package.json dependencies must stay empty unless a runtime dependency is intentionally adopted.');
   }
 
-  if (packageJson.peerDependencies?.svelte !== '^5.0.0') {
-    failures.push('package.json peerDependencies.svelte must stay ^5.0.0.');
+  if (packageJson.peerDependencies?.svelte !== '^5.56.0') {
+    failures.push('package.json peerDependencies.svelte must stay ^5.56.0.');
   }
 }
 
