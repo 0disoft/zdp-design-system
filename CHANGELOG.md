@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Bumped the package contract to `0.46.1` for the consumer fixture token-lint guard.
+- Documented `^0.46.1` as the default semver range for standalone consumers and public examples.
 - Raised the Svelte peer dependency floor to `^5.56.0` and bumped the package contract to `0.46.0` so downstream Svelte 5 consumers use the same compiler/runtime floor as the generated package surface.
 - Added layer and mobile-safe viewport tokens, then moved overlay z-index and `100vh`/`100vw` sizing to named token usage across Svelte components and static utilities.
 - Strengthened package checks for overlay token usage and overrideable default labels.
