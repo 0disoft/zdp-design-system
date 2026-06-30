@@ -1,3 +1,8 @@
+# mf:anchor zdp.design-system.service-contract
+# purpose: Locate the design token, shared CSS, icon guidance, Svelte UI package, and consumer contract boundary.
+# search: design system, design tokens, shared CSS, Svelte package, consumer contract
+# invariant: UI package contracts cannot become the source of truth for authorization, billing, identity, consent, or admin decisions.
+# risk: authz, security, data_consistency
 contract:
   schema_version: 2
   contract_version: 1
