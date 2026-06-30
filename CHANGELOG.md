@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Bumped the package contract to `0.46.1` for the consumer fixture token-lint guard.
 - Raised the Svelte peer dependency floor to `^5.56.0` and bumped the package contract to `0.46.0` so downstream Svelte 5 consumers use the same compiler/runtime floor as the generated package surface.
 - Added layer and mobile-safe viewport tokens, then moved overlay z-index and `100vh`/`100vw` sizing to named token usage across Svelte components and static utilities.
 - Strengthened package checks for overlay token usage and overrideable default labels.
@@ -9,6 +10,7 @@
 - Added `AdSlot` plus static `.zdp-ad-slot` utilities for provider-neutral ad or sponsorship placement reservation while keeping provider scripts, consent, slot ids, `ads.txt`, personalized ads, and automatic content insertion in consuming apps.
 - Documented the dependency adoption policy: active ZDP sibling consumers may keep `file:../zdp-design-system`, while standalone consumers, public templates, and external examples should use the npm package from `^0.46.0`.
 - Added a single-component consumer fixture proof so the root barrel keeps tree-shaking unused component exports out of Button-only bundles.
+- Strengthened consumer fixture checks so examples fail on raw color literals, pixel sizing, z-index numbers, and raw `100vh`/`100vw` viewport sizing instead of bypassing shared tokens.
 
 ## 0.43.8
 

@@ -425,6 +425,7 @@ Flutter와 native shell은 Svelte 컴포넌트를 직접 소비하지 않는다.
 - `control.heightMd`, `control.glyphMd`, `control.choiceSize`, `control.choiceIndicatorSize`, `control.switchWidth`, `control.switchHeight`, `control.scrollbarSize`, `control.radius`, `control.borderWidth`, `control.hitTarget`은 native control size, icon glyph size, choice mark, switch track, scrollbar 두께를 맞출 때의 기준이다.
 - `layer.*`는 skip link, floating overlay, toast, sheet, dialog처럼 겹침 순서가 필요한 surface의 기준이고, 소비처는 raw z-index 숫자를 직접 쌓지 않는다.
 - `viewport.*`는 overlay panel clamp, safe-area inset, mobile viewport fallback의 기준이고, 소비처는 modal/sheet/dropdown에 raw `100vh`/`100vw`를 직접 쓰지 않는다.
+- 소비처 fixture와 public example은 raw color literal, raw `px`, raw z-index number, raw `100vh`/`100vw`를 쓰지 않는다. `fixtures:check`는 이 위반을 shared token adoption drift로 본다.
 - `color.scrollbar.track`, `color.scrollbar.thumb`, `color.scrollbar.thumbHover`는 overflow 영역의 light/dark scrollbar 색 기준이다.
 - `color.selection.surface`, `color.selection.text`는 `.zdp-surface-reset` 안의 drag text selection 색 기준이다.
 - `focus.surface`, `focus.text`, `focus.line`은 keyboard focus 또는 TV/desktop focus affordance의 기준색이다.

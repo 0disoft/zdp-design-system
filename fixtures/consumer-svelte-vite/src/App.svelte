@@ -31,7 +31,7 @@
 
 <style>
   .consumer-fixture {
-    min-height: 100vh;
+    min-block-size: var(--zdp-viewport-block);
     padding: var(--zdp-space-6);
   }
 </style>
