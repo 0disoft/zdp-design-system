@@ -28,12 +28,14 @@ const allowedPackageFiles = [
   'README.md',
   'LICENSE',
   'CHANGELOG.md',
+  'SECURITY.md',
   'THIRD_PARTY_NOTICES.md'
 ] as const;
 const requiredPackagedFiles = [
   'README.md',
   'LICENSE',
   'CHANGELOG.md',
+  'SECURITY.md',
   'THIRD_PARTY_NOTICES.md',
   'docs/CONSUMER_CONTRACT.md',
   'docs/EXTERNAL_UI_ADOPTION.md',

@@ -1,6 +1,6 @@
 {
   "name": "zdp-design-system",
-  "version": "0.46.1",
+  "version": "0.46.2",
   "private": false,
   "license": "MIT",
   "type": "module",
@@ -29,6 +29,7 @@
     "README.md",
     "LICENSE",
     "CHANGELOG.md",
+    "SECURITY.md",
     "THIRD_PARTY_NOTICES.md"
   ],
   "sideEffects": [

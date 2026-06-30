@@ -116,6 +116,7 @@ const expectedPackageFiles = [
   'README.md',
   'LICENSE',
   'CHANGELOG.md',
+  'SECURITY.md',
   'THIRD_PARTY_NOTICES.md'
 ] as const;
 const expectedDistArtifactFiles = [
