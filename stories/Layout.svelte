@@ -1,5 +1,7 @@
 <script lang="ts">
   import Button from '../src/lib/components/Button.svelte';
+  import Card from '../src/lib/components/Card.svelte';
+  import CardHeader from '../src/lib/components/CardHeader.svelte';
   import Container from '../src/lib/components/Container.svelte';
   import Grid from '../src/lib/components/Grid.svelte';
   import Inline from '../src/lib/components/Inline.svelte';
@@ -7,7 +9,6 @@
   import PageHeader from '../src/lib/components/PageHeader.svelte';
   import Section from '../src/lib/components/Section.svelte';
   import Stack from '../src/lib/components/Stack.svelte';
-  import Surface from '../src/lib/components/Surface.svelte';
   import Toolbar from '../src/lib/components/Toolbar.svelte';
 </script>
 
@@ -36,18 +37,18 @@
             <p slot="summary">넓은 화면에서는 줄 길이를 붙잡고, 작은 화면에서는 액션이 자연스럽게 아래로 내려온다.</p>
           </PageHeader>
           <Grid columns="two" gap="md" labelledBy="layout-panel-title">
-            <Surface padding="lg">
-              <div class="layout-story__tile">
-                <strong>공개 표면</strong>
-                <p>브랜드, 문서, 로드맵처럼 반복해서 확인하는 화면을 차분하게 묶는다.</p>
-              </div>
-            </Surface>
-            <Surface padding="lg">
-              <div class="layout-story__tile">
-                <strong>작업 표면</strong>
-                <p>설정, 입력, 검토 흐름은 같은 여백과 같은 focus 규칙 위에 놓인다.</p>
-              </div>
-            </Surface>
+            <Card as="section" ariaLabelledBy="layout-public-card-title" hover>
+              <svelte:fragment slot="header">
+                <CardHeader id="layout-public-card-title">공개 표면</CardHeader>
+              </svelte:fragment>
+              <p>브랜드, 문서, 로드맵처럼 반복해서 확인하는 화면을 차분하게 묶는다.</p>
+            </Card>
+            <Card as="section" ariaLabelledBy="layout-work-card-title" tone="raised">
+              <svelte:fragment slot="header">
+                <CardHeader id="layout-work-card-title">작업 표면</CardHeader>
+              </svelte:fragment>
+              <p>설정, 입력, 검토 흐름은 같은 여백과 같은 focus 규칙 위에 놓인다.</p>
+            </Card>
           </Grid>
         </Stack>
       </Container>
@@ -115,15 +116,6 @@
     font-size: var(--zdp-type-title-size);
   }
 
-  .layout-story__tile strong {
-    color: var(--zdp-color-ink-strong);
-    display: block;
-    font-size: var(--zdp-type-body-size);
-    font-weight: var(--zdp-font-weight-medium);
-    line-height: var(--zdp-type-body-line-height);
-  }
-
-  .layout-story__tile p,
   .layout-story__copy {
     color: var(--zdp-color-ink-muted);
     font-size: var(--zdp-type-body-size);

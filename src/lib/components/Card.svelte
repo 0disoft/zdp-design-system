@@ -7,7 +7,7 @@
   export let ariaLabel: string | null = null;
   export let ariaLabelledBy: string | null = null;
 
-  $: role = as === 'div' ? 'region' : undefined;
+  $: role = as === 'div' && Boolean(ariaLabel?.trim() || ariaLabelledBy?.trim()) ? 'region' : undefined;
 </script>
 
 <svelte:element
@@ -85,17 +85,11 @@
   }
 
   .zdp-card--hover {
-    cursor: pointer;
     transition: border-color var(--zdp-motion-fast) ease;
   }
 
   .zdp-card--hover:hover {
     border-color: var(--zdp-color-line-strong);
-  }
-
-  .zdp-card--hover:focus-visible {
-    outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-line);
-    outline-offset: var(--zdp-control-focus-outline-offset);
   }
 
   .zdp-card__header {

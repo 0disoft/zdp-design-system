@@ -14,72 +14,8 @@ interface PackageJson {
 
 const root = process.cwd();
 const packagePath = join(root, 'package.json');
-const componentPaths = [
-  'src/lib/components/Accordion.svelte',
-  'src/lib/components/AdSlot.svelte',
-  'src/lib/components/Avatar.svelte',
-  'src/lib/components/Badge.svelte',
-  'src/lib/components/Breadcrumb.svelte',
-  'src/lib/components/Button.svelte',
-  'src/lib/components/Callout.svelte',
-  'src/lib/components/Checkbox.svelte',
-  'src/lib/components/CodeBlock.svelte',
-  'src/lib/components/Combobox.svelte',
-  'src/lib/components/CommandField.svelte',
-  'src/lib/components/ConfirmAction.svelte',
-  'src/lib/components/Container.svelte',
-  'src/lib/components/Dialog.svelte',
-  'src/lib/components/Disclosure.svelte',
-  'src/lib/components/Divider.svelte',
-  'src/lib/components/EmptyState.svelte',
-  'src/lib/components/ErrorText.svelte',
-  'src/lib/components/Field.svelte',
-  'src/lib/components/Grid.svelte',
-  'src/lib/components/HelpText.svelte',
-  'src/lib/components/Icon.svelte',
-  'src/lib/components/IconButton.svelte',
-  'src/lib/components/Inline.svelte',
-  'src/lib/components/InlineCode.svelte',
-  'src/lib/components/Input.svelte',
-  'src/lib/components/IdentityChip.svelte',
-  'src/lib/components/Kbd.svelte',
-  'src/lib/components/KeyValue.svelte',
-  'src/lib/components/Label.svelte',
-  'src/lib/components/Link.svelte',
-  'src/lib/components/LocaleSwitcher.svelte',
-  'src/lib/components/Menu.svelte',
-  'src/lib/components/Page.svelte',
-  'src/lib/components/PageHeader.svelte',
-  'src/lib/components/Pagination.svelte',
-  'src/lib/components/Popover.svelte',
-  'src/lib/components/Progress.svelte',
-  'src/lib/components/Radio.svelte',
-  'src/lib/components/Section.svelte',
-  'src/lib/components/Select.svelte',
-  'src/lib/components/SegmentedControl.svelte',
-  'src/lib/components/ShareDock.svelte',
-  'src/lib/components/Sheet.svelte',
-  'src/lib/components/ShortcutHint.svelte',
-  'src/lib/components/Skeleton.svelte',
-  'src/lib/components/SkipLink.svelte',
-  'src/lib/components/SortHeader.svelte',
-  'src/lib/components/Stack.svelte',
-  'src/lib/components/StatusToast.svelte',
-  'src/lib/components/Spinner.svelte',
-  'src/lib/components/Surface.svelte',
-  'src/lib/components/Switch.svelte',
-  'src/lib/components/Tabs.svelte',
-  'src/lib/components/Table.svelte',
-  'src/lib/components/TableToolbar.svelte',
-  'src/lib/components/TermSheet.svelte',
-  'src/lib/components/TermTrigger.svelte',
-  'src/lib/components/Textarea.svelte',
-  'src/lib/components/TextScaleControl.svelte',
-  'src/lib/components/ThemeToggle.svelte',
-  'src/lib/components/Tooltip.svelte',
-  'src/lib/components/Toast.svelte',
-  'src/lib/components/Toolbar.svelte',
-  'src/lib/components/VisuallyHidden.svelte',
+const publicComponentPaths = await readPublicComponentPaths();
+const storyPaths = [
   'stories/Buttons.svelte',
   'stories/ButtonPlayground.svelte',
   'stories/DataDisplay.svelte',
@@ -92,10 +28,11 @@ const componentPaths = [
   'stories/Navigation.svelte',
   'stories/ThemeLocaleStress.svelte'
 ] as const;
+const componentPaths = [...publicComponentPaths, ...storyPaths];
 const defaultLocaleSourcePaths = [
   'src/lib/preferences.ts',
-  ...componentPaths.filter((path) => path.startsWith('src/lib/components/'))
-] as const;
+  ...publicComponentPaths
+];
 const expectedRootRuntimeExport = './dist/index.js';
 const expectedRootTypeExport = './dist/index.d.ts';
 const expectedSubpathExports = {
@@ -158,6 +95,7 @@ await checkEnglishDefaultTextContract();
 await checkUserFacingLabelOverrideContract();
 await checkShareContract();
 await checkButtonContract();
+await checkCardContract();
 await checkSharedFocusContract();
 await checkModalLayerContract();
 await checkDialogFocusContract();
@@ -208,6 +146,26 @@ function checkPackageScripts(packageJson: PackageJson): void {
   if (!packageJson.scripts?.check?.includes('bun run fixtures:check')) {
     failures.push('package.json check script must build the consumer fixture against dist exports.');
   }
+}
+
+async function readPublicComponentPaths(): Promise<readonly string[]> {
+  const publicEntryPath = 'src/lib/index.ts';
+  const source = await readFile(join(root, publicEntryPath), 'utf8');
+  const matches = [
+    ...source.matchAll(/export \{ default as [A-Za-z0-9_]+ \} from '\.\/components\/([^']+\.svelte)';/g)
+  ];
+  const paths = matches.map((match) => `src/lib/components/${match[1]}`);
+  const uniquePaths = [...new Set(paths)].sort((a, b) => a.localeCompare(b));
+
+  if (uniquePaths.length === 0) {
+    throw new Error(`${publicEntryPath} must export at least one public Svelte component.`);
+  }
+
+  if (uniquePaths.length !== paths.length) {
+    throw new Error(`${publicEntryPath} must not export the same Svelte component path more than once.`);
+  }
+
+  return uniquePaths;
 }
 
 function checkPackageLicense(packageJson: PackageJson): void {
@@ -594,6 +552,73 @@ async function checkButtonContract(): Promise<void> {
 
   if (!componentCss.includes('font-weight: var(--zdp-font-weight-medium);')) {
     failures.push(`${componentCssPath} must expose medium .zdp-button label weight.`);
+  }
+}
+
+async function checkCardContract(): Promise<void> {
+  const cardPath = 'src/lib/components/Card.svelte';
+  const componentCssPath = 'src/styles/components.css';
+  const storyPath = 'stories/Layout.svelte';
+  const fixturePath = 'fixtures/consumer-svelte-vite/src/App.svelte';
+  const consumerContractPath = 'docs/CONSUMER_CONTRACT.md';
+  const card = await readFile(join(root, cardPath), 'utf8');
+  const componentCss = await readFile(join(root, componentCssPath), 'utf8');
+  const story = await readFile(join(root, storyPath), 'utf8');
+  const fixture = await readFile(join(root, fixturePath), 'utf8');
+  const consumerContract = await readFile(join(root, consumerContractPath), 'utf8');
+  const cardCssStart = componentCss.indexOf('.zdp-card {');
+  const cardCssEnd = componentCss.indexOf('.zdp-card-header {');
+  const cardCss = componentCss.slice(cardCssStart, cardCssEnd);
+
+  for (const requiredText of [
+    "as === 'div' && Boolean(ariaLabel?.trim() || ariaLabelledBy?.trim()) ? 'region' : undefined",
+    'class={`zdp-card zdp-card--${tone} zdp-card--padding-${padding} ${hover ? \'zdp-card--hover\' : \'\'}`}',
+    '.zdp-card--hover:hover'
+  ]) {
+    if (!card.includes(requiredText)) {
+      failures.push(`${cardPath} is missing non-interactive Card contract text ${requiredText}.`);
+    }
+  }
+
+  if (cardCssStart === -1 || cardCssEnd === -1 || cardCssEnd <= cardCssStart) {
+    failures.push(`${componentCssPath} must keep the static Card style boundary.`);
+  }
+
+  for (const [targetPath, source] of [
+    [cardPath, card],
+    [componentCssPath, cardCss]
+  ] as const) {
+    for (const forbiddenText of ['cursor: pointer', '.zdp-card--hover:focus-visible', 'tabindex=', 'onclick=', 'onkeydown=']) {
+      if (source.includes(forbiddenText)) {
+        failures.push(`${targetPath} must not make Card itself interactive through ${forbiddenText}.`);
+      }
+    }
+  }
+
+  for (const requiredText of [
+    "import Card from '../src/lib/components/Card.svelte';",
+    "import CardHeader from '../src/lib/components/CardHeader.svelte';",
+    '<Card ',
+    '<CardHeader '
+  ]) {
+    if (!story.includes(requiredText)) {
+      failures.push(`${storyPath} is missing Card story evidence ${requiredText}.`);
+    }
+  }
+
+  for (const requiredText of ['Card,', 'CardHeader,', '<Card ', '<CardHeader ']) {
+    if (!fixture.includes(requiredText)) {
+      failures.push(`${fixturePath} is missing Card public-package evidence ${requiredText}.`);
+    }
+  }
+
+  for (const requiredText of [
+    'Card와 CardHeader는 비상호작용 콘텐츠 컨테이너다.',
+    '전체 카드 이동이나 실행은 내부 Link 또는 Button으로 명시한다.'
+  ]) {
+    if (!consumerContract.includes(requiredText)) {
+      failures.push(`${consumerContractPath} is missing Card consumer contract text ${requiredText}.`);
+    }
   }
 }
 

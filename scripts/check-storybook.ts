@@ -1208,6 +1208,8 @@ for (const requiredText of [
 
 for (const requiredText of [
   '../src/lib/components/Button.svelte',
+  '../src/lib/components/Card.svelte',
+  '../src/lib/components/CardHeader.svelte',
   '../src/lib/components/Container.svelte',
   '../src/lib/components/Grid.svelte',
   '../src/lib/components/Inline.svelte',
@@ -1215,7 +1217,6 @@ for (const requiredText of [
   '../src/lib/components/PageHeader.svelte',
   '../src/lib/components/Section.svelte',
   '../src/lib/components/Stack.svelte',
-  '../src/lib/components/Surface.svelte',
   '../src/lib/components/Toolbar.svelte',
   '화면의 첫 장면',
   '작업을 모으는 폭',
@@ -1227,6 +1228,8 @@ for (const requiredText of [
   '<PageHeader labelledBy="layout-story-title" align="center">',
   '<svelte:fragment slot="actions">',
   '<Grid columns="two" gap="md" labelledBy="layout-panel-title">',
+  '<Card as="section" ariaLabelledBy="layout-public-card-title" hover>',
+  '<CardHeader id="layout-public-card-title">공개 표면</CardHeader>',
   '<Toolbar labelledBy="layout-toolbar-title">',
   'zdp-surface-reset'
 ]) {

@@ -1,6 +1,8 @@
 <script lang="ts">
   import {
     Button,
+    Card,
+    CardHeader,
     InlineCode,
     Tooltip,
     zdpTokenNames,
@@ -16,17 +18,23 @@
 </script>
 
 <main class="zdp-surface-reset consumer-fixture">
-  <Tooltip label="패키지 export 확인">
-    {#snippet trigger({ describedBy })}
-      <Button ariaDescribedBy={describedBy}>확인</Button>
-    {/snippet}
-  </Tooltip>
+  <Card as="section" ariaLabelledBy="consumer-card-title" hover>
+    <svelte:fragment slot="header">
+      <CardHeader id="consumer-card-title">Package surface</CardHeader>
+    </svelte:fragment>
 
-  <p>
-    <InlineCode>{firstToken}</InlineCode>
-    <span>{tokenVersion}</span>
-    <span>{iconCount}</span>
-  </p>
+    <Tooltip label="패키지 export 확인">
+      {#snippet trigger({ describedBy })}
+        <Button ariaDescribedBy={describedBy}>확인</Button>
+      {/snippet}
+    </Tooltip>
+
+    <p>
+      <InlineCode>{firstToken}</InlineCode>
+      <span>{tokenVersion}</span>
+      <span>{iconCount}</span>
+    </p>
+  </Card>
 </main>
 
 <style>
