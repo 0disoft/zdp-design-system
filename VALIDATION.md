@@ -7,6 +7,7 @@
 | Change scope | Check |
 | --- | --- |
 | tokens, CSS, components, stories, preview, fixtures, package readiness | `zdp_design_system_package_verify` |
+| browser accessibility semantics and keyboard focus order | `zdp_design_system_browser_accessibility_check` |
 | Storybook static build or bundle evidence | `zdp_design_system_bundle_analyze` |
 | npm package contents or release readiness | `zdp_design_system_npm_pack_dry_run` |
 | repository architecture contract | `zdp_architecture_validate_design_system_repository` |

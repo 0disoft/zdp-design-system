@@ -1,6 +1,6 @@
 {
   "name": "zdp-design-system",
-  "version": "0.46.3",
+  "version": "0.46.4",
   "private": false,
   "license": "MIT",
   "type": "module",
@@ -50,6 +50,7 @@
     "share-icons:check": "bun scripts/generate-share.ts --check && bun scripts/check-share-icons.ts",
     "preview:check": "bun scripts/check-preview.ts",
     "a11y:check": "bun scripts/check-storybook-a11y.ts",
+    "browser:check": "node scripts/check-browser-accessibility.mjs",
     "type:check": "svelte-check --tsconfig ./tsconfig.json",
     "package:build": "bun scripts/generate-tokens.ts && bun scripts/generate-share.ts && bun scripts/build-package.ts",
     "package:check": "bun scripts/check-package.ts",
@@ -66,6 +67,7 @@
     "@sveltejs/vite-plugin-svelte": "^6.2.4",
     "@tsconfig/svelte": "5.0.8",
     "@types/node": "26.0.1",
+    "playwright-core": "1.61.1",
     "simple-icons": "^16.23.0",
     "storybook": "10.4.2",
     "svelte": "^5.56.3",

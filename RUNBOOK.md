@@ -6,6 +6,7 @@ This repository owns design tokens, shared CSS entries, share icon helpers, Svel
 
 - Use the configured mustflow intent `zdp_architecture_validate_design_system_repository` for repository architecture validation.
 - Use the configured mustflow intent `zdp_design_system_package_verify` for token generation checks, consumer contract checks, share icon checks, preview checks, Storybook configuration checks, accessibility gates, Svelte type checks, package build, package surface checks, publish-readiness checks, and consumer fixtures.
+- Use `zdp_design_system_browser_accessibility_check` for real Chromium region semantics and keyboard focus-order evidence.
 - Use `zdp_design_system_bundle_analyze` when Storybook stories, Storybook configuration, bundle-sensitive package exports, or visual review surfaces change.
 - Use `zdp_design_system_npm_pack_dry_run` before package file surface review or release preparation.
 - Use `zdp_design_system_npm_publish_dry_run` only for approved publish-readiness dry runs; it is not a publish command.
