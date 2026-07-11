@@ -573,5 +573,6 @@ bun run tokens:check
 `package:build`는 `dist/` package surface를 생성한다.
 `package:check`는 package export, files, sideEffects, Svelte 컴포넌트 compile 결과가 함께 맞는지 확인한다.
 `publish:check`는 npm publish 전 package metadata, export target, files whitelist, generated dist entry, public docs, license, third-party notice가 함께 맞는지 확인한다.
+`release:check`는 `v<package version>` 태그가 전체 package 검증, npm provenance publish, exact-version registry 확인, 같은 태그의 GitHub Release 생성으로 이어지는 workflow 계약을 확인한다.
 `fixtures:check`는 소비자 Svelte/Vite fixture가 public package export만으로 build되는지 확인하고, fixture source가 raw color, px, z-index number, raw `100vh`/`100vw` 대신 shared token을 쓰는지 검사한다.
 `preview:check`와 `storybook:check`는 shared CSS, Svelte 컴포넌트, Storybook, 정적 preview에 장식성 그림자, 그라데이션, 반짝임 pseudo-element, hover 이동 효과, 과한 pill radius가 다시 들어오지 않는지도 확인한다.

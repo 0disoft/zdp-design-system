@@ -23,6 +23,7 @@
 - Token source: `tokens/zdp.tokens.json`
 - Web token CSS: `src/styles/tokens.css`
 - Package build/check scripts: `scripts/build-package.ts`, `scripts/check-package.ts`, `scripts/check-publish-readiness.ts`
+- Release workflow: `.github/workflows/publish-npm.yml`, `scripts/check-release-workflow.ts`
 - Token/share generators: `scripts/generate-tokens.ts`, `scripts/generate-share.ts`
 - Consumer contract docs: `docs/CONSUMER_CONTRACT.md`
 - External UI rules: `docs/EXTERNAL_UI_ADOPTION.md`, `docs/INTERACTIVE_PRIMITIVE_AUDIT.md`, `THIRD_PARTY_NOTICES.md`
