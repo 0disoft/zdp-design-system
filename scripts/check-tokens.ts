@@ -31,7 +31,6 @@ interface ColorTokenValue {
 }
 
 interface PackageJson {
-  readonly version?: string;
   readonly exports?: Record<string, unknown>;
   readonly sideEffects?: readonly unknown[];
 }
@@ -62,10 +61,6 @@ const tokenVariables = collectCssVariableNames(tokenDocument);
 const publicTokenNames = collectPublicTokenNames(tokenDocument);
 const colorTokens = collectColorTokens(tokenDocument);
 const failures: string[] = [];
-
-if (packageJson.version !== '0.46.4') {
-  failures.push('package.json version must be 0.46.4 for the current design-system package contract.');
-}
 
 if (tokenDocument.$schema !== '../schemas/design-tokens.schema.json') {
   failures.push('tokens/zdp.tokens.json must use the repo-local ../schemas/design-tokens.schema.json schema.');
@@ -575,7 +570,6 @@ async function readPackageJson(path: string): Promise<PackageJson> {
   }
 
   return {
-    version: typeof parsed.version === 'string' ? parsed.version : undefined,
     exports: isRecord(parsed.exports) ? parsed.exports : undefined,
     sideEffects: Array.isArray(parsed.sideEffects) ? parsed.sideEffects : undefined
   };

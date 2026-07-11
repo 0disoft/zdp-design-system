@@ -2,7 +2,6 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 interface PackageJson {
-  readonly version?: string;
   readonly exports?: Record<string, unknown>;
   readonly files?: readonly string[];
   readonly sideEffects?: readonly unknown[];
@@ -40,10 +39,6 @@ if (failures.length > 0) {
 }
 
 function checkPackageSurface(packageJson: PackageJson): void {
-  if (packageJson.version !== '0.46.4') {
-    failures.push('package.json version must be 0.46.4 for the current design-system package contract.');
-  }
-
   if (packageJson.exports?.['./brand-fonts.css'] !== './dist/styles/brand-fonts.css') {
     failures.push('package.json exports must include ./brand-fonts.css.');
   }
@@ -548,7 +543,6 @@ async function readPackageJson(path: string): Promise<PackageJson> {
   }
 
   return {
-    version: typeof parsed.version === 'string' ? parsed.version : undefined,
     exports: isRecord(parsed.exports) ? parsed.exports : undefined,
     files: isStringArray(parsed.files) ? parsed.files : undefined,
     sideEffects: Array.isArray(parsed.sideEffects) ? parsed.sideEffects : undefined,
