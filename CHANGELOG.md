@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Bumped the package contract to `0.46.5` and aligned packaged standalone-consumer guidance with the release version instead of pointing new consumers at the older `^0.46.3` range.
 - Bumped the package contract to `0.46.4` and added a real Chromium accessibility regression gate for Card region semantics and keyboard focus order instead of treating Storybook addon configuration as runtime proof.
 - Bumped the package contract to `0.46.3`, made Card a clearly non-interactive container with labelled regions only, and added automatic public-component compilation plus Storybook and consumer fixture coverage for Card and CardHeader.
 - Bumped the package contract to `0.46.2`, added `SECURITY.md` to the public npm package surface, and documented `^0.46.2` as the default semver range for standalone consumers and public examples.
