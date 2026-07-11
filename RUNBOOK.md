@@ -35,7 +35,7 @@ The static preview proves shared CSS and core token/component surfaces without a
 Package exports must point at `dist/**`; consumers must not deep import `src/**`. The package file allowlist includes `dist/`, `docs/`, `README.md`, `LICENSE`, `CHANGELOG.md`, `SECURITY.md`, and `THIRD_PARTY_NOTICES.md`. Changes to packaged docs or package metadata require version impact review before release preparation.
 
 Publishing is never implied by a green package check. Release preparation needs package verification, package dry run, publish dry run when approved, changelog review, and explicit publish approval before the public publish intent is eligible.
-The tag-triggered publish workflow reads the repository `NPM_TOKEN` secret only for the npm publish step; token values must not be stored in source, logs, examples, or package artifacts.
+The tag-triggered publish workflow uses npm trusted publishing with GitHub Actions OIDC and does not use a long-lived publish token. Before the first release, configure the `zdp-design-system` package's npm Trusted Publisher as GitHub Actions with organization `0disoft`, repository `zdp-design-system`, workflow filename `publish-npm.yml`, and allowed action `npm publish`. The workflow requires a GitHub-hosted runner and `id-token: write`; the package `repository.url` must keep matching this repository exactly.
 
 ## Failure Response
 

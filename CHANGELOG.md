@@ -6,6 +6,7 @@
 
 ## 0.46.5
 
+- Replaced the missing long-lived npm publish token dependency with GitHub Actions OIDC trusted publishing and an exact repository identity contract.
 - Packed once per release and verified the published registry integrity against that exact tarball so validation and publication cannot diverge.
 - Aligned packaged standalone-consumer guidance with the release version instead of pointing new consumers at the older `^0.46.3` range.
 - Added a tag-triggered release workflow that verifies the package, publishes with npm provenance, verifies the exact registry version, and creates the matching GitHub Release.
