@@ -50,6 +50,9 @@ assert.ok(
   'Every release workflow action must be pinned to a full commit SHA.'
 );
 assert.ok(ciWorkflow.includes('permissions:\n  contents: read'));
+assert.ok(ciWorkflow.includes('group: design-system-${{ github.workflow }}-${{ github.ref }}'));
+assert.ok(ciWorkflow.includes('cancel-in-progress: true'));
+assert.ok(ciWorkflow.includes('timeout-minutes: 20'));
 assert.ok(ciWorkflow.includes('uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7'));
 assert.ok(ciWorkflow.includes('persist-credentials: false'));
 assert.ok(ciWorkflow.includes('uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2'));
