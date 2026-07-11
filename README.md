@@ -574,5 +574,6 @@ bun run tokens:check
 `package:check`는 package export, files, sideEffects, Svelte 컴포넌트 compile 결과가 함께 맞는지 확인한다.
 `publish:check`는 npm publish 전 package metadata, export target, files whitelist, generated dist entry, public docs, license, third-party notice가 함께 맞는지 확인한다.
 `release:check`는 `v<package version>` 태그가 전체 package 검증, GitHub Actions OIDC 기반 npm trusted publishing과 provenance, exact-version registry 확인, 같은 태그의 GitHub Release 생성으로 이어지는 workflow 계약을 확인한다. 첫 release 전에 npm package 설정의 Trusted Publisher를 `0disoft/zdp-design-system`과 `publish-npm.yml`에 연결해야 하며 장기 publish token은 사용하지 않는다.
+Main package CI와 release workflow의 외부 Action은 reviewed full commit SHA만 실행한다. Main CI token은 `contents: read`로 제한하고 checkout credential persistence를 끈다.
 `fixtures:check`는 소비자 Svelte/Vite fixture가 public package export만으로 build되는지 확인하고, fixture source가 raw color, px, z-index number, raw `100vh`/`100vw` 대신 shared token을 쓰는지 검사한다.
 `preview:check`와 `storybook:check`는 shared CSS, Svelte 컴포넌트, Storybook, 정적 preview에 장식성 그림자, 그라데이션, 반짝임 pseudo-element, hover 이동 효과, 과한 pill radius가 다시 들어오지 않는지도 확인한다.
