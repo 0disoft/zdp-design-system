@@ -37,6 +37,7 @@ Package exports must point at `dist/**`; consumers must not deep import `src/**`
 Publishing is never implied by a green package check. Release preparation needs package verification, package dry run, publish dry run when approved, changelog review, and explicit publish approval before the public publish intent is eligible.
 The tag-triggered publish workflow uses npm trusted publishing with GitHub Actions OIDC and does not use a long-lived publish token. Before the first release, configure the `zdp-design-system` package's npm Trusted Publisher as GitHub Actions with organization `0disoft`, repository `zdp-design-system`, workflow filename `publish-npm.yml`, and allowed action `npm publish`. The workflow requires a GitHub-hosted runner and `id-token: write`; the package `repository.url` must keep matching this repository exactly.
 Release workflow actions are pinned to full upstream commit SHAs; the adjacent major-version comments are update hints, not executable references. Review the upstream commit and rerun the release checks before changing a pin.
+The GitHub Release is created with the exact npm tarball and `release-artifact.json`, which records package identity, version, tag commit, tarball filename, and SHA-512 integrity. A rerun downloads both immutable assets and compares their bytes with the rebuilt artifact; it never clobbers an existing release asset.
 
 ## Failure Response
 
