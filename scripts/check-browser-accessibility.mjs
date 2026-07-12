@@ -61,6 +61,19 @@ try {
   const focusedTestId = await page.evaluate(() => document.activeElement?.getAttribute('data-testid'));
   assert.equal(focusedTestId, 'card-link', 'The first keyboard stop must be the explicit link inside Card.');
 
+  const tooltipTrigger = page.getByTestId('tooltip-trigger');
+  const tooltip = page.getByRole('tooltip', { name: 'Keyboard help' });
+  await tooltipTrigger.focus();
+  assert.equal(await tooltipTrigger.getAttribute('aria-describedby'), 'browser-tooltip');
+  assert.equal(await tooltip.evaluate((element) => getComputedStyle(element).opacity), '1');
+  await page.keyboard.press('Escape');
+  assert.equal(await tooltip.evaluate((element) => getComputedStyle(element).opacity), '0');
+  assert.equal(
+    await tooltipTrigger.evaluate((element) => document.activeElement === element),
+    true,
+    'Escape dismissal must preserve focus on the Tooltip trigger.'
+  );
+
   console.log('Design system browser accessibility check passed.');
 } finally {
   await browser?.close();

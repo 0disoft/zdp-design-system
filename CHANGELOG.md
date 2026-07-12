@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.6
+
+- Fixed `Tooltip` Escape dismissal so it hides the tooltip without blurring the focused trigger, and extended the real Chromium accessibility gate to preserve that keyboard location contract.
+
 ## 0.46.5
 
 - Applied the immutable Action and non-persistent checkout policy to main package CI and made its token permissions explicitly read-only.

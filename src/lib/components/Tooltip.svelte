@@ -68,11 +68,8 @@
       return;
     }
 
+    event.preventDefault();
     dismissed = true;
-
-    if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
-    }
   }
 </script>
 

@@ -2115,7 +2115,8 @@ for (const requiredText of [
   '$: describedBy = disabled ? null : tooltipId',
   'handleKeydown',
   "event.key !== 'Escape'",
-  'document.activeElement.blur()',
+  'event.preventDefault()',
+  'dismissed = true',
   'data-dismissed={dismissed ?',
   '<slot describedBy={describedBy} />',
   'id={tooltipId}',
@@ -2136,6 +2137,10 @@ for (const requiredText of [
   if (!tooltip.includes(requiredText)) {
     failures.push(`Tooltip component is missing ${requiredText}.`);
   }
+}
+
+if (tooltip.includes('document.activeElement.blur()')) {
+  failures.push('Tooltip Escape dismissal must preserve trigger focus instead of calling document.activeElement.blur().');
 }
 
 assertNoDecorativeEffects(failures, 'Tooltip component', tooltip);
