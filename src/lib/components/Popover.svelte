@@ -3,6 +3,7 @@
 </script>
 
 <script lang="ts">
+  import { toZdpDomId } from '../dom-id';
   export let open = false;
   export let idPrefix: string | null = null;
   export let placement: 'top' | 'right' | 'bottom' | 'left' = 'bottom';
@@ -96,7 +97,7 @@
   }
 
   function toDomId(id: string): string {
-    return id.trim().replace(/[^a-zA-Z0-9_-]+/g, '-') || 'popover';
+    return toZdpDomId(id, 'popover');
   }
 </script>
 

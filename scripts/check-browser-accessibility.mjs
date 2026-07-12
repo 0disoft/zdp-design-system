@@ -74,6 +74,15 @@ try {
     'Escape dismissal must preserve focus on the Tooltip trigger.'
   );
 
+  const tabs = page.getByRole('tablist', { name: 'Release views' }).getByRole('tab');
+  const tabIds = await tabs.evaluateAll((elements) => elements.map((element) => element.id));
+  const controlledPanelIds = await tabs.evaluateAll((elements) =>
+    elements.map((element) => element.getAttribute('aria-controls'))
+  );
+  assert.equal(new Set(tabIds).size, 2, 'Distinct logical tab ids must remain distinct DOM ids.');
+  assert.equal(new Set(controlledPanelIds).size, 2, 'Distinct tabs must retain distinct aria-controls targets.');
+  assert.equal(await page.getByRole('tabpanel').getAttribute('id'), controlledPanelIds[0]);
+
   console.log('Design system browser accessibility check passed.');
 } finally {
   await browser?.close();

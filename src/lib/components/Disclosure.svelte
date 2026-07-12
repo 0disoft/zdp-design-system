@@ -3,6 +3,7 @@
 </script>
 
 <script lang="ts">
+  import { toZdpDomId } from '../dom-id';
   import type { ZdpDisclosureHeadingLevel } from '../disclosure';
 
   export let open = false;
@@ -32,7 +33,7 @@
   }
 
   function toDomId(value: string): string {
-    return value.trim().replace(/[^a-zA-Z0-9_-]+/g, '-') || 'disclosure';
+    return toZdpDomId(value, 'disclosure');
   }
 </script>
 

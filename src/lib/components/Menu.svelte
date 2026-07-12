@@ -4,6 +4,7 @@
 
 <script lang="ts">
   import { tick } from 'svelte';
+  import { toZdpDomId } from '../dom-id';
   import type { ZdpMenuItem } from '../menu';
 
   export let items: readonly ZdpMenuItem[] = [];
@@ -211,7 +212,7 @@
   }
 
   function toDomId(id: string): string {
-    return id.trim().replace(/[^a-zA-Z0-9_-]+/g, '-') || 'menu';
+    return toZdpDomId(id, 'menu');
   }
 </script>
 

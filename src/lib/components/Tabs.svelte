@@ -3,6 +3,7 @@
 </script>
 
 <script lang="ts">
+  import { toZdpDomId } from '../dom-id';
   interface TabItem {
     readonly id: string;
     readonly label: string;
@@ -83,7 +84,7 @@
   }
 
   function toDomId(id: string): string {
-    return id.trim().replace(/[^a-zA-Z0-9_-]+/g, '-') || 'item';
+    return toZdpDomId(id, 'item');
   }
 </script>
 

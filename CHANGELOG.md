@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.7
+
+- Preserved distinct consumer ids across generated component DOM ids so punctuation and spacing cannot collapse separate Tabs, Combobox, Disclosure, preference controls, Menu, or Popover relationships onto the same accessibility target.
+
 ## 0.46.6
 
 - Fixed `Tooltip` Escape dismissal so it hides the tooltip without blurring the focused trigger, and extended the real Chromium accessibility gate to preserve that keyboard location contract.

@@ -3,6 +3,7 @@
 </script>
 
 <script lang="ts">
+  import { toZdpDomId } from '../dom-id';
   import {
     zdpTextScaleControlOptions,
     type ZdpTextScale,
@@ -87,7 +88,7 @@
   }
 
   function toDomId(value: string): string {
-    return value.trim().replace(/[^a-zA-Z0-9_-]+/g, '-') || 'option';
+    return toZdpDomId(value, 'option');
   }
 </script>
 

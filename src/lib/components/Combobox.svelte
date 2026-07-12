@@ -5,6 +5,7 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from 'svelte/elements';
   import type { ZdpComboboxOption, ZdpComboboxSize } from '../combobox';
+  import { toZdpDomId } from '../dom-id';
 
   type DescribedBy = string | readonly string[] | null;
 
@@ -217,7 +218,7 @@
   }
 
   function toDomId(id: string): string {
-    return id.trim().replace(/[^a-zA-Z0-9_-]+/g, '-') || 'combobox';
+    return toZdpDomId(id, 'combobox');
   }
 </script>
 

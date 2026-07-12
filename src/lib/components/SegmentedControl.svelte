@@ -3,6 +3,7 @@
 </script>
 
 <script lang="ts">
+  import { toZdpDomId } from '../dom-id';
   import type { ZdpSegmentedControlItem, ZdpSegmentedControlSize } from '../segmented';
 
   export let items: readonly ZdpSegmentedControlItem[] = [];
@@ -83,7 +84,7 @@
   }
 
   function toDomId(value: string): string {
-    return value.trim().replace(/[^a-zA-Z0-9_-]+/g, '-') || 'item';
+    return toZdpDomId(value, 'item');
   }
 </script>
 
