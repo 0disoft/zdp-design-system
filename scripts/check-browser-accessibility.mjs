@@ -134,6 +134,59 @@ try {
     'Outside dismissal must keep focus on the clicked target instead of stealing it back.'
   );
 
+  await menuTrigger.focus();
+  await page.keyboard.press('ArrowDown');
+  menu = page.getByRole('menu', { name: 'Browser actions' });
+  const editMenuItem = menu.getByRole('menuitem', { name: 'Edit release' });
+  const deleteMenuItem = menu.getByRole('menuitem', { name: 'Delete release' });
+  const archiveMenuItem = menu.getByRole('menuitem', { name: 'Archive release' });
+  assert.equal(await editMenuItem.evaluate((element) => document.activeElement === element), true);
+  assert.equal(await deleteMenuItem.getAttribute('aria-disabled'), 'true');
+  assert.equal(await deleteMenuItem.getAttribute('tabindex'), '-1');
+  await page.keyboard.press('ArrowDown');
+  assert.equal(
+    await archiveMenuItem.evaluate((element) => document.activeElement === element),
+    true,
+    'ArrowDown must skip disabled items.'
+  );
+  await page.keyboard.press('ArrowDown');
+  assert.equal(
+    await editMenuItem.evaluate((element) => document.activeElement === element),
+    true,
+    'ArrowDown must wrap to the first enabled item.'
+  );
+  await page.keyboard.press('End');
+  assert.equal(await archiveMenuItem.evaluate((element) => document.activeElement === element), true);
+  await page.keyboard.press('Home');
+  assert.equal(await editMenuItem.evaluate((element) => document.activeElement === element), true);
+  await page.keyboard.press('ArrowUp');
+  assert.equal(
+    await archiveMenuItem.evaluate((element) => document.activeElement === element),
+    true,
+    'ArrowUp must wrap to the last enabled item.'
+  );
+  await page.keyboard.press('Tab');
+  assert.equal(await menu.count(), 0, 'Tab must close the Menu.');
+  assert.equal(
+    await page.getByTestId('popover-trigger').evaluate((element) => document.activeElement === element),
+    true,
+    'Tab must continue to the next document control instead of restoring trigger focus.'
+  );
+
+  await menuTrigger.focus();
+  await page.keyboard.press('ArrowUp');
+  menu = page.getByRole('menu', { name: 'Browser actions' });
+  assert.equal(
+    await menu.getByRole('menuitem', { name: 'Archive release' }).evaluate((element) => document.activeElement === element),
+    true,
+    'ArrowUp on the trigger must open the Menu at its last enabled item.'
+  );
+  await page.keyboard.press('Home');
+  await page.keyboard.press('Enter');
+  assert.equal(await menu.count(), 0, 'Enter must select the focused Menu item and close the Menu.');
+  assert.equal(await page.getByTestId('menu-selection').textContent(), 'edit');
+  assert.equal(await menuTrigger.evaluate((element) => document.activeElement === element), true);
+
   const popoverTrigger = page.getByTestId('popover-trigger');
   await popoverTrigger.focus();
   await popoverTrigger.click();

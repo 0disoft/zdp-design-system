@@ -85,7 +85,7 @@ settings, filter, drawer형 보조 흐름은 TermSheet에 추가하지 않고 `S
 현재 구현은 단순 action menu에 충분하지만 typeahead, submenu, checkbox/radio menu item, collision, portal, pointerdown outside, nested menu를 직접 늘리기 시작하면 접근성 부채가 빠르게 커진다.
 그 지점부터는 Behavior Spec이 아니라 Runtime Dependency 후보로 전환한다.
 단, Bits UI를 쓰더라도 `ZdpMenuItem`, `.zdp-menu*` class, token mapping, Storybook examples, consumer fixture는 ZDP가 소유한다.
-InteractionProbe는 ArrowDown open, roving focus, disabled skip, Home/End, Escape close, focus return, click select를 계속 확인한다. Chromium gate는 pointer open 뒤 첫 enabled item focus, Escape trigger focus 복귀, outside click target focus 보존을 확인한다.
+InteractionProbe는 ArrowDown open, roving focus, disabled skip, Home/End, Escape close, focus return, click select를 계속 확인한다. Chromium gate는 pointer open 뒤 첫 enabled item focus, Escape trigger focus 복귀, outside click target focus 보존에 더해 ArrowDown/ArrowUp trigger entry, disabled skip, 양방향 wrap, Home/End, Tab document exit, Enter selection과 trigger focus 복귀를 확인한다.
 
 ### Popover
 

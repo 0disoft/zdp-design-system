@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.15
+
+- Promoted the complete `Menu` keyboard contract to Chromium coverage: ArrowDown/ArrowUp trigger entry, disabled-item skipping, forward/backward wrapping, Home/End, Tab exit without focus theft, and Enter selection with trigger focus return.
+
 ## 0.46.14
 
 - Added Chromium regression coverage for `Popover` Escape and outside-click dismissal opt-outs, including stable focus, live ARIA relationships, explicit-close focus return, and cleanup; clarified that ARIA `Menu` dismissal remains mandatory.

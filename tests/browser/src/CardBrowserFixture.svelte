@@ -23,6 +23,7 @@
   ];
   const browserMenuItems: readonly ZdpMenuItem[] = [
     { id: 'edit', label: 'Edit release' },
+    { id: 'delete', label: 'Delete release', href: '#delete-release', disabled: true },
     { id: 'archive', label: 'Archive release' }
   ];
   let ownerValue = '';
@@ -37,6 +38,7 @@
   let protectedSheetOpen = false;
   let protectedTermSheetOpen = false;
   let menuOpen = false;
+  let menuSelection = '';
   let popoverOpen = false;
   let protectedPopoverOpen = false;
   const browserTerm: ZdpTermSheetTerm = {
@@ -89,9 +91,11 @@
     idPrefix="browser-menu"
     triggerLabel="Browser actions"
     items={browserMenuItems}
+    onSelect={(_event, item) => (menuSelection = item.id)}
   >
     <svelte:fragment slot="trigger">Browser actions</svelte:fragment>
   </Menu>
+  <output data-testid="menu-selection">{menuSelection}</output>
 
   <Popover bind:open={popoverOpen} idPrefix="browser-popover" let:close>
     <svelte:fragment slot="trigger" let:open let:toggle let:panelId>
