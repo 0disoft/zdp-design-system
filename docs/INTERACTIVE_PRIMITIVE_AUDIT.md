@@ -20,8 +20,8 @@
 | --- | --- | --- | --- | --- |
 | Select | Native `select` | Low | label/id/error/describedBy, invalid, disabled, required, focus-visible | Custom select나 combobox 요구 전까지 유지 |
 | CommandField | Native `input` | Low | label, shortcut hint, aria-keyshortcuts/autocomplete/controls/expanded/activedescendant passthrough, input keydown callback | result list, dispatcher, command palette는 별도 primitive로 분리 |
-| Combobox | ZDP custom combobox/listbox | Medium | input combobox role, listbox/option roles, ArrowUp/ArrowDown, Enter select, Escape close, disabled skip, hidden value, InteractionProbe play coverage | grouped options, virtualized list, async option loading, multi-select, portal/collision 요구 시 headless spike |
-| Tooltip | CSS hover/focus label | Low | role tooltip, slot-provided `describedBy`, Escape dismiss, pointer-events none | interactive content 금지 유지 |
+| Combobox | ZDP custom combobox/listbox | Medium | input combobox role, listbox/option roles, ArrowUp/ArrowDown, Enter select, Escape close, disabled skip, hidden value, open shadow root, InteractionProbe와 Chromium coverage | grouped options, virtualized list, async option loading, multi-select, portal/collision, closed shadow root 요구 시 headless spike |
+| Tooltip | CSS hover/focus label | Low | role tooltip, slot-provided `describedBy`, Escape dismiss, pointer-events none, open shadow root와 Chromium coverage | interactive content 금지와 shadow-root stylesheet 설치 계약 유지 |
 | Dialog | ZDP custom modal | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, background inert, body portal와 open shadow root 호환, activation-order modal layer, Chromium nested-layer coverage | package-owned portal API, closed shadow root, animation orchestration 요구가 생기면 headless spike |
 | Sheet | ZDP custom modal edge panel | Medium | right/left/bottom placement, Escape, backdrop close, focus trap, focus return, scroll lock, background inert, body portal와 open shadow root 호환, activation-order modal layer, InteractionProbe와 Chromium coverage | draggable sheet, snap point, package-owned portal API, closed shadow root 요구가 생기면 headless spike |
 | TermSheet | ZDP glossary sheet | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, background inert, body portal와 open shadow root 호환, activation-order modal layer, stable term attributes | glossary 외 설정/필터/drawer 요구는 Sheet로 보내고 closed shadow root는 지원하지 않는다 |
@@ -48,13 +48,14 @@ custom trigger, searchable option, grouped option, virtualized list, async optio
 ZDP는 label, input frame, listbox, active option, disabled option skip, hidden submitted value, keyboard navigation만 소유한다. IME 조합 중 Enter와 방향키는 option 선택이나 이동으로 소비하지 않는다.
 소비 앱은 option source, filtering, async search, result ranking, command execution, permission visibility를 계속 소유한다.
 단순 상태 선택은 native `Select`를 유지하고, 사용자가 입력으로 후보를 좁혀야 하는 단일 선택에만 `Combobox`를 쓴다.
-InteractionProbe와 Chromium gate는 ArrowDown open, disabled skip, Enter select, Escape close, IME composition 보호, listbox label, selected value sync를 계속 확인한다.
+InteractionProbe와 Chromium gate는 ArrowDown open, disabled skip, Enter select, Escape close, IME composition 보호, listbox label, selected value sync를 계속 확인한다. Chromium gate는 stylesheet가 설치된 open shadow root 안에서 input/toggle click이 listbox를 즉시 닫지 않고, Escape 뒤 input focus를 유지하며, 실제 outside click만 닫는 것도 확인한다. closed shadow root는 지원하지 않는다.
 
 ### Tooltip
 
 `Tooltip`은 짧은 설명 text만 노출한다.
 Tooltip 안에 button, link, form field를 넣지 않는다.
 Escape로 현재 tooltip을 dismiss할 수 있어야 한다.
+Chromium gate는 stylesheet가 설치된 open shadow root 안에서도 focus 표시, Escape dismiss, trigger focus 유지, blur 뒤 재표시를 확인한다. document에만 stylesheet를 import하면 shadow boundary를 넘지 않으므로 소비처가 해당 root 안에 CSS를 설치해야 한다. closed shadow root는 지원하지 않는다.
 viewport collision과 mobile long-press를 해결하려고 floating engine으로 키우지 않는다.
 그 요구는 Popover나 별도 help surface로 보낸다.
 

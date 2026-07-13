@@ -147,7 +147,7 @@
   }
 
   function handleDocumentClick(event: MouseEvent): void {
-    if (!open || rootElement?.contains(event.target as Node)) {
+    if (!open || (rootElement !== null && event.composedPath().includes(rootElement))) {
       return;
     }
 

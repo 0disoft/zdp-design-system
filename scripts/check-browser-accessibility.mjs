@@ -62,7 +62,7 @@ try {
   assert.equal(focusedTestId, 'card-link', 'The first keyboard stop must be the explicit link inside Card.');
 
   const tooltipTrigger = page.getByTestId('tooltip-trigger');
-  const tooltip = page.getByRole('tooltip', { name: 'Keyboard help' });
+  const tooltip = page.getByRole('tooltip', { name: 'Keyboard help', exact: true });
   await tooltipTrigger.focus();
   assert.equal(await tooltipTrigger.getAttribute('aria-describedby'), 'browser-tooltip');
   assert.equal(await tooltip.evaluate((element) => getComputedStyle(element).opacity), '1');
@@ -83,7 +83,7 @@ try {
   assert.equal(new Set(controlledPanelIds).size, 2, 'Distinct tabs must retain distinct aria-controls targets.');
   assert.equal(await page.getByRole('tabpanel').getAttribute('id'), controlledPanelIds[0]);
 
-  const combobox = page.getByRole('combobox', { name: 'Owner' });
+  const combobox = page.getByRole('combobox', { name: 'Owner', exact: true });
   await combobox.focus();
   assert.equal(await page.getByRole('listbox', { name: 'Owner list' }).count(), 1);
   for (const legacyKeyCode of [null, 229]) {
@@ -397,6 +397,7 @@ try {
     lastName: 'View details'
   });
 
+  const shadowHost = page.getByTestId('shadow-modal-host');
   const shadowOutsideTarget = page.getByTestId('shadow-overlay-outside-target');
   const shadowMenuTrigger = page.getByRole('button', { name: 'Shadow actions' });
   await shadowMenuTrigger.click();
@@ -446,6 +447,63 @@ try {
     await shadowOutsideTarget.evaluate((element) => document.activeElement === element),
     true,
     'Shadow Popover outside dismissal must preserve focus on the clicked light-DOM target.'
+  );
+
+  const shadowTooltipTrigger = page.getByTestId('shadow-tooltip-trigger');
+  const shadowTooltip = page.getByRole('tooltip', { name: 'Shadow keyboard help' });
+  await shadowTooltipTrigger.focus();
+  assert.equal(await isDeepActive(shadowTooltipTrigger), true);
+  assert.equal(await shadowTooltipTrigger.getAttribute('aria-describedby'), 'shadow-tooltip');
+  assert.equal(
+    await shadowTooltip.evaluate((element) => getComputedStyle(element).opacity),
+    '1',
+    'A Tooltip must remain visible when its trigger is focused inside an open shadow root.'
+  );
+  await page.keyboard.press('Escape');
+  assert.equal(await shadowTooltip.locator('..').getAttribute('data-dismissed'), 'true');
+  assert.equal(await shadowTooltip.evaluate((element) => getComputedStyle(element).opacity), '0');
+  assert.equal(
+    await isDeepActive(shadowTooltipTrigger),
+    true,
+    'Shadow Tooltip Escape dismissal must preserve its inner trigger focus.'
+  );
+  await shadowOutsideTarget.focus();
+  await shadowTooltipTrigger.focus();
+  assert.equal(
+    await shadowTooltip.evaluate((element) => getComputedStyle(element).opacity),
+    '1',
+    'A shadow-root Tooltip must become available again after focus leaves and returns.'
+  );
+
+  const shadowCombobox = page.getByRole('combobox', { name: 'Shadow owner' });
+  const shadowComboboxToggle = shadowHost.getByRole('button', { name: 'Open selection' });
+  await shadowOutsideTarget.click();
+  await shadowComboboxToggle.click();
+  let shadowListbox = page.getByRole('listbox', { name: 'Shadow owner list' });
+  assert.equal(
+    await shadowListbox.count(),
+    1,
+    'A Combobox toggle inside an open shadow root must not dismiss its own listbox.'
+  );
+  assert.equal(await isDeepActive(shadowCombobox), true, 'A shadow-root Combobox toggle must focus its input.');
+  assert.equal(await shadowCombobox.getAttribute('aria-expanded'), 'true');
+  assert.notEqual(await shadowCombobox.getAttribute('aria-controls'), null);
+  await page.keyboard.press('Escape');
+  assert.equal(await shadowListbox.count(), 0);
+  assert.equal(await isDeepActive(shadowCombobox), true, 'Escape must preserve shadow-root Combobox input focus.');
+  assert.equal(await shadowCombobox.getAttribute('aria-expanded'), 'false');
+  assert.equal(await shadowCombobox.getAttribute('aria-controls'), null);
+
+  await shadowOutsideTarget.click();
+  await shadowCombobox.click();
+  shadowListbox = page.getByRole('listbox', { name: 'Shadow owner list' });
+  assert.equal(await shadowListbox.count(), 1, 'A shadow-root Combobox input click must keep its listbox open.');
+  await shadowOutsideTarget.click();
+  assert.equal(await shadowListbox.count(), 0, 'A shadow-root Combobox must close after a composed outside click.');
+  assert.equal(
+    await shadowOutsideTarget.evaluate((element) => document.activeElement === element),
+    true,
+    'Shadow Combobox outside dismissal must preserve focus on the clicked light-DOM target.'
   );
   assert.equal(await hasInertAncestor(portalDialogTrigger), false);
   assert.equal(await page.evaluate(() => document.body.style.overflow), '');

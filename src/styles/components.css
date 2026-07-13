@@ -1409,6 +1409,10 @@
   opacity: 1;
 }
 
+.zdp-tooltip[data-dismissed="true"] .zdp-tooltip__content {
+  opacity: 0;
+}
+
 .zdp-tooltip[data-disabled="true"] {
   cursor: default;
 }

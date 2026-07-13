@@ -758,6 +758,7 @@ for (const requiredText of [
   '.zdp-tooltip--left .zdp-tooltip__content',
   '.zdp-tooltip:hover .zdp-tooltip__content',
   '.zdp-tooltip:focus-within .zdp-tooltip__content',
+  '.zdp-tooltip[data-dismissed="true"] .zdp-tooltip__content',
   '.zdp-disclosure',
   '.zdp-disclosure__heading',
   '.zdp-disclosure__trigger',

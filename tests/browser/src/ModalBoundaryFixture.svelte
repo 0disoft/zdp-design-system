@@ -1,5 +1,6 @@
 <script lang="ts">
   import { mount, onDestroy, onMount, unmount } from 'svelte';
+  import designSystemStyles from '../../../src/styles/index.css?inline';
   import PortalDialogSurface from './PortalDialogSurface.svelte';
   import ShadowDialogSurface from './ShadowDialogSurface.svelte';
 
@@ -9,6 +10,9 @@
 
   onMount(() => {
     const shadowRoot = shadowHost.attachShadow({ mode: 'open' });
+    const styleElement = document.createElement('style');
+    styleElement.textContent = designSystemStyles;
+    shadowRoot.append(styleElement);
     const shadowSurface = mount(ShadowDialogSurface, { target: shadowRoot });
 
     return () => {
@@ -48,8 +52,8 @@
   }
 </script>
 
-<div data-testid="shadow-modal-host" bind:this={shadowHost}></div>
 <button data-testid="shadow-overlay-outside-target" type="button">Outside embedded overlays</button>
+<div data-testid="shadow-modal-host" bind:this={shadowHost}></div>
 <button data-testid="portal-dialog-trigger" type="button" onclick={openPortalDialog}>
   Open portal dialog
 </button>

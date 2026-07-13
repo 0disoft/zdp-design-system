@@ -1,17 +1,26 @@
 <script lang="ts">
+  import Combobox from '../../../src/lib/components/Combobox.svelte';
   import Dialog from '../../../src/lib/components/Dialog.svelte';
   import Menu from '../../../src/lib/components/Menu.svelte';
   import Popover from '../../../src/lib/components/Popover.svelte';
   import Sheet from '../../../src/lib/components/Sheet.svelte';
   import TermSheet from '../../../src/lib/components/TermSheet.svelte';
+  import Tooltip from '../../../src/lib/components/Tooltip.svelte';
+  import type { ZdpComboboxOption } from '../../../src/lib/combobox';
   import type { ZdpMenuItem } from '../../../src/lib/menu';
   import type { ZdpTermSheetTerm } from '../../../src/lib/term';
 
   let open = false;
+  let comboboxQuery = '';
+  let comboboxValue = '';
   let menuOpen = false;
   let popoverOpen = false;
   let sheetOpen = false;
   let termOpen = false;
+  const shadowComboboxOptions: readonly ZdpComboboxOption[] = [
+    { id: 'platform', value: 'platform', label: 'Platform team' },
+    { id: 'security', value: 'security', label: 'Security team' }
+  ];
   const shadowMenuItems: readonly ZdpMenuItem[] = [
     { id: 'edit', label: 'Edit shadow release' },
     { id: 'archive', label: 'Archive shadow release' }
@@ -61,6 +70,21 @@
   <p>Shadow filter options</p>
   <button data-testid="shadow-popover-action" type="button" onclick={() => close()}>Apply shadow filters</button>
 </Popover>
+
+<Tooltip id="shadow-tooltip" text="Shadow keyboard help" let:describedBy>
+  <button data-testid="shadow-tooltip-trigger" type="button" aria-describedby={describedBy ?? undefined}>
+    Shadow help
+  </button>
+</Tooltip>
+
+<Combobox
+  id="shadow-combobox"
+  name="shadow-owner"
+  label="Shadow owner"
+  options={shadowComboboxOptions}
+  bind:query={comboboxQuery}
+  bind:value={comboboxValue}
+/>
 
 <button data-testid="shadow-sheet-trigger" type="button" onclick={() => (sheetOpen = true)}>
   Open shadow sheet

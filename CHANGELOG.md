@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.21
+
+- Preserved Combobox self-clicks and outside dismissal inside open shadow roots with composed event paths, restored the shared Tooltip utility's Escape-dismissed CSS state, and added Chromium coverage for stylesheet-installed shadow-root focus and dismissal contracts.
+
 ## 0.46.20
 
 - Preserved Menu and Popover trigger clicks, outside-click dismissal, and focus return inside open shadow roots by using composed event paths and the deepest active element, with Chromium regression coverage and an explicit closed-shadow-root limitation.
