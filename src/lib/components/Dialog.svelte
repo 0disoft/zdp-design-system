@@ -126,14 +126,22 @@
 
 {#if open}
   <div class="zdp-dialog" bind:this={layerElement}>
-    <button
-      class="zdp-dialog__backdrop"
-      type="button"
-      aria-label={closeLabel}
-      tabindex="-1"
-      onpointerdown={handleBackdropPointerDown}
-      onclick={handleBackdropClick}
-    ></button>
+    {#if closeOnBackdrop}
+      <button
+        class="zdp-dialog__backdrop"
+        type="button"
+        aria-label={closeLabel}
+        tabindex="-1"
+        onpointerdown={handleBackdropPointerDown}
+        onclick={handleBackdropClick}
+      ></button>
+    {:else}
+      <div
+        class="zdp-dialog__backdrop"
+        aria-hidden="true"
+        onpointerdown={handleBackdropPointerDown}
+      ></div>
+    {/if}
     <div
       class={`zdp-dialog__panel zdp-dialog__panel--${size}`}
       id={id ?? undefined}

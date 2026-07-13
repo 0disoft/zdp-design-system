@@ -281,14 +281,18 @@ async function verifyProtectedModalContract({ page, triggerTestId, dialogName, c
 
   const dialog = page.getByRole('dialog', { name: dialogName });
   const closeButton = dialog.getByRole('button', { name: closeName });
+  const backdrop = page.locator(backdropSelector);
   assert.equal(await dialog.count(), 1);
   assert.equal(await closeButton.evaluate((element) => document.activeElement === element), true);
+  assert.equal(await page.getByRole('button', { name: closeName }).count(), 1);
+  assert.equal(await backdrop.evaluate((element) => element.tagName), 'DIV');
+  assert.equal(await backdrop.getAttribute('aria-hidden'), 'true');
 
   await page.keyboard.press('Escape');
   assert.equal(await dialog.count(), 1, `${dialogName} must ignore Escape when dismissal is disabled.`);
   assert.equal(await closeButton.evaluate((element) => document.activeElement === element), true);
 
-  await page.locator(backdropSelector).click({ position: { x: 5, y: 5 } });
+  await backdrop.click({ position: { x: 5, y: 5 } });
   assert.equal(await dialog.count(), 1, `${dialogName} must ignore backdrop clicks when dismissal is disabled.`);
   assert.equal(
     await closeButton.evaluate((element) => document.activeElement === element),

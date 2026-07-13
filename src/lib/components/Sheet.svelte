@@ -118,14 +118,22 @@
 
 {#if open}
   <div class="zdp-sheet-layer" bind:this={layerElement}>
-    <button
-      class="zdp-sheet__backdrop"
-      type="button"
-      aria-label={closeLabel}
-      tabindex="-1"
-      onpointerdown={handleBackdropPointerDown}
-      onclick={handleBackdropClick}
-    ></button>
+    {#if closeOnBackdrop}
+      <button
+        class="zdp-sheet__backdrop"
+        type="button"
+        aria-label={closeLabel}
+        tabindex="-1"
+        onpointerdown={handleBackdropPointerDown}
+        onclick={handleBackdropClick}
+      ></button>
+    {:else}
+      <div
+        class="zdp-sheet__backdrop"
+        aria-hidden="true"
+        onpointerdown={handleBackdropPointerDown}
+      ></div>
+    {/if}
     <div
       class={`zdp-sheet zdp-sheet--${placement} zdp-sheet--${size}`}
       id={id ?? undefined}

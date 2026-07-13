@@ -135,14 +135,22 @@
 
 {#if open && term !== null}
   <div class="zdp-term-layer" bind:this={layerElement}>
-    <button
-      class="zdp-term-sheet__backdrop"
-      type="button"
-      aria-label={closeLabel}
-      tabindex="-1"
-      onpointerdown={handleBackdropPointerDown}
-      onclick={handleBackdropClick}
-    ></button>
+    {#if closeOnBackdrop}
+      <button
+        class="zdp-term-sheet__backdrop"
+        type="button"
+        aria-label={closeLabel}
+        tabindex="-1"
+        onpointerdown={handleBackdropPointerDown}
+        onclick={handleBackdropClick}
+      ></button>
+    {:else}
+      <div
+        class="zdp-term-sheet__backdrop"
+        aria-hidden="true"
+        onpointerdown={handleBackdropPointerDown}
+      ></div>
+    {/if}
     <div
       class={`zdp-term-sheet zdp-term-sheet--${resolvedPlacement}`}
       id={id}

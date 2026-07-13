@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.11
+
+- Rendered disabled `Dialog`, `Sheet`, and `TermSheet` backdrops as non-interactive, accessibility-hidden surfaces instead of misleading Close buttons while preserving panel focus across pointer input, with Chromium accessibility-tree coverage.
+
 ## 0.46.10
 
 - Prevented disabled `Dialog`, `Sheet`, and `TermSheet` backdrop dismissal from moving focus out of the active modal, and added real Chromium coverage for default backdrop close, Escape/backdrop opt-out, explicit close, focus return, and scroll-lock preservation.
