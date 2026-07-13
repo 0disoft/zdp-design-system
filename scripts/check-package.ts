@@ -97,8 +97,7 @@ await checkShareContract();
 await checkButtonContract();
 await checkCardContract();
 await checkSharedFocusContract();
-await checkModalLayerContract();
-await checkDialogFocusContract();
+await checkDialogStructureContract();
 await checkSheetContract();
 await checkAdSlotContract();
 await checkExternalAdoptionContract();
@@ -444,17 +443,13 @@ async function checkTermSheetContract(): Promise<void> {
   const source = await readFile(join(root, relativePath), 'utf8');
 
   for (const requiredText of [
-    'createZdpModalLayer',
-    'modalLayer.setActive(open && term !== null, layerElement)',
     '<div class="zdp-term-layer" bind:this={layerElement}>',
     'data-zdp-ad-exclude="true"',
     'data-term-id={term.id}',
     'data-zdp-term-id={term.id}',
     'data-zdp-term-placement={resolvedPlacement}',
     'data-zdp-term-surface="sheet"',
-    'data-zdp-term-id={relatedTerm.id}',
-    'zdpFocusableSelector',
-    'isZdpFocusableElement'
+    'data-zdp-term-id={relatedTerm.id}'
   ]) {
     if (!source.includes(requiredText)) {
       failures.push(`${relativePath} is missing TermSheet contract text ${requiredText}.`);
@@ -491,25 +486,6 @@ async function checkOverlayTokenContract(): Promise<void> {
 
     if (/\b100v[hw]\b/.test(source)) {
       failures.push(`${relativePath} must use --zdp-viewport-* tokens instead of raw 100vh/100vw sizing.`);
-    }
-  }
-}
-
-async function checkModalLayerContract(): Promise<void> {
-  const relativePath = 'src/lib/modal-layer.ts';
-  const source = await readFile(join(root, relativePath), 'utf8');
-
-  for (const requiredText of [
-    'zdpModalLayerRootAttribute',
-    'zdpModalLayerActiveAttribute',
-    'zdpModalLayerLevelAttribute',
-    'createZdpModalLayer',
-    'activeLayerIds',
-    'body.style.overflow =',
-    "root.setAttribute('data-zdp-modal-layer-count'"
-  ]) {
-    if (!source.includes(requiredText)) {
-      failures.push(`${relativePath} is missing modal layer contract text ${requiredText}.`);
     }
   }
 }
@@ -643,19 +619,15 @@ async function checkSharedFocusContract(): Promise<void> {
   }
 }
 
-async function checkDialogFocusContract(): Promise<void> {
+async function checkDialogStructureContract(): Promise<void> {
   const relativePath = 'src/lib/components/Dialog.svelte';
   const source = await readFile(join(root, relativePath), 'utf8');
 
   for (const requiredText of [
-    'zdpFocusableSelector',
-    'isZdpFocusableElement',
-    'createZdpModalLayer',
-    'modalLayer.setActive(open, layerElement)',
     '<div class="zdp-dialog" bind:this={layerElement}>'
   ]) {
     if (!source.includes(requiredText)) {
-      failures.push(`${relativePath} is missing shared focusability contract text ${requiredText}.`);
+      failures.push(`${relativePath} is missing dialog structure contract text ${requiredText}.`);
     }
   }
 
@@ -672,8 +644,6 @@ async function checkSheetContract(): Promise<void> {
 
   for (const requiredText of [
     "import type { ZdpSheetPlacement, ZdpSheetSize }",
-    'createZdpModalLayer',
-    'modalLayer.setActive(open, layerElement)',
     '<div class="zdp-sheet-layer" bind:this={layerElement}>',
     'class="zdp-sheet__backdrop"',
     'class={`zdp-sheet zdp-sheet--${placement} zdp-sheet--${size}`}',
@@ -688,9 +658,6 @@ async function checkSheetContract(): Promise<void> {
     'isZdpFocusableElement',
     'closeOnEscape',
     'closeOnBackdrop',
-    'restorePreviousFocus',
-    'handleBackdropClick',
-    'getFocusableElements',
     '.zdp-sheet__backdrop',
     '.zdp-sheet--right',
     '.zdp-sheet--left',

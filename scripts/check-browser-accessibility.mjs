@@ -143,6 +143,12 @@ try {
     await nestedSheet.locator('..').getAttribute('data-zdp-modal-layer-level'),
     '2'
   );
+  const nestedDialogZIndex = Number(await nestedDialog.locator('..').evaluate((element) => getComputedStyle(element).zIndex));
+  const nestedSheetZIndex = Number(await nestedSheet.locator('..').evaluate((element) => getComputedStyle(element).zIndex));
+  assert.ok(
+    nestedSheetZIndex > nestedDialogZIndex,
+    'A later modal activation must create a higher real stacking context regardless of component type.'
+  );
 
   const closeUnderlyingDialog = nestedSheet.getByTestId('close-underlying-dialog');
   await closeUnderlyingDialog.click();
