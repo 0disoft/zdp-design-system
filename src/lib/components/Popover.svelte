@@ -4,6 +4,7 @@
 
 <script lang="ts">
   import { toZdpDomId } from '../dom-id';
+  import { getZdpActiveElement } from '../focusable';
   export let open = false;
   export let idPrefix: string | null = null;
   export let placement: 'top' | 'right' | 'bottom' | 'left' = 'bottom';
@@ -65,7 +66,7 @@
       return;
     }
 
-    const activeElement = document.activeElement;
+    const activeElement = getZdpActiveElement();
     previousFocusElement = activeElement instanceof HTMLElement ? activeElement : null;
   }
 
@@ -74,7 +75,7 @@
       return;
     }
 
-    if (previousFocusElement !== null && document.contains(previousFocusElement)) {
+    if (previousFocusElement?.isConnected) {
       previousFocusElement.focus();
     }
 
@@ -82,7 +83,7 @@
   }
 
   function handleDocumentClick(event: MouseEvent): void {
-    if (!open || !closeOnOutside || rootElement?.contains(event.target as Node)) {
+    if (!open || !closeOnOutside || (rootElement !== null && event.composedPath().includes(rootElement))) {
       return;
     }
 

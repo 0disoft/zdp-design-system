@@ -49,6 +49,7 @@
 </script>
 
 <div data-testid="shadow-modal-host" bind:this={shadowHost}></div>
+<button data-testid="shadow-overlay-outside-target" type="button">Outside embedded overlays</button>
 <button data-testid="portal-dialog-trigger" type="button" onclick={openPortalDialog}>
   Open portal dialog
 </button>

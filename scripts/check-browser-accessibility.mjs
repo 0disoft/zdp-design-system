@@ -396,6 +396,57 @@ try {
     lastRole: 'link',
     lastName: 'View details'
   });
+
+  const shadowOutsideTarget = page.getByTestId('shadow-overlay-outside-target');
+  const shadowMenuTrigger = page.getByRole('button', { name: 'Shadow actions' });
+  await shadowMenuTrigger.click();
+  let shadowMenu = page.getByRole('menu', { name: 'Shadow actions' });
+  assert.equal(await shadowMenu.count(), 1, 'A Menu trigger inside an open shadow root must not dismiss itself.');
+  assert.equal(
+    await isDeepActive(shadowMenu.getByRole('menuitem', { name: 'Edit shadow release' })),
+    true,
+    'A shadow-root Menu must focus its first enabled item.'
+  );
+  await page.keyboard.press('Escape');
+  assert.equal(await shadowMenu.count(), 0);
+  assert.equal(await isDeepActive(shadowMenuTrigger), true, 'A shadow-root Menu must restore its inner trigger focus.');
+  assert.equal(await shadowMenuTrigger.getAttribute('aria-expanded'), 'false');
+  assert.equal(await shadowMenuTrigger.getAttribute('aria-controls'), null);
+
+  await shadowMenuTrigger.click();
+  shadowMenu = page.getByRole('menu', { name: 'Shadow actions' });
+  await shadowOutsideTarget.click();
+  assert.equal(await shadowMenu.count(), 0, 'A shadow-root Menu must close after a composed outside click.');
+  assert.equal(
+    await shadowOutsideTarget.evaluate((element) => document.activeElement === element),
+    true,
+    'Shadow Menu outside dismissal must preserve focus on the clicked light-DOM target.'
+  );
+
+  const shadowPopoverTrigger = page.getByTestId('shadow-popover-trigger');
+  await shadowPopoverTrigger.click();
+  let shadowPopover = page.getByRole('dialog', { name: 'Shadow filters' });
+  assert.equal(await shadowPopover.count(), 1, 'A Popover trigger inside an open shadow root must not dismiss itself.');
+  await page.getByTestId('shadow-popover-action').focus();
+  await page.keyboard.press('Escape');
+  assert.equal(await shadowPopover.count(), 0);
+  assert.equal(
+    await isDeepActive(shadowPopoverTrigger),
+    true,
+    'A shadow-root Popover must restore its inner trigger focus.'
+  );
+  assert.equal(await shadowPopoverTrigger.getAttribute('aria-expanded'), 'false');
+  assert.equal(await shadowPopoverTrigger.getAttribute('aria-controls'), null);
+
+  await shadowPopoverTrigger.click();
+  shadowPopover = page.getByRole('dialog', { name: 'Shadow filters' });
+  await shadowOutsideTarget.click();
+  assert.equal(await shadowPopover.count(), 0, 'A shadow-root Popover must close after a composed outside click.');
+  assert.equal(
+    await shadowOutsideTarget.evaluate((element) => document.activeElement === element),
+    true,
+    'Shadow Popover outside dismissal must preserve focus on the clicked light-DOM target.'
+  );
   assert.equal(await hasInertAncestor(portalDialogTrigger), false);
   assert.equal(await page.evaluate(() => document.body.style.overflow), '');
 

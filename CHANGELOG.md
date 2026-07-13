@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.20
+
+- Preserved Menu and Popover trigger clicks, outside-click dismissal, and focus return inside open shadow roots by using composed event paths and the deepest active element, with Chromium regression coverage and an explicit closed-shadow-root limitation.
+
 ## 0.46.19
 
 - Preserved Dialog, Sheet, and TermSheet background isolation, focus trapping, and focus return across body-level portal hosts and open shadow roots by traversing `ShadowRoot.host` boundaries and resolving the deepest active element, with Chromium regression coverage and an explicit closed-shadow-root limitation.

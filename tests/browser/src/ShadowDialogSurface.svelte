@@ -1,12 +1,21 @@
 <script lang="ts">
   import Dialog from '../../../src/lib/components/Dialog.svelte';
+  import Menu from '../../../src/lib/components/Menu.svelte';
+  import Popover from '../../../src/lib/components/Popover.svelte';
   import Sheet from '../../../src/lib/components/Sheet.svelte';
   import TermSheet from '../../../src/lib/components/TermSheet.svelte';
+  import type { ZdpMenuItem } from '../../../src/lib/menu';
   import type { ZdpTermSheetTerm } from '../../../src/lib/term';
 
   let open = false;
+  let menuOpen = false;
+  let popoverOpen = false;
   let sheetOpen = false;
   let termOpen = false;
+  const shadowMenuItems: readonly ZdpMenuItem[] = [
+    { id: 'edit', label: 'Edit shadow release' },
+    { id: 'archive', label: 'Archive shadow release' }
+  ];
   const shadowTerm: ZdpTermSheetTerm = {
     id: 'shadow-term',
     label: 'Shadow term',
@@ -32,6 +41,26 @@
     <button data-testid="shadow-dialog-last-action" type="button">Review shadow dialog</button>
   </svelte:fragment>
 </Dialog>
+
+<Menu bind:open={menuOpen} idPrefix="shadow-menu" triggerLabel="Shadow actions" items={shadowMenuItems}>
+  <svelte:fragment slot="trigger">Shadow actions</svelte:fragment>
+</Menu>
+
+<Popover bind:open={popoverOpen} idPrefix="shadow-popover" let:close>
+  <svelte:fragment slot="trigger" let:open let:toggle let:panelId>
+    <button
+      data-testid="shadow-popover-trigger"
+      type="button"
+      aria-controls={open ? panelId : undefined}
+      aria-expanded={open}
+      onclick={toggle}
+    >
+      Shadow filters
+    </button>
+  </svelte:fragment>
+  <p>Shadow filter options</p>
+  <button data-testid="shadow-popover-action" type="button" onclick={() => close()}>Apply shadow filters</button>
+</Popover>
 
 <button data-testid="shadow-sheet-trigger" type="button" onclick={() => (sheetOpen = true)}>
   Open shadow sheet

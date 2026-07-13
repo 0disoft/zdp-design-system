@@ -5,6 +5,7 @@
 <script lang="ts">
   import { tick } from 'svelte';
   import { toZdpDomId } from '../dom-id';
+  import { getZdpActiveElement } from '../focusable';
   import type { ZdpMenuItem } from '../menu';
 
   export let items: readonly ZdpMenuItem[] = [];
@@ -90,7 +91,7 @@
       return;
     }
 
-    const activeElement = document.activeElement;
+    const activeElement = getZdpActiveElement();
     previousFocusElement = activeElement instanceof HTMLElement ? activeElement : triggerElement;
 
     if (focusIntent === 'first') {
@@ -111,7 +112,7 @@
 
     const focusTarget = previousFocusElement ?? triggerElement;
 
-    if (focusTarget !== null && document.contains(focusTarget)) {
+    if (focusTarget?.isConnected) {
       focusTarget.focus();
     }
 
@@ -119,7 +120,7 @@
   }
 
   function handleDocumentClick(event: MouseEvent): void {
-    if (!open || rootElement?.contains(event.target as Node)) {
+    if (!open || (rootElement !== null && event.composedPath().includes(rootElement))) {
       return;
     }
 
