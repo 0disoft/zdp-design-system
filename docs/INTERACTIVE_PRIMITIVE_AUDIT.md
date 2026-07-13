@@ -62,7 +62,7 @@ viewport collision과 mobile long-press를 해결하려고 floating engine으로
 
 `Dialog`는 custom modal로 유지한다.
 현재 기준은 Escape close, backdrop close, Tab trap, Shift+Tab trap, focus return, shared focusability helper, modal layer scroll lock, background inert, activation-order stacking이다.
-Chromium gate는 Dialog, Sheet, TermSheet 각각의 keyboard/backdrop contract, disabled fieldset과 hidden·`aria-hidden`·`inert` ancestry를 제외한 focus trap, Escape와 backdrop dismissal opt-out, 비활성 backdrop의 접근성 트리 제외와 panel focus 보존, background DOM branch inert, 중첩 layer의 LIFO·비-LIFO 종료 때 isolation/stacking 재정렬, top-layer focus 유지, outer-trigger focus fallback, parent-driven active component unmount의 focus/inert/scroll/layer cleanup, 기존 inert 상태와 scroll lock 복구를 확인한다.
+Chromium gate는 Dialog, Sheet, TermSheet 각각의 keyboard/backdrop contract, disabled fieldset과 hidden·`aria-hidden`·`inert` ancestry를 제외한 focus trap, Escape와 backdrop dismissal opt-out, 비활성 backdrop의 접근성 트리 제외와 panel focus 보존, background DOM branch inert, 중첩 layer의 LIFO·비-LIFO 종료 때 isolation/stacking 재정렬, top-layer focus 유지, outer-trigger focus fallback, 단일·중첩 top·중첩 lower component unmount의 focus/inert/scroll/layer cleanup, 기존 inert 상태와 scroll lock 복구를 확인한다.
 다만 portal target과 animation orchestration은 아직 소유하지 않는다.
 이 요구가 실제 제품에서 반복되면 Runtime Dependency 등급으로 Bits UI 또는 Ark UI를 spike한다.
 

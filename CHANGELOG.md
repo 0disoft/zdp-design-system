@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.18
+
+- Extended Chromium modal-destruction coverage to nested top and lower component unmounts, proving lower-layer reactivation, surviving top-layer focus, inherited outer focus return, inert continuity, scroll-lock continuity, and final cleanup.
+
 ## 0.46.17
 
 - Restored focus to the surviving trigger when an active top Dialog, Sheet, or TermSheet component is destroyed without its normal close transition, while still releasing background inert state, scroll lock, and layer metadata; added Chromium regression coverage for parent-driven unmount.

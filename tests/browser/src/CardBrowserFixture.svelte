@@ -38,6 +38,8 @@
   let protectedSheetOpen = false;
   let protectedTermSheetOpen = false;
   let abruptDialogMounted = false;
+  let abruptNestedDialogMounted = false;
+  let abruptNestedSheetMounted = false;
   let menuOpen = false;
   let menuSelection = '';
   let popoverOpen = false;
@@ -268,6 +270,49 @@
         </button>
       </svelte:fragment>
     </Dialog>
+  {/if}
+
+  <button data-testid="abrupt-nested-trigger" type="button" onclick={() => (abruptNestedDialogMounted = true)}>
+    Open removable nested dialog
+  </button>
+  {#if abruptNestedDialogMounted}
+    <Dialog
+      open
+      labelledBy="abrupt-nested-dialog-title"
+      closeLabel="Close removable nested dialog"
+      onClose={() => (abruptNestedDialogMounted = false)}
+    >
+      <svelte:fragment slot="title">
+        <h2 id="abrupt-nested-dialog-title">Removable nested dialog</h2>
+      </svelte:fragment>
+      <p>Open a removable modal above this layer.</p>
+      <svelte:fragment slot="footer">
+        <button data-testid="abrupt-nested-sheet-trigger" type="button" onclick={() => (abruptNestedSheetMounted = true)}>
+          Open removable nested sheet
+        </button>
+      </svelte:fragment>
+    </Dialog>
+  {/if}
+  {#if abruptNestedSheetMounted}
+    <Sheet
+      open
+      labelledBy="abrupt-nested-sheet-title"
+      closeLabel="Close removable nested sheet"
+      onClose={() => (abruptNestedSheetMounted = false)}
+    >
+      <svelte:fragment slot="title">
+        <h2 id="abrupt-nested-sheet-title">Removable nested sheet</h2>
+      </svelte:fragment>
+      <p>Remove either modal component without its normal close transition.</p>
+      <svelte:fragment slot="footer">
+        <button data-testid="abrupt-nested-remove-top" type="button" onclick={() => (abruptNestedSheetMounted = false)}>
+          Remove top sheet
+        </button>
+        <button data-testid="abrupt-nested-remove-lower" type="button" onclick={() => (abruptNestedDialogMounted = false)}>
+          Remove lower dialog
+        </button>
+      </svelte:fragment>
+    </Sheet>
   {/if}
 
   <button data-testid="nested-dialog-trigger" type="button" onclick={() => (nestedDialogOpen = true)}>

@@ -308,6 +308,59 @@ try {
   );
   assert.equal(await page.getByTestId('preexisting-inert').getAttribute('inert'), '');
 
+  const abruptNestedTrigger = page.getByTestId('abrupt-nested-trigger');
+  await abruptNestedTrigger.click();
+  let abruptNestedDialog = page.getByRole('dialog', { name: 'Removable nested dialog' });
+  let abruptNestedSheetTrigger = abruptNestedDialog.getByTestId('abrupt-nested-sheet-trigger');
+  await abruptNestedSheetTrigger.click();
+  let abruptNestedSheet = page.getByRole('dialog', { name: 'Removable nested sheet' });
+  assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), '2');
+  assert.equal(await hasInertAncestor(abruptNestedDialog), true);
+  assert.equal(await hasInertAncestor(abruptNestedSheet), false);
+  await abruptNestedSheet.getByTestId('abrupt-nested-remove-top').click();
+  assert.equal(await abruptNestedSheet.count(), 0, 'Destroying the top component must remove only its modal layer.');
+  assert.equal(await abruptNestedDialog.count(), 1);
+  assert.equal(await abruptNestedDialog.locator('..').getAttribute('data-zdp-modal-layer-level'), '1');
+  assert.equal(await hasInertAncestor(abruptNestedDialog), false, 'Destroying the top component must reactivate the lower modal.');
+  assert.equal(await hasInertAncestor(abruptNestedTrigger), true);
+  assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
+  assert.equal(
+    await abruptNestedSheetTrigger.evaluate((element) => document.activeElement === element),
+    true,
+    'Destroying the top component must restore focus inside the lower modal.'
+  );
+  await page.keyboard.press('Escape');
+  assert.equal(await abruptNestedDialog.count(), 0);
+  assert.equal(await abruptNestedTrigger.evaluate((element) => document.activeElement === element), true);
+  assert.equal(await hasInertAncestor(abruptNestedTrigger), false);
+  assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+
+  await abruptNestedTrigger.click();
+  abruptNestedDialog = page.getByRole('dialog', { name: 'Removable nested dialog' });
+  abruptNestedSheetTrigger = abruptNestedDialog.getByTestId('abrupt-nested-sheet-trigger');
+  await abruptNestedSheetTrigger.click();
+  abruptNestedSheet = page.getByRole('dialog', { name: 'Removable nested sheet' });
+  const removeLowerDialog = abruptNestedSheet.getByTestId('abrupt-nested-remove-lower');
+  await removeLowerDialog.click();
+  assert.equal(await abruptNestedDialog.count(), 0, 'Destroying the lower component must not remove the top modal.');
+  assert.equal(await abruptNestedSheet.count(), 1);
+  assert.equal(await abruptNestedSheet.locator('..').getAttribute('data-zdp-modal-layer-level'), '1');
+  assert.equal(await hasInertAncestor(abruptNestedSheet), false);
+  assert.equal(await hasInertAncestor(abruptNestedTrigger), true);
+  assert.equal(await removeLowerDialog.evaluate((element) => document.activeElement === element), true);
+  assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
+  await page.keyboard.press('Escape');
+  assert.equal(await abruptNestedSheet.count(), 0);
+  assert.equal(
+    await abruptNestedTrigger.evaluate((element) => document.activeElement === element),
+    true,
+    'The surviving top modal must inherit the removed lower layer focus-return target.'
+  );
+  assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), null);
+  assert.equal(await hasInertAncestor(abruptNestedTrigger), false);
+  assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+  assert.equal(await page.getByTestId('preexisting-inert').getAttribute('inert'), '');
+
   const nestedDialogTrigger = page.getByTestId('nested-dialog-trigger');
   await nestedDialogTrigger.click();
   const nestedDialog = page.getByRole('dialog', { name: 'Nested dialog' });
