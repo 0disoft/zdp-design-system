@@ -75,6 +75,10 @@
     }
   }
 
+  function handleBackdropPointerDown(event: PointerEvent): void {
+    event.preventDefault();
+  }
+
   function handleKeydown(event: KeyboardEvent): void {
     if (event.key === 'Escape' && closeOnEscape) {
       event.preventDefault();
@@ -127,6 +131,7 @@
       type="button"
       aria-label={closeLabel}
       tabindex="-1"
+      onpointerdown={handleBackdropPointerDown}
       onclick={handleBackdropClick}
     ></button>
     <div

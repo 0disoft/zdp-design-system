@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.10
+
+- Prevented disabled `Dialog`, `Sheet`, and `TermSheet` backdrop dismissal from moving focus out of the active modal, and added real Chromium coverage for default backdrop close, Escape/backdrop opt-out, explicit close, focus return, and scroll-lock preservation.
+
 ## 0.46.9
 
 - Ordered nested `Dialog`, `Sheet`, and `TermSheet` surfaces by activation instead of component type, kept focus inside the surviving top layer when a lower layer closes first, preserved the outer focus-return chain, and renumbered remaining layer metadata without releasing the body scroll lock.

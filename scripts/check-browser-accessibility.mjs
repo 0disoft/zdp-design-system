@@ -111,6 +111,7 @@ try {
     triggerTestId: 'dialog-trigger',
     dialogName: 'Review changes',
     closeName: 'Close dialog',
+    backdropSelector: '.zdp-dialog__backdrop',
     lastTestId: 'dialog-last-action'
   });
   await verifyModalKeyboardContract({
@@ -118,6 +119,7 @@ try {
     triggerTestId: 'sheet-trigger',
     dialogName: 'Release details',
     closeName: 'Close sheet',
+    backdropSelector: '.zdp-sheet__backdrop',
     lastTestId: 'sheet-last-action'
   });
   await verifyModalKeyboardContract({
@@ -125,8 +127,31 @@ try {
     triggerTestId: 'term-sheet-trigger',
     dialogName: 'Browser term',
     closeName: 'Close term',
+    backdropSelector: '.zdp-term-sheet__backdrop',
     lastRole: 'link',
     lastName: 'View details'
+  });
+
+  await verifyProtectedModalContract({
+    page,
+    triggerTestId: 'protected-dialog-trigger',
+    dialogName: 'Protected dialog',
+    closeName: 'Close protected dialog',
+    backdropSelector: '.zdp-dialog__backdrop'
+  });
+  await verifyProtectedModalContract({
+    page,
+    triggerTestId: 'protected-sheet-trigger',
+    dialogName: 'Protected sheet',
+    closeName: 'Close protected sheet',
+    backdropSelector: '.zdp-sheet__backdrop'
+  });
+  await verifyProtectedModalContract({
+    page,
+    triggerTestId: 'protected-term-trigger',
+    dialogName: 'Protected term',
+    closeName: 'Close protected term',
+    backdropSelector: '.zdp-term-sheet__backdrop'
   });
 
   const nestedDialogTrigger = page.getByTestId('nested-dialog-trigger');
@@ -188,6 +213,7 @@ async function verifyModalKeyboardContract({
   triggerTestId,
   dialogName,
   closeName,
+  backdropSelector,
   lastTestId,
   lastRole,
   lastName
@@ -232,6 +258,49 @@ async function verifyModalKeyboardContract({
     true,
     `${dialogName} must restore focus to its trigger.`
   );
+  assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+  assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), null);
+
+  await trigger.click();
+  assert.equal(await dialog.count(), 1);
+  await page.locator(backdropSelector).click({ position: { x: 5, y: 5 } });
+  assert.equal(await dialog.count(), 0, `${dialogName} must close on backdrop click.`);
+  assert.equal(
+    await trigger.evaluate((element) => document.activeElement === element),
+    true,
+    `${dialogName} must restore focus after backdrop dismissal.`
+  );
+  assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+  assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), null);
+}
+
+async function verifyProtectedModalContract({ page, triggerTestId, dialogName, closeName, backdropSelector }) {
+  const trigger = page.getByTestId(triggerTestId);
+  await trigger.focus();
+  await trigger.click();
+
+  const dialog = page.getByRole('dialog', { name: dialogName });
+  const closeButton = dialog.getByRole('button', { name: closeName });
+  assert.equal(await dialog.count(), 1);
+  assert.equal(await closeButton.evaluate((element) => document.activeElement === element), true);
+
+  await page.keyboard.press('Escape');
+  assert.equal(await dialog.count(), 1, `${dialogName} must ignore Escape when dismissal is disabled.`);
+  assert.equal(await closeButton.evaluate((element) => document.activeElement === element), true);
+
+  await page.locator(backdropSelector).click({ position: { x: 5, y: 5 } });
+  assert.equal(await dialog.count(), 1, `${dialogName} must ignore backdrop clicks when dismissal is disabled.`);
+  assert.equal(
+    await closeButton.evaluate((element) => document.activeElement === element),
+    true,
+    `${dialogName} backdrop interaction must not move focus out of the protected modal.`
+  );
+  assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
+  assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), '1');
+
+  await closeButton.click();
+  assert.equal(await dialog.count(), 0);
+  assert.equal(await trigger.evaluate((element) => document.activeElement === element), true);
   assert.equal(await page.evaluate(() => document.body.style.overflow), '');
   assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), null);
 }

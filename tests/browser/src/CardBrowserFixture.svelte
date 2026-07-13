@@ -26,11 +26,19 @@
   let termSheetOpen = false;
   let nestedDialogOpen = false;
   let nestedSheetOpen = false;
+  let protectedDialogOpen = false;
+  let protectedSheetOpen = false;
+  let protectedTermSheetOpen = false;
   const browserTerm: ZdpTermSheetTerm = {
     id: 'browser-term',
     label: 'Browser term',
     short: 'A term used to verify the modal sheet contract.',
     canonicalPath: '#browser-term-details'
+  };
+  const protectedBrowserTerm: ZdpTermSheetTerm = {
+    id: 'protected-browser-term',
+    label: 'Protected term',
+    short: 'A term that requires an explicit close action.'
   };
 </script>
 
@@ -105,6 +113,53 @@
     term={browserTerm}
     closeLabel="Close term"
     onClose={() => (termSheetOpen = false)}
+  />
+
+  <button data-testid="protected-dialog-trigger" type="button" onclick={() => (protectedDialogOpen = true)}>
+    Open protected dialog
+  </button>
+  <Dialog
+    bind:open={protectedDialogOpen}
+    labelledBy="protected-dialog-title"
+    closeLabel="Close protected dialog"
+    closeOnEscape={false}
+    closeOnBackdrop={false}
+    onClose={() => (protectedDialogOpen = false)}
+  >
+    <svelte:fragment slot="title">
+      <h2 id="protected-dialog-title">Protected dialog</h2>
+    </svelte:fragment>
+    <p>Use the explicit close control.</p>
+  </Dialog>
+
+  <button data-testid="protected-sheet-trigger" type="button" onclick={() => (protectedSheetOpen = true)}>
+    Open protected sheet
+  </button>
+  <Sheet
+    bind:open={protectedSheetOpen}
+    labelledBy="protected-sheet-title"
+    closeLabel="Close protected sheet"
+    closeOnEscape={false}
+    closeOnBackdrop={false}
+    onClose={() => (protectedSheetOpen = false)}
+  >
+    <svelte:fragment slot="title">
+      <h2 id="protected-sheet-title">Protected sheet</h2>
+    </svelte:fragment>
+    <p>Use the explicit close control.</p>
+  </Sheet>
+
+  <button data-testid="protected-term-trigger" type="button" onclick={() => (protectedTermSheetOpen = true)}>
+    Open protected term
+  </button>
+  <TermSheet
+    bind:open={protectedTermSheetOpen}
+    id="protected-term-sheet"
+    term={protectedBrowserTerm}
+    closeLabel="Close protected term"
+    closeOnEscape={false}
+    closeOnBackdrop={false}
+    onClose={() => (protectedTermSheetOpen = false)}
   />
 
   <button data-testid="nested-dialog-trigger" type="button" onclick={() => (nestedDialogOpen = true)}>
