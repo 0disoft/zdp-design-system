@@ -42,6 +42,7 @@
 
     const activeElement = document.activeElement;
     previousFocusElement = activeElement instanceof HTMLElement ? activeElement : null;
+    modalLayer.setFocusReturnTarget(previousFocusElement);
 
     await tick();
 
@@ -54,8 +55,10 @@
       return;
     }
 
-    if (previousFocusElement !== null && document.contains(previousFocusElement)) {
-      previousFocusElement.focus();
+    const focusReturnTarget = modalLayer.takeFocusReturnTarget();
+
+    if (focusReturnTarget !== null && document.contains(focusReturnTarget)) {
+      focusReturnTarget.focus();
     }
 
     previousFocusElement = null;
@@ -165,7 +168,7 @@
     padding-block: max(var(--zdp-space-4), var(--zdp-viewport-safe-block-start)) max(var(--zdp-space-4), var(--zdp-viewport-safe-block-end));
     padding-inline: max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-start)) max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-end));
     position: fixed;
-    z-index: var(--zdp-layer-dialog);
+    z-index: calc(var(--zdp-layer-dialog) + var(--zdp-modal-layer-offset, 0));
   }
 
   .zdp-dialog__backdrop {

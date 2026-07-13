@@ -24,6 +24,8 @@
   let dialogOpen = false;
   let sheetOpen = false;
   let termSheetOpen = false;
+  let nestedDialogOpen = false;
+  let nestedSheetOpen = false;
   const browserTerm: ZdpTermSheetTerm = {
     id: 'browser-term',
     label: 'Browser term',
@@ -104,6 +106,42 @@
     closeLabel="Close term"
     onClose={() => (termSheetOpen = false)}
   />
+
+  <button data-testid="nested-dialog-trigger" type="button" onclick={() => (nestedDialogOpen = true)}>
+    Open nested dialog
+  </button>
+  <Dialog
+    bind:open={nestedDialogOpen}
+    labelledBy="nested-dialog-title"
+    closeLabel="Close nested dialog"
+    onClose={() => (nestedDialogOpen = false)}
+  >
+    <svelte:fragment slot="title">
+      <h2 id="nested-dialog-title">Nested dialog</h2>
+    </svelte:fragment>
+    <p>Open another modal layer.</p>
+    <svelte:fragment slot="footer">
+      <button data-testid="nested-sheet-trigger" type="button" onclick={() => (nestedSheetOpen = true)}>
+        Open nested sheet
+      </button>
+    </svelte:fragment>
+  </Dialog>
+  <Sheet
+    bind:open={nestedSheetOpen}
+    labelledBy="nested-sheet-title"
+    closeLabel="Close nested sheet"
+    onClose={() => (nestedSheetOpen = false)}
+  >
+    <svelte:fragment slot="title">
+      <h2 id="nested-sheet-title">Nested sheet</h2>
+    </svelte:fragment>
+    <p>Keep this layer active while the lower layer closes.</p>
+    <svelte:fragment slot="footer">
+      <button data-testid="close-underlying-dialog" type="button" onclick={() => (nestedDialogOpen = false)}>
+        Close underlying dialog
+      </button>
+    </svelte:fragment>
+  </Sheet>
 
   <section id="release-details" aria-label="Release details">
     <p>Keyboard navigation reached the explicit link.</p>

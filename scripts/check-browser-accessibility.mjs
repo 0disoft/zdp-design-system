@@ -129,6 +129,47 @@ try {
     lastName: 'View details'
   });
 
+  const nestedDialogTrigger = page.getByTestId('nested-dialog-trigger');
+  await nestedDialogTrigger.click();
+  const nestedDialog = page.getByRole('dialog', { name: 'Nested dialog' });
+  await nestedDialog.getByTestId('nested-sheet-trigger').click();
+  const nestedSheet = page.getByRole('dialog', { name: 'Nested sheet' });
+  assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), '2');
+  assert.equal(
+    await nestedDialog.locator('..').getAttribute('data-zdp-modal-layer-level'),
+    '1'
+  );
+  assert.equal(
+    await nestedSheet.locator('..').getAttribute('data-zdp-modal-layer-level'),
+    '2'
+  );
+
+  const closeUnderlyingDialog = nestedSheet.getByTestId('close-underlying-dialog');
+  await closeUnderlyingDialog.click();
+  assert.equal(await nestedDialog.count(), 0, 'The lower modal layer must be able to close independently.');
+  assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), '1');
+  assert.equal(
+    await nestedSheet.locator('..').getAttribute('data-zdp-modal-layer-level'),
+    '1',
+    'A surviving modal must be renumbered after a lower layer closes.'
+  );
+  assert.equal(
+    await closeUnderlyingDialog.evaluate((element) => document.activeElement === element),
+    true,
+    'Closing a lower modal must not steal focus from the active top layer.'
+  );
+  assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
+
+  await page.keyboard.press('Escape');
+  assert.equal(await nestedSheet.count(), 0);
+  assert.equal(
+    await nestedDialogTrigger.evaluate((element) => document.activeElement === element),
+    true,
+    'The final nested modal must fall back to the surviving outer trigger when its original trigger is removed.'
+  );
+  assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+  assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), null);
+
   console.log('Design system browser accessibility check passed.');
 } finally {
   await browser?.close();

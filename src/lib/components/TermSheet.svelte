@@ -51,6 +51,7 @@
 
     const activeElement = document.activeElement;
     previousFocusElement = activeElement instanceof HTMLElement ? activeElement : null;
+    modalLayer.setFocusReturnTarget(previousFocusElement);
 
     await tick();
 
@@ -63,8 +64,10 @@
       return;
     }
 
-    if (previousFocusElement !== null && document.contains(previousFocusElement)) {
-      previousFocusElement.focus();
+    const focusReturnTarget = modalLayer.takeFocusReturnTarget();
+
+    if (focusReturnTarget !== null && document.contains(focusReturnTarget)) {
+      focusReturnTarget.focus();
     }
 
     previousFocusElement = null;
@@ -206,7 +209,9 @@
 
 <style>
   .zdp-term-layer {
-    display: contents;
+    inset: 0;
+    position: fixed;
+    z-index: calc(var(--zdp-layer-dialog) + var(--zdp-modal-layer-offset, 0));
   }
 
   .zdp-term-sheet {

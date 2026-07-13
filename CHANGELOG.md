@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.9
+
+- Ordered nested `Dialog`, `Sheet`, and `TermSheet` surfaces by activation instead of component type, kept focus inside the surviving top layer when a lower layer closes first, preserved the outer focus-return chain, and renumbered remaining layer metadata without releasing the body scroll lock.
+
 ## 0.46.8
 
 - Prevented `Combobox` from consuming IME composition Enter and navigation keystrokes as option selection, with real Chromium coverage for modern and legacy composition signals.

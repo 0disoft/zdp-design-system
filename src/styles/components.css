@@ -3956,6 +3956,12 @@
   z-index: var(--zdp-layer-term-sheet);
 }
 
+.zdp-term-layer {
+  inset: 0;
+  position: fixed;
+  z-index: calc(var(--zdp-layer-dialog) + var(--zdp-modal-layer-offset, 0));
+}
+
 .zdp-term-sheet {
   background: var(--zdp-color-surface-panel);
   border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
@@ -4132,7 +4138,9 @@
 }
 
 .zdp-sheet-layer {
-  display: contents;
+  inset: 0;
+  position: fixed;
+  z-index: calc(var(--zdp-layer-dialog) + var(--zdp-modal-layer-offset, 0));
 }
 
 .zdp-sheet__backdrop {
@@ -4314,7 +4322,7 @@
   padding-block: max(var(--zdp-space-4), var(--zdp-viewport-safe-block-start)) max(var(--zdp-space-4), var(--zdp-viewport-safe-block-end));
   padding-inline: max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-start)) max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-end));
   position: fixed;
-  z-index: var(--zdp-layer-dialog);
+  z-index: calc(var(--zdp-layer-dialog) + var(--zdp-modal-layer-offset, 0));
 }
 
 .zdp-dialog__backdrop {

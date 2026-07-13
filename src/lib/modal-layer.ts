@@ -1,13 +1,25 @@
 export const zdpModalLayerRootAttribute = 'data-zdp-modal-layer-root';
 export const zdpModalLayerActiveAttribute = 'data-zdp-modal-layer-active';
 export const zdpModalLayerLevelAttribute = 'data-zdp-modal-layer-level';
+const zdpModalLayerOffsetProperty = '--zdp-modal-layer-offset';
 
 export interface ZdpModalLayerHandle {
   setActive(active: boolean, root?: HTMLElement | null): void;
+  setFocusReturnTarget(target: HTMLElement | null): void;
+  takeFocusReturnTarget(): HTMLElement | null;
   destroy(): void;
 }
 
+interface ZdpModalLayerState {
+  active: boolean;
+  focusReturnTarget: HTMLElement | null;
+  id: number;
+  restoreFocusAfterDeactivate: boolean;
+  root: HTMLElement | null;
+}
+
 let nextLayerId = 1;
+const layers = new Set<ZdpModalLayerState>();
 const activeLayerIds: number[] = [];
 let previousBodyOverflow: string | null = null;
 
@@ -19,64 +31,115 @@ let previousBodyOverflow: string | null = null;
  * risk: state
  */
 export function createZdpModalLayer(): ZdpModalLayerHandle {
-  const layerId = nextLayerId;
+  const state: ZdpModalLayerState = {
+    active: false,
+    focusReturnTarget: null,
+    id: nextLayerId,
+    restoreFocusAfterDeactivate: false,
+    root: null
+  };
   nextLayerId += 1;
+  layers.add(state);
 
-  let active = false;
-  let currentRoot: HTMLElement | null = null;
-
-  function setActive(nextActive: boolean, root: HTMLElement | null = currentRoot): void {
-    if (root !== currentRoot) {
-      clearRootAttributes();
-      currentRoot = root;
+  function setActive(nextActive: boolean, root: HTMLElement | null = state.root): void {
+    if (root !== state.root) {
+      clearRootAttributes(state.root);
+      state.root = root;
     }
 
-    if (nextActive && !active) {
-      active = true;
-      activeLayerIds.push(layerId);
-    } else if (!nextActive && active) {
-      active = false;
-      removeActiveLayer(layerId);
+    if (nextActive && !state.active) {
+      state.active = true;
+      state.restoreFocusAfterDeactivate = false;
+      activeLayerIds.push(state.id);
+    } else if (!nextActive && state.active) {
+      state.restoreFocusAfterDeactivate = activeLayerIds.at(-1) === state.id;
+      preserveFocusReturnForHigherLayers(state);
+      state.active = false;
+      removeActiveLayer(state.id);
     }
 
-    syncRootAttributes();
+    syncAllRootAttributes();
     syncDocumentState();
+  }
+
+  function setFocusReturnTarget(target: HTMLElement | null): void {
+    state.focusReturnTarget = target;
+  }
+
+  function takeFocusReturnTarget(): HTMLElement | null {
+    const target = state.restoreFocusAfterDeactivate ? state.focusReturnTarget : null;
+    state.restoreFocusAfterDeactivate = false;
+    state.focusReturnTarget = null;
+    return target;
   }
 
   function destroy(): void {
-    if (active) {
-      active = false;
-      removeActiveLayer(layerId);
+    if (state.active) {
+      preserveFocusReturnForHigherLayers(state);
+      state.active = false;
+      removeActiveLayer(state.id);
     }
 
-    clearRootAttributes();
+    clearRootAttributes(state.root);
+    layers.delete(state);
+    syncAllRootAttributes();
     syncDocumentState();
   }
 
-  function syncRootAttributes(): void {
-    if (currentRoot === null) {
-      return;
-    }
+  return { destroy, setActive, setFocusReturnTarget, takeFocusReturnTarget };
+}
 
-    currentRoot.setAttribute(zdpModalLayerRootAttribute, '');
+function preserveFocusReturnForHigherLayers(closingLayer: ZdpModalLayerState): void {
+  const closingIndex = activeLayerIds.indexOf(closingLayer.id);
 
-    if (!active) {
-      currentRoot.removeAttribute(zdpModalLayerActiveAttribute);
-      currentRoot.removeAttribute(zdpModalLayerLevelAttribute);
-      return;
-    }
-
-    currentRoot.setAttribute(zdpModalLayerActiveAttribute, 'true');
-    currentRoot.setAttribute(zdpModalLayerLevelAttribute, String(activeLayerIds.indexOf(layerId) + 1));
+  if (closingIndex < 0 || closingLayer.root === null) {
+    return;
   }
 
-  function clearRootAttributes(): void {
-    currentRoot?.removeAttribute(zdpModalLayerRootAttribute);
-    currentRoot?.removeAttribute(zdpModalLayerActiveAttribute);
-    currentRoot?.removeAttribute(zdpModalLayerLevelAttribute);
+  for (const layer of layers) {
+    const layerIndex = activeLayerIds.indexOf(layer.id);
+
+    if (
+      layerIndex > closingIndex &&
+      layer.focusReturnTarget !== null &&
+      closingLayer.root.contains(layer.focusReturnTarget)
+    ) {
+      layer.focusReturnTarget = closingLayer.focusReturnTarget;
+    }
+  }
+}
+
+function syncAllRootAttributes(): void {
+  for (const layer of layers) {
+    syncRootAttributes(layer);
+  }
+}
+
+function syncRootAttributes(layer: ZdpModalLayerState): void {
+  if (layer.root === null) {
+    return;
   }
 
-  return { destroy, setActive };
+  layer.root.setAttribute(zdpModalLayerRootAttribute, '');
+
+  if (!layer.active) {
+    layer.root.removeAttribute(zdpModalLayerActiveAttribute);
+    layer.root.removeAttribute(zdpModalLayerLevelAttribute);
+    layer.root.style.removeProperty(zdpModalLayerOffsetProperty);
+    return;
+  }
+
+  const level = activeLayerIds.indexOf(layer.id) + 1;
+  layer.root.setAttribute(zdpModalLayerActiveAttribute, 'true');
+  layer.root.setAttribute(zdpModalLayerLevelAttribute, String(level));
+  layer.root.style.setProperty(zdpModalLayerOffsetProperty, String(level * 2));
+}
+
+function clearRootAttributes(root: HTMLElement | null): void {
+  root?.removeAttribute(zdpModalLayerRootAttribute);
+  root?.removeAttribute(zdpModalLayerActiveAttribute);
+  root?.removeAttribute(zdpModalLayerLevelAttribute);
+  root?.style.removeProperty(zdpModalLayerOffsetProperty);
 }
 
 function removeActiveLayer(layerId: number): void {

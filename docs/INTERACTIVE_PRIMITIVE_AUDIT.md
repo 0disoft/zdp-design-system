@@ -8,7 +8,7 @@
 - 지금 당장 Bits UI, shadcn-svelte, Ark UI를 package dependency로 추가하지 않는다.
 - `Select`와 `CommandField`는 native element를 중심으로 둔 현재 구현을 유지한다.
 - `Combobox`는 searchable single-select를 ZDP-native로 제공하되 filtering, async search, command execution, permissions는 소비 앱에 남긴다.
-- `Dialog`, `Sheet`, `TermSheet`는 ZDP modal layer, focusable helper, scroll lock, focus return을 유지하되 nested modal, inert sibling, portal 요구가 커지면 headless 후보로 다시 평가한다.
+- `Dialog`, `Sheet`, `TermSheet`는 ZDP modal layer, focusable helper, scroll lock, focus return, activation-order stacking을 유지하되 inert sibling, portal, animation orchestration 요구가 커지면 headless 후보로 다시 평가한다.
 - `Sheet`는 settings, filter, drawer형 보조 흐름의 공통 modal edge panel이다. Drawer를 별도 primitive로 복제하지 않고 Sheet placement/use case로 먼저 다룬다.
 - `Menu`와 `Popover`는 가장 높은 위험군이다. 단순 더보기와 짧은 필터 표면은 현재 구현으로 유지하되, typeahead, submenu, collision detection, portal, nested overlay가 필요해지면 Bits UI 내부 의존성 후보로 올린다.
 - 모바일 keyboard, 긴 옵션, async option, grouped option, virtualized list, collision 반복 요구는 `Menu`, `Popover`, `Combobox` 안에서 계속 키우지 않고 `Sheet` flow 또는 headless spike로 보낸다.
@@ -22,9 +22,9 @@
 | CommandField | Native `input` | Low | label, shortcut hint, aria-keyshortcuts/autocomplete/controls/expanded/activedescendant passthrough, input keydown callback | result list, dispatcher, command palette는 별도 primitive로 분리 |
 | Combobox | ZDP custom combobox/listbox | Medium | input combobox role, listbox/option roles, ArrowUp/ArrowDown, Enter select, Escape close, disabled skip, hidden value, InteractionProbe play coverage | grouped options, virtualized list, async option loading, multi-select, portal/collision 요구 시 headless spike |
 | Tooltip | CSS hover/focus label | Low | role tooltip, slot-provided `describedBy`, Escape dismiss, pointer-events none | interactive content 금지 유지 |
-| Dialog | ZDP custom modal | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, modal layer | nested modal, portal, inert sibling 요구가 생기면 headless spike |
-| Sheet | ZDP custom modal edge panel | Medium | right/left/bottom placement, Escape, backdrop close, focus trap, focus return, scroll lock, modal layer, InteractionProbe play coverage | draggable sheet, snap point, nested modal, portal, inert sibling 요구가 생기면 headless spike |
-| TermSheet | ZDP glossary sheet | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, stable term attributes | glossary 외 설정/필터/drawer 요구는 Sheet로 보낸다 |
+| Dialog | ZDP custom modal | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, activation-order modal layer, Chromium nested-layer coverage | portal, inert sibling, animation orchestration 요구가 생기면 headless spike |
+| Sheet | ZDP custom modal edge panel | Medium | right/left/bottom placement, Escape, backdrop close, focus trap, focus return, scroll lock, activation-order modal layer, InteractionProbe와 Chromium coverage | draggable sheet, snap point, portal, inert sibling 요구가 생기면 headless spike |
+| TermSheet | ZDP glossary sheet | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, activation-order modal layer, stable term attributes | glossary 외 설정/필터/drawer 요구는 Sheet로 보낸다 |
 | Menu | ZDP custom menu | High | trigger keyboard open, roving focus, disabled skip, Home/End, Escape, outside click, focus return, InteractionProbe play coverage | typeahead, submenu, pointerdown outside, collision/portal 요구 시 Bits UI 후보 |
 | Popover | ZDP custom non-modal overlay | High | Escape, outside click, trigger focus policy, focus return, role/dialog passthrough, InteractionProbe play coverage | first focus policy, collision/portal, nested overlay 요구 시 Bits UI 후보 |
 
@@ -61,16 +61,17 @@ viewport collision과 mobile long-press를 해결하려고 floating engine으로
 ### Dialog
 
 `Dialog`는 custom modal로 유지한다.
-현재 기준은 Escape close, backdrop close, Tab trap, Shift+Tab trap, focus return, shared focusability helper, modal layer scroll lock이다.
-다만 sibling inert 처리, portal target, nested dialog priority, animation orchestration은 아직 소유하지 않는다.
+현재 기준은 Escape close, backdrop close, Tab trap, Shift+Tab trap, focus return, shared focusability helper, modal layer scroll lock, activation-order stacking이다.
+Chromium gate는 Dialog, Sheet, TermSheet 각각의 keyboard contract와 중첩 layer의 비-LIFO 종료 때 stacking 재정렬, top-layer focus 유지, outer-trigger focus fallback, scroll lock 복구를 확인한다.
+다만 sibling inert 처리, portal target, animation orchestration은 아직 소유하지 않는다.
 이 요구가 실제 제품에서 반복되면 Runtime Dependency 등급으로 Bits UI 또는 Ark UI를 spike한다.
 
 ### Sheet
 
 `Sheet`는 settings, filter, drawer형 보조 흐름을 위한 reusable modal edge panel이다.
-현재 기준은 right, left, bottom placement, Escape close, backdrop close, Tab trap, Shift+Tab trap, focus return, shared focusability helper, modal layer scroll lock, stable sheet data attributes다.
+현재 기준은 right, left, bottom placement, Escape close, backdrop close, Tab trap, Shift+Tab trap, focus return, shared focusability helper, modal layer scroll lock, activation-order stacking, stable sheet data attributes다.
 저장, 권한, 데이터 fetch, 라우팅 판단은 소비 앱에 남긴다.
-드래그 가능한 bottom sheet, snap point, nested sheet, sibling inert, portal target, mobile keyboard avoidance가 반복되면 이 컴포넌트 안에서 계속 키우지 말고 Bits UI 또는 Ark UI headless spike를 연다.
+드래그 가능한 bottom sheet, snap point, sibling inert, portal target, mobile keyboard avoidance가 반복되면 이 컴포넌트 안에서 계속 키우지 말고 Bits UI 또는 Ark UI headless spike를 연다.
 
 ### TermSheet
 
