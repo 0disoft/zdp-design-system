@@ -93,7 +93,7 @@ InteractionProbe는 ArrowDown open, roving focus, disabled skip, Home/End, Escap
 현재는 짧은 필터, 작은 설정, 간단한 정보 패널에만 쓴다.
 panel open 시 첫 focus를 강제로 옮기지 않는 정책은 non-modal popover 기준에서는 허용하지만, form-heavy popover나 dialog-like popover가 늘면 policy를 다시 정해야 한다.
 collision/flip/portal/nested overlay 요구가 반복되면 내부 headless 의존성 후보로 올린다.
-InteractionProbe는 trigger focus 유지, Escape close, focus return, outside click close를 계속 확인한다. Chromium gate는 panel 안 focus에서 Escape trigger 복귀, outside click target focus 보존, trigger의 `aria-expanded`와 `aria-controls` 정리를 확인한다.
+InteractionProbe는 trigger focus 유지, Escape close, focus return, outside click close를 계속 확인한다. Chromium gate는 panel 안 focus에서 Escape trigger 복귀, outside click target focus 보존, trigger의 `aria-expanded`와 `aria-controls` 정리뿐 아니라 `closeOnEscape={false}`와 `closeOnOutside={false}` 보호 중 open/focus/ARIA 유지 및 explicit close 복구까지 확인한다. 이 opt-out은 non-modal `Popover`에만 허용하며 ARIA `Menu`의 Escape/outside dismissal은 끄지 않는다.
 
 ## Headless Spike Trigger
 

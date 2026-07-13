@@ -38,6 +38,7 @@
   let protectedTermSheetOpen = false;
   let menuOpen = false;
   let popoverOpen = false;
+  let protectedPopoverOpen = false;
   const browserTerm: ZdpTermSheetTerm = {
     id: 'browser-term',
     label: 'Browser term',
@@ -106,6 +107,29 @@
     </svelte:fragment>
     <p>Filter options</p>
     <button data-testid="popover-action" type="button" onclick={() => close()}>Apply filters</button>
+  </Popover>
+
+  <Popover
+    bind:open={protectedPopoverOpen}
+    idPrefix="protected-browser-popover"
+    closeOnEscape={false}
+    closeOnOutside={false}
+    let:close
+  >
+    <svelte:fragment slot="trigger" let:open let:toggle let:panelId>
+      <button
+        data-testid="protected-popover-trigger"
+        type="button"
+        aria-controls={open ? panelId : undefined}
+        aria-expanded={open}
+        onclick={toggle}
+      >
+        Protected filters
+      </button>
+    </svelte:fragment>
+    <p>Protected filter options</p>
+    <button data-testid="protected-popover-action" type="button">Review protected filters</button>
+    <button data-testid="protected-popover-close" type="button" onclick={() => close()}>Close protected filters</button>
   </Popover>
 
   <button data-testid="overlay-outside-target" type="button">Outside overlays</button>

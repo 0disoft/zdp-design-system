@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.14
+
+- Added Chromium regression coverage for `Popover` Escape and outside-click dismissal opt-outs, including stable focus, live ARIA relationships, explicit-close focus return, and cleanup; clarified that ARIA `Menu` dismissal remains mandatory.
+
 ## 0.46.13
 
 - Fixed shared modal focusability filtering to honor browser-computed `:disabled` state, excluding controls disabled through an ancestor fieldset as well as hidden, `aria-hidden`, and inert ancestry from Dialog and Sheet focus-wrap boundaries, with Chromium regression coverage.

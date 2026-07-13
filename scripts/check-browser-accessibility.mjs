@@ -159,6 +159,35 @@ try {
     'Popover outside dismissal must preserve focus on the clicked target.'
   );
 
+  const protectedPopoverTrigger = page.getByTestId('protected-popover-trigger');
+  await protectedPopoverTrigger.click();
+  const protectedPopover = page.getByRole('dialog', { name: 'Protected filters' });
+  const protectedPopoverAction = page.getByTestId('protected-popover-action');
+  assert.equal(await protectedPopover.count(), 1);
+  await protectedPopoverAction.focus();
+  await page.keyboard.press('Escape');
+  assert.equal(await protectedPopover.count(), 1, 'Escape opt-out must keep the Popover open.');
+  assert.equal(
+    await protectedPopoverAction.evaluate((element) => document.activeElement === element),
+    true,
+    'Escape opt-out must not move focus out of the Popover.'
+  );
+  await outsideOverlayTarget.click();
+  assert.equal(await protectedPopover.count(), 1, 'Outside-click opt-out must keep the Popover open.');
+  assert.equal(
+    await outsideOverlayTarget.evaluate((element) => document.activeElement === element),
+    true,
+    'A protected non-modal Popover must still allow the clicked outside target to receive focus.'
+  );
+  assert.equal(await protectedPopoverTrigger.getAttribute('aria-expanded'), 'true');
+  assert.notEqual(await protectedPopoverTrigger.getAttribute('aria-controls'), null);
+  await page.getByTestId('protected-popover-close').focus();
+  await page.getByTestId('protected-popover-close').click();
+  assert.equal(await protectedPopover.count(), 0, 'The explicit close action must close a protected Popover.');
+  assert.equal(await protectedPopoverTrigger.evaluate((element) => document.activeElement === element), true);
+  assert.equal(await protectedPopoverTrigger.getAttribute('aria-expanded'), 'false');
+  assert.equal(await protectedPopoverTrigger.getAttribute('aria-controls'), null);
+
   await verifyModalKeyboardContract({
     page,
     triggerTestId: 'dialog-trigger',
