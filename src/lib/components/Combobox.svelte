@@ -91,6 +91,10 @@
   }
 
   function handleInputKeydown(event: KeyboardEvent): void {
+    if (event.isComposing || event.keyCode === 229) {
+      return;
+    }
+
     if (event.key === 'ArrowDown') {
       event.preventDefault();
       setOpen(true);

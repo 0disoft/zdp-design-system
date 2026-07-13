@@ -2069,6 +2069,8 @@ for (const requiredText of [
   'aria-disabled={option.disabled ?',
   'tabindex="-1"',
   'handleInputKeydown',
+  'event.isComposing',
+  'event.keyCode === 229',
   'moveActiveOption',
   'selectOption',
   'resolveActiveOptionId',

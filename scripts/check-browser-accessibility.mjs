@@ -83,6 +83,27 @@ try {
   assert.equal(new Set(controlledPanelIds).size, 2, 'Distinct tabs must retain distinct aria-controls targets.');
   assert.equal(await page.getByRole('tabpanel').getAttribute('id'), controlledPanelIds[0]);
 
+  const combobox = page.getByRole('combobox', { name: 'Owner' });
+  await combobox.focus();
+  assert.equal(await page.getByRole('listbox', { name: 'Owner list' }).count(), 1);
+  for (const legacyKeyCode of [null, 229]) {
+    const dispatchResult = await combobox.evaluate((element, keyCode) => {
+      const event = new KeyboardEvent('keydown', {
+        bubbles: true,
+        cancelable: true,
+        isComposing: keyCode === null,
+        key: 'Enter'
+      });
+      if (keyCode !== null) {
+        Object.defineProperty(event, 'keyCode', { value: keyCode });
+      }
+      return element.dispatchEvent(event);
+    }, legacyKeyCode);
+    assert.equal(dispatchResult, true, 'IME composition keys must not be consumed as option selection.');
+  }
+  assert.equal(await page.locator('input[type="hidden"][name="owner"]').inputValue(), '');
+  assert.equal(await page.getByTestId('combobox-selection-count').textContent(), '0');
+
   console.log('Design system browser accessibility check passed.');
 } finally {
   await browser?.close();

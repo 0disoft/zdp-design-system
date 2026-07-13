@@ -45,10 +45,10 @@ custom trigger, searchable option, grouped option, virtualized list, async optio
 ### Combobox
 
 `Combobox`는 검색 가능한 단일 선택 입력이다.
-ZDP는 label, input frame, listbox, active option, disabled option skip, hidden submitted value, keyboard navigation만 소유한다.
+ZDP는 label, input frame, listbox, active option, disabled option skip, hidden submitted value, keyboard navigation만 소유한다. IME 조합 중 Enter와 방향키는 option 선택이나 이동으로 소비하지 않는다.
 소비 앱은 option source, filtering, async search, result ranking, command execution, permission visibility를 계속 소유한다.
 단순 상태 선택은 native `Select`를 유지하고, 사용자가 입력으로 후보를 좁혀야 하는 단일 선택에만 `Combobox`를 쓴다.
-InteractionProbe는 ArrowDown open, disabled skip, Enter select, Escape close, listbox label, selected value sync를 계속 확인한다.
+InteractionProbe와 Chromium gate는 ArrowDown open, disabled skip, Enter select, Escape close, IME composition 보호, listbox label, selected value sync를 계속 확인한다.
 
 ### Tooltip
 

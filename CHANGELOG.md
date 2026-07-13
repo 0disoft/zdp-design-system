@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.8
+
+- Prevented `Combobox` from consuming IME composition Enter and navigation keystrokes as option selection, with real Chromium coverage for modern and legacy composition signals.
+
 ## 0.46.7
 
 - Preserved distinct consumer ids across generated component DOM ids so punctuation and spacing cannot collapse separate Tabs, Combobox, Disclosure, preference controls, Menu, or Popover relationships onto the same accessibility target.
