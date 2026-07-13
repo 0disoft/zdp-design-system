@@ -289,6 +289,25 @@ try {
     backdropSelector: '.zdp-term-sheet__backdrop'
   });
 
+  const abruptDialogTrigger = page.getByTestId('abrupt-dialog-trigger');
+  await abruptDialogTrigger.focus();
+  await abruptDialogTrigger.click();
+  const abruptDialog = page.getByRole('dialog', { name: 'Removable dialog' });
+  assert.equal(await abruptDialog.count(), 1);
+  assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
+  assert.equal(await hasInertAncestor(abruptDialogTrigger), true);
+  await abruptDialog.getByTestId('abrupt-dialog-unmount').click();
+  assert.equal(await abruptDialog.count(), 0, 'Parent unmount must destroy the active modal layer.');
+  assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), null);
+  assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+  assert.equal(await hasInertAncestor(abruptDialogTrigger), false, 'Parent unmount must restore background interaction.');
+  assert.equal(
+    await abruptDialogTrigger.evaluate((element) => document.activeElement === element),
+    true,
+    'Parent unmount must restore focus to the surviving trigger.'
+  );
+  assert.equal(await page.getByTestId('preexisting-inert').getAttribute('inert'), '');
+
   const nestedDialogTrigger = page.getByTestId('nested-dialog-trigger');
   await nestedDialogTrigger.click();
   const nestedDialog = page.getByRole('dialog', { name: 'Nested dialog' });

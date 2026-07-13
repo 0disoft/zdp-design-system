@@ -76,20 +76,32 @@ export function createZdpModalLayer(): ZdpModalLayerHandle {
   }
 
   function destroy(): void {
+    const focusReturnTarget = state.active && activeLayerIds.at(-1) === state.id
+      ? state.focusReturnTarget
+      : null;
+
     if (state.active) {
       preserveFocusReturnForHigherLayers(state);
       state.active = false;
       removeActiveLayer(state.id);
     }
 
+    state.focusReturnTarget = null;
     clearRootAttributes(state.root);
     layers.delete(state);
     syncAllRootAttributes();
     syncDocumentIsolation();
     syncDocumentState();
+    restoreFocusAfterDestroy(focusReturnTarget);
   }
 
   return { destroy, setActive, setFocusReturnTarget, takeFocusReturnTarget };
+}
+
+function restoreFocusAfterDestroy(target: HTMLElement | null): void {
+  if (target !== null && typeof document !== 'undefined' && document.contains(target)) {
+    target.focus();
+  }
 }
 
 function preserveFocusReturnForHigherLayers(closingLayer: ZdpModalLayerState): void {

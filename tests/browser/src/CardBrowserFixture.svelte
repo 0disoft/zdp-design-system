@@ -37,6 +37,7 @@
   let protectedDialogOpen = false;
   let protectedSheetOpen = false;
   let protectedTermSheetOpen = false;
+  let abruptDialogMounted = false;
   let menuOpen = false;
   let menuSelection = '';
   let popoverOpen = false;
@@ -251,6 +252,23 @@
     closeOnBackdrop={false}
     onClose={() => (protectedTermSheetOpen = false)}
   />
+
+  <button data-testid="abrupt-dialog-trigger" type="button" onclick={() => (abruptDialogMounted = true)}>
+    Open removable dialog
+  </button>
+  {#if abruptDialogMounted}
+    <Dialog open labelledBy="abrupt-dialog-title" closeLabel="Close removable dialog" onClose={() => (abruptDialogMounted = false)}>
+      <svelte:fragment slot="title">
+        <h2 id="abrupt-dialog-title">Removable dialog</h2>
+      </svelte:fragment>
+      <p>Remove this modal without its normal close transition.</p>
+      <svelte:fragment slot="footer">
+        <button data-testid="abrupt-dialog-unmount" type="button" onclick={() => (abruptDialogMounted = false)}>
+          Remove dialog
+        </button>
+      </svelte:fragment>
+    </Dialog>
+  {/if}
 
   <button data-testid="nested-dialog-trigger" type="button" onclick={() => (nestedDialogOpen = true)}>
     Open nested dialog

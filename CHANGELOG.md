@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.17
+
+- Restored focus to the surviving trigger when an active top Dialog, Sheet, or TermSheet component is destroyed without its normal close transition, while still releasing background inert state, scroll lock, and layer metadata; added Chromium regression coverage for parent-driven unmount.
+
 ## 0.46.16
 
 - Isolated background DOM branches with native `inert` while Dialog, Sheet, or TermSheet is active, recomputing ownership for nested and non-LIFO modal changes and restoring pre-existing inert state after the final close, with Chromium regression coverage.
