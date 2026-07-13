@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.16
+
+- Isolated background DOM branches with native `inert` while Dialog, Sheet, or TermSheet is active, recomputing ownership for nested and non-LIFO modal changes and restoring pre-existing inert state after the final close, with Chromium regression coverage.
+
 ## 0.46.15
 
 - Promoted the complete `Menu` keyboard contract to Chromium coverage: ArrowDown/ArrowUp trigger entry, disabled-item skipping, forward/backward wrapping, Home/End, Tab exit without focus theft, and Enter selection with trigger focus return.

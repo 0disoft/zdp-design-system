@@ -21,13 +21,14 @@ interface ZdpModalLayerState {
 let nextLayerId = 1;
 const layers = new Set<ZdpModalLayerState>();
 const activeLayerIds: number[] = [];
+const managedInertElements = new Map<HTMLElement, boolean>();
 let previousBodyOverflow: string | null = null;
 
 /**
  * mf:anchor zdp.design-system.modal-layer-state
  * purpose: Locate shared modal layer state for dialog, sheet, and term sheet surfaces.
  * search: modal layer, scroll lock, active layer, dialog, sheet, focus trap
- * invariant: Layer activation restores document overflow after the final active layer closes.
+ * invariant: Layer activation restores document overflow and pre-existing inert state after the final active layer closes.
  * risk: state
  */
 export function createZdpModalLayer(): ZdpModalLayerHandle {
@@ -59,6 +60,7 @@ export function createZdpModalLayer(): ZdpModalLayerHandle {
     }
 
     syncAllRootAttributes();
+    syncDocumentIsolation();
     syncDocumentState();
   }
 
@@ -83,6 +85,7 @@ export function createZdpModalLayer(): ZdpModalLayerHandle {
     clearRootAttributes(state.root);
     layers.delete(state);
     syncAllRootAttributes();
+    syncDocumentIsolation();
     syncDocumentState();
   }
 
@@ -148,6 +151,49 @@ function removeActiveLayer(layerId: number): void {
   if (index >= 0) {
     activeLayerIds.splice(index, 1);
   }
+}
+
+function syncDocumentIsolation(): void {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  restoreManagedInertElements();
+
+  const topLayerId = activeLayerIds.at(-1);
+  const topLayer = Array.from(layers).find((layer) => layer.id === topLayerId);
+  let activeBranch = topLayer?.root ?? null;
+
+  while (activeBranch !== null && activeBranch !== document.body) {
+    const parent = activeBranch.parentElement;
+
+    if (parent === null) {
+      return;
+    }
+
+    for (const sibling of parent.children) {
+      if (sibling === activeBranch || !(sibling instanceof HTMLElement)) {
+        continue;
+      }
+
+      managedInertElements.set(sibling, sibling.hasAttribute('inert'));
+      sibling.setAttribute('inert', '');
+    }
+
+    activeBranch = parent;
+  }
+}
+
+function restoreManagedInertElements(): void {
+  for (const [element, wasInert] of managedInertElements) {
+    if (wasInert) {
+      element.setAttribute('inert', '');
+    } else {
+      element.removeAttribute('inert');
+    }
+  }
+
+  managedInertElements.clear();
 }
 
 function syncDocumentState(): void {

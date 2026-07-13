@@ -288,6 +288,10 @@
     </svelte:fragment>
   </Sheet>
 
+  <section data-testid="preexisting-inert" inert>
+    <button type="button">Unavailable fixture action</button>
+  </section>
+
   <section id="release-details" aria-label="Release details">
     <p>Keyboard navigation reached the explicit link.</p>
   </section>

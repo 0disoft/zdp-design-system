@@ -295,6 +295,9 @@ try {
   await nestedDialog.getByTestId('nested-sheet-trigger').click();
   const nestedSheet = page.getByRole('dialog', { name: 'Nested sheet' });
   assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), '2');
+  assert.equal(await hasInertAncestor(nestedDialog), true, 'The lower modal layer must become inert.');
+  assert.equal(await hasInertAncestor(nestedSheet), false, 'The top modal layer must remain interactive.');
+  assert.equal(await hasInertAncestor(nestedDialogTrigger), true, 'Background controls must remain inert.');
   assert.equal(
     await nestedDialog.locator('..').getAttribute('data-zdp-modal-layer-level'),
     '1'
@@ -324,6 +327,8 @@ try {
     true,
     'Closing a lower modal must not steal focus from the active top layer.'
   );
+  assert.equal(await hasInertAncestor(nestedSheet), false, 'A surviving top layer must stay interactive.');
+  assert.equal(await hasInertAncestor(nestedDialogTrigger), true, 'Background isolation must survive non-LIFO close.');
   assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
 
   await page.keyboard.press('Escape');
@@ -335,6 +340,27 @@ try {
   );
   assert.equal(await page.evaluate(() => document.body.style.overflow), '');
   assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), null);
+  assert.equal(await hasInertAncestor(nestedDialogTrigger), false, 'Final close must restore background interaction.');
+  assert.equal(await page.getByTestId('preexisting-inert').getAttribute('inert'), '', 'Pre-existing inert state must survive modal cleanup.');
+
+  await nestedDialogTrigger.click();
+  const reopenedNestedDialog = page.getByRole('dialog', { name: 'Nested dialog' });
+  const reopenedNestedSheetTrigger = reopenedNestedDialog.getByTestId('nested-sheet-trigger');
+  await reopenedNestedSheetTrigger.click();
+  const reopenedNestedSheet = page.getByRole('dialog', { name: 'Nested sheet' });
+  await page.keyboard.press('Escape');
+  assert.equal(await reopenedNestedSheet.count(), 0);
+  assert.equal(await hasInertAncestor(reopenedNestedDialog), false, 'Closing the top layer must reactivate the lower layer.');
+  assert.equal(
+    await reopenedNestedSheetTrigger.evaluate((element) => document.activeElement === element),
+    true,
+    'Top-layer close must restore focus inside the reactivated lower layer.'
+  );
+  assert.equal(await hasInertAncestor(nestedDialogTrigger), true);
+  await page.keyboard.press('Escape');
+  assert.equal(await reopenedNestedDialog.count(), 0);
+  assert.equal(await hasInertAncestor(nestedDialogTrigger), false);
+  assert.equal(await page.getByTestId('preexisting-inert').getAttribute('inert'), '');
 
   console.log('Design system browser accessibility check passed.');
 } finally {
@@ -372,6 +398,7 @@ async function verifyModalKeyboardContract({
   );
   assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
   assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), '1');
+  assert.equal(await hasInertAncestor(trigger), true, `${dialogName} must make its background trigger inert.`);
 
   await page.keyboard.press('Shift+Tab');
   assert.equal(
@@ -395,6 +422,8 @@ async function verifyModalKeyboardContract({
   );
   assert.equal(await page.evaluate(() => document.body.style.overflow), '');
   assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), null);
+  assert.equal(await hasInertAncestor(trigger), false, `${dialogName} must restore background interaction.`);
+  assert.equal(await page.getByTestId('preexisting-inert').getAttribute('inert'), '');
 
   await trigger.click();
   assert.equal(await dialog.count(), 1);
@@ -407,6 +436,8 @@ async function verifyModalKeyboardContract({
   );
   assert.equal(await page.evaluate(() => document.body.style.overflow), '');
   assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), null);
+  assert.equal(await hasInertAncestor(trigger), false, `${dialogName} backdrop close must restore background interaction.`);
+  assert.equal(await page.getByTestId('preexisting-inert').getAttribute('inert'), '');
 }
 
 async function verifyProtectedModalContract({ page, triggerTestId, dialogName, closeName, backdropSelector }) {
@@ -436,10 +467,17 @@ async function verifyProtectedModalContract({ page, triggerTestId, dialogName, c
   );
   assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
   assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), '1');
+  assert.equal(await hasInertAncestor(trigger), true, `${dialogName} must keep its background inert while protected.`);
 
   await closeButton.click();
   assert.equal(await dialog.count(), 0);
   assert.equal(await trigger.evaluate((element) => document.activeElement === element), true);
   assert.equal(await page.evaluate(() => document.body.style.overflow), '');
   assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), null);
+  assert.equal(await hasInertAncestor(trigger), false, `${dialogName} explicit close must restore background interaction.`);
+  assert.equal(await page.getByTestId('preexisting-inert').getAttribute('inert'), '');
+}
+
+async function hasInertAncestor(locator) {
+  return locator.evaluate((element) => element.closest('[inert]') !== null);
 }
