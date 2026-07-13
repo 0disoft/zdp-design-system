@@ -361,6 +361,44 @@ try {
   assert.equal(await page.evaluate(() => document.body.style.overflow), '');
   assert.equal(await page.getByTestId('preexisting-inert').getAttribute('inert'), '');
 
+  const portalDialogTrigger = page.getByTestId('portal-dialog-trigger');
+  await portalDialogTrigger.click();
+  const portalDialog = page.getByRole('dialog', { name: 'Portal dialog' });
+  assert.equal(await portalDialog.count(), 1);
+  assert.equal(await hasInertAncestor(portalDialogTrigger), true, 'A body portal must isolate its light-DOM trigger.');
+  assert.equal(await hasInertAncestor(portalDialog), false);
+  assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
+  await page.keyboard.press('Escape');
+  assert.equal(await portalDialog.count(), 0);
+  assert.equal(await portalDialogTrigger.evaluate((element) => document.activeElement === element), true);
+  assert.equal(await hasInertAncestor(portalDialogTrigger), false);
+  assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+
+  await verifyShadowModalBoundary({
+    page,
+    triggerTestId: 'shadow-dialog-trigger',
+    dialogName: 'Shadow dialog',
+    closeName: 'Close shadow dialog',
+    lastTestId: 'shadow-dialog-last-action'
+  });
+  await verifyShadowModalBoundary({
+    page,
+    triggerTestId: 'shadow-sheet-trigger',
+    dialogName: 'Shadow sheet',
+    closeName: 'Close shadow sheet',
+    lastTestId: 'shadow-sheet-last-action'
+  });
+  await verifyShadowModalBoundary({
+    page,
+    triggerTestId: 'shadow-term-trigger',
+    dialogName: 'Shadow term',
+    closeName: 'Close shadow term',
+    lastRole: 'link',
+    lastName: 'View details'
+  });
+  assert.equal(await hasInertAncestor(portalDialogTrigger), false);
+  assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+
   const nestedDialogTrigger = page.getByTestId('nested-dialog-trigger');
   await nestedDialogTrigger.click();
   const nestedDialog = page.getByRole('dialog', { name: 'Nested dialog' });
@@ -552,4 +590,47 @@ async function verifyProtectedModalContract({ page, triggerTestId, dialogName, c
 
 async function hasInertAncestor(locator) {
   return locator.evaluate((element) => element.closest('[inert]') !== null);
+}
+
+async function verifyShadowModalBoundary({
+  page,
+  triggerTestId,
+  dialogName,
+  closeName,
+  lastTestId,
+  lastRole,
+  lastName
+}) {
+  const trigger = page.getByTestId(triggerTestId);
+  await trigger.click();
+  const dialog = page.getByRole('dialog', { name: dialogName });
+  const closeButton = dialog.getByRole('button', { name: closeName });
+  const lastControl = lastTestId
+    ? dialog.getByTestId(lastTestId)
+    : dialog.getByRole(lastRole, { name: lastName });
+
+  assert.equal(await dialog.count(), 1);
+  assert.equal(await hasInertAncestor(trigger), true, `${dialogName} must isolate shadow-root sibling controls.`);
+  assert.equal(await hasInertAncestor(dialog), false);
+  assert.equal(await isDeepActive(closeButton), true);
+  await page.keyboard.press('Shift+Tab');
+  assert.equal(await isDeepActive(lastControl), true, `${dialogName} focus must wrap backward inside the shadow root.`);
+  await page.keyboard.press('Tab');
+  assert.equal(await isDeepActive(closeButton), true, `${dialogName} focus must wrap forward inside the shadow root.`);
+  await page.keyboard.press('Escape');
+  assert.equal(await dialog.count(), 0);
+  assert.equal(await isDeepActive(trigger), true, `${dialogName} must restore its inner shadow trigger focus.`);
+  assert.equal(await hasInertAncestor(trigger), false);
+}
+
+async function isDeepActive(locator) {
+  return locator.evaluate((element) => {
+    let activeElement = document.activeElement;
+
+    while (activeElement instanceof HTMLElement && activeElement.shadowRoot?.activeElement) {
+      activeElement = activeElement.shadowRoot.activeElement;
+    }
+
+    return activeElement === element;
+  });
 }

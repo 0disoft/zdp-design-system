@@ -99,7 +99,7 @@ export function createZdpModalLayer(): ZdpModalLayerHandle {
 }
 
 function restoreFocusAfterDestroy(target: HTMLElement | null): void {
-  if (target !== null && typeof document !== 'undefined' && document.contains(target)) {
+  if (target?.isConnected) {
     target.focus();
   }
 }
@@ -177,7 +177,10 @@ function syncDocumentIsolation(): void {
   let activeBranch = topLayer?.root ?? null;
 
   while (activeBranch !== null && activeBranch !== document.body) {
-    const parent = activeBranch.parentElement;
+    const parentNode = activeBranch.parentNode;
+    const parent = parentNode instanceof HTMLElement || parentNode instanceof ShadowRoot
+      ? parentNode
+      : null;
 
     if (parent === null) {
       return;
@@ -192,7 +195,11 @@ function syncDocumentIsolation(): void {
       sibling.setAttribute('inert', '');
     }
 
-    activeBranch = parent;
+    activeBranch = parent instanceof ShadowRoot
+      ? parent.host instanceof HTMLElement
+        ? parent.host
+        : null
+      : parent;
   }
 }
 

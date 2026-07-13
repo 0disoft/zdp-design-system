@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.19
+
+- Preserved Dialog, Sheet, and TermSheet background isolation, focus trapping, and focus return across body-level portal hosts and open shadow roots by traversing `ShadowRoot.host` boundaries and resolving the deepest active element, with Chromium regression coverage and an explicit closed-shadow-root limitation.
+
 ## 0.46.18
 
 - Extended Chromium modal-destruction coverage to nested top and lower component unmounts, proving lower-layer reactivation, surviving top-layer focus, inherited outer focus return, inert continuity, scroll-lock continuity, and final cleanup.

@@ -34,3 +34,13 @@ export function isZdpFocusableElement(element: HTMLElement): boolean {
 
   return element.getClientRects().length > 0;
 }
+
+export function getZdpActiveElement(root: Document | ShadowRoot = document): HTMLElement | null {
+  let activeElement = root.activeElement;
+
+  while (activeElement instanceof HTMLElement && activeElement.shadowRoot?.activeElement) {
+    activeElement = activeElement.shadowRoot.activeElement;
+  }
+
+  return activeElement instanceof HTMLElement ? activeElement : null;
+}

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy, tick } from 'svelte';
-  import { isZdpFocusableElement, zdpFocusableSelector } from '../focusable';
+  import { getZdpActiveElement, isZdpFocusableElement, zdpFocusableSelector } from '../focusable';
   import { createZdpModalLayer } from '../modal-layer';
   import type { ZdpSheetPlacement, ZdpSheetSize } from '../sheet';
 
@@ -39,8 +39,7 @@
 
   async function handleSheetOpened(): Promise<void> {
     if (typeof document !== 'undefined') {
-      const activeElement = document.activeElement;
-      previousFocusElement = activeElement instanceof HTMLElement ? activeElement : null;
+      previousFocusElement = getZdpActiveElement();
       modalLayer.setFocusReturnTarget(previousFocusElement);
     }
 
@@ -58,7 +57,7 @@
   function restorePreviousFocus(): void {
     const focusReturnTarget = modalLayer.takeFocusReturnTarget();
 
-    if (focusReturnTarget !== null && document.contains(focusReturnTarget)) {
+    if (focusReturnTarget?.isConnected) {
       focusReturnTarget.focus();
     }
 
@@ -96,7 +95,7 @@
 
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
-    const activeElement = document.activeElement;
+    const activeElement = getZdpActiveElement();
 
     if (event.shiftKey && activeElement === firstElement) {
       event.preventDefault();

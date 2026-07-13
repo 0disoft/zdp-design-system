@@ -22,9 +22,9 @@
 | CommandField | Native `input` | Low | label, shortcut hint, aria-keyshortcuts/autocomplete/controls/expanded/activedescendant passthrough, input keydown callback | result list, dispatcher, command palette는 별도 primitive로 분리 |
 | Combobox | ZDP custom combobox/listbox | Medium | input combobox role, listbox/option roles, ArrowUp/ArrowDown, Enter select, Escape close, disabled skip, hidden value, InteractionProbe play coverage | grouped options, virtualized list, async option loading, multi-select, portal/collision 요구 시 headless spike |
 | Tooltip | CSS hover/focus label | Low | role tooltip, slot-provided `describedBy`, Escape dismiss, pointer-events none | interactive content 금지 유지 |
-| Dialog | ZDP custom modal | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, background inert, activation-order modal layer, Chromium nested-layer coverage | portal, animation orchestration 요구가 생기면 headless spike |
-| Sheet | ZDP custom modal edge panel | Medium | right/left/bottom placement, Escape, backdrop close, focus trap, focus return, scroll lock, background inert, activation-order modal layer, InteractionProbe와 Chromium coverage | draggable sheet, snap point, portal 요구가 생기면 headless spike |
-| TermSheet | ZDP glossary sheet | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, background inert, activation-order modal layer, stable term attributes | glossary 외 설정/필터/drawer 요구는 Sheet로 보낸다 |
+| Dialog | ZDP custom modal | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, background inert, body portal와 open shadow root 호환, activation-order modal layer, Chromium nested-layer coverage | package-owned portal API, closed shadow root, animation orchestration 요구가 생기면 headless spike |
+| Sheet | ZDP custom modal edge panel | Medium | right/left/bottom placement, Escape, backdrop close, focus trap, focus return, scroll lock, background inert, body portal와 open shadow root 호환, activation-order modal layer, InteractionProbe와 Chromium coverage | draggable sheet, snap point, package-owned portal API, closed shadow root 요구가 생기면 headless spike |
+| TermSheet | ZDP glossary sheet | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, background inert, body portal와 open shadow root 호환, activation-order modal layer, stable term attributes | glossary 외 설정/필터/drawer 요구는 Sheet로 보내고 closed shadow root는 지원하지 않는다 |
 | Menu | ZDP custom menu | High | trigger keyboard open, roving focus, disabled skip, Home/End, Escape, outside click, focus return, InteractionProbe와 Chromium coverage | typeahead, submenu, pointerdown outside, collision/portal 요구 시 Bits UI 후보 |
 | Popover | ZDP custom non-modal overlay | High | Escape, outside click, trigger focus policy, focus return, role/dialog passthrough, InteractionProbe와 Chromium coverage | first focus policy, collision/portal, nested overlay 요구 시 Bits UI 후보 |
 
@@ -62,8 +62,8 @@ viewport collision과 mobile long-press를 해결하려고 floating engine으로
 
 `Dialog`는 custom modal로 유지한다.
 현재 기준은 Escape close, backdrop close, Tab trap, Shift+Tab trap, focus return, shared focusability helper, modal layer scroll lock, background inert, activation-order stacking이다.
-Chromium gate는 Dialog, Sheet, TermSheet 각각의 keyboard/backdrop contract, disabled fieldset과 hidden·`aria-hidden`·`inert` ancestry를 제외한 focus trap, Escape와 backdrop dismissal opt-out, 비활성 backdrop의 접근성 트리 제외와 panel focus 보존, background DOM branch inert, 중첩 layer의 LIFO·비-LIFO 종료 때 isolation/stacking 재정렬, top-layer focus 유지, outer-trigger focus fallback, 단일·중첩 top·중첩 lower component unmount의 focus/inert/scroll/layer cleanup, 기존 inert 상태와 scroll lock 복구를 확인한다.
-다만 portal target과 animation orchestration은 아직 소유하지 않는다.
+Chromium gate는 Dialog, Sheet, TermSheet 각각의 keyboard/backdrop contract, disabled fieldset과 hidden·`aria-hidden`·`inert` ancestry를 제외한 focus trap, Escape와 backdrop dismissal opt-out, 비활성 backdrop의 접근성 트리 제외와 panel focus 보존, background DOM branch inert, 중첩 layer의 LIFO·비-LIFO 종료 때 isolation/stacking 재정렬, top-layer focus 유지, outer-trigger focus fallback, 단일·중첩 top·중첩 lower component unmount의 focus/inert/scroll/layer cleanup, body portal과 open shadow root 경계, 기존 inert 상태와 scroll lock 복구를 확인한다.
+다만 package-owned portal target API, closed shadow root focus orchestration, animation orchestration은 아직 소유하지 않는다.
 이 요구가 실제 제품에서 반복되면 Runtime Dependency 등급으로 Bits UI 또는 Ark UI를 spike한다.
 
 ### Sheet

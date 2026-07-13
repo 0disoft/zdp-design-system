@@ -4,6 +4,7 @@
   import Combobox from '../../../src/lib/components/Combobox.svelte';
   import Dialog from '../../../src/lib/components/Dialog.svelte';
   import Menu from '../../../src/lib/components/Menu.svelte';
+  import ModalBoundaryFixture from './ModalBoundaryFixture.svelte';
   import Popover from '../../../src/lib/components/Popover.svelte';
   import Sheet from '../../../src/lib/components/Sheet.svelte';
   import TermSheet from '../../../src/lib/components/TermSheet.svelte';
@@ -354,6 +355,8 @@
   <section data-testid="preexisting-inert" inert>
     <button type="button">Unavailable fixture action</button>
   </section>
+
+  <ModalBoundaryFixture />
 
   <section id="release-details" aria-label="Release details">
     <p>Keyboard navigation reached the explicit link.</p>
