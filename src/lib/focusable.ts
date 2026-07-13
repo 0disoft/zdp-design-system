@@ -18,7 +18,7 @@ export function isZdpFocusableElement(element: HTMLElement): boolean {
     return false;
   }
 
-  if (element.matches('[disabled], [hidden], [aria-hidden="true"]')) {
+  if (element.matches(':disabled, [hidden], [aria-hidden="true"]')) {
     return false;
   }
 

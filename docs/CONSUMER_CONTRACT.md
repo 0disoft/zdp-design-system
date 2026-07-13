@@ -12,7 +12,7 @@ Default component text is English. 소비 앱은 화면 locale에 맞춰 user-fa
 - 소비 저장소는 `zdp-design-system`의 public export만 사용하고 내부 `src/` deep import를 만들지 않는다.
 - package export는 `dist/` 산출물을 통해 소비한다. root runtime entry는 `dist/index.js`, type entry는 `dist/index.d.ts`다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `dist/`는 release 전 `bun run package:build`로 다시 만든다.
 - ZDP monorepo 안의 active sibling 소비처는 unpublished local changes와 package surface를 함께 검증하기 위해 `file:../zdp-design-system`을 유지할 수 있다. 이 경우 CI는 sibling `zdp-design-system`을 checkout하고 `bun run package:build`를 먼저 실행해야 한다.
-- standalone consumer, public template, external example처럼 sibling checkout을 전제로 하지 않는 표면은 npm registry package를 사용한다. 0.46.12 이상에서는 `zdp-design-system: ^0.46.12`를 기본 semver 범위로 쓰고, 재현 가능한 release proof가 필요한 곳만 exact version을 pin한다.
+- standalone consumer, public template, external example처럼 sibling checkout을 전제로 하지 않는 표면은 npm registry package를 사용한다. 0.46.13 이상에서는 `zdp-design-system: ^0.46.13`를 기본 semver 범위로 쓰고, 재현 가능한 release proof가 필요한 곳만 exact version을 pin한다.
 - `zdpTokenNames`, `share.js`, `share.d.ts`는 손으로 맞추지 않고 `tokens:generate`, `share-icons:generate` 산출물로 유지한다.
 - 새 버전은 소비 저장소가 opt-in으로 채택한다. broad adoption 전에는 대표 소비처에서 시각과 build를 확인한다.
 - keyboard focus, flat UI, framed control, Pretendard-first font stack은 소비처에서 임의로 낮추지 않는다.
@@ -458,7 +458,7 @@ Flutter와 native shell은 Svelte 컴포넌트를 직접 소비하지 않는다.
 - Table을 쓰는 화면은 caption 또는 labelledBy가 있고, `th scope="col"`과 `th scope="row"`가 필요한 곳에 남는지 확인한다.
 - SortHeader와 TableToolbar를 쓰는 화면은 정렬 중인 열의 owning `th`에 `aria-sort`가 남고, 선택 행 액션과 밀도 전환이 소비 앱 상태와 맞는지 확인한다.
 - TermTrigger와 TermSheet를 쓰는 화면은 클릭으로 열리고, Escape 닫기, Tab 순환, 이전 focus 복귀가 유지되는지 확인한다.
-- Dialog, Sheet, TermSheet를 쓰는 화면은 열린 동안 body scroll이 잠기고 닫힌 뒤 이전 scroll 상태가 복구되는지 확인한다. `closeOnEscape=false`와 `closeOnBackdrop=false`에서는 해당 입력 뒤에도 modal과 scroll lock이 유지되고, 비활성 backdrop이 Close button으로 노출되지 않으며 panel focus를 빼앗지 않는지 확인한다. 둘 이상 겹치면 나중에 열린 layer가 실제로 위에 놓이고, 아래 layer가 먼저 닫혀도 위 layer의 focus와 scroll lock이 유지되며 마지막 layer가 닫힐 때 살아 있는 바깥 trigger로 focus가 돌아오는지 확인한다.
+- Dialog, Sheet, TermSheet를 쓰는 화면은 열린 동안 body scroll이 잠기고 닫힌 뒤 이전 scroll 상태가 복구되는지 확인한다. focus trap은 직접 disabled control뿐 아니라 disabled fieldset 안 control, hidden·`aria-hidden`·`inert` 조상 아래 control을 순환 후보에서 제외해야 한다. `closeOnEscape=false`와 `closeOnBackdrop=false`에서는 해당 입력 뒤에도 modal과 scroll lock이 유지되고, 비활성 backdrop이 Close button으로 노출되지 않으며 panel focus를 빼앗지 않는지 확인한다. 둘 이상 겹치면 나중에 열린 layer가 실제로 위에 놓이고, 아래 layer가 먼저 닫혀도 위 layer의 focus와 scroll lock이 유지되며 마지막 layer가 닫힐 때 살아 있는 바깥 trigger로 focus가 돌아오는지 확인한다.
 - Sheet를 쓰는 화면은 `data-zdp-sheet-placement`, `data-zdp-sheet-size`, `data-zdp-sheet-surface="sheet"`가 남고 Drawer 변형을 별도 컴포넌트로 복제하지 않았는지 확인한다.
 - TermSheet root에는 `data-term-id`, `data-zdp-term-id`, `data-zdp-term-placement`, `data-zdp-term-surface="sheet"`가 남는지 확인한다.
 - TermSheet에는 광고 slot이 없고 root에 `data-zdp-ad-exclude="true"`가 남는지 확인한다.

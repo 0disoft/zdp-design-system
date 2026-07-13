@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.13
+
+- Fixed shared modal focusability filtering to honor browser-computed `:disabled` state, excluding controls disabled through an ancestor fieldset as well as hidden, `aria-hidden`, and inert ancestry from Dialog and Sheet focus-wrap boundaries, with Chromium regression coverage.
+
 ## 0.46.12
 
 - Promoted `Menu` and `Popover` Escape dismissal, trigger focus return, outside-click dismissal, clicked-target focus preservation, and ARIA cleanup from source/Storybook checks to real Chromium regression coverage.

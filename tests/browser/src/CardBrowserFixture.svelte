@@ -123,6 +123,19 @@
     <p>Confirm the release changes.</p>
     <svelte:fragment slot="footer">
       <button data-testid="dialog-last-action" type="button">Confirm dialog</button>
+      <button data-testid="dialog-direct-disabled" type="button" disabled>Disabled dialog action</button>
+      <span hidden>
+        <button data-testid="dialog-hidden-ancestor" type="button">Hidden dialog action</button>
+      </span>
+      <span aria-hidden="true">
+        <button data-testid="dialog-aria-hidden-ancestor" type="button">Hidden dialog label</button>
+      </span>
+      <span inert>
+        <button data-testid="dialog-inert-ancestor" type="button">Inert dialog action</button>
+      </span>
+      <fieldset disabled>
+        <button data-testid="dialog-disabled-fieldset" type="button">Fieldset dialog action</button>
+      </fieldset>
     </svelte:fragment>
   </Dialog>
 
@@ -139,6 +152,19 @@
     <p>Inspect the release details.</p>
     <svelte:fragment slot="footer">
       <button data-testid="sheet-last-action" type="button">Confirm sheet</button>
+      <button data-testid="sheet-direct-disabled" type="button" disabled>Disabled sheet action</button>
+      <span hidden>
+        <button data-testid="sheet-hidden-ancestor" type="button">Hidden sheet action</button>
+      </span>
+      <span aria-hidden="true">
+        <button data-testid="sheet-aria-hidden-ancestor" type="button">Hidden sheet label</button>
+      </span>
+      <span inert>
+        <button data-testid="sheet-inert-ancestor" type="button">Inert sheet action</button>
+      </span>
+      <fieldset disabled>
+        <button data-testid="sheet-disabled-fieldset" type="button">Fieldset sheet action</button>
+      </fieldset>
     </svelte:fragment>
   </Sheet>
 
