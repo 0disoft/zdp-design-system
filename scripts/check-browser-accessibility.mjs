@@ -103,10 +103,88 @@ try {
   }
   assert.equal(await page.locator('input[type="hidden"][name="owner"]').inputValue(), '');
   assert.equal(await page.getByTestId('combobox-selection-count').textContent(), '0');
+  await page.keyboard.press('Escape');
+  assert.equal(await page.getByRole('listbox', { name: 'Owner list' }).count(), 0);
+
+  await verifyModalKeyboardContract({
+    page,
+    triggerTestId: 'dialog-trigger',
+    dialogName: 'Review changes',
+    closeName: 'Close dialog',
+    lastTestId: 'dialog-last-action'
+  });
+  await verifyModalKeyboardContract({
+    page,
+    triggerTestId: 'sheet-trigger',
+    dialogName: 'Release details',
+    closeName: 'Close sheet',
+    lastTestId: 'sheet-last-action'
+  });
+  await verifyModalKeyboardContract({
+    page,
+    triggerTestId: 'term-sheet-trigger',
+    dialogName: 'Browser term',
+    closeName: 'Close term',
+    lastRole: 'link',
+    lastName: 'View details'
+  });
 
   console.log('Design system browser accessibility check passed.');
 } finally {
   await browser?.close();
   await server.close();
   await rm(cacheDir, { force: true, recursive: true });
+}
+
+async function verifyModalKeyboardContract({
+  page,
+  triggerTestId,
+  dialogName,
+  closeName,
+  lastTestId,
+  lastRole,
+  lastName
+}) {
+  const trigger = page.getByTestId(triggerTestId);
+  await trigger.focus();
+  await trigger.click();
+
+  const dialog = page.getByRole('dialog', { name: dialogName });
+  const closeButton = dialog.getByRole('button', { name: closeName });
+  const lastControl = lastTestId
+    ? dialog.getByTestId(lastTestId)
+    : dialog.getByRole(lastRole, { name: lastName });
+
+  assert.equal(await dialog.count(), 1, `${dialogName} must expose one named modal dialog.`);
+  assert.equal(await dialog.getAttribute('aria-modal'), 'true');
+  assert.equal(
+    await closeButton.evaluate((element) => document.activeElement === element),
+    true,
+    `${dialogName} must focus its first control after opening.`
+  );
+  assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
+  assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), '1');
+
+  await page.keyboard.press('Shift+Tab');
+  assert.equal(
+    await lastControl.evaluate((element) => document.activeElement === element),
+    true,
+    `${dialogName} must wrap backward focus to its last control.`
+  );
+  await page.keyboard.press('Tab');
+  assert.equal(
+    await closeButton.evaluate((element) => document.activeElement === element),
+    true,
+    `${dialogName} must wrap forward focus to its first control.`
+  );
+
+  await page.keyboard.press('Escape');
+  assert.equal(await dialog.count(), 0, `${dialogName} must close on Escape.`);
+  assert.equal(
+    await trigger.evaluate((element) => document.activeElement === element),
+    true,
+    `${dialogName} must restore focus to its trigger.`
+  );
+  assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+  assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), null);
 }

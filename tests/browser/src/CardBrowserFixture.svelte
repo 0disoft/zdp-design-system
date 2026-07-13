@@ -2,9 +2,13 @@
   import Card from '../../../src/lib/components/Card.svelte';
   import CardHeader from '../../../src/lib/components/CardHeader.svelte';
   import Combobox from '../../../src/lib/components/Combobox.svelte';
+  import Dialog from '../../../src/lib/components/Dialog.svelte';
+  import Sheet from '../../../src/lib/components/Sheet.svelte';
+  import TermSheet from '../../../src/lib/components/TermSheet.svelte';
   import Tooltip from '../../../src/lib/components/Tooltip.svelte';
   import Tabs from '../../../src/lib/components/Tabs.svelte';
   import type { ZdpComboboxOption } from '../../../src/lib/combobox';
+  import type { ZdpTermSheetTerm } from '../../../src/lib/term';
 
   const collidingTabItems = [
     { id: 'release notes', label: 'Release notes' },
@@ -17,6 +21,15 @@
   let ownerValue = '';
   let ownerQuery = '';
   let ownerSelectionCount = 0;
+  let dialogOpen = false;
+  let sheetOpen = false;
+  let termSheetOpen = false;
+  const browserTerm: ZdpTermSheetTerm = {
+    id: 'browser-term',
+    label: 'Browser term',
+    short: 'A term used to verify the modal sheet contract.',
+    canonicalPath: '#browser-term-details'
+  };
 </script>
 
 <main class="zdp-surface-reset">
@@ -50,6 +63,47 @@
     onValueChange={() => (ownerSelectionCount += 1)}
   />
   <output data-testid="combobox-selection-count">{ownerSelectionCount}</output>
+
+  <button data-testid="dialog-trigger" type="button" onclick={() => (dialogOpen = true)}>Open dialog</button>
+  <Dialog
+    bind:open={dialogOpen}
+    labelledBy="browser-dialog-title"
+    closeLabel="Close dialog"
+    onClose={() => (dialogOpen = false)}
+  >
+    <svelte:fragment slot="title">
+      <h2 id="browser-dialog-title">Review changes</h2>
+    </svelte:fragment>
+    <p>Confirm the release changes.</p>
+    <svelte:fragment slot="footer">
+      <button data-testid="dialog-last-action" type="button">Confirm dialog</button>
+    </svelte:fragment>
+  </Dialog>
+
+  <button data-testid="sheet-trigger" type="button" onclick={() => (sheetOpen = true)}>Open sheet</button>
+  <Sheet
+    bind:open={sheetOpen}
+    labelledBy="browser-sheet-title"
+    closeLabel="Close sheet"
+    onClose={() => (sheetOpen = false)}
+  >
+    <svelte:fragment slot="title">
+      <h2 id="browser-sheet-title">Release details</h2>
+    </svelte:fragment>
+    <p>Inspect the release details.</p>
+    <svelte:fragment slot="footer">
+      <button data-testid="sheet-last-action" type="button">Confirm sheet</button>
+    </svelte:fragment>
+  </Sheet>
+
+  <button data-testid="term-sheet-trigger" type="button" onclick={() => (termSheetOpen = true)}>Open term</button>
+  <TermSheet
+    bind:open={termSheetOpen}
+    id="browser-term-sheet"
+    term={browserTerm}
+    closeLabel="Close term"
+    onClose={() => (termSheetOpen = false)}
+  />
 
   <section id="release-details" aria-label="Release details">
     <p>Keyboard navigation reached the explicit link.</p>
