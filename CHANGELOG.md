@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.12
+
+- Promoted `Menu` and `Popover` Escape dismissal, trigger focus return, outside-click dismissal, clicked-target focus preservation, and ARIA cleanup from source/Storybook checks to real Chromium regression coverage.
+
 ## 0.46.11
 
 - Rendered disabled `Dialog`, `Sheet`, and `TermSheet` backdrops as non-interactive, accessibility-hidden surfaces instead of misleading Close buttons while preserving panel focus across pointer input, with Chromium accessibility-tree coverage.

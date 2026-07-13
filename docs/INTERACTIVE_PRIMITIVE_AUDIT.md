@@ -25,8 +25,8 @@
 | Dialog | ZDP custom modal | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, activation-order modal layer, Chromium nested-layer coverage | portal, inert sibling, animation orchestration 요구가 생기면 headless spike |
 | Sheet | ZDP custom modal edge panel | Medium | right/left/bottom placement, Escape, backdrop close, focus trap, focus return, scroll lock, activation-order modal layer, InteractionProbe와 Chromium coverage | draggable sheet, snap point, portal, inert sibling 요구가 생기면 headless spike |
 | TermSheet | ZDP glossary sheet | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, activation-order modal layer, stable term attributes | glossary 외 설정/필터/drawer 요구는 Sheet로 보낸다 |
-| Menu | ZDP custom menu | High | trigger keyboard open, roving focus, disabled skip, Home/End, Escape, outside click, focus return, InteractionProbe play coverage | typeahead, submenu, pointerdown outside, collision/portal 요구 시 Bits UI 후보 |
-| Popover | ZDP custom non-modal overlay | High | Escape, outside click, trigger focus policy, focus return, role/dialog passthrough, InteractionProbe play coverage | first focus policy, collision/portal, nested overlay 요구 시 Bits UI 후보 |
+| Menu | ZDP custom menu | High | trigger keyboard open, roving focus, disabled skip, Home/End, Escape, outside click, focus return, InteractionProbe와 Chromium coverage | typeahead, submenu, pointerdown outside, collision/portal 요구 시 Bits UI 후보 |
+| Popover | ZDP custom non-modal overlay | High | Escape, outside click, trigger focus policy, focus return, role/dialog passthrough, InteractionProbe와 Chromium coverage | first focus policy, collision/portal, nested overlay 요구 시 Bits UI 후보 |
 
 ## Component Notes
 
@@ -85,7 +85,7 @@ settings, filter, drawer형 보조 흐름은 TermSheet에 추가하지 않고 `S
 현재 구현은 단순 action menu에 충분하지만 typeahead, submenu, checkbox/radio menu item, collision, portal, pointerdown outside, nested menu를 직접 늘리기 시작하면 접근성 부채가 빠르게 커진다.
 그 지점부터는 Behavior Spec이 아니라 Runtime Dependency 후보로 전환한다.
 단, Bits UI를 쓰더라도 `ZdpMenuItem`, `.zdp-menu*` class, token mapping, Storybook examples, consumer fixture는 ZDP가 소유한다.
-InteractionProbe는 ArrowDown open, roving focus, disabled skip, Home/End, Escape close, focus return, click select를 계속 확인한다.
+InteractionProbe는 ArrowDown open, roving focus, disabled skip, Home/End, Escape close, focus return, click select를 계속 확인한다. Chromium gate는 pointer open 뒤 첫 enabled item focus, Escape trigger focus 복귀, outside click target focus 보존을 확인한다.
 
 ### Popover
 
@@ -93,7 +93,7 @@ InteractionProbe는 ArrowDown open, roving focus, disabled skip, Home/End, Escap
 현재는 짧은 필터, 작은 설정, 간단한 정보 패널에만 쓴다.
 panel open 시 첫 focus를 강제로 옮기지 않는 정책은 non-modal popover 기준에서는 허용하지만, form-heavy popover나 dialog-like popover가 늘면 policy를 다시 정해야 한다.
 collision/flip/portal/nested overlay 요구가 반복되면 내부 headless 의존성 후보로 올린다.
-InteractionProbe는 trigger focus 유지, Escape close, focus return, outside click close를 계속 확인한다.
+InteractionProbe는 trigger focus 유지, Escape close, focus return, outside click close를 계속 확인한다. Chromium gate는 panel 안 focus에서 Escape trigger 복귀, outside click target focus 보존, trigger의 `aria-expanded`와 `aria-controls` 정리를 확인한다.
 
 ## Headless Spike Trigger
 

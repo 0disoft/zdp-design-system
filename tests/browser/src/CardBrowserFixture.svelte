@@ -3,11 +3,14 @@
   import CardHeader from '../../../src/lib/components/CardHeader.svelte';
   import Combobox from '../../../src/lib/components/Combobox.svelte';
   import Dialog from '../../../src/lib/components/Dialog.svelte';
+  import Menu from '../../../src/lib/components/Menu.svelte';
+  import Popover from '../../../src/lib/components/Popover.svelte';
   import Sheet from '../../../src/lib/components/Sheet.svelte';
   import TermSheet from '../../../src/lib/components/TermSheet.svelte';
   import Tooltip from '../../../src/lib/components/Tooltip.svelte';
   import Tabs from '../../../src/lib/components/Tabs.svelte';
   import type { ZdpComboboxOption } from '../../../src/lib/combobox';
+  import type { ZdpMenuItem } from '../../../src/lib/menu';
   import type { ZdpTermSheetTerm } from '../../../src/lib/term';
 
   const collidingTabItems = [
@@ -17,6 +20,10 @@
   const ownerOptions: readonly ZdpComboboxOption[] = [
     { id: 'security', value: 'security', label: 'Security' },
     { id: 'platform', value: 'platform', label: 'Platform' }
+  ];
+  const browserMenuItems: readonly ZdpMenuItem[] = [
+    { id: 'edit', label: 'Edit release' },
+    { id: 'archive', label: 'Archive release' }
   ];
   let ownerValue = '';
   let ownerQuery = '';
@@ -29,6 +36,8 @@
   let protectedDialogOpen = false;
   let protectedSheetOpen = false;
   let protectedTermSheetOpen = false;
+  let menuOpen = false;
+  let popoverOpen = false;
   const browserTerm: ZdpTermSheetTerm = {
     id: 'browser-term',
     label: 'Browser term',
@@ -73,6 +82,33 @@
     onValueChange={() => (ownerSelectionCount += 1)}
   />
   <output data-testid="combobox-selection-count">{ownerSelectionCount}</output>
+
+  <Menu
+    bind:open={menuOpen}
+    idPrefix="browser-menu"
+    triggerLabel="Browser actions"
+    items={browserMenuItems}
+  >
+    <svelte:fragment slot="trigger">Browser actions</svelte:fragment>
+  </Menu>
+
+  <Popover bind:open={popoverOpen} idPrefix="browser-popover" let:close>
+    <svelte:fragment slot="trigger" let:open let:toggle let:panelId>
+      <button
+        data-testid="popover-trigger"
+        type="button"
+        aria-controls={open ? panelId : undefined}
+        aria-expanded={open}
+        onclick={toggle}
+      >
+        Browser filters
+      </button>
+    </svelte:fragment>
+    <p>Filter options</p>
+    <button data-testid="popover-action" type="button" onclick={() => close()}>Apply filters</button>
+  </Popover>
+
+  <button data-testid="overlay-outside-target" type="button">Outside overlays</button>
 
   <button data-testid="dialog-trigger" type="button" onclick={() => (dialogOpen = true)}>Open dialog</button>
   <Dialog

@@ -106,6 +106,59 @@ try {
   await page.keyboard.press('Escape');
   assert.equal(await page.getByRole('listbox', { name: 'Owner list' }).count(), 0);
 
+  const outsideOverlayTarget = page.getByTestId('overlay-outside-target');
+  const menuTrigger = page.getByRole('button', { name: 'Browser actions' });
+  await menuTrigger.focus();
+  await menuTrigger.click();
+  let menu = page.getByRole('menu', { name: 'Browser actions' });
+  assert.equal(await menu.count(), 1);
+  assert.equal(await menuTrigger.getAttribute('aria-expanded'), 'true');
+  assert.equal(
+    await menu.getByRole('menuitem', { name: 'Edit release' }).evaluate((element) => document.activeElement === element),
+    true,
+    'Menu must focus its first enabled item after pointer opening.'
+  );
+  await page.keyboard.press('Escape');
+  assert.equal(await menu.count(), 0);
+  assert.equal(await menuTrigger.evaluate((element) => document.activeElement === element), true);
+  assert.equal(await menuTrigger.getAttribute('aria-expanded'), 'false');
+  assert.equal(await menuTrigger.getAttribute('aria-controls'), null);
+
+  await menuTrigger.click();
+  menu = page.getByRole('menu', { name: 'Browser actions' });
+  await outsideOverlayTarget.click();
+  assert.equal(await menu.count(), 0, 'Menu must close after an outside click.');
+  assert.equal(
+    await outsideOverlayTarget.evaluate((element) => document.activeElement === element),
+    true,
+    'Outside dismissal must keep focus on the clicked target instead of stealing it back.'
+  );
+
+  const popoverTrigger = page.getByTestId('popover-trigger');
+  await popoverTrigger.focus();
+  await popoverTrigger.click();
+  let popover = page.getByRole('dialog', { name: 'Browser filters' });
+  const popoverAction = page.getByTestId('popover-action');
+  assert.equal(await popover.count(), 1);
+  assert.equal(await popoverTrigger.getAttribute('aria-expanded'), 'true');
+  await popoverAction.focus();
+  await page.keyboard.press('Escape');
+  assert.equal(await popover.count(), 0);
+  assert.equal(await popoverTrigger.evaluate((element) => document.activeElement === element), true);
+  assert.equal(await popoverTrigger.getAttribute('aria-expanded'), 'false');
+  assert.equal(await popoverTrigger.getAttribute('aria-controls'), null);
+
+  await popoverTrigger.click();
+  popover = page.getByRole('dialog', { name: 'Browser filters' });
+  await page.getByTestId('popover-action').focus();
+  await outsideOverlayTarget.click();
+  assert.equal(await popover.count(), 0, 'Popover must close after an outside click.');
+  assert.equal(
+    await outsideOverlayTarget.evaluate((element) => document.activeElement === element),
+    true,
+    'Popover outside dismissal must preserve focus on the clicked target.'
+  );
+
   await verifyModalKeyboardContract({
     page,
     triggerTestId: 'dialog-trigger',
