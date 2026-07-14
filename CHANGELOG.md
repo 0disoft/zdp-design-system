@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.23
+
+- Restored the shared Card reduced-motion transition rule and hardened component style parity checks to retain conditional at-rule context and cover CSS-only native states such as `:empty`.
+
 ## 0.46.22
 
 - Added a package verification gate that compares Svelte component hover, focus, disabled, ARIA, and data-state selectors and declarations against the shared `components.css` surface, preventing scoped component fixes from silently disappearing in static and shadow-root consumers.

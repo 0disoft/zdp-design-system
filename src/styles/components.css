@@ -826,6 +826,12 @@
   border-color: var(--zdp-color-line-strong);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .zdp-card--hover {
+    transition: none;
+  }
+}
+
 .zdp-card__header {
   display: grid;
   gap: var(--zdp-space-2);

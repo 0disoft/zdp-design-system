@@ -5,12 +5,14 @@ import { join } from 'node:path';
 interface CssRule {
   readonly selectors: readonly string[];
   readonly declarations: ReadonlyMap<string, readonly string[]>;
+  readonly conditions: readonly string[];
 }
 
 interface SelectorRule {
   readonly selector: string;
   readonly stateKey: string;
   readonly declarations: ReadonlyMap<string, readonly string[]>;
+  readonly conditions: readonly string[];
 }
 
 interface ParityIssue {
@@ -20,7 +22,9 @@ interface ParityIssue {
 }
 
 const statePattern =
-  /:(?:hover|focus|focus-visible|focus-within|active|disabled|checked|read-only|required|invalid|placeholder-shown)\b|\[(?:(?:aria|data)-[^\]]+|disabled|readonly|required|open|hidden|inert)(?:=[^\]]+)?\]/;
+  /:(?:hover|focus|focus-visible|focus-within|active|enabled|disabled|checked|indeterminate|read-only|read-write|required|optional|valid|invalid|user-valid|user-invalid|in-range|out-of-range|placeholder-shown|autofill|default|open|popover-open|modal|fullscreen|empty)\b|\[(?:(?:aria|data)-[^\]]+|disabled|readonly|required|open|hidden|inert)(?:=[^\]]+)?\]/;
+const stateConditionPattern =
+  /^@media\b[\s\S]*\((?:prefers-[\w-]+|forced-colors|inverted-colors|hover|any-hover|pointer|any-pointer|update|scripting)\s*:/;
 const root = process.cwd();
 const componentDirectory = join(root, 'src', 'lib', 'components');
 const sharedStylePath = join(root, 'src', 'styles', 'components.css');
@@ -46,7 +50,7 @@ for (const componentFile of componentFiles) {
 
   styledComponentCount += 1;
   const componentRules = toSelectorRules(styleBlocks.flatMap((style) => extractCssRules(style)));
-  const stateRules = componentRules.filter((rule) => isStateSelector(rule.selector));
+  const stateRules = componentRules.filter(isStateRule);
   stateSelectorCount += stateRules.length;
   failures.push(...findParityIssues(componentFile, stateRules, sharedRules));
 }
@@ -73,7 +77,7 @@ function assertCheckerContract(): void {
         color: var(--zdp-color-ink-strong);
       }
     `)
-  ).filter((rule) => isStateSelector(rule.selector));
+  ).filter(isStateRule);
   assert.equal(
     findParityIssues('fixture.svelte', slottedComponentRules, widenedGlobalRules).length,
     0,
@@ -86,7 +90,7 @@ function assertCheckerContract(): void {
         opacity: 0.5;
       }
     `)
-  ).filter((rule) => isStateSelector(rule.selector));
+  ).filter(isStateRule);
   const unsafeWidenedRules = toSelectorRules(extractCssRules(`.zdp-label { opacity: 0.5; }`));
   assert.equal(
     findParityIssues('fixture.svelte', ancestorStateRules, unsafeWidenedRules)[0]?.reason,
@@ -102,6 +106,42 @@ function assertCheckerContract(): void {
     'declaration drift',
     'A matching selector with different declarations must fail parity.'
   );
+
+  const emptyStateRules = toSelectorRules(
+    extractCssRules(`.zdp-toolbar__actions:empty { display: none; }`)
+  ).filter(isStateRule);
+  assert.equal(emptyStateRules.length, 1, ':empty must remain part of the CSS-only state contract.');
+
+  const reducedMotionRules = toSelectorRules(
+    extractCssRules(`
+      @media (prefers-reduced-motion: reduce) {
+        .zdp-card--hover { transition: none; }
+      }
+    `)
+  ).filter(isStateRule);
+  const unconditionalMotionRules = toSelectorRules(
+    extractCssRules(`.zdp-card--hover { transition: none; }`)
+  );
+  assert.equal(
+    findParityIssues('fixture.svelte', reducedMotionRules, unconditionalMotionRules)[0]?.reason,
+    'missing shared state selector',
+    'An unconditional declaration must not satisfy a reduced-motion state contract.'
+  );
+  assert.equal(
+    findParityIssues(
+      'fixture.svelte',
+      reducedMotionRules,
+      toSelectorRules(
+        extractCssRules(`
+          @media (prefers-reduced-motion: reduce) {
+            .zdp-card--hover { transition: none; }
+          }
+        `)
+      )
+    ).length,
+    0,
+    'Matching conditional state context and declarations must satisfy parity.'
+  );
 }
 
 function findParityIssues(
@@ -114,20 +154,21 @@ function findParityIssues(
   for (const componentRule of componentRules) {
     const candidates = sharedRules.filter(
       (sharedRule) =>
-        sharedRule.selector === componentRule.selector || sharedRule.stateKey === componentRule.stateKey
+        haveSameConditions(sharedRule.conditions, componentRule.conditions) &&
+        (sharedRule.selector === componentRule.selector || sharedRule.stateKey === componentRule.stateKey)
     );
 
     if (candidates.length === 0) {
       issues.push({
         component,
-        selector: componentRule.selector,
+        selector: formatSelectorRule(componentRule),
         reason: 'missing shared state selector'
       });
       continue;
     }
 
     if (!candidates.some((candidate) => containsDeclarations(candidate.declarations, componentRule.declarations))) {
-      issues.push({ component, selector: componentRule.selector, reason: 'declaration drift' });
+      issues.push({ component, selector: formatSelectorRule(componentRule), reason: 'declaration drift' });
     }
   }
 
@@ -154,9 +195,18 @@ function toSelectorRules(rules: readonly CssRule[]): readonly SelectorRule[] {
     rule.selectors.map((selector) => ({
       selector,
       stateKey: stateSelectorKey(selector),
-      declarations: rule.declarations
+      declarations: rule.declarations,
+      conditions: rule.conditions
     }))
   );
+}
+
+function haveSameConditions(left: readonly string[], right: readonly string[]): boolean {
+  return left.length === right.length && left.every((condition, index) => condition === right[index]);
+}
+
+function formatSelectorRule(rule: SelectorRule): string {
+  return rule.conditions.length > 0 ? `${rule.conditions.join(' > ')} { ${rule.selector} }` : rule.selector;
 }
 
 function stateSelectorKey(selector: string): string {
@@ -207,12 +257,21 @@ function isStateSelector(selector: string): boolean {
   return statePattern.test(selector);
 }
 
-function extractCssRules(css: string): readonly CssRule[] {
-  const normalizedCss = stripComments(css);
-  return parseRuleRange(normalizedCss, 0, normalizedCss.length);
+function isStateRule(rule: SelectorRule): boolean {
+  return isStateSelector(rule.selector) || rule.conditions.some((condition) => stateConditionPattern.test(condition));
 }
 
-function parseRuleRange(css: string, start: number, end: number): readonly CssRule[] {
+function extractCssRules(css: string): readonly CssRule[] {
+  const normalizedCss = stripComments(css);
+  return parseRuleRange(normalizedCss, 0, normalizedCss.length, []);
+}
+
+function parseRuleRange(
+  css: string,
+  start: number,
+  end: number,
+  conditions: readonly string[]
+): readonly CssRule[] {
   const rules: CssRule[] = [];
   let statementStart = start;
   let cursor = start;
@@ -242,7 +301,10 @@ function parseRuleRange(css: string, start: number, end: number): readonly CssRu
 
     if (header.startsWith('@')) {
       if (!/^@(?:keyframes|-webkit-keyframes)\b/.test(header)) {
-        rules.push(...parseRuleRange(body, 0, body.length));
+        const nestedConditions = isConditionalAtRule(header)
+          ? [...conditions, normalizeCondition(header)]
+          : conditions;
+        rules.push(...parseRuleRange(body, 0, body.length, nestedConditions));
       }
     } else if (header.includes('.zdp-')) {
       const selectors = splitSelectors(header)
@@ -250,7 +312,7 @@ function parseRuleRange(css: string, start: number, end: number): readonly CssRu
         .filter((selector) => selector.startsWith('.zdp-'));
 
       if (selectors.length > 0) {
-        rules.push({ selectors, declarations: parseDeclarations(body) });
+        rules.push({ selectors, declarations: parseDeclarations(body), conditions });
       }
     }
 
@@ -259,6 +321,14 @@ function parseRuleRange(css: string, start: number, end: number): readonly CssRu
   }
 
   return rules;
+}
+
+function isConditionalAtRule(header: string): boolean {
+  return /^@(?:media|supports|container|scope|starting-style)\b/.test(header);
+}
+
+function normalizeCondition(header: string): string {
+  return header.replace(/\s+/g, ' ').trim();
 }
 
 function findMatchingBrace(css: string, open: number, end: number): number {
