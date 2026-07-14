@@ -22,7 +22,14 @@ export async function verifyOverlayContracts(page) {
 
   await menuTrigger.click();
   menu = page.getByRole('menu', { name: 'Browser actions' });
-  await outsideOverlayTarget.click();
+  await pointerDownOn(page, outsideOverlayTarget);
+  assert.equal(await menu.count(), 1, 'Menu must remain open until the outside pointer sequence produces a click.');
+  assert.equal(
+    await outsideOverlayTarget.evaluate((element) => document.activeElement === element),
+    true,
+    'Outside pointerdown must move focus before Menu dismissal.'
+  );
+  await page.mouse.up();
   assert.equal(await menu.count(), 0, 'Menu must close after an outside click.');
   assert.equal(
     await outsideOverlayTarget.evaluate((element) => document.activeElement === element),
@@ -100,7 +107,14 @@ export async function verifyOverlayContracts(page) {
   await popoverTrigger.click();
   popover = page.getByRole('dialog', { name: 'Browser filters' });
   await page.getByTestId('popover-action').focus();
-  await outsideOverlayTarget.click();
+  await pointerDownOn(page, outsideOverlayTarget);
+  assert.equal(await popover.count(), 1, 'Popover must remain open until outside pointerup produces a click.');
+  assert.equal(
+    await outsideOverlayTarget.evaluate((element) => document.activeElement === element),
+    true,
+    'Outside pointerdown must move focus before Popover dismissal.'
+  );
+  await page.mouse.up();
   assert.equal(await popover.count(), 0, 'Popover must close after an outside click.');
   assert.equal(
     await outsideOverlayTarget.evaluate((element) => document.activeElement === element),
@@ -121,7 +135,9 @@ export async function verifyOverlayContracts(page) {
     true,
     'Escape opt-out must not move focus out of the Popover.'
   );
-  await outsideOverlayTarget.click();
+  await pointerDownOn(page, outsideOverlayTarget);
+  assert.equal(await protectedPopover.count(), 1, 'Outside pointerdown opt-out must keep the Popover open.');
+  await page.mouse.up();
   assert.equal(await protectedPopover.count(), 1, 'Outside-click opt-out must keep the Popover open.');
   assert.equal(
     await outsideOverlayTarget.evaluate((element) => document.activeElement === element),
@@ -136,7 +152,25 @@ export async function verifyOverlayContracts(page) {
   assert.equal(await protectedPopoverTrigger.evaluate((element) => document.activeElement === element), true);
   assert.equal(await protectedPopoverTrigger.getAttribute('aria-expanded'), 'false');
   assert.equal(await protectedPopoverTrigger.getAttribute('aria-controls'), null);
+
+  const combobox = page.getByRole('combobox', { name: 'Owner', exact: true });
+  const comboboxOutsideTarget = page.getByTestId('card-link');
+  await combobox.click();
+  const listbox = page.getByRole('listbox', { name: 'Owner list' });
+  assert.equal(await listbox.count(), 1);
+  await pointerDownOn(page, comboboxOutsideTarget);
+  assert.equal(await listbox.count(), 1, 'Combobox must remain open until outside pointerup produces a click.');
+  assert.equal(
+    await comboboxOutsideTarget.evaluate((element) => document.activeElement === element),
+    true,
+    'Outside pointerdown must move focus before Combobox dismissal.'
+  );
+  await page.mouse.up();
+  assert.equal(await listbox.count(), 0, 'Combobox must close after the outside click completes.');
+  assert.equal(await combobox.getAttribute('aria-expanded'), 'false');
+  assert.equal(await combobox.getAttribute('aria-controls'), null);
 }
+
 export async function verifyShadowOverlayContracts(page) {
   const shadowHost = page.getByTestId('shadow-modal-host');
   const shadowOutsideTarget = page.getByTestId('shadow-overlay-outside-target');
@@ -157,7 +191,18 @@ export async function verifyShadowOverlayContracts(page) {
 
   await shadowMenuTrigger.click();
   shadowMenu = page.getByRole('menu', { name: 'Shadow actions' });
-  await shadowOutsideTarget.click();
+  await pointerDownOn(page, shadowOutsideTarget);
+  assert.equal(
+    await shadowMenu.count(),
+    1,
+    'A shadow-root Menu must remain open until the composed outside pointer sequence produces a click.'
+  );
+  assert.equal(
+    await shadowOutsideTarget.evaluate((element) => document.activeElement === element),
+    true,
+    'Composed outside pointerdown must move focus before shadow Menu dismissal.'
+  );
+  await page.mouse.up();
   assert.equal(await shadowMenu.count(), 0, 'A shadow-root Menu must close after a composed outside click.');
   assert.equal(
     await shadowOutsideTarget.evaluate((element) => document.activeElement === element),
@@ -182,7 +227,18 @@ export async function verifyShadowOverlayContracts(page) {
 
   await shadowPopoverTrigger.click();
   shadowPopover = page.getByRole('dialog', { name: 'Shadow filters' });
-  await shadowOutsideTarget.click();
+  await pointerDownOn(page, shadowOutsideTarget);
+  assert.equal(
+    await shadowPopover.count(),
+    1,
+    'A shadow-root Popover must remain open until the composed outside pointer sequence produces a click.'
+  );
+  assert.equal(
+    await shadowOutsideTarget.evaluate((element) => document.activeElement === element),
+    true,
+    'Composed outside pointerdown must move focus before shadow Popover dismissal.'
+  );
+  await page.mouse.up();
   assert.equal(await shadowPopover.count(), 0, 'A shadow-root Popover must close after a composed outside click.');
   assert.equal(
     await shadowOutsideTarget.evaluate((element) => document.activeElement === element),
@@ -239,7 +295,18 @@ export async function verifyShadowOverlayContracts(page) {
   await shadowCombobox.click();
   shadowListbox = page.getByRole('listbox', { name: 'Shadow owner list' });
   assert.equal(await shadowListbox.count(), 1, 'A shadow-root Combobox input click must keep its listbox open.');
-  await shadowOutsideTarget.click();
+  await pointerDownOn(page, shadowOutsideTarget);
+  assert.equal(
+    await shadowListbox.count(),
+    1,
+    'A shadow-root Combobox must remain open until the composed outside pointer sequence produces a click.'
+  );
+  assert.equal(
+    await shadowOutsideTarget.evaluate((element) => document.activeElement === element),
+    true,
+    'Composed outside pointerdown must move focus before shadow Combobox dismissal.'
+  );
+  await page.mouse.up();
   assert.equal(await shadowListbox.count(), 0, 'A shadow-root Combobox must close after a composed outside click.');
   assert.equal(
     await shadowOutsideTarget.evaluate((element) => document.activeElement === element),
@@ -249,4 +316,12 @@ export async function verifyShadowOverlayContracts(page) {
   const portalDialogTrigger = page.getByTestId('portal-dialog-trigger');
   assert.equal(await hasInertAncestor(portalDialogTrigger), false);
   assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+}
+
+async function pointerDownOn(page, target) {
+  await target.click({ trial: true });
+  const bounds = await target.boundingBox();
+  assert.ok(bounds, 'The outside-dismiss target must have a measurable pointer hit area.');
+  await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+  await page.mouse.down();
 }
