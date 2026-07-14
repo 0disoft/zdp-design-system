@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.24
+
+- Aligned shared mobile Sheet safe-area padding and the TableToolbar `48rem` action breakpoint with component-scoped styles, and expanded style parity checks to cover every retained conditional at-rule context.
+
 ## 0.46.23
 
 - Restored the shared Card reduced-motion transition rule and hardened component style parity checks to retain conditional at-rule context and cover CSS-only native states such as `:empty`.

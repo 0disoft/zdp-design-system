@@ -23,8 +23,6 @@ interface ParityIssue {
 
 const statePattern =
   /:(?:hover|focus|focus-visible|focus-within|active|enabled|disabled|checked|indeterminate|read-only|read-write|required|optional|valid|invalid|user-valid|user-invalid|in-range|out-of-range|placeholder-shown|autofill|default|open|popover-open|modal|fullscreen|empty)\b|\[(?:(?:aria|data)-[^\]]+|disabled|readonly|required|open|hidden|inert)(?:=[^\]]+)?\]/;
-const stateConditionPattern =
-  /^@media\b[\s\S]*\((?:prefers-[\w-]+|forced-colors|inverted-colors|hover|any-hover|pointer|any-pointer|update|scripting)\s*:/;
 const root = process.cwd();
 const componentDirectory = join(root, 'src', 'lib', 'components');
 const sharedStylePath = join(root, 'src', 'styles', 'components.css');
@@ -38,7 +36,7 @@ const componentFiles = (await readdir(componentDirectory, { withFileTypes: true 
 const sharedRules = toSelectorRules(extractCssRules(await readFile(sharedStylePath, 'utf8')));
 const failures: ParityIssue[] = [];
 let styledComponentCount = 0;
-let stateSelectorCount = 0;
+let paritySelectorCount = 0;
 
 for (const componentFile of componentFiles) {
   const source = await readFile(join(componentDirectory, componentFile), 'utf8');
@@ -50,9 +48,9 @@ for (const componentFile of componentFiles) {
 
   styledComponentCount += 1;
   const componentRules = toSelectorRules(styleBlocks.flatMap((style) => extractCssRules(style)));
-  const stateRules = componentRules.filter(isStateRule);
-  stateSelectorCount += stateRules.length;
-  failures.push(...findParityIssues(componentFile, stateRules, sharedRules));
+  const parityRules = componentRules.filter(isParityRule);
+  paritySelectorCount += parityRules.length;
+  failures.push(...findParityIssues(componentFile, parityRules, sharedRules));
 }
 
 if (failures.length > 0) {
@@ -64,7 +62,7 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `Component style parity check passed for ${stateSelectorCount} state selectors across ${styledComponentCount} styled components.`
+  `Component style parity check passed for ${paritySelectorCount} state and conditional selectors across ${styledComponentCount} styled components.`
 );
 
 function assertCheckerContract(): void {
@@ -77,7 +75,7 @@ function assertCheckerContract(): void {
         color: var(--zdp-color-ink-strong);
       }
     `)
-  ).filter(isStateRule);
+  ).filter(isParityRule);
   assert.equal(
     findParityIssues('fixture.svelte', slottedComponentRules, widenedGlobalRules).length,
     0,
@@ -90,11 +88,11 @@ function assertCheckerContract(): void {
         opacity: 0.5;
       }
     `)
-  ).filter(isStateRule);
+  ).filter(isParityRule);
   const unsafeWidenedRules = toSelectorRules(extractCssRules(`.zdp-label { opacity: 0.5; }`));
   assert.equal(
     findParityIssues('fixture.svelte', ancestorStateRules, unsafeWidenedRules)[0]?.reason,
-    'missing shared state selector',
+    'missing shared selector or conditional context',
     'A state-bearing ancestor must remain part of the shared selector contract.'
   );
 
@@ -109,7 +107,7 @@ function assertCheckerContract(): void {
 
   const emptyStateRules = toSelectorRules(
     extractCssRules(`.zdp-toolbar__actions:empty { display: none; }`)
-  ).filter(isStateRule);
+  ).filter(isParityRule);
   assert.equal(emptyStateRules.length, 1, ':empty must remain part of the CSS-only state contract.');
 
   const reducedMotionRules = toSelectorRules(
@@ -118,13 +116,13 @@ function assertCheckerContract(): void {
         .zdp-card--hover { transition: none; }
       }
     `)
-  ).filter(isStateRule);
+  ).filter(isParityRule);
   const unconditionalMotionRules = toSelectorRules(
     extractCssRules(`.zdp-card--hover { transition: none; }`)
   );
   assert.equal(
     findParityIssues('fixture.svelte', reducedMotionRules, unconditionalMotionRules)[0]?.reason,
-    'missing shared state selector',
+    'missing shared selector or conditional context',
     'An unconditional declaration must not satisfy a reduced-motion state contract.'
   );
   assert.equal(
@@ -141,6 +139,39 @@ function assertCheckerContract(): void {
     ).length,
     0,
     'Matching conditional state context and declarations must satisfy parity.'
+  );
+
+  const responsiveRules = toSelectorRules(
+    extractCssRules(`
+      @media (max-width: 48rem) {
+        .zdp-toolbar { flex-direction: column; }
+      }
+    `)
+  ).filter(isParityRule);
+  assert.equal(responsiveRules.length, 1, 'Responsive conditional selectors must remain in the parity contract.');
+  assert.equal(
+    findParityIssues(
+      'fixture.svelte',
+      responsiveRules,
+      toSelectorRules(extractCssRules(`.zdp-toolbar { flex-direction: column; }`))
+    )[0]?.reason,
+    'missing shared selector or conditional context',
+    'An unconditional declaration must not satisfy a responsive conditional contract.'
+  );
+  assert.equal(
+    findParityIssues(
+      'fixture.svelte',
+      responsiveRules,
+      toSelectorRules(
+        extractCssRules(`
+          @media (max-width: 48rem) {
+            .zdp-toolbar { flex-direction: column; }
+          }
+        `)
+      )
+    ).length,
+    0,
+    'Matching responsive context and declarations must satisfy parity.'
   );
 }
 
@@ -162,7 +193,7 @@ function findParityIssues(
       issues.push({
         component,
         selector: formatSelectorRule(componentRule),
-        reason: 'missing shared state selector'
+        reason: 'missing shared selector or conditional context'
       });
       continue;
     }
@@ -257,8 +288,8 @@ function isStateSelector(selector: string): boolean {
   return statePattern.test(selector);
 }
 
-function isStateRule(rule: SelectorRule): boolean {
-  return isStateSelector(rule.selector) || rule.conditions.some((condition) => stateConditionPattern.test(condition));
+function isParityRule(rule: SelectorRule): boolean {
+  return isStateSelector(rule.selector) || rule.conditions.length > 0;
 }
 
 function extractCssRules(css: string): readonly CssRule[] {

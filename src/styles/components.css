@@ -3705,6 +3705,14 @@
   line-height: var(--zdp-type-caption-line-height);
 }
 
+@media (max-width: 48rem) {
+  .zdp-table-toolbar__actions {
+    inline-size: 100%;
+    justify-content: flex-start;
+    margin-inline-start: 0;
+  }
+}
+
 .zdp-key-value {
   border: 1px solid var(--zdp-color-line-subtle);
   border-radius: var(--zdp-control-radius);
@@ -3836,14 +3844,9 @@
   }
 
   .zdp-toolbar__main,
-  .zdp-toolbar__actions,
-  .zdp-table-toolbar__actions {
+  .zdp-toolbar__actions {
     inline-size: 100%;
     justify-content: flex-start;
-  }
-
-  .zdp-table-toolbar__actions {
-    margin-inline-start: 0;
   }
 }
 
@@ -4319,7 +4322,8 @@
     inset-block: auto 0;
     inset-inline: 0;
     max-block-size: min(34rem, calc(var(--zdp-viewport-block) - var(--zdp-space-6) - var(--zdp-viewport-safe-block-start) - var(--zdp-viewport-safe-block-end)));
-    padding: var(--zdp-space-4);
+    padding-block: var(--zdp-space-4) max(var(--zdp-space-4), var(--zdp-viewport-safe-block-end));
+    padding-inline: max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-start)) max(var(--zdp-space-4), var(--zdp-viewport-safe-inline-end));
   }
 }
 
