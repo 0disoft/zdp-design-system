@@ -73,6 +73,8 @@ const expectedScripts = {
   'share-icons:check': 'bun scripts/generate-share.ts --check && bun scripts/check-share-icons.ts',
   'tokens:generate': 'bun scripts/generate-tokens.ts',
   'tokens:check': 'bun scripts/generate-tokens.ts --check && bun scripts/check-tokens.ts',
+  'preview:check': 'bun scripts/check-preview.ts && bun run styles:parity:check',
+  'styles:parity:check': 'bun scripts/check-component-style-parity.ts',
   'a11y:check': 'bun scripts/check-storybook-a11y.ts',
   'type:check': 'svelte-check --tsconfig ./tsconfig.json',
   'package:build': 'bun scripts/generate-tokens.ts && bun scripts/generate-share.ts && bun scripts/build-package.ts',

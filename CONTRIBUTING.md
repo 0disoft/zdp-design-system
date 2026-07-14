@@ -157,4 +157,4 @@
 - Theme / Locale Stress story는 light/dark, ZDP Mobile 폭, 긴 한국어/영어/중국어/힌디어/베트남어/러시아어/말레이어/태국어 문장, focus-visible 상태를 한 번에 확인하는 QA 표면으로 유지한다.
 - Workduck 개발 서버와 빌드 액션이 깨지지 않도록 `dev`와 `build` 스크립트를 유지한다.
 - 패키지 export가 안정된 뒤에는 변경 내역을 `CHANGELOG.md`에 남긴다.
-- 토큰 JSON, CSS 변수, public export, Svelte 컴포넌트, Storybook, preview 변경 뒤에는 `bun run check`를 실행한다.
+- 토큰 JSON, CSS 변수, public export, Svelte 컴포넌트, Storybook, preview 변경 뒤에는 `bun run check`를 실행한다. Svelte component와 `src/styles/components.css`에 중복된 hover, focus, disabled, ARIA, data 상태를 바꾸면 `styles:parity:check`가 selector와 declaration의 one-way parity를 유지해야 한다.

@@ -34,6 +34,7 @@
 
 - Public package exports must not point at `src/**`.
 - Component CSS must not introduce raw product-specific colors, raw spacing, unreviewed z-index numbers, or unmanaged viewport units.
+- `preview:check` invokes `styles:parity:check`, which requires every Svelte component interaction-state selector and declaration to remain represented in `src/styles/components.css` while allowing shared utility-only selectors.
 - UI primitives must not own authorization, billing, identity, consent, admin, routing, data fetching, search execution, ads policy, or locale fallback truth.
 - External UI dependency types, Tailwind/shadcn class contracts, or copied proprietary snippets must not leak into public API.
 - Storybook, preview, fixtures, package metadata, and docs must not contradict the same token or component contract.

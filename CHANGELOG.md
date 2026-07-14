@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.22
+
+- Added a package verification gate that compares Svelte component hover, focus, disabled, ARIA, and data-state selectors and declarations against the shared `components.css` surface, preventing scoped component fixes from silently disappearing in static and shadow-root consumers.
+
 ## 0.46.21
 
 - Preserved Combobox self-clicks and outside dismissal inside open shadow roots with composed event paths, restored the shared Tooltip utility's Escape-dismissed CSS state, and added Chromium coverage for stylesheet-installed shadow-root focus and dismissal contracts.

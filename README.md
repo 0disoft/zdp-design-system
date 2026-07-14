@@ -102,7 +102,7 @@ import 'zdp-design-system/expressive-fonts.css';
 
 패키지 export는 `dist/` 산출물을 가리킨다. root runtime entry는 `dist/index.js`, type entry는 `dist/index.d.ts`다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `bun run package:build`가 소비자용 `dist/` 표면을 다시 만든다. 소비 저장소와 문서 예시는 `zdp-design-system` public export만 쓰고 내부 `src/` 경로를 직접 import하지 않는다.
 
-ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.46.21`를 기본으로 쓴다.
+ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.46.22`를 기본으로 쓴다.
 
 컴포넌트를 open shadow root 안에 mount하면 document에 import한 `zdp-design-system/styles.css`는 shadow boundary를 넘지 않는다. 소비 앱은 같은 stylesheet를 해당 shadow root 안의 `<style>` 또는 `<link rel="stylesheet">`로 직접 설치해야 하며, 이 조건에서 Tooltip, Combobox, Menu, Popover와 modal primitive의 keyboard, dismissal, focus 계약을 지원한다. closed shadow root는 지원하지 않는다.
 
@@ -569,7 +569,7 @@ bun run tokens:check
 `tokens:generate`는 `tokens/zdp.tokens.json`에서 `zdpTokenNames`를 다시 만든다.
 `share-icons:generate`는 `src/lib/share.ts`에서 소비자용 `share.js`와 `share.d.ts`를 다시 만든다.
 색상 토큰은 JSON의 `hex`와 `oklch` 값이 CSS fallback 및 OKLCH override에 모두 존재해야 통과한다.
-`preview:check`는 정적 미리보기 페이지가 공통 스타일 entry와 핵심 토큰/컴포넌트 표면을 참조하는지 확인한다.
+`preview:check`는 정적 미리보기 페이지가 공통 스타일 entry와 핵심 토큰/컴포넌트 표면을 참조하는지 확인하고 `styles:parity:check`를 호출한다. parity gate는 Svelte component의 hover, focus, disabled, ARIA, data 상태 selector와 declaration이 배포용 `components.css`에 빠지지 않았는지 검사한다.
 `storybook:check`는 Storybook 설정, scripts, devDependencies, overview story가 함께 유지되는지 확인한다.
 `a11y:check`는 Storybook Accessibility addon이 `error` 게이트로 유지되는지 확인한다.
 `package:build`는 `dist/` package surface를 생성한다.

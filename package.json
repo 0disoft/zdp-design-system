@@ -1,6 +1,6 @@
 {
   "name": "zdp-design-system",
-  "version": "0.46.21",
+  "version": "0.46.22",
   "private": false,
   "license": "MIT",
   "type": "module",
@@ -53,7 +53,8 @@
     "consumer:check": "bun scripts/check-consumer-contract.ts",
     "share-icons:generate": "bun scripts/generate-share.ts",
     "share-icons:check": "bun scripts/generate-share.ts --check && bun scripts/check-share-icons.ts",
-    "preview:check": "bun scripts/check-preview.ts",
+    "preview:check": "bun scripts/check-preview.ts && bun run styles:parity:check",
+    "styles:parity:check": "bun scripts/check-component-style-parity.ts",
     "a11y:check": "bun scripts/check-storybook-a11y.ts",
     "browser:check": "node scripts/check-browser-accessibility.mjs",
     "type:check": "svelte-check --tsconfig ./tsconfig.json",
