@@ -4762,3 +4762,33 @@
     block-size: auto;
   }
 }
+
+@media (forced-colors: active) {
+  /* Accessibility override: forced colors must outrank Svelte-scoped component state rules. */
+  :is([class^='zdp-'], [class*=' zdp-']):focus-visible {
+    border-color: Highlight !important;
+    outline: 2px solid Highlight !important;
+    outline-offset: 2px !important;
+  }
+
+  :is([class^='zdp-'], [class*=' zdp-']):is(:disabled, [aria-disabled='true']) {
+    border-color: GrayText !important;
+    color: GrayText !important;
+    opacity: 1 !important;
+  }
+
+  :is([class^='zdp-'], [class*=' zdp-']):is(
+      [aria-checked='true'],
+      [aria-selected='true'],
+      [aria-current],
+      [data-active='true'],
+      [data-selected='true']
+    ),
+  .zdp-choice__input:checked + .zdp-choice__mark,
+  .zdp-switch__input:checked + .zdp-switch__track {
+    background: Highlight !important;
+    border-color: Highlight !important;
+    color: HighlightText !important;
+    forced-color-adjust: none !important;
+  }
+}

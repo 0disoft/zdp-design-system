@@ -8,6 +8,7 @@ import { createServer } from 'vite';
 import { verifyFoundationAndFormContracts } from './browser/check-foundation-and-forms.mjs';
 import { verifyModalContracts, verifyNestedModalContracts } from './browser/check-modals.mjs';
 import { verifyOverlayContracts, verifyShadowOverlayContracts } from './browser/check-overlays.mjs';
+import { verifyResponsiveAndForcedColorContracts } from './browser/check-responsive-and-forced-colors.mjs';
 
 const root = process.cwd();
 const cacheDir = await mkdtemp(join(tmpdir(), 'zdp-design-system-browser-'));
@@ -53,6 +54,7 @@ try {
   await verifyModalContracts(page);
   await verifyShadowOverlayContracts(page);
   await verifyNestedModalContracts(page);
+  await verifyResponsiveAndForcedColorContracts(page);
 
   console.log('Design system browser accessibility check passed.');
 } finally {

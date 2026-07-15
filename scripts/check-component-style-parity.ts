@@ -34,6 +34,7 @@ const componentFiles = (await readdir(componentDirectory, { withFileTypes: true 
   .map((entry) => entry.name)
   .sort((left, right) => left.localeCompare(right));
 const sharedRules = toSelectorRules(extractCssRules(await readFile(sharedStylePath, 'utf8')));
+assertSharedForcedColorContract(sharedRules);
 const failures: ParityIssue[] = [];
 let styledComponentCount = 0;
 let paritySelectorCount = 0;
@@ -172,6 +173,44 @@ function assertCheckerContract(): void {
     ).length,
     0,
     'Matching responsive context and declarations must satisfy parity.'
+  );
+}
+
+function assertSharedForcedColorContract(sharedRules: readonly SelectorRule[]): void {
+  const requiredRules = toSelectorRules(
+    extractCssRules(`
+      @media (forced-colors: active) {
+        :is([class^='zdp-'], [class*=' zdp-']):focus-visible {
+          border-color: Highlight !important;
+          outline: 2px solid Highlight !important;
+          outline-offset: 2px !important;
+        }
+
+        :is([class^='zdp-'], [class*=' zdp-']):is(:disabled, [aria-disabled='true']) {
+          border-color: GrayText !important;
+          color: GrayText !important;
+          opacity: 1 !important;
+        }
+
+        :is([class^='zdp-'], [class*=' zdp-']):is(
+            [aria-checked='true'],
+            [aria-selected='true'],
+            [aria-current],
+            [data-active='true'],
+            [data-selected='true']
+          ) {
+          background: Highlight !important;
+          border-color: Highlight !important;
+          color: HighlightText !important;
+          forced-color-adjust: none !important;
+        }
+      }
+    `)
+  ).filter(isParityRule);
+  assert.deepEqual(
+    findParityIssues('components.css', requiredRules, sharedRules),
+    [],
+    'Shared CSS must preserve focus, disabled, and selected forced-color contracts.'
   );
 }
 

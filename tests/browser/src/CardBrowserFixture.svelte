@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Button from '../../../src/lib/components/Button.svelte';
   import Card from '../../../src/lib/components/Card.svelte';
   import CardHeader from '../../../src/lib/components/CardHeader.svelte';
   import Combobox from '../../../src/lib/components/Combobox.svelte';
@@ -7,6 +8,8 @@
   import ModalBoundaryFixture from './ModalBoundaryFixture.svelte';
   import Popover from '../../../src/lib/components/Popover.svelte';
   import Sheet from '../../../src/lib/components/Sheet.svelte';
+  import SegmentedControl from '../../../src/lib/components/SegmentedControl.svelte';
+  import TableToolbar from '../../../src/lib/components/TableToolbar.svelte';
   import TermSheet from '../../../src/lib/components/TermSheet.svelte';
   import Tooltip from '../../../src/lib/components/Tooltip.svelte';
   import Tabs from '../../../src/lib/components/Tabs.svelte';
@@ -27,6 +30,10 @@
     { id: 'delete', label: 'Delete release', href: '#delete-release', disabled: true },
     { id: 'archive', label: 'Archive release' }
   ];
+  const forcedColorItems = [
+    { id: 'selected', label: 'Selected contrast' },
+    { id: 'available', label: 'Available contrast' }
+  ] as const;
   let ownerValue = '';
   let ownerQuery = '';
   let ownerSelectionCount = 0;
@@ -78,6 +85,23 @@
   <Tabs items={collidingTabItems} selectedId="release notes" ariaLabel="Release views" idPrefix="browser tabs">
     <p>Selected release view</p>
   </Tabs>
+
+  <TableToolbar
+    title="Browser results"
+    summary="Two rows"
+    ariaLabel="Browser table tools"
+    densityItems={[]}
+  >
+    <svelte:fragment slot="actions">
+      <Button size="sm">Export results</Button>
+    </svelte:fragment>
+  </TableToolbar>
+
+  <section aria-label="Forced color controls">
+    <Button>Review contrast</Button>
+    <Button disabled>Unavailable contrast action</Button>
+    <SegmentedControl ariaLabel="Contrast choices" items={forcedColorItems} selectedId="selected" />
+  </section>
 
   <Combobox
     id="browser-combobox"

@@ -4,6 +4,10 @@
 
 - No unreleased changes.
 
+## 0.46.25
+
+- Added Chromium coverage for the TableToolbar `48rem` wrapping contract and mobile Sheet safe-area geometry, and preserved visible focus, disabled, and selected states with system colors when forced-colors mode is active.
+
 ## 0.46.24
 
 - Aligned shared mobile Sheet safe-area padding and the TableToolbar `48rem` action breakpoint with component-scoped styles, and expanded style parity checks to cover every retained conditional at-rule context.
