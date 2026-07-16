@@ -1,23 +1,25 @@
-<script context="module" lang="ts">
-  let tooltipIdCounter = 0;
-</script>
-
 <script lang="ts">
   import { onMount } from 'svelte';
 
-  export let text: string;
-  export let placement: 'top' | 'right' | 'bottom' | 'left' = 'top';
-  export let id: string | null = null;
-  export let disabled = false;
+  type Placement = 'top' | 'right' | 'bottom' | 'left';
 
-  let rootElement: HTMLElement | null = null;
-  const fallbackId = `zdp-tooltip-${++tooltipIdCounter}`;
+  interface Props {
+    text: string;
+    placement?: Placement;
+    id?: string | null;
+    disabled?: boolean;
+  }
 
-  let dismissed = false;
-  let pointerInside = false;
+  const componentId = $props.id();
+  const fallbackId = `zdp-tooltip-${componentId}`;
+  let { text, placement = 'top', id = null, disabled = false }: Props = $props();
 
-  $: tooltipId = id ?? fallbackId;
-  $: describedBy = disabled ? null : tooltipId;
+  let rootElement = $state<HTMLElement | null>(null);
+  let dismissed = $state(false);
+  let pointerInside = $state(false);
+
+  const tooltipId = $derived(id ?? fallbackId);
+  const describedBy = $derived(disabled ? null : tooltipId);
 
   onMount(() => {
     const root = rootElement;
@@ -80,6 +82,7 @@
   bind:this={rootElement}
 >
   <span class="zdp-tooltip__trigger">
+    <!-- svelte-ignore slot_element_deprecated legacy default slot contract remains public -->
     <slot describedBy={describedBy} />
   </span>
   {#if !disabled}

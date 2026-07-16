@@ -1,42 +1,61 @@
-<script lang="ts" context="module">
-  let nextPopoverInstanceId = 0;
-</script>
-
 <script lang="ts">
   import { toZdpDomId } from '../dom-id';
   import { getZdpActiveElement } from '../focusable';
-  export let open = false;
-  export let idPrefix: string | null = null;
-  export let placement: 'top' | 'right' | 'bottom' | 'left' = 'bottom';
-  export let align: 'start' | 'center' | 'end' = 'start';
-  export let labelledBy: string | null = null;
-  export let describedBy: string | null = null;
-  export let role: 'dialog' | 'group' | null = 'dialog';
-  export let closeOnEscape = true;
-  export let closeOnOutside = true;
-  export let onOpenChange: ((open: boolean) => void) | null = null;
 
-  const fallbackIdPrefix = `zdp-popover-${++nextPopoverInstanceId}`;
+  type Placement = 'top' | 'right' | 'bottom' | 'left';
+  type Alignment = 'start' | 'center' | 'end';
+  type PopoverRole = 'dialog' | 'group' | null;
 
-  let rootElement: HTMLElement | null = null;
-  let previousFocusElement: HTMLElement | null = null;
-  let knownOpenState = false;
-  let restoreFocusAfterClose = false;
+  interface Props {
+    open?: boolean;
+    idPrefix?: string | null;
+    placement?: Placement;
+    align?: Alignment;
+    labelledBy?: string | null;
+    describedBy?: string | null;
+    role?: PopoverRole;
+    closeOnEscape?: boolean;
+    closeOnOutside?: boolean;
+    onOpenChange?: ((open: boolean) => void) | null;
+  }
 
-  $: resolvedIdPrefix = toDomId(idPrefix ?? fallbackIdPrefix);
-  $: triggerId = `${resolvedIdPrefix}-trigger`;
-  $: panelId = `${resolvedIdPrefix}-panel`;
+  const componentId = $props.id();
+  const fallbackIdPrefix = `zdp-popover-${componentId}`;
+  let {
+    open = $bindable(false),
+    idPrefix = null,
+    placement = 'bottom',
+    align = 'start',
+    labelledBy = null,
+    describedBy = null,
+    role = 'dialog',
+    closeOnEscape = true,
+    closeOnOutside = true,
+    onOpenChange = null
+  }: Props = $props();
 
-  $: if (open !== knownOpenState) {
+  let rootElement = $state<HTMLElement | null>(null);
+  let previousFocusElement = $state<HTMLElement | null>(null);
+  let knownOpenState = $state(false);
+  let restoreFocusAfterClose = $state(false);
+
+  const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
+  const triggerId = $derived(`${resolvedIdPrefix}-trigger`);
+  const panelId = $derived(`${resolvedIdPrefix}-panel`);
+
+  $effect(() => {
+    if (open === knownOpenState) {
+      return;
+    }
+
     knownOpenState = open;
-
     if (open) {
       capturePreviousFocus();
     } else if (restoreFocusAfterClose) {
       restorePreviousFocus();
       restoreFocusAfterClose = false;
     }
-  }
+  });
 
   function setOpen(nextOpen: boolean): void {
     if (open === nextOpen) {
@@ -110,6 +129,7 @@
   bind:this={rootElement}
 >
   <span class="zdp-popover__trigger" id={triggerId}>
+    <!-- svelte-ignore slot_element_deprecated legacy named slot contract remains public -->
     <slot name="trigger" open={open} toggle={toggle} close={close} panelId={panelId} triggerId={triggerId} />
   </span>
   {#if open}
@@ -121,6 +141,7 @@
       aria-describedby={describedBy ?? undefined}
       tabindex="-1"
     >
+      <!-- svelte-ignore slot_element_deprecated legacy default slot contract remains public -->
       <slot open={open} close={close} panelId={panelId} triggerId={triggerId} />
     </div>
   {/if}

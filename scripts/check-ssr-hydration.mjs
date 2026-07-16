@@ -89,7 +89,19 @@ try {
   render(fixtureModule.default);
   renderedBody = render(fixtureModule.default).body;
 
-  for (const idPrefix of ['zdp-status-toast-', 'zdp-tabs-', 'zdp-combobox-', 'zdp-term-sheet-']) {
+  for (const idPrefix of [
+    'zdp-status-toast-',
+    'zdp-tabs-',
+    'zdp-combobox-',
+    'zdp-disclosure-',
+    'zdp-locale-switcher-',
+    'zdp-menu-',
+    'zdp-popover-',
+    'zdp-segmented-control-',
+    'zdp-text-scale-control-',
+    'zdp-term-sheet-',
+    'zdp-tooltip-'
+  ]) {
     assert.ok(renderedBody.includes(idPrefix), `Second SSR render must include generated ${idPrefix} ids.`);
   }
 
@@ -154,6 +166,53 @@ try {
   await page.getByRole('option', { name: 'Beta' }).click();
   assert.equal(await page.getByTestId('combobox-bound-value').textContent(), 'beta', 'Combobox bind:value must update.');
   assert.equal(await page.getByTestId('combobox-bound-query').textContent(), 'Beta', 'Combobox bind:query must update.');
+
+  await page.getByRole('button', { name: 'Hydration disclosure' }).click();
+  assert.equal(await page.getByTestId('disclosure-bound-open').textContent(), 'closed', 'Disclosure bind:open must update.');
+
+  const localeSwitcher = page.getByRole('radiogroup', { name: 'Hydration language' });
+  await localeSwitcher.getByRole('radio', { name: 'Korean' }).click();
+  assert.equal(await page.getByTestId('locale-bound-value').textContent(), 'ko', 'LocaleSwitcher bind:value must update.');
+
+  const segmentedControl = page.getByRole('radiogroup', { name: 'Hydration view' });
+  await segmentedControl.getByRole('radio', { name: 'Grid' }).click();
+  assert.equal(await page.getByTestId('segmented-bound-value').textContent(), 'grid', 'SegmentedControl binding must update.');
+
+  const textScaleControl = page.getByRole('radiogroup', { name: 'Hydration text size' });
+  await textScaleControl.getByRole('radio', { name: 'Large text size' }).click();
+  assert.equal(await page.getByTestId('text-scale-bound-value').textContent(), 'large', 'TextScaleControl binding must update.');
+
+  const menuTrigger = page.getByRole('button', { name: 'Hydration menu' });
+  await menuTrigger.click();
+  const menuPanelId = await menuTrigger.getAttribute('aria-controls');
+  assert.ok(menuPanelId, 'Hydrated Menu must expose its generated panel id while open.');
+  assert.equal(await page.locator(`[id="${menuPanelId}"]`).count(), 1, 'Menu aria-controls must resolve once.');
+  await page.getByRole('menuitem', { name: 'Review' }).click();
+  assert.equal(await page.getByTestId('menu-bound-open').textContent(), 'closed', 'Menu bind:open must update.');
+  assert.equal(await page.getByTestId('menu-selection').textContent(), 'review', 'Menu selection callback must update.');
+  await page.waitForFunction(() => document.activeElement?.getAttribute('aria-label') === 'Hydration menu');
+
+  const popoverTrigger = page.getByTestId('popover-trigger');
+  await popoverTrigger.click();
+  const popoverPanelId = await popoverTrigger.getAttribute('aria-controls');
+  assert.ok(popoverPanelId, 'Hydrated Popover trigger must expose its generated panel id while open.');
+  assert.equal(await page.locator(`[id="${popoverPanelId}"]`).count(), 1, 'Popover aria-controls must resolve once.');
+  await page.getByRole('button', { name: 'Close hydration popover' }).click();
+  assert.equal(await page.getByTestId('popover-bound-open').textContent(), 'closed', 'Popover bind:open must update.');
+  await page.waitForFunction(() => document.activeElement?.textContent?.trim() === 'Hydration popover');
+
+  const tooltipTrigger = page.getByTestId('tooltip-trigger');
+  const tooltipId = await tooltipTrigger.getAttribute('aria-describedby');
+  assert.ok(tooltipId, 'Hydrated Tooltip trigger must expose its generated description id.');
+  assert.equal(await page.locator(`[id="${tooltipId}"]`).count(), 1, 'Tooltip aria-describedby must resolve once.');
+  await tooltipTrigger.focus();
+  await tooltipTrigger.press('Escape');
+  assert.equal(
+    await tooltipTrigger.evaluate((element) => element.closest('.zdp-tooltip')?.getAttribute('data-dismissed')),
+    'true',
+    'Tooltip Escape dismissal must survive hydration.'
+  );
+  assert.equal(await tooltipTrigger.evaluate((element) => document.activeElement === element), true, 'Tooltip must keep focus.');
 
   assert.deepEqual(hydrationWarnings, [], `Hydration emitted browser warnings: ${hydrationWarnings.join('\n')}`);
   console.log('Design system SSR hydration check passed.');

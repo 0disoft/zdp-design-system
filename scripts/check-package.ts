@@ -869,7 +869,7 @@ async function checkMenuPopoverInteractionContract(): Promise<void> {
     'moveActiveItem',
     'focusActiveItem',
     'restorePreviousFocus',
-    'enabledItems = items.filter((item) => !item.disabled)',
+    'const enabledItems = $derived(items.filter((item) => !item.disabled))',
     'tabindex={item.id === activeItemId && !item.disabled ? 0 : -1}',
     '<svelte:document onclick={handleDocumentClick} />'
   ]) {

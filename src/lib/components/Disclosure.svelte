@@ -1,23 +1,30 @@
-<script lang="ts" context="module">
-  let nextDisclosureInstanceId = 0;
-</script>
-
 <script lang="ts">
   import { toZdpDomId } from '../dom-id';
   import type { ZdpDisclosureHeadingLevel } from '../disclosure';
 
-  export let open = false;
-  export let disabled = false;
-  export let id: string | null = null;
-  export let title = 'View details';
-  export let headingLevel: ZdpDisclosureHeadingLevel | null = null;
-  export let onOpenChange: ((open: boolean) => void) | null = null;
+  interface Props {
+    open?: boolean;
+    disabled?: boolean;
+    id?: string | null;
+    title?: string;
+    headingLevel?: ZdpDisclosureHeadingLevel | null;
+    onOpenChange?: ((open: boolean) => void) | null;
+  }
 
-  const fallbackId = `zdp-disclosure-${++nextDisclosureInstanceId}`;
+  const componentId = $props.id();
+  const fallbackId = `zdp-disclosure-${componentId}`;
+  let {
+    open = $bindable(false),
+    disabled = false,
+    id = null,
+    title = 'View details',
+    headingLevel = null,
+    onOpenChange = null
+  }: Props = $props();
 
-  $: resolvedId = toDomId(id ?? fallbackId);
-  $: triggerId = `${resolvedId}-trigger`;
-  $: panelId = `${resolvedId}-panel`;
+  const resolvedId = $derived(toDomId(id ?? fallbackId));
+  const triggerId = $derived(`${resolvedId}-trigger`);
+  const panelId = $derived(`${resolvedId}-panel`);
 
   function setOpen(nextOpen: boolean): void {
     if (disabled || open === nextOpen) {
@@ -50,6 +57,7 @@
         onclick={handleToggle}
       >
         <span class="zdp-disclosure__title">
+          <!-- svelte-ignore slot_element_deprecated legacy named slot contract remains public -->
           <slot name="title">{title}</slot>
         </span>
         <span class="zdp-disclosure__mark" aria-hidden="true">{open ? '-' : '+'}</span>
@@ -66,6 +74,7 @@
       onclick={handleToggle}
     >
       <span class="zdp-disclosure__title">
+        <!-- svelte-ignore slot_element_deprecated legacy named slot contract remains public -->
         <slot name="title">{title}</slot>
       </span>
       <span class="zdp-disclosure__mark" aria-hidden="true">{open ? '-' : '+'}</span>
@@ -74,6 +83,7 @@
 
   {#if open}
     <div class="zdp-disclosure__panel" id={panelId} role="group" aria-labelledby={triggerId}>
+      <!-- svelte-ignore slot_element_deprecated legacy default slot contract remains public -->
       <slot />
     </div>
   {/if}

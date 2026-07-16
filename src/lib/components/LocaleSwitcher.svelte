@@ -1,7 +1,3 @@
-<script lang="ts" context="module">
-  let nextLocaleSwitcherInstanceId = 0;
-</script>
-
 <script lang="ts">
   import { toZdpDomId } from '../dom-id';
   import {
@@ -10,23 +6,34 @@
     type ZdpLocaleSwitcherSize
   } from '../preferences';
 
-  export let value = 'en';
-  export let options: readonly ZdpLocaleSwitcherOption[] = zdpLocaleSwitcherOptions;
-  export let ariaLabel = 'Language';
-  export let idPrefix: string | null = null;
-  export let size: ZdpLocaleSwitcherSize = 'md';
-  export let disabled = false;
-  export let onChange:
-    | ((event: MouseEvent | KeyboardEvent, option: ZdpLocaleSwitcherOption) => void)
-    | null = null;
+  interface Props {
+    value?: string;
+    options?: readonly ZdpLocaleSwitcherOption[];
+    ariaLabel?: string;
+    idPrefix?: string | null;
+    size?: ZdpLocaleSwitcherSize;
+    disabled?: boolean;
+    onChange?: ((event: MouseEvent | KeyboardEvent, option: ZdpLocaleSwitcherOption) => void) | null;
+  }
 
-  const fallbackIdPrefix = `zdp-locale-switcher-${++nextLocaleSwitcherInstanceId}`;
+  const componentId = $props.id();
+  const fallbackIdPrefix = `zdp-locale-switcher-${componentId}`;
+  let {
+    value = $bindable('en'),
+    options = zdpLocaleSwitcherOptions,
+    ariaLabel = 'Language',
+    idPrefix = null,
+    size = 'md',
+    disabled = false,
+    onChange = null
+  }: Props = $props();
 
-  $: enabledOptions = options.filter((option) => !option.disabled);
-  $: activeOption =
-    enabledOptions.find((option) => option.value === value) ?? enabledOptions[0] ?? options[0] ?? null;
-  $: activeValue = activeOption?.value ?? value;
-  $: resolvedIdPrefix = toDomId(idPrefix ?? fallbackIdPrefix);
+  const enabledOptions = $derived(options.filter((option) => !option.disabled));
+  const activeOption = $derived(
+    enabledOptions.find((option) => option.value === value) ?? enabledOptions[0] ?? options[0] ?? null
+  );
+  const activeValue = $derived(activeOption?.value ?? value);
+  const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
 
   function selectOption(event: MouseEvent | KeyboardEvent, option: ZdpLocaleSwitcherOption): void {
     if (disabled || option.disabled) {

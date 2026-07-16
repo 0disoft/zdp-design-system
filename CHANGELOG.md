@@ -4,6 +4,11 @@
 
 - No unreleased changes.
 
+## 0.47.3
+
+- Made Disclosure, LocaleSwitcher, SegmentedControl, TextScaleControl, Menu, Popover, and Tooltip fallback IDs stable across repeated SSR renders and hydration without changing their explicit `id` or `idPrefix` APIs.
+- Expanded the SSR hydration gate to cover their generated ARIA references, bindings, legacy slot props, selection, dismissal, and trigger-focus return behavior.
+
 ## 0.47.2
 
 - Made Tabs, Combobox, and TermSheet fallback IDs stable across repeated SSR renders and hydration while preserving their existing binding and legacy Tabs slot contracts.

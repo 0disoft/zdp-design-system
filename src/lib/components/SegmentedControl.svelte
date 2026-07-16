@@ -1,29 +1,35 @@
-<script lang="ts" context="module">
-  let nextSegmentedControlInstanceId = 0;
-</script>
-
 <script lang="ts">
   import { toZdpDomId } from '../dom-id';
   import type { ZdpSegmentedControlItem, ZdpSegmentedControlSize } from '../segmented';
 
-  export let items: readonly ZdpSegmentedControlItem[] = [];
-  export let selectedId: string | null = null;
-  export let ariaLabel = 'Selection toggle';
-  export let idPrefix: string | null = null;
-  export let size: ZdpSegmentedControlSize = 'md';
-  export let onChange:
-    | ((event: MouseEvent | KeyboardEvent, item: ZdpSegmentedControlItem) => void)
-    | null = null;
+  interface Props {
+    items?: readonly ZdpSegmentedControlItem[];
+    selectedId?: string | null;
+    ariaLabel?: string;
+    idPrefix?: string | null;
+    size?: ZdpSegmentedControlSize;
+    onChange?: ((event: MouseEvent | KeyboardEvent, item: ZdpSegmentedControlItem) => void) | null;
+  }
 
-  const fallbackIdPrefix = `zdp-segmented-control-${++nextSegmentedControlInstanceId}`;
+  const componentId = $props.id();
+  const fallbackIdPrefix = `zdp-segmented-control-${componentId}`;
+  let {
+    items = [],
+    selectedId = $bindable(null),
+    ariaLabel = 'Selection toggle',
+    idPrefix = null,
+    size = 'md',
+    onChange = null
+  }: Props = $props();
 
-  $: selectedItem =
+  const selectedItem = $derived(
     items.find((item) => item.id === selectedId && !item.disabled) ??
     items.find((item) => !item.disabled) ??
     items[0] ??
-    null;
-  $: activeId = selectedItem?.id ?? '';
-  $: resolvedIdPrefix = toDomId(idPrefix ?? fallbackIdPrefix);
+    null
+  );
+  const activeId = $derived(selectedItem?.id ?? '');
+  const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
 
   function selectItem(event: MouseEvent | KeyboardEvent, item: ZdpSegmentedControlItem): void {
     if (item.disabled) {

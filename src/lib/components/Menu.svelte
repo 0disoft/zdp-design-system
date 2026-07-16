@@ -1,49 +1,67 @@
-<script lang="ts" context="module">
-  let nextMenuInstanceId = 0;
-</script>
-
 <script lang="ts">
   import { tick } from 'svelte';
   import { toZdpDomId } from '../dom-id';
   import { getZdpActiveElement } from '../focusable';
   import type { ZdpMenuItem } from '../menu';
 
-  export let items: readonly ZdpMenuItem[] = [];
-  export let open = false;
-  export let triggerLabel = 'Menu';
-  export let idPrefix: string | null = null;
-  export let placement: 'top' | 'right' | 'bottom' | 'left' = 'bottom';
-  export let align: 'start' | 'center' | 'end' = 'end';
-  export let onOpenChange: ((open: boolean) => void) | null = null;
-  export let onSelect: ((event: MouseEvent, item: ZdpMenuItem) => void) | null = null;
+  type Placement = 'top' | 'right' | 'bottom' | 'left';
+  type Alignment = 'start' | 'center' | 'end';
 
-  const fallbackIdPrefix = `zdp-menu-${++nextMenuInstanceId}`;
+  interface Props {
+    items?: readonly ZdpMenuItem[];
+    open?: boolean;
+    triggerLabel?: string;
+    idPrefix?: string | null;
+    placement?: Placement;
+    align?: Alignment;
+    onOpenChange?: ((open: boolean) => void) | null;
+    onSelect?: ((event: MouseEvent, item: ZdpMenuItem) => void) | null;
+  }
 
-  let rootElement: HTMLElement | null = null;
-  let triggerElement: HTMLButtonElement | null = null;
-  let panelElement: HTMLElement | null = null;
-  let previousFocusElement: HTMLElement | null = null;
-  let knownOpenState = false;
-  let restoreFocusAfterClose = false;
-  let focusIntent: 'first' | 'last' | 'current' = 'first';
-  let activeItemId = '';
+  const componentId = $props.id();
+  const fallbackIdPrefix = `zdp-menu-${componentId}`;
+  let {
+    items = [],
+    open = $bindable(false),
+    triggerLabel = 'Menu',
+    idPrefix = null,
+    placement = 'bottom',
+    align = 'end',
+    onOpenChange = null,
+    onSelect = null
+  }: Props = $props();
 
-  $: enabledItems = items.filter((item) => !item.disabled);
-  $: resolvedIdPrefix = toDomId(idPrefix ?? fallbackIdPrefix);
-  $: triggerId = `${resolvedIdPrefix}-trigger`;
-  $: panelId = `${resolvedIdPrefix}-panel`;
-  $: activeItemId = resolveActiveItemId(activeItemId, enabledItems);
+  let rootElement = $state<HTMLElement | null>(null);
+  let triggerElement = $state<HTMLButtonElement | null>(null);
+  let panelElement = $state<HTMLElement | null>(null);
+  let previousFocusElement = $state<HTMLElement | null>(null);
+  let knownOpenState = $state(false);
+  let restoreFocusAfterClose = $state(false);
+  let focusIntent = $state<'first' | 'last' | 'current'>('first');
+  let activeItemId = $state('');
 
-  $: if (open !== knownOpenState) {
+  const enabledItems = $derived(items.filter((item) => !item.disabled));
+  const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
+  const triggerId = $derived(`${resolvedIdPrefix}-trigger`);
+  const panelId = $derived(`${resolvedIdPrefix}-panel`);
+
+  $effect.pre(() => {
+    activeItemId = resolveActiveItemId(activeItemId, enabledItems);
+  });
+
+  $effect(() => {
+    if (open === knownOpenState) {
+      return;
+    }
+
     knownOpenState = open;
-
     if (open) {
       void handleMenuOpened();
     } else if (restoreFocusAfterClose) {
       restorePreviousFocus();
       restoreFocusAfterClose = false;
     }
-  }
+  });
 
   function setOpen(nextOpen: boolean): void {
     if (open === nextOpen) {
@@ -237,6 +255,7 @@
     onkeydown={handleTriggerKeydown}
   >
     <span class="zdp-menu__trigger-label">
+      <!-- svelte-ignore slot_element_deprecated legacy named slot contract remains public -->
       <slot name="trigger">{triggerLabel}</slot>
     </span>
     <span class="zdp-menu__trigger-mark" aria-hidden="true"></span>

@@ -1,7 +1,3 @@
-<script lang="ts" context="module">
-  let nextTextScaleControlInstanceId = 0;
-</script>
-
 <script lang="ts">
   import { toZdpDomId } from '../dom-id';
   import {
@@ -11,23 +7,34 @@
     type ZdpTextScaleControlSize
   } from '../preferences';
 
-  export let value: ZdpTextScale = 'base';
-  export let options: readonly ZdpTextScaleControlOption[] = zdpTextScaleControlOptions;
-  export let ariaLabel = 'Text size';
-  export let idPrefix: string | null = null;
-  export let size: ZdpTextScaleControlSize = 'md';
-  export let disabled = false;
-  export let onChange:
-    | ((event: MouseEvent | KeyboardEvent, option: ZdpTextScaleControlOption) => void)
-    | null = null;
+  interface Props {
+    value?: ZdpTextScale;
+    options?: readonly ZdpTextScaleControlOption[];
+    ariaLabel?: string;
+    idPrefix?: string | null;
+    size?: ZdpTextScaleControlSize;
+    disabled?: boolean;
+    onChange?: ((event: MouseEvent | KeyboardEvent, option: ZdpTextScaleControlOption) => void) | null;
+  }
 
-  const fallbackIdPrefix = `zdp-text-scale-control-${++nextTextScaleControlInstanceId}`;
+  const componentId = $props.id();
+  const fallbackIdPrefix = `zdp-text-scale-control-${componentId}`;
+  let {
+    value = $bindable<ZdpTextScale>('base'),
+    options = zdpTextScaleControlOptions,
+    ariaLabel = 'Text size',
+    idPrefix = null,
+    size = 'md',
+    disabled = false,
+    onChange = null
+  }: Props = $props();
 
-  $: enabledOptions = options.filter((option) => !option.disabled);
-  $: activeOption =
-    enabledOptions.find((option) => option.value === value) ?? enabledOptions[0] ?? options[0] ?? null;
-  $: activeValue = activeOption?.value ?? value;
-  $: resolvedIdPrefix = toDomId(idPrefix ?? fallbackIdPrefix);
+  const enabledOptions = $derived(options.filter((option) => !option.disabled));
+  const activeOption = $derived(
+    enabledOptions.find((option) => option.value === value) ?? enabledOptions[0] ?? options[0] ?? null
+  );
+  const activeValue = $derived(activeOption?.value ?? value);
+  const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
 
   function selectOption(event: MouseEvent | KeyboardEvent, option: ZdpTextScaleControlOption): void {
     if (disabled || option.disabled) {
