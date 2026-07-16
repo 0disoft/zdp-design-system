@@ -11,6 +11,7 @@
   import Popover from '../../../src/lib/components/Popover.svelte';
   import Sheet from '../../../src/lib/components/Sheet.svelte';
   import SegmentedControl from '../../../src/lib/components/SegmentedControl.svelte';
+  import ShareDock from '../../../src/lib/components/ShareDock.svelte';
   import StatusToast from '../../../src/lib/components/StatusToast.svelte';
   import TableToolbar from '../../../src/lib/components/TableToolbar.svelte';
   import TermSheet from '../../../src/lib/components/TermSheet.svelte';
@@ -19,6 +20,7 @@
   import Toast from '../../../src/lib/components/Toast.svelte';
   import type { ZdpComboboxOption } from '../../../src/lib/combobox';
   import type { ZdpMenuItem } from '../../../src/lib/menu';
+  import type { ZdpShareDockItem } from '../../../src/lib/share';
   import type { ZdpTermSheetTerm } from '../../../src/lib/term';
   import type { ZdpStatusToastItem } from '../../../src/lib/toast';
 
@@ -42,6 +44,10 @@
   const collidingToastItems: readonly ZdpStatusToastItem[] = [
     { id: 'sync failed', title: 'Sync failed', message: 'Try again.' }
   ];
+  const browserShareItems: readonly ZdpShareDockItem[] = [
+    { id: 'copy', label: 'Copy browser link', icon: 'copy' },
+    { id: 'device', label: 'Share from browser', icon: 'device' }
+  ];
   let ownerValue = '';
   let ownerQuery = '';
   let ownerSelectionCount = 0;
@@ -50,6 +56,7 @@
   let requiredOwnerSelectionCount = 0;
   let confirmActionDisabled = false;
   let confirmActionCount = 0;
+  let shareDockPlacement: 'side' | 'rail' | 'bottom' | 'inline' = 'inline';
   let dialogOpen = false;
   let sheetOpen = false;
   let termSheetOpen = false;
@@ -163,6 +170,15 @@
     <StatusToast placement="inline" ariaLabel="Primary status notifications" items={collidingToastItems} />
     <StatusToast placement="inline" ariaLabel="Secondary status notifications" items={collidingToastItems} />
   </section>
+
+  <label for="browser-share-dock-placement">Share dock placement</label>
+  <select id="browser-share-dock-placement" data-testid="share-dock-placement" bind:value={shareDockPlacement}>
+    <option value="side">Side</option>
+    <option value="rail">Rail</option>
+    <option value="bottom">Bottom</option>
+    <option value="inline">Inline</option>
+  </select>
+  <ShareDock placement={shareDockPlacement} ariaLabel="Browser share actions" items={browserShareItems} />
 
   <Menu
     bind:open={menuOpen}

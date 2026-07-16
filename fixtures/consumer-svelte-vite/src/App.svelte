@@ -23,10 +23,8 @@
       <CardHeader id="consumer-card-title">Package surface</CardHeader>
     </svelte:fragment>
 
-    <Tooltip label="패키지 export 확인">
-      {#snippet trigger({ describedBy })}
-        <Button ariaDescribedBy={describedBy}>확인</Button>
-      {/snippet}
+    <Tooltip text="패키지 export 확인" let:describedBy>
+      <Button ariaDescribedBy={describedBy}>확인</Button>
     </Tooltip>
 
     <p>

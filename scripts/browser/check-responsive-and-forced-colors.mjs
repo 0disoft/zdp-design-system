@@ -7,6 +7,7 @@ export async function verifyResponsiveAndForcedColorContracts(page) {
   try {
     await verifyTableToolbarBreakpoint(page);
     await verifySheetSafeAreaGeometry(page);
+    await verifyShareDockPlacements(page);
     await verifyForcedColorStates(page);
   } finally {
     await page.evaluate(() => {
@@ -19,6 +20,90 @@ export async function verifyResponsiveAndForcedColorContracts(page) {
     await page.emulateMedia({ forcedColors: 'none' });
     await page.setViewportSize(initialViewport);
   }
+}
+
+async function verifyShareDockPlacements(page) {
+  const placementControl = page.getByTestId('share-dock-placement');
+  const dock = page.getByRole('complementary', { name: 'Browser share actions' });
+  const list = dock.locator('.zdp-share-dock__list');
+
+  try {
+    await page.setViewportSize({ width: 1200, height: 900 });
+
+    await placementControl.selectOption('inline');
+    assert.equal(await dock.evaluate((element) => getComputedStyle(element).position), 'static');
+    assert.equal(await list.evaluate((element) => getComputedStyle(element).display), 'flex');
+    assert.equal(await dock.locator('.zdp-tooltip--top').count(), 2);
+
+    await placementControl.selectOption('rail');
+    const railStyle = await dock.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return { position: style.position, top: style.top };
+    });
+    assert.equal(railStyle.position, 'sticky');
+    assert.notEqual(railStyle.top, 'auto');
+    assert.equal(await list.evaluate((element) => getComputedStyle(element).display), 'grid');
+    assert.equal(await dock.locator('.zdp-tooltip--left').count(), 2);
+
+    await placementControl.selectOption('side');
+    const sideGeometry = await measureShareDock(dock, list);
+    assert.equal(sideGeometry.position, 'fixed');
+    assert.equal(Math.round(sideGeometry.top), 360, 'Wide side ShareDock must remain at 40% of viewport height.');
+    assert.equal(sideGeometry.listDisplay, 'grid');
+    assert.equal(await dock.locator('.zdp-tooltip--left').count(), 2);
+
+    await page.evaluate(() => {
+      const root = document.documentElement;
+      root.style.setProperty('--zdp-viewport-safe-inline-start', '31px');
+      root.style.setProperty('--zdp-viewport-safe-inline-end', '29px');
+      root.style.setProperty('--zdp-viewport-safe-block-end', '37px');
+    });
+    await page.setViewportSize({ width: 900, height: 900 });
+    const responsiveSideGeometry = await measureShareDock(dock, list);
+    assert.equal(responsiveSideGeometry.position, 'fixed');
+    assert.equal(responsiveSideGeometry.listDisplay, 'flex');
+    assert.equal(Math.round(responsiveSideGeometry.left), 31);
+    assert.equal(Math.round(900 - responsiveSideGeometry.right), 29);
+    assert.equal(Math.round(900 - responsiveSideGeometry.bottom), 37);
+
+    await placementControl.selectOption('rail');
+    const responsiveRailGeometry = await measureShareDock(dock, list);
+    assert.equal(responsiveRailGeometry.position, 'sticky');
+    assert.equal(responsiveRailGeometry.listDisplay, 'flex');
+    assert.ok(
+      responsiveRailGeometry.width > 800,
+      'Responsive rail ShareDock must expand across its available inline size.'
+    );
+
+    await page.setViewportSize({ width: 640, height: 900 });
+    await placementControl.selectOption('bottom');
+    const bottomGeometry = await measureShareDock(dock, list);
+    assert.equal(bottomGeometry.position, 'fixed');
+    assert.equal(bottomGeometry.listDisplay, 'flex');
+    assert.equal(Math.round(900 - bottomGeometry.bottom), 37);
+    assert.equal(await dock.locator('.zdp-tooltip--top').count(), 2);
+  } finally {
+    await placementControl.selectOption('inline');
+  }
+}
+
+async function measureShareDock(dock, list) {
+  const listDisplay = await list.evaluate((element) => getComputedStyle(element).display);
+
+  return dock.evaluate((element, measuredListDisplay) => {
+    const rect = element.getBoundingClientRect();
+    const style = getComputedStyle(element);
+
+    return {
+      bottom: rect.bottom,
+      left: rect.left,
+      listDisplay: measuredListDisplay,
+      position: style.position,
+      right: rect.right,
+      top: rect.top,
+      width: rect.width
+    };
+  }, listDisplay);
 }
 
 async function verifyTableToolbarBreakpoint(page) {
