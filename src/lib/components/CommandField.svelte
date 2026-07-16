@@ -39,6 +39,12 @@
   $: resolvedErrorMessageId = invalid && errorMessageId ? errorMessageId : null;
   $: hasShortcut = shortcutKeys.length > 0;
   $: inputAriaLabel = label ? undefined : ariaLabel ?? 'Search';
+  $: hasComboboxContract =
+    ariaAutocomplete !== null ||
+    ariaControls !== null ||
+    ariaExpanded !== null ||
+    ariaActivedescendant !== null;
+  $: resolvedAriaExpanded = hasComboboxContract ? ariaExpanded ?? false : null;
 
   function handleInput(event: Event): void {
     value = (event.currentTarget as HTMLInputElement).value;
@@ -79,6 +85,7 @@
       {value}
       placeholder={placeholder ?? undefined}
       autocomplete={autocomplete ?? undefined}
+      role={hasComboboxContract ? 'combobox' : undefined}
       aria-label={inputAriaLabel}
       aria-describedby={ariaDescribedBy ?? undefined}
       aria-errormessage={resolvedErrorMessageId ?? undefined}
@@ -86,7 +93,8 @@
       aria-keyshortcuts={ariaKeyShortcuts ?? undefined}
       aria-autocomplete={ariaAutocomplete ?? undefined}
       aria-controls={ariaControls ?? undefined}
-      aria-expanded={ariaExpanded ?? undefined}
+      aria-expanded={resolvedAriaExpanded ?? undefined}
+      aria-haspopup={hasComboboxContract ? 'listbox' : undefined}
       aria-activedescendant={ariaActivedescendant ?? undefined}
       {disabled}
       readonly={readonly}

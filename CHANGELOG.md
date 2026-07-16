@@ -4,6 +4,12 @@
 
 - No unreleased changes.
 
+## 0.47.1
+
+- Added a rendered Storybook axe gate that audits every story in headless Chromium and fixed the duplicate landmark names and incomplete CommandField combobox semantics it exposed.
+- Made StatusToast fallback IDs stable across SSR and hydration, with a repeated-server-render hydration regression check for generated IDs and ARIA references.
+- Aligned ShareDock side and bottom placement with viewport and safe-area tokens, including asymmetric inset geometry coverage.
+
 ## 0.47.0
 
 - Prevented disabled-in-progress ConfirmAction holds from confirming and added browser regression coverage for timer cancellation.

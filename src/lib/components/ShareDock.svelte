@@ -142,7 +142,7 @@
   .zdp-share-dock--side {
     position: fixed;
     right: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-end), calc((var(--zdp-viewport-inline) - var(--zdp-breakpoint-desktop)) / 2 + var(--zdp-space-4)));
-    top: 40vh;
+    top: calc(var(--zdp-viewport-block) * 0.4);
   }
 
   .zdp-share-dock--rail {
@@ -152,10 +152,10 @@
   }
 
   .zdp-share-dock--bottom {
-    bottom: var(--zdp-space-3);
-    left: var(--zdp-space-3);
+    bottom: max(var(--zdp-space-3), var(--zdp-viewport-safe-block-end));
+    left: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-start));
     position: fixed;
-    right: var(--zdp-space-3);
+    right: max(var(--zdp-space-3), var(--zdp-viewport-safe-inline-end));
   }
 
   .zdp-share-dock--inline {

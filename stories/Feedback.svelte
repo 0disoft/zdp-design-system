@@ -137,7 +137,7 @@
             <AdSlot
               placement="between-sections"
               state="pending"
-              label="Advertisement"
+              label="Light theme advertisement"
               describedBy="feedback-light-ad-desc"
             />
             <p class="story-status" id="feedback-light-ad-desc">
@@ -233,12 +233,17 @@
         <Surface padding="lg">
           <Stack gap="md">
             <h3 id="feedback-dark-ad-title">광고 자리</h3>
-            <AdSlot placement="rail" state="filled" label="Advertisement" minHeight="10rem">
+            <AdSlot placement="rail" state="filled" label="Dark theme rail advertisement" minHeight="10rem">
               <div class="story-ad-creative" aria-hidden="true">
                 <span>Reserved creative</span>
               </div>
             </AdSlot>
-            <AdSlot placement="inline" state="blocked" label="Advertisement" fallbackText="Ad unavailable" />
+            <AdSlot
+              placement="inline"
+              state="blocked"
+              label="Dark theme unavailable advertisement"
+              fallbackText="Ad unavailable"
+            />
           </Stack>
         </Surface>
 

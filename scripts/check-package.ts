@@ -67,6 +67,8 @@ const expectedScripts = {
   'preview:check': 'bun scripts/check-preview.ts && bun run styles:parity:check',
   'styles:parity:check': 'bun scripts/check-component-style-parity.ts',
   'a11y:check': 'bun scripts/check-storybook-a11y.ts',
+  'a11y:runtime:check': 'node scripts/check-storybook-runtime-a11y.mjs',
+  'ssr:hydration:check': 'node scripts/check-ssr-hydration.mjs',
   'type:check': 'svelte-check --tsconfig ./tsconfig.json',
   'package:build': 'bun scripts/generate-tokens.ts && bun scripts/generate-share.ts && bun scripts/build-package.ts',
   'package:check': 'bun scripts/check-package.ts',
@@ -320,7 +322,9 @@ async function checkUserFacingLabelOverrideContract(): Promise<void> {
         "export let label: string | null = 'Search'",
         "export let placeholder: string | null = 'Search query'",
         'placeholder={placeholder ?? undefined}',
-        'aria-label={inputAriaLabel}'
+        'aria-label={inputAriaLabel}',
+        "role={hasComboboxContract ? 'combobox' : undefined}",
+        'aria-expanded={resolvedAriaExpanded ?? undefined}'
       ]
     },
     {
@@ -354,7 +358,8 @@ async function checkUserFacingLabelOverrideContract(): Promise<void> {
     {
       path: 'src/lib/components/StatusToast.svelte',
       requiredTexts: [
-        "export let ariaLabel = 'Status notifications'",
+        "ariaLabel = 'Status notifications'",
+        'const componentId = $props.id()',
         "dismissLabel={item.dismissLabel ?? 'Dismiss notification'}",
         'aria-label={labelledBy ? undefined : ariaLabel}'
       ]

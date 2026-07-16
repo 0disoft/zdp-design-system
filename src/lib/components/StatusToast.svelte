@@ -1,27 +1,36 @@
-<script lang="ts" context="module">
-  let nextStatusToastInstanceId = 0;
-</script>
-
 <script lang="ts">
   import { toZdpDomId } from '../dom-id';
   import Toast from './Toast.svelte';
   import type { ZdpStatusToastItem } from '../toast';
 
-  export let items: readonly ZdpStatusToastItem[] = [];
-  export let placement:
+  type Placement =
     | 'inline'
     | 'top-start'
     | 'top-end'
     | 'bottom-start'
-    | 'bottom-end' = 'bottom-end';
-  const fallbackIdPrefix = `zdp-status-toast-${++nextStatusToastInstanceId}`;
+    | 'bottom-end';
 
-  export let idPrefix = fallbackIdPrefix;
-  export let ariaLabel = 'Status notifications';
-  export let labelledBy: string | null = null;
-  export let onDismiss: ((event: MouseEvent, item: ZdpStatusToastItem) => void) | null = null;
+  interface Props {
+    items?: readonly ZdpStatusToastItem[];
+    placement?: Placement;
+    idPrefix?: string;
+    ariaLabel?: string;
+    labelledBy?: string | null;
+    onDismiss?: ((event: MouseEvent, item: ZdpStatusToastItem) => void) | null;
+  }
 
-  $: resolvedIdPrefix = toZdpDomId(idPrefix, fallbackIdPrefix);
+  const componentId = $props.id();
+  const fallbackIdPrefix = `zdp-status-toast-${componentId}`;
+  let {
+    items = [],
+    placement = 'bottom-end',
+    idPrefix = fallbackIdPrefix,
+    ariaLabel = 'Status notifications',
+    labelledBy = null,
+    onDismiss = null
+  }: Props = $props();
+
+  const resolvedIdPrefix = $derived(toZdpDomId(idPrefix, fallbackIdPrefix));
 
   function titleId(item: ZdpStatusToastItem): string | null {
     return item.title ? `${resolvedIdPrefix}-${toDomId(item.id)}-title` : null;

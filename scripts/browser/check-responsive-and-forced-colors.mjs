@@ -80,6 +80,8 @@ async function verifyShareDockPlacements(page) {
     const bottomGeometry = await measureShareDock(dock, list);
     assert.equal(bottomGeometry.position, 'fixed');
     assert.equal(bottomGeometry.listDisplay, 'flex');
+    assert.equal(Math.round(bottomGeometry.left), 31);
+    assert.equal(Math.round(640 - bottomGeometry.right), 29);
     assert.equal(Math.round(900 - bottomGeometry.bottom), 37);
     assert.equal(await dock.locator('.zdp-tooltip--top').count(), 2);
   } finally {
