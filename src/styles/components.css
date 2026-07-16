@@ -3916,6 +3916,10 @@
   padding: var(--zdp-space-4);
 }
 
+.zdp-tabs__panel[hidden] {
+  display: none;
+}
+
 .zdp-tabs__panel:focus-visible {
   border-color: var(--zdp-color-focus-line);
   outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);

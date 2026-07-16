@@ -3,19 +3,24 @@
   import Card from '../../../src/lib/components/Card.svelte';
   import CardHeader from '../../../src/lib/components/CardHeader.svelte';
   import Combobox from '../../../src/lib/components/Combobox.svelte';
+  import ConfirmAction from '../../../src/lib/components/ConfirmAction.svelte';
   import Dialog from '../../../src/lib/components/Dialog.svelte';
+  import Disclosure from '../../../src/lib/components/Disclosure.svelte';
   import Menu from '../../../src/lib/components/Menu.svelte';
   import ModalBoundaryFixture from './ModalBoundaryFixture.svelte';
   import Popover from '../../../src/lib/components/Popover.svelte';
   import Sheet from '../../../src/lib/components/Sheet.svelte';
   import SegmentedControl from '../../../src/lib/components/SegmentedControl.svelte';
+  import StatusToast from '../../../src/lib/components/StatusToast.svelte';
   import TableToolbar from '../../../src/lib/components/TableToolbar.svelte';
   import TermSheet from '../../../src/lib/components/TermSheet.svelte';
   import Tooltip from '../../../src/lib/components/Tooltip.svelte';
   import Tabs from '../../../src/lib/components/Tabs.svelte';
+  import Toast from '../../../src/lib/components/Toast.svelte';
   import type { ZdpComboboxOption } from '../../../src/lib/combobox';
   import type { ZdpMenuItem } from '../../../src/lib/menu';
   import type { ZdpTermSheetTerm } from '../../../src/lib/term';
+  import type { ZdpStatusToastItem } from '../../../src/lib/toast';
 
   const collidingTabItems = [
     { id: 'release notes', label: 'Release notes' },
@@ -34,9 +39,17 @@
     { id: 'selected', label: 'Selected contrast' },
     { id: 'available', label: 'Available contrast' }
   ] as const;
+  const collidingToastItems: readonly ZdpStatusToastItem[] = [
+    { id: 'sync failed', title: 'Sync failed', message: 'Try again.' }
+  ];
   let ownerValue = '';
   let ownerQuery = '';
   let ownerSelectionCount = 0;
+  let requiredOwnerValue = '';
+  let requiredOwnerQuery = '';
+  let requiredOwnerSelectionCount = 0;
+  let confirmActionDisabled = false;
+  let confirmActionCount = 0;
   let dialogOpen = false;
   let sheetOpen = false;
   let termSheetOpen = false;
@@ -86,6 +99,10 @@
     <p>Selected release view</p>
   </Tabs>
 
+  <Disclosure id="browser-disclosure" title="Browser details">
+    <p>Disclosure details</p>
+  </Disclosure>
+
   <TableToolbar
     title="Browser results"
     summary="Two rows"
@@ -113,6 +130,39 @@
     onValueChange={() => (ownerSelectionCount += 1)}
   />
   <output data-testid="combobox-selection-count">{ownerSelectionCount}</output>
+
+  <Combobox
+    id="required-browser-combobox"
+    name="required-owner"
+    label="Required owner"
+    options={ownerOptions}
+    required
+    selectionRequiredText="Choose an owner"
+    bind:value={requiredOwnerValue}
+    bind:query={requiredOwnerQuery}
+    onValueChange={() => (requiredOwnerSelectionCount += 1)}
+  />
+  <output data-testid="required-combobox-selection-count">{requiredOwnerSelectionCount}</output>
+
+  <ConfirmAction
+    label="Confirm browser action"
+    hint="Hold to confirm"
+    durationMs={600}
+    disabled={confirmActionDisabled}
+    onconfirm={() => (confirmActionCount += 1)}
+  />
+  <button data-testid="disable-confirm-action" type="button" onclick={() => (confirmActionDisabled = true)}>
+    Disable confirmation
+  </button>
+  <output data-testid="confirm-action-count">{confirmActionCount}</output>
+
+  <section data-testid="toast-live-off">
+    <Toast live="off">Quiet status</Toast>
+  </section>
+  <section data-testid="status-toast-id-fixture">
+    <StatusToast placement="inline" ariaLabel="Primary status notifications" items={collidingToastItems} />
+    <StatusToast placement="inline" ariaLabel="Secondary status notifications" items={collidingToastItems} />
+  </section>
 
   <Menu
     bind:open={menuOpen}

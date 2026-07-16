@@ -2,6 +2,11 @@ import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { compile, type Warning } from 'svelte/compiler';
+import {
+  expectedPackageExportTargets,
+  expectedPackageExports,
+  validatePackageExports
+} from './package-exports';
 
 interface PackageJson {
   readonly version?: string;
@@ -33,20 +38,6 @@ const defaultLocaleSourcePaths = [
   'src/lib/preferences.ts',
   ...publicComponentPaths
 ];
-const expectedRootRuntimeExport = './dist/index.js';
-const expectedRootTypeExport = './dist/index.d.ts';
-const expectedSubpathExports = {
-  './styles.css': './dist/styles/index.css',
-  './brand-fonts.css': './dist/styles/brand-fonts.css',
-  './expressive-fonts.css': './dist/styles/expressive-fonts.css',
-  './locale-fonts.css': './dist/styles/locale-fonts.css',
-  './tokens': './dist/tokens/zdp.tokens.json'
-} as const;
-const expectedShareExport = {
-  types: './dist/share.d.ts',
-  import: './dist/share.js',
-  default: './dist/share.js'
-} as const;
 const expectedPackageFiles = [
   'dist/',
   'docs/',
@@ -88,6 +79,7 @@ const packageJson = await readPackageJson(packagePath);
 
 checkPackageScripts(packageJson);
 checkPackageLicense(packageJson);
+checkPackageExportsValidatorSelfTest();
 checkPackageExports(packageJson);
 checkPackageFiles(packageJson);
 checkPackageArtifactFiles(packageJson);
@@ -176,40 +168,29 @@ function checkPackageLicense(packageJson: PackageJson): void {
 }
 
 function checkPackageExports(packageJson: PackageJson): void {
-  const rootExport = packageJson.exports?.['.'];
+  failures.push(...validatePackageExports(packageJson.exports));
 
-  if (!isRecord(rootExport)) {
-    failures.push('package.json exports["."] must be an object.');
-    return;
+  for (const exportTarget of expectedPackageExportTargets) {
+    assertExistingExportTarget(exportTarget);
   }
+}
 
-  for (const condition of ['svelte', 'import', 'default'] as const) {
-    if (rootExport[condition] !== expectedRootRuntimeExport) {
-      failures.push(`package.json exports["."].${condition} must be ${expectedRootRuntimeExport}.`);
-    }
+function checkPackageExportsValidatorSelfTest(): void {
+  const invalidExports = {
+    ...expectedPackageExports,
+    './internal': './src/private.ts'
+  };
+  const actualFailures = validatePackageExports(invalidExports);
+  const expectedFailures = [
+    'package.json exports["./internal"] is not an intended public export.',
+    'package.json exports["./internal"] target ./src/private.ts must resolve under ./dist/**.'
+  ];
+
+  if (JSON.stringify(actualFailures) !== JSON.stringify(expectedFailures)) {
+    failures.push(
+      `Package exports validator negative self-test returned ${JSON.stringify(actualFailures)} instead of ${JSON.stringify(expectedFailures)}.`
+    );
   }
-
-  if (rootExport.types !== expectedRootTypeExport) {
-    failures.push(`package.json exports["."].types must be ${expectedRootTypeExport}.`);
-  }
-
-  for (const [condition, target] of Object.entries(rootExport)) {
-    if (typeof target === 'string' && target.endsWith('.ts') && !target.endsWith('.d.ts')) {
-      failures.push(`package.json exports["."].${condition} must not point at a TypeScript source file.`);
-    }
-  }
-
-  for (const [subpath, expectedPath] of Object.entries(expectedSubpathExports)) {
-    if (packageJson.exports?.[subpath] !== expectedPath) {
-      failures.push(`package.json exports["${subpath}"] must be ${expectedPath}.`);
-      continue;
-    }
-
-    assertExistingExportTarget(expectedPath);
-  }
-
-  assertExistingExportTarget(expectedRootRuntimeExport);
-  assertExistingExportTarget(expectedRootTypeExport);
 }
 
 function checkPackageFiles(packageJson: PackageJson): void {
@@ -224,26 +205,7 @@ function checkPackageFiles(packageJson: PackageJson): void {
     }
   }
 
-  const shareExport = packageJson.exports?.['./share'];
-
-  if (!isRecord(shareExport)) {
-    failures.push('package.json exports["./share"] must be an object.');
-  } else {
-    for (const [condition, expectedPath] of Object.entries(expectedShareExport)) {
-      if (shareExport[condition] !== expectedPath) {
-        failures.push(`package.json exports["./share"].${condition} must be ${expectedPath}.`);
-      }
-
-      assertExistingExportTarget(expectedPath);
-    }
-  }
-
-  for (const exportTarget of [
-    expectedRootRuntimeExport,
-    expectedRootTypeExport,
-    ...Object.values(expectedSubpathExports),
-    ...Object.values(expectedShareExport)
-  ]) {
+  for (const exportTarget of expectedPackageExportTargets) {
     if (!isCoveredByPackageFiles(packageJson.files, exportTarget)) {
       failures.push(`package.json files does not include export target ${exportTarget}.`);
     }
@@ -852,7 +814,7 @@ async function checkComboboxContract(): Promise<void> {
     'const nextQuery = selectedOptionLabel || query',
     'onQueryChange?.(nextQuery)',
     'onValueChange?.(value, option)',
-    '<input type="hidden" {name} {value} />',
+    '<input type="hidden" {name} {value} disabled={disabled} />',
     '.zdp-combobox',
     '.zdp-combobox__control:focus-within',
     '.zdp-combobox__option[data-active="true"]',

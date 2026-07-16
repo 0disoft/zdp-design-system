@@ -37,7 +37,28 @@ export async function verifyFoundationAndFormContracts(page) {
   );
   assert.equal(new Set(tabIds).size, 2, 'Distinct logical tab ids must remain distinct DOM ids.');
   assert.equal(new Set(controlledPanelIds).size, 2, 'Distinct tabs must retain distinct aria-controls targets.');
+  const tabPanels = page.locator('.zdp-tabs__panel');
+  assert.equal(await tabPanels.count(), 2, 'Every tab aria-controls target must remain in the DOM.');
+  assert.deepEqual(
+    new Set(await tabPanels.evaluateAll((elements) => elements.map((element) => element.id))),
+    new Set(controlledPanelIds),
+    'Every tab must reference an existing panel.'
+  );
   assert.equal(await page.getByRole('tabpanel').getAttribute('id'), controlledPanelIds[0]);
+  assert.equal(await tabPanels.nth(1).getAttribute('hidden'), '', 'Inactive tab panels must be hidden.');
+  await tabs.nth(0).focus();
+  await page.keyboard.press('ArrowRight');
+  assert.equal(await tabs.nth(1).getAttribute('aria-selected'), 'true');
+  assert.equal(await page.getByRole('tabpanel').getAttribute('id'), controlledPanelIds[1]);
+
+  const disclosureTrigger = page.getByRole('button', { name: 'Browser details' });
+  assert.equal(await disclosureTrigger.getAttribute('aria-controls'), null);
+  await disclosureTrigger.click();
+  const disclosurePanelId = await disclosureTrigger.getAttribute('aria-controls');
+  assert.ok(disclosurePanelId, 'An open Disclosure must reference its rendered panel.');
+  assert.equal(await page.locator(`[id="${disclosurePanelId}"]`).count(), 1);
+  await disclosureTrigger.click();
+  assert.equal(await disclosureTrigger.getAttribute('aria-controls'), null);
 
   const combobox = page.getByRole('combobox', { name: 'Owner', exact: true });
   await combobox.focus();
@@ -61,4 +82,51 @@ export async function verifyFoundationAndFormContracts(page) {
   assert.equal(await page.getByTestId('combobox-selection-count').textContent(), '0');
   await page.keyboard.press('Escape');
   assert.equal(await page.getByRole('listbox', { name: 'Owner list' }).count(), 0);
+  await page.keyboard.press('ArrowDown');
+  assert.match(
+    (await combobox.getAttribute('aria-activedescendant')) ?? '',
+    /-option-security$/,
+    'The first ArrowDown from a closed Combobox must activate the first enabled option.'
+  );
+  await page.keyboard.press('Escape');
+
+  const requiredCombobox = page.getByRole('combobox', { name: 'Required owner', exact: true });
+  assert.equal(await requiredCombobox.evaluate((element) => element.checkValidity()), false);
+  await requiredCombobox.fill('Unlisted owner');
+  assert.equal(await page.locator('input[type="hidden"][name="required-owner"]').inputValue(), '');
+  assert.equal(await requiredCombobox.evaluate((element) => element.validationMessage), 'Choose an owner');
+  await page.keyboard.press('Escape');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  assert.equal(await page.locator('input[type="hidden"][name="required-owner"]').inputValue(), 'security');
+  assert.equal(await requiredCombobox.evaluate((element) => element.checkValidity()), true);
+  await requiredCombobox.fill('Edited selection');
+  assert.equal(await page.locator('input[type="hidden"][name="required-owner"]').inputValue(), '');
+  assert.equal(await page.getByTestId('required-combobox-selection-count').textContent(), '2');
+  await page.keyboard.press('Escape');
+
+  const confirmAction = page.getByRole('button', { name: /Confirm browser action/ });
+  await confirmAction.evaluate((element) => {
+    element.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Enter' }));
+  });
+  await page.waitForTimeout(80);
+  await page.getByTestId('disable-confirm-action').click();
+  await page.waitForTimeout(650);
+  assert.equal(await page.getByTestId('confirm-action-count').textContent(), '0');
+  assert.equal(await confirmAction.getAttribute('data-active'), null);
+  assert.match((await confirmAction.getAttribute('style')) ?? '', /progress:\s*0(?:;|$)/);
+
+  const quietToast = page.getByTestId('toast-live-off').locator('.zdp-toast');
+  assert.equal(await quietToast.getAttribute('aria-live'), 'off');
+  assert.equal(await quietToast.getAttribute('aria-atomic'), null);
+
+  const statusToastIdRefs = await page.getByTestId('status-toast-id-fixture').locator('.zdp-toast').evaluateAll(
+    (elements) =>
+      elements.flatMap((element) => [element.getAttribute('aria-labelledby'), element.getAttribute('aria-describedby')])
+  );
+  assert.equal(new Set(statusToastIdRefs).size, statusToastIdRefs.length, 'StatusToast IDREFs must be instance-unique.');
+  for (const idRef of statusToastIdRefs) {
+    assert.ok(idRef && !/\s/.test(idRef), 'StatusToast IDREFs must be valid single DOM ids.');
+    assert.equal(await page.locator(`[id="${idRef}"]`).count(), 1, `StatusToast target ${idRef} must exist once.`);
+  }
 }

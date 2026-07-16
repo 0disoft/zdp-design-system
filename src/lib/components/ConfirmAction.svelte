@@ -21,6 +21,9 @@
 
   $: safeDurationMs = Math.max(600, durationMs);
   $: progressStyle = `--zdp-confirm-action-progress: ${progress};`;
+  $: if (disabled && active) {
+    cancelInteraction();
+  }
 
   function beginInteraction(clientX: number | null, element: HTMLButtonElement): void {
     if (disabled || confirmed) {
@@ -37,7 +40,10 @@
   }
 
   function updateHoldProgress(): void {
-    if (!active) {
+    if (!active || disabled) {
+      if (disabled) {
+        cancelInteraction();
+      }
       return;
     }
 
@@ -61,6 +67,11 @@
   }
 
   function confirmAction(): void {
+    if (disabled) {
+      cancelInteraction();
+      return;
+    }
+
     if (confirmed) {
       return;
     }

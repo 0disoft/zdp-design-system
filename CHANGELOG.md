@@ -4,6 +4,13 @@
 
 - No unreleased changes.
 
+## 0.47.0
+
+- Prevented disabled-in-progress ConfirmAction holds from confirming and added browser regression coverage for timer cancellation.
+- Made Combobox required validation depend on a real selected option, cleared stale submitted values when labels are edited, disabled hidden values with the control, and fixed the first closed-state arrow navigation target.
+- Kept every Tabs `aria-controls` target in the DOM, removed closed Disclosure references to absent panels, made StatusToast and TermSheet fallback ids instance-unique, sanitized StatusToast item ids, and made Toast `live="off"` explicit.
+- Closed the package export namespace with one shared validator, synchronized documented package ranges with package metadata, and replaced the preview shell's raw viewport height with the viewport token.
+
 ## 0.46.25
 
 - Added Chromium coverage for the TableToolbar `48rem` wrapping contract and mobile Sheet safe-area geometry, and preserved visible focus, disabled, and selected states with system colors when forced-colors mode is active.

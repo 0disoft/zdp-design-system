@@ -1,4 +1,9 @@
+<script lang="ts" context="module">
+  let nextStatusToastInstanceId = 0;
+</script>
+
 <script lang="ts">
+  import { toZdpDomId } from '../dom-id';
   import Toast from './Toast.svelte';
   import type { ZdpStatusToastItem } from '../toast';
 
@@ -9,17 +14,21 @@
     | 'top-end'
     | 'bottom-start'
     | 'bottom-end' = 'bottom-end';
-  export let idPrefix = 'zdp-status-toast';
+  const fallbackIdPrefix = `zdp-status-toast-${++nextStatusToastInstanceId}`;
+
+  export let idPrefix = fallbackIdPrefix;
   export let ariaLabel = 'Status notifications';
   export let labelledBy: string | null = null;
   export let onDismiss: ((event: MouseEvent, item: ZdpStatusToastItem) => void) | null = null;
 
+  $: resolvedIdPrefix = toZdpDomId(idPrefix, fallbackIdPrefix);
+
   function titleId(item: ZdpStatusToastItem): string | null {
-    return item.title ? `${idPrefix}-${item.id}-title` : null;
+    return item.title ? `${resolvedIdPrefix}-${toDomId(item.id)}-title` : null;
   }
 
   function messageId(item: ZdpStatusToastItem): string {
-    return `${idPrefix}-${item.id}-message`;
+    return `${resolvedIdPrefix}-${toDomId(item.id)}-message`;
   }
 
   function handleDismiss(event: MouseEvent, item: ZdpStatusToastItem): void {
@@ -32,6 +41,10 @@
 
   function resolvedRel(item: ZdpStatusToastItem): string | undefined {
     return item.target === '_blank' ? item.rel ?? 'noopener noreferrer' : item.rel;
+  }
+
+  function toDomId(id: string): string {
+    return toZdpDomId(id, 'item');
   }
 </script>
 

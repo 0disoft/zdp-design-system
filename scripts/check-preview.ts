@@ -33,6 +33,7 @@ for (const requiredText of [
   '../src/styles/index.css',
   '../src/styles/brand-fonts.css',
   '../src/styles/expressive-fonts.css',
+  'min-block-size: var(--zdp-viewport-block)',
   'zdp-brand-lockup',
   'zdp-brand-lockup__mark',
   'zdp-brand-wordmark',
@@ -474,6 +475,10 @@ for (const requiredText of [
   if (!preview.includes(requiredText)) {
     failures.push(`Preview is missing ${requiredText}.`);
   }
+}
+
+if (/(?:min-|max-)?(?:height|width|block-size|inline-size)\s*:\s*100v[hw]\b/i.test(preview)) {
+  failures.push('preview/index.html must use ZDP viewport tokens instead of raw 100vh/100vw sizing.');
 }
 
 for (const forbiddenText of [

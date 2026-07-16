@@ -20,7 +20,6 @@
   $: selectedItem =
     items.find((item) => item.id === selectedId && !item.disabled) ??
     items.find((item) => !item.disabled) ??
-    items[0] ??
     null;
   $: activeId = selectedItem?.id ?? '';
 
@@ -113,17 +112,20 @@
     {/each}
   </div>
 
-  {#if selectedItem}
+  {#each items as item (item.id)}
     <div
       class="zdp-tabs__panel"
-      id={panelId(selectedItem.id)}
+      id={panelId(item.id)}
       role="tabpanel"
-      aria-labelledby={tabId(selectedItem.id)}
-      tabindex="0"
+      aria-labelledby={tabId(item.id)}
+      tabindex={item.id === activeId ? 0 : undefined}
+      hidden={item.id !== activeId}
     >
-      <slot selectedId={selectedItem.id} selectedItem={selectedItem} />
+      {#if item.id === activeId && selectedItem}
+        <slot selectedId={selectedItem.id} selectedItem={selectedItem} />
+      {/if}
     </div>
-  {/if}
+  {/each}
 </div>
 
 <style>
@@ -196,6 +198,10 @@
     gap: var(--zdp-space-2);
     min-width: 0;
     padding: var(--zdp-space-4);
+  }
+
+  .zdp-tabs__panel[hidden] {
+    display: none;
   }
 
   .zdp-tabs__panel:focus-visible {

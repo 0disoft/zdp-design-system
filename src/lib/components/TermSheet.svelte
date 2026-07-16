@@ -1,11 +1,17 @@
+<script lang="ts" context="module">
+  let nextTermSheetInstanceId = 0;
+</script>
+
 <script lang="ts">
   import { onDestroy, tick } from 'svelte';
   import { getZdpActiveElement, isZdpFocusableElement, zdpFocusableSelector } from '../focusable';
   import { createZdpModalLayer } from '../modal-layer';
   import type { ZdpTermSheetPlacement, ZdpTermSheetTerm } from '../term';
 
+  const fallbackId = `zdp-term-sheet-${++nextTermSheetInstanceId}`;
+
   export let open = false;
-  export let id = 'zdp-term-sheet';
+  export let id = fallbackId;
   export let term: ZdpTermSheetTerm | null = null;
   export let placement: ZdpTermSheetPlacement = 'right';
   export let closeLabel = 'Close';

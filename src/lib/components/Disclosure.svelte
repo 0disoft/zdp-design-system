@@ -45,7 +45,7 @@
         id={triggerId}
         type="button"
         aria-expanded={open}
-        aria-controls={panelId}
+        aria-controls={open ? panelId : undefined}
         disabled={disabled}
         onclick={handleToggle}
       >
@@ -61,7 +61,7 @@
       id={triggerId}
       type="button"
       aria-expanded={open}
-      aria-controls={panelId}
+      aria-controls={open ? panelId : undefined}
       disabled={disabled}
       onclick={handleToggle}
     >

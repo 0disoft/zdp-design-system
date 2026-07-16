@@ -27,6 +27,7 @@
   export let required = false;
   export let size: ZdpComboboxSize = 'md';
   export let noResultsText = 'No results';
+  export let selectionRequiredText = 'Select an option';
   export let onQueryChange: ((query: string) => void) | null = null;
   export let onValueChange: ((value: string, option: ZdpComboboxOption | null) => void) | null = null;
   export let onOpenChange: ((open: boolean) => void) | null = null;
@@ -58,6 +59,9 @@
   $: activeOptionDomId = open && activeOptionId ? optionDomId(activeOptionId) : null;
   $: inputAriaLabel = label ? undefined : ariaLabel ?? 'Search';
   $: listboxLabel = `${label ?? ariaLabel ?? 'Selection'} list`;
+  $: selectionMissing = required && !disabled && !readonly && selectedOption === null;
+  $: resolvedSelectionRequiredText = selectionRequiredText.trim() || 'Select an option';
+  $: syncInputValidity(inputElement, selectionMissing, resolvedSelectionRequiredText);
 
   $: if (value !== lastSyncedValue) {
     query = selectedOptionLabel;
@@ -78,8 +82,10 @@
   }
 
   function handleInput(event: Event): void {
-    query = (event.currentTarget as HTMLInputElement).value;
+    const nextQuery = (event.currentTarget as HTMLInputElement).value;
+    query = nextQuery;
     onQueryChange?.(query);
+    clearSelectionForQuery(nextQuery);
     setOpen(true);
     activeOptionId = enabledOptions[0]?.id ?? '';
   }
@@ -95,17 +101,31 @@
       return;
     }
 
+    if (disabled || readonly) {
+      return;
+    }
+
     if (event.key === 'ArrowDown') {
       event.preventDefault();
+      const wasOpen = open;
       setOpen(true);
-      moveActiveOption('ArrowDown');
+      if (wasOpen) {
+        moveActiveOption('ArrowDown');
+      } else {
+        activeOptionId = selectedOption?.id ?? enabledOptions[0]?.id ?? '';
+      }
       return;
     }
 
     if (event.key === 'ArrowUp') {
       event.preventDefault();
+      const wasOpen = open;
       setOpen(true);
-      moveActiveOption('ArrowUp');
+      if (wasOpen) {
+        moveActiveOption('ArrowUp');
+      } else {
+        activeOptionId = selectedOption?.id ?? enabledOptions[enabledOptions.length - 1]?.id ?? '';
+      }
       return;
     }
 
@@ -174,6 +194,22 @@
     onValueChange?.(value, option);
     setOpen(false);
     inputElement?.focus();
+  }
+
+  function clearSelectionForQuery(nextQuery: string): void {
+    const currentOption = options.find((option) => option.value === value) ?? null;
+
+    if (currentOption === null || currentOption.label === nextQuery) {
+      return;
+    }
+
+    value = '';
+    lastSyncedValue = value;
+    onValueChange?.('', null);
+  }
+
+  function syncInputValidity(element: HTMLInputElement | null, missing: boolean, message: string): void {
+    element?.setCustomValidity(missing ? message : '');
   }
 
   function moveActiveOption(key: 'ArrowDown' | 'ArrowUp'): void {
@@ -269,7 +305,7 @@
       onkeydown={handleInputKeydown}
     />
     {#if name}
-      <input type="hidden" {name} {value} />
+      <input type="hidden" {name} {value} disabled={disabled} />
     {/if}
     <button
       class="zdp-combobox__toggle"

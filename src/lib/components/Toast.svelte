@@ -11,7 +11,7 @@
   export let onClose: ((event: MouseEvent) => void) | null = null;
 
   $: resolvedRole = semanticRole ?? (tone === 'danger' ? 'alert' : 'status');
-  $: resolvedLive = live === 'off' ? undefined : live ?? (tone === 'danger' ? 'assertive' : 'polite');
+  $: resolvedLive = live ?? (tone === 'danger' ? 'assertive' : 'polite');
   $: resolvedAtomic = live === 'off' ? undefined : atomic;
 </script>
 

@@ -1,6 +1,7 @@
 import { existsSync, statSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { extname, join, relative } from 'node:path';
+import { expectedPackageExportTargets, validatePackageExports } from './package-exports';
 
 interface PackageJson {
   readonly name?: string;
@@ -140,50 +141,9 @@ function checkRequiredPackagedFilesExist(): void {
 }
 
 function checkExports(): void {
-  const rootExport = packageJson.exports?.['.'];
-  const shareExport = packageJson.exports?.['./share'];
+  failures.push(...validatePackageExports(packageJson.exports));
 
-  if (!isRecord(rootExport)) {
-    failures.push('package.json exports["."] must be an object.');
-    return;
-  }
-
-  for (const [condition, expectedPath] of Object.entries({
-    svelte: './dist/index.js',
-    import: './dist/index.js',
-    default: './dist/index.js',
-    types: './dist/index.d.ts'
-  })) {
-    if (rootExport[condition] !== expectedPath) {
-      failures.push(`package.json exports["."].${condition} must be ${expectedPath}.`);
-    }
-
-    assertExistingFile(expectedPath);
-    assertPackageFileCovered(expectedPath);
-  }
-
-  for (const [condition, target] of Object.entries(rootExport)) {
-    if (typeof target === 'string' && target.endsWith('.ts') && !target.endsWith('.d.ts')) {
-      failures.push(`package.json exports["."].${condition} must not point at raw TypeScript source.`);
-    }
-  }
-
-  if (!isRecord(shareExport)) {
-    failures.push('package.json exports["./share"] must be an object.');
-  } else {
-    for (const expectedPath of ['./dist/share.js', './dist/share.d.ts'] as const) {
-      assertExistingFile(expectedPath);
-      assertPackageFileCovered(expectedPath);
-    }
-  }
-
-  for (const expectedPath of [
-    './dist/styles/index.css',
-    './dist/styles/brand-fonts.css',
-    './dist/styles/expressive-fonts.css',
-    './dist/styles/locale-fonts.css',
-    './dist/tokens/zdp.tokens.json'
-  ] as const) {
+  for (const expectedPath of expectedPackageExportTargets) {
     assertExistingFile(expectedPath);
     assertPackageFileCovered(expectedPath);
   }

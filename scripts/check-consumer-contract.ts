@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 interface PackageJson {
+  readonly version?: string;
   readonly exports?: Record<string, unknown>;
   readonly files?: readonly string[];
   readonly sideEffects?: readonly unknown[];
@@ -31,7 +32,7 @@ const [
 
 checkPackageSurface(packageJson);
 checkConsumerContractDocument(consumerContract);
-checkSynchronizedDocs(readme, contributing, serviceYaml);
+checkSynchronizedDocs(readme, contributing, serviceYaml, consumerContract, packageJson.version);
 checkTokenAndComponentSurface(tokenDocument, publicEntry);
 
 if (failures.length > 0) {
@@ -255,7 +256,34 @@ function checkConsumerContractDocument(documentText: string): void {
   }
 }
 
-function checkSynchronizedDocs(readme: string, contributing: string, serviceYaml: string): void {
+function checkSynchronizedDocs(
+  readme: string,
+  contributing: string,
+  serviceYaml: string,
+  consumerContract: string,
+  version: string | undefined
+): void {
+  if (!version) {
+    failures.push('package.json version must be present so packaged docs can stay synchronized.');
+  } else {
+    const expectedDependency = `zdp-design-system: ^${version}`;
+
+    for (const [path, documentText] of [
+      ['README.md', readme],
+      ['docs/CONSUMER_CONTRACT.md', consumerContract]
+    ] as const) {
+      if (!documentText.includes(expectedDependency)) {
+        failures.push(`${path} must document the current package range ${expectedDependency}.`);
+      }
+
+      for (const match of documentText.matchAll(/zdp-design-system: \^(\d+\.\d+\.\d+)/g)) {
+        if (match[1] !== version) {
+          failures.push(`${path} contains stale package range ${match[0]}; expected ${expectedDependency}.`);
+        }
+      }
+    }
+  }
+
   for (const requiredText of [
     'docs/CONSUMER_CONTRACT.md',
     "import 'zdp-design-system/styles.css';",
@@ -543,6 +571,7 @@ async function readPackageJson(path: string): Promise<PackageJson> {
   }
 
   return {
+    version: typeof parsed.version === 'string' ? parsed.version : undefined,
     exports: isRecord(parsed.exports) ? parsed.exports : undefined,
     files: isStringArray(parsed.files) ? parsed.files : undefined,
     sideEffects: Array.isArray(parsed.sideEffects) ? parsed.sideEffects : undefined,
