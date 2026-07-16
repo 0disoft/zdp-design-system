@@ -85,11 +85,13 @@ try {
   assert.ok(address && typeof address === 'object', 'SSR fixture server must expose a listening address.');
 
   const { render } = await server.ssrLoadModule('svelte/server');
-  const fixtureModule = await server.ssrLoadModule('/tests/ssr/StatusToastHydration.svelte');
+  const fixtureModule = await server.ssrLoadModule('/tests/ssr/IdHydrationFixture.svelte');
   render(fixtureModule.default);
   renderedBody = render(fixtureModule.default).body;
 
-  assert.match(renderedBody, /zdp-status-toast-/, 'Second SSR render must include generated StatusToast ids.');
+  for (const idPrefix of ['zdp-status-toast-', 'zdp-tabs-', 'zdp-combobox-', 'zdp-term-sheet-']) {
+    assert.ok(renderedBody.includes(idPrefix), `Second SSR render must include generated ${idPrefix} ids.`);
+  }
 
   browser = await chromium.launch({
     channel: process.env.ZDP_BROWSER_CHANNEL ?? 'chrome',
@@ -117,7 +119,7 @@ try {
     error: window.__zdpHydrationError ?? null
   }));
 
-  assert.equal(result.error, null, `StatusToast hydration failed: ${result.error}`);
+  assert.equal(result.error, null, `Design system hydration failed: ${result.error}`);
   assert.deepEqual(result.after.ids, result.before.ids, 'Hydration must preserve generated DOM ids exactly.');
   assert.deepEqual(
     result.after.idReferences,
@@ -125,12 +127,33 @@ try {
     'Hydration must preserve generated ARIA ID references exactly.'
   );
   assert.equal(new Set(result.after.ids).size, result.after.ids.length, 'Hydrated DOM ids must be instance-unique.');
-  assert.ok(result.after.ids.length >= 4, 'Hydration fixture must exercise multiple generated title and message ids.');
 
   for (const idReference of result.after.idReferences) {
     const targetCount = await page.locator(`[id="${idReference}"]`).count();
     assert.equal(targetCount, 1, `ARIA reference ${idReference} must resolve to exactly one element.`);
   }
+
+  const termSheet = page.getByRole('dialog', { name: 'Hydration term' });
+  await termSheet.getByRole('button', { name: 'Close hydration term' }).click();
+  await page.getByTestId('term-sheet-bound-open').getByText('closed', { exact: true }).waitFor();
+  assert.equal(await page.getByRole('dialog', { name: 'Hydration term' }).count(), 0, 'TermSheet must close after hydration.');
+
+  await page.getByRole('tab', { name: 'History' }).click();
+  await page.getByTestId('tabs-slot-selection').getByText('history', { exact: true }).waitFor();
+  assert.equal(
+    await page.getByTestId('tabs-bound-selection').textContent(),
+    'history',
+    'Tabs bind:selectedId contract must update after hydration.'
+  );
+
+  const combobox = page.getByRole('combobox', { name: 'Hydration choice' });
+  await combobox.click();
+  const listboxId = await combobox.getAttribute('aria-controls');
+  assert.ok(listboxId, 'Hydrated Combobox must expose its generated listbox id while open.');
+  assert.equal(await page.locator(`[id="${listboxId}"]`).count(), 1, 'Combobox aria-controls must resolve once.');
+  await page.getByRole('option', { name: 'Beta' }).click();
+  assert.equal(await page.getByTestId('combobox-bound-value').textContent(), 'beta', 'Combobox bind:value must update.');
+  assert.equal(await page.getByTestId('combobox-bound-query').textContent(), 'Beta', 'Combobox bind:query must update.');
 
   assert.deepEqual(hydrationWarnings, [], `Hydration emitted browser warnings: ${hydrationWarnings.join('\n')}`);
   console.log('Design system SSR hydration check passed.');

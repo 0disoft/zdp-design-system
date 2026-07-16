@@ -1,54 +1,73 @@
-<script lang="ts" context="module">
-  let nextTermSheetInstanceId = 0;
-</script>
-
 <script lang="ts">
   import { onDestroy, tick } from 'svelte';
   import { getZdpActiveElement, isZdpFocusableElement, zdpFocusableSelector } from '../focusable';
   import { createZdpModalLayer } from '../modal-layer';
   import type { ZdpTermSheetPlacement, ZdpTermSheetTerm } from '../term';
 
-  const fallbackId = `zdp-term-sheet-${++nextTermSheetInstanceId}`;
+  interface Props {
+    open?: boolean;
+    id?: string;
+    term?: ZdpTermSheetTerm | null;
+    placement?: ZdpTermSheetPlacement;
+    closeLabel?: string;
+    eyebrow?: string;
+    detailLabel?: string;
+    relatedLabel?: string;
+    exampleLabel?: string;
+    closeOnEscape?: boolean;
+    closeOnBackdrop?: boolean;
+    onClose?: (() => void) | null;
+    onRelatedTerm?: ((termId: string) => void) | null;
+  }
 
-  export let open = false;
-  export let id = fallbackId;
-  export let term: ZdpTermSheetTerm | null = null;
-  export let placement: ZdpTermSheetPlacement = 'right';
-  export let closeLabel = 'Close';
-  export let eyebrow = 'Term';
-  export let detailLabel = 'View details';
-  export let relatedLabel = 'Related terms';
-  export let exampleLabel = 'Example';
-  export let closeOnEscape = true;
-  export let closeOnBackdrop = true;
-  export let onClose: (() => void) | null = null;
-  export let onRelatedTerm: ((termId: string) => void) | null = null;
+  const componentId = $props.id();
+  const fallbackId = `zdp-term-sheet-${componentId}`;
+  let {
+    open = $bindable(false),
+    id = fallbackId,
+    term = null,
+    placement = 'right',
+    closeLabel = 'Close',
+    eyebrow = 'Term',
+    detailLabel = 'View details',
+    relatedLabel = 'Related terms',
+    exampleLabel = 'Example',
+    closeOnEscape = true,
+    closeOnBackdrop = true,
+    onClose = null,
+    onRelatedTerm = null
+  }: Props = $props();
 
-  let panelElement: HTMLElement | null = null;
-  let layerElement: HTMLElement | null = null;
-  let previousFocusElement: HTMLElement | null = null;
-  let knownOpenState = false;
+  let panelElement = $state<HTMLElement | null>(null);
+  let layerElement = $state<HTMLElement | null>(null);
+  let previousFocusElement = $state<HTMLElement | null>(null);
+  let knownOpenState = $state(false);
   const modalLayer = createZdpModalLayer();
 
-  $: modalLayer.setActive(open && term !== null, layerElement);
+  $effect.pre(() => {
+    modalLayer.setActive(open && term !== null, layerElement);
+  });
 
   onDestroy(() => {
     modalLayer.destroy();
   });
 
-  $: titleId = `${id}-title`;
-  $: descriptionId = `${id}-description`;
-  $: resolvedPlacement = placement;
+  const titleId = $derived(`${id}-title`);
+  const descriptionId = $derived(`${id}-description`);
+  const resolvedPlacement = $derived(placement);
 
-  $: if (open !== knownOpenState) {
+  $effect(() => {
+    if (open === knownOpenState) {
+      return;
+    }
+
     knownOpenState = open;
-
     if (open) {
       void handleSheetOpened();
     } else {
       restorePreviousFocus();
     }
-  }
+  });
 
   async function handleSheetOpened(): Promise<void> {
     if (typeof document === 'undefined') {

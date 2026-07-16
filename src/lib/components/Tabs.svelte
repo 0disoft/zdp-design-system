@@ -1,27 +1,34 @@
-<script lang="ts" context="module">
-  let nextTabsInstanceId = 0;
-</script>
-
 <script lang="ts">
   import { toZdpDomId } from '../dom-id';
+
   interface TabItem {
     readonly id: string;
     readonly label: string;
     readonly disabled?: boolean;
   }
 
-  export let items: readonly TabItem[] = [];
-  export let selectedId: string | null = null;
-  export let ariaLabel = 'Tabs';
-  export let idPrefix: string | null = null;
+  interface Props {
+    items?: readonly TabItem[];
+    selectedId?: string | null;
+    ariaLabel?: string;
+    idPrefix?: string | null;
+  }
 
-  const fallbackIdPrefix = `zdp-tabs-${++nextTabsInstanceId}`;
+  const componentId = $props.id();
+  const fallbackIdPrefix = `zdp-tabs-${componentId}`;
+  let {
+    items = [],
+    selectedId = $bindable(null),
+    ariaLabel = 'Tabs',
+    idPrefix = null
+  }: Props = $props();
 
-  $: selectedItem =
+  const selectedItem = $derived(
     items.find((item) => item.id === selectedId && !item.disabled) ??
     items.find((item) => !item.disabled) ??
-    null;
-  $: activeId = selectedItem?.id ?? '';
+    null
+  );
+  const activeId = $derived(selectedItem?.id ?? '');
 
   function selectTab(item: TabItem): void {
     if (item.disabled) {
@@ -72,7 +79,7 @@
     return (currentIndex + 1) % length;
   }
 
-  $: resolvedIdPrefix = toDomId(idPrefix ?? fallbackIdPrefix);
+  const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
 
   function tabId(id: string): string {
     return `${resolvedIdPrefix}-tab-${toDomId(id)}`;
@@ -122,6 +129,7 @@
       hidden={item.id !== activeId}
     >
       {#if item.id === activeId && selectedItem}
+        <!-- svelte-ignore slot_element_deprecated legacy let: slot contract remains public -->
         <slot selectedId={selectedItem.id} selectedItem={selectedItem} />
       {/if}
     </div>

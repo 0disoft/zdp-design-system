@@ -1,7 +1,3 @@
-<script lang="ts" context="module">
-  let nextComboboxInstanceId = 0;
-</script>
-
 <script lang="ts">
   import type { HTMLInputAttributes } from 'svelte/elements';
   import type { ZdpComboboxOption, ZdpComboboxSize } from '../combobox';
@@ -9,64 +5,104 @@
 
   type DescribedBy = string | readonly string[] | null;
 
-  export let id: string | null = null;
-  export let name: string | null = null;
-  export let value = '';
-  export let query = '';
-  export let options: readonly ZdpComboboxOption[] = [];
-  export let label: string | null = 'Search';
-  export let labelVisible = false;
-  export let ariaLabel: string | null = null;
-  export let placeholder: string | null = 'Search query';
-  export let autocomplete: HTMLInputAttributes['autocomplete'] | null = 'off';
-  export let describedBy: DescribedBy = null;
-  export let errorMessageId: string | null = null;
-  export let invalid = false;
-  export let disabled = false;
-  export let readonly = false;
-  export let required = false;
-  export let size: ZdpComboboxSize = 'md';
-  export let noResultsText = 'No results';
-  export let selectionRequiredText = 'Select an option';
-  export let onQueryChange: ((query: string) => void) | null = null;
-  export let onValueChange: ((value: string, option: ZdpComboboxOption | null) => void) | null = null;
-  export let onOpenChange: ((open: boolean) => void) | null = null;
-
-  const fallbackIdPrefix = `zdp-combobox-${++nextComboboxInstanceId}`;
-
-  let rootElement: HTMLElement | null = null;
-  let inputElement: HTMLInputElement | null = null;
-  let open = false;
-  let activeOptionId = '';
-  let lastSyncedValue = value;
-  let lastSelectedValue = '';
-  let lastSelectedLabel = '';
-
-  $: enabledOptions = options.filter((option) => !option.disabled);
-  $: selectedOption = options.find((option) => option.value === value) ?? null;
-  $: if (selectedOption) {
-    lastSelectedValue = selectedOption.value;
-    lastSelectedLabel = selectedOption.label;
+  interface Props {
+    id?: string | null;
+    name?: string | null;
+    value?: string;
+    query?: string;
+    options?: readonly ZdpComboboxOption[];
+    label?: string | null;
+    labelVisible?: boolean;
+    ariaLabel?: string | null;
+    placeholder?: string | null;
+    autocomplete?: HTMLInputAttributes['autocomplete'] | null;
+    describedBy?: DescribedBy;
+    errorMessageId?: string | null;
+    invalid?: boolean;
+    disabled?: boolean;
+    readonly?: boolean;
+    required?: boolean;
+    size?: ZdpComboboxSize;
+    noResultsText?: string;
+    selectionRequiredText?: string;
+    onQueryChange?: ((query: string) => void) | null;
+    onValueChange?: ((value: string, option: ZdpComboboxOption | null) => void) | null;
+    onOpenChange?: ((open: boolean) => void) | null;
   }
-  $: selectedOptionLabel = selectedOption?.label ?? (value === lastSelectedValue ? lastSelectedLabel : '');
-  $: resolvedIdPrefix = toDomId(id ?? fallbackIdPrefix);
-  $: inputId = id ?? `${resolvedIdPrefix}-input`;
-  $: listboxId = `${resolvedIdPrefix}-listbox`;
-  $: ariaDescribedBy = normalizeIdRefs(describedBy);
-  $: resolvedErrorMessageId = invalid && errorMessageId ? errorMessageId : null;
-  $: hasOptions = options.length > 0;
-  $: activeOptionId = resolveActiveOptionId(activeOptionId, enabledOptions);
-  $: activeOptionDomId = open && activeOptionId ? optionDomId(activeOptionId) : null;
-  $: inputAriaLabel = label ? undefined : ariaLabel ?? 'Search';
-  $: listboxLabel = `${label ?? ariaLabel ?? 'Selection'} list`;
-  $: selectionMissing = required && !disabled && !readonly && selectedOption === null;
-  $: resolvedSelectionRequiredText = selectionRequiredText.trim() || 'Select an option';
-  $: syncInputValidity(inputElement, selectionMissing, resolvedSelectionRequiredText);
 
-  $: if (value !== lastSyncedValue) {
-    query = selectedOptionLabel;
-    lastSyncedValue = value;
-  }
+  const componentId = $props.id();
+  const fallbackIdPrefix = `zdp-combobox-${componentId}`;
+  let {
+    id = null,
+    name = null,
+    value = $bindable(''),
+    query = $bindable(''),
+    options = [],
+    label = 'Search',
+    labelVisible = false,
+    ariaLabel = null,
+    placeholder = 'Search query',
+    autocomplete = 'off',
+    describedBy = null,
+    errorMessageId = null,
+    invalid = false,
+    disabled = false,
+    readonly = false,
+    required = false,
+    size = 'md',
+    noResultsText = 'No results',
+    selectionRequiredText = 'Select an option',
+    onQueryChange = null,
+    onValueChange = null,
+    onOpenChange = null
+  }: Props = $props();
+
+  let rootElement = $state<HTMLElement | null>(null);
+  let inputElement = $state<HTMLInputElement | null>(null);
+  let open = $state(false);
+  let activeOptionId = $state('');
+  let lastSyncedValue = $state(value);
+  let lastSelectedValue = $state('');
+  let lastSelectedLabel = $state('');
+
+  const enabledOptions = $derived(options.filter((option) => !option.disabled));
+  const selectedOption = $derived(options.find((option) => option.value === value) ?? null);
+  const selectedOptionLabel = $derived(
+    selectedOption?.label ?? (value === lastSelectedValue ? lastSelectedLabel : '')
+  );
+  const resolvedIdPrefix = $derived(toDomId(id ?? fallbackIdPrefix));
+  const inputId = $derived(id ?? `${resolvedIdPrefix}-input`);
+  const listboxId = $derived(`${resolvedIdPrefix}-listbox`);
+  const ariaDescribedBy = $derived(normalizeIdRefs(describedBy));
+  const resolvedErrorMessageId = $derived(invalid && errorMessageId ? errorMessageId : null);
+  const hasOptions = $derived(options.length > 0);
+  const activeOptionDomId = $derived(open && activeOptionId ? optionDomId(activeOptionId) : null);
+  const inputAriaLabel = $derived(label ? undefined : ariaLabel ?? 'Search');
+  const listboxLabel = $derived(`${label ?? ariaLabel ?? 'Selection'} list`);
+  const selectionMissing = $derived(required && !disabled && !readonly && selectedOption === null);
+  const resolvedSelectionRequiredText = $derived(selectionRequiredText.trim() || 'Select an option');
+
+  $effect.pre(() => {
+    if (selectedOption) {
+      lastSelectedValue = selectedOption.value;
+      lastSelectedLabel = selectedOption.label;
+    }
+  });
+
+  $effect.pre(() => {
+    activeOptionId = resolveActiveOptionId(activeOptionId, enabledOptions);
+  });
+
+  $effect.pre(() => {
+    if (value !== lastSyncedValue) {
+      query = selectedOptionLabel;
+      lastSyncedValue = value;
+    }
+  });
+
+  $effect(() => {
+    syncInputValidity(inputElement, selectionMissing, resolvedSelectionRequiredText);
+  });
 
   function setOpen(nextOpen: boolean): void {
     if (disabled || readonly || open === nextOpen) {

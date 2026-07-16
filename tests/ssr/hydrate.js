@@ -1,5 +1,5 @@
 import { hydrate, tick } from 'svelte';
-import StatusToastHydration from './StatusToastHydration.svelte';
+import IdHydrationFixture from './IdHydrationFixture.svelte';
 
 const target = document.querySelector('#app');
 
@@ -8,7 +8,7 @@ if (!(target instanceof HTMLElement)) {
 }
 
 try {
-  hydrate(StatusToastHydration, { target });
+  hydrate(IdHydrationFixture, { target });
   await tick();
   await new Promise((resolve) => requestAnimationFrame(resolve));
   window.__zdpHydrationResult = window.__zdpCaptureHydrationContract(target);

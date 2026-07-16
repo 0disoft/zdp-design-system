@@ -4,6 +4,11 @@
 
 - No unreleased changes.
 
+## 0.47.2
+
+- Made Tabs, Combobox, and TermSheet fallback IDs stable across repeated SSR renders and hydration while preserving their existing binding and legacy Tabs slot contracts.
+- Expanded the SSR hydration gate to exercise generated tab, combobox, and term-sheet ARIA references plus post-hydration selection and close behavior.
+
 ## 0.47.1
 
 - Added a rendered Storybook axe gate that audits every story in headless Chromium and fixed the duplicate landmark names and incomplete CommandField combobox semantics it exposed.
