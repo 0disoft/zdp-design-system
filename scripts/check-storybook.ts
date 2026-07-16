@@ -2878,6 +2878,8 @@ for (const requiredText of [
   'onkeydown={handleKeydown}',
   'if (disabled && active)',
   'if (disabled) {\n      cancelInteraction();',
+  'resetTimer = window.setTimeout(reset, 1000);\n\n    try {\n      onconfirm?.();',
+  'catch (error) {\n      clearTimers();\n      throw error;',
   'class="zdp-confirm-action__glyph"',
   'stroke-width: 2.25',
   '--zdp-confirm-action-progress: 0',

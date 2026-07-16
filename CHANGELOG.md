@@ -8,6 +8,7 @@
 
 - Replaced formatting-sensitive regular-expression type stripping in the package builder with TypeScript compiler transpilation.
 - Added Node runtime import checks for the generated preferences, share, shortcuts, and token modules before publish readiness can pass.
+- Scheduled ConfirmAction reset before invoking consumer callbacks so synchronous unmount cleanup can cancel the timer, while preserving callback error behavior.
 
 ## 0.47.3
 

@@ -80,8 +80,14 @@
     active = false;
     confirmed = true;
     progress = 1;
-    onconfirm?.();
     resetTimer = window.setTimeout(reset, 1000);
+
+    try {
+      onconfirm?.();
+    } catch (error) {
+      clearTimers();
+      throw error;
+    }
   }
 
   function cancelInteraction(): void {
