@@ -1,6 +1,8 @@
 import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import { join, relative } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { compile, type Warning } from 'svelte/compiler';
 import {
   expectedPackageExportTargets,
@@ -50,6 +52,12 @@ const expectedPackageFiles = [
 const expectedDistArtifactFiles = [
   './dist/schemas/design-tokens.schema.json'
 ] as const;
+const runtimeArtifactPaths = [
+  'dist/preferences.js',
+  'dist/share.js',
+  'dist/shortcuts.js',
+  'dist/tokens.js'
+] as const;
 const expectedSideEffects = [
   './dist/styles/index.css',
   './dist/styles/brand-fonts.css',
@@ -86,6 +94,7 @@ checkPackageExports(packageJson);
 checkPackageFiles(packageJson);
 checkPackageArtifactFiles(packageJson);
 checkPackageSideEffects(packageJson);
+checkRuntimeArtifactImports();
 await checkSvelteCompilation();
 await checkEnglishDefaultTextContract();
 await checkUserFacingLabelOverrideContract();
@@ -140,6 +149,33 @@ function checkPackageScripts(packageJson: PackageJson): void {
 
   if (!packageJson.scripts?.check?.includes('bun run fixtures:check')) {
     failures.push('package.json check script must build the consumer fixture against dist exports.');
+  }
+}
+
+function checkRuntimeArtifactImports(): void {
+  const nodeExecutable = process.platform === 'win32' ? 'node.exe' : 'node';
+
+  for (const relativePath of runtimeArtifactPaths) {
+    const moduleUrl = pathToFileURL(join(root, relativePath)).href;
+    const result = spawnSync(
+      nodeExecutable,
+      ['--input-type=module', '--eval', `await import(${JSON.stringify(moduleUrl)})`],
+      {
+        cwd: root,
+        encoding: 'utf8',
+        shell: false
+      }
+    );
+
+    if (result.error) {
+      failures.push(`${relativePath} could not start the Node runtime import check: ${result.error.message}`);
+      continue;
+    }
+
+    if (result.status !== 0) {
+      const detail = (result.stderr || result.stdout || 'unknown import failure').trim();
+      failures.push(`${relativePath} must be importable by Node: ${detail}`);
+    }
   }
 }
 

@@ -1,6 +1,16 @@
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { basename, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  DiagnosticCategory,
+  ModuleKind,
+  ScriptKind,
+  ScriptTarget,
+  createSourceFile,
+  flattenDiagnosticMessageText,
+  isExportDeclaration,
+  transpileModule
+} from 'typescript';
 
 const repoRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const distRoot = resolve(repoRoot, 'dist');
@@ -44,97 +54,62 @@ for (const moduleName of runtimeModuleNames) {
 }
 
 function createPublicRuntimeEntry(source: string): string {
-  return parseExportStatements(source)
-    .filter((statement) => !statement.startsWith('export type '))
-    .map(rewriteRuntimeExportSpecifier)
-    .join('\n');
+  return rewriteRuntimeExportSpecifiers(
+    transpileTypescript(createPublicTypeEntry(source), 'src/lib/index.ts')
+  );
 }
 
 function createPublicTypeEntry(source: string): string {
-  return parseExportStatements(source).join('\n');
+  const sourceFile = createSourceFile(
+    'src/lib/index.ts',
+    source,
+    ScriptTarget.Latest,
+    true,
+    ScriptKind.TS
+  );
+
+  return sourceFile.statements
+    .filter(isExportDeclaration)
+    .map((statement) => source.slice(statement.getFullStart(), statement.end).trim())
+    .join('\n');
 }
 
-function parseExportStatements(source: string): readonly string[] {
-  const statements: string[] = [];
-  let current = '';
-
-  for (const line of source.split(/\r?\n/)) {
-    if (current.length === 0 && !line.startsWith('export ')) {
-      continue;
-    }
-
-    current = current.length === 0 ? line : `${current}\n${line}`;
-
-    if (line.trimEnd().endsWith(';')) {
-      statements.push(current);
-      current = '';
-    }
-  }
-
-  if (current.trim().length > 0) {
-    throw new Error('Unterminated export statement in src/lib/index.ts.');
-  }
-
-  return statements;
-}
-
-function rewriteRuntimeExportSpecifier(statement: string): string {
-  return statement.replace(/from '(\.\/[^']+)'/g, (_match, specifier: string) => {
+function rewriteRuntimeExportSpecifiers(source: string): string {
+  return source.replace(/from (["'])(\.\/[^"']+)\1/g, (_match, quote: string, specifier: string) => {
     if (specifier.endsWith('.svelte') || specifier.endsWith('.js')) {
-      return `from '${specifier}'`;
+      return `from ${quote}${specifier}${quote}`;
     }
 
-    return `from '${specifier}.js'`;
+    return `from ${quote}${specifier}.js${quote}`;
   });
 }
 
 function createRuntimeModule(source: string, moduleName: (typeof runtimeModuleNames)[number]): string {
-  if (moduleName === 'preferences') {
-    return stripPreferencesTypes(source);
+  return transpileTypescript(source, `src/lib/${moduleName}.ts`);
+}
+
+function transpileTypescript(source: string, fileName: string): string {
+  const result = transpileModule(source, {
+    fileName,
+    reportDiagnostics: true,
+    compilerOptions: {
+      module: ModuleKind.ESNext,
+      target: ScriptTarget.ES2022,
+      verbatimModuleSyntax: true
+    }
+  });
+  const errors = result.diagnostics?.filter(
+    (diagnostic) => diagnostic.category === DiagnosticCategory.Error
+  ) ?? [];
+
+  if (errors.length > 0) {
+    const messages = errors.map((diagnostic) =>
+      flattenDiagnosticMessageText(diagnostic.messageText, '\n')
+    );
+    throw new Error(`TypeScript transpilation failed for ${fileName}:\n- ${messages.join('\n- ')}`);
   }
 
-  if (moduleName === 'shortcuts') {
-    return stripShortcutsTypes(source);
-  }
-
-  return stripTokenTypes(source);
-}
-
-function stripPreferencesTypes(source: string): string {
-  return source
-    .replace(/export type ZdpTextScale = [\s\S]*?;\n\n/g, '')
-    .replace(/export type ZdpTextScaleControlSize = [\s\S]*?;\n\n/g, '')
-    .replace(/export type ZdpLocaleSwitcherSize = [\s\S]*?;\n\n/g, '')
-    .replace(/export interface ZdpLocaleSwitcherOption [\s\S]*?\n}\n\n/g, '')
-    .replace(/export interface ZdpTextScaleControlOption [\s\S]*?\n}\n\n/g, '')
-    .replace(/\] as const satisfies readonly ZdpTextScaleControlOption\[];/g, '];')
-    .replace(/\] as const satisfies readonly ZdpLocaleSwitcherOption\[];/g, '];')
-    .replace(
-      /export function isZdpTextScale\(value: string \| null \| undefined\): value is ZdpTextScale/g,
-      'export function isZdpTextScale(value)'
-    );
-}
-
-function stripShortcutsTypes(source: string): string {
-  return source
-    .replace(/export type ZdpShortcutIntent =[\s\S]*?;\n\n/g, '')
-    .replace(/export type ZdpShortcutRisk =[\s\S]*?;\n\n/g, '')
-    .replace(/export interface ZdpShortcutRecommendation [\s\S]*?\n}\n\n/g, '')
-    .replace(/export interface ZdpShortcutGuardOptions [\s\S]*?\n}\n\n/g, '')
-    .replace(/\] as const satisfies readonly ZdpShortcutRecommendation\[];/g, '];')
-    .replace(/\] as const;/g, '];')
-    .replace(/export function isZdpTextEntryTarget\(target: EventTarget \| null\): boolean/g, 'export function isZdpTextEntryTarget(target)')
-    .replace(/export function isZdpBrowserReservedShortcut\(event: KeyboardEvent\): boolean/g, 'export function isZdpBrowserReservedShortcut(event)')
-    .replace(
-      /export function shouldZdpIgnoreShortcutEvent\(\n  event: KeyboardEvent,\n  options: ZdpShortcutGuardOptions = {}\n\): boolean/g,
-      'export function shouldZdpIgnoreShortcutEvent(\n  event,\n  options = {}\n)'
-    );
-}
-
-function stripTokenTypes(source: string): string {
-  return source
-    .replace(/\] as const;/g, '];')
-    .replace(/export type ZdpTokenName = [\s\S]*?;\n?$/g, '');
+  return result.outputText;
 }
 
 for (const moduleName of runtimeModuleNames) {

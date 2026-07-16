@@ -4,6 +4,11 @@
 
 - No unreleased changes.
 
+## 0.47.4
+
+- Replaced formatting-sensitive regular-expression type stripping in the package builder with TypeScript compiler transpilation.
+- Added Node runtime import checks for the generated preferences, share, shortcuts, and token modules before publish readiness can pass.
+
 ## 0.47.3
 
 - Made Disclosure, LocaleSwitcher, SegmentedControl, TextScaleControl, Menu, Popover, and Tooltip fallback IDs stable across repeated SSR renders and hydration without changing their explicit `id` or `idPrefix` APIs.
