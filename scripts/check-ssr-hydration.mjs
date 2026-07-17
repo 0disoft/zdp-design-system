@@ -21,6 +21,30 @@ const server = await createServer({
   plugins: [
     svelte(),
     {
+      name: 'zdp-modal-layer-ssr-diagnostics',
+      enforce: 'post',
+      transform(code, id, options) {
+        const normalizedId = id.replaceAll('\\', '/').split('?')[0];
+
+        if (!options?.ssr || !normalizedId.endsWith('/src/lib/modal-layer.ts')) {
+          return null;
+        }
+
+        return {
+          code: `${code}
+export function __getZdpModalLayerSsrSnapshot() {
+  return {
+    activeLayerCount: activeLayerIds.length,
+    managedInertElementCount: managedInertElements.size,
+    previousBodyOverflow,
+    registeredLayerCount: layers.size
+  };
+}`,
+          map: null
+        };
+      }
+    },
+    {
       name: 'zdp-ssr-hydration-fixture',
       configureServer(vite) {
         vite.middlewares.use(async (request, response, next) => {
@@ -85,7 +109,23 @@ try {
   assert.ok(address && typeof address === 'object', 'SSR fixture server must expose a listening address.');
 
   const { render } = await server.ssrLoadModule('svelte/server');
+  const modalLayerModule = await server.ssrLoadModule('/src/lib/modal-layer.ts');
+  const modalSsrFixtureModule = await server.ssrLoadModule('/tests/ssr/ModalLayerSsrFixture.svelte');
   const fixtureModule = await server.ssrLoadModule('/tests/ssr/IdHydrationFixture.svelte');
+
+  assertModalLayerSsrSnapshot(modalLayerModule.__getZdpModalLayerSsrSnapshot(), 'before modal SSR');
+
+  for (const renderNumber of [1, 2]) {
+    const modalSsrBody = render(modalSsrFixtureModule.default).body;
+    assert.ok(modalSsrBody.includes('SSR dialog'), `Modal SSR render ${renderNumber} must include Dialog output.`);
+    assert.ok(modalSsrBody.includes('SSR sheet'), `Modal SSR render ${renderNumber} must include Sheet output.`);
+    assert.ok(modalSsrBody.includes('SSR term'), `Modal SSR render ${renderNumber} must include TermSheet output.`);
+    assertModalLayerSsrSnapshot(
+      modalLayerModule.__getZdpModalLayerSsrSnapshot(),
+      `after modal SSR render ${renderNumber}`
+    );
+  }
+
   render(fixtureModule.default);
   renderedBody = render(fixtureModule.default).body;
 
@@ -220,4 +260,11 @@ try {
   await browser?.close();
   await server.close();
   await rm(cacheDir, { force: true, recursive: true });
+}
+
+function assertModalLayerSsrSnapshot(snapshot, phase) {
+  assert.equal(snapshot.registeredLayerCount, 0, `${phase}: modal handles must not remain registered.`);
+  assert.equal(snapshot.activeLayerCount, 0, `${phase}: active modal layer ids must not survive the render.`);
+  assert.equal(snapshot.managedInertElementCount, 0, `${phase}: managed inert state must be empty.`);
+  assert.equal(snapshot.previousBodyOverflow, null, `${phase}: body overflow state must be released.`);
 }
