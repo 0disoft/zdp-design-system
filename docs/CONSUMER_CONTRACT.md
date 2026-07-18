@@ -12,7 +12,7 @@ Default component text is English. 소비 앱은 화면 locale에 맞춰 user-fa
 - 소비 저장소는 `zdp-design-system`의 public export만 사용하고 내부 `src/` deep import를 만들지 않는다.
 - package export는 `dist/` 산출물을 통해 소비한다. root runtime entry는 `dist/index.js`, type entry는 `dist/index.d.ts`다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `dist/`는 release 전 `bun run package:build`로 다시 만든다.
 - ZDP monorepo 안의 active sibling 소비처는 unpublished local changes와 package surface를 함께 검증하기 위해 `file:../zdp-design-system`을 유지할 수 있다. 이 경우 CI는 sibling `zdp-design-system`을 checkout하고 `bun run package:build`를 먼저 실행해야 한다.
-- standalone consumer, public template, external example처럼 sibling checkout을 전제로 하지 않는 표면은 npm registry package를 사용한다. 0.47.4 이상에서는 `zdp-design-system: ^0.47.4`를 기본 semver 범위로 쓰고, 재현 가능한 release proof가 필요한 곳만 exact version을 pin한다.
+- standalone consumer, public template, external example처럼 sibling checkout을 전제로 하지 않는 표면은 npm registry package를 사용한다. 0.47.5 이상에서는 `zdp-design-system: ^0.47.5`를 기본 semver 범위로 쓰고, 재현 가능한 release proof가 필요한 곳만 exact version을 pin한다.
 - open shadow root 안에 component를 mount하는 소비처는 document-level import에 기대지 않고 `zdp-design-system/styles.css` 내용을 해당 root 안의 `<style>` 또는 `<link rel="stylesheet">`로 직접 설치한다. stylesheet가 설치된 open root에서 Tooltip, Combobox, Menu, Popover, Dialog, Sheet, TermSheet의 documented interaction contract를 지원한다. closed shadow root는 지원하지 않는다.
 - `zdpTokenNames`, `share.js`, `share.d.ts`는 손으로 맞추지 않고 `tokens:generate`, `share-icons:generate` 산출물로 유지한다.
 - 새 버전은 소비 저장소가 opt-in으로 채택한다. broad adoption 전에는 대표 소비처에서 시각과 build를 확인한다.
@@ -414,7 +414,7 @@ Input, Textarea, Select는 `describedBy`에 하나 이상의 id를 연결할 수
 Switch도 `describedBy` id 배열과 `errorMessageId`를 통해 invalid 상태의 보조 설명과 에러 메시지를 native switch input에 연결한다.
 Input과 Textarea의 `readonly` 상태는 제출과 포커스를 유지하는 읽기 전용 값에 사용한다. 권한 때문에 값을 바꾸면 안 되는지, 단순히 고정 식별자를 보여주는지는 소비 앱이 결정한다.
 Tabs는 가까운 정보 묶음 전환을 표현하되 라우팅, 권한, 데이터 로딩 판단은 소비 앱이 계속 소유한다. 기본 tab/panel prefix는 인스턴스마다 다르고 SSR과 hydration에서 안정적이며, 소비 앱이 명시적인 `idPrefix`를 전달하는 계약도 유지한다. 기존 `let:selectedId`, `let:selectedItem`, `bind:selectedId` 계약은 계속 지원한다.
-Dialog는 modal layer, backdrop, close, scroll lock, focus trap, aria 구조만 제공하며 저장, 삭제, 인증, 결제, 권한 판단은 소비 앱이 계속 소유한다.
+Dialog는 modal layer, backdrop, close, scroll lock, focus trap, aria 구조만 제공하며 저장, 삭제, 인증, 결제, 권한 판단은 소비 앱이 계속 소유한다. Dialog, Sheet, TermSheet의 modal registry는 browser document lifecycle에만 등록되므로 반복되거나 실패한 SSR 렌더 사이에 layer 상태를 공유하지 않는다. 처음부터 열린 modal을 SSR한 소비처는 hydration 뒤 단일 active layer, body scroll lock, background inert가 활성화되고 close 뒤 모두 복구되는 계약을 유지한다.
 
 ## Flutter와 Native 소비 표면
 

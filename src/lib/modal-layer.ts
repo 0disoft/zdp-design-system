@@ -24,6 +24,15 @@ const activeLayerIds: number[] = [];
 const managedInertElements = new Map<HTMLElement, boolean>();
 let previousBodyOverflow: string | null = null;
 
+const serverModalLayerHandle: ZdpModalLayerHandle = {
+  destroy(): void {},
+  setActive(): void {},
+  setFocusReturnTarget(): void {},
+  takeFocusReturnTarget(): HTMLElement | null {
+    return null;
+  }
+};
+
 /**
  * mf:anchor zdp.design-system.modal-layer-state
  * purpose: Locate shared modal layer state for dialog, sheet, and term sheet surfaces.
@@ -32,6 +41,10 @@ let previousBodyOverflow: string | null = null;
  * risk: state
  */
 export function createZdpModalLayer(): ZdpModalLayerHandle {
+  if (typeof document === 'undefined') {
+    return serverModalLayerHandle;
+  }
+
   const state: ZdpModalLayerState = {
     active: false,
     focusReturnTarget: null,

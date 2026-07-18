@@ -8,7 +8,28 @@ import { createServer } from 'vite';
 
 const root = process.cwd();
 const cacheDir = await mkdtemp(join(tmpdir(), 'zdp-design-system-ssr-'));
+const modalHydrationCases = [
+  {
+    accessibleName: 'Hydration dialog',
+    closeLabel: 'Close hydration dialog',
+    kind: 'dialog',
+    path: '/modal/dialog'
+  },
+  {
+    accessibleName: 'Hydration sheet',
+    closeLabel: 'Close hydration sheet',
+    kind: 'sheet',
+    path: '/modal/sheet'
+  },
+  {
+    accessibleName: 'Hydration term sheet',
+    closeLabel: 'Close hydration term sheet',
+    kind: 'term-sheet',
+    path: '/modal/term-sheet'
+  }
+];
 let renderedBody = '';
+const renderedModalBodies = new Map();
 
 const server = await createServer({
   appType: 'custom',
@@ -48,39 +69,21 @@ export function __getZdpModalLayerSsrSnapshot() {
       name: 'zdp-ssr-hydration-fixture',
       configureServer(vite) {
         vite.middlewares.use(async (request, response, next) => {
-          if (request.url !== '/') {
+          const pathname = request.url?.split('?')[0] ?? '/';
+          const modalCase = modalHydrationCases.find((candidate) => candidate.path === pathname) ?? null;
+
+          if (pathname !== '/' && modalCase === null) {
             next();
             return;
           }
 
           try {
+            const sourceHtml = modalCase === null
+              ? createIdHydrationHtml(renderedBody)
+              : createModalHydrationHtml(renderedModalBodies.get(modalCase.kind) ?? '', modalCase.kind);
             const html = await vite.transformIndexHtml(
               request.url,
-              `<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="data:," />
-    <title>SSR hydration check</title>
-  </head>
-  <body>
-    <main id="app">${renderedBody}</main>
-    <script>
-      window.__zdpCaptureHydrationContract = (root) => ({
-        ids: Array.from(root.querySelectorAll('[id]'), (element) => element.id),
-        idReferences: Array.from(
-          root.querySelectorAll('[aria-activedescendant], [aria-controls], [aria-describedby], [aria-labelledby]')
-        ).flatMap((element) =>
-          ['aria-activedescendant', 'aria-controls', 'aria-describedby', 'aria-labelledby']
-            .flatMap((attribute) => (element.getAttribute(attribute) || '').split(/\\s+/))
-            .filter(Boolean)
-        )
-      });
-      window.__zdpHydrationBefore = window.__zdpCaptureHydrationContract(document.querySelector('#app'));
-    </script>
-    <script type="module" src="/tests/ssr/hydrate.js"></script>
-  </body>
-</html>`
+              sourceHtml
             );
             response.statusCode = 200;
             response.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -110,6 +113,7 @@ try {
 
   const { render } = await server.ssrLoadModule('svelte/server');
   const modalLayerModule = await server.ssrLoadModule('/src/lib/modal-layer.ts');
+  const modalHydrationFixtureModule = await server.ssrLoadModule('/tests/ssr/ModalHydrationFixture.svelte');
   const modalSsrFixtureModule = await server.ssrLoadModule('/tests/ssr/ModalLayerSsrFixture.svelte');
   const fixtureModule = await server.ssrLoadModule('/tests/ssr/IdHydrationFixture.svelte');
 
@@ -123,6 +127,37 @@ try {
     assertModalLayerSsrSnapshot(
       modalLayerModule.__getZdpModalLayerSsrSnapshot(),
       `after modal SSR render ${renderNumber}`
+    );
+  }
+
+  for (const modalCase of modalHydrationCases) {
+    const throwingModalRenderProbe = (renderer, props) => {
+      modalHydrationFixtureModule.default(renderer, props);
+      throw new Error(`Intentional ${props.kind} SSR render failure`);
+    };
+
+    assert.throws(
+      () => render(throwingModalRenderProbe, { props: { kind: modalCase.kind } }).body,
+      (error) =>
+        error instanceof Error && error.message === `Intentional ${modalCase.kind} SSR render failure`,
+      `${modalCase.kind} SSR failure fixture must throw its expected error.`
+    );
+    assertModalLayerSsrSnapshot(
+      modalLayerModule.__getZdpModalLayerSsrSnapshot(),
+      `after ${modalCase.kind} SSR render failure`
+    );
+
+    const modalHydrationBody = render(modalHydrationFixtureModule.default, {
+      props: { kind: modalCase.kind }
+    }).body;
+    assert.ok(
+      modalHydrationBody.includes(modalCase.accessibleName),
+      `${modalCase.kind} initial-open SSR output must include its accessible name.`
+    );
+    renderedModalBodies.set(modalCase.kind, modalHydrationBody);
+    assertModalLayerSsrSnapshot(
+      modalLayerModule.__getZdpModalLayerSsrSnapshot(),
+      `after ${modalCase.kind} initial-open SSR render`
     );
   }
 
@@ -255,11 +290,149 @@ try {
   assert.equal(await tooltipTrigger.evaluate((element) => document.activeElement === element), true, 'Tooltip must keep focus.');
 
   assert.deepEqual(hydrationWarnings, [], `Hydration emitted browser warnings: ${hydrationWarnings.join('\n')}`);
+  await page.close();
+
+  for (const modalCase of modalHydrationCases) {
+    await verifyInitiallyOpenModalHydration(browser, address.port, modalCase);
+  }
+
   console.log('Design system SSR hydration check passed.');
 } finally {
   await browser?.close();
   await server.close();
   await rm(cacheDir, { force: true, recursive: true });
+}
+
+function createIdHydrationHtml(body) {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <title>SSR hydration check</title>
+  </head>
+  <body>
+    <main id="app">${body}</main>
+    <script>
+      window.__zdpCaptureHydrationContract = (root) => ({
+        ids: Array.from(root.querySelectorAll('[id]'), (element) => element.id),
+        idReferences: Array.from(
+          root.querySelectorAll('[aria-activedescendant], [aria-controls], [aria-describedby], [aria-labelledby]')
+        ).flatMap((element) =>
+          ['aria-activedescendant', 'aria-controls', 'aria-describedby', 'aria-labelledby']
+            .flatMap((attribute) => (element.getAttribute(attribute) || '').split(/\\s+/))
+            .filter(Boolean)
+        )
+      });
+      window.__zdpHydrationBefore = window.__zdpCaptureHydrationContract(document.querySelector('#app'));
+    </script>
+    <script type="module" src="/tests/ssr/hydrate.js"></script>
+  </body>
+</html>`;
+}
+
+function createModalHydrationHtml(body, kind) {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <title>${kind} SSR hydration check</title>
+  </head>
+  <body>
+    <main id="app">${body}</main>
+    <script>
+      window.__zdpModalHydrationKind = ${JSON.stringify(kind)};
+      const modalHydrationRoot = document.querySelector('#app');
+      const modalHydrationBackground = modalHydrationRoot.querySelector('[data-testid="modal-hydration-background"]');
+      const modalHydrationLayer = modalHydrationRoot.querySelector('[data-zdp-modal-layer-root]');
+      window.__zdpModalHydrationBefore = {
+        backgroundInert: modalHydrationBackground.hasAttribute('inert'),
+        bodyOverflow: document.body.style.overflow,
+        layerActive: modalHydrationLayer?.getAttribute('data-zdp-modal-layer-active') ?? null,
+        layerCount: document.documentElement.getAttribute('data-zdp-modal-layer-count'),
+        layerLevel: modalHydrationLayer?.getAttribute('data-zdp-modal-layer-level') ?? null
+      };
+    </script>
+    <script type="module" src="/tests/ssr/hydrate-modal.js"></script>
+  </body>
+</html>`;
+}
+
+async function verifyInitiallyOpenModalHydration(browserInstance, port, modalCase) {
+  const page = await browserInstance.newPage();
+  const hydrationWarnings = [];
+  page.on('console', (message) => {
+    if (message.type() === 'warning' || message.type() === 'error') {
+      hydrationWarnings.push(message.text());
+    }
+  });
+  page.setDefaultTimeout(10_000);
+  page.setDefaultNavigationTimeout(30_000);
+
+  try {
+    await page.goto(`http://127.0.0.1:${port}${modalCase.path}`, {
+      timeout: 30_000,
+      waitUntil: 'domcontentloaded'
+    });
+    await page.waitForFunction(() => window.__zdpModalHydrationResult || window.__zdpModalHydrationError);
+
+    const result = await page.evaluate(() => ({
+      after: window.__zdpModalHydrationResult,
+      before: window.__zdpModalHydrationBefore,
+      error: window.__zdpModalHydrationError ?? null
+    }));
+
+    assert.equal(result.error, null, `${modalCase.kind} hydration failed: ${result.error}`);
+    assert.deepEqual(
+      result.before,
+      {
+        backgroundInert: false,
+        bodyOverflow: '',
+        layerActive: null,
+        layerCount: null,
+        layerLevel: null
+      },
+      `${modalCase.kind} SSR output must not mutate document modal state before hydration.`
+    );
+    assert.deepEqual(
+      result.after,
+      {
+        backgroundInert: true,
+        bodyOverflow: 'hidden',
+        layerActive: 'true',
+        layerCount: '1',
+        layerLevel: '1'
+      },
+      `${modalCase.kind} hydration must activate exactly one isolated modal layer.`
+    );
+
+    const dialog = page.getByRole('dialog', { name: modalCase.accessibleName });
+    assert.equal(await dialog.count(), 1, `${modalCase.kind} must remain rendered after hydration.`);
+    await dialog.getByRole('button', { name: modalCase.closeLabel }).click();
+    await page.getByTestId('modal-hydration-open-state').getByText('closed', { exact: true }).waitFor();
+    await page.waitForFunction(() => {
+      const background = document.querySelector('[data-testid="modal-hydration-background"]');
+      return (
+        !document.documentElement.hasAttribute('data-zdp-modal-layer-count') &&
+        document.body.style.overflow === '' &&
+        background !== null &&
+        !background.hasAttribute('inert')
+      );
+    });
+
+    assert.equal(await dialog.count(), 0, `${modalCase.kind} must close after hydration.`);
+    assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), null);
+    assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+    assert.equal(await page.getByTestId('modal-hydration-background').getAttribute('inert'), null);
+    assert.deepEqual(
+      hydrationWarnings,
+      [],
+      `${modalCase.kind} hydration emitted browser warnings: ${hydrationWarnings.join('\n')}`
+    );
+  } finally {
+    await page.close();
+  }
 }
 
 function assertModalLayerSsrSnapshot(snapshot, phase) {

@@ -4,6 +4,11 @@
 
 - No unreleased changes.
 
+## 0.47.5
+
+- Kept modal layer registration browser-only so repeated or failed Dialog, Sheet, and TermSheet SSR renders cannot retain process-global modal handles or active-layer state.
+- Expanded the SSR hydration gate to verify initially open modal activation, background isolation, scroll locking, close cleanup, and render-failure isolation across all three modal primitives.
+
 ## 0.47.4
 
 - Replaced formatting-sensitive regular-expression type stripping in the package builder with TypeScript compiler transpilation.
