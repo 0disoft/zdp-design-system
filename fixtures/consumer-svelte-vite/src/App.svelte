@@ -7,6 +7,7 @@
     InlineCode,
     ResizableSplitPane,
     Tooltip,
+    createZdpSplitPaneController,
     createZdpSplitPaneSizePersistence,
     zdpTokenNames,
     type ZdpTokenName
@@ -20,9 +21,34 @@
   const tokenVersion = tokens.version;
   const splitPanePersistence = createZdpSplitPaneSizePersistence({ key: 'consumer-fixture-navigation' });
   let splitPaneSize = 280;
+  let staticSplitPaneRoot: HTMLElement | null = null;
+  let staticSplitPanePrimary: HTMLElement | null = null;
+  let staticSplitPaneSeparator: HTMLElement | null = null;
+  let staticSplitPaneSecondary: HTMLElement | null = null;
 
   onMount(() => {
     splitPaneSize = splitPanePersistence.load();
+  });
+
+  onMount(() => {
+    if (!staticSplitPaneRoot || !staticSplitPanePrimary || !staticSplitPaneSeparator || !staticSplitPaneSecondary) {
+      return;
+    }
+
+    const controller = createZdpSplitPaneController(
+      {
+        root: staticSplitPaneRoot,
+        primary: staticSplitPanePrimary,
+        separator: staticSplitPaneSeparator,
+        secondary: staticSplitPaneSecondary
+      },
+      {
+        ariaLabel: 'Static navigation width',
+        secondaryMinSize: 320
+      }
+    );
+
+    return () => controller.destroy();
   });
 </script>
 
@@ -60,6 +86,17 @@
       <p id="consumer-contract">Resize the navigation to match your workspace.</p>
     </section>
   </ResizableSplitPane>
+
+  <div bind:this={staticSplitPaneRoot}>
+    <nav bind:this={staticSplitPanePrimary} aria-label="Static documentation">
+      <a href="#static-consumer-overview">Static overview</a>
+    </nav>
+    <div bind:this={staticSplitPaneSeparator}></div>
+    <section bind:this={staticSplitPaneSecondary} aria-labelledby="static-consumer-overview">
+      <h2 id="static-consumer-overview">Static DOM controller</h2>
+      <p>The same package contract works without the Svelte component wrapper.</p>
+    </section>
+  </div>
 </main>
 
 <style>

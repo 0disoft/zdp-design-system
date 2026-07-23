@@ -7,6 +7,7 @@
 ## 0.48.0
 
 - Added `ResizableSplitPane` for consumer-owned desktop workspace layouts with bounded pixel sizing, Pointer Events capture and cleanup, keyboard and single-click resize alternatives, RTL-aware movement, accessible separator values, container-aware clamping, and temporary drag-only text-selection suppression.
+- Added framework-neutral `createZdpSplitPaneController` so Astro and static DOM consumers can attach the same resize, cleanup, keyboard, and ARIA contract without a Svelte island.
 - Added SSR-safe `clampZdpSplitPaneSize` and `createZdpSplitPaneSizePersistence` helpers so consumers can explicitly own stable local persistence without hidden component storage.
 - Documented the narrow-layout handoff from desktop split panes to consumer-composed `Sheet` overlays and added Storybook, packed-consumer, package-contract, and Chromium regression coverage.
 

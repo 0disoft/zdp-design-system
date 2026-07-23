@@ -157,7 +157,7 @@ export async function verifyFoundationAndFormContracts(page) {
 
   const splitPaneFixture = page.getByTestId('split-pane-fixture');
   const splitPane = splitPaneFixture.locator('#browser-split-pane');
-  const separator = page.getByRole('separator', { name: 'Navigation width' });
+  const separator = splitPaneFixture.getByRole('separator', { name: 'Navigation width', exact: true });
   const controlledPanelId = await separator.getAttribute('aria-controls');
   assert.ok(controlledPanelId, 'The split pane separator must identify its primary panel.');
   assert.equal(await page.locator(`[id="${controlledPanelId}"]`).count(), 1);
@@ -222,6 +222,40 @@ export async function verifyFoundationAndFormContracts(page) {
     'Blank or corrupt persisted values must restore the configured default.'
   );
   assert.equal(await splitPane.getAttribute('data-zdp-resizable-split-pane-constrained'), null);
+
+  const staticSplitPane = page.locator('#browser-static-split-pane');
+  const staticSeparator = page.locator('#browser-static-split-pane-separator');
+  assert.equal(
+    await page
+      .getByTestId('static-split-pane-fixture')
+      .getByRole('separator', { name: 'Static navigation width', exact: true })
+      .count(),
+    1
+  );
+  assert.equal(await staticSplitPane.getAttribute('data-zdp-resizable-split-pane-orientation'), 'vertical');
+  assert.equal(await staticSeparator.getAttribute('aria-controls'), await staticSplitPane.locator('nav').getAttribute('id'));
+  assert.equal(await staticSeparator.getAttribute('aria-valuemin'), '220');
+  assert.equal(await staticSeparator.getAttribute('aria-valuemax'), '480');
+  assert.equal(await staticSeparator.getAttribute('aria-valuenow'), '280');
+  await staticSeparator.focus();
+  await page.keyboard.press('ArrowRight');
+  assert.equal(await staticSeparator.getAttribute('aria-valuenow'), '288');
+  assert.equal(await page.getByTestId('static-split-pane-size').textContent(), '288');
+  await page.keyboard.press('Home');
+  assert.equal(await staticSeparator.getAttribute('aria-valuenow'), '220');
+  await page.getByTestId('static-split-pane-destroy').click();
+  assert.equal(await staticSeparator.getAttribute('role'), null, 'Destroy must restore the separator role.');
+  assert.equal(await staticSplitPane.locator('nav').getAttribute('id'), null, 'Destroy must remove its generated panel id.');
+  assert.equal(
+    await staticSplitPane.getAttribute('data-zdp-resizable-split-pane'),
+    null,
+    'Destroy must restore controller-owned root attributes.'
+  );
+  assert.equal(
+    await staticSplitPane.evaluate((element) => element.classList.contains('zdp-resizable-split-pane')),
+    false,
+    'Destroy must restore controller-owned classes.'
+  );
 
   const quietToast = page.getByTestId('toast-live-off').locator('.zdp-toast');
   assert.equal(await quietToast.getAttribute('aria-live'), 'off');

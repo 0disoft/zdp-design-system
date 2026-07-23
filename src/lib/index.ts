@@ -95,9 +95,17 @@ export type {
   ZdpTextScaleControlSize
 } from './preferences';
 export type { ZdpProgressSize, ZdpProgressTone, ZdpSkeletonVariant, ZdpSpinnerSize } from './progress';
-export { clampZdpSplitPaneSize, createZdpSplitPaneSizePersistence } from './split-pane';
+export {
+  clampZdpSplitPaneSize,
+  createZdpSplitPaneController,
+  createZdpSplitPaneSizePersistence
+} from './split-pane';
 export type {
+  ZdpSplitPaneController,
+  ZdpSplitPaneControllerElements,
+  ZdpSplitPaneControllerOptions,
   ZdpSplitPaneOrientation,
+  ZdpSplitPaneResizeEvent,
   ZdpSplitPaneSizeBounds,
   ZdpSplitPaneSizePersistence,
   ZdpSplitPaneSizePersistenceOptions

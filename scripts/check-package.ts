@@ -477,31 +477,38 @@ async function checkSplitPaneContract(): Promise<void> {
   const helper = await readFile(join(root, helperPath), 'utf8');
 
   for (const requiredText of [
+    'createZdpSplitPaneController',
+    'controller?.update(createControllerOptions())',
+    'bind:this={primaryElement}',
+    'bind:this={secondaryElement}',
     'role="separator"',
     'aria-controls={resolvedPrimaryId}',
     'aria-valuemin={normalizedMinSize}',
-    'aria-valuemax={effectiveMaxSize}',
+    'aria-valuemax={normalizedMaxSize}',
     'aria-valuenow={renderedSize}',
-    "separatorElement.setPointerCapture(event.pointerId)",
-    'beginZdpDragSelection(separatorElement.ownerDocument)',
-    "event.key === 'Home'",
-    "event.key === 'End'",
-    "getComputedStyle(rootElement).direction === 'rtl'",
-    'new ResizeObserver(updateContainerSize)',
-    'data-zdp-resizable-split-pane-constrained'
+    'data-zdp-resizable-split-pane-orientation={orientation}'
   ]) {
     if (!component.includes(requiredText)) {
       failures.push(`${componentPath} is missing split pane contract text ${requiredText}.`);
     }
   }
 
-  for (const forbiddenText of ['resize:', 'localStorage']) {
+  for (const forbiddenText of ['resize:', 'localStorage', 'setPointerCapture', 'beginZdpDragSelection', 'ResizeObserver']) {
     if (component.includes(forbiddenText)) {
       failures.push(`${componentPath} must not contain ${forbiddenText}; resizing and persistence stay explicit.`);
     }
   }
 
   for (const requiredText of [
+    'export function createZdpSplitPaneController(',
+    "separator.addEventListener('pointerdown', handlePointerDown)",
+    'separator.setPointerCapture(event.pointerId)',
+    'beginZdpDragSelection(separator.ownerDocument)',
+    "event.key === 'Home'",
+    "event.key === 'End'",
+    "root.ownerDocument.defaultView?.getComputedStyle(root).direction === 'rtl'",
+    'new ResizeObserverConstructor',
+    "'data-zdp-resizable-split-pane-constrained'",
     "const ZDP_SPLIT_PANE_STORAGE_PREFIX = 'zdp:split-pane-size:v1:'",
     "typeof window === 'undefined'",
     'return window.localStorage',
@@ -510,7 +517,7 @@ async function checkSplitPaneContract(): Promise<void> {
     "throw new TypeError('Split pane persistence requires a non-empty key.')"
   ]) {
     if (!helper.includes(requiredText)) {
-      failures.push(`${helperPath} is missing split pane persistence contract text ${requiredText}.`);
+      failures.push(`${helperPath} is missing split pane controller or persistence contract text ${requiredText}.`);
     }
   }
 }

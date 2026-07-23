@@ -25,7 +25,11 @@
   import type { ZdpShareDockItem } from '../../../src/lib/share';
   import type { ZdpTermSheetTerm } from '../../../src/lib/term';
   import type { ZdpStatusToastItem } from '../../../src/lib/toast';
-  import { createZdpSplitPaneSizePersistence } from '../../../src/lib/split-pane';
+  import {
+    createZdpSplitPaneController,
+    createZdpSplitPaneSizePersistence,
+    type ZdpSplitPaneController
+  } from '../../../src/lib/split-pane';
 
   const collidingTabItems = [
     { id: 'release notes', label: 'Release notes' },
@@ -76,6 +80,12 @@
   let popoverOpen = false;
   let splitPaneSize = 280;
   let splitPaneDirection: 'ltr' | 'rtl' = 'ltr';
+  let staticSplitPaneSize = 280;
+  let staticSplitPaneRoot: HTMLElement | null = null;
+  let staticSplitPanePrimary: HTMLElement | null = null;
+  let staticSplitPaneSeparator: HTMLElement | null = null;
+  let staticSplitPaneSecondary: HTMLElement | null = null;
+  let staticSplitPaneController: ZdpSplitPaneController | null = null;
   let protectedPopoverOpen = false;
   const browserTerm: ZdpTermSheetTerm = {
     id: 'browser-term',
@@ -93,6 +103,40 @@
   onMount(() => {
     splitPaneSize = splitPanePersistence.load();
   });
+
+  onMount(() => {
+    if (!staticSplitPaneRoot || !staticSplitPanePrimary || !staticSplitPaneSeparator || !staticSplitPaneSecondary) {
+      return;
+    }
+
+    staticSplitPaneController = createZdpSplitPaneController(
+      {
+        root: staticSplitPaneRoot,
+        primary: staticSplitPanePrimary,
+        separator: staticSplitPaneSeparator,
+        secondary: staticSplitPaneSecondary
+      },
+      {
+        size: staticSplitPaneSize,
+        minSize: 220,
+        maxSize: 480,
+        secondaryMinSize: 320,
+        ariaLabel: 'Static navigation width',
+        onResize: (size) => (staticSplitPaneSize = size),
+        onResizeCommit: (size) => (staticSplitPaneSize = size)
+      }
+    );
+
+    return () => {
+      staticSplitPaneController?.destroy();
+      staticSplitPaneController = null;
+    };
+  });
+
+  function destroyStaticSplitPaneController(): void {
+    staticSplitPaneController?.destroy();
+    staticSplitPaneController = null;
+  }
 </script>
 
 <main class="zdp-surface-reset">
@@ -204,6 +248,23 @@
       onclick={() => (splitPaneDirection = splitPaneDirection === 'ltr' ? 'rtl' : 'ltr')}
     >
       Toggle direction
+    </button>
+  </section>
+
+  <section data-testid="static-split-pane-fixture" aria-label="Static resizable workspace">
+    <div bind:this={staticSplitPaneRoot} id="browser-static-split-pane">
+      <nav bind:this={staticSplitPanePrimary} aria-label="Static browser fixture navigation">
+        <a href="#browser-static-split-pane-document">Static overview</a>
+      </nav>
+      <div bind:this={staticSplitPaneSeparator} id="browser-static-split-pane-separator"></div>
+      <article bind:this={staticSplitPaneSecondary} id="browser-static-split-pane-document">
+        <h2>Static workspace document</h2>
+        <p>The framework-neutral controller owns the same splitter contract.</p>
+      </article>
+    </div>
+    <output data-testid="static-split-pane-size">{staticSplitPaneSize}</output>
+    <button data-testid="static-split-pane-destroy" type="button" onclick={destroyStaticSplitPaneController}>
+      Destroy static controller
     </button>
   </section>
   <button data-testid="disable-confirm-action" type="button" onclick={() => (confirmActionDisabled = true)}>
@@ -516,7 +577,16 @@
     inline-size: min(64rem, 100%);
   }
 
+  [data-testid='static-split-pane-fixture'] {
+    inline-size: min(64rem, 100%);
+  }
+
   [data-testid='split-pane-fixture'] > :global(.zdp-resizable-split-pane) {
+    block-size: 24rem;
+    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+  }
+
+  [data-testid='static-split-pane-fixture'] > :global(.zdp-resizable-split-pane) {
     block-size: 24rem;
     border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
   }
