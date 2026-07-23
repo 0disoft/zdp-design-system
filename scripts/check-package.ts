@@ -56,6 +56,7 @@ const runtimeArtifactPaths = [
   'dist/preferences.js',
   'dist/share.js',
   'dist/shortcuts.js',
+  'dist/split-pane.js',
   'dist/tokens.js'
 ] as const;
 const expectedSideEffects = [
@@ -109,6 +110,7 @@ await checkExternalAdoptionContract();
 await checkInteractivePrimitiveAuditContract();
 await checkComboboxContract();
 await checkMenuPopoverInteractionContract();
+await checkSplitPaneContract();
 await checkTermSheetContract();
 await checkOverlayTokenContract();
 
@@ -468,6 +470,51 @@ async function checkTermSheetContract(): Promise<void> {
   }
 }
 
+async function checkSplitPaneContract(): Promise<void> {
+  const componentPath = 'src/lib/components/ResizableSplitPane.svelte';
+  const helperPath = 'src/lib/split-pane.ts';
+  const component = await readFile(join(root, componentPath), 'utf8');
+  const helper = await readFile(join(root, helperPath), 'utf8');
+
+  for (const requiredText of [
+    'role="separator"',
+    'aria-controls={resolvedPrimaryId}',
+    'aria-valuemin={normalizedMinSize}',
+    'aria-valuemax={effectiveMaxSize}',
+    'aria-valuenow={renderedSize}',
+    "separatorElement.setPointerCapture(event.pointerId)",
+    'beginZdpDragSelection(separatorElement.ownerDocument)',
+    "event.key === 'Home'",
+    "event.key === 'End'",
+    "getComputedStyle(rootElement).direction === 'rtl'",
+    'new ResizeObserver(updateContainerSize)',
+    'data-zdp-resizable-split-pane-constrained'
+  ]) {
+    if (!component.includes(requiredText)) {
+      failures.push(`${componentPath} is missing split pane contract text ${requiredText}.`);
+    }
+  }
+
+  for (const forbiddenText of ['resize:', 'localStorage']) {
+    if (component.includes(forbiddenText)) {
+      failures.push(`${componentPath} must not contain ${forbiddenText}; resizing and persistence stay explicit.`);
+    }
+  }
+
+  for (const requiredText of [
+    "const ZDP_SPLIT_PANE_STORAGE_PREFIX = 'zdp:split-pane-size:v1:'",
+    "typeof window === 'undefined'",
+    'return window.localStorage',
+    "storedValue.trim() === ''",
+    'clampZdpSplitPaneSize(parsedValue, bounds)',
+    "throw new TypeError('Split pane persistence requires a non-empty key.')"
+  ]) {
+    if (!helper.includes(requiredText)) {
+      failures.push(`${helperPath} is missing split pane persistence contract text ${requiredText}.`);
+    }
+  }
+}
+
 async function checkOverlayTokenContract(): Promise<void> {
   const checkedPaths = [
     'src/lib/components/Combobox.svelte',
@@ -475,6 +522,7 @@ async function checkOverlayTokenContract(): Promise<void> {
     'src/lib/components/Dialog.svelte',
     'src/lib/components/Menu.svelte',
     'src/lib/components/Popover.svelte',
+    'src/lib/components/ResizableSplitPane.svelte',
     'src/lib/components/ShareDock.svelte',
     'src/lib/components/Sheet.svelte',
     'src/lib/components/SkipLink.svelte',
@@ -791,10 +839,13 @@ async function checkExternalAdoptionContract(): Promise<void> {
   }
 
   for (const requiredText of [
-    'No third-party source code is currently copied or adapted into the package source.',
+    'Simple Icons',
+    'CC0-1.0',
+    'Telegram, LINE, WhatsApp, X, and Reddit',
+    '`src/lib/share.ts`',
     'docs/EXTERNAL_UI_ADOPTION.md',
     'Tailwind Plus and Tailwind UI',
-    'If any third-party source code is copied, ported, or meaningfully adapted later, update this file in the same change.'
+    'If any additional third-party source code, data, or assets are copied, ported, or meaningfully adapted later, update this file in the same change.'
   ]) {
     if (!notices.includes(requiredText)) {
       failures.push(`${noticesPath} is missing third-party notice contract text ${requiredText}.`);

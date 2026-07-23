@@ -17,7 +17,7 @@ const actionReferences = [...workflow.matchAll(/^\s*- uses:\s+([^\s#]+)/gm)].map
 const ciActionReferences = [...ciWorkflow.matchAll(/^\s*- uses:\s+([^\s#]+)/gm)].map((match) => match[1]);
 
 assert.equal(typeof packageJson.version, 'string', 'package.json must declare a string version.');
-assert.equal(packageJson.packageManager, 'bun@1.3.5');
+assert.equal(packageJson.packageManager, 'bun@1.3.14');
 assert.equal(packageJson.repository?.url, 'git+https://github.com/0disoft/zdp-design-system.git');
 assert.match(workflow, /^name: Publish npm package$/m);
 assert.match(workflow, /^\s+tags:$/m);
@@ -61,7 +61,7 @@ assert.ok(
   ciActionReferences.every((reference) => /@[0-9a-f]{40}$/.test(reference)),
   'Every main CI action must be pinned to a full commit SHA.'
 );
-assert.ok(workflow.includes('bun-version: 1.3.5'));
+assert.ok(workflow.includes('bun-version: 1.3.14'));
 assert.ok(workflow.includes('name: Verify npm trusted publishing support'));
 assert.ok(workflow.includes('npm 11.5.1 or later is required'));
 assert.ok(workflow.includes('bun install --frozen-lockfile'));

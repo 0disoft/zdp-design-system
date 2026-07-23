@@ -1,10 +1,10 @@
 {
   "name": "zdp-design-system",
-  "version": "0.47.5",
+  "version": "0.48.0",
   "private": false,
   "license": "MIT",
   "type": "module",
-  "packageManager": "bun@1.3.5",
+  "packageManager": "bun@1.3.14",
   "description": "ZDP design tokens, CSS, icons, and Svelte UI package boundary.",
   "repository": {
     "type": "git",
@@ -72,19 +72,19 @@
     "check": "bun run tokens:check && bun run consumer:check && bun run share-icons:check && bun run preview:check && bun run storybook:check && bun run a11y:check && bun run a11y:runtime:check && bun run ssr:hydration:check && bun run type:check && bun run package:build && bun run package:check && bun run publish:check && bun run release:check && bun run fixtures:check"
   },
   "devDependencies": {
-    "@storybook/addon-a11y": "10.4.2",
-    "@storybook/svelte-vite": "10.4.2",
-    "@sveltejs/vite-plugin-svelte": "^6.2.4",
+    "@storybook/addon-a11y": "10.5.3",
+    "@storybook/svelte-vite": "10.5.3",
+    "@sveltejs/vite-plugin-svelte": "^7.2.0",
     "@tsconfig/svelte": "5.0.8",
-    "@types/node": "26.0.1",
-    "axe-core": "4.12.0",
+    "@types/node": "26.1.1",
+    "axe-core": "4.12.1",
     "playwright-core": "1.61.1",
-    "simple-icons": "^16.23.0",
-    "storybook": "10.4.2",
-    "svelte": "^5.56.3",
-    "svelte-check": "4.7.1",
-    "typescript": "5.9.3",
-    "vite": "^7.3.5"
+    "simple-icons": "^16.27.0",
+    "storybook": "10.5.3",
+    "svelte": "^5.56.7",
+    "svelte-check": "4.7.3",
+    "typescript": "6.0.2",
+    "vite": "^8.1.5"
   },
   "peerDependencies": {
     "svelte": "^5.56.0"

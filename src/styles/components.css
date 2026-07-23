@@ -1,6 +1,7 @@
 .zdp-user-select-control,
 .zdp-user-select-decorative,
 .zdp-user-select-dragging,
+.zdp-resizable-split-pane__separator,
 .zdp-brand-lockup__mark,
 .zdp-button,
 .zdp-confirm-action,
@@ -4761,6 +4762,92 @@
   opacity: 0.72;
 }
 
+.zdp-resizable-split-pane {
+  display: grid;
+  min-block-size: 0;
+  min-inline-size: 0;
+  position: relative;
+}
+
+.zdp-resizable-split-pane--vertical {
+  grid-template-columns: var(--zdp-resizable-split-pane-size) minmax(0, 1fr);
+}
+
+.zdp-resizable-split-pane--horizontal {
+  grid-template-rows: var(--zdp-resizable-split-pane-size) minmax(0, 1fr);
+}
+
+.zdp-resizable-split-pane__primary,
+.zdp-resizable-split-pane__secondary {
+  min-block-size: 0;
+  min-inline-size: 0;
+  overflow: auto;
+}
+
+.zdp-resizable-split-pane__separator {
+  background: transparent;
+  border: 0;
+  box-sizing: border-box;
+  padding: 0;
+  position: absolute;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.zdp-resizable-split-pane__separator::before {
+  background: var(--zdp-color-line-strong);
+  content: '';
+  position: absolute;
+}
+
+.zdp-resizable-split-pane--vertical > .zdp-resizable-split-pane__separator {
+  block-size: 100%;
+  cursor: col-resize;
+  inline-size: var(--zdp-resizable-split-pane-handle-size);
+  inset-block-start: 0;
+  inset-inline-start: var(--zdp-resizable-split-pane-size);
+  margin-inline-start: calc(var(--zdp-resizable-split-pane-handle-size) / -2);
+}
+
+.zdp-resizable-split-pane--vertical > .zdp-resizable-split-pane__separator::before {
+  block-size: 100%;
+  inline-size: var(--zdp-control-border-width);
+  inset-block-start: 0;
+  inset-inline-start: 50%;
+}
+
+.zdp-resizable-split-pane--horizontal > .zdp-resizable-split-pane__separator {
+  block-size: var(--zdp-resizable-split-pane-handle-size);
+  cursor: row-resize;
+  inline-size: 100%;
+  inset-block-start: var(--zdp-resizable-split-pane-size);
+  inset-inline-start: 0;
+  margin-block-start: calc(var(--zdp-resizable-split-pane-handle-size) / -2);
+}
+
+.zdp-resizable-split-pane--horizontal > .zdp-resizable-split-pane__separator::before {
+  block-size: var(--zdp-control-border-width);
+  inline-size: 100%;
+  inset-block-start: 50%;
+  inset-inline-start: 0;
+}
+
+.zdp-resizable-split-pane__separator:hover::before,
+.zdp-resizable-split-pane__separator:focus-visible::before,
+.zdp-resizable-split-pane--dragging > .zdp-resizable-split-pane__separator::before {
+  background: var(--zdp-color-focus-line);
+}
+
+.zdp-resizable-split-pane__separator:focus-visible {
+  outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
+  outline-offset: calc(var(--zdp-control-focus-outline-width) * -1);
+}
+
+.zdp-resizable-split-pane__separator[aria-disabled='true'] {
+  cursor: default;
+}
+
 @media (max-width: 48rem) {
   .zdp-ad-slot--rail {
     block-size: auto;
@@ -4768,6 +4855,14 @@
 }
 
 @media (forced-colors: active) {
+  .zdp-resizable-split-pane__separator::before {
+    background: CanvasText;
+  }
+
+  .zdp-resizable-split-pane__separator:focus-visible {
+    outline-color: Highlight;
+  }
+
   /* Accessibility override: forced colors must outrank Svelte-scoped component state rules. */
   :is([class^='zdp-'], [class*=' zdp-']):focus-visible {
     border-color: Highlight !important;

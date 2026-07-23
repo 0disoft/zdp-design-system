@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import Button from '../../../src/lib/components/Button.svelte';
   import Card from '../../../src/lib/components/Card.svelte';
   import CardHeader from '../../../src/lib/components/CardHeader.svelte';
@@ -9,6 +10,7 @@
   import Menu from '../../../src/lib/components/Menu.svelte';
   import ModalBoundaryFixture from './ModalBoundaryFixture.svelte';
   import Popover from '../../../src/lib/components/Popover.svelte';
+  import ResizableSplitPane from '../../../src/lib/components/ResizableSplitPane.svelte';
   import Sheet from '../../../src/lib/components/Sheet.svelte';
   import SegmentedControl from '../../../src/lib/components/SegmentedControl.svelte';
   import ShareDock from '../../../src/lib/components/ShareDock.svelte';
@@ -23,6 +25,7 @@
   import type { ZdpShareDockItem } from '../../../src/lib/share';
   import type { ZdpTermSheetTerm } from '../../../src/lib/term';
   import type { ZdpStatusToastItem } from '../../../src/lib/toast';
+  import { createZdpSplitPaneSizePersistence } from '../../../src/lib/split-pane';
 
   const collidingTabItems = [
     { id: 'release notes', label: 'Release notes' },
@@ -71,6 +74,8 @@
   let menuOpen = false;
   let menuSelection = '';
   let popoverOpen = false;
+  let splitPaneSize = 280;
+  let splitPaneDirection: 'ltr' | 'rtl' = 'ltr';
   let protectedPopoverOpen = false;
   const browserTerm: ZdpTermSheetTerm = {
     id: 'browser-term',
@@ -83,6 +88,11 @@
     label: 'Protected term',
     short: 'A term that requires an explicit close action.'
   };
+  const splitPanePersistence = createZdpSplitPaneSizePersistence({ key: 'browser-fixture-navigation' });
+
+  onMount(() => {
+    splitPaneSize = splitPanePersistence.load();
+  });
 </script>
 
 <main class="zdp-surface-reset">
@@ -158,10 +168,58 @@
     disabled={confirmActionDisabled}
     onconfirm={() => (confirmActionCount += 1)}
   />
+
+  <section data-testid="split-pane-fixture" aria-label="Resizable workspace" dir={splitPaneDirection}>
+    <ResizableSplitPane
+      id="browser-split-pane"
+      bind:size={splitPaneSize}
+      minSize={220}
+      maxSize={480}
+      secondaryMinSize={320}
+      ariaLabel="Navigation width"
+      getValueText={(size) => `${size} pixels`}
+      onResizeCommit={(size) => splitPanePersistence.save(size)}
+    >
+      {#snippet primary()}
+        <nav class="browser-split-pane__primary" aria-label="Browser fixture navigation">
+          <a href="#browser-split-pane-document">Overview</a>
+          <a href="#browser-split-pane-document">A long navigation label that must not break the workspace</a>
+        </nav>
+      {/snippet}
+      <article id="browser-split-pane-document" class="browser-split-pane__secondary">
+        <h2>Workspace document</h2>
+        <p>The document uses the remaining inline space.</p>
+      </article>
+    </ResizableSplitPane>
+    <output data-testid="split-pane-size">{splitPaneSize}</output>
+    <button data-testid="split-pane-reset-state" type="button" onclick={() => (splitPaneSize = 220)}>
+      Reset fixture state
+    </button>
+    <button data-testid="split-pane-restore-state" type="button" onclick={() => (splitPaneSize = splitPanePersistence.load())}>
+      Restore saved width
+    </button>
+    <button
+      data-testid="split-pane-toggle-direction"
+      type="button"
+      onclick={() => (splitPaneDirection = splitPaneDirection === 'ltr' ? 'rtl' : 'ltr')}
+    >
+      Toggle direction
+    </button>
+  </section>
   <button data-testid="disable-confirm-action" type="button" onclick={() => (confirmActionDisabled = true)}>
     Disable confirmation
   </button>
   <output data-testid="confirm-action-count">{confirmActionCount}</output>
+
+  <ConfirmAction
+    id="throwing-confirm-action"
+    label="Confirm throwing browser action"
+    hint="Hold to test callback failure"
+    durationMs={600}
+    onconfirm={() => {
+      throw new Error('Expected ConfirmAction callback failure.');
+    }}
+  />
 
   <section data-testid="toast-live-off">
     <Toast live="off">Quiet status</Toast>
@@ -452,3 +510,31 @@
     <p>Keyboard navigation reached the explicit link.</p>
   </section>
 </main>
+
+<style>
+  [data-testid='split-pane-fixture'] {
+    inline-size: min(64rem, 100%);
+  }
+
+  [data-testid='split-pane-fixture'] > :global(.zdp-resizable-split-pane) {
+    block-size: 24rem;
+    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+  }
+
+  .browser-split-pane__primary,
+  .browser-split-pane__secondary {
+    box-sizing: border-box;
+    padding: var(--zdp-space-4);
+  }
+
+  .browser-split-pane__primary {
+    display: grid;
+    gap: var(--zdp-space-3);
+  }
+
+  .browser-split-pane__primary a {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>

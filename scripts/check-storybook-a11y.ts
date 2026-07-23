@@ -16,11 +16,11 @@ if (!preview.includes("a11y: {\n      test: 'error'\n    }")) {
   failures.push('.storybook/preview.ts must keep addon-a11y test mode set to error.');
 }
 
-if (packageJson.devDependencies?.['@storybook/addon-a11y'] !== '10.4.2') {
+if (packageJson.devDependencies?.['@storybook/addon-a11y'] !== '10.5.3') {
   failures.push('package.json must keep @storybook/addon-a11y pinned for the a11y gate contract.');
 }
 
-if (packageJson.devDependencies?.['axe-core'] !== '4.12.0') {
+if (packageJson.devDependencies?.['axe-core'] !== '4.12.1') {
   failures.push('package.json must keep axe-core pinned for reproducible runtime story audits.');
 }
 

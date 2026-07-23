@@ -116,6 +116,113 @@ export async function verifyFoundationAndFormContracts(page) {
   assert.equal(await confirmAction.getAttribute('data-active'), null);
   assert.match((await confirmAction.getAttribute('style')) ?? '', /progress:\s*0(?:;|$)/);
 
+  const expectedConfirmActionError = 'Expected ConfirmAction callback failure.';
+  const throwingConfirmAction = page.locator('#throwing-confirm-action');
+  await page.evaluate((expectedMessage) => {
+    window.__zdpConfirmActionError = null;
+    window.addEventListener(
+      'error',
+      (event) => {
+        const message = event.error instanceof Error ? event.error.message : event.message;
+
+        if (message !== expectedMessage) {
+          return;
+        }
+
+        event.preventDefault();
+        window.__zdpConfirmActionError = message;
+      },
+      { once: true }
+    );
+  }, expectedConfirmActionError);
+  await throwingConfirmAction.evaluate((element) => {
+    element.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Enter' }));
+  });
+  await page.waitForFunction(
+    (expectedMessage) => window.__zdpConfirmActionError === expectedMessage,
+    expectedConfirmActionError
+  );
+  await page.waitForFunction(() => {
+    const button = document.querySelector('#throwing-confirm-action');
+    return (
+      button instanceof HTMLButtonElement &&
+      !button.hasAttribute('data-active') &&
+      !button.hasAttribute('data-confirmed') &&
+      button.style.getPropertyValue('--zdp-confirm-action-progress').trim() === '0'
+    );
+  });
+  assert.equal(await throwingConfirmAction.getAttribute('data-active'), null);
+  assert.equal(await throwingConfirmAction.getAttribute('data-confirmed'), null);
+  assert.match((await throwingConfirmAction.getAttribute('style')) ?? '', /progress:\s*0(?:;|$)/);
+
+  const splitPaneFixture = page.getByTestId('split-pane-fixture');
+  const splitPane = splitPaneFixture.locator('#browser-split-pane');
+  const separator = page.getByRole('separator', { name: 'Navigation width' });
+  const controlledPanelId = await separator.getAttribute('aria-controls');
+  assert.ok(controlledPanelId, 'The split pane separator must identify its primary panel.');
+  assert.equal(await page.locator(`[id="${controlledPanelId}"]`).count(), 1);
+  assert.equal(await separator.getAttribute('aria-orientation'), 'vertical');
+  assert.equal(await separator.getAttribute('aria-valuemin'), '220');
+  assert.equal(await separator.getAttribute('aria-valuemax'), '480');
+  assert.equal(await separator.getAttribute('aria-valuenow'), '280');
+  assert.equal(await separator.getAttribute('aria-valuetext'), '280 pixels');
+  assert.ok((await separator.boundingBox()).width >= 24, 'The splitter hit target must be at least 24 CSS pixels wide.');
+
+  await separator.focus();
+  await page.keyboard.press('ArrowRight');
+  assert.equal(await separator.getAttribute('aria-valuenow'), '288');
+  await page.keyboard.press('Shift+ArrowRight');
+  assert.equal(await separator.getAttribute('aria-valuenow'), '320');
+  await page.keyboard.press('Home');
+  assert.equal(await separator.getAttribute('aria-valuenow'), '220');
+  await page.keyboard.press('End');
+  assert.equal(await separator.getAttribute('aria-valuenow'), '480');
+
+  await page.getByTestId('split-pane-toggle-direction').click();
+  await separator.focus();
+  await page.keyboard.press('Home');
+  await page.keyboard.press('ArrowLeft');
+  assert.equal(await separator.getAttribute('aria-valuenow'), '228', 'ArrowLeft must increase the primary pane in RTL.');
+  await page.getByTestId('split-pane-toggle-direction').click();
+
+  const separatorBounds = await separator.boundingBox();
+  assert.ok(separatorBounds, 'The split pane separator must have measurable browser geometry.');
+  await page.mouse.move(separatorBounds.x + separatorBounds.width / 2, separatorBounds.y + separatorBounds.height / 2);
+  await page.mouse.down();
+  assert.equal(
+    await page.locator('html').evaluate((element) => element.classList.contains('zdp-user-select-dragging')),
+    true,
+    'Text selection suppression must start with the active drag only.'
+  );
+  await page.mouse.move(separatorBounds.x + separatorBounds.width / 2 + 72, separatorBounds.y + separatorBounds.height / 2);
+  assert.ok(Number(await separator.getAttribute('aria-valuenow')) >= 296, 'Pointer movement must resize the primary pane.');
+  await page.mouse.up();
+  assert.equal(
+    await page.locator('html').evaluate((element) => element.classList.contains('zdp-user-select-dragging')),
+    false,
+    'Text selection suppression must be removed after pointer release.'
+  );
+
+  const draggedSize = Number(await separator.getAttribute('aria-valuenow'));
+  const clickBounds = await separator.boundingBox();
+  assert.ok(clickBounds, 'The resized separator must retain measurable geometry.');
+  await separator.click({ position: { x: clickBounds.width - 2, y: clickBounds.height / 2 } });
+  const clickedSize = Number(await separator.getAttribute('aria-valuenow'));
+  assert.equal(clickedSize, draggedSize + 8, 'A single pointer click on the end half must provide a non-drag resize step.');
+
+  await page.getByTestId('split-pane-reset-state').click();
+  assert.equal(await page.getByTestId('split-pane-size').textContent(), '220');
+  await page.getByTestId('split-pane-restore-state').click();
+  assert.equal(await page.getByTestId('split-pane-size').textContent(), String(clickedSize));
+  await page.evaluate(() => localStorage.setItem('zdp:split-pane-size:v1:browser-fixture-navigation', '   '));
+  await page.getByTestId('split-pane-restore-state').click();
+  assert.equal(
+    await page.getByTestId('split-pane-size').textContent(),
+    '280',
+    'Blank or corrupt persisted values must restore the configured default.'
+  );
+  assert.equal(await splitPane.getAttribute('data-zdp-resizable-split-pane-constrained'), null);
+
   const quietToast = page.getByTestId('toast-live-off').locator('.zdp-toast');
   assert.equal(await quietToast.getAttribute('aria-live'), 'off');
   assert.equal(await quietToast.getAttribute('aria-atomic'), null);

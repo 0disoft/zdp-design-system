@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
-import { build } from 'vite';
+import { spawn, spawnSync } from 'node:child_process';
+import { build, createServer } from 'vite';
 import { cp, mkdir, mkdtemp, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { basename, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,7 +10,16 @@ const repoRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const fixtureRoot = resolve(repoRoot, 'fixtures/consumer-svelte-vite');
 const fixtureSourceRoot = resolve(fixtureRoot, 'src');
 const temporaryRoot = resolve(repoRoot, 'tmp');
+const packedModalBrowserCheckPath = resolve(repoRoot, 'scripts/browser/check-packed-consumer-hydration.mjs');
 const sourceExtensions = new Set(['.svelte', '.ts', '.js', '.css']);
+const packedModalKinds = ['dialog', 'sheet', 'term-sheet'] as const;
+type PackedModalKind = (typeof packedModalKinds)[number];
+
+const packedModalAccessibleNames: Record<PackedModalKind, string> = {
+  dialog: 'Packed hydration dialog',
+  sheet: 'Packed hydration sheet',
+  'term-sheet': 'Packed hydration term sheet'
+};
 
 interface BuildOutput {
   readonly output: readonly BuildOutputItem[];
@@ -40,6 +49,7 @@ async function checkPackedConsumerFixture(): Promise<void> {
     const tarball = await packCurrentPackage(packedRoot);
     await installPackedPackage(packedRoot, tarball);
     await assertInstalledPackageSurface(packedRoot);
+    await checkPackedConsumerSsrHydration(packedRoot);
 
     const fullFixtureRoot = resolve(packedRoot, 'full');
     await copyFullConsumerFixture(fullFixtureRoot);
@@ -49,6 +59,233 @@ async function checkPackedConsumerFixture(): Promise<void> {
   } finally {
     await rm(packedRoot, { recursive: true, force: true });
   }
+}
+
+async function checkPackedConsumerSsrHydration(packedRoot: string): Promise<void> {
+  const fixtureRoot = resolve(packedRoot, 'ssr-hydration');
+  await mkdir(fixtureRoot, { recursive: true });
+  await writeFile(resolve(fixtureRoot, 'App.svelte'), createPackedModalFixtureSource(), 'utf8');
+  await writeFile(resolve(fixtureRoot, 'hydrate.js'), createPackedModalHydrationSource(), 'utf8');
+
+  const renderedBodies = new Map<string, string>();
+  const server = await createServer({
+    appType: 'custom',
+    cacheDir: resolve(packedRoot, 'vite-ssr-hydration-cache'),
+    configFile: false,
+    logLevel: 'silent',
+    optimizeDeps: {
+      noDiscovery: true
+    },
+    plugins: [
+      svelte(),
+      {
+        name: 'zdp-packed-consumer-ssr-hydration',
+        configureServer(vite) {
+          vite.middlewares.use(async (request, response, next) => {
+            const pathname = request.url?.split('?')[0] ?? '/';
+            const kind = parsePackedModalPath(pathname);
+
+            if (kind === null) {
+              next();
+              return;
+            }
+
+            try {
+              const html = await vite.transformIndexHtml(
+                request.url ?? pathname,
+                createPackedModalHydrationHtml(renderedBodies.get(kind) ?? '', kind)
+              );
+              response.statusCode = 200;
+              response.setHeader('Content-Type', 'text/html; charset=utf-8');
+              response.end(html);
+            } catch (error) {
+              next(error);
+            }
+          });
+        }
+      }
+    ],
+    root: fixtureRoot,
+    server: {
+      hmr: false,
+      host: '127.0.0.1',
+      port: 0,
+      strictPort: false
+    }
+  });
+
+  try {
+    await server.listen();
+    const address = server.httpServer?.address();
+    assert.ok(address && typeof address === 'object', 'Packed SSR fixture server must expose an address.');
+
+    const { render } = await server.ssrLoadModule('svelte/server');
+    const fixtureModule = await server.ssrLoadModule('/App.svelte');
+
+    for (const kind of packedModalKinds) {
+      const body = render(fixtureModule.default, { props: { kind } }).body;
+      assert.ok(body.includes(packedModalAccessibleNames[kind]), `${kind} packed SSR output is missing its name.`);
+      assert.equal(
+        body.includes('data-zdp-modal-layer-active'),
+        false,
+        `${kind} packed SSR output must not serialize browser-only modal activation.`
+      );
+      renderedBodies.set(kind, body);
+    }
+
+    await runPackedModalBrowserCheck(address.port);
+  } finally {
+    await server.close();
+  }
+}
+
+function parsePackedModalPath(pathname: string): PackedModalKind | null {
+  const kind = pathname.startsWith('/modal/') ? pathname.slice('/modal/'.length) : '';
+  return packedModalKinds.find((candidate) => candidate === kind) ?? null;
+}
+
+function createPackedModalFixtureSource(): string {
+  return `<script lang="ts">
+  import { Dialog, Sheet, TermSheet } from 'zdp-design-system';
+
+  export let kind: 'dialog' | 'sheet' | 'term-sheet';
+
+  let open = true;
+  const term = {
+    id: 'packed-hydration-term',
+    label: 'Packed hydration term sheet',
+    short: 'Term content rendered from the installed package.'
+  };
+</script>
+
+<section data-testid="packed-modal-background" aria-label="Packed modal background">
+  <button type="button">Background action</button>
+</section>
+
+{#if kind === 'dialog'}
+  <Dialog
+    bind:open
+    labelledBy="packed-hydration-dialog-title"
+    closeLabel="Close packed hydration dialog"
+    onClose={() => (open = false)}
+  >
+    <svelte:fragment slot="title">
+      <h2 id="packed-hydration-dialog-title">Packed hydration dialog</h2>
+    </svelte:fragment>
+    <p>Dialog content rendered from the installed package.</p>
+  </Dialog>
+{:else if kind === 'sheet'}
+  <Sheet
+    bind:open
+    labelledBy="packed-hydration-sheet-title"
+    closeLabel="Close packed hydration sheet"
+    onClose={() => (open = false)}
+  >
+    <svelte:fragment slot="title">
+      <h2 id="packed-hydration-sheet-title">Packed hydration sheet</h2>
+    </svelte:fragment>
+    <p>Sheet content rendered from the installed package.</p>
+  </Sheet>
+{:else}
+  <TermSheet bind:open {term} closeLabel="Close packed hydration term sheet" onClose={() => (open = false)} />
+{/if}
+
+<output data-testid="packed-modal-open-state">{open ? 'open' : 'closed'}</output>
+`;
+}
+
+function createPackedModalHydrationSource(): string {
+  return `import { hydrate, tick } from 'svelte';
+import App from './App.svelte';
+
+const target = document.querySelector('#app');
+const kind = window.__zdpPackedModalKind;
+
+try {
+  if (!(target instanceof HTMLElement)) {
+    throw new Error('Packed modal hydration root was not found.');
+  }
+
+  if (kind !== 'dialog' && kind !== 'sheet' && kind !== 'term-sheet') {
+    throw new Error(\`Unknown packed modal kind: \${String(kind)}\`);
+  }
+
+  hydrate(App, { props: { kind }, target });
+  await tick();
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+
+  const background = target.querySelector('[data-testid="packed-modal-background"]');
+  const layer = target.querySelector('[data-zdp-modal-layer-root]');
+  window.__zdpPackedModalResult = {
+    backgroundInert: background?.hasAttribute('inert') ?? false,
+    bodyOverflow: document.body.style.overflow,
+    layerActive: layer?.getAttribute('data-zdp-modal-layer-active') ?? null,
+    layerCount: document.documentElement.getAttribute('data-zdp-modal-layer-count'),
+    layerLevel: layer?.getAttribute('data-zdp-modal-layer-level') ?? null
+  };
+} catch (error) {
+  window.__zdpPackedModalError = error instanceof Error ? error.message : String(error);
+}
+`;
+}
+
+function createPackedModalHydrationHtml(body: string, kind: PackedModalKind): string {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <title>${kind} packed SSR hydration check</title>
+  </head>
+  <body>
+    <main id="app">${body}</main>
+    <script>
+      window.__zdpPackedModalKind = ${JSON.stringify(kind)};
+      const root = document.querySelector('#app');
+      const background = root.querySelector('[data-testid="packed-modal-background"]');
+      const layer = root.querySelector('[data-zdp-modal-layer-root]');
+      window.__zdpPackedModalBefore = {
+        backgroundInert: background.hasAttribute('inert'),
+        bodyOverflow: document.body.style.overflow,
+        layerActive: layer?.getAttribute('data-zdp-modal-layer-active') ?? null,
+        layerCount: document.documentElement.getAttribute('data-zdp-modal-layer-count'),
+        layerLevel: layer?.getAttribute('data-zdp-modal-layer-level') ?? null
+      };
+    </script>
+    <script type="module" src="/hydrate.js"></script>
+  </body>
+</html>`;
+}
+
+async function runPackedModalBrowserCheck(port: number): Promise<void> {
+  const nodeExecutable = process.platform === 'win32' ? 'node.exe' : 'node';
+
+  await new Promise<void>((resolvePromise, rejectPromise) => {
+    const child = spawn(nodeExecutable, [packedModalBrowserCheckPath, String(port)], {
+      cwd: repoRoot,
+      shell: false,
+      stdio: ['ignore', 'inherit', 'inherit'],
+      windowsHide: true
+    });
+
+    child.once('error', (error) => {
+      rejectPromise(new Error(`Packed modal Node browser check failed to start: ${error.message}`, { cause: error }));
+    });
+    child.once('close', (code, signal) => {
+      if (code === 0) {
+        resolvePromise();
+        return;
+      }
+
+      rejectPromise(
+        new Error(
+          `Packed modal Node browser check failed with ${
+            signal ? `signal ${signal}` : `exit code ${String(code)}`
+          }.`
+        )
+      );
+    });
+  });
 }
 
 async function packCurrentPackage(packedRoot: string): Promise<string> {
@@ -113,10 +350,13 @@ async function copyFullConsumerFixture(fullFixtureRoot: string): Promise<void> {
   await mkdir(fullFixtureRoot, { recursive: true });
   await cp(resolve(fixtureRoot, 'index.html'), resolve(fullFixtureRoot, 'index.html'));
   await cp(fixtureSourceRoot, resolve(fullFixtureRoot, 'src'), { recursive: true });
+  const svelteTsconfigPath = normalizePath(
+    relative(fullFixtureRoot, resolve(repoRoot, 'node_modules/@tsconfig/svelte/tsconfig.json'))
+  );
   await writeFile(
     resolve(fullFixtureRoot, 'tsconfig.json'),
     `${JSON.stringify({
-      extends: normalizePath(resolve(repoRoot, 'node_modules/@tsconfig/svelte/tsconfig.json')),
+      extends: svelteTsconfigPath,
       compilerOptions: {
         allowJs: true,
         checkJs: false,
@@ -126,7 +366,7 @@ async function copyFullConsumerFixture(fullFixtureRoot: string): Promise<void> {
         noEmit: true,
         resolveJsonModule: true,
         strict: true,
-        types: ['svelte']
+        types: ['svelte', 'vite/client']
       },
       include: ['src/**/*.svelte', 'src/**/*.ts']
     }, null, 2)}\n`,

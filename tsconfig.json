@@ -16,7 +16,8 @@
     "strict": false,
     "types": [
       "node",
-      "svelte"
+      "svelte",
+      "vite/client"
     ]
   },
   "include": [

@@ -85,7 +85,7 @@
     try {
       onconfirm?.();
     } catch (error) {
-      clearTimers();
+      reset();
       throw error;
     }
   }

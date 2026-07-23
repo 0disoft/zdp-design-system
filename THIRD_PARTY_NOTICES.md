@@ -3,9 +3,18 @@
 This repository may review external UI libraries as behavior references, pattern catalogs, or implementation candidates.
 External sources are not automatically copied into `zdp-design-system`.
 
-## Current Adapted Source
+## Current Adapted Material
 
-No third-party source code is currently copied or adapted into the package source.
+The package keeps exact third-party brand icon path data where substituting a custom glyph would
+misrepresent the platform brand.
+
+| Source | License | Material And Adoption Grade | Local Files |
+| --- | --- | --- | --- |
+| [Simple Icons](https://github.com/simple-icons/simple-icons), package snapshot 16.23.0 | CC0-1.0 | Exact SVG path data for Telegram, LINE, WhatsApp, X, and Reddit; Source Adapted. | `src/lib/share.ts`; generated `share.js` and `dist/share.js`. |
+
+`scripts/check-share-icons.ts` compares these five paths with the installed Simple Icons package so
+the copied data cannot silently drift into custom approximations. The CC0 license does not grant
+trademark rights; consuming applications remain responsible for using each brand appropriately.
 
 ## Review Sources
 
@@ -30,5 +39,5 @@ Their license terms are not a fit for a redistributable shared UI package, templ
 
 ## Notice Rule
 
-If any third-party source code is copied, ported, or meaningfully adapted later, update this file in the same change.
+If any additional third-party source code, data, or assets are copied, ported, or meaningfully adapted later, update this file in the same change.
 Record the source URL, license, component, adoption grade, and local files affected.

@@ -4,6 +4,19 @@
 
 - No unreleased changes.
 
+## 0.48.0
+
+- Added `ResizableSplitPane` for consumer-owned desktop workspace layouts with bounded pixel sizing, Pointer Events capture and cleanup, keyboard and single-click resize alternatives, RTL-aware movement, accessible separator values, container-aware clamping, and temporary drag-only text-selection suppression.
+- Added SSR-safe `clampZdpSplitPaneSize` and `createZdpSplitPaneSizePersistence` helpers so consumers can explicitly own stable local persistence without hidden component storage.
+- Documented the narrow-layout handoff from desktop split panes to consumer-composed `Sheet` overlays and added Storybook, packed-consumer, package-contract, and Chromium regression coverage.
+
+## 0.47.6
+
+- Updated the Bun package-manager contract and the Storybook, Svelte, Vite, accessibility, icon, and type-checking toolchain, keeping TypeScript on the latest Svelte-compatible 6.0 line and hardening packed-consumer CSS typing plus Windows tsconfig path resolution for Vite 8.
+- Reset ConfirmAction immediately when a consumer callback throws synchronously while preserving error propagation, with Chromium regression coverage for the reusable control state.
+- Recorded the Simple Icons CC0-1.0 provenance for the exact Telegram, LINE, WhatsApp, X, and Reddit brand path data shipped by ShareDock.
+- Kept packed-consumer modal hydration setup under Bun while running Playwright through a Node subprocess, preventing Windows Chromium handshake stalls without weakening the Dialog, Sheet, or TermSheet assertions.
+
 ## 0.47.5
 
 - Kept modal layer registration browser-only so repeated or failed Dialog, Sheet, and TermSheet SSR renders cannot retain process-global modal handles or active-layer state.

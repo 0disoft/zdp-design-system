@@ -46,6 +46,7 @@ export { default as Pagination } from './components/Pagination.svelte';
 export { default as Popover } from './components/Popover.svelte';
 export { default as Progress } from './components/Progress.svelte';
 export { default as Radio } from './components/Radio.svelte';
+export { default as ResizableSplitPane } from './components/ResizableSplitPane.svelte';
 export { default as Section } from './components/Section.svelte';
 export { default as Select } from './components/Select.svelte';
 export { default as SegmentedControl } from './components/SegmentedControl.svelte';
@@ -94,6 +95,13 @@ export type {
   ZdpTextScaleControlSize
 } from './preferences';
 export type { ZdpProgressSize, ZdpProgressTone, ZdpSkeletonVariant, ZdpSpinnerSize } from './progress';
+export { clampZdpSplitPaneSize, createZdpSplitPaneSizePersistence } from './split-pane';
+export type {
+  ZdpSplitPaneOrientation,
+  ZdpSplitPaneSizeBounds,
+  ZdpSplitPaneSizePersistence,
+  ZdpSplitPaneSizePersistenceOptions
+} from './split-pane';
 export type { ZdpSegmentedControlItem, ZdpSegmentedControlSize } from './segmented';
 export type { ZdpSheetPlacement, ZdpSheetSize } from './sheet';
 export {
