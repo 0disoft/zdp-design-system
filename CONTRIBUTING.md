@@ -71,6 +71,7 @@
 - ShareDock의 플랫폼 브랜드 아이콘은 Simple Icons path 기준을 유지하고, 임의 outline glyph로 대체하지 않는다.
 - Page는 shared page root, surface reset, theme tone만 담당하며 라우팅, SEO, 데이터, 권한, 제품별 visibility 판단을 직접 수행하지 않는다.
 - Container는 페이지 폭, inline padding, centered width만 담당하며 그리드 의미, 라우팅, 데이터, 권한, 제품별 visibility 판단을 직접 수행하지 않는다.
+- 페이지 최외곽 Container는 `gutter="page"` 또는 `.zdp-container--padding-page`로 양쪽 최소 24 CSS px를 유지한다. `padding="sm"`, `padding="md"`, `padding="lg"`는 중첩 Container에 사용하고, 페이지 shell의 더 작은 gutter는 소비 저장소의 명시적 architecture 예외 없이 추가하지 않는다. 이 semantic class/API는 architecture linter가 page shell의 작은 gutter를 식별하는 기준이다.
 - Section은 섹션 block rhythm과 optional full-width band만 담당하며 카드, 라우팅, 데이터, 권한, 제품별 visibility 판단을 직접 수행하지 않는다.
 - PageHeader는 제목, 요약, 액션 배치만 담당하며 문구, SEO heading hierarchy, 라우팅, 데이터, 권한 판단을 직접 수행하지 않는다.
 - Page, Container, Section, PageHeader와 `.zdp-page`, `.zdp-container`, `.zdp-section`, `.zdp-page-header`는 그림자, 그라데이션, hover 상태를 만들지 않고 spacing, width, border, typography 계약만 유지한다.

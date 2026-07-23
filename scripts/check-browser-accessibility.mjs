@@ -8,6 +8,7 @@ import { createServer } from 'vite';
 import { verifyFoundationAndFormContracts } from './browser/check-foundation-and-forms.mjs';
 import { verifyModalContracts, verifyNestedModalContracts } from './browser/check-modals.mjs';
 import { verifyOverlayContracts, verifyShadowOverlayContracts } from './browser/check-overlays.mjs';
+import { verifyPageGutterContracts } from './browser/check-page-gutters.mjs';
 import { verifyResponsiveAndForcedColorContracts } from './browser/check-responsive-and-forced-colors.mjs';
 
 const root = process.cwd();
@@ -44,7 +45,8 @@ try {
   const page = await browser.newPage();
   page.setDefaultTimeout(10_000);
   page.setDefaultNavigationTimeout(30_000);
-  await page.goto(`http://127.0.0.1:${address.port}`, {
+  const baseUrl = `http://127.0.0.1:${address.port}`;
+  await page.goto(baseUrl, {
     timeout: 30_000,
     waitUntil: 'domcontentloaded'
   });
@@ -55,6 +57,7 @@ try {
   await verifyShadowOverlayContracts(page);
   await verifyNestedModalContracts(page);
   await verifyResponsiveAndForcedColorContracts(page);
+  await verifyPageGutterContracts(page, baseUrl);
 
   console.log('Design system browser accessibility check passed.');
 } finally {

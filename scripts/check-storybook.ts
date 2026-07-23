@@ -1227,7 +1227,7 @@ for (const requiredText of [
   '읽을 곳을 내 손에 맞추기',
   '<Page as="div" tone="canvas" labelledBy="layout-story-title">',
   '<Section spacing="xl">',
-  '<Container size="lg" padding="lg">',
+  '<Container size="lg" gutter="page">',
   '<PageHeader labelledBy="layout-story-title" align="center">',
   '<svelte:fragment slot="actions">',
   '<Grid columns="two" gap="md" labelledBy="layout-panel-title">',
@@ -2441,6 +2441,8 @@ for (const requiredText of [
   'as:',
   'size:',
   'padding:',
+  'gutter:',
+  "gutter === 'page'",
   'aria-labelledby={labelledBy ?? undefined}',
   'inline-size: 100%',
   'margin-inline: auto',
@@ -2449,7 +2451,8 @@ for (const requiredText of [
   '.zdp-container--lg',
   '.zdp-container--xl',
   '.zdp-container--full',
-  '.zdp-container--padding-lg'
+  '.zdp-container--padding-lg',
+  '.zdp-container--padding-page'
 ]) {
   if (!container.includes(requiredText)) {
     failures.push(`Container component is missing ${requiredText}.`);

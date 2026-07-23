@@ -11,6 +11,10 @@ const fixtureRoot = resolve(repoRoot, 'fixtures/consumer-svelte-vite');
 const fixtureSourceRoot = resolve(fixtureRoot, 'src');
 const temporaryRoot = resolve(repoRoot, 'tmp');
 const packedModalBrowserCheckPath = resolve(repoRoot, 'scripts/browser/check-packed-consumer-hydration.mjs');
+const packedFrameworkNeutralBrowserCheckPath = resolve(
+  repoRoot,
+  'scripts/browser/check-packed-framework-neutral-dev.mjs'
+);
 const sourceExtensions = new Set(['.svelte', '.ts', '.js', '.css']);
 const packedModalKinds = ['dialog', 'sheet', 'term-sheet'] as const;
 type PackedModalKind = (typeof packedModalKinds)[number];
@@ -49,6 +53,7 @@ async function checkPackedConsumerFixture(): Promise<void> {
     const tarball = await packCurrentPackage(packedRoot);
     await installPackedPackage(packedRoot, tarball);
     await assertInstalledPackageSurface(packedRoot);
+    await checkPackedFrameworkNeutralViteDev(packedRoot);
     await checkPackedConsumerSsrHydration(packedRoot);
 
     const fullFixtureRoot = resolve(packedRoot, 'full');
@@ -59,6 +64,121 @@ async function checkPackedConsumerFixture(): Promise<void> {
   } finally {
     await rm(packedRoot, { recursive: true, force: true });
   }
+}
+
+async function checkPackedFrameworkNeutralViteDev(packedRoot: string): Promise<void> {
+  const fixtureRoot = resolve(packedRoot, 'framework-neutral-dev');
+  await mkdir(fixtureRoot, { recursive: true });
+  await writeFile(
+    resolve(fixtureRoot, 'index.html'),
+    '<link rel="icon" href="data:," /><div id="app"></div><script type="module" src="/main.js"></script>\n',
+    'utf8'
+  );
+  await writeFile(resolve(fixtureRoot, 'main.js'), createFrameworkNeutralDevSource(), 'utf8');
+
+  const server = await createServer({
+    cacheDir: resolve(packedRoot, 'vite-framework-neutral-cache'),
+    configFile: false,
+    logLevel: 'silent',
+    root: fixtureRoot,
+    server: {
+      hmr: false,
+      host: '127.0.0.1',
+      port: 0,
+      strictPort: false
+    }
+  });
+
+  try {
+    await server.listen();
+    const address = server.httpServer?.address();
+    assert.ok(address && typeof address === 'object', 'Framework-neutral Vite fixture must expose an address.');
+    await runPackedFrameworkNeutralBrowserCheck(address.port);
+  } finally {
+    await server.close();
+  }
+}
+
+function createFrameworkNeutralDevSource(): string {
+  return `import {
+  clampZdpSplitPaneSize,
+  createZdpSplitPaneController,
+  createZdpSplitPaneSizePersistence
+} from 'zdp-design-system/split-pane';
+
+const target = document.querySelector('#app');
+
+if (!(target instanceof HTMLElement)) {
+  throw new Error('Framework-neutral fixture root was not found.');
+}
+
+target.innerHTML = '<div data-split-pane><nav data-primary></nav><div data-separator></div><main data-secondary></main></div>';
+
+const root = target.querySelector('[data-split-pane]');
+const primary = target.querySelector('[data-primary]');
+const separator = target.querySelector('[data-separator]');
+const secondary = target.querySelector('[data-secondary]');
+
+if (
+  !(root instanceof HTMLElement) ||
+  !(primary instanceof HTMLElement) ||
+  !(separator instanceof HTMLElement) ||
+  !(secondary instanceof HTMLElement)
+) {
+  throw new Error('Framework-neutral split pane elements were not created.');
+}
+
+const persistence = createZdpSplitPaneSizePersistence({ key: 'packed-framework-neutral-dev' });
+persistence.save(312);
+const controller = createZdpSplitPaneController(
+  { root, primary, separator, secondary },
+  { size: persistence.load(), minSize: 220, maxSize: 480, secondaryMinSize: 320 }
+);
+
+window.__zdpFrameworkNeutralDevResult = {
+  clampedSize: clampZdpSplitPaneSize(999, { minSize: 220, maxSize: 480 }),
+  currentSize: controller.getSize(),
+  orientation: separator.getAttribute('aria-orientation'),
+  role: separator.getAttribute('role'),
+  storedSize: persistence.load()
+};
+
+controller.destroy();
+persistence.clear();
+`;
+}
+
+async function runPackedFrameworkNeutralBrowserCheck(port: number): Promise<void> {
+  const nodeExecutable = process.platform === 'win32' ? 'node.exe' : 'node';
+
+  await new Promise<void>((resolvePromise, rejectPromise) => {
+    const child = spawn(nodeExecutable, [packedFrameworkNeutralBrowserCheckPath, String(port)], {
+      cwd: repoRoot,
+      shell: false,
+      stdio: ['ignore', 'inherit', 'inherit'],
+      windowsHide: true
+    });
+
+    child.once('error', (error) => {
+      rejectPromise(
+        new Error(`Packed framework-neutral Vite browser check failed to start: ${error.message}`, { cause: error })
+      );
+    });
+    child.once('close', (code, signal) => {
+      if (code === 0) {
+        resolvePromise();
+        return;
+      }
+
+      rejectPromise(
+        new Error(
+          `Packed framework-neutral Vite browser check failed with ${
+            signal ? `signal ${signal}` : `exit code ${String(code)}`
+          }.`
+        )
+      );
+    });
+  });
 }
 
 async function checkPackedConsumerSsrHydration(packedRoot: string): Promise<void> {

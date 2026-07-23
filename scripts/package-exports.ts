@@ -22,6 +22,11 @@ export const expectedPackageExports = {
     import: './dist/share.js',
     default: './dist/share.js'
   },
+  './split-pane': {
+    types: './dist/split-pane.ts',
+    import: './dist/split-pane.js',
+    default: './dist/split-pane.js'
+  },
   './tokens': './dist/tokens/zdp.tokens.json'
 } as const satisfies Readonly<Record<string, PackageExportNode>>;
 

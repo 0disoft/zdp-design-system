@@ -4,6 +4,12 @@
 
 - No unreleased changes.
 
+## 0.49.0
+
+- Added the semantic `Container gutter="page"` and `.zdp-container--padding-page` contract so page shells retain at least 24 CSS px of inline gutter when max-width auto margins collapse, without changing nested `padding="sm"`, `padding="md"`, or `padding="lg"` behavior.
+- Added isolated Chromium regression coverage for Svelte and static page containers across 100%, 125%, 150%, and 200% zoom-equivalent effective widths, long localized copy, RTL, and horizontal overflow.
+- Added the framework-neutral `zdp-design-system/split-pane` package subpath and a packed Vite dev-server smoke without the Svelte plugin, preventing Astro consumers from pulling the root Svelte component barrel into dependency optimization.
+
 ## 0.48.0
 
 - Added `ResizableSplitPane` for consumer-owned desktop workspace layouts with bounded pixel sizing, Pointer Events capture and cleanup, keyboard and single-click resize alternatives, RTL-aware movement, accessible separator values, container-aware clamping, and temporary drag-only text-selection suppression.

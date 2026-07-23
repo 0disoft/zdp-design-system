@@ -1,6 +1,6 @@
 {
   "name": "zdp-design-system",
-  "version": "0.48.0",
+  "version": "0.49.0",
   "private": false,
   "license": "MIT",
   "type": "module",
@@ -25,6 +25,11 @@
       "types": "./dist/share.d.ts",
       "import": "./dist/share.js",
       "default": "./dist/share.js"
+    },
+    "./split-pane": {
+      "types": "./dist/split-pane.ts",
+      "import": "./dist/split-pane.js",
+      "default": "./dist/split-pane.js"
     },
     "./tokens": "./dist/tokens/zdp.tokens.json"
   },

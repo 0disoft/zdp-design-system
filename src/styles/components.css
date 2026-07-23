@@ -684,6 +684,10 @@
   padding-inline: var(--zdp-space-6);
 }
 
+.zdp-container--padding-page {
+  padding-inline: var(--zdp-space-6);
+}
+
 .zdp-section {
   min-width: 0;
 }

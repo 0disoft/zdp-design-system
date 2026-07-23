@@ -2,15 +2,17 @@
   export let as: 'div' | 'section' | 'article' | 'header' | 'footer' = 'div';
   export let size: 'sm' | 'md' | 'lg' | 'xl' | 'full' = 'lg';
   export let padding: 'none' | 'sm' | 'md' | 'lg' = 'md';
+  export let gutter: 'page' | null = null;
   export let id: string | null = null;
   export let labelledBy: string | null = null;
 
   $: labelledGroupRole = as === 'div' && labelledBy ? 'group' : undefined;
+  $: paddingClass = gutter === 'page' ? 'zdp-container--padding-page' : `zdp-container--padding-${padding}`;
 </script>
 
 <svelte:element
   this={as}
-  class={`zdp-container zdp-container--${size} zdp-container--padding-${padding}`}
+  class={`zdp-container zdp-container--${size} ${paddingClass}`}
   {id}
   role={labelledGroupRole}
   aria-labelledby={labelledBy ?? undefined}
@@ -58,6 +60,10 @@
   }
 
   .zdp-container--padding-lg {
+    padding-inline: var(--zdp-space-6);
+  }
+
+  .zdp-container--padding-page {
     padding-inline: var(--zdp-space-6);
   }
 </style>

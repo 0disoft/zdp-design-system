@@ -37,7 +37,7 @@
 <main class="layout-story zdp-surface-reset" lang="ko">
   <Page as="div" tone="canvas" labelledBy="layout-story-title">
     <Section spacing="xl">
-      <Container size="lg" padding="lg">
+      <Container size="lg" gutter="page">
         <PageHeader labelledBy="layout-story-title" align="center">
           <span slot="eyebrow" class="layout-story__eyebrow">Layout</span>
           <h1 id="layout-story-title">화면의 첫 장면</h1>
@@ -51,7 +51,7 @@
     </Section>
 
     <Section tone="panel" spacing="lg" labelledBy="layout-panel-title">
-      <Container size="lg" padding="lg">
+      <Container size="lg" gutter="page">
         <Stack gap="lg">
           <PageHeader as="div" labelledBy="layout-panel-title">
             <span slot="eyebrow" class="layout-story__eyebrow">Section</span>
@@ -77,7 +77,7 @@
     </Section>
 
     <Section spacing="lg">
-      <Container size="md" padding="lg">
+      <Container size="md" gutter="page">
         <Stack gap="md" align="start">
           <span class="layout-story__eyebrow">Container</span>
           <h2>읽기 좋은 본문 폭</h2>
@@ -91,7 +91,7 @@
     </Section>
 
     <Section tone="raised" spacing="lg" labelledBy="layout-toolbar-title">
-      <Container size="lg" padding="lg">
+      <Container size="lg" gutter="page">
         <Toolbar labelledBy="layout-toolbar-title">
           <Stack gap="xs">
             <span class="layout-story__eyebrow">Toolbar</span>
@@ -106,7 +106,7 @@
     </Section>
 
     <Section spacing="lg" labelledBy="layout-split-pane-title">
-      <Container size="lg" padding="lg">
+      <Container size="lg" gutter="page">
         <Stack gap="md">
           <PageHeader as="div" labelledBy="layout-split-pane-title">
             <span slot="eyebrow" class="layout-story__eyebrow">Workspace</span>

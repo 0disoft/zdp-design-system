@@ -79,6 +79,7 @@ function checkConsumerContractDocument(documentText: string): void {
     "import 'zdp-design-system/locale-fonts.css';",
     "from 'zdp-design-system'",
     'zdp-design-system/share',
+    'zdp-design-system/split-pane',
     'Accordion',
     'AdSlot',
     'Avatar',
@@ -349,10 +350,14 @@ function checkSynchronizedDocs(
     'TermSheet에는 광고 slot을 넣지 않는다',
     'Dialog는 모달 레이어',
     'Page, Container, Section, PageHeader는 페이지 폭',
+    'Container gutter="page"',
+    '.zdp-container--padding-page',
+    '최소 24 CSS px',
     '`describedBy`에 id 배열',
     '`errorMessageId`로 `aria-errormessage`',
     'Astro는 `styles.css`',
     'zdp-design-system/share',
+    'zdp-design-system/split-pane',
     'Flutter는 Svelte 컴포넌트를 직접 쓰지 않고'
   ]) {
     if (!readme.includes(requiredText)) {
@@ -420,6 +425,9 @@ function checkSynchronizedDocs(
     'Dialog는 `role="dialog"`',
     'Page는 shared page root',
     'Container는 페이지 폭',
+    'gutter="page"',
+    '.zdp-container--padding-page',
+    'architecture linter',
     'Section은 섹션 block rhythm',
     'PageHeader는 제목',
     '`errorMessageId`를 통해 `aria-errormessage`',
