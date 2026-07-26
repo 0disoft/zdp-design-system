@@ -266,16 +266,14 @@ for (const requiredText of [
 }
 
 for (const requiredText of [
-  'https://fonts.googleapis.com/css2?',
-  'family=Cabin:ital,wght@0,400..700;1,400..700',
-  'family=Caesar+Dressing',
-  'family=Copse',
-  'family=Fredericka+the+Great',
-  'family=Google+Sans',
-  'family=Libertinus+Keyboard',
-  'family=Merriweather:ital,wght@0,400;0,700;1,400',
-  'family=Tangerine:wght@400;700',
-  'display=swap'
+  '@fontsource/tangerine@5.3.0',
+  '@fontsource/caesar-dressing@5.3.0',
+  '@fontsource/copse@5.3.0',
+  '@fontsource/fredericka-the-great@5.3.0',
+  '@fontsource/google-sans@5.3.1',
+  '@fontsource/libertinus-keyboard@5.3.0',
+  '@fontsource-variable/merriweather@5.3.0',
+  '@fontsource-variable/cabin@5.3.0'
 ]) {
   if (!expressiveFonts.includes(requiredText)) {
     failures.push(`Expressive font CSS export is missing ${requiredText}.`);

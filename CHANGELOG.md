@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- No unreleased changes.
+Migrated expressive-fonts.css from Google Fonts direct import to fontsource/jsDelivr CDN for consistent font loading policy. Tangerine, Caesar Dressing, Copse, Fredericka the Great, Google Sans, Libertinus Keyboard, Merriweather (variable), and Cabin (variable) now load from cdn.jsdelivr.net/npm/@fontsource* with pinned exact versions.
 
 ## 0.49.0
 
