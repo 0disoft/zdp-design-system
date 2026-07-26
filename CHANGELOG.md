@@ -319,8 +319,8 @@
 
 ## 0.30.0
 
-- Added Japanese font-family token and optional Noto Sans JP locale font export for the 10-locale ZDP plan.
-- Expanded locale documentation from the previous 6-language wording to the 10-language target.
+- Added Japanese font-family token and optional Noto Sans JP locale font export for the 12-locale ZDP plan.
+- Expanded locale documentation from the previous 6-language wording to the 12-language target.
 
 ## 0.29.2
 

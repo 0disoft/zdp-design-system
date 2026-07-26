@@ -79,7 +79,7 @@ Tailwind Plus와 Tailwind UI 계열은 파생/재배포 리스크 때문에 ZDP 
 import 'zdp-design-system/styles.css';
 ```
 
-10개국어 웹 표면에서 라틴/중국어/힌디어/일본어 웹폰트까지 명시 로드해야 하면 선택형 폰트 CSS를 추가로 불러온다. 한국어 Pretendard는 기본 `styles.css`에서 이미 로드한다.
+12개국어 웹 표면에서 라틴/중국어/힌디어/일본어/태국어 웹폰트까지 명시 로드해야 하면 선택형 폰트 CSS를 추가로 불러온다. 한국어 Pretendard는 기본 `styles.css`에서 이미 로드한다.
 
 ```ts
 import 'zdp-design-system/styles.css';
