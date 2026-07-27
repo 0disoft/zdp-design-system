@@ -2,7 +2,12 @@
 
 ## Unreleased
 
-Migrated expressive-fonts.css from Google Fonts direct import to fontsource/jsDelivr CDN for consistent font loading policy. Tangerine, Caesar Dressing, Copse, Fredericka the Great, Google Sans, Libertinus Keyboard, Merriweather (variable), and Cabin (variable) now load from cdn.jsdelivr.net/npm/@fontsource* with pinned exact versions.
+## 0.50.0
+
+- Added a framework-neutral brand asset manifest and public package asset subpaths for an Open Graph background, responsive square, editorial 4:3, landscape 16:9 fallbacks, and the official ship mark.
+- Added deterministic maintainer generation from externally stored, hash-pinned source PNGs plus output hash, dimensions, format, byte-budget, allowlist, source-exclusion, exact-SVG, and forbidden-image checks.
+- Added Storybook light/dark, safe-area, small-mark, aspect-ratio, and failed-image previews and documented consumer crop, responsive delivery, and accessibility ownership.
+- Migrated expressive-fonts.css from Google Fonts direct import to fontsource/jsDelivr CDN for consistent font loading policy. Tangerine, Caesar Dressing, Copse, Fredericka the Great, Google Sans, Libertinus Keyboard, Merriweather (variable), and Cabin (variable) now load from cdn.jsdelivr.net/npm/@fontsource* with pinned exact versions.
 
 ## 0.49.0
 

@@ -38,6 +38,7 @@ const requiredPackagedFiles = [
   'CHANGELOG.md',
   'SECURITY.md',
   'THIRD_PARTY_NOTICES.md',
+  'docs/BRAND_ASSETS.md',
   'docs/CONSUMER_CONTRACT.md',
   'docs/EXTERNAL_UI_ADOPTION.md',
   'docs/INTERACTIVE_PRIMITIVE_AUDIT.md',

@@ -12,6 +12,8 @@
     zdpTokenNames,
     type ZdpTokenName
   } from 'zdp-design-system';
+  import { zdpBrandAssets } from 'zdp-design-system/brand-assets';
+  import landscapeFallback from 'zdp-design-system/assets/brand/landscape-640x360.webp';
   import { zdpShareIcons } from 'zdp-design-system/share';
   import tokens from 'zdp-design-system/tokens';
   import 'zdp-design-system/styles.css';
@@ -19,6 +21,7 @@
   const firstToken: ZdpTokenName = zdpTokenNames[0];
   const iconCount = Object.keys(zdpShareIcons).length;
   const tokenVersion = tokens.version;
+  const landscapeAsset = zdpBrandAssets.landscape[2];
   const splitPanePersistence = createZdpSplitPaneSizePersistence({ key: 'consumer-fixture-navigation' });
   let splitPaneSize = 280;
   let staticSplitPaneRoot: HTMLElement | null = null;
@@ -69,6 +72,16 @@
     </p>
   </Card>
 
+  <figure class="consumer-fixture__brand-asset">
+    <img
+      src={landscapeFallback}
+      width={landscapeAsset.width}
+      height={landscapeAsset.height}
+      alt=""
+    />
+    <figcaption>{landscapeAsset.packagePath}</figcaption>
+  </figure>
+
   <ResizableSplitPane
     bind:size={splitPaneSize}
     ariaLabel="Navigation width"
@@ -110,6 +123,16 @@
   .consumer-fixture > :global(.zdp-resizable-split-pane) {
     block-size: 24rem;
     border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+  }
+
+  .consumer-fixture__brand-asset {
+    margin: 0;
+  }
+
+  .consumer-fixture__brand-asset img {
+    display: block;
+    inline-size: min(100%, 40rem);
+    block-size: auto;
   }
 
   .consumer-fixture__navigation,

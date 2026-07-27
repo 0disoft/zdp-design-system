@@ -22,6 +22,21 @@ export const expectedPackageExports = {
     import: './dist/share.js',
     default: './dist/share.js'
   },
+  './brand-assets': {
+    types: './dist/brand-assets.ts',
+    import: './dist/brand-assets.js',
+    default: './dist/brand-assets.js'
+  },
+  './assets/brand/og-background-1200x630.jpg': './dist/assets/brand/og-background-1200x630.jpg',
+  './assets/brand/brand-square-1024.webp': './dist/assets/brand/brand-square-1024.webp',
+  './assets/brand/brand-square-512.webp': './dist/assets/brand/brand-square-512.webp',
+  './assets/brand/brand-square-256.webp': './dist/assets/brand/brand-square-256.webp',
+  './assets/brand/editorial-1440x1080.webp': './dist/assets/brand/editorial-1440x1080.webp',
+  './assets/brand/editorial-720x540.webp': './dist/assets/brand/editorial-720x540.webp',
+  './assets/brand/landscape-1600x900.webp': './dist/assets/brand/landscape-1600x900.webp',
+  './assets/brand/landscape-960x540.webp': './dist/assets/brand/landscape-960x540.webp',
+  './assets/brand/landscape-640x360.webp': './dist/assets/brand/landscape-640x360.webp',
+  './assets/brand/ship-mark.svg': './dist/assets/brand/ship-mark.svg',
   './split-pane': {
     types: './dist/split-pane.ts',
     import: './dist/split-pane.js',

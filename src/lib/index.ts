@@ -127,5 +127,12 @@ export type { ZdpSortDirection, ZdpTableDensity, ZdpTableToolbarDensityItem } fr
 export type { ZdpTermRelatedTerm, ZdpTermSheetPlacement, ZdpTermSheetTerm } from './term';
 export { zdpShareIcons } from './share';
 export type { ZdpShareDockItem, ZdpShareIconName, ZdpShareIconShape } from './share';
+export { zdpBrandAssets } from './brand-assets';
+export type {
+  ZdpBrandAsset,
+  ZdpBrandAssetCropPolicy,
+  ZdpBrandAssetFormat,
+  ZdpBrandAssetTheme
+} from './brand-assets';
 export { zdpTokenNames } from './tokens';
 export type { ZdpTokenName } from './tokens';

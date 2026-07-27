@@ -102,7 +102,18 @@ import 'zdp-design-system/expressive-fonts.css';
 
 패키지 export는 `dist/` 산출물을 가리킨다. root runtime entry는 `dist/index.js`, type entry는 `dist/index.d.ts`다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `bun run package:build`가 소비자용 `dist/` 표면을 다시 만든다. 소비 저장소와 문서 예시는 `zdp-design-system` public export만 쓰고 내부 `src/` 경로를 직접 import하지 않는다.
 
-ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.49.0`를 기본으로 쓴다.
+ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.50.0`를 기본으로 쓴다.
+
+### Brand fallback assets
+
+공용 Open Graph, square, editorial 4:3, landscape 16:9 fallback과 공식 ship mark는 package asset subpath로 제공한다. 이미지에는 제품명이나 locale 문구가 없고 소비처가 의미와 대체 텍스트를 소유한다.
+
+```ts
+import { zdpBrandAssets } from 'zdp-design-system/brand-assets';
+import squareFallback from 'zdp-design-system/assets/brand/brand-square-512.webp';
+```
+
+`zdpBrandAssets`에는 stable ID, package path, format, dimensions, ratio, theme suitability, intended use, crop policy, decorative 여부, SHA-256가 들어 있다. 사용 가능한 크기와 `object-fit`/접근성 계약은 [`docs/BRAND_ASSETS.md`](docs/BRAND_ASSETS.md)를 따른다. `styles.css`는 이 이미지들을 자동으로 요청하지 않는다.
 
 컴포넌트를 open shadow root 안에 mount하면 document에 import한 `zdp-design-system/styles.css`는 shadow boundary를 넘지 않는다. 소비 앱은 같은 stylesheet를 해당 shadow root 안의 `<style>` 또는 `<link rel="stylesheet">`로 직접 설치해야 하며, 이 조건에서 Tooltip, Combobox, Menu, Popover와 modal primitive의 keyboard, dismissal, focus 계약을 지원한다. closed shadow root는 지원하지 않는다.
 
@@ -554,7 +565,7 @@ preview/index.html
 - CSS는 hex를 먼저 선언하고 OKLCH 지원 브라우저에서만 `@supports`로 덮어쓴다.
 - `styles.css`는 Pretendard Variable dynamic subset을 로드하고, sans/display stack은 `"Pretendard Variable", Pretendard`를 최우선으로 둔다.
 - `brand-fonts.css`는 선택형 public export이며 `font.family.brand`와 `.zdp-brand-wordmark`가 쓰는 Playwrite AU VIC Guides를 로드한다. 일반 문서 제목, 제품 UI heading, 표, 본문에는 `brand` stack을 쓰지 않는다.
-- `expressive-fonts.css`는 선택형 public export이며 `font.family.expressionScript`, `font.family.expressionInscription`, `font.family.expressionSketch`, `font.family.expressionEditorial`, `font.family.expressionSans`, `font.family.expressionKeyboard`가 쓰는 표현용 Google Fonts를 로드한다. 기본 앱 UI, 표, 긴 본문, 일반 Tooltip에는 자동 적용하지 않는다.
+- `expressive-fonts.css`는 선택형 public export이며 `font.family.expressionScript`, `font.family.expressionInscription`, `font.family.expressionSketch`, `font.family.expressionEditorial`, `font.family.expressionSans`, `font.family.expressionKeyboard`가 쓰는 표현용 폰트를 Fontsource의 jsDelivr 배포 파일에서 로드한다. 기본 앱 UI, 표, 긴 본문, 일반 Tooltip에는 자동 적용하지 않는다.
 - `locale-fonts.css`는 선택형 public export이며 Manrope, Noto Sans SC, Noto Sans Devanagari, Noto Sans JP, Noto Sans Thai 웹폰트를 로드한다. 모든 소비 앱이 반드시 가져갈 필요는 없다.
 - `:lang(en|es|fr|vi|ru|id|ms)`는 Manrope/Inter 라틴 스택, `:lang(ko)`는 Pretendard 한국어 스택, `:lang(zh)`는 Noto Sans SC/시스템 중국어 스택, `:lang(hi)`는 Noto Sans Devanagari/시스템 데바나가리 스택, `:lang(ja)`는 Noto Sans JP/시스템 일본어 스택, `:lang(th)`는 Noto Sans Thai/시스템 태국어 스택으로 덮어쓴다.
 - Flutter, native shell, 문서 생성기는 JSON 토큰의 hex 값을 기본 입력으로 쓰고 필요할 때 OKLCH를 별도 변환한다.
