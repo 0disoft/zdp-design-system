@@ -56,13 +56,17 @@ export async function verifyFoundationAndFormContracts(page) {
     const supportsCustomizableSelect = CSS.supports('appearance', 'base-select');
     const pickerStyle = getComputedStyle(element, '::picker-icon');
     const spacedOptionStyle = getComputedStyle(element.options[1]);
+    const selectStyle = getComputedStyle(element);
     return {
       supportsCustomizableSelect,
-      appearance: getComputedStyle(element).appearance,
-      paddingBlockStart: Number.parseFloat(getComputedStyle(element).paddingTop),
-      paddingBlockEnd: Number.parseFloat(getComputedStyle(element).paddingBottom),
+      appearance: selectStyle.appearance,
+      paddingBlockStart: Number.parseFloat(selectStyle.paddingTop),
+      paddingBlockEnd: Number.parseFloat(selectStyle.paddingBottom),
+      paddingInlineEnd: Number.parseFloat(selectStyle.paddingInlineEnd),
       pickerMarginInlineEnd: Number.parseFloat(pickerStyle.marginInlineEnd),
-      optionMarginBlockStart: Number.parseFloat(spacedOptionStyle.marginBlockStart)
+      optionMarginBlockStart: Number.parseFloat(spacedOptionStyle.marginBlockStart),
+      optionPaddingBlockStart: Number.parseFloat(spacedOptionStyle.paddingBlockStart),
+      optionPaddingBlockEnd: Number.parseFloat(spacedOptionStyle.paddingBlockEnd)
     };
   });
   if (selectPickerStyle.supportsCustomizableSelect) {
@@ -77,14 +81,29 @@ export async function verifyFoundationAndFormContracts(page) {
       'The customizable native Select must retain enough block padding to center its value and picker icon.'
     );
     assert.equal(
-      selectPickerStyle.pickerMarginInlineEnd,
+      selectPickerStyle.paddingInlineEnd,
       4,
-      'The native Select picker icon must keep a compact 4 CSS pixel inline-end inset.'
+      'The native Select control must keep its picker icon within a compact 4 CSS pixel inline-end inset.'
+    );
+    assert.equal(
+      selectPickerStyle.pickerMarginInlineEnd,
+      0,
+      'The picker icon must not add a second inline-end margin beyond the Select control inset.'
     );
     assert.equal(
       selectPickerStyle.optionMarginBlockStart,
       2,
       'Adjacent customizable Select options must keep 2 CSS pixels of separation.'
+    );
+    assert.equal(
+      selectPickerStyle.optionPaddingBlockStart,
+      2,
+      'Customizable Select options must add 2 CSS pixels of visible block-start breathing room.'
+    );
+    assert.equal(
+      selectPickerStyle.optionPaddingBlockEnd,
+      2,
+      'Customizable Select options must add 2 CSS pixels of visible block-end breathing room.'
     );
     const originalTheme = await page.locator('html').getAttribute('data-zdp-theme');
     for (const theme of ['light', 'dark']) {

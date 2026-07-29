@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.50.3
+
+- Made customizable native Select spacing visibly perceptible by adding block inset to each option and moving the picker icon closer to the inline-end border through the control padding instead of an icon-only margin.
+
 ## 0.50.2
 
 - Tightened the customizable native Select picker icon inset to 4 CSS pixels and added 2 CSS pixels of separation between adjacent options while preserving native fallback and forced-colors behavior.
