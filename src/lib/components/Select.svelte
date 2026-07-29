@@ -85,4 +85,41 @@
     cursor: not-allowed;
     opacity: 0.56;
   }
+
+  @supports (appearance: base-select) {
+    .zdp-select,
+    .zdp-select::picker(select) {
+      appearance: base-select;
+    }
+
+    .zdp-select {
+      padding-block: var(--zdp-space-3);
+    }
+
+    .zdp-select::picker-icon {
+      margin-inline-end: var(--zdp-space-2);
+    }
+
+    .zdp-select::picker(select) {
+      background: var(--zdp-color-surface-panel);
+      border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
+      color: var(--zdp-color-ink-strong);
+    }
+
+    .zdp-select :global(option) {
+      background-color: var(--zdp-color-surface-panel);
+      color: var(--zdp-color-ink-strong);
+    }
+
+    .zdp-select :global(option:hover),
+    .zdp-select :global(option:focus-visible) {
+      background-color: var(--zdp-color-surface-raised);
+      color: var(--zdp-color-ink-strong);
+    }
+
+    .zdp-select :global(option:checked) {
+      background-color: var(--zdp-color-focus-surface);
+      color: var(--zdp-color-focus-text);
+    }
+  }
 </style>

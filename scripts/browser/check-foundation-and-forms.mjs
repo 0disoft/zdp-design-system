@@ -51,6 +51,70 @@ export async function verifyFoundationAndFormContracts(page) {
   assert.equal(await tabs.nth(1).getAttribute('aria-selected'), 'true');
   assert.equal(await page.getByRole('tabpanel').getAttribute('id'), controlledPanelIds[1]);
 
+  const releaseStatus = page.getByRole('combobox', { name: 'Release status', exact: true });
+  const selectPickerStyle = await releaseStatus.evaluate((element) => {
+    const supportsCustomizableSelect = CSS.supports('appearance', 'base-select');
+    const pickerStyle = getComputedStyle(element, '::picker-icon');
+    return {
+      supportsCustomizableSelect,
+      appearance: getComputedStyle(element).appearance,
+      paddingBlockStart: Number.parseFloat(getComputedStyle(element).paddingTop),
+      paddingBlockEnd: Number.parseFloat(getComputedStyle(element).paddingBottom),
+      pickerMarginInlineEnd: Number.parseFloat(pickerStyle.marginInlineEnd)
+    };
+  });
+  if (selectPickerStyle.supportsCustomizableSelect) {
+    assert.equal(selectPickerStyle.appearance, 'base-select');
+    assert.equal(
+      selectPickerStyle.paddingBlockStart,
+      selectPickerStyle.paddingBlockEnd,
+      'The customizable native Select must use symmetric block padding for vertical centering.'
+    );
+    assert.ok(
+      selectPickerStyle.paddingBlockStart >= 8,
+      'The customizable native Select must retain enough block padding to center its value and picker icon.'
+    );
+    assert.ok(
+      selectPickerStyle.pickerMarginInlineEnd >= 8,
+      'The native Select picker icon must retain at least 8 CSS pixels of inline-end breathing room.'
+    );
+    const originalTheme = await page.locator('html').getAttribute('data-zdp-theme');
+    for (const theme of ['light', 'dark']) {
+      const selectedOptionVisuals = await releaseStatus.evaluate((element, selectedTheme) => {
+        document.documentElement.setAttribute('data-zdp-theme', selectedTheme);
+        const selectedOption = element.selectedOptions[0];
+        const probe = document.createElement('span');
+        probe.style.backgroundColor = 'var(--zdp-color-focus-surface)';
+        probe.style.color = 'var(--zdp-color-focus-text)';
+        document.body.append(probe);
+        const visuals = {
+          backgroundColor: getComputedStyle(selectedOption).backgroundColor,
+          color: getComputedStyle(selectedOption).color,
+          expectedBackgroundColor: getComputedStyle(probe).backgroundColor,
+          expectedColor: getComputedStyle(probe).color
+        };
+        probe.remove();
+        return visuals;
+      }, theme);
+      assert.equal(
+        selectedOptionVisuals.backgroundColor,
+        selectedOptionVisuals.expectedBackgroundColor,
+        `The ${theme} native Select must use the themed focus surface instead of the browser selection color.`
+      );
+      assert.equal(
+        selectedOptionVisuals.color,
+        selectedOptionVisuals.expectedColor,
+        `The ${theme} native Select must keep readable themed text on its selected option.`
+      );
+    }
+    await page.locator('html').evaluate((element, theme) => {
+      if (theme === null) element.removeAttribute('data-zdp-theme');
+      else element.setAttribute('data-zdp-theme', theme);
+    }, originalTheme);
+  }
+  await releaseStatus.selectOption('blocked');
+  assert.equal(await releaseStatus.inputValue(), 'blocked', 'Picker icon styling must preserve native Select changes.');
+
   const disclosureTrigger = page.getByRole('button', { name: 'Browser details' });
   assert.equal(await disclosureTrigger.getAttribute('aria-controls'), null);
   await disclosureTrigger.click();

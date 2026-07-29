@@ -13,6 +13,7 @@
   import ResizableSplitPane from '../../../src/lib/components/ResizableSplitPane.svelte';
   import Sheet from '../../../src/lib/components/Sheet.svelte';
   import SegmentedControl from '../../../src/lib/components/SegmentedControl.svelte';
+  import Select from '../../../src/lib/components/Select.svelte';
   import ShareDock from '../../../src/lib/components/ShareDock.svelte';
   import StatusToast from '../../../src/lib/components/StatusToast.svelte';
   import TableToolbar from '../../../src/lib/components/TableToolbar.svelte';
@@ -180,6 +181,12 @@
     <Button disabled>Unavailable contrast action</Button>
     <SegmentedControl ariaLabel="Contrast choices" items={forcedColorItems} selectedId="selected" />
   </section>
+
+  <label for="browser-release-status">Release status</label>
+  <Select id="browser-release-status" name="release-status" value="ready">
+    <option value="ready">Ready</option>
+    <option value="blocked">Blocked</option>
+  </Select>
 
   <Combobox
     id="browser-combobox"

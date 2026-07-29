@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.50.1
+
+- Added progressive native Select picker styling so supported browsers keep the disclosure arrow away from the inline-end border and render the picker, hover, and selected options with theme tokens instead of the browser-blue selection color, without replacing native keyboard or touch behavior.
+
 ## 0.50.0
 
 - Added a framework-neutral brand asset manifest and public package asset subpaths for an Open Graph background, responsive square, editorial 4:3, landscape 16:9 fallbacks, and the official ship mark.
