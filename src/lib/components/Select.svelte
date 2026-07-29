@@ -94,7 +94,7 @@
 
     .zdp-select {
       padding-block: var(--zdp-space-3);
-      padding-inline-end: var(--zdp-space-1);
+      padding-inline-end: var(--zdp-space-2);
     }
 
     .zdp-select::picker-icon {

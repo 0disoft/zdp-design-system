@@ -84,8 +84,8 @@ export async function verifyFoundationAndFormContracts(page) {
     );
     assert.equal(
       selectPickerStyle.paddingInlineEnd,
-      4,
-      'The native Select control must keep its picker icon within a compact 4 CSS pixel inline-end inset.'
+      8,
+      'The native Select control must keep its picker icon within a balanced 8 CSS pixel inline-end inset.'
     );
     assert.equal(
       selectPickerStyle.pickerMarginInlineEnd,

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.50.5
+
+- Rebalanced the customizable native Select picker icon inset from 4 to 8 CSS pixels so the arrow remains compact without appearing attached to the control border.
+
 ## 0.50.4
 
 - Added compact inline padding to customizable native Select options so selected and hovered rows keep visible breathing room on every side.
