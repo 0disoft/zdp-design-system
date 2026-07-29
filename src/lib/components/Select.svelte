@@ -117,6 +117,10 @@
       margin-block-start: calc(var(--zdp-space-1) / 2);
     }
 
+    .zdp-select :global(option::checkmark) {
+      margin-inline-start: var(--zdp-space-1);
+    }
+
     .zdp-select :global(option:hover),
     .zdp-select :global(option:focus-visible) {
       background-color: var(--zdp-color-surface-raised);

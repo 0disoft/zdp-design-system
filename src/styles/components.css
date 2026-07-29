@@ -2770,6 +2770,10 @@
     margin-block-start: calc(var(--zdp-space-1) / 2);
   }
 
+  .zdp-select option::checkmark {
+    margin-inline-start: var(--zdp-space-1);
+  }
+
   .zdp-select option:hover,
   .zdp-select option:focus-visible {
     background-color: var(--zdp-color-surface-raised);

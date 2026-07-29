@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.50.6
+
+- Added logical inline-start clearance to the customizable native Select checkmark so the selected indicator no longer touches the picker edge while preserving option text alignment and RTL behavior.
+
 ## 0.50.5
 
 - Rebalanced the customizable native Select picker icon inset from 4 to 8 CSS pixels so the arrow remains compact without appearing attached to the control border.

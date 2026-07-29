@@ -56,6 +56,7 @@ export async function verifyFoundationAndFormContracts(page) {
     const supportsCustomizableSelect = CSS.supports('appearance', 'base-select');
     const pickerStyle = getComputedStyle(element, '::picker-icon');
     const spacedOptionStyle = getComputedStyle(element.options[1]);
+    const selectedOptionCheckmarkStyle = getComputedStyle(element.selectedOptions[0], '::checkmark');
     const selectStyle = getComputedStyle(element);
     return {
       supportsCustomizableSelect,
@@ -64,6 +65,7 @@ export async function verifyFoundationAndFormContracts(page) {
       paddingBlockEnd: Number.parseFloat(selectStyle.paddingBottom),
       paddingInlineEnd: Number.parseFloat(selectStyle.paddingInlineEnd),
       pickerMarginInlineEnd: Number.parseFloat(pickerStyle.marginInlineEnd),
+      selectedOptionCheckmarkMarginInlineStart: Number.parseFloat(selectedOptionCheckmarkStyle.marginInlineStart),
       optionMarginBlockStart: Number.parseFloat(spacedOptionStyle.marginBlockStart),
       optionPaddingBlockStart: Number.parseFloat(spacedOptionStyle.paddingBlockStart),
       optionPaddingBlockEnd: Number.parseFloat(spacedOptionStyle.paddingBlockEnd),
@@ -91,6 +93,11 @@ export async function verifyFoundationAndFormContracts(page) {
       selectPickerStyle.pickerMarginInlineEnd,
       0,
       'The picker icon must not add a second inline-end margin beyond the Select control inset.'
+    );
+    assert.equal(
+      selectPickerStyle.selectedOptionCheckmarkMarginInlineStart,
+      4,
+      'The selected option checkmark must keep 4 CSS pixels of logical inline-start clearance from the picker edge.'
     );
     assert.equal(
       selectPickerStyle.optionMarginBlockStart,
