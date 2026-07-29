@@ -110,7 +110,7 @@
     .zdp-select :global(option) {
       background-color: var(--zdp-color-surface-panel);
       color: var(--zdp-color-ink-strong);
-      padding-block: calc(var(--zdp-space-1) / 2);
+      padding: calc(var(--zdp-space-1) / 2);
     }
 
     .zdp-select :global(option + option) {

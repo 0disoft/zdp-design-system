@@ -66,7 +66,9 @@ export async function verifyFoundationAndFormContracts(page) {
       pickerMarginInlineEnd: Number.parseFloat(pickerStyle.marginInlineEnd),
       optionMarginBlockStart: Number.parseFloat(spacedOptionStyle.marginBlockStart),
       optionPaddingBlockStart: Number.parseFloat(spacedOptionStyle.paddingBlockStart),
-      optionPaddingBlockEnd: Number.parseFloat(spacedOptionStyle.paddingBlockEnd)
+      optionPaddingBlockEnd: Number.parseFloat(spacedOptionStyle.paddingBlockEnd),
+      optionPaddingInlineStart: Number.parseFloat(spacedOptionStyle.paddingInlineStart),
+      optionPaddingInlineEnd: Number.parseFloat(spacedOptionStyle.paddingInlineEnd)
     };
   });
   if (selectPickerStyle.supportsCustomizableSelect) {
@@ -104,6 +106,16 @@ export async function verifyFoundationAndFormContracts(page) {
       selectPickerStyle.optionPaddingBlockEnd,
       2,
       'Customizable Select options must add 2 CSS pixels of visible block-end breathing room.'
+    );
+    assert.equal(
+      selectPickerStyle.optionPaddingInlineStart,
+      2,
+      'Customizable Select options must add 2 CSS pixels of inline-start breathing room.'
+    );
+    assert.equal(
+      selectPickerStyle.optionPaddingInlineEnd,
+      2,
+      'Customizable Select options must add 2 CSS pixels of inline-end breathing room.'
     );
     const originalTheme = await page.locator('html').getAttribute('data-zdp-theme');
     for (const theme of ['light', 'dark']) {

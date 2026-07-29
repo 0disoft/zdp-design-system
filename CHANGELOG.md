@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.50.4
+
+- Added compact inline padding to customizable native Select options so selected and hovered rows keep visible breathing room on every side.
+
 ## 0.50.3
 
 - Made customizable native Select spacing visibly perceptible by adding block inset to each option and moving the picker icon closer to the inline-end border through the control padding instead of an icon-only margin.
