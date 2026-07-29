@@ -97,7 +97,7 @@
     }
 
     .zdp-select::picker-icon {
-      margin-inline-end: var(--zdp-space-2);
+      margin-inline-end: var(--zdp-space-1);
     }
 
     .zdp-select::picker(select) {
@@ -109,6 +109,10 @@
     .zdp-select :global(option) {
       background-color: var(--zdp-color-surface-panel);
       color: var(--zdp-color-ink-strong);
+    }
+
+    .zdp-select :global(option + option) {
+      margin-block-start: calc(var(--zdp-space-1) / 2);
     }
 
     .zdp-select :global(option:hover),

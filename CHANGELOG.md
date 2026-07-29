@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.50.2
+
+- Tightened the customizable native Select picker icon inset to 4 CSS pixels and added 2 CSS pixels of separation between adjacent options while preserving native fallback and forced-colors behavior.
+
 ## 0.50.1
 
 - Added progressive native Select picker styling so supported browsers keep the disclosure arrow away from the inline-end border and render the picker, hover, and selected options with theme tokens instead of the browser-blue selection color, without replacing native keyboard or touch behavior.

@@ -55,12 +55,14 @@ export async function verifyFoundationAndFormContracts(page) {
   const selectPickerStyle = await releaseStatus.evaluate((element) => {
     const supportsCustomizableSelect = CSS.supports('appearance', 'base-select');
     const pickerStyle = getComputedStyle(element, '::picker-icon');
+    const spacedOptionStyle = getComputedStyle(element.options[1]);
     return {
       supportsCustomizableSelect,
       appearance: getComputedStyle(element).appearance,
       paddingBlockStart: Number.parseFloat(getComputedStyle(element).paddingTop),
       paddingBlockEnd: Number.parseFloat(getComputedStyle(element).paddingBottom),
-      pickerMarginInlineEnd: Number.parseFloat(pickerStyle.marginInlineEnd)
+      pickerMarginInlineEnd: Number.parseFloat(pickerStyle.marginInlineEnd),
+      optionMarginBlockStart: Number.parseFloat(spacedOptionStyle.marginBlockStart)
     };
   });
   if (selectPickerStyle.supportsCustomizableSelect) {
@@ -74,9 +76,15 @@ export async function verifyFoundationAndFormContracts(page) {
       selectPickerStyle.paddingBlockStart >= 8,
       'The customizable native Select must retain enough block padding to center its value and picker icon.'
     );
-    assert.ok(
-      selectPickerStyle.pickerMarginInlineEnd >= 8,
-      'The native Select picker icon must retain at least 8 CSS pixels of inline-end breathing room.'
+    assert.equal(
+      selectPickerStyle.pickerMarginInlineEnd,
+      4,
+      'The native Select picker icon must keep a compact 4 CSS pixel inline-end inset.'
+    );
+    assert.equal(
+      selectPickerStyle.optionMarginBlockStart,
+      2,
+      'Adjacent customizable Select options must keep 2 CSS pixels of separation.'
     );
     const originalTheme = await page.locator('html').getAttribute('data-zdp-theme');
     for (const theme of ['light', 'dark']) {
