@@ -134,5 +134,13 @@ export type {
   ZdpBrandAssetFormat,
   ZdpBrandAssetTheme
 } from './brand-assets';
+export { zdpCreditAssets } from './credit-assets';
+export type {
+  ZdpCreditAsset,
+  ZdpCreditAssetFormat,
+  ZdpCreditAssetKind,
+  ZdpCreditAssetTheme,
+  ZdpCreditPackId
+} from './credit-assets';
 export { zdpTokenNames } from './tokens';
 export type { ZdpTokenName } from './tokens';

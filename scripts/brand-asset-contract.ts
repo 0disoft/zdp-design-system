@@ -23,5 +23,9 @@ export const brandOutputContract = Object.freeze([
   Object.freeze({ fileName: 'landscape-1600x900.webp', width: 1600, height: 900, format: 'webp', maxBytes: 600_000 }),
   Object.freeze({ fileName: 'landscape-960x540.webp', width: 960, height: 540, format: 'webp', maxBytes: 260_000 }),
   Object.freeze({ fileName: 'landscape-640x360.webp', width: 640, height: 360, format: 'webp', maxBytes: 150_000 }),
-  Object.freeze({ fileName: 'ship-mark.svg', width: 48, height: 48, format: 'svg', maxBytes: 2_500 })
+  Object.freeze({ fileName: 'ship-mark.svg', width: 48, height: 48, format: 'svg', maxBytes: 2_500 }),
+  Object.freeze({ fileName: 'ship-mark-simple-mono.svg', width: 48, height: 48, format: 'svg', maxBytes: 1_000 }),
+  Object.freeze({ fileName: 'ship-mark-simple-inverse.svg', width: 48, height: 48, format: 'svg', maxBytes: 1_000 }),
+  Object.freeze({ fileName: 'ship-mark-simple-current-color.svg', width: 48, height: 48, format: 'svg', maxBytes: 1_000 }),
+  Object.freeze({ fileName: 'ship-mark-simple-tricolor.svg', width: 48, height: 48, format: 'svg', maxBytes: 1_000 })
 ]);

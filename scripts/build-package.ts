@@ -14,7 +14,7 @@ import {
 
 const repoRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const distRoot = resolve(repoRoot, 'dist');
-const runtimeModuleNames = ['brand-assets', 'preferences', 'shortcuts', 'split-pane', 'tokens'] as const;
+const runtimeModuleNames = ['brand-assets', 'credit-assets', 'preferences', 'shortcuts', 'split-pane', 'tokens'] as const;
 
 function assertInsideRepo(path: string): void {
   const normalizedRepo = repoRoot.endsWith(sep) ? repoRoot : `${repoRoot}${sep}`;

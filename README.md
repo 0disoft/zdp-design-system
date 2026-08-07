@@ -102,18 +102,32 @@ import 'zdp-design-system/expressive-fonts.css';
 
 패키지 export는 `dist/` 산출물을 가리킨다. root runtime entry는 `dist/index.js`, type entry는 `dist/index.d.ts`다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `bun run package:build`가 소비자용 `dist/` 표면을 다시 만든다. 소비 저장소와 문서 예시는 `zdp-design-system` public export만 쓰고 내부 `src/` 경로를 직접 import하지 않는다.
 
-ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.50.6`를 기본으로 쓴다.
+ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.51.0`를 기본으로 쓴다.
 
 ### Brand fallback assets
 
-공용 Open Graph, square, editorial 4:3, landscape 16:9 fallback과 공식 ship mark는 package asset subpath로 제공한다. 이미지에는 제품명이나 locale 문구가 없고 소비처가 의미와 대체 텍스트를 소유한다.
+공용 Open Graph, square, editorial 4:3, landscape 16:9 fallback과 ship mark는 package asset subpath로 제공한다. 기존 상세형 `ship-mark.svg`는 보존되며, 새 기본 단색·역상·inline `currentColor`·표시용 3색 심볼은 각각 `ship-mark-simple-*` 이름으로 분리한다. 이미지에는 제품명이나 locale 문구가 없고 소비처가 의미와 대체 텍스트를 소유한다.
 
 ```ts
 import { zdpBrandAssets } from 'zdp-design-system/brand-assets';
 import squareFallback from 'zdp-design-system/assets/brand/brand-square-512.webp';
+import simpleShipMark from 'zdp-design-system/assets/brand/ship-mark-simple-mono.svg';
 ```
 
 `zdpBrandAssets`에는 stable ID, package path, format, dimensions, ratio, theme suitability, intended use, crop policy, decorative 여부, SHA-256가 들어 있다. 사용 가능한 크기와 `object-fit`/접근성 계약은 [`docs/BRAND_ASSETS.md`](docs/BRAND_ASSETS.md)를 따른다. `styles.css`는 이 이미지들을 자동으로 요청하지 않는다.
+
+### Credit assets
+
+공용 귤 심볼과 Dinghy부터 Flagship까지의 크레딧 팩 함선은 브랜드 fallback과 분리된 package surface로 제공한다. 디자인 시스템은 형태와 렌더링 규칙만 소유하며 가격, 지급량, 보너스, 유효기간과 판매 상태를 결정하지 않는다.
+
+```ts
+import { zdpCreditAssets } from 'zdp-design-system/credit-assets';
+import tangerine from 'zdp-design-system/assets/credits/credit-tangerine-simple-mono.svg';
+import flagshipGlyph from 'zdp-design-system/assets/credits/credit-pack-flagship.svg';
+import flagshipKeyArt from 'zdp-design-system/assets/credits/credit-pack-keyart-flagship.webp';
+```
+
+24px compact glyph는 표·영수증·지갑 목록에 사용하고, 1600×900 cinematic key art는 선택 카드와 큰 요금제 상세 패널에 사용한다. 구매·보너스·무료·보상 귤을 색상만으로 구분하지 않으며, 함선은 localized pack name과 가격·지급 정보를 대체하지 않는다. variant, 최소 크기, `currentColor`, 접근성 및 소유권 규칙은 [`docs/CREDIT_ASSETS.md`](docs/CREDIT_ASSETS.md)를 따른다.
 
 컴포넌트를 open shadow root 안에 mount하면 document에 import한 `zdp-design-system/styles.css`는 shadow boundary를 넘지 않는다. 소비 앱은 같은 stylesheet를 해당 shadow root 안의 `<style>` 또는 `<link rel="stylesheet">`로 직접 설치해야 하며, 이 조건에서 Tooltip, Combobox, Menu, Popover와 modal primitive의 keyboard, dismissal, focus 계약을 지원한다. closed shadow root는 지원하지 않는다.
 

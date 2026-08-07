@@ -24,6 +24,7 @@ const packagePath = join(root, 'package.json');
 const publicComponentPaths = await readPublicComponentPaths();
 const storyPaths = [
   'stories/BrandAssets.svelte',
+  'stories/CreditAssets.svelte',
   'stories/Buttons.svelte',
   'stories/ButtonPlayground.svelte',
   'stories/DataDisplay.svelte',
@@ -53,10 +54,13 @@ const expectedPackageFiles = [
 const expectedDistArtifactFiles = [
   './dist/brand-assets.js',
   './dist/brand-assets.ts',
+  './dist/credit-assets.js',
+  './dist/credit-assets.ts',
   './dist/schemas/design-tokens.schema.json'
 ] as const;
 const runtimeArtifactPaths = [
   'dist/brand-assets.js',
+  'dist/credit-assets.js',
   'dist/preferences.js',
   'dist/share.js',
   'dist/shortcuts.js',
@@ -74,6 +78,7 @@ const expectedSideEffects = [
 const expectedScripts = {
   'brand-assets:generate': 'bun scripts/generate-brand-assets.ts',
   'brand-assets:check': 'bun scripts/check-brand-assets.ts',
+  'credit-assets:check': 'bun scripts/check-credit-assets.ts',
   'consumer:check': 'bun scripts/check-consumer-contract.ts',
   'share-icons:generate': 'bun scripts/generate-share.ts',
   'share-icons:check': 'bun scripts/generate-share.ts --check && bun scripts/check-share-icons.ts',
@@ -149,6 +154,10 @@ function checkPackageScripts(packageJson: PackageJson): void {
 
   if (!packageJson.scripts?.check?.includes('bun run brand-assets:check')) {
     failures.push('package.json check script must validate the public brand asset contract.');
+  }
+
+  if (!packageJson.scripts?.check?.includes('bun run credit-assets:check')) {
+    failures.push('package.json check script must validate the public credit asset contract.');
   }
 
   if (!packageJson.scripts?.check?.includes('bun run package:build')) {

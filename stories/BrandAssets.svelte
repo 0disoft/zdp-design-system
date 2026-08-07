@@ -4,7 +4,11 @@
     square: new URL('../src/lib/assets/brand/brand-square-256.webp', import.meta.url).href,
     editorial: new URL('../src/lib/assets/brand/editorial-720x540.webp', import.meta.url).href,
     landscape: new URL('../src/lib/assets/brand/landscape-960x540.webp', import.meta.url).href,
-    shipMark: new URL('../src/lib/assets/brand/ship-mark.svg', import.meta.url).href
+    shipMark: new URL('../src/lib/assets/brand/ship-mark.svg', import.meta.url).href,
+    shipMarkSimpleMono: new URL('../src/lib/assets/brand/ship-mark-simple-mono.svg', import.meta.url).href,
+    shipMarkSimpleInverse: new URL('../src/lib/assets/brand/ship-mark-simple-inverse.svg', import.meta.url).href,
+    shipMarkSimpleCurrentColor: new URL('../src/lib/assets/brand/ship-mark-simple-current-color.svg', import.meta.url).href,
+    shipMarkSimpleTricolor: new URL('../src/lib/assets/brand/ship-mark-simple-tricolor.svg', import.meta.url).href
   } as const;
 </script>
 
@@ -30,6 +34,10 @@
         <img src={assets.landscape} alt="" width="960" height="540" />
         <figcaption>Landscape · 16:9</figcaption>
       </figure>
+      <figure class="asset-frame asset-frame--mark asset-frame--inverse">
+        <img src={assets.shipMarkSimpleInverse} alt="" width="48" height="48" />
+        <figcaption>Simple inverse mark · 48 × 48</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -42,7 +50,23 @@
       </figure>
       <figure class="asset-frame asset-frame--mark">
         <img src={assets.shipMark} alt="" width="48" height="48" />
-        <figcaption>Official ship mark · 48 × 48</figcaption>
+        <figcaption>Detailed compatibility mark · 48 × 48</figcaption>
+      </figure>
+      <figure class="asset-frame asset-frame--mark">
+        <img src={assets.shipMarkSimpleMono} alt="" width="48" height="48" />
+        <figcaption>Simple mono mark · default</figcaption>
+      </figure>
+      <figure class="asset-frame asset-frame--mark">
+        <span
+          class="asset-mark-preview"
+          style={`--asset-mark-url: url("${assets.shipMarkSimpleCurrentColor}")`}
+          aria-hidden="true"
+        ></span>
+        <figcaption>Simple currentColor mark · inline use</figcaption>
+      </figure>
+      <figure class="asset-frame asset-frame--mark">
+        <img src={assets.shipMarkSimpleTricolor} alt="" width="48" height="48" />
+        <figcaption>Simple tricolor mark · 32 px minimum</figcaption>
       </figure>
       <figure class="asset-frame asset-frame--missing">
         <img src="/__zdp_missing_brand_asset__.webp" alt="" width="256" height="256" />
@@ -129,10 +153,29 @@
   .asset-frame--landscape img { aspect-ratio: 16 / 9; }
 
   .asset-frame--mark img,
-  .asset-frame--missing img {
+  .asset-frame--missing img,
+  .asset-mark-preview {
     margin: auto;
     max-inline-size: 16rem;
     padding: var(--zdp-space-8);
+  }
+
+  .asset-frame--inverse {
+    background: var(--zdp-color-surface-canvas);
+  }
+
+  .asset-frame--inverse img {
+    background: var(--zdp-color-surface-canvas);
+  }
+
+  .asset-mark-preview {
+    aspect-ratio: 1;
+    background: var(--zdp-color-accent-strong);
+    block-size: auto;
+    box-sizing: border-box;
+    display: block;
+    inline-size: 100%;
+    mask: var(--asset-mark-url) center / calc(100% - (2 * var(--zdp-space-8))) no-repeat;
   }
 
   .safe-area {

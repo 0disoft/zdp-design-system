@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 0.51.0
+
+- Added a three-shape `ship-mark-simple-*` family with default monochrome, dark-surface inverse, inline `currentColor`, and display-only tricolor variants while preserving the existing detailed `ship-mark.svg` contract.
+- Added stable package exports, manifest metadata, exact geometry and fill validation, Storybook review surfaces, and consumer guidance for the simple mark family.
+- Added four three-path tangerine credit marks and seven progressively distinct `currentColor` credit-pack ship silhouettes from Dinghy through Flagship.
+- Added a framework-neutral credit asset manifest, exact file and geometry validation, Storybook 24/64 px review surfaces, package exports, and ownership guidance that keeps pricing and ledger policy outside the design system.
+- Added seven GPT-generated 1600×900 cinematic ship key arts for pricing-card and selected-plan detail surfaces, while retaining the monochrome ship family as compact UI glyphs.
+
 ## 0.50.6
 
 - Added logical inline-start clearance to the customizable native Select checkmark so the selected indicator no longer touches the picker edge while preserving option text alignment and RTL behavior.

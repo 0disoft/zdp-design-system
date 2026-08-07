@@ -56,7 +56,55 @@ export const zdpBrandAssets = Object.freeze({
     cropPolicy: 'none',
     decorative: false,
     sha256: '79bd535918a3b3b2d9ba2a404a2fee3a8e507902b4285d8bae526e212818e2ca'
-  })
+  }),
+  shipMarkSimpleMono: createAsset(
+    'zdp-brand-ship-mark-simple-mono',
+    'ship-mark-simple-mono.svg',
+    'svg',
+    48,
+    48,
+    '1:1',
+    ['light'],
+    ['brand-mark', 'small-size', 'monochrome'],
+    false,
+    '10a84334b03039c61a16226ff9c0c4acdcf5e8eaa6584af0fd562e0591c42103'
+  ),
+  shipMarkSimpleInverse: createAsset(
+    'zdp-brand-ship-mark-simple-inverse',
+    'ship-mark-simple-inverse.svg',
+    'svg',
+    48,
+    48,
+    '1:1',
+    ['dark'],
+    ['brand-mark', 'small-size', 'inverse'],
+    false,
+    '7cc5e98f8025b61882687257db21f8818ff3118dfa01ee0d9c5db2d122b98ed5'
+  ),
+  shipMarkSimpleCurrentColor: createAsset(
+    'zdp-brand-ship-mark-simple-current-color',
+    'ship-mark-simple-current-color.svg',
+    'svg',
+    48,
+    48,
+    '1:1',
+    ['light', 'dark'],
+    ['brand-mark', 'small-size', 'inline-current-color'],
+    false,
+    '705ee14fa62daedab880489b61ba3c8866a9b04292cc21f5296eea3e49624a9d'
+  ),
+  shipMarkSimpleTricolor: createAsset(
+    'zdp-brand-ship-mark-simple-tricolor',
+    'ship-mark-simple-tricolor.svg',
+    'svg',
+    48,
+    48,
+    '1:1',
+    ['light'],
+    ['brand-mark-display', 'minimum-32px', 'tricolor'],
+    false,
+    '3e21ad6b22129cb28bcce07d211f2118dfe34b212aa575e75c70c5cd46134ff5'
+  )
 } as const satisfies Readonly<Record<string, ZdpBrandAsset | readonly ZdpBrandAsset[]>>);
 
 function createAsset(

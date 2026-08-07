@@ -1,6 +1,6 @@
 {
   "name": "zdp-design-system",
-  "version": "0.50.6",
+  "version": "0.51.0",
   "private": false,
   "license": "MIT",
   "type": "module",
@@ -31,6 +31,11 @@
       "import": "./dist/brand-assets.js",
       "default": "./dist/brand-assets.js"
     },
+    "./credit-assets": {
+      "types": "./dist/credit-assets.ts",
+      "import": "./dist/credit-assets.js",
+      "default": "./dist/credit-assets.js"
+    },
     "./assets/brand/og-background-1200x630.jpg": "./dist/assets/brand/og-background-1200x630.jpg",
     "./assets/brand/brand-square-1024.webp": "./dist/assets/brand/brand-square-1024.webp",
     "./assets/brand/brand-square-512.webp": "./dist/assets/brand/brand-square-512.webp",
@@ -41,6 +46,28 @@
     "./assets/brand/landscape-960x540.webp": "./dist/assets/brand/landscape-960x540.webp",
     "./assets/brand/landscape-640x360.webp": "./dist/assets/brand/landscape-640x360.webp",
     "./assets/brand/ship-mark.svg": "./dist/assets/brand/ship-mark.svg",
+    "./assets/brand/ship-mark-simple-mono.svg": "./dist/assets/brand/ship-mark-simple-mono.svg",
+    "./assets/brand/ship-mark-simple-inverse.svg": "./dist/assets/brand/ship-mark-simple-inverse.svg",
+    "./assets/brand/ship-mark-simple-current-color.svg": "./dist/assets/brand/ship-mark-simple-current-color.svg",
+    "./assets/brand/ship-mark-simple-tricolor.svg": "./dist/assets/brand/ship-mark-simple-tricolor.svg",
+    "./assets/credits/credit-tangerine-simple-mono.svg": "./dist/assets/credits/credit-tangerine-simple-mono.svg",
+    "./assets/credits/credit-tangerine-simple-inverse.svg": "./dist/assets/credits/credit-tangerine-simple-inverse.svg",
+    "./assets/credits/credit-tangerine-simple-current-color.svg": "./dist/assets/credits/credit-tangerine-simple-current-color.svg",
+    "./assets/credits/credit-tangerine-simple-color.svg": "./dist/assets/credits/credit-tangerine-simple-color.svg",
+    "./assets/credits/credit-pack-dinghy.svg": "./dist/assets/credits/credit-pack-dinghy.svg",
+    "./assets/credits/credit-pack-skiff.svg": "./dist/assets/credits/credit-pack-skiff.svg",
+    "./assets/credits/credit-pack-sloop.svg": "./dist/assets/credits/credit-pack-sloop.svg",
+    "./assets/credits/credit-pack-brig.svg": "./dist/assets/credits/credit-pack-brig.svg",
+    "./assets/credits/credit-pack-frigate.svg": "./dist/assets/credits/credit-pack-frigate.svg",
+    "./assets/credits/credit-pack-galleon.svg": "./dist/assets/credits/credit-pack-galleon.svg",
+    "./assets/credits/credit-pack-flagship.svg": "./dist/assets/credits/credit-pack-flagship.svg",
+    "./assets/credits/credit-pack-keyart-dinghy.webp": "./dist/assets/credits/credit-pack-keyart-dinghy.webp",
+    "./assets/credits/credit-pack-keyart-skiff.webp": "./dist/assets/credits/credit-pack-keyart-skiff.webp",
+    "./assets/credits/credit-pack-keyart-sloop.webp": "./dist/assets/credits/credit-pack-keyart-sloop.webp",
+    "./assets/credits/credit-pack-keyart-brig.webp": "./dist/assets/credits/credit-pack-keyart-brig.webp",
+    "./assets/credits/credit-pack-keyart-frigate.webp": "./dist/assets/credits/credit-pack-keyart-frigate.webp",
+    "./assets/credits/credit-pack-keyart-galleon.webp": "./dist/assets/credits/credit-pack-keyart-galleon.webp",
+    "./assets/credits/credit-pack-keyart-flagship.webp": "./dist/assets/credits/credit-pack-keyart-flagship.webp",
     "./split-pane": {
       "types": "./dist/split-pane.ts",
       "import": "./dist/split-pane.js",
@@ -75,6 +102,7 @@
     "share-icons:check": "bun scripts/generate-share.ts --check && bun scripts/check-share-icons.ts",
     "brand-assets:generate": "bun scripts/generate-brand-assets.ts",
     "brand-assets:check": "bun scripts/check-brand-assets.ts",
+    "credit-assets:check": "bun scripts/check-credit-assets.ts",
     "preview:check": "bun scripts/check-preview.ts && bun run styles:parity:check",
     "styles:parity:check": "bun scripts/check-component-style-parity.ts",
     "a11y:check": "bun scripts/check-storybook-a11y.ts",
@@ -91,7 +119,7 @@
     "storybook": "bun run dev",
     "storybook:build": "bun run build",
     "storybook:check": "bun scripts/check-storybook.ts",
-    "check": "bun run tokens:check && bun run consumer:check && bun run share-icons:check && bun run brand-assets:check && bun run preview:check && bun run storybook:check && bun run a11y:check && bun run a11y:runtime:check && bun run ssr:hydration:check && bun run type:check && bun run package:build && bun run package:check && bun run publish:check && bun run release:check && bun run fixtures:check"
+    "check": "bun run tokens:check && bun run consumer:check && bun run share-icons:check && bun run brand-assets:check && bun run credit-assets:check && bun run preview:check && bun run storybook:check && bun run a11y:check && bun run a11y:runtime:check && bun run ssr:hydration:check && bun run type:check && bun run package:build && bun run package:check && bun run publish:check && bun run release:check && bun run fixtures:check"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "10.5.3",

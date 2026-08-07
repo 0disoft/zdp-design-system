@@ -12,12 +12,17 @@ import {
 } from './brand-asset-contract';
 
 const failures: string[] = [];
-const expectedShipPaths = [
+const expectedDetailedShipPaths = [
   'M23 8v20H12c1.5-7.8 5-14.1 11-20Z',
   'M26 6v22h13C36.9 18.2 32.8 11.5 26 6Z',
   'M24 7v24',
   'M8 31h32l-4.6 7H13.8L8 31Z',
   'M12 41c3 1.6 6 1.6 9 0s6-1.6 9 0 5.5 1.5 8 0'
+] as const;
+const expectedSimpleShipPaths = [
+  'M10 29 21 14v15Z',
+  'M25 8v21h15Z',
+  'M7 33h34l-4.5 7h-25Z'
 ] as const;
 
 await checkOutputs();
@@ -60,7 +65,7 @@ async function checkOutputs(): Promise<void> {
     assertManifestMetadata(output.fileName, manifest, output);
 
     if (output.format === 'svg') {
-      checkShipSvg(bytes.toString('utf8'));
+      checkShipSvg(output.fileName, bytes.toString('utf8'));
       continue;
     }
 
@@ -143,13 +148,45 @@ function assertManifestMetadata(
   }
 }
 
-function checkShipSvg(source: string): void {
+function checkShipSvg(fileName: string, source: string): void {
   const paths = [...source.matchAll(/\sd="([^"]+)"/g)].map((match) => match[1]);
-  if (JSON.stringify(paths) !== JSON.stringify(expectedShipPaths)) {
-    failures.push('ship-mark.svg must preserve the five official ship-mark paths exactly and in order.');
+  const expectedPaths = fileName === 'ship-mark.svg' ? expectedDetailedShipPaths : expectedSimpleShipPaths;
+
+  if (JSON.stringify(paths) !== JSON.stringify(expectedPaths)) {
+    failures.push(`${fileName} must preserve its official ship-mark paths exactly and in order.`);
   }
-  if (!source.includes('viewBox="0 0 48 48"')) failures.push('ship-mark.svg must preserve the official 48x48 viewBox.');
-  if (/<text\b|<image\b|href=|xlink:href=/i.test(source)) failures.push('ship-mark.svg must not embed text, raster images, or external references.');
+  if (!source.includes('viewBox="0 0 48 48"')) failures.push(`${fileName} must preserve the official 48x48 viewBox.`);
+  if (/<text\b|<image\b|href=|xlink:href=/i.test(source)) {
+    failures.push(`${fileName} must not embed text, raster images, or external references.`);
+  }
+
+  if (fileName === 'ship-mark.svg') return;
+
+  if (/<rect\b|<circle\b|<ellipse\b|<polygon\b|<polyline\b|\sstroke=/i.test(source)) {
+    failures.push(`${fileName} must not embed backgrounds, alternate geometry elements, or strokes.`);
+  }
+
+  if (paths.length !== 3) failures.push(`${fileName} must contain exactly three geometric paths.`);
+
+  const expectedFill = {
+    'ship-mark-simple-mono.svg': '<g fill="#2f2418">',
+    'ship-mark-simple-inverse.svg': '<g fill="#fff8ea">',
+    'ship-mark-simple-current-color.svg': '<g fill="currentColor">'
+  }[fileName];
+
+  if (expectedFill && !source.includes(expectedFill)) {
+    failures.push(`${fileName} must preserve its declared single-color fill contract.`);
+  }
+
+  if (fileName === 'ship-mark-simple-tricolor.svg') {
+    for (const requiredPath of [
+      '<path fill="#b66a24" d="M10 29 21 14v15Z" />',
+      '<path fill="#b89a6a" d="M25 8v21h15Z" />',
+      '<path fill="#2f2418" d="M7 33h34l-4.5 7h-25Z" />'
+    ]) {
+      if (!source.includes(requiredPath)) failures.push(`${fileName} must preserve tricolor path ${requiredPath}.`);
+    }
+  }
 }
 
 function readRasterMetadata(bytes: Buffer, extension: string): { format: 'png' | 'jpeg' | 'webp'; width: number; height: number } {
