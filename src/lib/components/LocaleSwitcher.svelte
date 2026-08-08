@@ -30,10 +30,17 @@
 
   const enabledOptions = $derived(options.filter((option) => !option.disabled));
   const activeOption = $derived(
-    enabledOptions.find((option) => option.value === value) ?? enabledOptions[0] ?? options[0] ?? null
+    enabledOptions.find((option) => option.value === value) ?? null
   );
-  const activeValue = $derived(activeOption?.value ?? value);
+  const normalizedOption = $derived(activeOption ?? enabledOptions[0] ?? null);
+  const activeValue = $derived(activeOption?.value ?? '');
   const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
+
+  $effect.pre(() => {
+    if (normalizedOption && value !== normalizedOption.value) {
+      value = normalizedOption.value;
+    }
+  });
 
   function selectOption(event: MouseEvent | KeyboardEvent, option: ZdpLocaleSwitcherOption): void {
     if (disabled || option.disabled) {

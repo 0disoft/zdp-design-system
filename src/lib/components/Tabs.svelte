@@ -23,12 +23,20 @@
     idPrefix = null
   }: Props = $props();
 
-  const selectedItem = $derived(
+  const normalizedSelectedItem = $derived(
     items.find((item) => item.id === selectedId && !item.disabled) ??
     items.find((item) => !item.disabled) ??
     null
   );
+  const selectedItem = $derived(items.find((item) => item.id === selectedId && !item.disabled) ?? null);
   const activeId = $derived(selectedItem?.id ?? '');
+
+  $effect.pre(() => {
+    const normalizedId = normalizedSelectedItem?.id ?? null;
+    if (selectedId !== normalizedId) {
+      selectedId = normalizedId;
+    }
+  });
 
   function selectTab(item: TabItem): void {
     if (item.disabled) {

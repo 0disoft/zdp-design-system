@@ -8,6 +8,7 @@
   import Dialog from '../../../src/lib/components/Dialog.svelte';
   import Disclosure from '../../../src/lib/components/Disclosure.svelte';
   import Menu from '../../../src/lib/components/Menu.svelte';
+  import LocaleSwitcher from '../../../src/lib/components/LocaleSwitcher.svelte';
   import ModalBoundaryFixture from './ModalBoundaryFixture.svelte';
   import Popover from '../../../src/lib/components/Popover.svelte';
   import ResizableSplitPane from '../../../src/lib/components/ResizableSplitPane.svelte';
@@ -21,9 +22,11 @@
   import TermSheet from '../../../src/lib/components/TermSheet.svelte';
   import Tooltip from '../../../src/lib/components/Tooltip.svelte';
   import Tabs from '../../../src/lib/components/Tabs.svelte';
+  import TextScaleControl from '../../../src/lib/components/TextScaleControl.svelte';
   import Toast from '../../../src/lib/components/Toast.svelte';
   import type { ZdpComboboxOption } from '../../../src/lib/combobox';
   import type { ZdpMenuItem } from '../../../src/lib/menu';
+  import type { ZdpTextScale } from '../../../src/lib/preferences';
   import type { ZdpShareDockItem } from '../../../src/lib/share';
   import type { ZdpTermSheetTerm } from '../../../src/lib/term';
   import type { ZdpStatusToastItem } from '../../../src/lib/toast';
@@ -85,6 +88,10 @@
   let asyncOwnerQuery = '';
   let loadedAsyncOwnerOptions: readonly ZdpComboboxOption[] = [];
   let browserRadioValue: string | null = 'weekly';
+  let normalizedTabId: string | null = 'missing-tab';
+  let normalizedSegmentId: string | null = 'missing-segment';
+  let normalizedLocale = 'missing-locale';
+  let normalizedTextScale = 'missing-scale' as ZdpTextScale;
   let confirmActionDisabled = false;
   let confirmActionCount = 0;
   let shareDockPlacement: 'side' | 'rail' | 'bottom' | 'inline' = 'inline';
@@ -196,6 +203,21 @@
   <Tabs items={collidingTabItems} selectedId="release notes" ariaLabel="Release views" idPrefix="browser tabs">
     <p>Selected release view</p>
   </Tabs>
+
+  <Tabs items={collidingTabItems} bind:selectedId={normalizedTabId} ariaLabel="Normalized release views">
+    <p>Normalized tab selection</p>
+  </Tabs>
+  <output data-testid="normalized-tab-value">{normalizedTabId}</output>
+  <SegmentedControl
+    ariaLabel="Normalized contrast choices"
+    items={forcedColorItems}
+    bind:selectedId={normalizedSegmentId}
+  />
+  <output data-testid="normalized-segment-value">{normalizedSegmentId}</output>
+  <LocaleSwitcher ariaLabel="Normalized language" bind:value={normalizedLocale} />
+  <output data-testid="normalized-locale-value">{normalizedLocale}</output>
+  <TextScaleControl ariaLabel="Normalized text size" bind:value={normalizedTextScale} />
+  <output data-testid="normalized-text-scale-value">{normalizedTextScale}</output>
 
   <Disclosure id="browser-disclosure" title="Browser details">
     <p>Disclosure details</p>

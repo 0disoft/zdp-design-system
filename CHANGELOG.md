@@ -15,6 +15,7 @@
 - Batched split-pane pointer rendering to one animation frame, cached drag direction at pointer start, and skipped controller measurement/render work when Svelte echoes an internally produced size without other visual option changes.
 - Added the public `tokens.css` entry and wildcard `components/ComponentName` Svelte subpaths, made token-only direct imports the default Svelte guidance, and retained the root barrel plus full `styles.css` for compatibility and static/framework-neutral utilities.
 - Restored Menu trigger focus when an href item click is cancelled by an SPA router or consumer callback, while preserving native navigation focus behavior for uncancelled links.
+- Normalized invalid Tabs, SegmentedControl, LocaleSwitcher, and TextScaleControl bindings to the first enabled item, or no visual selection when none are enabled, so parent state and ARIA no longer expose different truths.
 
 ## 0.51.1
 

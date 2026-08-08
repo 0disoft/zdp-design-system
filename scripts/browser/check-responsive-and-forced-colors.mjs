@@ -210,7 +210,9 @@ async function verifyForcedColorStates(page) {
     'Forced-colors disabled controls must expose the same system disabled color in text and border.'
   );
 
-  const selectedOption = page.getByRole('radio', { name: 'Selected contrast' });
+  const selectedOption = page
+    .getByRole('region', { name: 'Forced color controls' })
+    .getByRole('radio', { name: 'Selected contrast' });
   const selectedStyle = await selectedOption.evaluate((element) => {
     const style = getComputedStyle(element);
     return {

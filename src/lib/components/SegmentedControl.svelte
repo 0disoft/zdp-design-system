@@ -22,14 +22,21 @@
     onChange = null
   }: Props = $props();
 
-  const selectedItem = $derived(
+  const normalizedSelectedItem = $derived(
     items.find((item) => item.id === selectedId && !item.disabled) ??
     items.find((item) => !item.disabled) ??
-    items[0] ??
     null
   );
+  const selectedItem = $derived(items.find((item) => item.id === selectedId && !item.disabled) ?? null);
   const activeId = $derived(selectedItem?.id ?? '');
   const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
+
+  $effect.pre(() => {
+    const normalizedId = normalizedSelectedItem?.id ?? null;
+    if (selectedId !== normalizedId) {
+      selectedId = normalizedId;
+    }
+  });
 
   function selectItem(event: MouseEvent | KeyboardEvent, item: ZdpSegmentedControlItem): void {
     if (item.disabled) {

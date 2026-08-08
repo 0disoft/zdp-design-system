@@ -30,26 +30,35 @@ export async function verifyFoundationAndFormContracts(page) {
     'Escape dismissal must preserve focus on the Tooltip trigger.'
   );
 
-  const tabs = page.getByRole('tablist', { name: 'Release views' }).getByRole('tab');
+  const releaseTablist = page.getByRole('tablist', { name: 'Release views', exact: true });
+  const tabs = releaseTablist.getByRole('tab');
   const tabIds = await tabs.evaluateAll((elements) => elements.map((element) => element.id));
   const controlledPanelIds = await tabs.evaluateAll((elements) =>
     elements.map((element) => element.getAttribute('aria-controls'))
   );
   assert.equal(new Set(tabIds).size, 2, 'Distinct logical tab ids must remain distinct DOM ids.');
   assert.equal(new Set(controlledPanelIds).size, 2, 'Distinct tabs must retain distinct aria-controls targets.');
-  const tabPanels = page.locator('.zdp-tabs__panel');
+  assert.equal(await page.getByTestId('normalized-tab-value').textContent(), 'release notes');
+  assert.equal(await page.getByRole('tablist', { name: 'Normalized release views' }).getByRole('tab', { selected: true }).count(), 1);
+  assert.equal(await page.getByTestId('normalized-segment-value').textContent(), 'selected');
+  assert.equal(await page.getByRole('radiogroup', { name: 'Normalized contrast choices' }).getByRole('radio', { checked: true }).count(), 1);
+  assert.equal(await page.getByTestId('normalized-locale-value').textContent(), 'en');
+  assert.equal(await page.getByRole('radiogroup', { name: 'Normalized language' }).getByRole('radio', { checked: true }).count(), 1);
+  assert.equal(await page.getByTestId('normalized-text-scale-value').textContent(), 'base');
+  assert.equal(await page.getByRole('radiogroup', { name: 'Normalized text size' }).getByRole('radio', { checked: true }).count(), 1);
+  const tabPanels = releaseTablist.locator('..').locator('.zdp-tabs__panel');
   assert.equal(await tabPanels.count(), 2, 'Every tab aria-controls target must remain in the DOM.');
   assert.deepEqual(
     new Set(await tabPanels.evaluateAll((elements) => elements.map((element) => element.id))),
     new Set(controlledPanelIds),
     'Every tab must reference an existing panel.'
   );
-  assert.equal(await page.getByRole('tabpanel').getAttribute('id'), controlledPanelIds[0]);
+  assert.equal(await releaseTablist.locator('..').getByRole('tabpanel').getAttribute('id'), controlledPanelIds[0]);
   assert.equal(await tabPanels.nth(1).getAttribute('hidden'), '', 'Inactive tab panels must be hidden.');
   await tabs.nth(0).focus();
   await page.keyboard.press('ArrowRight');
   assert.equal(await tabs.nth(1).getAttribute('aria-selected'), 'true');
-  assert.equal(await page.getByRole('tabpanel').getAttribute('id'), controlledPanelIds[1]);
+  assert.equal(await releaseTablist.locator('..').getByRole('tabpanel').getAttribute('id'), controlledPanelIds[1]);
 
   const releaseStatus = page.getByRole('combobox', { name: 'Release status', exact: true });
   const selectPickerStyle = await releaseStatus.evaluate((element) => {
