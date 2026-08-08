@@ -401,6 +401,11 @@ export function createZdpSplitPaneController(
     return getOrientation() === 'vertical' ? event.clientX : event.clientY;
   }
 
+  function pointerSizeDelta(event: PointerEvent): number {
+    const delta = pointerCoordinate(event) - pointerStartCoordinate;
+    return getOrientation() === 'vertical' && isRtl() ? -delta : delta;
+  }
+
   function primaryAxisPosition(event: PointerEvent): number {
     const bounds = root.getBoundingClientRect();
 
@@ -446,7 +451,7 @@ export function createZdpSplitPaneController(
     pointerMoved = pointerMoved || Math.abs(pointerCoordinate(event) - pointerStartCoordinate) >= 3;
 
     if (pointerMoved) {
-      setSize(primaryAxisPosition(event), event, false);
+      setSize(pointerStartSize + pointerSizeDelta(event), event, false);
     }
   }
 

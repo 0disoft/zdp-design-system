@@ -347,8 +347,32 @@ export async function verifyFoundationAndFormContracts(page) {
   assert.equal(await separator.getAttribute('aria-valuenow'), '228', 'ArrowLeft must increase the primary pane in RTL.');
   await page.getByTestId('split-pane-toggle-direction').click();
 
-  const separatorBounds = await separator.boundingBox();
+  let separatorBounds = await separator.boundingBox();
   assert.ok(separatorBounds, 'The split pane separator must have measurable browser geometry.');
+  await page.mouse.move(separatorBounds.x + 2, separatorBounds.y + separatorBounds.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(separatorBounds.x + 6, separatorBounds.y + separatorBounds.height / 2);
+  assert.equal(
+    await separator.getAttribute('aria-valuenow'),
+    '232',
+    'Dragging 4 pixels from the start edge of the hit target must resize by exactly 4 pixels.'
+  );
+  await page.mouse.up();
+
+  separatorBounds = await separator.boundingBox();
+  assert.ok(separatorBounds, 'The split pane separator must remain measurable after start-edge drag.');
+  await page.mouse.move(separatorBounds.x + separatorBounds.width - 2, separatorBounds.y + separatorBounds.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(separatorBounds.x + separatorBounds.width - 6, separatorBounds.y + separatorBounds.height / 2);
+  assert.equal(
+    await separator.getAttribute('aria-valuenow'),
+    '228',
+    'Dragging 4 pixels from the end edge of the hit target must resize by exactly 4 pixels.'
+  );
+  await page.mouse.up();
+
+  separatorBounds = await separator.boundingBox();
+  assert.ok(separatorBounds, 'The split pane separator must retain measurable geometry after edge drags.');
   await page.mouse.move(separatorBounds.x + separatorBounds.width / 2, separatorBounds.y + separatorBounds.height / 2);
   await page.mouse.down();
   assert.equal(
@@ -357,7 +381,7 @@ export async function verifyFoundationAndFormContracts(page) {
     'Text selection suppression must start with the active drag only.'
   );
   await page.mouse.move(separatorBounds.x + separatorBounds.width / 2 + 72, separatorBounds.y + separatorBounds.height / 2);
-  assert.ok(Number(await separator.getAttribute('aria-valuenow')) >= 296, 'Pointer movement must resize the primary pane.');
+  assert.equal(await separator.getAttribute('aria-valuenow'), '300', 'Pointer movement must apply its delta to the drag-start size.');
   await page.mouse.up();
   assert.equal(
     await page.locator('html').evaluate((element) => element.classList.contains('zdp-user-select-dragging')),

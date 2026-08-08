@@ -7,6 +7,7 @@
 - Synchronized TermSheet modal activation and focus transitions with the effective `open && term` state so asynchronously arriving or disappearing term data cannot leave an empty modal lifecycle or steal focus after close.
 - Restricted ConfirmAction to left-button primary pointers and cancelled pending confirmations on capture, focus, window-focus, visibility, and disabled-state loss while separating the completion timeout from animation-frame progress rendering.
 - Made disabled ShareDock links non-navigable, non-focusable, callback-free, and tooltip-free with explicit `aria-disabled` semantics matching disabled button items.
+- Calculated split-pane pointer resizing from the drag-start size and signed pointer delta so grabbing either edge of the separator hit target no longer causes an initial size jump, including RTL layouts.
 
 ## 0.51.1
 
