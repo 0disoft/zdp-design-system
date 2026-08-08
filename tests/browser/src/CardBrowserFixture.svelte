@@ -11,6 +11,7 @@
   import ModalBoundaryFixture from './ModalBoundaryFixture.svelte';
   import Popover from '../../../src/lib/components/Popover.svelte';
   import ResizableSplitPane from '../../../src/lib/components/ResizableSplitPane.svelte';
+  import Radio from '../../../src/lib/components/Radio.svelte';
   import Sheet from '../../../src/lib/components/Sheet.svelte';
   import SegmentedControl from '../../../src/lib/components/SegmentedControl.svelte';
   import Select from '../../../src/lib/components/Select.svelte';
@@ -80,6 +81,7 @@
   let asyncOwnerValue = 'async-owner-24';
   let asyncOwnerQuery = '';
   let loadedAsyncOwnerOptions: readonly ZdpComboboxOption[] = [];
+  let browserRadioValue: string | null = 'weekly';
   let confirmActionDisabled = false;
   let confirmActionCount = 0;
   let shareDockPlacement: 'side' | 'rail' | 'bottom' | 'inline' = 'inline';
@@ -262,6 +264,16 @@
     bind:query={asyncOwnerQuery}
   />
   <button data-testid="combobox-focus-target" type="button">Combobox focus target</button>
+
+  <div role="radiogroup" aria-label="Browser frequency">
+    <Radio id="browser-radio-weekly" name="browser-frequency" value="weekly" bind:selectedValue={browserRadioValue}>
+      Weekly
+    </Radio>
+    <Radio id="browser-radio-monthly" name="browser-frequency" value="monthly" bind:selectedValue={browserRadioValue}>
+      Monthly
+    </Radio>
+  </div>
+  <output data-testid="browser-radio-value">{browserRadioValue}</output>
 
   <ConfirmAction
     label="Confirm browser action"

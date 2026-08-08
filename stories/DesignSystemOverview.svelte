@@ -57,6 +57,8 @@
   let darkDialogOpen = false;
   let lightShareCount = 0;
   let darkShareCount = 0;
+  let lightChoiceFrequency: string | null = 'weekly';
+  let darkChoiceFrequency: string | null = 'weekly';
 
   const shareItems: readonly ZdpShareDockItem[] = [
     {
@@ -587,10 +589,10 @@
           </Checkbox>
           <div class="choice-stack" role="radiogroup" aria-labelledby="storybook-light-choice-frequency">
             <span class="choice-group-label" id="storybook-light-choice-frequency">알림 주기</span>
-            <Radio id="storybook-light-choice-weekly" name="light-choice-frequency" value="weekly" checked>
+            <Radio id="storybook-light-choice-weekly" name="light-choice-frequency" value="weekly" bind:selectedValue={lightChoiceFrequency}>
               매주
             </Radio>
-            <Radio id="storybook-light-choice-monthly" name="light-choice-frequency" value="monthly">
+            <Radio id="storybook-light-choice-monthly" name="light-choice-frequency" value="monthly" bind:selectedValue={lightChoiceFrequency}>
               매월
             </Radio>
           </div>
@@ -998,10 +1000,10 @@
           </Checkbox>
           <div class="choice-stack" role="radiogroup" aria-labelledby="storybook-dark-choice-frequency">
             <span class="choice-group-label" id="storybook-dark-choice-frequency">알림 주기</span>
-            <Radio id="storybook-dark-choice-weekly" name="dark-choice-frequency" value="weekly" checked>
+            <Radio id="storybook-dark-choice-weekly" name="dark-choice-frequency" value="weekly" bind:selectedValue={darkChoiceFrequency}>
               매주
             </Radio>
-            <Radio id="storybook-dark-choice-monthly" name="dark-choice-frequency" value="monthly">
+            <Radio id="storybook-dark-choice-monthly" name="dark-choice-frequency" value="monthly" bind:selectedValue={darkChoiceFrequency}>
               매월
             </Radio>
           </div>

@@ -19,6 +19,8 @@
     { id: 'security', label: '보안 검토', value: 'security', description: '권한과 로그 확인' },
     { id: 'locale', label: 'Locale Quality', value: 'locale', description: '다국어 표시 확인' }
   ];
+  let lightFrequency: string | null = 'weekly';
+  let darkFrequency: string | null = 'weekly';
 </script>
 
 <main class="component-story zdp-surface-reset" lang="ko">
@@ -101,8 +103,8 @@
             </Checkbox>
             <div class="choice-stack" role="radiogroup" aria-labelledby="forms-light-frequency">
               <span class="choice-group-label" id="forms-light-frequency">알림 주기</span>
-              <Radio id="forms-light-weekly" name="forms-light-frequency" value="weekly" checked>매주</Radio>
-              <Radio id="forms-light-monthly" name="forms-light-frequency" value="monthly">매월</Radio>
+              <Radio id="forms-light-weekly" name="forms-light-frequency" value="weekly" bind:selectedValue={lightFrequency}>매주</Radio>
+              <Radio id="forms-light-monthly" name="forms-light-frequency" value="monthly" bind:selectedValue={lightFrequency}>매월</Radio>
             </div>
             <Switch id="forms-light-autosave" name="forms-light-autosave" describedBy="forms-light-autosave-help" checked>
               자동 저장
@@ -186,8 +188,8 @@
             </Checkbox>
             <div class="choice-stack" role="radiogroup" aria-labelledby="forms-dark-frequency">
               <span class="choice-group-label" id="forms-dark-frequency">알림 주기</span>
-              <Radio id="forms-dark-weekly" name="forms-dark-frequency" value="weekly" checked>매주</Radio>
-              <Radio id="forms-dark-monthly" name="forms-dark-frequency" value="monthly">매월</Radio>
+              <Radio id="forms-dark-weekly" name="forms-dark-frequency" value="weekly" bind:selectedValue={darkFrequency}>매주</Radio>
+              <Radio id="forms-dark-monthly" name="forms-dark-frequency" value="monthly" bind:selectedValue={darkFrequency}>매월</Radio>
             </div>
             <Switch id="forms-dark-autosave" name="forms-dark-autosave" describedBy="forms-dark-autosave-help" checked>
               자동 저장

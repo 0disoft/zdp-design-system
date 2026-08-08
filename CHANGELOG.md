@@ -9,6 +9,7 @@
 - Made disabled ShareDock links non-navigable, non-focusable, callback-free, and tooltip-free with explicit `aria-disabled` semantics matching disabled button items.
 - Calculated split-pane pointer resizing from the drag-start size and signed pointer delta so grabbing either edge of the separator hit target no longer causes an initial size jump, including RTL layouts.
 - Synchronized Combobox display queries with initial and asynchronously resolved selected options until the user edits, closed the listbox on root focus exit or root-level Escape, and scrolled keyboard-active options into view.
+- Added an additive Radio `selectedValue` group binding so every item derives checked state from one parent value, while retaining the former `checked` prop as a deprecated compatibility surface.
 
 ## 0.51.1
 

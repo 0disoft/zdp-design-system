@@ -2,14 +2,29 @@
   export let id: string | null = null;
   export let name: string | null = null;
   export let value: string | null = null;
+  export let selectedValue: string | null | undefined = undefined;
+  /** @deprecated Bind selectedValue across the radio group instead. */
   export let checked = false;
   export let describedBy: string | null = null;
   export let invalid = false;
   export let disabled = false;
   export let required = false;
+  export let onValueChange: ((value: string) => void) | null = null;
+
+  $: resolvedChecked = selectedValue === undefined ? checked : selectedValue === value;
 
   function handleChange(event: Event): void {
-    checked = (event.currentTarget as HTMLInputElement).checked;
+    const nextChecked = (event.currentTarget as HTMLInputElement).checked;
+
+    if (selectedValue !== undefined) {
+      if (nextChecked && value !== null) {
+        selectedValue = value;
+        onValueChange?.(value);
+      }
+      return;
+    }
+
+    checked = nextChecked;
   }
 </script>
 
@@ -20,7 +35,7 @@
     name={name ?? undefined}
     type="radio"
     value={value ?? undefined}
-    {checked}
+    checked={resolvedChecked}
     aria-describedby={describedBy ?? undefined}
     {disabled}
     {required}

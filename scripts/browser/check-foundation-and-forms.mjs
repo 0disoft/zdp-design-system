@@ -279,6 +279,20 @@ export async function verifyFoundationAndFormContracts(page) {
   assert.equal(await asyncListbox.count(), 0, 'Tabbing outside the Combobox root must close its listbox.');
   assert.equal(await page.getByTestId('combobox-focus-target').evaluate((element) => document.activeElement === element), true);
 
+  const weeklyRadio = page.getByRole('radio', { name: 'Weekly' });
+  const monthlyRadio = page.getByRole('radio', { name: 'Monthly' });
+  assert.equal(await weeklyRadio.isChecked(), true);
+  assert.equal(await monthlyRadio.isChecked(), false);
+  assert.equal(await page.getByTestId('browser-radio-value').textContent(), 'weekly');
+  await monthlyRadio.click();
+  assert.equal(await weeklyRadio.isChecked(), false);
+  assert.equal(await monthlyRadio.isChecked(), true);
+  assert.equal(await page.getByTestId('browser-radio-value').textContent(), 'monthly');
+  await weeklyRadio.click();
+  assert.equal(await weeklyRadio.isChecked(), true);
+  assert.equal(await monthlyRadio.isChecked(), false);
+  assert.equal(await page.getByTestId('browser-radio-value').textContent(), 'weekly');
+
   const confirmAction = page.getByRole('button', { name: /Confirm browser action/ });
   const confirmActionBox = await confirmAction.boundingBox();
   assert.ok(confirmActionBox);
