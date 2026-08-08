@@ -215,6 +215,70 @@ export async function verifyFoundationAndFormContracts(page) {
   assert.equal(await page.getByTestId('required-combobox-selection-count').textContent(), '2');
   await page.keyboard.press('Escape');
 
+  const initialCombobox = page.getByRole('combobox', { name: 'Initial owner', exact: true });
+  assert.equal(await initialCombobox.inputValue(), 'Security');
+  assert.equal(await page.locator('input[type="hidden"][name="initial-owner"]').inputValue(), 'security');
+  assert.equal(await initialCombobox.evaluate((element) => element.checkValidity()), true);
+
+  const asyncCombobox = page.getByRole('combobox', { name: 'Async owner', exact: true });
+  assert.equal(await asyncCombobox.inputValue(), '');
+  assert.equal(await asyncCombobox.evaluate((element) => element.checkValidity()), false);
+  await page.getByTestId('load-async-owner-options').click();
+  assert.equal(await asyncCombobox.inputValue(), 'Async owner 24');
+  assert.equal(await page.locator('input[type="hidden"][name="async-owner"]').inputValue(), 'async-owner-24');
+  assert.equal(await asyncCombobox.evaluate((element) => element.checkValidity()), true);
+
+  await asyncCombobox.focus();
+  const asyncListbox = page.getByRole('listbox', { name: 'Async owner list' });
+  assert.equal(await asyncListbox.count(), 1);
+  await page.keyboard.press('End');
+  const asyncActiveId = await asyncCombobox.getAttribute('aria-activedescendant');
+  assert.match(asyncActiveId ?? '', /-option-async-owner-24$/);
+  const asyncActiveOption = page.locator(`[id="${asyncActiveId}"]`);
+  await page.waitForFunction(
+    ({ panelSelector, optionId }) => {
+      const option = document.getElementById(optionId);
+      const panel = option?.closest(panelSelector);
+
+      if (!(option instanceof HTMLElement) || !(panel instanceof HTMLElement)) {
+        return false;
+      }
+
+      const optionRect = option.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+      return optionRect.top >= panelRect.top && optionRect.bottom <= panelRect.bottom + 1;
+    },
+    { panelSelector: '.zdp-combobox__panel', optionId: asyncActiveId }
+  );
+  const asyncScrollGeometry = await asyncActiveOption.evaluate((option) => {
+    const panel = option.closest('.zdp-combobox__panel');
+
+    if (!(panel instanceof HTMLElement)) {
+      return null;
+    }
+
+    const optionRect = option.getBoundingClientRect();
+    const panelRect = panel.getBoundingClientRect();
+    return { optionBottom: optionRect.bottom, optionTop: optionRect.top, panelBottom: panelRect.bottom, panelTop: panelRect.top };
+  });
+  assert.ok(asyncScrollGeometry);
+  assert.ok(
+    asyncScrollGeometry.optionTop >= asyncScrollGeometry.panelTop &&
+      asyncScrollGeometry.optionBottom <= asyncScrollGeometry.panelBottom + 1
+  );
+
+  await page.keyboard.press('Tab');
+  assert.equal(await asyncListbox.count(), 1, 'Moving focus from input to toggle must keep the Combobox open.');
+  await page.keyboard.press('Escape');
+  assert.equal(await asyncListbox.count(), 0, 'Escape on the toggle must close the Combobox root.');
+
+  await asyncCombobox.focus();
+  assert.equal(await asyncListbox.count(), 1);
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  assert.equal(await asyncListbox.count(), 0, 'Tabbing outside the Combobox root must close its listbox.');
+  assert.equal(await page.getByTestId('combobox-focus-target').evaluate((element) => document.activeElement === element), true);
+
   const confirmAction = page.getByRole('button', { name: /Confirm browser action/ });
   const confirmActionBox = await confirmAction.boundingBox();
   assert.ok(confirmActionBox);

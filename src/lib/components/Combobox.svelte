@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { tick } from 'svelte';
   import type { HTMLInputAttributes } from 'svelte/elements';
   import type { ZdpComboboxOption, ZdpComboboxSize } from '../combobox';
   import { toZdpDomId } from '../dom-id';
@@ -62,8 +63,10 @@
   let open = $state(false);
   let activeOptionId = $state('');
   let lastSyncedValue = $state(value);
+  let lastSyncedOptionLabel = $state('');
   let lastSelectedValue = $state('');
   let lastSelectedLabel = $state('');
+  let queryDirty = $state(query.trim().length > 0);
 
   const enabledOptions = $derived(options.filter((option) => !option.disabled));
   const selectedOption = $derived(options.find((option) => option.value === value) ?? null);
@@ -94,14 +97,31 @@
   });
 
   $effect.pre(() => {
-    if (value !== lastSyncedValue) {
-      query = selectedOptionLabel;
+    const valueChanged = value !== lastSyncedValue;
+    const optionLabelChanged = selectedOptionLabel !== lastSyncedOptionLabel;
+
+    if (valueChanged) {
+      queryDirty = false;
       lastSyncedValue = value;
     }
+
+    if (!queryDirty && (valueChanged || optionLabelChanged)) {
+      query = selectedOptionLabel;
+    }
+
+    lastSyncedOptionLabel = selectedOptionLabel;
   });
 
   $effect(() => {
     syncInputValidity(inputElement, selectionMissing, resolvedSelectionRequiredText);
+  });
+
+  $effect(() => {
+    const optionId = activeOptionDomId;
+
+    if (optionId) {
+      void scrollActiveOptionIntoView(optionId);
+    }
   });
 
   function setOpen(nextOpen: boolean): void {
@@ -120,6 +140,7 @@
   function handleInput(event: Event): void {
     const nextQuery = (event.currentTarget as HTMLInputElement).value;
     query = nextQuery;
+    queryDirty = true;
     onQueryChange?.(query);
     clearSelectionForQuery(nextQuery);
     setOpen(true);
@@ -138,6 +159,16 @@
     }
 
     if (disabled || readonly) {
+      return;
+    }
+
+    if (event.key === 'Escape') {
+      handleRootEscape(event);
+      return;
+    }
+
+    if (event.key === 'Tab' && event.shiftKey) {
+      setOpen(false);
       return;
     }
 
@@ -188,13 +219,40 @@
       return;
     }
 
-    if (event.key === 'Escape' && open) {
-      event.preventDefault();
-      const nextQuery = selectedOptionLabel || query;
-      query = nextQuery;
-      onQueryChange?.(nextQuery);
+  }
+
+  function handleToggleKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      handleRootEscape(event);
+      return;
+    }
+
+    if (event.key === 'Tab' && !event.shiftKey) {
       setOpen(false);
     }
+  }
+
+  function handleRootEscape(event: KeyboardEvent): void {
+    if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || !open) {
+      return;
+    }
+
+    event.preventDefault();
+    const nextQuery = selectedOptionLabel || query;
+    query = nextQuery;
+    queryDirty = false;
+    onQueryChange?.(nextQuery);
+    setOpen(false);
+  }
+
+  function handleFocusout(event: FocusEvent): void {
+    const nextTarget = event.relatedTarget;
+
+    if (!open || (nextTarget instanceof Node && rootElement?.contains(nextTarget))) {
+      return;
+    }
+
+    setOpen(false);
   }
 
   function handleToggleClick(): void {
@@ -223,7 +281,9 @@
 
     value = option.value;
     query = option.label;
+    queryDirty = false;
     lastSyncedValue = value;
+    lastSyncedOptionLabel = option.label;
     lastSelectedValue = option.value;
     lastSelectedLabel = option.label;
     onQueryChange?.(query);
@@ -242,6 +302,19 @@
     value = '';
     lastSyncedValue = value;
     onValueChange?.('', null);
+  }
+
+  async function scrollActiveOptionIntoView(optionId: string): Promise<void> {
+    await tick();
+
+    if (activeOptionDomId !== optionId || rootElement === null) {
+      return;
+    }
+
+    const optionElement = Array.from(
+      rootElement.querySelectorAll<HTMLElement>('.zdp-combobox__option')
+    ).find((element) => element.id === optionId);
+    optionElement?.scrollIntoView({ block: 'nearest' });
   }
 
   function syncInputValidity(element: HTMLInputElement | null, missing: boolean, message: string): void {
@@ -338,6 +411,7 @@
       bind:this={inputElement}
       oninput={handleInput}
       onfocus={handleInputFocus}
+      onfocusout={handleFocusout}
       onkeydown={handleInputKeydown}
     />
     {#if name}
@@ -350,6 +424,8 @@
       aria-controls={open && hasOptions ? listboxId : undefined}
       aria-expanded={open}
       disabled={disabled || readonly}
+      onfocusout={handleFocusout}
+      onkeydown={handleToggleKeydown}
       onclick={handleToggleClick}
     >
       <span class="zdp-combobox__mark" aria-hidden="true"></span>

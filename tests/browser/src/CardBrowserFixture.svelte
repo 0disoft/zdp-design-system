@@ -40,6 +40,11 @@
     { id: 'security', value: 'security', label: 'Security' },
     { id: 'platform', value: 'platform', label: 'Platform' }
   ];
+  const asyncOwnerOptions: readonly ZdpComboboxOption[] = Array.from({ length: 24 }, (_, index) => ({
+    id: `async-owner-${index + 1}`,
+    value: `async-owner-${index + 1}`,
+    label: `Async owner ${index + 1}`
+  }));
   const browserMenuItems: readonly ZdpMenuItem[] = [
     { id: 'edit', label: 'Edit release' },
     { id: 'delete', label: 'Delete release', href: '#delete-release', disabled: true },
@@ -70,6 +75,11 @@
   let requiredOwnerValue = '';
   let requiredOwnerQuery = '';
   let requiredOwnerSelectionCount = 0;
+  let initialOwnerValue = 'security';
+  let initialOwnerQuery = '';
+  let asyncOwnerValue = 'async-owner-24';
+  let asyncOwnerQuery = '';
+  let loadedAsyncOwnerOptions: readonly ZdpComboboxOption[] = [];
   let confirmActionDisabled = false;
   let confirmActionCount = 0;
   let shareDockPlacement: 'side' | 'rail' | 'bottom' | 'inline' = 'inline';
@@ -228,6 +238,30 @@
     onValueChange={() => (requiredOwnerSelectionCount += 1)}
   />
   <output data-testid="required-combobox-selection-count">{requiredOwnerSelectionCount}</output>
+
+  <Combobox
+    id="initial-browser-combobox"
+    name="initial-owner"
+    label="Initial owner"
+    options={ownerOptions}
+    required
+    bind:value={initialOwnerValue}
+    bind:query={initialOwnerQuery}
+  />
+
+  <button data-testid="load-async-owner-options" type="button" onclick={() => (loadedAsyncOwnerOptions = asyncOwnerOptions)}>
+    Load async owner options
+  </button>
+  <Combobox
+    id="async-browser-combobox"
+    name="async-owner"
+    label="Async owner"
+    options={loadedAsyncOwnerOptions}
+    required
+    bind:value={asyncOwnerValue}
+    bind:query={asyncOwnerQuery}
+  />
+  <button data-testid="combobox-focus-target" type="button">Combobox focus target</button>
 
   <ConfirmAction
     label="Confirm browser action"

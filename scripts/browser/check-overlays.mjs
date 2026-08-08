@@ -159,14 +159,14 @@ export async function verifyOverlayContracts(page) {
   const listbox = page.getByRole('listbox', { name: 'Owner list' });
   assert.equal(await listbox.count(), 1);
   await pointerDownOn(page, comboboxOutsideTarget);
-  assert.equal(await listbox.count(), 1, 'Combobox must remain open until outside pointerup produces a click.');
+  assert.equal(await listbox.count(), 0, 'Combobox must close as soon as outside pointer focus leaves its root.');
   assert.equal(
     await comboboxOutsideTarget.evaluate((element) => document.activeElement === element),
     true,
     'Outside pointerdown must move focus before Combobox dismissal.'
   );
   await page.mouse.up();
-  assert.equal(await listbox.count(), 0, 'Combobox must close after the outside click completes.');
+  assert.equal(await listbox.count(), 0, 'The completed outside click must not reopen the Combobox.');
   assert.equal(await combobox.getAttribute('aria-expanded'), 'false');
   assert.equal(await combobox.getAttribute('aria-controls'), null);
 }
@@ -298,8 +298,8 @@ export async function verifyShadowOverlayContracts(page) {
   await pointerDownOn(page, shadowOutsideTarget);
   assert.equal(
     await shadowListbox.count(),
-    1,
-    'A shadow-root Combobox must remain open until the composed outside pointer sequence produces a click.'
+    0,
+    'A shadow-root Combobox must close as soon as composed outside pointer focus leaves its root.'
   );
   assert.equal(
     await shadowOutsideTarget.evaluate((element) => document.activeElement === element),
@@ -307,7 +307,7 @@ export async function verifyShadowOverlayContracts(page) {
     'Composed outside pointerdown must move focus before shadow Combobox dismissal.'
   );
   await page.mouse.up();
-  assert.equal(await shadowListbox.count(), 0, 'A shadow-root Combobox must close after a composed outside click.');
+  assert.equal(await shadowListbox.count(), 0, 'The completed composed outside click must not reopen the Combobox.');
   assert.equal(
     await shadowOutsideTarget.evaluate((element) => document.activeElement === element),
     true,
