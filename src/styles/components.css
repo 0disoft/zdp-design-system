@@ -4629,8 +4629,8 @@
   width: var(--zdp-control-icon-sm);
 }
 
-.zdp-share-action:hover:not(:disabled),
-.zdp-share-action:focus-visible {
+.zdp-share-action:hover:not(:disabled):not([aria-disabled="true"]),
+.zdp-share-action:focus-visible:not([aria-disabled="true"]) {
   background: var(--zdp-color-surface-raised);
   border-color: var(--zdp-color-line-subtle);
   color: var(--zdp-color-ink-strong);
@@ -4642,7 +4642,8 @@
   outline-offset: var(--zdp-control-focus-outline-offset);
 }
 
-.zdp-share-action:disabled {
+.zdp-share-action:disabled,
+.zdp-share-action[aria-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.56;
 }

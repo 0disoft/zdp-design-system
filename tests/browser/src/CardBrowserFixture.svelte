@@ -54,7 +54,15 @@
   ];
   const browserShareItems: readonly ZdpShareDockItem[] = [
     { id: 'copy', label: 'Copy browser link', icon: 'copy' },
-    { id: 'device', label: 'Share from browser', icon: 'device' }
+    { id: 'device', label: 'Share from browser', icon: 'device' },
+    {
+      id: 'disabled-link',
+      label: 'Disabled browser share',
+      icon: 'copy',
+      href: '#disabled-browser-share',
+      disabled: true,
+      onclick: () => (disabledShareCount += 1)
+    }
   ];
   let ownerValue = '';
   let ownerQuery = '';
@@ -65,6 +73,7 @@
   let confirmActionDisabled = false;
   let confirmActionCount = 0;
   let shareDockPlacement: 'side' | 'rail' | 'bottom' | 'inline' = 'inline';
+  let disabledShareCount = 0;
   let dialogOpen = false;
   let sheetOpen = false;
   let termSheetOpen = false;
@@ -313,6 +322,7 @@
     <option value="inline">Inline</option>
   </select>
   <ShareDock placement={shareDockPlacement} ariaLabel="Browser share actions" items={browserShareItems} />
+  <output data-testid="disabled-share-count">{disabledShareCount}</output>
 
   <Menu
     bind:open={menuOpen}

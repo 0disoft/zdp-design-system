@@ -307,6 +307,16 @@ export async function verifyFoundationAndFormContracts(page) {
   assert.equal(await throwingConfirmAction.getAttribute('data-confirmed'), null);
   assert.match((await throwingConfirmAction.getAttribute('style')) ?? '', /progress:\s*0(?:;|$)/);
 
+  const disabledShareLink = page.getByRole('link', { name: 'Disabled browser share' });
+  const shareUrlBeforeClick = page.url();
+  assert.equal(await disabledShareLink.getAttribute('aria-disabled'), 'true');
+  assert.equal(await disabledShareLink.getAttribute('tabindex'), '-1');
+  assert.equal(await disabledShareLink.getAttribute('href'), null);
+  assert.equal(await disabledShareLink.getAttribute('aria-describedby'), null);
+  await disabledShareLink.dispatchEvent('click');
+  assert.equal(page.url(), shareUrlBeforeClick);
+  assert.equal(await page.getByTestId('disabled-share-count').textContent(), '0');
+
   const splitPaneFixture = page.getByTestId('split-pane-fixture');
   const splitPane = splitPaneFixture.locator('#browser-split-pane');
   const separator = splitPaneFixture.getByRole('separator', { name: 'Navigation width', exact: true });

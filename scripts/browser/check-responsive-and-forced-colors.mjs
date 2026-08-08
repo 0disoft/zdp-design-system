@@ -33,7 +33,7 @@ async function verifyShareDockPlacements(page) {
     await placementControl.selectOption('inline');
     assert.equal(await dock.evaluate((element) => getComputedStyle(element).position), 'static');
     assert.equal(await list.evaluate((element) => getComputedStyle(element).display), 'flex');
-    assert.equal(await dock.locator('.zdp-tooltip--top').count(), 2);
+    assert.equal(await dock.locator('.zdp-tooltip--top').count(), 3);
 
     await placementControl.selectOption('rail');
     const railStyle = await dock.evaluate((element) => {
@@ -43,14 +43,14 @@ async function verifyShareDockPlacements(page) {
     assert.equal(railStyle.position, 'sticky');
     assert.notEqual(railStyle.top, 'auto');
     assert.equal(await list.evaluate((element) => getComputedStyle(element).display), 'grid');
-    assert.equal(await dock.locator('.zdp-tooltip--left').count(), 2);
+    assert.equal(await dock.locator('.zdp-tooltip--left').count(), 3);
 
     await placementControl.selectOption('side');
     const sideGeometry = await measureShareDock(dock, list);
     assert.equal(sideGeometry.position, 'fixed');
     assert.equal(Math.round(sideGeometry.top), 360, 'Wide side ShareDock must remain at 40% of viewport height.');
     assert.equal(sideGeometry.listDisplay, 'grid');
-    assert.equal(await dock.locator('.zdp-tooltip--left').count(), 2);
+    assert.equal(await dock.locator('.zdp-tooltip--left').count(), 3);
 
     await page.evaluate(() => {
       const root = document.documentElement;
@@ -83,7 +83,7 @@ async function verifyShareDockPlacements(page) {
     assert.equal(Math.round(bottomGeometry.left), 31);
     assert.equal(Math.round(640 - bottomGeometry.right), 29);
     assert.equal(Math.round(900 - bottomGeometry.bottom), 37);
-    assert.equal(await dock.locator('.zdp-tooltip--top').count(), 2);
+    assert.equal(await dock.locator('.zdp-tooltip--top').count(), 3);
   } finally {
     await placementControl.selectOption('inline');
   }

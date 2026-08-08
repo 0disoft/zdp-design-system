@@ -8,6 +8,12 @@
   export let placement: 'side' | 'rail' | 'bottom' | 'inline' = 'side';
 
   function handleClick(event: MouseEvent, item: ZdpShareDockItem): void {
+    if (item.disabled) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
     item.onclick?.(event, item);
   }
 
@@ -31,12 +37,15 @@
     {#each items as item (item.id)}
       {@const icon = zdpShareIcons[item.icon]}
       {#if item.href}
-        <Tooltip text={item.label} placement={tooltipPlacement} let:describedBy>
+        <Tooltip text={item.label} placement={tooltipPlacement} disabled={item.disabled} let:describedBy>
           <a
             class="zdp-share-action"
-            href={item.href}
-            target={item.target ?? undefined}
-            rel={resolvedRel(item)}
+            href={item.disabled ? undefined : item.href}
+            target={item.disabled ? undefined : (item.target ?? undefined)}
+            rel={item.disabled ? undefined : resolvedRel(item)}
+            role={item.disabled ? 'link' : undefined}
+            aria-disabled={item.disabled ? 'true' : undefined}
+            tabindex={item.disabled ? -1 : undefined}
             aria-label={item.ariaLabel ?? item.label}
             aria-describedby={describedBy ?? undefined}
             data-share-id={item.id}
@@ -201,8 +210,8 @@
     width: var(--zdp-control-icon-sm);
   }
 
-  .zdp-share-action:hover:not(:disabled),
-  .zdp-share-action:focus-visible {
+  .zdp-share-action:hover:not(:disabled):not([aria-disabled="true"]),
+  .zdp-share-action:focus-visible:not([aria-disabled="true"]) {
     background: var(--zdp-color-surface-raised);
     border-color: var(--zdp-color-line-subtle);
     color: var(--zdp-color-ink-strong);
@@ -214,7 +223,8 @@
     outline-offset: var(--zdp-control-focus-outline-offset);
   }
 
-  .zdp-share-action:disabled {
+  .zdp-share-action:disabled,
+  .zdp-share-action[aria-disabled="true"] {
     cursor: not-allowed;
     opacity: 0.56;
   }

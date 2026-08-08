@@ -379,7 +379,7 @@ Icon은 장식용 glyph 또는 짧은 보조 기호의 박스, 크기, 중앙정
 Link는 일반 텍스트 이동, hover 색상 변화, keyboard focus highlight만 제공하며 라우팅, SEO, 인증, 결제, 권한 판단은 소비 앱이 계속 소유한다. 실제 단축키가 구현된 링크만 `ariaKeyShortcuts`를 전달한다.
 SkipLink는 반복 탐색을 건너뛰는 keyboard-first link 구조와 focus-visible 표시만 제공하며 target id, 페이지 레이아웃, 라우팅 판단은 소비 앱이 계속 소유한다.
 VisuallyHidden은 screen-reader-only 보조 텍스트 숨김만 제공하며 라벨 문구, 번역, 권한, 데이터 판단은 소비 앱이 계속 소유한다.
-ShareDock은 공유 도크의 위치, 아이콘, tooltip, focus-visible 표면만 제공하며 URL 생성, clipboard, navigator.share, 플랫폼별 공유 링크, 권한 판단은 소비 앱이 계속 소유한다. 문서 본문 옆에 붙는 sticky 공유 레일은 `rail` placement를 사용한다.
+ShareDock은 공유 도크의 위치, 아이콘, tooltip, focus-visible 표면만 제공하며 URL 생성, clipboard, navigator.share, 플랫폼별 공유 링크, 권한 판단은 소비 앱이 계속 소유한다. `disabled` 항목은 button과 link 모두 tooltip, tab stop, navigation, callback을 비활성화하며 link에는 `aria-disabled="true"`를 노출한다. 문서 본문 옆에 붙는 sticky 공유 레일은 `rail` placement를 사용한다.
 `zdpShareIcons`는 공유 아이콘 shape 데이터만 제공하며 플랫폼별 공유 URL, target, rel, 클릭 가능 여부는 소비 앱이 계속 소유한다. Telegram, LINE, WhatsApp, X, Reddit, Facebook, Threads, Bluesky, Weibo 같은 플랫폼 브랜드 glyph는 Simple Icons path 기준을 유지하고, LinkedIn은 Simple Icons에서 제거되어 simple-icons 13.21.0 vendored path 기준을 유지한다.
 ThemeToggle은 light/dark 전환 버튼의 pressed 상태, glyph, 접근성 이름, focus-visible 표면만 제공하며 초기 테마 결정, storage key, system preference, SSR/초기 paint 처리는 소비 앱이 계속 소유한다.
 

@@ -145,7 +145,7 @@ import flagshipKeyArt from 'zdp-design-system/assets/credits/credit-pack-keyart-
 - InlineCode와 CodeBlock은 문서, 보안, 아키텍처 화면의 코드 표면이다.
 - Icon은 장식용 glyph 기본값을 갖고, 의미 있는 아이콘은 소비 컴포넌트가 접근성 이름을 제공한다.
 - Link는 일반 텍스트 링크이며 버튼처럼 보이는 destructive action으로 쓰지 않는다.
-- ShareDock은 공유 도크와 아이콘 shape를 제공하고 URL 조립과 플랫폼 정책은 소비 앱이 정한다.
+- ShareDock은 공유 도크와 아이콘 shape를 제공하고 URL 조립과 플랫폼 정책은 소비 앱이 정한다. `disabled` 항목은 button과 link 모두 tooltip, tab stop, navigation, callback을 비활성화한다.
 - Kbd와 ShortcutHint는 입력 힌트를 표시할 뿐, 단축키 실행을 등록하지 않는다. 화면에 보이는 힌트는 `/`, `?`, `Esc`, `Enter`, `ArrowUp/ArrowDown`, `Ctrl/⌘+Enter`처럼 자주 쓰고 맥락이 분명한 키만 남긴다. `ariaKeyShortcuts`는 실제 단축키가 소비 앱에서 구현된 control이나 CommandField에만 붙인다.
 - LocaleSwitcher는 언어 선택 표면과 keyboard 이동만 제공하고 실제 message catalog, 라우팅, fallback locale, 저장소, `<html lang>` 반영은 소비 앱이 정한다.
 - ThemeToggle은 light/dark 전환 버튼의 pressed 상태와 glyph만 제공하고 초기 테마, 저장소, 시스템 선호도 판단은 소비 앱이 정한다.
