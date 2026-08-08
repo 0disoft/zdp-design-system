@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 0.51.2
+## 0.52.0
 
 - Synchronized TermSheet modal activation and focus transitions with the effective `open && term` state so asynchronously arriving or disappearing term data cannot leave an empty modal lifecycle or steal focus after close.
 - Restricted ConfirmAction to left-button primary pointers and cancelled pending confirmations on capture, focus, window-focus, visibility, and disabled-state loss while separating the completion timeout from animation-frame progress rendering.
