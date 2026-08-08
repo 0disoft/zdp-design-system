@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.51.2
+
+- Synchronized TermSheet modal activation and focus transitions with the effective `open && term` state so asynchronously arriving or disappearing term data cannot leave an empty modal lifecycle or steal focus after close.
+
 ## 0.51.1
 
 - Updated the Storybook, Svelte, Vite, accessibility, browser-test, icon, Node typing, and type-checking toolchain while retaining TypeScript 6 for the current Svelte and Storybook peer contracts.

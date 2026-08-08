@@ -42,13 +42,16 @@
   let layerElement = $state<HTMLElement | null>(null);
   let previousFocusElement = $state<HTMLElement | null>(null);
   let knownOpenState = $state(false);
+  let focusTransition = 0;
   const modalLayer = createZdpModalLayer();
+  const effectiveOpen = $derived(open && term !== null);
 
   $effect.pre(() => {
-    modalLayer.setActive(open && term !== null, layerElement);
+    modalLayer.setActive(effectiveOpen, layerElement);
   });
 
   onDestroy(() => {
+    focusTransition += 1;
     modalLayer.destroy();
   });
 
@@ -57,19 +60,20 @@
   const resolvedPlacement = $derived(placement);
 
   $effect(() => {
-    if (open === knownOpenState) {
+    if (effectiveOpen === knownOpenState) {
       return;
     }
 
-    knownOpenState = open;
-    if (open) {
-      void handleSheetOpened();
+    knownOpenState = effectiveOpen;
+    const transition = ++focusTransition;
+    if (effectiveOpen) {
+      void handleSheetOpened(transition);
     } else {
       restorePreviousFocus();
     }
   });
 
-  async function handleSheetOpened(): Promise<void> {
+  async function handleSheetOpened(transition: number): Promise<void> {
     if (typeof document === 'undefined') {
       return;
     }
@@ -78,6 +82,10 @@
     modalLayer.setFocusReturnTarget(previousFocusElement);
 
     await tick();
+
+    if (transition !== focusTransition || !effectiveOpen) {
+      return;
+    }
 
     const firstElement = getFocusableElements()[0] ?? panelElement;
     firstElement?.focus();
@@ -159,7 +167,7 @@
   }
 </script>
 
-{#if open && term !== null}
+{#if effectiveOpen && term !== null}
   <div class="zdp-term-layer" bind:this={layerElement}>
     {#if closeOnBackdrop}
       <button

@@ -68,6 +68,8 @@
   let dialogOpen = false;
   let sheetOpen = false;
   let termSheetOpen = false;
+  let asyncTermSheetOpen = false;
+  let asyncTerm: ZdpTermSheetTerm | null = null;
   let nestedDialogOpen = false;
   let nestedSheetOpen = false;
   let protectedDialogOpen = false;
@@ -93,6 +95,12 @@
     label: 'Browser term',
     short: 'A term used to verify the modal sheet contract.',
     canonicalPath: '#browser-term-details'
+  };
+  const asyncBrowserTerm: ZdpTermSheetTerm = {
+    id: 'async-browser-term',
+    label: 'Async browser term',
+    short: 'A term loaded after its sheet was requested.',
+    relatedTerms: [{ id: 'remove-async-term', label: 'Remove async term' }]
   };
   const protectedBrowserTerm: ZdpTermSheetTerm = {
     id: 'protected-browser-term',
@@ -423,6 +431,26 @@
     term={browserTerm}
     closeLabel="Close term"
     onClose={() => (termSheetOpen = false)}
+  />
+
+  <button
+    data-testid="async-term-sheet-trigger"
+    type="button"
+    onclick={() => {
+      asyncTerm = null;
+      asyncTermSheetOpen = true;
+    }}>Open async term shell</button
+  >
+  <button data-testid="async-term-load" type="button" onclick={() => (asyncTerm = asyncBrowserTerm)}>
+    Load async term
+  </button>
+  <TermSheet
+    bind:open={asyncTermSheetOpen}
+    id="async-browser-term-sheet"
+    term={asyncTerm}
+    closeLabel="Close async term"
+    onRelatedTerm={() => (asyncTerm = null)}
+    onClose={() => (asyncTermSheetOpen = false)}
   />
 
   <button data-testid="protected-dialog-trigger" type="button" onclick={() => (protectedDialogOpen = true)}>

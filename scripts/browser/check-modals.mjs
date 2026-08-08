@@ -28,6 +28,35 @@ export async function verifyModalContracts(page) {
     lastName: 'View details'
   });
 
+  const asyncTermTrigger = page.getByTestId('async-term-sheet-trigger');
+  const asyncTermLoad = page.getByTestId('async-term-load');
+  await asyncTermTrigger.focus();
+  await asyncTermTrigger.click();
+  assert.equal(
+    await page.getByRole('dialog', { name: 'Async browser term' }).count(),
+    0,
+    'Opening a TermSheet without term data must not activate an empty modal.'
+  );
+  assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+  assert.equal(await hasInertAncestor(asyncTermTrigger), false);
+
+  await asyncTermLoad.click();
+  const asyncTermDialog = page.getByRole('dialog', { name: 'Async browser term' });
+  assert.equal(await asyncTermDialog.count(), 1, 'Term data arriving later must activate the requested sheet.');
+  assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
+  assert.equal(await hasInertAncestor(asyncTermTrigger), true);
+  assert.equal(await isDeepActive(asyncTermDialog.getByRole('button', { name: 'Close async term' })), true);
+
+  await asyncTermDialog.getByRole('button', { name: 'Remove async term' }).click();
+  assert.equal(await asyncTermDialog.count(), 0, 'Removing term data must deactivate the modal while open stays requested.');
+  assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+  assert.equal(await hasInertAncestor(asyncTermTrigger), false);
+  assert.equal(
+    await asyncTermLoad.evaluate((element) => document.activeElement === element),
+    true,
+    'Removing term data must restore focus to the control active when the modal appeared.'
+  );
+
   await verifyProtectedModalContract({
     page,
     triggerTestId: 'protected-dialog-trigger',
