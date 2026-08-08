@@ -1,4 +1,8 @@
 <script lang="ts">
+  import shipMarkSimpleCurrentColorMarkup from '../src/lib/assets/brand/ship-mark-simple-current-color.svg?raw';
+
+  let unavailableAsset = false;
+
   const assets = {
     og: new URL('../src/lib/assets/brand/og-background-1200x630.jpg', import.meta.url).href,
     square: new URL('../src/lib/assets/brand/brand-square-256.webp', import.meta.url).href,
@@ -7,7 +11,6 @@
     shipMark: new URL('../src/lib/assets/brand/ship-mark.svg', import.meta.url).href,
     shipMarkSimpleMono: new URL('../src/lib/assets/brand/ship-mark-simple-mono.svg', import.meta.url).href,
     shipMarkSimpleInverse: new URL('../src/lib/assets/brand/ship-mark-simple-inverse.svg', import.meta.url).href,
-    shipMarkSimpleCurrentColor: new URL('../src/lib/assets/brand/ship-mark-simple-current-color.svg', import.meta.url).href,
     shipMarkSimpleTricolor: new URL('../src/lib/assets/brand/ship-mark-simple-tricolor.svg', import.meta.url).href
   } as const;
 </script>
@@ -57,11 +60,9 @@
         <figcaption>Simple mono mark · default</figcaption>
       </figure>
       <figure class="asset-frame asset-frame--mark">
-        <span
-          class="asset-mark-preview"
-          style={`--asset-mark-url: url("${assets.shipMarkSimpleCurrentColor}")`}
-          aria-hidden="true"
-        ></span>
+        <span class="asset-mark-preview" aria-hidden="true">
+          {@html shipMarkSimpleCurrentColorMarkup}
+        </span>
         <figcaption>Simple currentColor mark · inline use</figcaption>
       </figure>
       <figure class="asset-frame asset-frame--mark">
@@ -69,7 +70,23 @@
         <figcaption>Simple tricolor mark · 32 px minimum</figcaption>
       </figure>
       <figure class="asset-frame asset-frame--missing">
-        <img src="/__zdp_missing_brand_asset__.webp" alt="" width="256" height="256" />
+        {#if unavailableAsset}
+          <span class="asset-missing-preview" aria-hidden="true">
+            <svg viewBox="0 0 48 48">
+              <rect x="7" y="9" width="34" height="30" rx="2" fill="none" stroke="currentColor" stroke-width="2" />
+              <path d="m10 36 9-10 6 6 5-5 8 9M32 16h.01" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+              <path d="M9 41 40 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="3" />
+            </svg>
+          </span>
+        {:else}
+          <img
+            src="/__zdp_missing_brand_asset__.webp"
+            alt=""
+            width="256"
+            height="256"
+            onerror={() => (unavailableAsset = true)}
+          />
+        {/if}
         <figcaption>Unavailable asset</figcaption>
       </figure>
     </div>
@@ -154,7 +171,8 @@
 
   .asset-frame--mark img,
   .asset-frame--missing img,
-  .asset-mark-preview {
+  .asset-mark-preview,
+  .asset-missing-preview {
     margin: auto;
     max-inline-size: 16rem;
     padding: var(--zdp-space-8);
@@ -170,12 +188,26 @@
 
   .asset-mark-preview {
     aspect-ratio: 1;
-    background: var(--zdp-color-accent-strong);
     block-size: auto;
     box-sizing: border-box;
+    color: var(--zdp-color-accent-primary);
     display: block;
     inline-size: 100%;
-    mask: var(--asset-mark-url) center / calc(100% - (2 * var(--zdp-space-8))) no-repeat;
+  }
+
+  .asset-mark-preview :global(svg),
+  .asset-missing-preview svg {
+    block-size: 100%;
+    display: block;
+    inline-size: 100%;
+  }
+
+  .asset-missing-preview {
+    aspect-ratio: 1;
+    box-sizing: border-box;
+    color: var(--zdp-color-ink-muted);
+    display: block;
+    inline-size: 100%;
   }
 
   .safe-area {

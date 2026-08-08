@@ -195,7 +195,7 @@
   }
 
   .credit-icon--current {
-    color: var(--zdp-color-accent-strong);
+    color: var(--zdp-color-accent-primary);
   }
 
   .credit-ship-sizes {
