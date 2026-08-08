@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.51.1
+
+- Updated the Storybook, Svelte, Vite, accessibility, browser-test, icon, Node typing, and type-checking toolchain while retaining TypeScript 6 for the current Svelte and Storybook peer contracts.
+- Synchronized the packaged and static-preview Threads glyph with Simple Icons 16.28.0 and updated the pinned Storybook accessibility gate versions.
+
 ## 0.51.0
 
 - Added a three-shape `ship-mark-simple-*` family with default monochrome, dark-surface inverse, inline `currentColor`, and display-only tricolor variants while preserving the existing detailed `ship-mark.svg` contract.
