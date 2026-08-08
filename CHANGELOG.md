@@ -9,7 +9,7 @@
 - Made disabled ShareDock links non-navigable, non-focusable, callback-free, and tooltip-free with explicit `aria-disabled` semantics matching disabled button items.
 - Calculated split-pane pointer resizing from the drag-start size and signed pointer delta so grabbing either edge of the separator hit target no longer causes an initial size jump, including RTL layouts.
 - Synchronized Combobox display queries with initial and asynchronously resolved selected options until the user edits, closed the listbox on root focus exit or root-level Escape, and scrolled keyboard-active options into view.
-- Added an additive Radio `selectedValue` group binding so every item derives checked state from one parent value, while retaining the former `checked` prop as a deprecated compatibility surface.
+- Replaced Radio's per-item `checked` state with a required item `value` and one shared `selectedValue` binding so DOM and parent state cannot retain different group selections.
 - Added a document-scoped dismiss stack and migrated Menu, Popover, and Combobox so only open layers install shared listeners and only the most recently activated layer receives Escape or outside-click dismissal.
 - Migrated Tooltip, Dialog, Sheet, and TermSheet to the shared dismiss stack, added Tooltip outside-click pass-through, and verified a real Dialog → Sheet → Menu → Tooltip DOM hierarchy dismisses exactly one layer per Escape.
 - Batched split-pane pointer rendering to one animation frame, cached drag direction at pointer start, and skipped controller measurement/render work when Svelte echoes an internally produced size without other visual option changes.

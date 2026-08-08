@@ -98,9 +98,9 @@ Svelte island 없이 Astro에서 공유 아이콘 shape만 필요하면 `zdp-des
 플랫폼 브랜드 공유 아이콘은 Simple Icons path 기준을 유지하고 임의 outline glyph로 대체하지 않는다.
 Astro 페이지는 Svelte island가 필요한 부분에서만 Svelte 컴포넌트를 가져온다.
 
-## Svelte와 Tauri 소비 표면
+## 호환용 package-root Svelte 표면
 
-Svelte, SvelteKit, Tauri Svelte WebView는 package root에서 shared component를 가져온다.
+이 절의 package-root 예시는 기존 Svelte, SvelteKit, Tauri Svelte WebView 소비처의 호환 검증용이다. 새 표면은 앞 절의 direct component subpath를 사용한다.
 
 ```svelte
 <script lang="ts">
@@ -431,7 +431,7 @@ Toolbar는 가까운 화면 도구와 액션 묶음의 wrapping, main/action 배
 CommandField는 검색 입력의 label, frame, focus-within, shortcut keycap, help/error id, `ariaKeyShortcuts`, `ariaAutocomplete`, result id 연결, 입력 keydown callback만 제공하며 검색 인덱스, 결과 정렬, command palette, 라우팅, 권한 판단은 소비 앱이 계속 소유한다. `ariaAutocomplete`, `ariaControls`, `ariaExpanded`, `ariaActivedescendant` 중 하나를 전달하면 입력은 `combobox` 역할과 기본 `aria-expanded="false"`를 함께 노출한다. 결과 목록, keyboard dispatcher, command 실행 상태는 소비 앱이 계속 소유한다.
 Combobox는 검색 가능한 단일 선택의 label, input frame, listbox, active option, disabled option skip, hidden submitted value만 제공한다. 사용자가 query를 직접 편집하기 전에는 초기 `value`와 비동기로 도착하거나 label이 바뀐 option을 표시 query에 동기화한다. 사용자가 선택 label을 편집하면 hidden submitted value를 즉시 비우고 `onValueChange('', null)`을 호출한다. `required`는 임의 입력 문자열이 아니라 실제 option 선택을 검증하며 기본 문구는 `selectionRequiredText`로 바꿀 수 있다. IME 조합 중 Enter와 방향키는 선택이나 이동으로 처리하지 않는다. focus가 root 밖으로 나가거나 root 어디서든 Escape를 누르면 listbox를 닫고, keyboard active option은 panel의 보이는 영역으로 스크롤한다. 기본 input/listbox/option ID는 SSR과 hydration에서 안정적이며, 소비 앱이 명시적인 `id`를 전달하는 계약도 유지한다. light DOM과 stylesheet가 설치된 open shadow root에서 composed click path를 기준으로 자체 input/toggle/option 입력과 실제 outside click을 구분한다. 실제 필터링, async search, command 실행, 권한 판단은 소비 앱이 계속 소유한다. 단순 상태 선택은 native `Select`를 유지한다. `appearance: base-select`를 지원하는 브라우저에서는 picker surface, option 사이의 2 CSS px 간격과 각 option 안쪽의 2 CSS px inset, 선택 checkmark의 논리 inline-start 4 CSS px 여백, hover와 selected option, 그리고 inline-end에서 8 CSS px 떨어진 picker icon이 ZDP theme token과 spacing 계약을 따른다. 지원하지 않거나 forced-colors가 활성화된 환경에서는 native 동작과 사용자 색상 강제를 유지한다. 사용자가 입력으로 후보를 좁히는 단일 선택일 때만 Combobox를 쓴다.
 
-Radio group은 개별 `checked` boolean을 각각 bind하지 않는다. 부모의 단일 `string | null` 값을 각 Radio의 `selectedValue`에 bind하면 DOM checked 상태는 `selectedValue === value`로 계산되고 선택 변경이 같은 부모 값으로 전파된다. 기존 `checked` prop은 단독·레거시 호환용 deprecated 표면이며 새 group 구현의 상태 정본으로 사용하지 않는다.
+Radio group은 부모의 단일 `string | null` 값을 각 Radio의 `selectedValue`에 bind한다. DOM checked 상태는 `selectedValue === value`로 계산되고 선택 변경이 같은 부모 값으로 전파된다. 개별 `checked` prop은 두 상태 정본을 만들기 때문에 제공하지 않는다.
 
 Tabs, SegmentedControl, LocaleSwitcher, TextScaleControl에 전달된 선택값이 없거나 disabled·unknown 값이면 첫 enabled 항목으로 바인딩 값을 자동 보정한다. enabled 항목이 하나도 없으면 어떤 항목도 selected/checked로 표시하지 않는다. ARIA·시각 선택과 부모 상태는 항상 같은 값을 정본으로 공유한다.
 AdSlot은 광고나 후원 자리의 reserved layout, accessible label, placement/state data attribute만 제공한다. `placement`는 `inline`, `banner`, `rail`, `between-sections` 같은 layout hint이고, `state`는 `pending`, `filled`, `empty`, `blocked` 같은 표시 상태다. provider markup은 slot으로 소비 앱이 넣고, provider script, consent, slot id, ads.txt, personalized ads 판단은 소비 앱이 계속 소유한다.
@@ -473,11 +473,11 @@ Flutter와 native shell은 Svelte 컴포넌트를 직접 소비하지 않는다.
 
 ## 소비처 적용 체크리스트
 
-- `styles.css`를 먼저 import한다.
+- Svelte component는 `tokens.css`와 `components/ComponentName` direct subpath를 기본으로 사용한다.
 - 다국어 웹폰트가 필요한 경우에만 `locale-fonts.css`를 추가한다.
 - 브랜드 워드마크가 필요한 경우에만 `brand-fonts.css`를 추가한다.
 - 표현용 섹션이나 캠페인 문구가 필요한 경우에만 `expressive-fonts.css`를 추가한다.
-- Svelte component는 package root에서만 import한다.
+- package root와 `styles.css`는 기존 호환 또는 framework-neutral/static utility가 필요한 표면에서만 사용한다.
 - Link를 쓰는 화면은 hover가 색상 변화 중심이고 focus가 sunlit gold highlight로 보이는지 확인한다.
 - SkipLink를 쓰는 화면은 첫 Tab 대상에서 보이고 본문 target id로 이동하는지 확인한다.
 - VisuallyHidden을 쓰는 화면은 화면에는 보이지 않지만 접근성 이름이나 설명에 포함되는지 확인한다.

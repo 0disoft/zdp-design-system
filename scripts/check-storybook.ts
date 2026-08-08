@@ -3077,6 +3077,21 @@ if (!radio.includes('.zdp-choice[data-invalid="true"] .zdp-choice__mark')) {
 }
 
 for (const requiredText of [
+  'export let value: string',
+  'export let selectedValue: string | null = null',
+  'resolvedChecked = selectedValue === value',
+  'selectedValue = value'
+]) {
+  if (!radio.includes(requiredText)) {
+    failures.push(`Radio component is missing single-value group contract ${requiredText}.`);
+  }
+}
+
+if (radio.includes('export let checked')) {
+  failures.push('Radio component must not expose per-item checked state; groups bind one selectedValue.');
+}
+
+for (const requiredText of [
   'role="switch"',
   'type DescribedBy = string | readonly string[] | null',
   'errorMessageId: string | null = null',
