@@ -29,6 +29,7 @@ export async function verifyModalContracts(page) {
   });
 
   await verifyModalDocumentOwnership(page);
+  await verifyFocusableCache(page);
 
   const asyncTermTrigger = page.getByTestId('async-term-sheet-trigger');
   const asyncTermLoad = page.getByTestId('async-term-load');
@@ -267,6 +268,64 @@ async function verifyModalDocumentOwnership(page) {
     restore('padding-inline-end', styles.paddingValue, styles.paddingPriority);
     document.querySelector('[data-testid="preexisting-inert"]')?.setAttribute('inert', '');
   }, initialBodyStyles);
+}
+
+async function verifyFocusableCache(page) {
+  await page.evaluate(() => {
+    const originalGetComputedStyle = window.getComputedStyle.bind(window);
+    window.__zdpOriginalGetComputedStyle = originalGetComputedStyle;
+    window.__zdpFocusableStyleReads = 0;
+    window.getComputedStyle = (...args) => {
+      if (args[0] instanceof HTMLElement && args[0].closest('[role="dialog"]')) {
+        window.__zdpFocusableStyleReads += 1;
+      }
+      return originalGetComputedStyle(...args);
+    };
+  });
+
+  const trigger = page.getByTestId('dialog-trigger');
+  await trigger.click();
+  const dialog = page.getByRole('dialog', { name: 'Review changes' });
+  const closeButton = dialog.getByRole('button', { name: 'Close dialog' });
+  const lastAction = dialog.getByTestId('dialog-last-action');
+  await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  const readsAfterOpen = await page.evaluate(() => window.__zdpFocusableStyleReads);
+
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Tab');
+  assert.equal(
+    await page.evaluate(() => window.__zdpFocusableStyleReads),
+    readsAfterOpen,
+    'Repeated focus wrapping must reuse the cached focusable set while modal DOM is unchanged.'
+  );
+  assert.equal(await closeButton.evaluate((element) => document.activeElement === element), true);
+
+  await dialog.evaluate((element) => {
+    const button = document.createElement('button');
+    button.dataset.testid = 'dynamic-dialog-action';
+    button.textContent = 'Dynamic dialog action';
+    element.append(button);
+  });
+  await page.evaluate(() => new Promise((resolve) => queueMicrotask(resolve)));
+  await closeButton.focus();
+  await page.keyboard.press('Shift+Tab');
+  assert.equal(
+    await page.getByTestId('dynamic-dialog-action').evaluate((element) => document.activeElement === element),
+    true,
+    'A modal DOM mutation must invalidate the cache before the next focus traversal.'
+  );
+  assert.ok(
+    await page.evaluate(() => window.__zdpFocusableStyleReads) > readsAfterOpen,
+    'Cache invalidation must re-evaluate focusability after a modal DOM mutation.'
+  );
+
+  await page.getByTestId('dynamic-dialog-action').evaluate((element) => element.remove());
+  await closeButton.click();
+  await page.evaluate(() => {
+    window.getComputedStyle = window.__zdpOriginalGetComputedStyle;
+    delete window.__zdpOriginalGetComputedStyle;
+    delete window.__zdpFocusableStyleReads;
+  });
 }
 export async function verifyNestedModalContracts(page) {
   const nestedDialogTrigger = page.getByTestId('nested-dialog-trigger');

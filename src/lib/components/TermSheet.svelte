@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy, tick } from 'svelte';
-  import { getZdpActiveElement, isZdpFocusableElement, zdpFocusableSelector } from '../focusable';
+  import { createZdpFocusableCache, getZdpActiveElement } from '../focusable';
   import { createZdpDismissLayer } from '../dismiss-layer';
   import { createZdpModalLayer } from '../modal-layer';
   import type { ZdpTermSheetPlacement, ZdpTermSheetTerm } from '../term';
@@ -46,6 +46,7 @@
   let focusTransition = 0;
   const modalLayer = createZdpModalLayer();
   const dismissLayer = createZdpDismissLayer();
+  const focusableCache = createZdpFocusableCache(() => panelElement);
   const effectiveOpen = $derived(open && term !== null);
 
   $effect.pre(() => {
@@ -59,6 +60,7 @@
 
   onDestroy(() => {
     focusTransition += 1;
+    focusableCache.destroy();
     modalLayer.destroy();
     dismissLayer.destroy();
   });
@@ -95,7 +97,7 @@
       return;
     }
 
-    const firstElement = getFocusableElements()[0] ?? panelElement;
+    const firstElement = focusableCache.get()[0] ?? panelElement;
     firstElement?.focus();
   }
 
@@ -133,7 +135,7 @@
       return;
     }
 
-    const focusableElements = getFocusableElements();
+    const focusableElements = focusableCache.get();
 
     if (focusableElements.length === 0) {
       event.preventDefault();
@@ -158,15 +160,6 @@
     }
   }
 
-  function getFocusableElements(): HTMLElement[] {
-    if (panelElement === null) {
-      return [];
-    }
-
-    return Array.from(panelElement.querySelectorAll<HTMLElement>(zdpFocusableSelector)).filter(
-      isZdpFocusableElement
-    );
-  }
 </script>
 
 {#if effectiveOpen && term !== null}

@@ -686,6 +686,10 @@ async function checkSharedFocusContract(): Promise<void> {
   for (const requiredText of [
     'zdpFocusableSelector',
     'isZdpFocusableElement',
+    'createZdpFocusableCache',
+    'new MutationObserver(invalidate)',
+    'new ResizeObserver',
+    'cachedElements',
     'getClientRects().length > 0',
     "closest('[hidden], [aria-hidden=\"true\"], [inert]')",
     "window.getComputedStyle(element)"
@@ -735,8 +739,9 @@ async function checkSheetContract(): Promise<void> {
     'data-zdp-sheet-placement={placement}',
     'data-zdp-sheet-size={size}',
     'data-zdp-sheet-surface="sheet"',
-    'zdpFocusableSelector',
-    'isZdpFocusableElement',
+    'createZdpFocusableCache',
+    'focusableCache.get()',
+    'focusableCache.destroy()',
     'closeOnEscape',
     'closeOnBackdrop',
     '.zdp-sheet__backdrop',
