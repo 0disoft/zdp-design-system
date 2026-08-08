@@ -16,6 +16,7 @@ Default component text is English. 소비 앱은 화면 locale에 맞춰 user-fa
 - open shadow root 안에 component를 mount하는 소비처는 document-level import에 기대지 않고 `zdp-design-system/styles.css` 내용을 해당 root 안의 `<style>` 또는 `<link rel="stylesheet">`로 직접 설치한다. stylesheet가 설치된 open root에서 Tooltip, Combobox, Menu, Popover, Dialog, Sheet, TermSheet의 documented interaction contract를 지원한다. closed shadow root는 지원하지 않는다.
 - `zdpTokenNames`, `share.js`, `share.d.ts`는 손으로 맞추지 않고 `tokens:generate`, `share-icons:generate` 산출물로 유지한다.
 - 새 버전은 소비 저장소가 opt-in으로 채택한다. broad adoption 전에는 대표 소비처에서 시각과 build를 확인한다.
+- Svelte 소비처는 `zdp-design-system/tokens.css`와 `zdp-design-system/components/ComponentName` direct subpath를 기본으로 사용해 scoped component CSS와 전역 `components.css`를 중복하지 않고 root barrel의 전체 개발 그래프를 피한다. 기존 root named export와 `styles.css`는 호환 및 framework-neutral/static utility 표면으로 유지한다.
 - keyboard focus, flat UI, framed control, Pretendard-first font stack은 소비처에서 임의로 낮추지 않는다.
 - 브랜드 워드마크는 `font.family.brand`와 `brand-fonts.css`를 쓰되, 본문과 제품 UI heading은 Pretendard-first sans/display stack을 유지한다.
 - 소비 저장소는 `zdp-design-system`을 쓰기 위해 Tailwind, UnoCSS, shadcn registry, daisyUI theme, Skeleton preset, Flowbite theme, external `cn()` helper를 알 필요가 없어야 한다.
@@ -23,6 +24,18 @@ Default component text is English. 소비 앱은 화면 locale에 맞춰 user-fa
 - 공용 이미지 fallback은 `zdp-design-system/brand-assets` manifest와 `zdp-design-system/assets/brand/*` 파일만 사용한다. 원본 PNG 또는 내부 `src/` 경로를 import하지 않으며, 비율과 crop 규칙은 `docs/BRAND_ASSETS.md`를 따른다.
 - 새 심볼 표면은 `ship-mark-simple-mono.svg`를 기본으로 사용하고, 상세형 호환·역상·inline `currentColor`·표시용 3색 요구가 있을 때만 각 명시적 variant를 선택한다. 3색 variant는 32 CSS px 미만에서 쓰지 않는다.
 - 공용 귤과 크레딧 팩 함선은 `zdp-design-system/credit-assets` manifest와 `zdp-design-system/assets/credits/*` 파일만 사용한다. 구매·보너스·무료·보상 귤을 색상만으로 구분하지 않고 localized text 또는 Badge를 함께 제공하며, 함선 asset ID를 가격·지급량·판매 상태의 정본으로 사용하지 않는다.
+
+## Svelte 소비 표면
+
+Svelte 앱과 Svelte island는 token-only CSS와 필요한 컴포넌트 subpath를 직접 불러온다.
+
+```ts
+import 'zdp-design-system/tokens.css';
+import Button from 'zdp-design-system/components/Button';
+import Dialog from 'zdp-design-system/components/Dialog';
+```
+
+각 `.svelte` 파일이 자신의 scoped CSS를 포함하므로 같은 앱에서 `styles.css`까지 함께 import하지 않는다. 전역 utility class나 framework-neutral DOM controller를 함께 쓰는 화면만 `styles.css`를 선택하고, 그 경우 `tokens.css`를 별도로 중복 import하지 않는다. 기존 `import { Button } from 'zdp-design-system'` root named export는 호환용이지만 새 코드와 template의 기본 경로는 아니다.
 
 ## Astro 소비 표면
 

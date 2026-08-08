@@ -73,7 +73,15 @@ Tailwind Plus와 Tailwind UI 계열은 파생/재배포 리스크 때문에 ZDP 
 
 ## 패키지 표면
 
-웹 소비 저장소는 공통 CSS 토큰을 먼저 불러온다.
+Svelte 소비처는 컴포넌트 scoped CSS를 다시 받으므로 token-only entry와 컴포넌트 subpath를 기본으로 쓴다. 이 경로는 root barrel의 전체 컴포넌트 그래프와 전역 `components.css` 중복을 피한다.
+
+```ts
+import 'zdp-design-system/tokens.css';
+import Button from 'zdp-design-system/components/Button';
+import Dialog from 'zdp-design-system/components/Dialog';
+```
+
+기존 root named export는 호환용으로 유지한다. Astro 정적 HTML, framework-neutral controller, 전역 utility class를 쓰는 표면은 tokens와 전체 `components.css`를 합친 기존 entry를 사용한다.
 
 ```ts
 import 'zdp-design-system/styles.css';
@@ -100,7 +108,7 @@ import 'zdp-design-system/styles.css';
 import 'zdp-design-system/expressive-fonts.css';
 ```
 
-패키지 export는 `dist/` 산출물을 가리킨다. root runtime entry는 `dist/index.js`, type entry는 `dist/index.d.ts`다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `bun run package:build`가 소비자용 `dist/` 표면을 다시 만든다. 소비 저장소와 문서 예시는 `zdp-design-system` public export만 쓰고 내부 `src/` 경로를 직접 import하지 않는다.
+패키지 export는 `dist/` 산출물을 가리킨다. root runtime entry는 `dist/index.js`, type entry는 `dist/index.d.ts`이며 호환용이다. 새 Svelte 코드는 `zdp-design-system/components/ComponentName`과 `zdp-design-system/tokens.css`를 기본으로 쓴다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `bun run package:build`가 소비자용 `dist/` 표면을 다시 만든다. 소비 저장소와 문서 예시는 `zdp-design-system` public export만 쓰고 내부 `src/` 경로를 직접 import하지 않는다.
 
 ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.51.2`를 기본으로 쓴다.
 

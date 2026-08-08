@@ -14,9 +14,14 @@ export const expectedPackageExports = {
     default: './dist/index.js'
   },
   './styles.css': './dist/styles/index.css',
+  './tokens.css': './dist/styles/tokens.css',
   './brand-fonts.css': './dist/styles/brand-fonts.css',
   './expressive-fonts.css': './dist/styles/expressive-fonts.css',
   './locale-fonts.css': './dist/styles/locale-fonts.css',
+  './components/*': {
+    svelte: './dist/components/*.svelte',
+    default: './dist/components/*.svelte'
+  },
   './share': {
     types: './dist/share.d.ts',
     import: './dist/share.js',
@@ -73,7 +78,7 @@ export const expectedPackageExports = {
 } as const satisfies Readonly<Record<string, PackageExportNode>>;
 
 export const expectedPackageExportTargets = Object.freeze(
-  [...new Set(collectExportTargets(expectedPackageExports))]
+  [...new Set(collectExportTargets(expectedPackageExports))].filter((target) => !target.includes('*'))
 );
 
 export function validatePackageExports(exportsValue: unknown): readonly string[] {

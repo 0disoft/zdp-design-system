@@ -74,6 +74,8 @@ function checkConsumerContractDocument(documentText: string): void {
     '# Consumer Contract',
     'Default component text is English.',
     "import 'zdp-design-system/styles.css';",
+    "import 'zdp-design-system/tokens.css';",
+    "zdp-design-system/components/Button",
     "import 'zdp-design-system/brand-fonts.css';",
     "import 'zdp-design-system/expressive-fonts.css';",
     "import 'zdp-design-system/locale-fonts.css';",
@@ -288,6 +290,7 @@ function checkSynchronizedDocs(
   for (const requiredText of [
     'docs/CONSUMER_CONTRACT.md',
     "import 'zdp-design-system/styles.css';",
+    "import 'zdp-design-system/tokens.css';",
     "import 'zdp-design-system/brand-fonts.css';",
     "import 'zdp-design-system/locale-fonts.css';",
     'tokens/zdp.tokens.json',

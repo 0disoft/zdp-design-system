@@ -541,7 +541,8 @@ async function checkSingleComponentTreeShaking(packedRoot: string): Promise<void
     resolve(singleComponentFixtureRoot, 'src/main.ts'),
     [
       "import { mount } from 'svelte';",
-      "import { Button } from 'zdp-design-system';",
+      "import Button from 'zdp-design-system/components/Button';",
+      "import 'zdp-design-system/tokens.css';",
       '',
       'const target = document.getElementById(\'app\');',
       '',
