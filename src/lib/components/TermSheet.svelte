@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onDestroy, tick } from 'svelte';
   import { getZdpActiveElement, isZdpFocusableElement, zdpFocusableSelector } from '../focusable';
+  import { createZdpDismissLayer } from '../dismiss-layer';
   import { createZdpModalLayer } from '../modal-layer';
   import type { ZdpTermSheetPlacement, ZdpTermSheetTerm } from '../term';
 
@@ -44,15 +45,22 @@
   let knownOpenState = $state(false);
   let focusTransition = 0;
   const modalLayer = createZdpModalLayer();
+  const dismissLayer = createZdpDismissLayer();
   const effectiveOpen = $derived(open && term !== null);
 
   $effect.pre(() => {
     modalLayer.setActive(effectiveOpen, layerElement);
+    dismissLayer.setActive(effectiveOpen, layerElement, {
+      closeOnEscape,
+      closeOnOutside: false,
+      onEscape: requestClose
+    });
   });
 
   onDestroy(() => {
     focusTransition += 1;
     modalLayer.destroy();
+    dismissLayer.destroy();
   });
 
   const titleId = $derived(`${id}-title`);
@@ -121,12 +129,6 @@
   }
 
   function handleKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Escape' && closeOnEscape) {
-      event.preventDefault();
-      requestClose();
-      return;
-    }
-
     if (event.key !== 'Tab') {
       return;
     }

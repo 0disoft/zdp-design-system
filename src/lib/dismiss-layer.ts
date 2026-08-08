@@ -1,6 +1,7 @@
 export interface ZdpDismissLayerOptions {
   closeOnEscape?: boolean;
   closeOnOutside?: boolean;
+  ignoreOutside?: boolean;
   onEscape?: (event: KeyboardEvent) => void;
   onOutsideClick?: (event: MouseEvent) => void;
 }
@@ -98,12 +99,23 @@ function syncDocumentListeners(state: ZdpDismissDocumentState): void {
 }
 
 function dismissOutside(state: ZdpDismissDocumentState, event: MouseEvent): void {
-  const topLayer = state.layers.at(-1);
+  const topLayer = findTopOutsideLayer(state.layers);
   if (!topLayer || event.composedPath().includes(topLayer.root) || topLayer.options.closeOnOutside === false) {
     return;
   }
 
   topLayer.options.onOutsideClick?.(event);
+}
+
+function findTopOutsideLayer(layers: readonly ZdpDismissLayerEntry[]): ZdpDismissLayerEntry | undefined {
+  for (let index = layers.length - 1; index >= 0; index -= 1) {
+    const layer = layers[index];
+    if (layer?.options.ignoreOutside !== true) {
+      return layer;
+    }
+  }
+
+  return undefined;
 }
 
 function dismissEscape(state: ZdpDismissDocumentState, event: KeyboardEvent): void {

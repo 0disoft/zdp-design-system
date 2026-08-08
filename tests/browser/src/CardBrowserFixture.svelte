@@ -93,6 +93,9 @@
   let asyncTerm: ZdpTermSheetTerm | null = null;
   let nestedDialogOpen = false;
   let nestedSheetOpen = false;
+  let domNestedDialogOpen = false;
+  let domNestedSheetOpen = false;
+  let domNestedMenuOpen = false;
   let protectedDialogOpen = false;
   let protectedSheetOpen = false;
   let protectedTermSheetOpen = false;
@@ -651,6 +654,47 @@
       </button>
     </svelte:fragment>
   </Sheet>
+
+  <button data-testid="dom-nested-dialog-trigger" type="button" onclick={() => (domNestedDialogOpen = true)}>
+    Open DOM nested dialog
+  </button>
+  <Dialog
+    bind:open={domNestedDialogOpen}
+    labelledBy="dom-nested-dialog-title"
+    closeLabel="Close DOM nested dialog"
+    onClose={() => (domNestedDialogOpen = false)}
+  >
+    <svelte:fragment slot="title">
+      <h2 id="dom-nested-dialog-title">DOM nested dialog</h2>
+    </svelte:fragment>
+    <button data-testid="dom-nested-sheet-trigger" type="button" onclick={() => (domNestedSheetOpen = true)}>
+      Open DOM nested sheet
+    </button>
+    <Sheet
+      bind:open={domNestedSheetOpen}
+      labelledBy="dom-nested-sheet-title"
+      closeLabel="Close DOM nested sheet"
+      onClose={() => (domNestedSheetOpen = false)}
+    >
+      <svelte:fragment slot="title">
+        <h2 id="dom-nested-sheet-title">DOM nested sheet</h2>
+      </svelte:fragment>
+      <Menu
+        bind:open={domNestedMenuOpen}
+        idPrefix="dom-nested-menu"
+        triggerLabel="DOM nested actions"
+        items={browserMenuItems}
+        onOpenChange={(open) => (domNestedMenuOpen = open)}
+      >
+        <svelte:fragment slot="trigger">DOM nested actions</svelte:fragment>
+      </Menu>
+      <Tooltip text="DOM nested keyboard help" id="dom-nested-tooltip" let:describedBy>
+        <button data-testid="dom-nested-tooltip-trigger" type="button" aria-describedby={describedBy ?? undefined}>
+          DOM nested help
+        </button>
+      </Tooltip>
+    </Sheet>
+  </Dialog>
 
   <section data-testid="preexisting-inert" inert>
     <button type="button">Unavailable fixture action</button>

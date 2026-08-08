@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
+  import { createZdpDismissLayer } from '../dismiss-layer';
 
   type Placement = 'top' | 'right' | 'bottom' | 'left';
 
@@ -17,9 +18,22 @@
   let rootElement = $state<HTMLElement | null>(null);
   let dismissed = $state(false);
   let pointerInside = $state(false);
+  let focusInside = $state(false);
+  const dismissLayer = createZdpDismissLayer();
 
   const tooltipId = $derived(id ?? fallbackId);
   const describedBy = $derived(disabled ? null : tooltipId);
+  const visible = $derived(!disabled && !dismissed && (pointerInside || focusInside));
+
+  $effect.pre(() => {
+    dismissLayer.setActive(visible, rootElement, {
+      closeOnOutside: false,
+      ignoreOutside: true,
+      onEscape: () => (dismissed = true)
+    });
+  });
+
+  onDestroy(() => dismissLayer.destroy());
 
   onMount(() => {
     const root = rootElement;
@@ -32,14 +46,12 @@
     root.addEventListener('mouseleave', handleMouseleave);
     root.addEventListener('focusin', handleFocusin);
     root.addEventListener('focusout', handleFocusout);
-    root.addEventListener('keydown', handleKeydown);
 
     return () => {
       root.removeEventListener('mouseenter', handleMouseenter);
       root.removeEventListener('mouseleave', handleMouseleave);
       root.removeEventListener('focusin', handleFocusin);
       root.removeEventListener('focusout', handleFocusout);
-      root.removeEventListener('keydown', handleKeydown);
     };
   });
 
@@ -54,24 +66,21 @@
   }
 
   function handleFocusin(): void {
+    focusInside = true;
     if (!pointerInside) {
       dismissed = false;
     }
   }
 
-  function handleFocusout(): void {
-    if (!pointerInside) {
-      dismissed = false;
-    }
-  }
-
-  function handleKeydown(event: KeyboardEvent): void {
-    if (event.key !== 'Escape' || disabled) {
+  function handleFocusout(event: FocusEvent): void {
+    if (event.relatedTarget instanceof Node && rootElement?.contains(event.relatedTarget)) {
       return;
     }
 
-    event.preventDefault();
-    dismissed = true;
+    focusInside = false;
+    if (!pointerInside) {
+      dismissed = false;
+    }
   }
 </script>
 

@@ -11,6 +11,7 @@
 - Synchronized Combobox display queries with initial and asynchronously resolved selected options until the user edits, closed the listbox on root focus exit or root-level Escape, and scrolled keyboard-active options into view.
 - Added an additive Radio `selectedValue` group binding so every item derives checked state from one parent value, while retaining the former `checked` prop as a deprecated compatibility surface.
 - Added a document-scoped dismiss stack and migrated Menu, Popover, and Combobox so only open layers install shared listeners and only the most recently activated layer receives Escape or outside-click dismissal.
+- Migrated Tooltip, Dialog, Sheet, and TermSheet to the shared dismiss stack, added Tooltip outside-click pass-through, and verified a real Dialog → Sheet → Menu → Tooltip DOM hierarchy dismisses exactly one layer per Escape.
 
 ## 0.51.1
 

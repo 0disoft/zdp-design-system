@@ -260,6 +260,40 @@ export async function verifyNestedModalContracts(page) {
   assert.equal(await reopenedNestedDialog.count(), 0);
   assert.equal(await hasInertAncestor(nestedDialogTrigger), false);
   assert.equal(await page.getByTestId('preexisting-inert').getAttribute('inert'), '');
+
+  const domNestedDialogTrigger = page.getByTestId('dom-nested-dialog-trigger');
+  await domNestedDialogTrigger.click();
+  const domNestedDialog = page.getByRole('dialog', { name: 'DOM nested dialog' });
+  await domNestedDialog.getByTestId('dom-nested-sheet-trigger').click();
+  const domNestedSheet = page.getByRole('dialog', { name: 'DOM nested sheet' });
+  await domNestedSheet.getByRole('button', { name: 'DOM nested actions' }).click();
+  const domNestedMenu = page.getByRole('menu', { name: 'DOM nested actions' });
+  assert.equal(await domNestedMenu.count(), 1);
+  const domNestedTooltipTrigger = domNestedSheet.getByTestId('dom-nested-tooltip-trigger');
+  await domNestedTooltipTrigger.focus();
+  const domNestedTooltip = page.getByRole('tooltip', { name: 'DOM nested keyboard help' });
+  assert.equal(await domNestedTooltip.evaluate((element) => getComputedStyle(element).opacity), '1');
+
+  await page.keyboard.press('Escape');
+  assert.equal(await domNestedTooltip.locator('..').getAttribute('data-dismissed'), 'true');
+  assert.equal(await domNestedMenu.count(), 1, 'Tooltip Escape must not cascade into its parent Menu.');
+  assert.equal(await domNestedSheet.count(), 1);
+  assert.equal(await domNestedDialog.count(), 1);
+
+  await page.keyboard.press('Escape');
+  assert.equal(await domNestedMenu.count(), 0, 'The second Escape must close only the top Menu.');
+  assert.equal(await domNestedSheet.count(), 1);
+  assert.equal(await domNestedDialog.count(), 1);
+
+  await page.keyboard.press('Escape');
+  assert.equal(await domNestedSheet.count(), 0, 'The third Escape must close only the nested Sheet.');
+  assert.equal(await domNestedDialog.count(), 1);
+
+  await page.keyboard.press('Escape');
+  assert.equal(await domNestedDialog.count(), 0, 'The fourth Escape must close the remaining Dialog.');
+  assert.equal(await domNestedDialogTrigger.evaluate((element) => document.activeElement === element), true);
+  assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), null);
+  assert.equal(await page.evaluate(() => document.body.style.overflow), '');
 }
 
 async function verifyModalKeyboardContract({

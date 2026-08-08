@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onDestroy, tick } from 'svelte';
   import { getZdpActiveElement, isZdpFocusableElement, zdpFocusableSelector } from '../focusable';
+  import { createZdpDismissLayer } from '../dismiss-layer';
   import { createZdpModalLayer } from '../modal-layer';
   import type { ZdpSheetPlacement, ZdpSheetSize } from '../sheet';
 
@@ -20,9 +21,15 @@
   let previousFocusElement: HTMLElement | null = null;
   let wasOpen = false;
   const modalLayer = createZdpModalLayer();
+  const dismissLayer = createZdpDismissLayer();
 
   $: {
     modalLayer.setActive(open, layerElement);
+    dismissLayer.setActive(open, layerElement, {
+      closeOnEscape,
+      closeOnOutside: false,
+      onEscape: requestClose
+    });
 
     if (open && !wasOpen) {
       wasOpen = true;
@@ -35,6 +42,7 @@
 
   onDestroy(() => {
     modalLayer.destroy();
+    dismissLayer.destroy();
   });
 
   async function handleSheetOpened(): Promise<void> {
@@ -75,12 +83,6 @@
   }
 
   function handleKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Escape' && closeOnEscape) {
-      event.preventDefault();
-      requestClose();
-      return;
-    }
-
     if (event.key !== 'Tab') {
       return;
     }

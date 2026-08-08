@@ -1015,6 +1015,7 @@ async function checkMenuPopoverInteractionContract(): Promise<void> {
     "state.document.addEventListener('click', state.handleClick, true)",
     "state.document.addEventListener('keydown', state.handleKeydown, true)",
     'const topLayer = state.layers.at(-1)',
+    'findTopOutsideLayer(state.layers)',
     'event.composedPath().includes(topLayer.root)',
     'event.stopPropagation()'
   ]) {
