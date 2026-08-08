@@ -28,6 +28,8 @@ export async function verifyModalContracts(page) {
     lastName: 'View details'
   });
 
+  await verifyModalDocumentOwnership(page);
+
   const asyncTermTrigger = page.getByTestId('async-term-sheet-trigger');
   const asyncTermLoad = page.getByTestId('async-term-load');
   await asyncTermTrigger.focus();
@@ -186,6 +188,85 @@ export async function verifyModalContracts(page) {
     lastRole: 'link',
     lastName: 'View details'
   });
+}
+
+async function verifyModalDocumentOwnership(page) {
+  const initialBodyStyles = await page.evaluate(() => ({
+    overflowPriority: document.body.style.getPropertyPriority('overflow'),
+    overflowValue: document.body.style.getPropertyValue('overflow'),
+    paddingPriority: document.body.style.getPropertyPriority('padding-inline-end'),
+    paddingValue: document.body.style.getPropertyValue('padding-inline-end')
+  }));
+
+  await page.evaluate(() => {
+    document.body.style.setProperty('overflow', 'clip', 'important');
+    document.body.style.setProperty('padding-inline-end', '7px', 'important');
+  });
+
+  const trigger = page.getByTestId('dialog-trigger');
+  await trigger.click();
+  const dialog = page.getByRole('dialog', { name: 'Review changes' });
+  const lockedStyles = await page.evaluate(() => ({
+    computedPaddingInlineEnd: Number.parseFloat(getComputedStyle(document.body).paddingInlineEnd),
+    overflow: document.body.style.getPropertyValue('overflow'),
+    overflowPriority: document.body.style.getPropertyPriority('overflow'),
+    paddingInlineEnd: document.body.style.getPropertyValue('padding-inline-end'),
+    paddingPriority: document.body.style.getPropertyPriority('padding-inline-end'),
+    scrollbarWidth: Math.max(0, window.innerWidth - document.documentElement.clientWidth)
+  }));
+
+  assert.equal(lockedStyles.overflow, 'hidden', 'A modal must lock body scrolling.');
+  assert.equal(lockedStyles.overflowPriority, '', 'The modal lock must own its applied inline style.');
+  assert.equal(
+    lockedStyles.computedPaddingInlineEnd,
+    7 + lockedStyles.scrollbarWidth,
+    'A modal must compensate the removed scrollbar without discarding existing inline padding.'
+  );
+  if (lockedStyles.scrollbarWidth > 0) {
+    assert.equal(lockedStyles.paddingPriority, '', 'Scrollbar compensation must own its applied inline style.');
+  }
+
+  await page.evaluate(() => {
+    document.body.style.setProperty('overflow', 'scroll', 'important');
+    document.body.style.setProperty('padding-inline-end', '11px', 'important');
+    document.querySelector('[data-testid="preexisting-inert"]')?.removeAttribute('inert');
+  });
+  await dialog.getByRole('button', { name: 'Close dialog' }).click();
+
+  const externallyOwnedStyles = await page.evaluate(() => ({
+    overflow: document.body.style.getPropertyValue('overflow'),
+    overflowPriority: document.body.style.getPropertyPriority('overflow'),
+    paddingInlineEnd: document.body.style.getPropertyValue('padding-inline-end'),
+    paddingPriority: document.body.style.getPropertyPriority('padding-inline-end')
+  }));
+  assert.deepEqual(
+    externallyOwnedStyles,
+    {
+      overflow: 'scroll',
+      overflowPriority: 'important',
+      paddingInlineEnd: '11px',
+      paddingPriority: 'important'
+    },
+    'Modal cleanup must not overwrite body styles changed by another owner while open.'
+  );
+  assert.equal(
+    await page.getByTestId('preexisting-inert').getAttribute('inert'),
+    null,
+    'Modal cleanup must not restore a pre-existing inert attribute removed by another owner while open.'
+  );
+
+  await page.evaluate((styles) => {
+    const restore = (property, value, priority) => {
+      if (value === '') {
+        document.body.style.removeProperty(property);
+      } else {
+        document.body.style.setProperty(property, value, priority);
+      }
+    };
+    restore('overflow', styles.overflowValue, styles.overflowPriority);
+    restore('padding-inline-end', styles.paddingValue, styles.paddingPriority);
+    document.querySelector('[data-testid="preexisting-inert"]')?.setAttribute('inert', '');
+  }, initialBodyStyles);
 }
 export async function verifyNestedModalContracts(page) {
   const nestedDialogTrigger = page.getByTestId('nested-dialog-trigger');
