@@ -87,7 +87,12 @@
     { id: 'line', label: '라인', icon: 'line', href: '#share', ariaLabel: '라인으로 공유' },
     { id: 'whatsapp', label: '왓츠앱', icon: 'whatsapp', href: '#share', ariaLabel: '왓츠앱으로 공유' },
     { id: 'x', label: 'X', icon: 'x', href: '#share', ariaLabel: 'X으로 공유' },
-    { id: 'reddit', label: '레딧', icon: 'reddit', href: '#share', ariaLabel: '레딧으로 공유' }
+    { id: 'reddit', label: '레딧', icon: 'reddit', href: '#share', ariaLabel: '레딧으로 공유' },
+    { id: 'facebook', label: '페이스북', icon: 'facebook', href: '#share', ariaLabel: '페이스북으로 공유' },
+    { id: 'threads', label: '스레드', icon: 'threads', href: '#share', ariaLabel: '스레드로 공유' },
+    { id: 'bluesky', label: '블루스카이', icon: 'bluesky', href: '#share', ariaLabel: '블루스카이로 공유' },
+    { id: 'linkedin', label: '링크드인', icon: 'linkedin', href: '#share', ariaLabel: '링크드인으로 공유' },
+    { id: 'weibo', label: '웨이보', icon: 'weibo', href: '#share', ariaLabel: '웨이보로 공유' }
   ];
   const darkShareItems: readonly ZdpShareDockItem[] = shareItems.map((item) =>
     item.id === 'copy' || item.id === 'device'

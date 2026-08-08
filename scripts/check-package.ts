@@ -867,7 +867,7 @@ async function checkExternalAdoptionContract(): Promise<void> {
   for (const requiredText of [
     'Simple Icons',
     'CC0-1.0',
-    'Telegram, LINE, WhatsApp, X, and Reddit',
+    'Telegram, LINE, WhatsApp, X, Reddit, Facebook, Threads, Bluesky, and Sina Weibo',
     '`src/lib/share.ts`',
     'docs/EXTERNAL_UI_ADOPTION.md',
     'Tailwind Plus and Tailwind UI',

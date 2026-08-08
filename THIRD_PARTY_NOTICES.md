@@ -10,7 +10,7 @@ misrepresent the platform brand.
 
 | Source | License | Material And Adoption Grade | Local Files |
 | --- | --- | --- | --- |
-| [Simple Icons](https://github.com/simple-icons/simple-icons), package snapshot 16.23.0 | CC0-1.0 | Exact SVG path data for Telegram, LINE, WhatsApp, X, and Reddit; Source Adapted. | `src/lib/share.ts`; generated `share.js` and `dist/share.js`. |
+| [Simple Icons](https://github.com/simple-icons/simple-icons), package snapshot 16.23.0 | CC0-1.0 | Exact SVG path data for Telegram, LINE, WhatsApp, X, Reddit, Facebook, Threads, Bluesky, and Sina Weibo; LinkedIn glyph vendored from simple-icons 13.21.0 (CC0-1.0); Source Adapted. | `src/lib/share.ts`; generated `share.js` and `dist/share.js`. |
 
 `scripts/check-share-icons.ts` compares these five paths with the installed Simple Icons package so
 the copied data cannot silently drift into custom approximations. The CC0 license does not grant

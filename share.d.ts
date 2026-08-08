@@ -1,4 +1,16 @@
-export type ZdpShareIconName = 'copy' | 'device' | 'telegram' | 'line' | 'whatsapp' | 'x' | 'reddit';
+export type ZdpShareIconName =
+  | 'copy'
+  | 'device'
+  | 'telegram'
+  | 'line'
+  | 'whatsapp'
+  | 'x'
+  | 'reddit'
+  | 'facebook'
+  | 'threads'
+  | 'bluesky'
+  | 'linkedin'
+  | 'weibo';
 
 export interface ZdpShareIconPath {
   readonly d: string;

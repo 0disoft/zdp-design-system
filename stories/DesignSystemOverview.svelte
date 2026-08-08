@@ -79,7 +79,12 @@
     { id: 'line', label: '라인', icon: 'line', href: '#share-line' },
     { id: 'whatsapp', label: '왓츠앱', icon: 'whatsapp', href: '#share-whatsapp' },
     { id: 'x', label: 'X', icon: 'x', href: '#share-x' },
-    { id: 'reddit', label: '레딧', icon: 'reddit', href: '#share-reddit' }
+    { id: 'reddit', label: '레딧', icon: 'reddit', href: '#share-reddit' },
+    { id: 'facebook', label: '페이스북', icon: 'facebook', href: '#share-facebook' },
+    { id: 'threads', label: '스레드', icon: 'threads', href: '#share-threads' },
+    { id: 'bluesky', label: '블루스카이', icon: 'bluesky', href: '#share-bluesky' },
+    { id: 'linkedin', label: '링크드인', icon: 'linkedin', href: '#share-linkedin' },
+    { id: 'weibo', label: '웨이보', icon: 'weibo', href: '#share-weibo' }
   ];
 
   const darkShareItems: readonly ZdpShareDockItem[] = shareItems.map((item) =>

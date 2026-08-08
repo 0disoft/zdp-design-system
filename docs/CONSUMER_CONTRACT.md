@@ -380,7 +380,7 @@ Link는 일반 텍스트 이동, hover 색상 변화, keyboard focus highlight�
 SkipLink는 반복 탐색을 건너뛰는 keyboard-first link 구조와 focus-visible 표시만 제공하며 target id, 페이지 레이아웃, 라우팅 판단은 소비 앱이 계속 소유한다.
 VisuallyHidden은 screen-reader-only 보조 텍스트 숨김만 제공하며 라벨 문구, 번역, 권한, 데이터 판단은 소비 앱이 계속 소유한다.
 ShareDock은 공유 도크의 위치, 아이콘, tooltip, focus-visible 표면만 제공하며 URL 생성, clipboard, navigator.share, 플랫폼별 공유 링크, 권한 판단은 소비 앱이 계속 소유한다. 문서 본문 옆에 붙는 sticky 공유 레일은 `rail` placement를 사용한다.
-`zdpShareIcons`는 공유 아이콘 shape 데이터만 제공하며 플랫폼별 공유 URL, target, rel, 클릭 가능 여부는 소비 앱이 계속 소유한다. Telegram, LINE, WhatsApp, X, Reddit 같은 플랫폼 브랜드 glyph는 Simple Icons path 기준을 유지한다.
+`zdpShareIcons`는 공유 아이콘 shape 데이터만 제공하며 플랫폼별 공유 URL, target, rel, 클릭 가능 여부는 소비 앱이 계속 소유한다. Telegram, LINE, WhatsApp, X, Reddit, Facebook, Threads, Bluesky, Weibo 같은 플랫폼 브랜드 glyph는 Simple Icons path 기준을 유지하고, LinkedIn은 Simple Icons에서 제거되어 simple-icons 13.21.0 vendored path 기준을 유지한다.
 ThemeToggle은 light/dark 전환 버튼의 pressed 상태, glyph, 접근성 이름, focus-visible 표면만 제공하며 초기 테마 결정, storage key, system preference, SSR/초기 paint 처리는 소비 앱이 계속 소유한다.
 
 LocaleSwitcher는 locale 선택을 위한 radiogroup, 선택 상태, focus-visible, keyboard 이동 표면만 제공한다. 실제 message catalog 로딩, URL routing, fallback locale, root `lang`, storage key, 사용자 preference 저장은 소비 앱이 계속 소유한다.
