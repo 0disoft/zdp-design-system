@@ -107,6 +107,7 @@ checkPackageFiles(packageJson);
 checkPackageArtifactFiles(packageJson);
 checkPackageSideEffects(packageJson);
 checkRuntimeArtifactImports();
+await checkStrictTypeScriptContract();
 await checkSvelteCompilation();
 await checkEnglishDefaultTextContract();
 await checkUserFacingLabelOverrideContract();
@@ -196,6 +197,19 @@ function checkRuntimeArtifactImports(): void {
     if (result.status !== 0) {
       const detail = (result.stderr || result.stdout || 'unknown import failure').trim();
       failures.push(`${relativePath} must be importable by Node: ${detail}`);
+    }
+  }
+}
+
+async function checkStrictTypeScriptContract(): Promise<void> {
+  const parsed: unknown = JSON.parse(await readFile(join(root, 'tsconfig.json'), 'utf8'));
+  const compilerOptions = isRecord(parsed) && isRecord(parsed.compilerOptions)
+    ? parsed.compilerOptions
+    : null;
+
+  for (const option of ['strict', 'noUncheckedIndexedAccess', 'exactOptionalPropertyTypes'] as const) {
+    if (compilerOptions?.[option] !== true) {
+      failures.push(`tsconfig.json compilerOptions.${option} must remain true.`);
     }
   }
 }
@@ -1038,12 +1052,12 @@ async function readPackageJson(path: string): Promise<PackageJson> {
   }
 
   return {
-    version: typeof parsed.version === 'string' ? parsed.version : undefined,
-    license: typeof parsed.license === 'string' ? parsed.license : undefined,
-    exports: isRecord(parsed.exports) ? parsed.exports : undefined,
-    files: isStringArray(parsed.files) ? parsed.files : undefined,
-    sideEffects: isStringArray(parsed.sideEffects) ? parsed.sideEffects : undefined,
-    scripts: isStringRecord(parsed.scripts) ? parsed.scripts : undefined
+    ...(typeof parsed.version === 'string' ? { version: parsed.version } : {}),
+    ...(typeof parsed.license === 'string' ? { license: parsed.license } : {}),
+    ...(isRecord(parsed.exports) ? { exports: parsed.exports } : {}),
+    ...(isStringArray(parsed.files) ? { files: parsed.files } : {}),
+    ...(isStringArray(parsed.sideEffects) ? { sideEffects: parsed.sideEffects } : {}),
+    ...(isStringRecord(parsed.scripts) ? { scripts: parsed.scripts } : {})
   };
 }
 

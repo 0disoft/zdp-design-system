@@ -97,8 +97,13 @@
       return;
     }
 
-    const firstElement = focusableElements[0];
-    const lastElement = focusableElements[focusableElements.length - 1];
+    const firstElement = focusableElements.at(0);
+    const lastElement = focusableElements.at(-1);
+    if (firstElement === undefined || lastElement === undefined) {
+      event.preventDefault();
+      panelElement?.focus();
+      return;
+    }
     const activeElement = getZdpActiveElement();
 
     if (event.shiftKey && activeElement === firstElement) {

@@ -204,7 +204,7 @@ function readJpegMetadata(bytes: Buffer): { format: 'jpeg'; width: number; heigh
   let offset = 2;
   while (offset + 9 < bytes.length) {
     if (bytes[offset] !== 0xff) { offset += 1; continue; }
-    const marker = bytes[offset + 1];
+    const marker = bytes.readUInt8(offset + 1);
     if (marker === 0xd8 || marker === 0xd9) { offset += 2; continue; }
     const length = bytes.readUInt16BE(offset + 2);
     if (marker >= 0xc0 && marker <= 0xc3) {
@@ -228,5 +228,5 @@ function readWebpMetadata(bytes: Buffer): { format: 'webp'; width: number; heigh
 }
 
 function readUInt24LE(bytes: Buffer, offset: number): number {
-  return bytes[offset] | (bytes[offset + 1] << 8) | (bytes[offset + 2] << 16);
+  return bytes.readUInt8(offset) | (bytes.readUInt8(offset + 1) << 8) | (bytes.readUInt8(offset + 2) << 16);
 }

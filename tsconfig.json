@@ -12,8 +12,10 @@
     ],
     "moduleResolution": "bundler",
     "noEmit": true,
+    "noUncheckedIndexedAccess": true,
     "resolveJsonModule": true,
-    "strict": false,
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
     "types": [
       "node",
       "svelte",

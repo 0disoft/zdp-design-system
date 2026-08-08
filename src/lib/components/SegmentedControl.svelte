@@ -72,6 +72,10 @@
     const nextIndex = getNextIndex(event.key, currentIndex, options.length);
     const nextOption = options[nextIndex];
 
+    if (nextOption === undefined) {
+      return;
+    }
+
     nextOption.focus();
     nextOption.click();
   }

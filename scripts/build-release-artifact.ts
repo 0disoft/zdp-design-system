@@ -99,7 +99,9 @@ async function buildArtifact(gitHead: string, artifactDirectory: string): Promis
 
     const results = JSON.parse(packed.stdout) as PackResult[];
     assert.equal(results.length, 1, 'npm pack must create exactly one tarball.');
-    const filename = results[0]?.filename;
+    const [result] = results;
+    assert.ok(result, 'npm pack did not return a result.');
+    const filename = result.filename;
     assert.ok(typeof filename === 'string', 'npm pack did not return a tarball filename.');
     assert.equal(basename(filename), filename, 'npm pack returned an unsafe filename.');
 
@@ -107,7 +109,7 @@ async function buildArtifact(gitHead: string, artifactDirectory: string): Promis
     assert.equal(relative(resolve(artifactDirectory), tarball), filename);
     const archive = await readFile(tarball);
     const integrity = `sha512-${createHash('sha512').update(archive).digest('base64')}`;
-    assert.equal(results[0].integrity, integrity, 'npm pack integrity does not match the tarball bytes.');
+    assert.equal(result.integrity, integrity, 'npm pack integrity does not match the tarball bytes.');
 
     const packedManifest = JSON.parse(readTarEntry(archive, 'package/package.json').toString('utf8')) as PackageManifest;
     assert.equal(packedManifest.gitHead, gitHead, 'Packed package.json does not contain the release gitHead.');
@@ -148,11 +150,13 @@ if (checkOnly) {
     await rm(checkDirectory, { recursive: true, force: true });
   }
 } else {
-  assert.ok(gitHeadIndex >= 0 && args[gitHeadIndex + 1], 'Missing --git-head value.');
-  assert.ok(githubOutputIndex >= 0 && args[githubOutputIndex + 1], 'Missing --github-output value.');
-  const { tarball, integrity, manifest } = await buildArtifact(args[gitHeadIndex + 1], root);
+  const gitHead = gitHeadIndex >= 0 ? args[gitHeadIndex + 1] : undefined;
+  const githubOutput = githubOutputIndex >= 0 ? args[githubOutputIndex + 1] : undefined;
+  assert.ok(gitHead, 'Missing --git-head value.');
+  assert.ok(githubOutput, 'Missing --github-output value.');
+  const { tarball, integrity, manifest } = await buildArtifact(gitHead, root);
   await appendFile(
-    args[githubOutputIndex + 1],
+    githubOutput,
     `tarball=${basename(tarball)}\nintegrity=${integrity}\nmanifest=${basename(manifest)}\n`,
     'utf8'
   );

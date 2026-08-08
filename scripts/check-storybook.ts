@@ -3462,11 +3462,13 @@ async function readPackageJson(path: string): Promise<PackageJson> {
     throw new Error('package.json must be a JSON object.');
   }
 
+  const scripts = readOptionalStringRecord(parsed.scripts, 'scripts');
+  const devDependencies = readOptionalStringRecord(parsed.devDependencies, 'devDependencies');
   return {
-    scripts: readOptionalStringRecord(parsed.scripts, 'scripts'),
-    devDependencies: readOptionalStringRecord(parsed.devDependencies, 'devDependencies'),
-    exports: isRecord(parsed.exports) ? parsed.exports : undefined,
-    sideEffects: Array.isArray(parsed.sideEffects) ? parsed.sideEffects : undefined
+    ...(scripts ? { scripts } : {}),
+    ...(devDependencies ? { devDependencies } : {}),
+    ...(isRecord(parsed.exports) ? { exports: parsed.exports } : {}),
+    ...(Array.isArray(parsed.sideEffects) ? { sideEffects: parsed.sideEffects } : {})
   };
 }
 

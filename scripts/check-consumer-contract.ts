@@ -582,11 +582,11 @@ async function readPackageJson(path: string): Promise<PackageJson> {
   }
 
   return {
-    version: typeof parsed.version === 'string' ? parsed.version : undefined,
-    exports: isRecord(parsed.exports) ? parsed.exports : undefined,
-    files: isStringArray(parsed.files) ? parsed.files : undefined,
-    sideEffects: Array.isArray(parsed.sideEffects) ? parsed.sideEffects : undefined,
-    scripts: isStringRecord(parsed.scripts) ? parsed.scripts : undefined
+    ...(typeof parsed.version === 'string' ? { version: parsed.version } : {}),
+    ...(isRecord(parsed.exports) ? { exports: parsed.exports } : {}),
+    ...(isStringArray(parsed.files) ? { files: parsed.files } : {}),
+    ...(Array.isArray(parsed.sideEffects) ? { sideEffects: parsed.sideEffects } : {}),
+    ...(isStringRecord(parsed.scripts) ? { scripts: parsed.scripts } : {})
   };
 }
 

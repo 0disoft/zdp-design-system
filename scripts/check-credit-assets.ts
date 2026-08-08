@@ -96,5 +96,5 @@ function readWebpDimensions(bytes: Buffer): { width: number; height: number } {
 }
 
 function readUInt24LE(bytes: Buffer, offset: number): number {
-  return bytes[offset] | (bytes[offset + 1] << 8) | (bytes[offset + 2] << 16);
+  return bytes.readUInt8(offset) | (bytes.readUInt8(offset + 1) << 8) | (bytes.readUInt8(offset + 2) << 16);
 }

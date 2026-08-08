@@ -67,6 +67,10 @@
     const nextIndex = getNextIndex(event.key, currentIndex, tabs.length);
     const nextTab = tabs[nextIndex];
 
+    if (nextTab === undefined) {
+      return;
+    }
+
     nextTab.focus();
     nextTab.click();
   }

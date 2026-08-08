@@ -221,20 +221,26 @@ async function readPackageJson(path: string): Promise<PackageJson> {
     throw new Error('package.json must be a JSON object.');
   }
 
+  const name = readOptionalString(parsed.name);
+  const version = readOptionalString(parsed.version);
+  const license = readOptionalString(parsed.license);
+  const type = readOptionalString(parsed.type);
+  const description = readOptionalString(parsed.description);
+
   return {
-    name: readOptionalString(parsed.name),
-    version: readOptionalString(parsed.version),
-    private: typeof parsed.private === 'boolean' ? parsed.private : undefined,
-    license: readOptionalString(parsed.license),
-    type: readOptionalString(parsed.type),
-    description: readOptionalString(parsed.description),
-    exports: isRecord(parsed.exports) ? parsed.exports : undefined,
-    files: isStringArray(parsed.files) ? parsed.files : undefined,
-    sideEffects: isStringArray(parsed.sideEffects) ? parsed.sideEffects : undefined,
-    scripts: isStringRecord(parsed.scripts) ? parsed.scripts : undefined,
-    dependencies: isStringRecord(parsed.dependencies) ? parsed.dependencies : undefined,
-    peerDependencies: isStringRecord(parsed.peerDependencies) ? parsed.peerDependencies : undefined,
-    publishConfig: isRecord(parsed.publishConfig) ? parsed.publishConfig : undefined
+    ...(name === undefined ? {} : { name }),
+    ...(version === undefined ? {} : { version }),
+    ...(typeof parsed.private === 'boolean' ? { private: parsed.private } : {}),
+    ...(license === undefined ? {} : { license }),
+    ...(type === undefined ? {} : { type }),
+    ...(description === undefined ? {} : { description }),
+    ...(isRecord(parsed.exports) ? { exports: parsed.exports } : {}),
+    ...(isStringArray(parsed.files) ? { files: parsed.files } : {}),
+    ...(isStringArray(parsed.sideEffects) ? { sideEffects: parsed.sideEffects } : {}),
+    ...(isStringRecord(parsed.scripts) ? { scripts: parsed.scripts } : {}),
+    ...(isStringRecord(parsed.dependencies) ? { dependencies: parsed.dependencies } : {}),
+    ...(isStringRecord(parsed.peerDependencies) ? { peerDependencies: parsed.peerDependencies } : {}),
+    ...(isRecord(parsed.publishConfig) ? { publishConfig: parsed.publishConfig } : {})
   };
 }
 

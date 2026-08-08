@@ -37,7 +37,7 @@
     {#each items as item (item.id)}
       {@const icon = zdpShareIcons[item.icon]}
       {#if item.href}
-        <Tooltip text={item.label} placement={tooltipPlacement} disabled={item.disabled} let:describedBy>
+        <Tooltip text={item.label} placement={tooltipPlacement} disabled={item.disabled ?? false} let:describedBy>
           <a
             class="zdp-share-action"
             href={item.disabled ? undefined : item.href}
@@ -89,7 +89,7 @@
           </a>
         </Tooltip>
       {:else}
-        <Tooltip text={item.label} placement={tooltipPlacement} disabled={item.disabled} let:describedBy>
+        <Tooltip text={item.label} placement={tooltipPlacement} disabled={item.disabled ?? false} let:describedBy>
           <button
             class="zdp-share-action"
             type="button"

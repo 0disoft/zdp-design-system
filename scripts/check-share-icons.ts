@@ -58,6 +58,10 @@ function assertSimpleBrandIcon(
   }
 
   const [path] = icon.paths;
+  if (path === undefined) {
+    failures.push(`${name} must expose one readable Simple Icons path.`);
+    return;
+  }
 
   if (path.d !== expectedPath) {
     failures.push(`${name} path must match simple-icons exactly.`);

@@ -13,8 +13,8 @@ const packageJson = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 };
 const changelog = readFileSync(join(root, 'CHANGELOG.md'), 'utf8');
 const serviceContract = readFileSync(join(root, 'service.yaml'), 'utf8');
-const actionReferences = [...workflow.matchAll(/^\s*- uses:\s+([^\s#]+)/gm)].map((match) => match[1]);
-const ciActionReferences = [...ciWorkflow.matchAll(/^\s*- uses:\s+([^\s#]+)/gm)].map((match) => match[1]);
+const actionReferences = [...workflow.matchAll(/^\s*- uses:\s+([^\s#]+)/gm)].flatMap((match) => match[1] ? [match[1]] : []);
+const ciActionReferences = [...ciWorkflow.matchAll(/^\s*- uses:\s+([^\s#]+)/gm)].flatMap((match) => match[1] ? [match[1]] : []);
 
 assert.equal(typeof packageJson.version, 'string', 'package.json must declare a string version.');
 assert.equal(packageJson.packageManager, 'bun@1.3.14');

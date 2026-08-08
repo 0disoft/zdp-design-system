@@ -190,8 +190,11 @@ if (!publicEntry.includes("export { zdpTokenNames }")) {
   failures.push('Missing zdpTokenNames public export.');
 }
 
+const sansFamily = tokenDocument.font.family.sans;
+const displayFamily = tokenDocument.font.family.display;
+
 if (
-  !tokenDocument.font.family.sans.startsWith(
+  !sansFamily?.startsWith(
     '"Pretendard Variable", Pretendard, "Manrope Variable", Manrope, '
   )
 ) {
@@ -199,7 +202,7 @@ if (
 }
 
 if (
-  !tokenDocument.font.family.display.startsWith(
+  !displayFamily?.startsWith(
     '"Pretendard Variable", Pretendard, "Manrope Variable", Manrope, '
   )
 ) {
@@ -214,7 +217,7 @@ if (
   failures.push('font.family.brand must be a Playwrite AU VIC Guides-first wordmark stack.');
 }
 
-if (tokenDocument.font.family.display.includes('Playwrite AU VIC Guides')) {
+if (displayFamily?.includes('Playwrite AU VIC Guides')) {
   failures.push('font.family.display must not use the brand wordmark font.');
 }
 
@@ -549,14 +552,16 @@ async function readSchemaDocument(path: string): Promise<{
     ? properties.$schema
     : undefined;
 
+  if (!schemaProperty) {
+    return {};
+  }
+
   return {
-    properties: schemaProperty
-      ? {
-          $schema: {
-            const: typeof schemaProperty.const === 'string' ? schemaProperty.const : undefined
-          }
-        }
-      : undefined
+    properties: {
+      $schema: typeof schemaProperty.const === 'string'
+        ? { const: schemaProperty.const }
+        : {}
+    }
   };
 }
 
@@ -568,8 +573,8 @@ async function readPackageJson(path: string): Promise<PackageJson> {
   }
 
   return {
-    exports: isRecord(parsed.exports) ? parsed.exports : undefined,
-    sideEffects: Array.isArray(parsed.sideEffects) ? parsed.sideEffects : undefined
+    ...(isRecord(parsed.exports) ? { exports: parsed.exports } : {}),
+    ...(Array.isArray(parsed.sideEffects) ? { sideEffects: parsed.sideEffects } : {})
   };
 }
 

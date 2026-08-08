@@ -645,7 +645,7 @@ function collectBuildOutputText(result: Awaited<ReturnType<typeof build>>): stri
 
   for (const output of outputs) {
     for (const item of output.output) {
-      if (item.type === 'chunk') {
+      if (item.type === 'chunk' && typeof item.code === 'string') {
         parts.push(item.code);
         continue;
       }

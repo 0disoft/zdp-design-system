@@ -27,8 +27,8 @@
   $: segmentedDensityItems = densityItems.map((item) => ({
     id: item.id,
     label: item.label,
-    ariaLabel: item.ariaLabel,
-    disabled: item.disabled
+    ...(item.ariaLabel === undefined ? {} : { ariaLabel: item.ariaLabel }),
+    ...(item.disabled === undefined ? {} : { disabled: item.disabled })
   }));
   $: activeDensity = normalizeDensity(density, densityItems);
 

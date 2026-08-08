@@ -77,6 +77,10 @@
     const nextIndex = getNextIndex(event.key, currentIndex, controls.length);
     const nextControl = controls[nextIndex];
 
+    if (nextControl === undefined) {
+      return;
+    }
+
     nextControl.focus();
     nextControl.click();
   }

@@ -223,7 +223,11 @@ export const Probe: StoryObj<typeof InteractionProbe> = {
 
       await userEvent.click(sheetTrigger);
       await expect(canvas.getByRole('dialog', { name: '화면 설정' })).toBeVisible();
-      await userEvent.click(canvas.getAllByRole('button', { name: '닫기' })[0]);
+      const closeButton = canvas.getAllByRole('button', { name: '닫기' }).at(0);
+      if (closeButton === undefined) {
+        throw new Error('Expected the open Sheet to expose a close button.');
+      }
+      await userEvent.click(closeButton);
       await waitFor(() => expect(canvas.queryByRole('dialog', { name: '화면 설정' })).not.toBeInTheDocument());
       await expect(canvas.getByText('Sheet 닫힘')).toBeVisible();
     });

@@ -118,7 +118,13 @@ function validateExactExportNode(
       continue;
     }
 
-    validateExactExportNode(actual[key], expected[key], formatExportLocation(location, key), failures);
+    const expectedNode = expected[key];
+    if (expectedNode === undefined) {
+      failures.push(`${formatExportLocation(location, key)} has an invalid undefined expectation.`);
+      continue;
+    }
+
+    validateExactExportNode(actual[key], expectedNode, formatExportLocation(location, key), failures);
   }
 
   for (const key of actualKeys.filter((key) => !Object.hasOwn(expected, key)).sort()) {

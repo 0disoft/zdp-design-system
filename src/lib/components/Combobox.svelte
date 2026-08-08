@@ -256,7 +256,7 @@
     inputElement?.focus();
   }
 
-  function handleOptionMouseenter(option: ZdpComboboxOption): void {
+  function handleOptionPointermove(option: ZdpComboboxOption): void {
     if (!option.disabled) {
       activeOptionId = option.id;
     }
@@ -435,7 +435,7 @@
               data-active={option.id === activeOptionId ? 'true' : undefined}
               data-selected={option.value === value ? 'true' : undefined}
               onmousedown={(event) => event.preventDefault()}
-              onmouseenter={() => handleOptionMouseenter(option)}
+              onpointermove={() => handleOptionPointermove(option)}
               onclick={() => selectOption(option)}
             >
               <span class="zdp-combobox__option-label">{option.label}</span>
