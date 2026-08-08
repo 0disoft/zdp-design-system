@@ -200,7 +200,11 @@ export function createZdpSplitPaneController(
   let activePointerId: number | null = null;
   let pointerStartCoordinate = 0;
   let pointerStartSize = 0;
+  let pointerDirection = 1;
   let pointerMoved = false;
+  let pointerFrame: number | null = null;
+  let pendingPointerEvent: PointerEvent | null = null;
+  let pendingPointerSize: number | null = null;
   let dragging = false;
   let destroyed = false;
   let endDragSelection: (() => void) | null = null;
@@ -239,14 +243,20 @@ export function createZdpSplitPaneController(
         return;
       }
 
-      if (Object.prototype.hasOwnProperty.call(nextOptions, 'size') && nextOptions.size !== undefined) {
-        requestedSize = normalizeSize(nextOptions.size, getDefaultSize());
-      }
-
+      const previousOptions = options;
+      const nextRequestedSize = Object.prototype.hasOwnProperty.call(nextOptions, 'size') && nextOptions.size !== undefined
+        ? normalizeSize(nextOptions.size, getDefaultSize())
+        : requestedSize;
       options = { ...options, ...nextOptions };
+      const renderRequired = nextRequestedSize !== requestedSize || hasRenderOptionChanges(previousOptions, options);
+      requestedSize = nextRequestedSize;
 
       if (isDisabled() && dragging) {
         finishPointerInteraction();
+      }
+
+      if (!renderRequired) {
+        return;
       }
 
       measureContainer();
@@ -402,8 +412,7 @@ export function createZdpSplitPaneController(
   }
 
   function pointerSizeDelta(event: PointerEvent): number {
-    const delta = pointerCoordinate(event) - pointerStartCoordinate;
-    return getOrientation() === 'vertical' && isRtl() ? -delta : delta;
+    return (pointerCoordinate(event) - pointerStartCoordinate) * pointerDirection;
   }
 
   function primaryAxisPosition(event: PointerEvent): number {
@@ -429,6 +438,7 @@ export function createZdpSplitPaneController(
     activePointerId = event.pointerId;
     pointerStartCoordinate = pointerCoordinate(event);
     pointerStartSize = getRenderedSize();
+    pointerDirection = getOrientation() === 'vertical' && isRtl() ? -1 : 1;
     pointerMoved = false;
     dragging = true;
     render();
@@ -451,7 +461,7 @@ export function createZdpSplitPaneController(
     pointerMoved = pointerMoved || Math.abs(pointerCoordinate(event) - pointerStartCoordinate) >= 3;
 
     if (pointerMoved) {
-      setSize(pointerStartSize + pointerSizeDelta(event), event, false);
+      schedulePointerResize(pointerStartSize + pointerSizeDelta(event), event);
     }
   }
 
@@ -461,6 +471,7 @@ export function createZdpSplitPaneController(
     }
 
     if (pointerMoved) {
+      flushPointerResize();
       const committedSize = getRenderedSize();
       finishPointerInteraction();
       options.onResizeCommit?.(committedSize, event);
@@ -475,12 +486,14 @@ export function createZdpSplitPaneController(
 
   function handlePointerCancel(event: PointerEvent): void {
     if (event.pointerId === activePointerId) {
+      cancelPendingPointerResize();
       finishPointerInteraction();
     }
   }
 
   function handleLostPointerCapture(event: PointerEvent): void {
     if (dragging && event.pointerId === activePointerId) {
+      flushPointerResize();
       const committedSize = getRenderedSize();
       finishPointerInteraction();
       options.onResizeCommit?.(committedSize, event);
@@ -492,6 +505,7 @@ export function createZdpSplitPaneController(
     dragging = false;
     activePointerId = null;
     pointerMoved = false;
+    cancelPendingPointerResize();
     endDragSelection?.();
     endDragSelection = null;
     root.classList.remove('zdp-resizable-split-pane--dragging');
@@ -505,6 +519,75 @@ export function createZdpSplitPaneController(
         // The pointer may already have been released by the browser.
       }
     }
+  }
+
+  function schedulePointerResize(nextSize: number, event: PointerEvent): void {
+    pendingPointerSize = nextSize;
+    pendingPointerEvent = event;
+
+    if (pointerFrame !== null) {
+      return;
+    }
+
+    const view = root.ownerDocument.defaultView;
+    if (!view) {
+      flushPointerResize();
+      return;
+    }
+
+    pointerFrame = view.requestAnimationFrame(() => {
+      pointerFrame = null;
+      applyPendingPointerResize();
+    });
+  }
+
+  function flushPointerResize(): void {
+    const view = root.ownerDocument.defaultView;
+    if (pointerFrame !== null && view) {
+      view.cancelAnimationFrame(pointerFrame);
+      pointerFrame = null;
+    }
+
+    applyPendingPointerResize();
+  }
+
+  function applyPendingPointerResize(): void {
+    const nextSize = pendingPointerSize;
+    const event = pendingPointerEvent;
+    pendingPointerSize = null;
+    pendingPointerEvent = null;
+
+    if (nextSize !== null && event !== null && dragging) {
+      setSize(nextSize, event, false);
+    }
+  }
+
+  function cancelPendingPointerResize(): void {
+    const view = root.ownerDocument.defaultView;
+    if (pointerFrame !== null && view) {
+      view.cancelAnimationFrame(pointerFrame);
+    }
+
+    pointerFrame = null;
+    pendingPointerSize = null;
+    pendingPointerEvent = null;
+  }
+
+  function hasRenderOptionChanges(
+    previous: ZdpSplitPaneControllerOptions,
+    next: ZdpSplitPaneControllerOptions
+  ): boolean {
+    return previous.defaultSize !== next.defaultSize ||
+      previous.minSize !== next.minSize ||
+      previous.maxSize !== next.maxSize ||
+      previous.secondaryMinSize !== next.secondaryMinSize ||
+      previous.handleSize !== next.handleSize ||
+      previous.keyboardStep !== next.keyboardStep ||
+      previous.largeKeyboardStep !== next.largeKeyboardStep ||
+      previous.orientation !== next.orientation ||
+      previous.ariaLabel !== next.ariaLabel ||
+      previous.disabled !== next.disabled ||
+      previous.getValueText !== next.getValueText;
   }
 
   function handleKeydown(event: KeyboardEvent): void {

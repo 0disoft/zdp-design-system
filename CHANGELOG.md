@@ -12,6 +12,7 @@
 - Added an additive Radio `selectedValue` group binding so every item derives checked state from one parent value, while retaining the former `checked` prop as a deprecated compatibility surface.
 - Added a document-scoped dismiss stack and migrated Menu, Popover, and Combobox so only open layers install shared listeners and only the most recently activated layer receives Escape or outside-click dismissal.
 - Migrated Tooltip, Dialog, Sheet, and TermSheet to the shared dismiss stack, added Tooltip outside-click pass-through, and verified a real Dialog → Sheet → Menu → Tooltip DOM hierarchy dismisses exactly one layer per Escape.
+- Batched split-pane pointer rendering to one animation frame, cached drag direction at pointer start, and skipped controller measurement/render work when Svelte echoes an internally produced size without other visual option changes.
 
 ## 0.51.1
 
