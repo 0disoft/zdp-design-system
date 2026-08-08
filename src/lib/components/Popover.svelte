@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onDestroy } from 'svelte';
+  import { createZdpDismissLayer } from '../dismiss-layer';
   import { toZdpDomId } from '../dom-id';
   import { getZdpActiveElement } from '../focusable';
 
@@ -38,6 +40,7 @@
   let previousFocusElement = $state<HTMLElement | null>(null);
   let knownOpenState = $state(false);
   let restoreFocusAfterClose = $state(false);
+  const dismissLayer = createZdpDismissLayer();
 
   const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
   const triggerId = $derived(`${resolvedIdPrefix}-trigger`);
@@ -56,6 +59,17 @@
       restoreFocusAfterClose = false;
     }
   });
+
+  $effect.pre(() => {
+    dismissLayer.setActive(open, rootElement, {
+      closeOnEscape,
+      closeOnOutside,
+      onEscape: () => close(),
+      onOutsideClick: () => close(false)
+    });
+  });
+
+  onDestroy(() => dismissLayer.destroy());
 
   function setOpen(nextOpen: boolean): void {
     if (open === nextOpen) {
@@ -101,27 +115,10 @@
     previousFocusElement = null;
   }
 
-  function handleDocumentClick(event: MouseEvent): void {
-    if (!open || !closeOnOutside || (rootElement !== null && event.composedPath().includes(rootElement))) {
-      return;
-    }
-
-    close(false);
-  }
-
-  function handleDocumentKeydown(event: KeyboardEvent): void {
-    if (open && event.key === 'Escape' && closeOnEscape) {
-      event.preventDefault();
-      close();
-    }
-  }
-
   function toDomId(id: string): string {
     return toZdpDomId(id, 'popover');
   }
 </script>
-
-<svelte:document onclick={handleDocumentClick} onkeydown={handleDocumentKeydown} />
 
 <span
   class={`zdp-popover zdp-popover--${placement} zdp-popover--align-${align}`}

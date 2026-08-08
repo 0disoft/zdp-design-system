@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { tick } from 'svelte';
+  import { onDestroy, tick } from 'svelte';
   import type { HTMLInputAttributes } from 'svelte/elements';
   import type { ZdpComboboxOption, ZdpComboboxSize } from '../combobox';
   import { toZdpDomId } from '../dom-id';
+  import { createZdpDismissLayer } from '../dismiss-layer';
 
   type DescribedBy = string | readonly string[] | null;
 
@@ -67,6 +68,7 @@
   let lastSelectedValue = $state('');
   let lastSelectedLabel = $state('');
   let queryDirty = $state(query.trim().length > 0);
+  const dismissLayer = createZdpDismissLayer();
 
   const enabledOptions = $derived(options.filter((option) => !option.disabled));
   const selectedOption = $derived(options.find((option) => option.value === value) ?? null);
@@ -116,6 +118,15 @@
     syncInputValidity(inputElement, selectionMissing, resolvedSelectionRequiredText);
   });
 
+  $effect.pre(() => {
+    dismissLayer.setActive(open, rootElement, {
+      onEscape: handleDismissEscape,
+      onOutsideClick: () => setOpen(false)
+    });
+  });
+
+  onDestroy(() => dismissLayer.destroy());
+
   $effect(() => {
     const optionId = activeOptionDomId;
 
@@ -159,11 +170,6 @@
     }
 
     if (disabled || readonly) {
-      return;
-    }
-
-    if (event.key === 'Escape') {
-      handleRootEscape(event);
       return;
     }
 
@@ -222,22 +228,12 @@
   }
 
   function handleToggleKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Escape') {
-      handleRootEscape(event);
-      return;
-    }
-
     if (event.key === 'Tab' && !event.shiftKey) {
       setOpen(false);
     }
   }
 
-  function handleRootEscape(event: KeyboardEvent): void {
-    if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || !open) {
-      return;
-    }
-
-    event.preventDefault();
+  function handleDismissEscape(): void {
     const nextQuery = selectedOptionLabel || query;
     query = nextQuery;
     queryDirty = false;
@@ -258,14 +254,6 @@
   function handleToggleClick(): void {
     setOpen(!open);
     inputElement?.focus();
-  }
-
-  function handleDocumentClick(event: MouseEvent): void {
-    if (!open || (rootElement !== null && event.composedPath().includes(rootElement))) {
-      return;
-    }
-
-    setOpen(false);
   }
 
   function handleOptionMouseenter(option: ZdpComboboxOption): void {
@@ -370,8 +358,6 @@
     return toZdpDomId(id, 'combobox');
   }
 </script>
-
-<svelte:document onclick={handleDocumentClick} />
 
 <span
   class={`zdp-combobox zdp-combobox--${size}`}

@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { tick } from 'svelte';
+  import { onDestroy, tick } from 'svelte';
+  import { createZdpDismissLayer } from '../dismiss-layer';
   import { toZdpDomId } from '../dom-id';
   import { getZdpActiveElement } from '../focusable';
   import type { ZdpMenuItem } from '../menu';
@@ -39,6 +40,7 @@
   let restoreFocusAfterClose = $state(false);
   let focusIntent = $state<'first' | 'last' | 'current'>('first');
   let activeItemId = $state('');
+  const dismissLayer = createZdpDismissLayer();
 
   const enabledItems = $derived(items.filter((item) => !item.disabled));
   const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
@@ -48,6 +50,15 @@
   $effect.pre(() => {
     activeItemId = resolveActiveItemId(activeItemId, enabledItems);
   });
+
+  $effect.pre(() => {
+    dismissLayer.setActive(open, rootElement, {
+      onEscape: () => closeMenu(),
+      onOutsideClick: () => closeMenu(false)
+    });
+  });
+
+  onDestroy(() => dismissLayer.destroy());
 
   $effect(() => {
     if (open === knownOpenState) {
@@ -137,21 +148,7 @@
     previousFocusElement = null;
   }
 
-  function handleDocumentClick(event: MouseEvent): void {
-    if (!open || (rootElement !== null && event.composedPath().includes(rootElement))) {
-      return;
-    }
-
-    closeMenu(false);
-  }
-
   function handlePanelKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      closeMenu();
-      return;
-    }
-
     if (event.key === 'Tab') {
       closeMenu(false);
       return;
@@ -234,8 +231,6 @@
     return toZdpDomId(id, 'menu');
   }
 </script>
-
-<svelte:document onclick={handleDocumentClick} />
 
 <span
   class={`zdp-menu zdp-menu--${placement} zdp-menu--align-${align}`}

@@ -969,14 +969,15 @@ async function checkComboboxContract(): Promise<void> {
 async function checkMenuPopoverInteractionContract(): Promise<void> {
   const menuPath = 'src/lib/components/Menu.svelte';
   const popoverPath = 'src/lib/components/Popover.svelte';
+  const dismissLayerPath = 'src/lib/dismiss-layer.ts';
   const menu = await readFile(join(root, menuPath), 'utf8');
   const popover = await readFile(join(root, popoverPath), 'utf8');
+  const dismissLayer = await readFile(join(root, dismissLayerPath), 'utf8');
 
   for (const requiredText of [
     'handleTriggerKeydown',
     "event.key === 'ArrowDown'",
     "event.key === 'ArrowUp'",
-    "event.key === 'Escape'",
     "event.key === 'Tab'",
     "'ArrowDown', 'ArrowUp', 'Home', 'End'",
     'moveActiveItem',
@@ -984,7 +985,8 @@ async function checkMenuPopoverInteractionContract(): Promise<void> {
     'restorePreviousFocus',
     'const enabledItems = $derived(items.filter((item) => !item.disabled))',
     'tabindex={item.id === activeItemId && !item.disabled ? 0 : -1}',
-    '<svelte:document onclick={handleDocumentClick} />'
+    'createZdpDismissLayer',
+    'dismissLayer.setActive(open, rootElement'
   ]) {
     if (!menu.includes(requiredText)) {
       failures.push(`${menuPath} is missing menu interaction contract text ${requiredText}.`);
@@ -996,10 +998,8 @@ async function checkMenuPopoverInteractionContract(): Promise<void> {
     'closeOnOutside = true',
     'capturePreviousFocus',
     'restorePreviousFocus',
-    'handleDocumentClick',
-    'handleDocumentKeydown',
-    "event.key === 'Escape'",
-    '<svelte:document onclick={handleDocumentClick} onkeydown={handleDocumentKeydown} />',
+    'createZdpDismissLayer',
+    'dismissLayer.setActive(open, rootElement',
     'slot name="trigger" open={open} toggle={toggle} close={close} panelId={panelId} triggerId={triggerId}',
     'role={role ?? undefined}',
     'aria-labelledby={labelledBy ?? triggerId}',
@@ -1007,6 +1007,19 @@ async function checkMenuPopoverInteractionContract(): Promise<void> {
   ]) {
     if (!popover.includes(requiredText)) {
       failures.push(`${popoverPath} is missing popover interaction contract text ${requiredText}.`);
+    }
+  }
+
+  for (const requiredText of [
+    'const documentStates = new WeakMap<Document, ZdpDismissDocumentState>()',
+    "state.document.addEventListener('click', state.handleClick, true)",
+    "state.document.addEventListener('keydown', state.handleKeydown, true)",
+    'const topLayer = state.layers.at(-1)',
+    'event.composedPath().includes(topLayer.root)',
+    'event.stopPropagation()'
+  ]) {
+    if (!dismissLayer.includes(requiredText)) {
+      failures.push(`${dismissLayerPath} is missing shared dismiss stack contract text ${requiredText}.`);
     }
   }
 }
