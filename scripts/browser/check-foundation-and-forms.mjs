@@ -216,6 +216,48 @@ export async function verifyFoundationAndFormContracts(page) {
   await page.keyboard.press('Escape');
 
   const confirmAction = page.getByRole('button', { name: /Confirm browser action/ });
+  const confirmActionBox = await confirmAction.boundingBox();
+  assert.ok(confirmActionBox);
+
+  await page.mouse.move(confirmActionBox.x + confirmActionBox.width / 2, confirmActionBox.y + confirmActionBox.height / 2);
+  await page.mouse.down({ button: 'right' });
+  await page.waitForTimeout(650);
+  await page.mouse.up({ button: 'right' });
+  assert.equal(await page.getByTestId('confirm-action-count').textContent(), '0');
+  assert.equal(await confirmAction.getAttribute('data-active'), null);
+
+  await page.mouse.down();
+  await confirmAction.dispatchEvent('lostpointercapture', { pointerId: 1 });
+  await page.waitForTimeout(650);
+  await page.mouse.up();
+  assert.equal(await page.getByTestId('confirm-action-count').textContent(), '0');
+  assert.equal(await confirmAction.getAttribute('data-active'), null);
+
+  await confirmAction.evaluate((element) => {
+    element.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Enter' }));
+    window.dispatchEvent(new Event('blur'));
+  });
+  await page.waitForTimeout(650);
+  assert.equal(await page.getByTestId('confirm-action-count').textContent(), '0');
+  assert.equal(await confirmAction.getAttribute('data-active'), null);
+
+  await confirmAction.evaluate((element) => {
+    element.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Enter' }));
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await page.waitForTimeout(650);
+  assert.equal(await page.getByTestId('confirm-action-count').textContent(), '0');
+  assert.equal(await confirmAction.getAttribute('data-active'), null);
+
+  await confirmAction.focus();
+  await confirmAction.evaluate((element) => {
+    element.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Enter' }));
+  });
+  await page.getByTestId('disable-confirm-action').focus();
+  await page.waitForTimeout(650);
+  assert.equal(await page.getByTestId('confirm-action-count').textContent(), '0');
+  assert.equal(await confirmAction.getAttribute('data-active'), null);
+
   await confirmAction.evaluate((element) => {
     element.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Enter' }));
   });

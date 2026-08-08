@@ -16,7 +16,8 @@
   let startX = 0;
   let trackWidth = 1;
   let startedAt = 0;
-  let progressTimer: number | null = null;
+  let progressFrame: number | null = null;
+  let confirmTimer: number | null = null;
   let resetTimer: number | null = null;
 
   $: safeDurationMs = Math.max(600, durationMs);
@@ -33,13 +34,15 @@
     clearTimers();
     active = true;
     progress = 0;
-    startedAt = Date.now();
     startX = clientX ?? 0;
     trackWidth = Math.max(1, element.getBoundingClientRect().width);
-    progressTimer = window.setInterval(updateHoldProgress, 40);
+    startedAt = performance.now();
+    addCancellationListeners();
+    progressFrame = window.requestAnimationFrame(updateHoldProgress);
+    confirmTimer = window.setTimeout(confirmAction, safeDurationMs);
   }
 
-  function updateHoldProgress(): void {
+  function updateHoldProgress(now: number): void {
     if (!active || disabled) {
       if (disabled) {
         cancelInteraction();
@@ -47,11 +50,8 @@
       return;
     }
 
-    progress = Math.max(progress, Math.min(1, (Date.now() - startedAt) / safeDurationMs));
-
-    if (progress >= 1) {
-      confirmAction();
-    }
+    progress = Math.max(progress, Math.min(1, (now - startedAt) / safeDurationMs));
+    progressFrame = window.requestAnimationFrame(updateHoldProgress);
   }
 
   function updateSlideProgress(clientX: number): void {
@@ -108,20 +108,51 @@
   }
 
   function clearTimers(): void {
-    if (progressTimer !== null) {
-      window.clearInterval(progressTimer);
-      progressTimer = null;
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    if (progressFrame !== null) {
+      window.cancelAnimationFrame(progressFrame);
+      progressFrame = null;
+    }
+
+    if (confirmTimer !== null) {
+      window.clearTimeout(confirmTimer);
+      confirmTimer = null;
     }
 
     if (resetTimer !== null) {
       window.clearTimeout(resetTimer);
       resetTimer = null;
     }
+
+    removeCancellationListeners();
+  }
+
+  function addCancellationListeners(): void {
+    window.addEventListener('blur', cancelInteraction);
+    document.addEventListener('visibilitychange', cancelInteraction);
+  }
+
+  function removeCancellationListeners(): void {
+    window.removeEventListener('blur', cancelInteraction);
+    document.removeEventListener('visibilitychange', cancelInteraction);
   }
 
   function handlePointerDown(event: PointerEvent): void {
+    if (event.button !== 0 || !event.isPrimary || disabled || confirmed) {
+      return;
+    }
+
     const button = event.currentTarget as HTMLButtonElement;
-    button.setPointerCapture(event.pointerId);
+    try {
+      button.setPointerCapture(event.pointerId);
+    } catch {
+      cancelInteraction();
+      return;
+    }
+
     beginInteraction(event.clientX, button);
   }
 
@@ -175,6 +206,8 @@
   onpointermove={handlePointerMove}
   onpointerup={handlePointerEnd}
   onpointercancel={handlePointerEnd}
+  onlostpointercapture={cancelInteraction}
+  onblur={cancelInteraction}
   onkeydown={handleKeydown}
   onkeyup={handleKeyup}
 >
