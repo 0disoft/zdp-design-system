@@ -51,6 +51,9 @@
     { id: 'delete', label: 'Delete release', href: '#delete-release', disabled: true },
     { id: 'archive', label: 'Archive release' }
   ];
+  const routerMenuItems: readonly ZdpMenuItem[] = [
+    { id: 'router-release', label: 'Open routed release', href: '#routed-release' }
+  ];
   const forcedColorItems = [
     { id: 'selected', label: 'Selected contrast' },
     { id: 'available', label: 'Available contrast' }
@@ -104,6 +107,7 @@
   let abruptNestedSheetMounted = false;
   let menuOpen = false;
   let menuSelection = '';
+  let routerMenuSelection = '';
   let popoverOpen = false;
   let splitPaneSize = 280;
   let splitPaneDirection: 'ltr' | 'rtl' = 'ltr';
@@ -383,6 +387,19 @@
     <svelte:fragment slot="trigger">Browser actions</svelte:fragment>
   </Menu>
   <output data-testid="menu-selection">{menuSelection}</output>
+
+  <Menu
+    idPrefix="router-browser-menu"
+    triggerLabel="Router actions"
+    items={routerMenuItems}
+    onSelect={(event, item) => {
+      event.preventDefault();
+      routerMenuSelection = item.id;
+    }}
+  >
+    <svelte:fragment slot="trigger">Router actions</svelte:fragment>
+  </Menu>
+  <output data-testid="router-menu-selection">{routerMenuSelection}</output>
 
   <Popover bind:open={popoverOpen} idPrefix="browser-popover" let:close>
     <svelte:fragment slot="trigger" let:open let:toggle let:panelId>

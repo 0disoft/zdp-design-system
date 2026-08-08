@@ -170,7 +170,7 @@
 
     item.onclick?.(event, item);
     onSelect?.(event, item);
-    closeMenu(!item.href);
+    closeMenu(!item.href || event.defaultPrevented);
   }
 
   function moveActiveItem(key: string): void {

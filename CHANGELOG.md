@@ -14,6 +14,7 @@
 - Migrated Tooltip, Dialog, Sheet, and TermSheet to the shared dismiss stack, added Tooltip outside-click pass-through, and verified a real Dialog → Sheet → Menu → Tooltip DOM hierarchy dismisses exactly one layer per Escape.
 - Batched split-pane pointer rendering to one animation frame, cached drag direction at pointer start, and skipped controller measurement/render work when Svelte echoes an internally produced size without other visual option changes.
 - Added the public `tokens.css` entry and wildcard `components/ComponentName` Svelte subpaths, made token-only direct imports the default Svelte guidance, and retained the root barrel plus full `styles.css` for compatibility and static/framework-neutral utilities.
+- Restored Menu trigger focus when an href item click is cancelled by an SPA router or consumer callback, while preserving native navigation focus behavior for uncancelled links.
 
 ## 0.51.1
 

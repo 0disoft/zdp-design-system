@@ -20,6 +20,19 @@ export async function verifyOverlayContracts(page) {
   assert.equal(await menuTrigger.getAttribute('aria-expanded'), 'false');
   assert.equal(await menuTrigger.getAttribute('aria-controls'), null);
 
+  const routerMenuTrigger = page.getByRole('button', { name: 'Router actions' });
+  const routerUrlBeforeClick = page.url();
+  await routerMenuTrigger.click();
+  const routedMenuItem = page.getByRole('menuitem', { name: 'Open routed release' });
+  await routedMenuItem.click();
+  assert.equal(page.url(), routerUrlBeforeClick, 'A router-prevented Menu link must not navigate.');
+  assert.equal(await page.getByTestId('router-menu-selection').textContent(), 'router-release');
+  assert.equal(
+    await routerMenuTrigger.evaluate((element) => document.activeElement === element),
+    true,
+    'A router-prevented Menu link must restore focus because no navigation occurred.'
+  );
+
   await menuTrigger.click();
   menu = page.getByRole('menu', { name: 'Browser actions' });
   await pointerDownOn(page, outsideOverlayTarget);
@@ -71,7 +84,7 @@ export async function verifyOverlayContracts(page) {
   await page.keyboard.press('Tab');
   assert.equal(await menu.count(), 0, 'Tab must close the Menu.');
   assert.equal(
-    await page.getByTestId('popover-trigger').evaluate((element) => document.activeElement === element),
+    await page.getByRole('button', { name: 'Router actions' }).evaluate((element) => document.activeElement === element),
     true,
     'Tab must continue to the next document control instead of restoring trigger focus.'
   );
