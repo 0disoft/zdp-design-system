@@ -43,6 +43,33 @@ try {
     timeout: 30_000
   });
   const page = await browser.newPage();
+  await page.addInitScript(() => {
+    const originalAddEventListener = Document.prototype.addEventListener;
+    const originalRemoveEventListener = Document.prototype.removeEventListener;
+    const captureListeners = {
+      click: new Set(),
+      keydown: new Set()
+    };
+
+    Document.prototype.addEventListener = function (type, listener, options) {
+      const capture = options === true || (typeof options === 'object' && options?.capture === true);
+      if (this === document && capture && (type === 'click' || type === 'keydown')) {
+        captureListeners[type].add(listener);
+      }
+      return originalAddEventListener.call(this, type, listener, options);
+    };
+    Document.prototype.removeEventListener = function (type, listener, options) {
+      const capture = options === true || (typeof options === 'object' && options?.capture === true);
+      if (this === document && capture && (type === 'click' || type === 'keydown')) {
+        captureListeners[type].delete(listener);
+      }
+      return originalRemoveEventListener.call(this, type, listener, options);
+    };
+    window.__zdpDismissListenerCounts = () => ({
+      click: captureListeners.click.size,
+      keydown: captureListeners.keydown.size
+    });
+  });
   page.setDefaultTimeout(10_000);
   page.setDefaultNavigationTimeout(30_000);
   const baseUrl = `http://127.0.0.1:${address.port}`;

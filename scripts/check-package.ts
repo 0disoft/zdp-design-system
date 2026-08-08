@@ -1033,6 +1033,8 @@ async function checkMenuPopoverInteractionContract(): Promise<void> {
     'const documentStates = new WeakMap<Document, ZdpDismissDocumentState>()',
     "state.document.addEventListener('click', state.handleClick, true)",
     "state.document.addEventListener('keydown', state.handleKeydown, true)",
+    "state.document.removeEventListener('click', state.handleClick, true)",
+    "state.document.removeEventListener('keydown', state.handleKeydown, true)",
     'const topLayer = state.layers.at(-1)',
     'findTopOutsideLayer(state.layers)',
     'event.composedPath().includes(topLayer.root)',

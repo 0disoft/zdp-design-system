@@ -2,6 +2,11 @@ import assert from 'node:assert/strict';
 import { hasInertAncestor, isDeepActive } from './browser-assertions.mjs';
 
 export async function verifyOverlayContracts(page) {
+  assert.deepEqual(
+    await readDismissListenerCounts(page),
+    { click: 0, keydown: 0 },
+    'Closed overlay instances must not retain document-level dismiss listeners.'
+  );
   const outsideOverlayTarget = page.getByTestId('overlay-outside-target');
   const menuTrigger = page.getByRole('button', { name: 'Browser actions' });
   await menuTrigger.focus();
@@ -9,6 +14,11 @@ export async function verifyOverlayContracts(page) {
   let menu = page.getByRole('menu', { name: 'Browser actions' });
   assert.equal(await menu.count(), 1);
   assert.equal(await menuTrigger.getAttribute('aria-expanded'), 'true');
+  assert.deepEqual(
+    await readDismissListenerCounts(page),
+    { click: 1, keydown: 1 },
+    'Open overlays must share exactly one document listener per dismiss event type.'
+  );
   assert.equal(
     await menu.getByRole('menuitem', { name: 'Edit release' }).evaluate((element) => document.activeElement === element),
     true,
@@ -19,6 +29,11 @@ export async function verifyOverlayContracts(page) {
   assert.equal(await menuTrigger.evaluate((element) => document.activeElement === element), true);
   assert.equal(await menuTrigger.getAttribute('aria-expanded'), 'false');
   assert.equal(await menuTrigger.getAttribute('aria-controls'), null);
+  assert.deepEqual(
+    await readDismissListenerCounts(page),
+    { click: 0, keydown: 0 },
+    'Closing the final overlay must remove the shared document listeners.'
+  );
 
   const routerMenuTrigger = page.getByRole('button', { name: 'Router actions' });
   const routerUrlBeforeClick = page.url();
@@ -182,6 +197,10 @@ export async function verifyOverlayContracts(page) {
   assert.equal(await listbox.count(), 0, 'The completed outside click must not reopen the Combobox.');
   assert.equal(await combobox.getAttribute('aria-expanded'), 'false');
   assert.equal(await combobox.getAttribute('aria-controls'), null);
+}
+
+async function readDismissListenerCounts(page) {
+  return page.evaluate(() => window.__zdpDismissListenerCounts());
 }
 
 export async function verifyShadowOverlayContracts(page) {
