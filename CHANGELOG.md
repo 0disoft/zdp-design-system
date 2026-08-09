@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.57.2
+
+- Expanded the Theme / Locale Stress story from eight samples to the complete 12-locale ZDP target set by adding Spanish, French, Japanese, and Indonesian fixtures.
+- Distinguished the 12-locale QA target from the initially active Korean and English locales, and added static contract coverage so the fixture cannot silently shrink again.
+
 ## 0.57.1
 
 - Stopped the Brand Assets story from stretching the 256px square fallback across a much wider card by wiring its 256, 512, and 1024px derivatives through responsive `srcset` and `sizes`.

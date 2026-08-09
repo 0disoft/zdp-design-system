@@ -129,4 +129,13 @@ The 256px derivative was valid at its intended intrinsic size, but the Storybook
 
 Browser inspection confirmed that the square preview selects a higher-resolution derivative rather than upscaling the 256px file. No actionable P0, P1, or P2 mismatch remains.
 
+## Twelve-locale stress coverage correction
+
+- Issue reference: `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-87a0bb5d-aa9c-4aeb-a644-cf6bd42a1c37.png`
+- Corrected Storybook screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-theme-locale-stress-12-locales-qa-20260809.png`
+
+The Theme / Locale Stress story covered only eight samples while the Architecture contract defines 12 target locales: `en`, `zh`, `es`, `fr`, `hi`, `ko`, `ja`, `vi`, `ru`, `id`, `ms`, and `th`. Spanish, French, Japanese, and Indonesian fixtures are now present in both light and dark mobile-width panels. The story explicitly distinguishes that QA target set from the initially active `ko` and `en` locales. Static Storybook checks require all 12 IDs and representative strings so coverage cannot silently shrink.
+
+Browser inspection confirmed 12 locale cards per theme without horizontal page overflow. No actionable P0, P1, or P2 mismatch remains.
+
 final result: passed

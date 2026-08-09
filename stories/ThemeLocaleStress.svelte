@@ -28,7 +28,7 @@
   };
 
   type LocaleSample = {
-    readonly lang: 'ko' | 'en' | 'zh' | 'hi' | 'vi' | 'ru' | 'ms' | 'th';
+    readonly lang: 'en' | 'zh' | 'es' | 'fr' | 'hi' | 'ko' | 'ja' | 'vi' | 'ru' | 'id' | 'ms' | 'th';
     readonly label: string;
     readonly text: string;
   };
@@ -72,10 +72,28 @@
         '这是一个非常长的状态说明用于检查中文文本在窄屏幕里是否保持清晰不会挤压按钮表格和提示。'
     },
     {
+      lang: 'es',
+      label: 'Español',
+      text:
+        'Un nombre de proyecto excepcionalmente largo debe ajustarse en una pantalla estrecha sin ocultar acciones ni recortar el foco.'
+    },
+    {
+      lang: 'fr',
+      label: 'Français',
+      text:
+        'Un message de vérification particulièrement long doit revenir à la ligne sans masquer les actions ni couper le contour de focus.'
+    },
+    {
       lang: 'hi',
       label: 'हिन्दी',
       text:
         'लंबे समीक्षा संदेश और लगातार बदलती स्थिति संकरी स्क्रीन पर भी साफ दिखनी चाहिए और फोकस रिंग छिपनी नहीं चाहिए।'
+    },
+    {
+      lang: 'ja',
+      label: '日本語',
+      text:
+        '非常に長いプロジェクト名と状態メッセージが狭い画面でも操作ボタンやフォーカス表示を隠さずに折り返されるか確認します。'
     },
     {
       lang: 'vi',
@@ -88,6 +106,12 @@
       label: 'Русский',
       text:
         'Очень длинное сообщение о проверке доступа должно переноситься без обрезки действий и видимого фокуса.'
+    },
+    {
+      lang: 'id',
+      label: 'Bahasa Indonesia',
+      text:
+        'Nama tugas dan pesan pemeriksaan yang sangat panjang harus tetap terbaca di layar sempit tanpa menutupi tindakan.'
     },
     {
       lang: 'ms',
@@ -127,7 +151,7 @@
   ] as const;
 
   const codeExample =
-    "const labels = ['ko', 'en', 'zh', 'hi', 'vi', 'ru', 'ms', 'th'];\nconst focusVisible = labels.every((locale) => viewport.width <= 390 || locale.length > 0);\nconst horizontalOverflowProbe = 'ko-승인대기-zh-非常长的中文项目名称-hi-देवनागरी-th-ข้อความยาวมาก-long-owner-name-without-manual-line-breaks';";
+    "const targetLocales = ['en', 'zh', 'es', 'fr', 'hi', 'ko', 'ja', 'vi', 'ru', 'id', 'ms', 'th'];\nconst activeLocales = ['ko', 'en'];\nconst focusVisible = targetLocales.every((locale) => viewport.width <= 390 || locale.length > 0);\nconst horizontalOverflowProbe = 'ko-승인대기-zh-非常长的中文项目名称-hi-देवनागरी-th-ข้อความยาวมาก-long-owner-name-without-manual-line-breaks';";
 </script>
 
 <main class="stress-story zdp-surface-reset" lang="ko">
@@ -152,7 +176,10 @@
             <Surface padding="lg">
               <Stack gap="md">
                 <div class="stress-section-heading">
-                  <h3 id={`stress-${theme.id}-device-title`}>좁은 화면</h3>
+                  <div>
+                    <h3 id={`stress-${theme.id}-device-title`}>좁은 화면</h3>
+                    <p class="stress-locale-summary">12 target locales · active ko/en</p>
+                  </div>
                   <InlineCode text="24.375rem" />
                 </div>
 
@@ -429,12 +456,17 @@
   }
 
   .stress-locale-card p,
+  .stress-locale-summary,
   .stress-status {
     color: var(--zdp-color-ink-muted);
     font-size: var(--zdp-type-body-small-size);
     line-height: var(--zdp-type-body-small-line-height);
     margin: 0;
     overflow-wrap: var(--zdp-i18n-overflow-wrap);
+  }
+
+  .stress-locale-summary {
+    margin-block-start: var(--zdp-space-1);
   }
 
   .stress-force-focus {
