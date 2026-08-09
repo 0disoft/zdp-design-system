@@ -6,10 +6,10 @@ export const creditAssetRepoRoot = resolve(fileURLToPath(new URL('..', import.me
 export const creditAssetOutputRoot = resolve(creditAssetRepoRoot, 'src/lib/assets/credits');
 
 export const creditAssetContract = Object.freeze([
-  createSvgContract('credit-tangerine-simple-mono.svg', 'credit-mark', null, 3, '#2f2418', 16),
-  createSvgContract('credit-tangerine-simple-inverse.svg', 'credit-mark', null, 3, '#fff8ea', 16),
-  createSvgContract('credit-tangerine-simple-current-color.svg', 'credit-mark', null, 3, 'currentColor', 16),
-  createSvgContract('credit-tangerine-simple-color.svg', 'credit-mark', null, 3, 'multi', 24),
+  createSvgContract('credit-lemon-simple-mono.svg', 'credit-mark', null, 3, '#2f2418', 16),
+  createSvgContract('credit-lemon-simple-inverse.svg', 'credit-mark', null, 3, '#fff8ea', 16),
+  createSvgContract('credit-lemon-simple-current-color.svg', 'credit-mark', null, 3, 'currentColor', 16),
+  createSvgContract('credit-lemon-simple-color.svg', 'credit-mark', null, 3, 'multi', 24),
   ...([
     ['dinghy', 2],
     ['skiff', 3],

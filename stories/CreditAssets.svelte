@@ -1,23 +1,23 @@
 <script lang="ts">
-  const tangerineAssets = [
+  const lemonAssets = [
     {
       name: 'Mono',
-      url: new URL('../src/lib/assets/credits/credit-tangerine-simple-mono.svg', import.meta.url).href,
+      url: new URL('../src/lib/assets/credits/credit-lemon-simple-mono.svg', import.meta.url).href,
       surface: 'light'
     },
     {
       name: 'Inverse',
-      url: new URL('../src/lib/assets/credits/credit-tangerine-simple-inverse.svg', import.meta.url).href,
+      url: new URL('../src/lib/assets/credits/credit-lemon-simple-inverse.svg', import.meta.url).href,
       surface: 'dark'
     },
     {
       name: 'Current color',
-      url: new URL('../src/lib/assets/credits/credit-tangerine-simple-current-color.svg', import.meta.url).href,
+      url: new URL('../src/lib/assets/credits/credit-lemon-simple-current-color.svg', import.meta.url).href,
       surface: 'current'
     },
     {
       name: 'Color',
-      url: new URL('../src/lib/assets/credits/credit-tangerine-simple-color.svg', import.meta.url).href,
+      url: new URL('../src/lib/assets/credits/credit-lemon-simple-color.svg', import.meta.url).href,
       surface: 'light'
     }
   ] as const;
@@ -50,9 +50,9 @@
   </header>
 
   <section aria-labelledby="credit-marks-title">
-    <h2 id="credit-marks-title">Tangerine marks</h2>
+    <h2 id="credit-marks-title">Lemon marks</h2>
     <div class="credit-grid credit-grid--marks">
-      {#each tangerineAssets as asset}
+      {#each lemonAssets as asset}
         <figure class:credit-frame--dark={asset.surface === 'dark'} class="credit-frame">
           {#if asset.surface === 'current'}
             <span

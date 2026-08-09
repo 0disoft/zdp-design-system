@@ -74,7 +74,7 @@ async function checkCreditAssets(): Promise<void> {
 }
 
 function flattenManifest(): readonly ZdpCreditAsset[] {
-  return [...zdpCreditAssets.tangerine, ...zdpCreditAssets.packs, ...zdpCreditAssets.keyart];
+  return [...zdpCreditAssets.lemon, ...zdpCreditAssets.packs, ...zdpCreditAssets.keyart];
 }
 
 function sha256(bytes: Uint8Array): string {

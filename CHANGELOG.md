@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.53.0
+
+- Renamed the user-facing credit mark contract to Lemon/레몬, including manifest keys, asset IDs, SVG filenames, package exports, documentation, checks, and Storybook review surfaces; internal `credits` and `credit_unit` accounting contracts remain unchanged.
+
 ## 0.52.0
 
 - Synchronized TermSheet modal activation and focus transitions with the effective `open && term` state so asynchronously arriving or disappearing term data cannot leave an empty modal lifecycle or steal focus after close.
@@ -26,7 +30,7 @@
 
 - Added a three-shape `ship-mark-simple-*` family with default monochrome, dark-surface inverse, inline `currentColor`, and display-only tricolor variants while preserving the existing detailed `ship-mark.svg` contract.
 - Added stable package exports, manifest metadata, exact geometry and fill validation, Storybook review surfaces, and consumer guidance for the simple mark family.
-- Added four three-path tangerine credit marks and seven progressively distinct `currentColor` credit-pack ship silhouettes from Dinghy through Flagship.
+- Added four three-path lemon credit marks and seven progressively distinct `currentColor` credit-pack ship silhouettes from Dinghy through Flagship.
 - Added a framework-neutral credit asset manifest, exact file and geometry validation, Storybook 24/64 px review surfaces, package exports, and ownership guidance that keeps pricing and ledger policy outside the design system.
 - Added seven GPT-generated 1600×900 cinematic ship key arts for pricing-card and selected-plan detail surfaces, while retaining the monochrome ship family as compact UI glyphs.
 
