@@ -3318,6 +3318,8 @@ for (const requiredText of [
   'onclick={handleClick}',
   '.zdp-term-trigger',
   'background: transparent',
+  'border: 0',
+  'font-weight: var(--zdp-font-weight-medium)',
   'padding: 0 0.2rem',
   '.zdp-term-trigger:hover:not(:disabled)',
   'background: var(--zdp-color-accent-primary-soft)',
@@ -3329,6 +3331,10 @@ for (const requiredText of [
   if (!termTrigger.includes(requiredText)) {
     failures.push(`TermTrigger component is missing ${requiredText}.`);
   }
+}
+
+if (termTrigger.includes('border-block-end:')) {
+  failures.push('TermTrigger component must not resemble an underlined text field in its default state.');
 }
 
 if (termTrigger.includes('-webkit-user-select: none') || termTrigger.includes('user-select: none')) {

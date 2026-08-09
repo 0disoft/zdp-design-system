@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.54.1
+
+- Removed TermTrigger's default bottom border so inline glossary terms no longer resemble underlined text fields, while retaining medium-weight discoverability plus hover and keyboard-focus feedback.
+
 ## 0.54.0
 
 - Added the opt-in `Button variant="text"` and framework-neutral `.zdp-button--text` contract for borderless content and marketing actions with a persistent underline, stronger hover and keyboard-focus states, preserved hit targets, static-link semantics, Storybook controls, and consumer guidance.

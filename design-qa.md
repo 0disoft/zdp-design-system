@@ -45,4 +45,16 @@ No actionable P0, P1, or P2 mismatch remains.
 2. The implementation added compact tokenized inline padding while preserving the 44 px hit target.
 3. The revised render keeps all four actions on one line in both themes and matches the selected source's density.
 
+## TermTrigger bottom-border correction
+
+- Issue reference: `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-700e429e-7c5e-4f48-b1de-2ef6c5dfbf58.png`
+- Default-state screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-term-trigger-default-qa-20260809.png`
+- Hover-state screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-term-trigger-hover-qa-20260809.png`
+- Focus-return screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-term-trigger-focus-qa-20260809.png`
+- Browser viewport: 1280 × 720 CSS px
+
+The issue reference showed the inline term with a rounded bottom border that resembled a short text field. The revised light and dark Storybook states remove that default border and retain medium-weight text for term recognition. Hover uses the existing soft accent background, while keyboard focus after closing the sheet remains visibly outlined. Computed browser styles confirm `border-bottom-width: 0px`, `border-bottom-style: none`, and `font-weight: 500`.
+
+No actionable P0, P1, or P2 mismatch remains. The only console warning is Storybook's manager-owned future `PopoverProvider ariaLabel` deprecation notice and is unrelated to TermTrigger.
+
 final result: passed

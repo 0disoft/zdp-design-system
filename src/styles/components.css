@@ -4028,18 +4028,17 @@
   appearance: none;
   background: transparent;
   border: 0;
-  border-block-end: var(--zdp-control-border-width) solid var(--zdp-color-focus-line);
   border-radius: var(--zdp-radius-sm);
   color: inherit;
   cursor: pointer;
   display: inline;
   font: inherit;
+  font-weight: var(--zdp-font-weight-medium);
   line-height: inherit;
   margin: 0;
   padding: 0 0.2rem;
   text-align: inherit;
   text-decoration: none;
-  text-underline-offset: 0.14em;
 }
 
 .zdp-term-trigger:hover:not(:disabled) {
