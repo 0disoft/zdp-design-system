@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.55.1
+
+- Kept the danger Button label visible on light-theme hover by pairing the panel hover surface with the semantic danger ink in both Svelte and framework-neutral CSS.
+
 ## 0.55.0
 
 - Reworked primary, secondary, danger, and icon buttons around filled or tonal surfaces instead of visible resting borders while preserving transparent layout slots, focus outlines, and forced-colors system borders.

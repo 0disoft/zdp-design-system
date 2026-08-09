@@ -135,6 +135,8 @@
 
   .zdp-button--danger:hover:not(:disabled) {
     background: var(--zdp-color-surface-panel);
+    border-color: transparent;
+    color: var(--zdp-color-accent-danger);
   }
 
   :global([data-zdp-theme="dark"]) .zdp-button--danger:hover:not(:disabled) {

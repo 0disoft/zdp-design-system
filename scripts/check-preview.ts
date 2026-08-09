@@ -1133,6 +1133,10 @@ const staticDangerButtonBlock = componentStyle.slice(
   componentStyle.indexOf('.zdp-button--danger {'),
   componentStyle.indexOf('.zdp-button--danger:hover')
 );
+const staticDangerButtonHoverBlock = componentStyle.slice(
+  componentStyle.indexOf('.zdp-button--danger:hover:not(:disabled)'),
+  componentStyle.indexOf('.zdp-button--danger:active:not(:disabled)')
+);
 
 if (!staticSecondaryButtonBlock.includes('background: var(--zdp-color-surface-raised)')) {
   failures.push('Static Button secondary variant must keep a visible tonal surface without relying on a border.');
@@ -1141,6 +1145,12 @@ if (!staticSecondaryButtonBlock.includes('background: var(--zdp-color-surface-ra
 for (const requiredText of ['background: var(--zdp-color-accent-danger)', 'color: var(--zdp-color-ink-inverse)']) {
   if (!staticDangerButtonBlock.includes(requiredText)) {
     failures.push(`Static Button danger variant must keep a contrast-safe filled surface: ${requiredText}.`);
+  }
+}
+
+for (const requiredText of ['background: var(--zdp-color-surface-panel)', 'color: var(--zdp-color-accent-danger)']) {
+  if (!staticDangerButtonHoverBlock.includes(requiredText)) {
+    failures.push(`Static Button danger hover must keep its label visible: ${requiredText}.`);
   }
 }
 

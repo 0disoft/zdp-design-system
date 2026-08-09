@@ -927,6 +927,10 @@ const dangerButtonBlock = button.slice(
   button.indexOf('.zdp-button--danger {'),
   button.indexOf('.zdp-button--danger:hover')
 );
+const dangerButtonHoverBlock = button.slice(
+  button.indexOf('.zdp-button--danger:hover:not(:disabled)'),
+  button.indexOf('.zdp-button--danger:active:not(:disabled)')
+);
 
 if (!secondaryButtonBlock.includes('background: var(--zdp-color-surface-raised)')) {
   failures.push('Button secondary variant must keep a visible tonal surface without relying on a border.');
@@ -935,6 +939,12 @@ if (!secondaryButtonBlock.includes('background: var(--zdp-color-surface-raised)'
 for (const requiredText of ['background: var(--zdp-color-accent-danger)', 'color: var(--zdp-color-ink-inverse)']) {
   if (!dangerButtonBlock.includes(requiredText)) {
     failures.push(`Button danger variant must keep a contrast-safe filled surface: ${requiredText}.`);
+  }
+}
+
+for (const requiredText of ['background: var(--zdp-color-surface-panel)', 'color: var(--zdp-color-accent-danger)']) {
+  if (!dangerButtonHoverBlock.includes(requiredText)) {
+    failures.push(`Button danger hover must keep its label visible: ${requiredText}.`);
   }
 }
 

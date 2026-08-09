@@ -91,4 +91,13 @@ The references identified visual stiffness from repeating borders around control
 
 Computed browser styles confirmed transparent resting border slots for Button, LocaleSwitcher, SegmentedControl, and Storybook theme panels in both themes. The full package verification passed component/static parity, 13 Storybook runtime accessibility stories, SSR hydration, Svelte diagnostics, release checks, and packed consumer browser fixtures. No actionable P0, P1, or P2 mismatch remains.
 
+## Danger Button hover-label correction
+
+- Issue reference: `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-3caa34dd-43a2-4997-a9e6-df7ccbbf30d2.png`
+- Verified screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-danger-hover-fixed-full-20260809.png`
+
+The light-theme danger hover previously changed to the light panel surface while retaining inverse ink, which made the `삭제` label visually disappear. The revised hover state pairs the panel surface with semantic danger ink in both the Svelte component and framework-neutral CSS. Browser inspection confirmed the light hover uses `surface-panel` with `accent-danger`, the dark hover uses its dark panel and danger tokens, both borders remain transparent, and the label remains visible without changing button geometry.
+
+No actionable P0, P1, or P2 mismatch remains.
+
 final result: passed
