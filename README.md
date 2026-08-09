@@ -69,7 +69,7 @@ Tailwind Plus와 Tailwind UI 계열은 파생/재배포 리스크 때문에 ZDP 
 - Viewports는 ZDP Mobile, Tablet, Desktop, Wide 프리셋으로 mobile/tablet/desktop 폭을 확인한다.
 - Accessibility addon은 CI 실패 게이트로 유지한다. 새 story는 a11y 위반을 남긴 채 merge하지 않는다.
 - Interaction play는 `Tabs`, `Dialog`, `ConfirmAction`처럼 키보드와 상태 전이가 중요한 컴포넌트에 먼저 붙인다.
-- Theme / Locale Stress story는 light/dark, ZDP Mobile 폭, 12개 target locale(`en`, `zh`, `es`, `fr`, `hi`, `ko`, `ja`, `vi`, `ru`, `id`, `ms`, `th`)의 긴 문장과 focus-visible 상태를 한 번에 확인한다. 초기 active locale은 `ko`, `en`이지만 QA fixture는 target locale 전체를 유지한다.
+- Theme / Locale Stress story는 선택형 `locale-fonts.css`까지 로드한 상태에서 light/dark, ZDP Mobile 폭, 12개 target locale(`en`, `zh`, `es`, `fr`, `hi`, `ko`, `ja`, `vi`, `ru`, `id`, `ms`, `th`)의 긴 문장과 focus-visible 상태를 한 번에 확인한다. 초기 active locale은 `ko`, `en`이지만 QA fixture는 target locale 전체를 유지한다.
 
 ## 패키지 표면
 
@@ -110,7 +110,7 @@ import 'zdp-design-system/expressive-fonts.css';
 
 패키지 export는 `dist/` 산출물을 가리킨다. root runtime entry는 `dist/index.js`, type entry는 `dist/index.d.ts`이며 호환용이다. 새 Svelte 코드는 `zdp-design-system/components/ComponentName`과 `zdp-design-system/tokens.css`를 기본으로 쓴다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `bun run package:build`가 소비자용 `dist/` 표면을 다시 만든다. 소비 저장소와 문서 예시는 `zdp-design-system` public export만 쓰고 내부 `src/` 경로를 직접 import하지 않는다.
 
-ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.57.2`을 기본으로 쓴다.
+ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.57.3`을 기본으로 쓴다.
 
 ### Brand fallback assets
 

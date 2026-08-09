@@ -380,6 +380,10 @@ if (!preview.includes("import '../src/styles/brand-fonts.css';")) {
   failures.push('Storybook preview must import the brand font entry for wordmark review.');
 }
 
+if (!preview.includes("import '../src/styles/locale-fonts.css';")) {
+  failures.push('Storybook preview must import the locale font entry for 12-locale review.');
+}
+
 if (!preview.includes("import '../src/styles/expressive-fonts.css';")) {
   failures.push('Storybook preview must import the expressive font entry for type specimen review.');
 }

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.57.3
+
+- Loaded the optional locale font bundle in Storybook so the 12-locale stress fixture exercises the published Manrope and Noto Sans webfont contract instead of silently relying on platform fallbacks.
+- Added a Storybook contract check that prevents locale font QA from being detached from `locale-fonts.css`.
+
 ## 0.57.2
 
 - Expanded the Theme / Locale Stress story from eight samples to the complete 12-locale ZDP target set by adding Spanish, French, Japanese, and Indonesian fixtures.

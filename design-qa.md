@@ -138,4 +138,13 @@ The Theme / Locale Stress story covered only eight samples while the Architectur
 
 Browser inspection confirmed 12 locale cards per theme without horizontal page overflow. No actionable P0, P1, or P2 mismatch remains.
 
+## Twelve-locale webfont correction
+
+- Before correction: the Storybook preview did not import `locale-fonts.css`; Chinese, Hindi, Japanese and Thai used platform fonts, while Vietnamese and Russian mixed multiple fallback families.
+- Corrected Storybook screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-theme-locale-fonts-12-locales-qa-20260809.png`
+
+The locale-specific font-family tokens were correct, but the QA environment loaded only the base Pretendard and brand/expressive font surfaces. Storybook now imports the optional locale bundle used by 12-language consumers, allowing the stress story to exercise Manrope and the Noto Sans SC, Devanagari, JP and Thai families rather than passing on Windows-only fallbacks. The Storybook contract check requires this import.
+
+Browser platform-font inspection confirmed the intended custom webfont families for all 12 locale samples, with no mixed-family line, clipped text, horizontal page overflow, or console font error. No actionable P0, P1, or P2 mismatch remains.
+
 final result: passed
