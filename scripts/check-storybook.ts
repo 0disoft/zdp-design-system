@@ -2937,6 +2937,10 @@ for (const requiredText of [
   '.zdp-button--primary:hover:not(:disabled)',
   '.zdp-button--secondary:hover:not(:disabled)',
   '.zdp-button--danger:hover:not(:disabled)',
+  '.zdp-button--text:hover:not(:disabled)',
+  '.zdp-button--text:focus-visible::after',
+  'padding-inline: var(--zdp-space-2)',
+  'min-block-size: var(--zdp-control-focus-underline-width)',
   'background: var(--zdp-color-surface-raised)',
   '.zdp-button--primary:active:not(:disabled)',
   'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
@@ -2944,6 +2948,29 @@ for (const requiredText of [
 ]) {
   if (!button.includes(requiredText)) {
     failures.push(`Button component is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  '<Button variant="text">가격 보기</Button>',
+  '<Button variant="text" disabled>가격 보기</Button>',
+  'class="text-action-demo" aria-label="경계 없는 탐색 — 밝은 테마"',
+  'class="text-action-demo" aria-label="경계 없는 탐색 — 어두운 테마"',
+  'class="zdp-button zdp-button--text zdp-button--md"',
+  '.text-action-demo',
+  '.text-action-demo-shell'
+]) {
+  if (!buttonsComponent.includes(requiredText)) {
+    failures.push(`Button states story is missing ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  "export let variant: 'primary' | 'secondary' | 'danger' | 'text' = 'primary'",
+  "options: ['primary', 'secondary', 'danger', 'text']"
+]) {
+  if (!buttonPlayground.includes(requiredText) && !buttonsStory.includes(requiredText)) {
+    failures.push(`Button playground contract is missing ${requiredText}.`);
   }
 }
 

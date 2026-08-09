@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let variant: 'primary' | 'secondary' | 'danger' = 'primary';
+  export let variant: 'primary' | 'secondary' | 'danger' | 'text' = 'primary';
   export let size: 'sm' | 'md' = 'md';
   export let type: 'button' | 'submit' | 'reset' = 'button';
   export let disabled = false;
@@ -149,10 +149,55 @@
     color: var(--zdp-color-accent-danger);
   }
 
+  .zdp-button--text {
+    background: transparent;
+    border-color: transparent;
+    border-radius: var(--zdp-radius-none);
+    color: var(--zdp-color-ink-strong);
+    padding-inline: var(--zdp-space-2);
+    position: relative;
+  }
+
+  .zdp-button--text::after {
+    background: var(--zdp-color-line-strong);
+    border-radius: var(--zdp-radius-sm);
+    content: '';
+    inset-block-end: var(--zdp-space-1);
+    inset-inline: var(--zdp-space-2);
+    min-block-size: var(--zdp-control-border-width);
+    pointer-events: none;
+    position: absolute;
+    transition:
+      background-color var(--zdp-motion-fast) ease,
+      transform var(--zdp-motion-fast) ease;
+  }
+
+  .zdp-button--text:hover:not(:disabled),
+  .zdp-button--text:active:not(:disabled) {
+    background: transparent;
+    border-color: transparent;
+    color: var(--zdp-color-ink-strong);
+  }
+
+  .zdp-button--text:hover:not(:disabled)::after,
+  .zdp-button--text:active:not(:disabled)::after {
+    background: var(--zdp-color-accent-primary-strong);
+    transform: scaleX(1.08);
+  }
+
   .zdp-button:focus-visible {
     border-color: var(--zdp-color-focus-line);
     outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
     outline-offset: var(--zdp-control-focus-outline-offset);
+  }
+
+  .zdp-button--text:focus-visible {
+    border-color: transparent;
+  }
+
+  .zdp-button--text:focus-visible::after {
+    background: var(--zdp-color-focus-line);
+    min-block-size: var(--zdp-control-focus-underline-width);
   }
 
   .zdp-button:disabled {

@@ -26,7 +26,7 @@
     <section class="component-story__panel" data-zdp-theme="light" aria-labelledby="buttons-light-title">
       <h2 id="buttons-light-title">Light</h2>
       <Stack gap="lg">
-        <Surface padding="lg">
+        <div class="text-action-demo-shell">
           <Stack gap="md">
             <h3>기본 작업</h3>
             <Inline gap="sm" align="center">
@@ -43,6 +43,7 @@
                 <VisuallyHidden>새 항목 </VisuallyHidden>추가
               </Button>
               <Button variant="danger">삭제</Button>
+              <Button variant="text">가격 보기</Button>
               <IconButton
                 ariaLabel="추가"
                 variant="solid"
@@ -57,7 +58,19 @@
               · {lightIconPressed ? '추가 선택됨' : '추가 대기'}
             </p>
           </Stack>
-        </Surface>
+        </div>
+
+        <div class="text-action-demo-shell">
+          <Stack gap="md">
+            <h3>경계 없는 탐색</h3>
+            <nav class="text-action-demo" aria-label="경계 없는 탐색 — 밝은 테마">
+              <a class="zdp-button zdp-button--text zdp-button--md" href="#buttons-light-title">제품 보기</a>
+              <a class="zdp-button zdp-button--text zdp-button--md" href="#buttons-light-title">가격 보기</a>
+              <a class="zdp-button zdp-button--text zdp-button--md" href="#buttons-light-title">업데이트</a>
+              <a class="zdp-button zdp-button--text zdp-button--md" href="#buttons-light-title">고객 지원</a>
+            </nav>
+          </Stack>
+        </div>
 
         <Surface padding="lg">
           <Stack gap="md">
@@ -66,6 +79,7 @@
               <Button variant="primary" disabled>저장</Button>
               <Button variant="secondary" disabled><Icon size="sm">+</Icon>추가</Button>
               <Button variant="danger" disabled>삭제</Button>
+              <Button variant="text" disabled>가격 보기</Button>
               <IconButton ariaLabel="추가" variant="solid" disabled>+</IconButton>
             </Inline>
           </Stack>
@@ -108,6 +122,7 @@
                 <VisuallyHidden>새 항목 </VisuallyHidden>추가
               </Button>
               <Button variant="danger">삭제</Button>
+              <Button variant="text">가격 보기</Button>
               <IconButton
                 ariaLabel="추가"
                 variant="ghost"
@@ -126,11 +141,24 @@
 
         <Surface padding="lg">
           <Stack gap="md">
+            <h3>경계 없는 탐색</h3>
+            <nav class="text-action-demo" aria-label="경계 없는 탐색 — 어두운 테마">
+              <a class="zdp-button zdp-button--text zdp-button--md" href="#buttons-dark-title">제품 보기</a>
+              <a class="zdp-button zdp-button--text zdp-button--md" href="#buttons-dark-title">가격 보기</a>
+              <a class="zdp-button zdp-button--text zdp-button--md" href="#buttons-dark-title">업데이트</a>
+              <a class="zdp-button zdp-button--text zdp-button--md" href="#buttons-dark-title">고객 지원</a>
+            </nav>
+          </Stack>
+        </Surface>
+
+        <Surface padding="lg">
+          <Stack gap="md">
             <h3>비활성 작업</h3>
             <Inline gap="sm" align="center">
               <Button variant="primary" disabled>저장</Button>
               <Button variant="secondary" disabled><Icon size="sm">+</Icon>추가</Button>
               <Button variant="danger" disabled>삭제</Button>
+              <Button variant="text" disabled>가격 보기</Button>
               <IconButton ariaLabel="추가" variant="ghost" disabled>+</IconButton>
             </Inline>
           </Stack>
@@ -226,6 +254,18 @@
     font-size: var(--zdp-type-caption-size);
     line-height: var(--zdp-type-caption-line-height);
     margin: 0;
+  }
+
+  .text-action-demo {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--zdp-space-3);
+  }
+
+  .text-action-demo-shell {
+    background: var(--zdp-color-surface-canvas);
+    padding: var(--zdp-space-6);
   }
 
   @media (max-width: 860px) {

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.54.0
+
+- Added the opt-in `Button variant="text"` and framework-neutral `.zdp-button--text` contract for borderless content and marketing actions with a persistent underline, stronger hover and keyboard-focus states, preserved hit targets, static-link semantics, Storybook controls, and consumer guidance.
+
 ## 0.53.1
 
 - Replaced the round orange credit-mark artwork with a pointed lemon silhouette and yellow display color while preserving the four SVG variants, three-path geometry contract, package paths, and accounting boundaries.

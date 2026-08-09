@@ -12,7 +12,7 @@ Default component text is English. 소비 앱은 화면 locale에 맞춰 user-fa
 - 소비 저장소는 `zdp-design-system`의 public export만 사용하고 내부 `src/` deep import를 만들지 않는다.
 - package export는 `dist/` 산출물을 통해 소비한다. root runtime entry는 `dist/index.js`, type entry는 `dist/index.d.ts`다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `dist/`는 release 전 `bun run package:build`로 다시 만든다.
 - ZDP monorepo 안의 active sibling 소비처는 unpublished local changes와 package surface를 함께 검증하기 위해 `file:../zdp-design-system`을 유지할 수 있다. 이 경우 CI는 sibling `zdp-design-system`을 checkout하고 `bun run package:build`를 먼저 실행해야 한다.
-- standalone consumer, public template, external example처럼 sibling checkout을 전제로 하지 않는 표면은 npm registry package를 사용한다. 0.53.1 이상에서는 `zdp-design-system: ^0.53.1`을 기본 semver 범위로 쓰고, 재현 가능한 release proof가 필요한 곳만 exact version을 pin한다.
+- standalone consumer, public template, external example처럼 sibling checkout을 전제로 하지 않는 표면은 npm registry package를 사용한다. 0.54.0 이상에서는 `zdp-design-system: ^0.54.0`을 기본 semver 범위로 쓰고, 재현 가능한 release proof가 필요한 곳만 exact version을 pin한다.
 - open shadow root 안에 component를 mount하는 소비처는 document-level import에 기대지 않고 `zdp-design-system/styles.css` 내용을 해당 root 안의 `<style>` 또는 `<link rel="stylesheet">`로 직접 설치한다. stylesheet가 설치된 open root에서 Tooltip, Combobox, Menu, Popover, Dialog, Sheet, TermSheet의 documented interaction contract를 지원한다. closed shadow root는 지원하지 않는다.
 - `zdpTokenNames`, `share.js`, `share.d.ts`는 손으로 맞추지 않고 `tokens:generate`, `share-icons:generate` 산출물로 유지한다.
 - 새 버전은 소비 저장소가 opt-in으로 채택한다. broad adoption 전에는 대표 소비처에서 시각과 build를 확인한다.
@@ -385,7 +385,9 @@ Astro 페이지는 Svelte island가 필요한 부분에서만 Svelte 컴포넌�
 Tauri shell은 native window, permission, update, file access 결정을 이 패키지에 넘기지 않는다.
 이 패키지는 WebView 안의 UI 토큰과 컴포넌트만 담당한다.
 Breadcrumb는 page-location trail, link, separator, current-page aria 구조만 제공하며 라우팅, SEO, 인증, 결제, 권한 판단은 소비 앱이 계속 소유한다.
-Button과 IconButton은 native button 위의 framed control 표면이며 `onclick`, `ariaLabel`, `ariaControls`, `ariaExpanded`, `ariaPressed`, `ariaDescribedBy`, `ariaKeyShortcuts` 같은 액션 연결 props를 전달한다. 저장, 삭제, 권한, 결제 판단은 소비 앱이 계속 소유한다.
+Button과 IconButton은 native button 위의 control 표면이며 `onclick`, `ariaLabel`, `ariaControls`, `ariaExpanded`, `ariaPressed`, `ariaDescribedBy`, `ariaKeyShortcuts` 같은 액션 연결 props를 전달한다. 저장, 삭제, 권한, 결제 판단은 소비 앱이 계속 소유한다.
+
+`Button variant="text"`와 framework-neutral `.zdp-button--text`는 콘텐츠·마케팅 화면의 경계 없는 텍스트 액션에 사용한다. 기본·hover·focus 상태는 배경 상자 대신 하단 선으로 구분하고 최소 hit target은 그대로 유지한다. 실제 페이지 이동은 `<a class="zdp-button zdp-button--text zdp-button--md">`처럼 링크 의미를 유지하며, 폼 제출이나 상태 변경은 Svelte Button을 사용한다. 이 variant를 모든 버튼의 기본값으로 바꾸거나 파괴적·결제 확인 작업에 사용하지 않는다.
 ConfirmAction은 중요한 액션을 밀기 또는 길게 누르기로 확인하는 표면이며 `onconfirm` 콜백만 전달한다. 결제, 삭제, 권한, 환불 판단과 서버 요청은 소비 앱이 계속 소유한다.
 Avatar와 IdentityChip은 사람, 팀, 조직의 visual identity, 이니셜, 이름, 보조 텍스트, 선택적 링크 표면만 제공하며 실제 계정 식별, 프로필 라우팅, 온라인 상태, 권한, 초대 가능 여부 판단은 소비 앱이 계속 소유한다.
 Icon은 장식용 glyph 또는 짧은 보조 기호의 박스, 크기, 중앙정렬만 제공하며 의미, 라벨 문구, 상태 판단은 소비 앱이 계속 소유한다.

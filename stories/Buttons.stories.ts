@@ -33,7 +33,7 @@ export const Playground: StoryObj<typeof ButtonPlayground> = {
   argTypes: {
     variant: {
       control: 'radio',
-      options: ['primary', 'secondary', 'danger']
+      options: ['primary', 'secondary', 'danger', 'text']
     },
     size: {
       control: 'radio',

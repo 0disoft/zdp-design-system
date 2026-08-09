@@ -58,6 +58,7 @@ for (const requiredText of [
   'lang="hi"',
   'lang="ja"',
   'zdp-button zdp-button--primary zdp-button--md',
+  'zdp-button zdp-button--text zdp-button--md',
   'zdp-icon-button zdp-icon-button--solid zdp-icon-button--md',
   'zdp-icon zdp-icon--md zdp-icon-button__glyph',
   'zdp-theme-toggle zdp-theme-toggle--md',

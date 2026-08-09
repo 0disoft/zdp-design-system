@@ -5,7 +5,7 @@
   import Surface from '../src/lib/components/Surface.svelte';
   import VisuallyHidden from '../src/lib/components/VisuallyHidden.svelte';
 
-  export let variant: 'primary' | 'secondary' | 'danger' = 'primary';
+  export let variant: 'primary' | 'secondary' | 'danger' | 'text' = 'primary';
   export let size: 'sm' | 'md' = 'md';
   export let label = '저장';
   export let disabled = false;
