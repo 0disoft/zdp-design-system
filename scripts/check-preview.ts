@@ -1196,6 +1196,25 @@ for (const [label, selector] of [
   }
 }
 
+for (const [label, startSelector, endSelector] of [
+  ['ConfirmAction', '.zdp-confirm-action {', '.zdp-badge {'],
+  ['Menu', '.zdp-menu__trigger {', '.zdp-menu__separator {'],
+  ['Select', '.zdp-select {', '.zdp-choice,']
+] satisfies Array<readonly [string, string, string]>) {
+  const blockStart = componentStyle.indexOf(startSelector);
+  const blockEnd = componentStyle.indexOf(endSelector, blockStart + startSelector.length);
+  const block = componentStyle.slice(blockStart, blockEnd);
+
+  for (const requiredText of [
+    'border: var(--zdp-control-border-width) solid transparent',
+    'background: var(--zdp-color-surface-raised)'
+  ]) {
+    if (!block.includes(requiredText)) {
+      failures.push(`Static ${label} must keep the borderless surface contract text ${requiredText}.`);
+    }
+  }
+}
+
 for (const requiredText of [
   '.zdp-button:not(.zdp-button--text)',
   '.zdp-icon-button',

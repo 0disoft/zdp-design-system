@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.56.0
+
+- Reworked ConfirmAction, native Select including the customizable picker, and Menu trigger/panel/items around tonal surfaces instead of visible decorative borders.
+- Kept keyboard focus outlines and forced-colors system borders, while Select invalid state continues through ARIA and its linked error message without adding a second visual frame.
+
 ## 0.55.1
 
 - Kept the danger Button label visible on light-theme hover by pairing the panel hover surface with the semantic danger ink in both Svelte and framework-neutral CSS.

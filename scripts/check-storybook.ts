@@ -2458,6 +2458,10 @@ for (const requiredText of [
   '.zdp-menu__item:hover:not(:disabled):not([aria-disabled="true"])',
   '.zdp-menu__item--danger',
   '.zdp-menu__separator',
+  'border: var(--zdp-control-border-width) solid transparent',
+  'background: var(--zdp-color-surface-raised)',
+  'background: var(--zdp-color-accent-primary-soft)',
+  'border-color: ButtonText',
   '.zdp-menu--bottom .zdp-menu__panel',
   '.zdp-menu--align-end .zdp-menu__panel',
   'max-inline-size: min(18rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6)))',
@@ -2990,6 +2994,10 @@ for (const requiredText of [
   '--zdp-confirm-action-progress: 0',
   'width: calc(var(--zdp-confirm-action-progress) * 100%)',
   'touch-action: none',
+  'border: var(--zdp-control-border-width) solid transparent',
+  'background: var(--zdp-color-surface-raised)',
+  'background: var(--zdp-color-accent-primary-soft)',
+  'border-color: ButtonText',
   '.zdp-confirm-action--danger',
   'background: var(--zdp-color-accent-danger)',
   'opacity: 0.24',
@@ -3131,19 +3139,42 @@ for (const [componentName, componentSource] of Object.entries({
     'aria-describedby={ariaDescribedBy ?? undefined}',
     'aria-errormessage={resolvedErrorMessageId ?? undefined}',
     "aria-invalid={invalid ? 'true' : undefined}",
-    'border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong)',
-    'background: var(--zdp-color-surface-panel)',
     ':hover:not(:disabled)',
-    'background: var(--zdp-color-surface-raised)',
     ':focus-visible',
     'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
-    'border-color: var(--zdp-color-focus-line)',
-    '[aria-invalid="true"]',
-    'border-color: var(--zdp-color-accent-danger)'
+    '[aria-invalid="true"]'
   ]) {
     if (!componentSource.includes(requiredText)) {
       failures.push(`${componentName} component is missing ${requiredText}.`);
     }
+  }
+}
+
+for (const [componentName, componentSource] of Object.entries({ Input: input, Textarea: textarea })) {
+  for (const requiredText of [
+    'border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong)',
+    'background: var(--zdp-color-surface-panel)',
+    'background: var(--zdp-color-surface-raised)',
+    'border-color: var(--zdp-color-focus-line)',
+    'border-color: var(--zdp-color-accent-danger)'
+  ]) {
+    if (!componentSource.includes(requiredText)) {
+      failures.push(`${componentName} component is missing framed input contract text ${requiredText}.`);
+    }
+  }
+}
+
+for (const requiredText of [
+  'border: var(--zdp-control-border-width) solid transparent',
+  'background: var(--zdp-color-surface-raised)',
+    'background: var(--zdp-color-accent-primary-soft)',
+    '.zdp-select::picker(select)',
+    '.zdp-select:focus-visible',
+    '.zdp-select[aria-invalid="true"]',
+    'border-color: ButtonText'
+]) {
+  if (!select.includes(requiredText)) {
+    failures.push(`Select component is missing borderless surface contract text ${requiredText}.`);
   }
 }
 

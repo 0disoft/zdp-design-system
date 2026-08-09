@@ -110,7 +110,7 @@ import 'zdp-design-system/expressive-fonts.css';
 
 패키지 export는 `dist/` 산출물을 가리킨다. root runtime entry는 `dist/index.js`, type entry는 `dist/index.d.ts`이며 호환용이다. 새 Svelte 코드는 `zdp-design-system/components/ComponentName`과 `zdp-design-system/tokens.css`를 기본으로 쓴다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `bun run package:build`가 소비자용 `dist/` 표면을 다시 만든다. 소비 저장소와 문서 예시는 `zdp-design-system` public export만 쓰고 내부 `src/` 경로를 직접 import하지 않는다.
 
-ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.55.1`을 기본으로 쓴다.
+ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.56.0`을 기본으로 쓴다.
 
 ### Brand fallback assets
 
@@ -145,7 +145,7 @@ import flagshipKeyArt from 'zdp-design-system/assets/credits/credit-pack-keyart-
 - Button과 IconButton은 `onclick` 실행 표면이며 권한, 저장, 네트워크 재시도 판단을 소유하지 않는다.
 - Card와 CardHeader는 비상호작용 콘텐츠 컨테이너다. panel/raised tone은 색상 단계로 깊이를 만들고, `outline`만 명시적 테두리를 사용한다. `hover`는 부드러운 표면색 변화만 제공하며 클릭 가능성, 손가락 커서, 키보드 focus를 암시하지 않는다. 전체 카드 이동이나 실행은 내부 Link 또는 Button으로 명시한다.
 - 단축키 표기는 `ariaKeyShortcuts`와 실제 keydown 처리를 분리한다. Chrome과 브라우저가 기본 동작으로 가져가는 조합은 제품 단축키로 덮어쓰지 않는다. 소비 앱의 전역 단축키 dispatcher는 `shouldZdpIgnoreShortcutEvent`, `isZdpTextEntryTarget`, `isZdpBrowserReservedShortcut`, `zdpShortcutRecommendations` 같은 shortcut policy helper로 입력창, IME 조합, 브라우저 예약 조합을 먼저 걸러낸다.
-- ConfirmAction은 중요한 액션 앞의 확인 흐름만 제공하고, 실제 삭제나 권한 검사는 소비 앱이 한다.
+- ConfirmAction은 중요한 액션 앞의 확인 흐름만 제공하고, 실제 삭제나 권한 검사는 소비 앱이 한다. resting/hover/active/confirmed 상태는 outer border가 아니라 surface와 진행 fill, thumb 색으로 구분한다.
 - Avatar와 IdentityChip은 사람, 팀, 계정의 짧은 식별 표면이다.
 - CommandField는 검색 입력 primitive이며 shortcut keycap, `ariaKeyShortcuts`, `ariaAutocomplete`, result id 연결, 입력 keydown callback은 제공하되 실제 검색 로직, 결과 목록, command palette 실행은 소비 앱이 소유한다. `ariaAutocomplete`, `ariaControls`, `ariaExpanded`, `ariaActivedescendant` 중 하나를 전달하면 입력은 `combobox` 역할과 기본 `aria-expanded="false"`를 함께 노출한다.
 - Combobox는 검색 가능한 단일 선택 입력의 frame, listbox, keyboard navigation, disabled option skip, hidden submitted value만 제공한다. 사용자가 query를 직접 편집하기 전에는 초기 `value`와 비동기로 도착하거나 label이 바뀐 option을 표시 query에 동기화한다. 사용자가 선택 label을 편집하면 submitted value를 비우고, `required`일 때 실제 option 선택 여부를 검증하며 `selectionRequiredText`로 기본 검증 문구를 바꿀 수 있다. focus가 root 밖으로 나가거나 root 어디서든 Escape를 누르면 닫고, keyboard active option은 보이는 영역으로 스크롤한다. 기본 input/listbox/option ID는 SSR과 hydration에서 안정적이며, 명시적인 `id`도 계속 지원한다. light DOM과 stylesheet가 설치된 open shadow root에서 내부 클릭과 outside dismissal을 구분한다. 실제 필터링, async search, command 실행, 권한 판단은 소비 앱이 계속 소유한다.
@@ -163,7 +163,7 @@ import flagshipKeyArt from 'zdp-design-system/assets/credits/credit-pack-keyart-
 - Accordion과 Disclosure는 접힌 안내와 점진적 정보 공개를 담당한다.
 - SegmentedControl은 보기 방식이나 단일 모드 전환을 표현한다.
 - SortHeader와 TableToolbar는 sortable column affordance, 선택 행 액션, 밀도 조절 같은 표 주변 도구를 맡는다.
-- Popover와 Menu는 설정, 더보기, 필터, 계정 메뉴 표면을 제공하지만 메뉴 항목 권한 판단은 소비 앱이 한다. Popover의 Escape/outside dismissal은 명시적으로 끌 수 있지만, ARIA Menu의 Escape/outside dismissal은 키보드 탈출 계약이라 끄지 않는다. 두 컴포넌트의 내부 클릭 판정과 focus return은 light DOM과 open shadow root에서 유지하며 closed shadow root는 지원하지 않는다.
+- Popover와 Menu는 설정, 더보기, 필터, 계정 메뉴 표면을 제공하지만 메뉴 항목 권한 판단은 소비 앱이 한다. Menu trigger/panel/item은 tonal surface로 계층을 구분하고 resting/hover border를 사용하지 않는다. Popover의 Escape/outside dismissal은 명시적으로 끌 수 있지만, ARIA Menu의 Escape/outside dismissal은 키보드 탈출 계약이라 끄지 않는다. 두 컴포넌트의 내부 클릭 판정과 focus return은 light DOM과 open shadow root에서 유지하며 closed shadow root는 지원하지 않는다.
 - Disclosure, LocaleSwitcher, SegmentedControl, TextScaleControl, Menu, Popover, Tooltip은 명시적 `id` 또는 `idPrefix`를 생략해도 반복 SSR과 hydration 사이에서 같은 fallback ID와 ARIA 참조를 유지한다. 소비 앱이 외부 요소와 참조를 공유해야 할 때만 명시적 값을 넘긴다.
 - Sheet는 설정, 필터, 보조 흐름을 right, left, bottom edge panel로 열고, 저장, 권한, 데이터 fetch, 라우팅 판단은 소비 앱이 한다.
 - Pagination은 목록 페이지 이동을 표현하고 데이터 범위 계산은 소비 앱이 한다.
@@ -604,6 +604,7 @@ preview/index.html
 - 버튼 hover/active는 배경색, 테두리색, 글자색만 바꾼다. 위치 이동·빛 반사 없음.
 - Secondary Button은 raised tonal surface, ghost IconButton은 투명 surface를 기본으로 사용하며 hover/active는 인접 surface 단계로 구분한다. 시각적 resting border는 사용하지 않되 레이아웃 보존용 투명 border slot은 유지한다.
 - Focus는 `focus.surface` outline + `focus.line` border로 표시한다.
+- ConfirmAction, Select, Menu는 resting/hover에서 surface 단계만 바꾸며 투명 border slot으로 크기를 유지한다. keyboard focus와 forced-colors에서는 outline 또는 system border를 복원한다.
 
 **Radius**
 - controls (Button, Input 등): `0.375rem`

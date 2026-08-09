@@ -229,8 +229,8 @@
     --zdp-confirm-action-fill: var(--zdp-color-accent-primary);
 
     align-items: center;
-    background: var(--zdp-color-surface-panel);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
+    background: var(--zdp-color-surface-raised);
+    border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-strong);
@@ -264,7 +264,7 @@
   .zdp-confirm-action__thumb {
     align-items: center;
     background: var(--zdp-color-accent-primary);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-accent-primary-strong);
+    border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-strong);
@@ -316,8 +316,8 @@
   }
 
   .zdp-confirm-action:hover:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    background: var(--zdp-color-accent-primary-soft);
+    border-color: transparent;
   }
 
   .zdp-confirm-action:focus-visible {
@@ -327,7 +327,7 @@
   }
 
   .zdp-confirm-action--danger {
-    border-color: var(--zdp-color-accent-danger);
+    border-color: transparent;
   }
 
   .zdp-confirm-action--danger .zdp-confirm-action__fill {
@@ -337,21 +337,28 @@
 
   .zdp-confirm-action--danger .zdp-confirm-action__thumb {
     background: var(--zdp-color-accent-danger);
-    border-color: var(--zdp-color-accent-danger);
+    border-color: transparent;
   }
 
   .zdp-confirm-action[data-active="true"],
   .zdp-confirm-action[data-confirmed="true"] {
-    border-color: var(--zdp-color-focus-line);
+    border-color: transparent;
   }
 
   .zdp-confirm-action[data-confirmed="true"] .zdp-confirm-action__thumb {
     background: var(--zdp-color-accent-success);
-    border-color: var(--zdp-color-accent-success);
+    border-color: transparent;
   }
 
   .zdp-confirm-action:disabled {
     cursor: not-allowed;
     opacity: 0.56;
+  }
+
+  @media (forced-colors: active) {
+    .zdp-confirm-action,
+    .zdp-confirm-action__thumb {
+      border-color: ButtonText;
+    }
   }
 </style>

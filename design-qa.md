@@ -87,7 +87,7 @@ No actionable P0, P1, or P2 mismatch remains. The isolated Storybook page emitte
 - Button screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-surface-first-buttons-qa-20260809.png`
 - Selection screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-surface-first-selection-qa-20260809.png`
 
-The references identified visual stiffness from repeating borders around controls, groups, containers, and Storybook frames. The revised controls use filled or tonal surfaces for hierarchy: primary and danger actions are filled, secondary actions use a raised surface, ghost icon actions reveal a surface on interaction, and text actions retain their underline contract. LocaleSwitcher and SegmentedControl now use raised group surfaces with filled selected items. Panel and raised Surface/Card tones no longer draw decorative borders; explicit Card outline, inputs, tables, modal boundaries, focus outlines, and forced-colors system borders remain structural exceptions.
+The references identified visual stiffness from repeating borders around controls, groups, containers, and Storybook frames. The revised controls use filled or tonal surfaces for hierarchy: primary and danger actions are filled, secondary actions use a raised surface, ghost icon actions reveal a surface on interaction, and text actions retain their underline contract. LocaleSwitcher and SegmentedControl now use raised group surfaces with filled selected items. Panel and raised Surface/Card tones no longer draw decorative borders; explicit Card outline, text inputs, textareas, tables, modal boundaries, focus outlines, and forced-colors system borders remain structural exceptions.
 
 Computed browser styles confirmed transparent resting border slots for Button, LocaleSwitcher, SegmentedControl, and Storybook theme panels in both themes. The full package verification passed component/static parity, 13 Storybook runtime accessibility stories, SSR hydration, Svelte diagnostics, release checks, and packed consumer browser fixtures. No actionable P0, P1, or P2 mismatch remains.
 
@@ -99,5 +99,16 @@ Computed browser styles confirmed transparent resting border slots for Button, L
 The light-theme danger hover previously changed to the light panel surface while retaining inverse ink, which made the `삭제` label visually disappear. The revised hover state pairs the panel surface with semantic danger ink in both the Svelte component and framework-neutral CSS. Browser inspection confirmed the light hover uses `surface-panel` with `accent-danger`, the dark hover uses its dark panel and danger tokens, both borders remain transparent, and the label remains visible without changing button geometry.
 
 No actionable P0, P1, or P2 mismatch remains.
+
+## ConfirmAction, Select, and Menu borderless correction
+
+- Issue references: `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-2940b2a8-7bc4-49c3-b101-c63e4b7ea382.png`, `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-e0a4f514-9577-43dc-9b37-52344d495ec3.png`, `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-0c2507b7-d89b-4fcd-9bee-cc4fedabd474.png`
+- ConfirmAction screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-confirm-action-borderless-final-20260809.png`
+- Select screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-select-borderless-final-20260809.png`
+- Menu screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-menu-borderless-20260809.png`
+
+ConfirmAction now uses a raised resting surface, accent hover surface, progress fill, and thumb color without outer or thumb borders. Select and its customizable native picker use raised surfaces with a borderless picker and option states; keyboard focus keeps one outline, while invalid state remains connected through ARIA and ErrorText without adding another frame. Menu trigger, floating panel, and item hover/focus states use raised and soft accent surfaces without visible resting or hover borders. All three restore system borders in forced-colors mode.
+
+Browser-computed styles confirmed transparent borders for ConfirmAction and its thumb, Menu trigger/panel/items, and Select in light and dark themes. No actionable P0, P1, or P2 mismatch remains.
 
 final result: passed

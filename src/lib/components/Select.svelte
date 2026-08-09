@@ -49,8 +49,8 @@
 
 <style>
   .zdp-select {
-    background: var(--zdp-color-surface-panel);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
+    background: var(--zdp-color-surface-raised);
+    border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-strong);
@@ -67,18 +67,18 @@
   }
 
   .zdp-select:hover:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    background: var(--zdp-color-accent-primary-soft);
+    border-color: transparent;
   }
 
   .zdp-select:focus-visible {
-    border-color: var(--zdp-color-focus-line);
+    border-color: transparent;
     outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
     outline-offset: var(--zdp-control-focus-outline-offset);
   }
 
   .zdp-select[aria-invalid="true"] {
-    border-color: var(--zdp-color-accent-danger);
+    border-color: transparent;
   }
 
   .zdp-select:disabled {
@@ -102,13 +102,13 @@
     }
 
     .zdp-select::picker(select) {
-      background: var(--zdp-color-surface-panel);
-      border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
+      background: var(--zdp-color-surface-raised);
+      border: var(--zdp-control-border-width) solid transparent;
       color: var(--zdp-color-ink-strong);
     }
 
     .zdp-select :global(option) {
-      background-color: var(--zdp-color-surface-panel);
+      background-color: var(--zdp-color-surface-raised);
       color: var(--zdp-color-ink-strong);
       padding: calc(var(--zdp-space-1) / 2);
     }
@@ -123,13 +123,20 @@
 
     .zdp-select :global(option:hover),
     .zdp-select :global(option:focus-visible) {
-      background-color: var(--zdp-color-surface-raised);
+      background-color: var(--zdp-color-surface-panel);
       color: var(--zdp-color-ink-strong);
     }
 
     .zdp-select :global(option:checked) {
       background-color: var(--zdp-color-focus-surface);
       color: var(--zdp-color-focus-text);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .zdp-select,
+    .zdp-select::picker(select) {
+      border-color: ButtonText;
     }
   }
 </style>
