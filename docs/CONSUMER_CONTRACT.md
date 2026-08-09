@@ -8,11 +8,11 @@ Default component text is English. 소비 앱은 화면 locale에 맞춰 user-fa
 
 - 소비 저장소는 제품 문구, 라우팅, SEO, 데이터 로딩, 인증, 결제, 권한 판단을 직접 소유한다.
 - 디자인 시스템은 색상, 타입, 간격, radius, focus, i18n, control metric, shared component API만 제공한다.
-- Card와 CardHeader는 비상호작용 콘텐츠 컨테이너다. `hover`는 테두리 강조만 제공하며 클릭 가능성, 손가락 커서, 키보드 focus를 암시하지 않는다. 전체 카드 이동이나 실행은 내부 Link 또는 Button으로 명시한다.
+- Card와 CardHeader는 비상호작용 콘텐츠 컨테이너다. panel/raised tone은 색상 단계로 깊이를 만들고, `outline`만 명시적 테두리를 사용한다. `hover`는 부드러운 표면색 변화만 제공하며 클릭 가능성, 손가락 커서, 키보드 focus를 암시하지 않는다. 전체 카드 이동이나 실행은 내부 Link 또는 Button으로 명시한다.
 - 소비 저장소는 `zdp-design-system`의 public export만 사용하고 내부 `src/` deep import를 만들지 않는다.
 - package export는 `dist/` 산출물을 통해 소비한다. root runtime entry는 `dist/index.js`, type entry는 `dist/index.d.ts`다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `dist/`는 release 전 `bun run package:build`로 다시 만든다.
 - ZDP monorepo 안의 active sibling 소비처는 unpublished local changes와 package surface를 함께 검증하기 위해 `file:../zdp-design-system`을 유지할 수 있다. 이 경우 CI는 sibling `zdp-design-system`을 checkout하고 `bun run package:build`를 먼저 실행해야 한다.
-- standalone consumer, public template, external example처럼 sibling checkout을 전제로 하지 않는 표면은 npm registry package를 사용한다. 0.54.3 이상에서는 `zdp-design-system: ^0.54.3`을 기본 semver 범위로 쓰고, 재현 가능한 release proof가 필요한 곳만 exact version을 pin한다.
+- standalone consumer, public template, external example처럼 sibling checkout을 전제로 하지 않는 표면은 npm registry package를 사용한다. 0.55.0 이상에서는 `zdp-design-system: ^0.55.0`을 기본 semver 범위로 쓰고, 재현 가능한 release proof가 필요한 곳만 exact version을 pin한다.
 - open shadow root 안에 component를 mount하는 소비처는 document-level import에 기대지 않고 `zdp-design-system/styles.css` 내용을 해당 root 안의 `<style>` 또는 `<link rel="stylesheet">`로 직접 설치한다. stylesheet가 설치된 open root에서 Tooltip, Combobox, Menu, Popover, Dialog, Sheet, TermSheet의 documented interaction contract를 지원한다. closed shadow root는 지원하지 않는다.
 - `zdpTokenNames`, `share.js`, `share.d.ts`는 손으로 맞추지 않고 `tokens:generate`, `share-icons:generate` 산출물로 유지한다.
 - 새 버전은 소비 저장소가 opt-in으로 채택한다. broad adoption 전에는 대표 소비처에서 시각과 build를 확인한다.
@@ -387,6 +387,8 @@ Tauri shell은 native window, permission, update, file access 결정을 이 패�
 Breadcrumb는 page-location trail, link, separator, current-page aria 구조만 제공하며 라우팅, SEO, 인증, 결제, 권한 판단은 소비 앱이 계속 소유한다.
 Button과 IconButton은 native button 위의 control 표면이며 `onclick`, `ariaLabel`, `ariaControls`, `ariaExpanded`, `ariaPressed`, `ariaDescribedBy`, `ariaKeyShortcuts` 같은 액션 연결 props를 전달한다. 저장, 삭제, 권한, 결제 판단은 소비 앱이 계속 소유한다.
 
+Primary·secondary·danger Button과 solid IconButton은 채워진 또는 tonal surface로 우선순위를 구분하고, ghost IconButton은 hover/active에서만 surface를 드러낸다. 기본 상태의 시각적 border는 사용하지 않지만 크기 안정성을 위한 투명 border slot과 keyboard focus outline, Windows forced-colors의 system border는 유지한다.
+
 `Button variant="text"`와 framework-neutral `.zdp-button--text`는 콘텐츠·마케팅 화면의 경계 없는 텍스트 액션에 사용한다. 기본·hover·focus 상태는 배경 상자 대신 하단 선으로 구분하고, hover와 focus에서는 밝고 어두운 표면 모두에서 선 두께가 분명히 바뀌어야 하며, 최소 hit target은 그대로 유지한다. 실제 페이지 이동은 `<a class="zdp-button zdp-button--text zdp-button--md">`처럼 링크 의미를 유지하며, 폼 제출이나 상태 변경은 Svelte Button을 사용한다. 이 variant를 모든 버튼의 기본값으로 바꾸거나 파괴적·결제 확인 작업에 사용하지 않는다.
 ConfirmAction은 중요한 액션을 밀기 또는 길게 누르기로 확인하는 표면이며 `onconfirm` 콜백만 전달한다. 결제, 삭제, 권한, 환불 판단과 서버 요청은 소비 앱이 계속 소유한다.
 Avatar와 IdentityChip은 사람, 팀, 조직의 visual identity, 이니셜, 이름, 보조 텍스트, 선택적 링크 표면만 제공하며 실제 계정 식별, 프로필 라우팅, 온라인 상태, 권한, 초대 가능 여부 판단은 소비 앱이 계속 소유한다.
@@ -399,6 +401,8 @@ ShareDock은 공유 도크의 위치, 아이콘, tooltip, focus-visible 표면�
 ThemeToggle은 light/dark 전환 버튼의 pressed 상태, glyph, 접근성 이름, focus-visible 표면만 제공하며 초기 테마 결정, storage key, system preference, SSR/초기 paint 처리는 소비 앱이 계속 소유한다.
 
 LocaleSwitcher는 locale 선택을 위한 radiogroup, 선택 상태, focus-visible, keyboard 이동 표면만 제공한다. 실제 message catalog 로딩, URL routing, fallback locale, root `lang`, storage key, 사용자 preference 저장은 소비 앱이 계속 소유한다.
+
+LocaleSwitcher와 SegmentedControl은 visible outer border 대신 raised group surface를 사용하고, 선택 항목은 filled accent surface로 구분한다. 소비 앱은 별도 테두리를 중첩하지 않으며 forced-colors에서는 디자인 시스템이 제공하는 system border와 Highlight 선택 상태를 유지한다.
 
 TextScaleControl은 글자 크기 선택을 위한 radiogroup, 선택 상태, focus-visible, keyboard 이동 표면만 제공한다. 실제 document root 배율, media query, storage key, locale별 글자 크기 보정, 사용자 preference 저장은 소비 앱이 계속 소유한다.
 

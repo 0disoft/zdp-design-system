@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.55.0
+
+- Reworked primary, secondary, danger, and icon buttons around filled or tonal surfaces instead of visible resting borders while preserving transparent layout slots, focus outlines, and forced-colors system borders.
+- Replaced LocaleSwitcher and SegmentedControl frames with raised group surfaces and filled selected items, retaining radiogroup semantics, keyboard navigation, disabled states, and forced-colors selection cues.
+- Removed decorative borders from panel and raised Surface/Card tones and Storybook theme frames, preserved the explicit Card outline tone, and moved Card hover feedback to a soft surface color.
+
 ## 0.54.3
 
 - Promoted TermTrigger's soft accent background to its default state for persistent discoverability and changed hover feedback to a stronger ink color without font-weight layout shift.

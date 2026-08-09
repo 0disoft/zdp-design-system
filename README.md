@@ -110,7 +110,7 @@ import 'zdp-design-system/expressive-fonts.css';
 
 패키지 export는 `dist/` 산출물을 가리킨다. root runtime entry는 `dist/index.js`, type entry는 `dist/index.d.ts`이며 호환용이다. 새 Svelte 코드는 `zdp-design-system/components/ComponentName`과 `zdp-design-system/tokens.css`를 기본으로 쓴다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `bun run package:build`가 소비자용 `dist/` 표면을 다시 만든다. 소비 저장소와 문서 예시는 `zdp-design-system` public export만 쓰고 내부 `src/` 경로를 직접 import하지 않는다.
 
-ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.54.3`을 기본으로 쓴다.
+ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.55.0`을 기본으로 쓴다.
 
 ### Brand fallback assets
 
@@ -143,7 +143,7 @@ import flagshipKeyArt from 'zdp-design-system/assets/credits/credit-pack-keyart-
 
 - Breadcrumb는 현재 위치 탐색을 `nav`로 표현하고, 제품 라우팅 판단은 소비 앱이 한다.
 - Button과 IconButton은 `onclick` 실행 표면이며 권한, 저장, 네트워크 재시도 판단을 소유하지 않는다.
-- Card와 CardHeader는 비상호작용 콘텐츠 컨테이너다. `hover`는 테두리 강조만 제공하며 클릭 가능성, 손가락 커서, 키보드 focus를 암시하지 않는다. 전체 카드 이동이나 실행은 내부 Link 또는 Button으로 명시한다.
+- Card와 CardHeader는 비상호작용 콘텐츠 컨테이너다. panel/raised tone은 색상 단계로 깊이를 만들고, `outline`만 명시적 테두리를 사용한다. `hover`는 부드러운 표면색 변화만 제공하며 클릭 가능성, 손가락 커서, 키보드 focus를 암시하지 않는다. 전체 카드 이동이나 실행은 내부 Link 또는 Button으로 명시한다.
 - 단축키 표기는 `ariaKeyShortcuts`와 실제 keydown 처리를 분리한다. Chrome과 브라우저가 기본 동작으로 가져가는 조합은 제품 단축키로 덮어쓰지 않는다. 소비 앱의 전역 단축키 dispatcher는 `shouldZdpIgnoreShortcutEvent`, `isZdpTextEntryTarget`, `isZdpBrowserReservedShortcut`, `zdpShortcutRecommendations` 같은 shortcut policy helper로 입력창, IME 조합, 브라우저 예약 조합을 먼저 걸러낸다.
 - ConfirmAction은 중요한 액션 앞의 확인 흐름만 제공하고, 실제 삭제나 권한 검사는 소비 앱이 한다.
 - Avatar와 IdentityChip은 사람, 팀, 계정의 짧은 식별 표면이다.
@@ -594,7 +594,7 @@ preview/index.html
 
 ## Flat UI 계약
 
-그림자, 그라데이션, 반짝임, 이동형 hover 장식을 쓰지 않는다. 깊이는 `surface` 색상 단계, 1px framed border, 타이포그래피, 여백으로 만든다.
+그림자, 그라데이션, 반짝임, 이동형 hover 장식을 쓰지 않는다. 깊이는 우선 `surface` 색상 단계, 타이포그래피, 여백으로 만들고, 1px 선은 입력 경계·표 구조·모달 경계·명시적 outline처럼 관계를 설명할 때만 사용한다.
 
 **Shadow / Gradient**
 - `shadow.focus`, `shadow.sm`, `shadow.md`는 `none`이다.
@@ -602,7 +602,7 @@ preview/index.html
 
 **Hover / Active**
 - 버튼 hover/active는 배경색, 테두리색, 글자색만 바꾼다. 위치 이동·빛 반사 없음.
-- Secondary Button과 ghost IconButton의 resting border는 `line-subtle`, hover/active는 `line-strong`.
+- Secondary Button은 raised tonal surface, ghost IconButton은 투명 surface를 기본으로 사용하며 hover/active는 인접 surface 단계로 구분한다. 시각적 resting border는 사용하지 않되 레이아웃 보존용 투명 border slot은 유지한다.
 - Focus는 `focus.surface` outline + `focus.line` border로 표시한다.
 
 **Radius**

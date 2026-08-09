@@ -81,4 +81,14 @@ The issue reference showed that the soft accent background only appeared on hove
 
 No actionable P0, P1, or P2 mismatch remains. The isolated Storybook page emitted no console error or warning during this check.
 
+## Surface-first control and container correction
+
+- Issue references: `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-02f41d69-ceb4-4b0a-afe8-c698eb94d639.png`, `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-b1d24149-994b-48f1-9679-802bdd134b4f.png`, `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-4ec2f804-7844-4662-b62f-31a0189d74c5.png`
+- Button screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-surface-first-buttons-qa-20260809.png`
+- Selection screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-surface-first-selection-qa-20260809.png`
+
+The references identified visual stiffness from repeating borders around controls, groups, containers, and Storybook frames. The revised controls use filled or tonal surfaces for hierarchy: primary and danger actions are filled, secondary actions use a raised surface, ghost icon actions reveal a surface on interaction, and text actions retain their underline contract. LocaleSwitcher and SegmentedControl now use raised group surfaces with filled selected items. Panel and raised Surface/Card tones no longer draw decorative borders; explicit Card outline, inputs, tables, modal boundaries, focus outlines, and forced-colors system borders remain structural exceptions.
+
+Computed browser styles confirmed transparent resting border slots for Button, LocaleSwitcher, SegmentedControl, and Storybook theme panels in both themes. The full package verification passed component/static parity, 13 Storybook runtime accessibility stories, SSR hydration, Svelte diagnostics, release checks, and packed consumer browser fixtures. No actionable P0, P1, or P2 mismatch remains.
+
 final result: passed
