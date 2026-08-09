@@ -20,10 +20,10 @@ export interface ZdpCreditAsset {
 
 export const zdpCreditAssets = Object.freeze({
   lemon: Object.freeze([
-    createCreditAsset('zdp-credit-lemon-simple-mono', 'credit-lemon-simple-mono.svg', 'credit-mark', null, ['light'], ['balance', 'credit-amount', 'monochrome'], 16, '6ca3af258f5e51ecd0c822d47d0128b1e8ae3ee8017df5332d01088572370c9f'),
-    createCreditAsset('zdp-credit-lemon-simple-inverse', 'credit-lemon-simple-inverse.svg', 'credit-mark', null, ['dark'], ['balance', 'credit-amount', 'inverse'], 16, '994c7e95530580734dc7f5cd3143cd54b19c7b806430b5e35a1048e7949df707'),
-    createCreditAsset('zdp-credit-lemon-simple-current-color', 'credit-lemon-simple-current-color.svg', 'credit-mark', null, ['light', 'dark'], ['balance', 'credit-amount', 'inline-current-color'], 16, '5e01ef81d542f9600a15b52b10726a6e9b60fa7bb79a4cf9819f4afa1ec56728'),
-    createCreditAsset('zdp-credit-lemon-simple-color', 'credit-lemon-simple-color.svg', 'credit-mark', null, ['light'], ['wallet', 'credit-policy', 'display-color'], 24, 'e84ed5363efe5f39e3184d76df4132967e3a4e2feecd828c5cb40caa838e7ad4')
+    createCreditAsset('zdp-credit-lemon-simple-mono', 'credit-lemon-simple-mono.svg', 'credit-mark', null, ['light'], ['balance', 'credit-amount', 'monochrome'], 16, '93352fc720631e5cfcc0786e243b8f7fd277babe39f3e455f7aa82ffafb6d69a'),
+    createCreditAsset('zdp-credit-lemon-simple-inverse', 'credit-lemon-simple-inverse.svg', 'credit-mark', null, ['dark'], ['balance', 'credit-amount', 'inverse'], 16, 'c318dc42fc30805b9c9582f6a60a4b77f688411a84de3c88dd2be14117e1ed50'),
+    createCreditAsset('zdp-credit-lemon-simple-current-color', 'credit-lemon-simple-current-color.svg', 'credit-mark', null, ['light', 'dark'], ['balance', 'credit-amount', 'inline-current-color'], 16, 'ffe9089029544d5ce0a82d231873e517e4d4199cff3a178b0f66ad3b7aad2f65'),
+    createCreditAsset('zdp-credit-lemon-simple-color', 'credit-lemon-simple-color.svg', 'credit-mark', null, ['light'], ['wallet', 'credit-policy', 'display-color'], 24, '1d63a79c17a0659728da3b6782c1dbb59c582f724f78014b2bb75ecb23875ea5')
   ]),
   packs: Object.freeze([
     createCreditAsset('zdp-credit-pack-dinghy', 'credit-pack-dinghy.svg', 'credit-pack-glyph', 'dinghy', ['light', 'dark'], ['credit-pack', 'compact-glyph', 'inline-current-color'], 24, '271626fc5d89155de9f10015d7eb595d5657fa44963698a532a63b1363cf4796'),

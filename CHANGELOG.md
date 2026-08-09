@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.53.1
+
+- Replaced the round orange credit-mark artwork with a pointed lemon silhouette and yellow display color while preserving the four SVG variants, three-path geometry contract, package paths, and accounting boundaries.
+
 ## 0.53.0
 
 - Renamed the user-facing credit mark contract to Lemon/레몬, including manifest keys, asset IDs, SVG filenames, package exports, documentation, checks, and Storybook review surfaces; internal `credits` and `credit_unit` accounting contracts remain unchanged.

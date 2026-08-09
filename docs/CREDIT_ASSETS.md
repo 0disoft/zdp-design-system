@@ -1,6 +1,6 @@
 # Credit asset contract
 
-`zdp-design-system` 0.53.0부터 ZDP 공용 크레딧인 레몬과 크레딧 팩 함선의 현재 시각 자산 계약을 제공한다. 이 계약은 아이콘의 형태와 사용 규칙만 소유한다. 가격, 지급량, 보너스, 유효기간, 소진 순서, 환불, pack availability는 Money와 Architecture 계약이 소유한다.
+`zdp-design-system` 0.53.1부터 ZDP 공용 크레딧인 레몬과 크레딧 팩 함선의 현재 시각 자산 계약을 제공한다. 이 계약은 아이콘의 형태와 사용 규칙만 소유한다. 가격, 지급량, 보너스, 유효기간, 소진 순서, 환불, pack availability는 Money와 Architecture 계약이 소유한다.
 
 ## Public surface
 
@@ -28,7 +28,7 @@ import sloop from 'zdp-design-system/assets/credits/credit-pack-sloop.svg';
 | Current color | `credit-lemon-simple-current-color.svg` | 16 CSS px | inline SVG inheriting consumer color |
 | Display color | `credit-lemon-simple-color.svg` | 24 CSS px | wallet and credit-policy display |
 
-모든 레몬은 원형 과실, 잎, 꼭지의 정확히 세 path로 구성한다. `currentColor` 파일은 inline SVG용이다. 외부 `<img>`는 소비처 CSS의 `color`를 상속하지 않는다.
+모든 레몬은 양끝이 살짝 뾰족한 타원형 과실, 잎, 꼭지의 정확히 세 path로 구성한다. `currentColor` 파일은 inline SVG용이다. 외부 `<img>`는 소비처 CSS의 `color`를 상속하지 않는다.
 
 구매 레몬, 보너스 레몬, 무료 레몬, 보상 레몬의 회계 속성을 레몬 색깔만으로 표현하지 않는다. 동일한 레몬 심볼 옆에 localized text 또는 Badge로 종류를 명시한다. 색은 보조 단서일 뿐 정책 식별자가 아니다.
 
