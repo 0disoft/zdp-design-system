@@ -39,7 +39,7 @@
 <style>
   .zdp-button {
     align-items: center;
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
+    border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     cursor: pointer;
     display: inline-flex;
@@ -74,18 +74,18 @@
 
   .zdp-button--primary {
     background: var(--zdp-color-accent-primary);
-    border-color: var(--zdp-color-accent-primary-strong);
+    border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-button--primary:hover:not(:disabled) {
     background: var(--zdp-color-accent-primary-strong);
-    border-color: var(--zdp-color-accent-primary-strong);
+    border-color: transparent;
   }
 
   .zdp-button--primary:active:not(:disabled) {
     background: var(--zdp-color-accent-primary-strong);
-    border-color: var(--zdp-color-accent-primary-strong);
+    border-color: transparent;
   }
 
   :global([data-zdp-theme="dark"]) .zdp-button--primary {
@@ -93,59 +93,59 @@
   }
 
   .zdp-button--secondary {
-    background: var(--zdp-color-surface-panel);
-    border-color: var(--zdp-color-line-subtle);
+    background: var(--zdp-color-surface-raised);
+    border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-button--secondary:hover:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    background: var(--zdp-color-surface-panel);
+    border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-button--secondary:active:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    background: var(--zdp-color-surface-panel);
+    border-color: transparent;
   }
 
   :global([data-zdp-theme="dark"]) .zdp-button--secondary {
-    background: var(--zdp-color-surface-panel);
-    border-color: var(--zdp-color-line-subtle);
+    background: var(--zdp-color-surface-raised);
+    border-color: transparent;
     color: var(--zdp-color-ink-muted);
   }
 
   :global([data-zdp-theme="dark"]) .zdp-button--secondary:hover:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    background: var(--zdp-color-surface-panel);
+    border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-button--danger {
-    background: var(--zdp-color-surface-panel);
-    border-color: var(--zdp-color-accent-danger);
-    color: var(--zdp-color-accent-danger);
+    background: var(--zdp-color-accent-danger);
+    border-color: transparent;
+    color: var(--zdp-color-ink-inverse);
   }
 
   :global([data-zdp-theme="dark"]) .zdp-button--danger {
-    background: transparent;
-    border-color: var(--zdp-color-accent-danger);
-    color: var(--zdp-color-accent-danger);
+    background: var(--zdp-color-accent-danger);
+    border-color: transparent;
+    color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-button--danger:hover:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-surface-panel);
   }
 
   :global([data-zdp-theme="dark"]) .zdp-button--danger:hover:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-accent-danger);
+    background: var(--zdp-color-surface-panel);
+    border-color: transparent;
     color: var(--zdp-color-accent-danger);
   }
 
   .zdp-button--danger:active:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-accent-danger);
+    background: var(--zdp-color-surface-panel);
+    border-color: transparent;
     color: var(--zdp-color-accent-danger);
   }
 
@@ -204,6 +204,16 @@
   .zdp-button:disabled {
     cursor: not-allowed;
     opacity: 0.56;
+  }
+
+  @media (forced-colors: active) {
+    .zdp-button:not(.zdp-button--text) {
+      border-color: ButtonText;
+    }
+
+    .zdp-button--text::after {
+      background: ButtonText;
+    }
   }
 
 </style>

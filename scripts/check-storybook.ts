@@ -896,6 +896,25 @@ for (const requiredText of [
   }
 }
 
+const secondaryButtonBlock = button.slice(
+  button.indexOf('.zdp-button--secondary {'),
+  button.indexOf('.zdp-button--secondary:hover')
+);
+const dangerButtonBlock = button.slice(
+  button.indexOf('.zdp-button--danger {'),
+  button.indexOf('.zdp-button--danger:hover')
+);
+
+if (!secondaryButtonBlock.includes('background: var(--zdp-color-surface-raised)')) {
+  failures.push('Button secondary variant must keep a visible tonal surface without relying on a border.');
+}
+
+for (const requiredText of ['background: var(--zdp-color-accent-danger)', 'color: var(--zdp-color-ink-inverse)']) {
+  if (!dangerButtonBlock.includes(requiredText)) {
+    failures.push(`Button danger variant must keep a contrast-safe filled surface: ${requiredText}.`);
+  }
+}
+
 for (const requiredText of [
   '../src/lib/components/Badge.svelte',
   '../src/lib/components/Button.svelte',
@@ -2931,8 +2950,8 @@ for (const requiredText of [
   'onclick={onclick ?? undefined}',
   'font-family: var(--zdp-font-family-sans)',
   'font-weight: var(--zdp-font-weight-medium)',
-  'border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong)',
-  'border-color: var(--zdp-color-line-subtle)',
+  'border: var(--zdp-control-border-width) solid transparent',
+  'border-color: transparent',
   'background: var(--zdp-color-accent-primary)',
   '.zdp-button--primary:hover:not(:disabled)',
   '.zdp-button--secondary:hover:not(:disabled)',
@@ -2944,7 +2963,9 @@ for (const requiredText of [
   'background: var(--zdp-color-surface-raised)',
   '.zdp-button--primary:active:not(:disabled)',
   'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
-  'border-color: var(--zdp-color-focus-line)'
+  'border-color: var(--zdp-color-focus-line)',
+  '.zdp-button:not(.zdp-button--text)',
+  'border-color: ButtonText'
 ]) {
   if (!button.includes(requiredText)) {
     failures.push(`Button component is missing ${requiredText}.`);
@@ -2958,6 +2979,18 @@ const textButtonHoverBlock = button.slice(
 
 if (!textButtonHoverBlock.includes('min-block-size: var(--zdp-control-focus-underline-width)')) {
   failures.push('Button text variant hover must strengthen the underline in light and dark themes.');
+}
+
+const flatButtonBlock = button.slice(button.indexOf('.zdp-button {'), button.indexOf('.zdp-button:focus-visible'));
+
+for (const forbiddenText of [
+  'border-color: var(--zdp-color-line-',
+  'border-color: var(--zdp-color-accent-primary-strong)',
+  'border-color: var(--zdp-color-accent-danger)'
+]) {
+  if (flatButtonBlock.includes(forbiddenText)) {
+    failures.push(`Button visual variants must not restore visible borders: ${forbiddenText}.`);
+  }
 }
 
 for (const requiredText of [
@@ -3376,12 +3409,15 @@ for (const requiredText of [
   '.zdp-icon-button--solid:active:not(:disabled)',
   '.zdp-icon-button--solid:hover:not(:disabled)',
   '.zdp-icon-button--ghost:hover:not(:disabled)',
-  'border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong)',
-  'border-color: var(--zdp-color-line-subtle)',
+  'border: var(--zdp-control-border-width) solid transparent',
+  'border-color: transparent',
+  'background: transparent',
   'font-family: var(--zdp-font-family-sans)',
   'font-weight: var(--zdp-font-weight-regular)',
   'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
   'border-color: var(--zdp-color-focus-line)',
+  '@media (forced-colors: active)',
+  'border-color: ButtonText',
   'zdp-icon zdp-icon--${size} zdp-icon-button__glyph',
   'font-size: var(--zdp-control-glyph-md)',
   'text-align: center',
@@ -3391,6 +3427,20 @@ for (const requiredText of [
 ]) {
   if (!iconButton.includes(requiredText)) {
     failures.push(`IconButton component is missing centered glyph style ${requiredText}.`);
+  }
+}
+
+const flatIconButtonBlock = iconButton.slice(
+  iconButton.indexOf('.zdp-icon-button {'),
+  iconButton.indexOf('.zdp-icon-button:focus-visible')
+);
+
+for (const forbiddenText of [
+  'border-color: var(--zdp-color-line-',
+  'border-color: var(--zdp-color-accent-primary-strong)'
+]) {
+  if (flatIconButtonBlock.includes(forbiddenText)) {
+    failures.push(`IconButton visual variants must not restore visible borders: ${forbiddenText}.`);
   }
 }
 

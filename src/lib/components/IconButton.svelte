@@ -42,7 +42,7 @@
 <style>
   .zdp-icon-button {
     align-items: center;
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
+    border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     cursor: pointer;
     display: inline-flex;
@@ -68,49 +68,49 @@
   }
 
   .zdp-icon-button--ghost {
-    background: var(--zdp-color-surface-panel);
-    border-color: var(--zdp-color-line-subtle);
+    background: transparent;
+    border-color: transparent;
     color: var(--zdp-color-ink-normal);
   }
 
   .zdp-icon-button--ghost:hover:not(:disabled) {
     background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
   :global([data-zdp-theme="dark"]) .zdp-icon-button--ghost {
-    background: var(--zdp-color-surface-panel);
-    border-color: var(--zdp-color-line-subtle);
+    background: transparent;
+    border-color: transparent;
     color: var(--zdp-color-ink-muted);
   }
 
   :global([data-zdp-theme="dark"]) .zdp-icon-button--ghost:hover:not(:disabled) {
     background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-icon-button--ghost:active:not(:disabled) {
     background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-icon-button--solid {
     background: var(--zdp-color-accent-primary);
-    border-color: var(--zdp-color-accent-primary-strong);
+    border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-icon-button--solid:hover:not(:disabled) {
     background: var(--zdp-color-accent-primary-strong);
-    border-color: var(--zdp-color-accent-primary-strong);
+    border-color: transparent;
   }
 
   .zdp-icon-button--solid:active:not(:disabled) {
     background: var(--zdp-color-accent-primary-strong);
-    border-color: var(--zdp-color-accent-primary-strong);
+    border-color: transparent;
   }
 
   :global([data-zdp-theme="dark"]) .zdp-icon-button--solid {
@@ -126,6 +126,12 @@
   .zdp-icon-button:disabled {
     cursor: not-allowed;
     opacity: 0.56;
+  }
+
+  @media (forced-colors: active) {
+    .zdp-icon-button {
+      border-color: ButtonText;
+    }
   }
 
   .zdp-icon,

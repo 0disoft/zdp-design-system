@@ -1095,6 +1095,67 @@ if (staticTermTriggerBlock.includes('background: transparent')) {
   failures.push('Static TermTrigger must keep its soft accent background in the default state.');
 }
 
+const staticBorderlessControlBlocks: Array<readonly [string, string]> = [
+  [
+    'Button',
+    componentStyle.slice(componentStyle.indexOf('.zdp-button {'), componentStyle.indexOf('.zdp-button:focus-visible'))
+  ],
+  [
+    'IconButton',
+    componentStyle.slice(
+      componentStyle.indexOf('.zdp-icon-button {'),
+      componentStyle.indexOf('.zdp-icon-button:focus-visible')
+    )
+  ]
+];
+
+for (const [label, block] of staticBorderlessControlBlocks) {
+  if (!block.includes('border: var(--zdp-control-border-width) solid transparent')) {
+    failures.push(`Static ${label} must preserve border geometry without a visible default border.`);
+  }
+
+  for (const forbiddenText of [
+    'border-color: var(--zdp-color-line-',
+    'border-color: var(--zdp-color-accent-primary-strong)',
+    'border-color: var(--zdp-color-accent-danger)'
+  ]) {
+    if (block.includes(forbiddenText)) {
+      failures.push(`Static ${label} visual variants must not restore visible borders: ${forbiddenText}.`);
+    }
+  }
+}
+
+const staticSecondaryButtonBlock = componentStyle.slice(
+  componentStyle.indexOf('.zdp-button--secondary {'),
+  componentStyle.indexOf('.zdp-button--secondary:hover')
+);
+const staticDangerButtonBlock = componentStyle.slice(
+  componentStyle.indexOf('.zdp-button--danger {'),
+  componentStyle.indexOf('.zdp-button--danger:hover')
+);
+
+if (!staticSecondaryButtonBlock.includes('background: var(--zdp-color-surface-raised)')) {
+  failures.push('Static Button secondary variant must keep a visible tonal surface without relying on a border.');
+}
+
+for (const requiredText of ['background: var(--zdp-color-accent-danger)', 'color: var(--zdp-color-ink-inverse)']) {
+  if (!staticDangerButtonBlock.includes(requiredText)) {
+    failures.push(`Static Button danger variant must keep a contrast-safe filled surface: ${requiredText}.`);
+  }
+}
+
+for (const requiredText of [
+  '.zdp-button:not(.zdp-button--text)',
+  '.zdp-icon-button',
+  'border-color: ButtonText',
+  '.zdp-button--text::after',
+  'background: ButtonText'
+]) {
+  if (!componentStyle.includes(requiredText)) {
+    failures.push(`Forced-colors borderless control fallback is missing ${requiredText}.`);
+  }
+}
+
 for (const forbiddenText of [
   'selectstart',
   'user-select: none !important',
