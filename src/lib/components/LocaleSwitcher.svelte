@@ -146,8 +146,8 @@
 <style>
   .zdp-locale-switcher {
     align-items: center;
-    background: var(--zdp-color-surface-panel);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+    background: var(--zdp-color-surface-raised);
+    border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-normal);
@@ -197,8 +197,8 @@
   }
 
   .zdp-locale-switcher__item:hover:not(:disabled):not([aria-checked='true']) {
-    background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    background: var(--zdp-color-surface-panel);
+    border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
@@ -210,9 +210,14 @@
 
   .zdp-locale-switcher__item--selected,
   .zdp-locale-switcher__item[aria-checked='true'] {
-    background: var(--zdp-color-accent-primary-soft);
-    border-color: var(--zdp-color-accent-primary-strong);
+    background: var(--zdp-color-accent-primary);
+    border-color: transparent;
     color: var(--zdp-color-ink-strong);
+  }
+
+  :global([data-zdp-theme="dark"]) .zdp-locale-switcher__item--selected,
+  :global([data-zdp-theme="dark"]) .zdp-locale-switcher__item[aria-checked='true'] {
+    color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-locale-switcher__item:disabled {
@@ -224,5 +229,19 @@
     display: inline-block;
     line-height: 1;
     white-space: nowrap;
+  }
+
+  @media (forced-colors: active) {
+    .zdp-locale-switcher {
+      border-color: ButtonText;
+    }
+
+    .zdp-locale-switcher__item--selected,
+    .zdp-locale-switcher__item[aria-checked='true'] {
+      background: Highlight;
+      border-color: Highlight;
+      color: HighlightText;
+      forced-color-adjust: none;
+    }
   }
 </style>

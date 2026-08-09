@@ -1462,6 +1462,16 @@ for (const requiredText of [
   'data-zdp-locale-option-value={option.value}',
   'class={`zdp-locale-switcher zdp-locale-switcher--${size}`}',
   '.zdp-locale-switcher',
+  'background: var(--zdp-color-surface-raised)',
+  'border: var(--zdp-control-border-width) solid transparent',
+  '.zdp-locale-switcher__item:hover:not(:disabled):not([aria-checked=',
+  'background: var(--zdp-color-surface-panel)',
+  'border-color: transparent',
+  'background: var(--zdp-color-accent-primary)',
+  ':global([data-zdp-theme="dark"]) .zdp-locale-switcher__item--selected',
+  'color: var(--zdp-color-ink-inverse)',
+  '@media (forced-colors: active)',
+  'border-color: ButtonText',
   '.zdp-locale-switcher__item:focus-visible',
   '.zdp-locale-switcher__label',
   'user-select: none'
@@ -2301,6 +2311,16 @@ for (const requiredText of [
   'disabled={item.disabled}',
   'onclick={(event) => selectItem(event, item)}',
   '.zdp-segmented-control',
+  'background: var(--zdp-color-surface-raised)',
+  'border: var(--zdp-control-border-width) solid transparent',
+  '.zdp-segmented-control__item:hover:not(:disabled):not([aria-checked=',
+  'background: var(--zdp-color-surface-panel)',
+  'border-color: transparent',
+  'background: var(--zdp-color-accent-primary)',
+  ':global([data-zdp-theme="dark"]) .zdp-segmented-control__item--selected',
+  'color: var(--zdp-color-ink-inverse)',
+  '@media (forced-colors: active)',
+  'border-color: ButtonText',
   '.zdp-segmented-control__item',
   '.zdp-segmented-control--sm .zdp-segmented-control__item',
   '.zdp-segmented-control--md .zdp-segmented-control__item',
@@ -2315,6 +2335,20 @@ for (const requiredText of [
 
 assertNoDecorativeEffects(failures, 'SegmentedControl component', segmentedControl);
 assertNoOverRoundedUsage(failures, 'SegmentedControl component', segmentedControl);
+
+for (const [label, source] of [
+  ['LocaleSwitcher', localeSwitcher],
+  ['SegmentedControl', segmentedControl]
+] satisfies Array<readonly [string, string]>) {
+  for (const forbiddenText of [
+    'border-color: var(--zdp-color-line-strong)',
+    'border-color: var(--zdp-color-accent-primary-strong)'
+  ]) {
+    if (source.includes(forbiddenText)) {
+      failures.push(`${label} must express hover and selection with surfaces instead of visible borders: ${forbiddenText}.`);
+    }
+  }
+}
 
 for (const requiredText of [
   "placement = 'bottom'",

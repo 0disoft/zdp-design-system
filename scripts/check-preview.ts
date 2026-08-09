@@ -1144,9 +1144,53 @@ for (const requiredText of ['background: var(--zdp-color-accent-danger)', 'color
   }
 }
 
+for (const [label, selector] of [
+  ['LocaleSwitcher', '.zdp-locale-switcher'],
+  ['SegmentedControl', '.zdp-segmented-control']
+] satisfies Array<readonly [string, string]>) {
+  const rootBlock = componentStyle.slice(
+    componentStyle.indexOf(`${selector} {`),
+    componentStyle.indexOf(`${selector}__item {`)
+  );
+  const interactionBlock = componentStyle.slice(
+    componentStyle.indexOf(`${selector}__item:hover`),
+    componentStyle.indexOf(`${selector}__item:disabled`)
+  );
+
+  for (const requiredText of [
+    'background: var(--zdp-color-surface-raised)',
+    'border: var(--zdp-control-border-width) solid transparent'
+  ]) {
+    if (!rootBlock.includes(requiredText)) {
+      failures.push(`Static ${label} surface-first root is missing ${requiredText}.`);
+    }
+  }
+
+  for (const requiredText of [
+    'background: var(--zdp-color-surface-panel)',
+    'background: var(--zdp-color-accent-primary)',
+    'border-color: transparent'
+  ]) {
+    if (!interactionBlock.includes(requiredText)) {
+      failures.push(`Static ${label} surface state is missing ${requiredText}.`);
+    }
+  }
+
+  for (const forbiddenText of [
+    'border-color: var(--zdp-color-line-strong)',
+    'border-color: var(--zdp-color-accent-primary-strong)'
+  ]) {
+    if (interactionBlock.includes(forbiddenText)) {
+      failures.push(`Static ${label} must not use visible borders for hover or selection: ${forbiddenText}.`);
+    }
+  }
+}
+
 for (const requiredText of [
   '.zdp-button:not(.zdp-button--text)',
   '.zdp-icon-button',
+  '.zdp-locale-switcher',
+  '.zdp-segmented-control',
   'border-color: ButtonText',
   '.zdp-button--text::after',
   'background: ButtonText'
