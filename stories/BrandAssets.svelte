@@ -5,7 +5,9 @@
 
   const assets = {
     og: new URL('../src/lib/assets/brand/og-background-1200x630.jpg', import.meta.url).href,
-    square: new URL('../src/lib/assets/brand/brand-square-256.webp', import.meta.url).href,
+    square256: new URL('../src/lib/assets/brand/brand-square-256.webp', import.meta.url).href,
+    square512: new URL('../src/lib/assets/brand/brand-square-512.webp', import.meta.url).href,
+    square1024: new URL('../src/lib/assets/brand/brand-square-1024.webp', import.meta.url).href,
     editorial: new URL('../src/lib/assets/brand/editorial-720x540.webp', import.meta.url).href,
     landscape: new URL('../src/lib/assets/brand/landscape-960x540.webp', import.meta.url).href,
     shipMark: new URL('../src/lib/assets/brand/ship-mark.svg', import.meta.url).href,
@@ -30,8 +32,15 @@
         <figcaption>Open Graph · 1200 × 630</figcaption>
       </figure>
       <figure class="asset-frame asset-frame--square">
-        <img src={assets.square} alt="" width="256" height="256" />
-        <figcaption>Square · 256 × 256</figcaption>
+        <img
+          src={assets.square512}
+          srcset={`${assets.square256} 256w, ${assets.square512} 512w, ${assets.square1024} 1024w`}
+          sizes="(max-width: 50rem) calc(100vw - 4rem), 27rem"
+          alt=""
+          width="1024"
+          height="1024"
+        />
+        <figcaption>Square · responsive 256 / 512 / 1024</figcaption>
       </figure>
       <figure class="asset-frame asset-frame--landscape">
         <img src={assets.landscape} alt="" width="960" height="540" />

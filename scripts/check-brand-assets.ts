@@ -28,6 +28,7 @@ const expectedSimpleShipPaths = [
 await checkOutputs();
 await checkForbiddenAsset();
 await checkPackageExclusions();
+await checkResponsiveStoryUsage();
 
 if (failures.length > 0) {
   throw new Error(`Brand asset check failed:\n- ${failures.join('\n- ')}`);
@@ -110,6 +111,18 @@ async function checkPackageExclusions(): Promise<void> {
     }
   } catch {
     // package:build owns dist creation; absence is valid for the source-only check.
+  }
+}
+
+async function checkResponsiveStoryUsage(): Promise<void> {
+  const story = await readFile(resolve(repoRoot, 'stories/BrandAssets.svelte'), 'utf8');
+  for (const size of [256, 512, 1024]) {
+    if (!story.includes(`brand-square-${size}.webp`)) {
+      failures.push(`BrandAssets story must include the ${size}px square fallback derivative.`);
+    }
+  }
+  if (!story.includes('srcset=') || !story.includes('sizes=')) {
+    failures.push('BrandAssets story must use responsive srcset and sizes for the variable-width square preview.');
   }
 }
 

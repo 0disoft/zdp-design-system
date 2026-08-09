@@ -120,4 +120,13 @@ The previous compact pack family scaled tier value by stacking rectangular sails
 
 Browser inspection at both rendered sizes confirmed that each tier remains distinguishable without the block-stack effect. No actionable P0, P1, or P2 mismatch remains.
 
+## Responsive square fallback correction
+
+- Issue references: `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-0454ded3-81a4-4709-bfa6-29d051298564.png`, `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-e9c47d9e-7d0b-49cf-a59c-6b91ef1ef90d.png`, `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-beaaed3d-68ca-4319-83e0-91e45c130cce.png`
+- Corrected Storybook screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-brand-square-responsive-qa-20260809.png`
+
+The 256px derivative was valid at its intended intrinsic size, but the Storybook card stretched it to roughly 450 CSS px and made it look materially softer than neighboring assets. The story now supplies the existing 256, 512 and 1024px derivatives as one responsive source set with a truthful `sizes` hint, leaving the browser to select enough source pixels for the rendered width and device pixel ratio. No raster bytes were re-encoded, so the approved source provenance and published asset hashes remain unchanged.
+
+Browser inspection confirmed that the square preview selects a higher-resolution derivative rather than upscaling the 256px file. No actionable P0, P1, or P2 mismatch remains.
+
 final result: passed

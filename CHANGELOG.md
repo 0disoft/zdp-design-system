@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.57.1
+
+- Stopped the Brand Assets story from stretching the 256px square fallback across a much wider card by wiring its 256, 512, and 1024px derivatives through responsive `srcset` and `sizes`.
+- Documented the square fallback density-selection contract so consumers do not upscale the smallest derivative on wide or high-DPR surfaces.
+
 ## 0.57.0
 
 - Redrew the seven compact credit-pack ships as a coherent curved silhouette family with clearer hull, sail, mast, stern, and pennant progression at 24 and 64 CSS px.

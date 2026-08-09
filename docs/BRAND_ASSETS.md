@@ -14,7 +14,22 @@ import { zdpBrandAssets } from 'zdp-design-system/brand-assets';
 
 ```ts
 import ogBackground from 'zdp-design-system/assets/brand/og-background-1200x630.jpg';
-import squareFallback from 'zdp-design-system/assets/brand/brand-square-512.webp';
+import squareFallback256 from 'zdp-design-system/assets/brand/brand-square-256.webp';
+import squareFallback512 from 'zdp-design-system/assets/brand/brand-square-512.webp';
+import squareFallback1024 from 'zdp-design-system/assets/brand/brand-square-1024.webp';
+```
+
+가변 폭 카드에서 한 파일을 확대하지 말고 브라우저가 실제 표시 폭과 DPR에 맞는 파생본을 고르게 한다.
+
+```svelte
+<img
+  src={squareFallback512}
+  srcset={`${squareFallback256} 256w, ${squareFallback512} 512w, ${squareFallback1024} 1024w`}
+  sizes="(max-width: 50rem) calc(100vw - 4rem), 27rem"
+  width="1024"
+  height="1024"
+  alt=""
+/>
 ```
 
 Astro에서는 같은 import가 `ImageMetadata`를 만든다. Astro의 `<Image>`에 그대로 전달하거나 native `<img>`를 쓸 때 `.src`, `.width`, `.height`를 명시한다.
@@ -51,6 +66,7 @@ Raster derivatives are encoded without retained source metadata. WebP and JPEG f
 - Use the declared `aspectRatio` before the image loads so failure and slow-network states do not collapse layout.
 - Default to `object-fit: contain`. Do not use `cover` for the editorial frame, landscape sailboat, square mark, or OG safe-area composition.
 - Select a width close to the rendered CSS width. Do not ship the 1600 or 1440 source to a 320 CSS px card.
+- `brand-square-256.webp`를 256 CSS px보다 크게 확대하지 않는다. 가변 폭 또는 high-DPR 표면은 256/512/1024 `srcset`과 정확한 `sizes`를 제공한다.
 - The OG background contains no text. The consumer owns title, logo lockup, locale, and social metadata composition inside the right safe area.
 - The square raster already contains the official ship mark. Do not overlay another mark.
 - 새 배치에서는 `ship-mark-simple-mono.svg`를 기본 심볼로 쓴다. 기존 `ship-mark.svg`는 이미 배포된 상세형 표면과 호환할 때만 유지한다.
