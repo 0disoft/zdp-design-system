@@ -2951,6 +2951,15 @@ for (const requiredText of [
   }
 }
 
+const textButtonHoverBlock = button.slice(
+  button.indexOf('.zdp-button--text:hover:not(:disabled)::after'),
+  button.indexOf('.zdp-button:focus-visible')
+);
+
+if (!textButtonHoverBlock.includes('min-block-size: var(--zdp-control-focus-underline-width)')) {
+  failures.push('Button text variant hover must strengthen the underline in light and dark themes.');
+}
+
 for (const requiredText of [
   '<Button variant="text">가격 보기</Button>',
   '<Button variant="text" disabled>가격 보기</Button>',

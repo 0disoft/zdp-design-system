@@ -206,6 +206,7 @@
 .zdp-button--text:hover:not(:disabled)::after,
 .zdp-button--text:active:not(:disabled)::after {
   background: var(--zdp-color-accent-primary-strong);
+  min-block-size: var(--zdp-control-focus-underline-width);
   transform: scaleX(1.08);
 }
 

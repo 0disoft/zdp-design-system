@@ -57,4 +57,16 @@ The issue reference showed the inline term with a rounded bottom border that res
 
 No actionable P0, P1, or P2 mismatch remains. The only console warning is Storybook's manager-owned future `PopoverProvider ariaLabel` deprecation notice and is unrelated to TermTrigger.
 
+## Text action light-theme hover correction
+
+- Issue reference: `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-a95337a4-d608-4f9e-8ee2-2576033d9cdc.png`
+- Default-state screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-text-action-default-qa-20260809.png`
+- Light-hover screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-text-action-light-hover-qa-20260809.png`
+- Dark-hover screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-text-action-dark-hover-qa-20260809.png`
+- Browser viewport: 1280 × 720 CSS px
+
+The issue reference showed that the dark-theme underline color changed perceptibly while the light-theme change was difficult to notice. The revised hover and active states keep the borderless composition and expand the underline from 1 px to the 3 px focus-width token. Browser-computed styles confirm `min-block-size: 3px` and `scaleX(1.08)` in both themes, with their theme-specific strong accent colors.
+
+No actionable P0, P1, or P2 mismatch remains. The isolated Storybook page emitted no console error or warning during this check.
+
 final result: passed

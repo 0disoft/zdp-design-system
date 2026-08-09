@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.54.2
+
+- Increased the borderless text action underline to the focus-width token on hover and active states so the interaction change remains visible on both light and dark surfaces.
+
 ## 0.54.1
 
 - Removed TermTrigger's default bottom border so inline glossary terms no longer resemble underlined text fields, while retaining medium-weight discoverability plus hover and keyboard-focus feedback.
