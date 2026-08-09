@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.54.3
+
+- Promoted TermTrigger's soft accent background to its default state for persistent discoverability and changed hover feedback to a stronger ink color without font-weight layout shift.
+
 ## 0.54.2
 
 - Increased the borderless text action underline to the focus-width token on hover and active states so the interaction change remains visible on both light and dark surfaces.

@@ -69,4 +69,16 @@ The issue reference showed that the dark-theme underline color changed perceptib
 
 No actionable P0, P1, or P2 mismatch remains. The isolated Storybook page emitted no console error or warning during this check.
 
+## TermTrigger persistent discoverability correction
+
+- Issue reference: `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-8805fa1c-1dd1-46db-b6a4-1fbffc1c2f5c.png`
+- Default-state screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-term-trigger-default-background-qa-20260809.png`
+- Light-hover screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-term-trigger-light-hover-qa-20260809.png`
+- Dark-hover screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-term-trigger-dark-hover-qa-20260809.png`
+- Browser viewport: 1280 × 720 CSS px
+
+The issue reference showed that the soft accent background only appeared on hover, leaving the default inline term difficult to recognize as interactive. The revised default state keeps that soft accent background in light and dark themes. Hover changes only to the semantic strong ink color, avoiding font-weight width changes or surrounding-text movement. Browser-computed styles confirm stable `font-weight: 500`, unchanged theme-specific backgrounds, and stronger hover ink in both themes. The focus-return state retains its 2.4 px outline and closed `aria-expanded` state.
+
+No actionable P0, P1, or P2 mismatch remains. The isolated Storybook page emitted no console error or warning during this check.
+
 final result: passed

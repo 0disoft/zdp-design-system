@@ -1076,6 +1076,25 @@ for (const requiredText of [
   }
 }
 
+const staticTermTriggerBlock = componentStyle.slice(
+  componentStyle.indexOf('.zdp-term-trigger {'),
+  componentStyle.indexOf('.zdp-term-trigger:focus-visible')
+);
+
+for (const requiredText of [
+  'background: var(--zdp-color-accent-primary-soft)',
+  '.zdp-term-trigger:hover:not(:disabled)',
+  'color: var(--zdp-color-ink-strong)'
+]) {
+  if (!staticTermTriggerBlock.includes(requiredText)) {
+    failures.push(`Static TermTrigger contract is missing ${requiredText}.`);
+  }
+}
+
+if (staticTermTriggerBlock.includes('background: transparent')) {
+  failures.push('Static TermTrigger must keep its soft accent background in the default state.');
+}
+
 for (const forbiddenText of [
   'selectstart',
   'user-select: none !important',

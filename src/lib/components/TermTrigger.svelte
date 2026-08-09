@@ -35,7 +35,7 @@
   .zdp-term-trigger {
     align-items: baseline;
     appearance: none;
-    background: transparent;
+    background: var(--zdp-color-accent-primary-soft);
     border: 0;
     border-radius: var(--zdp-radius-sm);
     color: inherit;
@@ -48,11 +48,11 @@
     padding: 0 0.2rem;
     text-align: inherit;
     text-decoration: none;
+    transition: color var(--zdp-motion-fast) ease;
   }
 
   .zdp-term-trigger:hover:not(:disabled) {
-    background: var(--zdp-color-accent-primary-soft);
-    color: inherit;
+    color: var(--zdp-color-ink-strong);
   }
 
   .zdp-term-trigger:focus-visible {
