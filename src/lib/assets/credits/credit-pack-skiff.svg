@@ -1,7 +1,7 @@
 <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
   <g fill="currentColor">
-    <path d="M5 29h38l-6 10H12Z" />
-    <path d="M11 24h26v5H11Z" />
-    <path d="M30 11h3L19 34l-3-2Z" />
+    <path d="M5 31c9 1.5 29 1.5 38 0l-4 7C31 41 17 41 9 38Z" />
+    <path d="M25 9h2v23h-2Z" />
+    <path d="M23 12C17 16 12 22 9 29h14ZM29 12v17h12c-3-7-7-13-12-17Z" />
   </g>
 </svg>

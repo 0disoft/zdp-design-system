@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.57.0
+
+- Redrew the seven compact credit-pack ships as a coherent curved silhouette family with clearer hull, sail, mast, stern, and pennant progression at 24 and 64 CSS px.
+- Added a contract guard requiring curved geometry in compact ship glyphs so they cannot silently regress to stacked rectangular pixel forms.
+
 ## 0.56.0
 
 - Reworked ConfirmAction, native Select including the customizable picker, and Menu trigger/panel/items around tonal surfaces instead of visible decorative borders.

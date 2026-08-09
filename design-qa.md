@@ -111,4 +111,13 @@ ConfirmAction now uses a raised resting surface, accent hover surface, progress 
 
 Browser-computed styles confirmed transparent borders for ConfirmAction and its thumb, Menu trigger/panel/items, and Select in light and dark themes. No actionable P0, P1, or P2 mismatch remains.
 
+## Compact credit-pack glyph refinement
+
+- Issue reference: `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-2c888605-9335-418c-9373-af194a867e02.png`
+- Refined Storybook screenshot: `C:\Users\cherr\AppData\Local\Temp\zdp-credit-pack-glyphs-refined-20260809.png`
+
+The previous compact pack family scaled tier value by stacking rectangular sails and hull blocks, which read as crude pixel art rather than a premium product system. The replacement keeps the stable asset names, `currentColor`, 48×48 viewBox, fill-only geometry, 24 CSS px minimum and exact path budgets while introducing curved hulls, triangular sail rhythm, negative gaps and a clearer progression from oared dinghy to pennant-bearing flagship. A contract check now requires curved geometry for every compact pack glyph.
+
+Browser inspection at both rendered sizes confirmed that each tier remains distinguishable without the block-stack effect. No actionable P0, P1, or P2 mismatch remains.
+
 final result: passed

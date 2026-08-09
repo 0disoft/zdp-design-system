@@ -41,15 +41,15 @@ import sloop from 'zdp-design-system/assets/credits/credit-pack-sloop.svg';
 
 | Pack ID | Compact glyph | Pricing key art | Visual distinction |
 | --- | --- | --- | --- |
-| `dinghy` | `credit-pack-dinghy.svg` | `credit-pack-keyart-dinghy.webp` | small polished boat, oar, first cargo crate |
-| `skiff` | `credit-pack-skiff.svg` | `credit-pack-keyart-skiff.webp` | longer open hull and lateen sail |
-| `sloop` | `credit-pack-sloop.svg` | `credit-pack-keyart-sloop.webp` | one mast and two large sails |
-| `brig` | `credit-pack-brig.svg` | `credit-pack-keyart-brig.webp` | exact two-mast merchant brig |
-| `frigate` | `credit-pack-frigate.svg` | `credit-pack-keyart-frigate.webp` | long three-mast merchant vessel |
-| `galleon` | `credit-pack-galleon.svg` | `credit-pack-keyart-galleon.webp` | tall ornate stern and layered sails |
-| `flagship` | `credit-pack-flagship.svg` | `credit-pack-keyart-flagship.webp` | largest command ship, pennant and brass crest |
+| `dinghy` | `credit-pack-dinghy.svg` | `credit-pack-keyart-dinghy.webp` | curved rowboat hull, bench and diagonal oar |
+| `skiff` | `credit-pack-skiff.svg` | `credit-pack-keyart-skiff.webp` | light one-mast craft with a restrained lateen silhouette |
+| `sloop` | `credit-pack-sloop.svg` | `credit-pack-keyart-sloop.webp` | one mast and two balanced sails |
+| `brig` | `credit-pack-brig.svg` | `credit-pack-keyart-brig.webp` | two-mast merchant silhouette with stepped sail groups |
+| `frigate` | `credit-pack-frigate.svg` | `credit-pack-keyart-frigate.webp` | long three-mast silhouette with a lighter sail rhythm |
+| `galleon` | `credit-pack-galleon.svg` | `credit-pack-keyart-galleon.webp` | raised stern and layered three-mast silhouette |
+| `flagship` | `credit-pack-flagship.svg` | `credit-pack-keyart-flagship.webp` | broad command hull, strongest sail plan and pennant |
 
-Compact glyph는 모두 `currentColor`, `48×48` viewBox, fill-only path로 제공하며 최소 24 CSS px에서 사용한다. Pricing key art는 `1600×900` WebP이며 선택 카드에서는 thumbnail crop으로, 선택된 요금제에서는 큰 16:9 이미지로 사용한다. 각 이미지의 오른쪽 약 30%는 HTML 상세 정보가 올라갈 수 있도록 비교적 어둡고 조용하게 구성했다. 이미지 안에 가격이나 UI 문구를 합성하지 않는다. 생성·파생·해시 근거는 [`CREDIT_KEYART_PROVENANCE.md`](CREDIT_KEYART_PROVENANCE.md)에 기록한다.
+Compact glyph는 모두 `currentColor`, `48×48` viewBox, fill-only path로 제공하며 최소 24 CSS px에서 사용한다. 같은 계열임을 유지하되 곡선형 hull, sail 수, mast 수, stern 높이와 pennant로 등급을 구분한다. 24px에서 네모난 sail을 쌓은 픽셀 아트처럼 보이지 않도록 각 glyph는 곡선 geometry와 명확한 음각 간격을 유지한다. Pricing key art는 `1600×900` WebP이며 선택 카드에서는 thumbnail crop으로, 선택된 요금제에서는 큰 16:9 이미지로 사용한다. 각 이미지의 오른쪽 약 30%는 HTML 상세 정보가 올라갈 수 있도록 비교적 어둡고 조용하게 구성했다. 이미지 안에 가격이나 UI 문구를 합성하지 않는다. 생성·파생·해시 근거는 [`CREDIT_KEYART_PROVENANCE.md`](CREDIT_KEYART_PROVENANCE.md)에 기록한다.
 
 함선만 보고 요금제나 가격을 추측하게 만들지 않는다. 가격표와 구매 화면에는 localized pack name, 가격, 지급 레몬, 보너스, 세금 정보를 텍스트로 함께 표시한다. `packId`와 가격·지급량 연결은 소비처의 검토된 Money 계약에서 가져온다.
 

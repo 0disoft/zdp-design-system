@@ -60,6 +60,9 @@ async function checkCreditAssets(): Promise<void> {
     const source = bytes.toString('utf8');
     const paths = [...source.matchAll(/\sd="([^"]+)"/g)];
     if (paths.length !== contract.pathCount) failures.push(`${contract.fileName} must contain exactly ${contract.pathCount} path elements.`);
+    if (contract.kind === 'credit-pack-glyph' && !paths.some((path) => /[CcQq]/.test(path[1] ?? ''))) {
+      failures.push(`${contract.fileName} must use curved geometry so compact hulls do not regress to stacked pixel blocks.`);
+    }
     if (!source.includes(`viewBox="${contract.viewBox}"`)) failures.push(`${contract.fileName} must preserve viewBox ${contract.viewBox}.`);
     if (/<script\b|<style\b|<text\b|<image\b|<foreignObject\b|href=|xlink:href=|\son[a-z]+=/i.test(source)) {
       failures.push(`${contract.fileName} must not embed scripts, styles, text, raster images, event handlers, or external references.`);
