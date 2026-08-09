@@ -13,7 +13,7 @@
 
 <style>
   .zdp-surface {
-    border: 1px solid var(--zdp-color-line-subtle);
+    border: 1px solid transparent;
     border-radius: var(--zdp-radius-lg);
     color: var(--zdp-color-ink-normal);
   }

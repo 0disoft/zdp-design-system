@@ -644,6 +644,9 @@ async function checkCardContract(): Promise<void> {
   for (const requiredText of [
     "as === 'div' && Boolean(ariaLabel?.trim() || ariaLabelledBy?.trim()) ? 'region' : undefined",
     'class={`zdp-card zdp-card--${tone} zdp-card--padding-${padding} ${hover ? \'zdp-card--hover\' : \'\'}`}',
+    'border: 1px solid transparent',
+    'border-color: var(--zdp-color-line-subtle)',
+    'background: var(--zdp-color-accent-primary-soft)',
     '.zdp-card--hover:hover'
   ]) {
     if (!card.includes(requiredText)) {
@@ -653,6 +656,16 @@ async function checkCardContract(): Promise<void> {
 
   if (cardCssStart === -1 || cardCssEnd === -1 || cardCssEnd <= cardCssStart) {
     failures.push(`${componentCssPath} must keep the static Card style boundary.`);
+  }
+
+  for (const requiredText of [
+    'border: 1px solid transparent',
+    'border-color: var(--zdp-color-line-subtle)',
+    'background: var(--zdp-color-accent-primary-soft)'
+  ]) {
+    if (!cardCss.includes(requiredText)) {
+      failures.push(`${componentCssPath} is missing surface-first Card contract text ${requiredText}.`);
+    }
   }
 
   for (const [targetPath, source] of [

@@ -284,6 +284,29 @@ const previewStyle = await readFile(previewStylePath, 'utf8');
 const brandFontStyle = await readFile(brandFontStylePath, 'utf8');
 const expressiveFontStyle = await readFile(expressiveFontStylePath, 'utf8');
 
+for (const requiredText of [
+  'border: 1px solid transparent',
+  'background: var(--zdp-color-surface-panel)',
+  'background: var(--zdp-color-surface-raised)'
+]) {
+  if (!surface.includes(requiredText)) {
+    failures.push(`Surface must keep the surface-first container contract text ${requiredText}.`);
+  }
+}
+
+for (const [storyName, storySource] of [
+  ['Buttons', buttonsComponent],
+  ['DataDisplay', dataDisplayComponent],
+  ['Feedback', feedbackComponent],
+  ['Forms', formsComponent],
+  ['Interaction', interactionComponent],
+  ['Navigation', navigationComponent]
+] as const) {
+  if (!storySource.includes('border: var(--zdp-control-border-width) solid transparent')) {
+    failures.push(`${storyName} story must not add a visible border around its light and dark preview panels.`);
+  }
+}
+
 for (const [scriptName, expectedCommand] of Object.entries({
   dev: 'storybook dev -p 6006',
   build: 'storybook build',

@@ -46,7 +46,7 @@
 
 <style>
   .zdp-card {
-    border: 1px solid var(--zdp-color-line-subtle);
+    border: 1px solid transparent;
     border-radius: var(--zdp-radius-lg);
     box-sizing: border-box;
     color: var(--zdp-color-ink-normal);
@@ -66,6 +66,7 @@
 
   .zdp-card--outline {
     background: transparent;
+    border-color: var(--zdp-color-line-subtle);
   }
 
   .zdp-card--padding-none {
@@ -85,10 +86,16 @@
   }
 
   .zdp-card--hover {
-    transition: border-color var(--zdp-motion-fast) ease;
+    transition:
+      background-color var(--zdp-motion-fast) ease,
+      border-color var(--zdp-motion-fast) ease;
   }
 
   .zdp-card--hover:hover {
+    background: var(--zdp-color-accent-primary-soft);
+  }
+
+  .zdp-card--outline.zdp-card--hover:hover {
     border-color: var(--zdp-color-line-strong);
   }
 
