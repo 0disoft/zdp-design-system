@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Corrected modal Tab ordering for implicit `contenteditable`, radio groups, and positive `tabindex` candidates, and resolved active elements through each surface's owning document instead of the ambient window realm.
+- Cancelled SplitPane drags when pointer capture fails or orientation changes, preventing stuck selection locks and mixed-axis resize commits.
 
 ## 0.57.4
 

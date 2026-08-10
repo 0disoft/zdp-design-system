@@ -476,6 +476,63 @@ export async function verifyFoundationAndFormContracts(page) {
     'Text selection suppression must be removed after pointer release.'
   );
 
+  const sizeBeforeOrientationChange = Number(await separator.getAttribute('aria-valuenow'));
+  separatorBounds = await separator.boundingBox();
+  assert.ok(separatorBounds, 'The split pane separator must remain measurable before an orientation change.');
+  await page.mouse.move(separatorBounds.x + separatorBounds.width / 2, separatorBounds.y + separatorBounds.height / 2);
+  await page.mouse.down();
+  await page.getByTestId('split-pane-toggle-orientation').evaluate((element) => element.click());
+  await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(resolve)));
+  assert.equal(await separator.getAttribute('aria-orientation'), 'horizontal');
+  assert.equal(
+    await splitPane.evaluate((element) => element.classList.contains('zdp-resizable-split-pane--dragging')),
+    false,
+    'Changing orientation must cancel the active drag before pointer axes can be mixed.'
+  );
+  assert.equal(
+    await page.getByTestId('split-pane-size').textContent(),
+    String(sizeBeforeOrientationChange),
+    'Changing orientation must not commit a mixed-axis drag value to the bound size.'
+  );
+  assert.equal(
+    await page.locator('html').evaluate((element) => element.classList.contains('zdp-user-select-dragging')),
+    false,
+    'Changing orientation must release the drag selection lock.'
+  );
+  await page.mouse.up();
+  await page.getByTestId('split-pane-toggle-orientation').click();
+  assert.equal(await separator.getAttribute('aria-orientation'), 'vertical');
+  assert.equal(await separator.getAttribute('aria-valuenow'), String(sizeBeforeOrientationChange));
+
+  separatorBounds = await separator.boundingBox();
+  assert.ok(separatorBounds, 'The split pane separator must remain measurable before capture failure.');
+  const sizeBeforeCaptureFailure = Number(await separator.getAttribute('aria-valuenow'));
+  await separator.evaluate((element) => {
+    element.__zdpOriginalSetPointerCapture = element.setPointerCapture;
+    element.setPointerCapture = () => {
+      throw new DOMException('Synthetic capture failure', 'InvalidStateError');
+    };
+  });
+  await page.mouse.move(separatorBounds.x + separatorBounds.width / 2, separatorBounds.y + separatorBounds.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(separatorBounds.x + separatorBounds.width + 80, separatorBounds.y + separatorBounds.height + 80);
+  await page.mouse.up();
+  assert.equal(
+    await splitPane.evaluate((element) => element.classList.contains('zdp-resizable-split-pane--dragging')),
+    false,
+    'Pointer capture failure must cancel the drag instead of leaving a stuck dragging state.'
+  );
+  assert.equal(
+    await page.locator('html').evaluate((element) => element.classList.contains('zdp-user-select-dragging')),
+    false,
+    'Pointer capture failure must not retain the document selection lock.'
+  );
+  assert.equal(await separator.getAttribute('aria-valuenow'), String(sizeBeforeCaptureFailure));
+  await separator.evaluate((element) => {
+    element.setPointerCapture = element.__zdpOriginalSetPointerCapture;
+    delete element.__zdpOriginalSetPointerCapture;
+  });
+
   const draggedSize = Number(await separator.getAttribute('aria-valuenow'));
   const clickBounds = await separator.boundingBox();
   assert.ok(clickBounds, 'The resized separator must retain measurable geometry.');

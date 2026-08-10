@@ -199,6 +199,7 @@ export function createZdpSplitPaneController(
   let containerSize = Number.POSITIVE_INFINITY;
   let activePointerId: number | null = null;
   let pointerStartCoordinate = 0;
+  let pointerStartOrientation: ZdpSplitPaneOrientation = 'vertical';
   let pointerStartSize = 0;
   let pointerDirection = 1;
   let pointerMoved = false;
@@ -251,7 +252,7 @@ export function createZdpSplitPaneController(
       const renderRequired = nextRequestedSize !== requestedSize || hasRenderOptionChanges(previousOptions, options);
       requestedSize = nextRequestedSize;
 
-      if (isDisabled() && dragging) {
+      if (dragging && (isDisabled() || getOrientation() !== pointerStartOrientation)) {
         finishPointerInteraction();
       }
 
@@ -436,20 +437,22 @@ export function createZdpSplitPaneController(
 
     event.preventDefault();
     activePointerId = event.pointerId;
+    pointerStartOrientation = getOrientation();
     pointerStartCoordinate = pointerCoordinate(event);
     pointerStartSize = getRenderedSize();
-    pointerDirection = getOrientation() === 'vertical' && isRtl() ? -1 : 1;
+    pointerDirection = pointerStartOrientation === 'vertical' && isRtl() ? -1 : 1;
     pointerMoved = false;
-    dragging = true;
-    render();
 
     try {
       separator.setPointerCapture(event.pointerId);
     } catch {
-      // Pointer capture may be unavailable for synthetic events; document-level state still cleans up.
+      activePointerId = null;
+      return;
     }
 
+    dragging = true;
     endDragSelection = beginZdpDragSelection(separator.ownerDocument);
+    render();
   }
 
   function handlePointerMove(event: PointerEvent): void {

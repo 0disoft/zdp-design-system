@@ -118,6 +118,7 @@
   let popoverOpen = false;
   let splitPaneSize = 280;
   let splitPaneDirection: 'ltr' | 'rtl' = 'ltr';
+  let splitPaneOrientation: 'vertical' | 'horizontal' = 'vertical';
   let staticSplitPaneSize = 280;
   let staticSplitPaneRoot: HTMLElement | null = null;
   let staticSplitPanePrimary: HTMLElement | null = null;
@@ -319,6 +320,7 @@
       minSize={220}
       maxSize={480}
       secondaryMinSize={320}
+      orientation={splitPaneOrientation}
       ariaLabel="Navigation width"
       getValueText={(size) => `${size} pixels`}
       onResizeCommit={(size) => splitPanePersistence.save(size)}
@@ -347,6 +349,13 @@
       onclick={() => (splitPaneDirection = splitPaneDirection === 'ltr' ? 'rtl' : 'ltr')}
     >
       Toggle direction
+    </button>
+    <button
+      data-testid="split-pane-toggle-orientation"
+      type="button"
+      onclick={() => (splitPaneOrientation = splitPaneOrientation === 'vertical' ? 'horizontal' : 'vertical')}
+    >
+      Toggle orientation
     </button>
   </section>
 
