@@ -42,3 +42,5 @@
 ## Version Impact
 
 `package.json` version is the package version source. `docs/**`, `README.md`, `CHANGELOG.md`, `SECURITY.md`, `THIRD_PARTY_NOTICES.md`, `dist/**`, and package metadata are included in the package surface. Changes to those files require package version impact review. Source-only agent docs under `.agents/**`, `CHECKLIST.md`, `VALIDATION.md`, and `AGENTS.md` are not part of the current package `files` allowlist.
+
+Source-text checks may protect public exports, semantic markup, stable CSS hooks, token names, generated assets, and package metadata. They must not require a particular private function name or event implementation when a configured Chromium, SSR, hydration, or type contract already verifies the behavior. Focus movement, pointer capture, dismissal, controlled-state transitions, and focus restoration belong in runtime regression checks.

@@ -534,13 +534,6 @@ async function checkSplitPaneContract(): Promise<void> {
 
   for (const requiredText of [
     'export function createZdpSplitPaneController(',
-    "separator.addEventListener('pointerdown', handlePointerDown)",
-    'separator.setPointerCapture(event.pointerId)',
-    'beginZdpDragSelection(separator.ownerDocument)',
-    "event.key === 'Home'",
-    "event.key === 'End'",
-    "root.ownerDocument.defaultView?.getComputedStyle(root).direction === 'rtl'",
-    'new ResizeObserverConstructor',
     "'data-zdp-resizable-split-pane-constrained'",
     "const ZDP_SPLIT_PANE_STORAGE_PREFIX = 'zdp:split-pane-size:v1:'",
     "typeof window === 'undefined'",
@@ -714,15 +707,8 @@ async function checkSharedFocusContract(): Promise<void> {
     'zdpFocusableSelector',
     'isZdpFocusableElement',
     'createZdpFocusableCache',
-    'new MutationObserver(invalidate)',
-    'new ResizeObserver',
-    'cachedElements',
-    'getClientRects().length > 0',
-    "closest('[hidden], [aria-hidden=\"true\"], [inert]')",
     '[contenteditable]:not([contenteditable="false"])',
     'element.ownerDocument.defaultView',
-    'isRadioGroupTabStop',
-    'sortZdpTabbableElements',
     'isZdpHtmlElement'
   ]) {
     if (!source.includes(requiredText)) {
@@ -1005,24 +991,14 @@ async function checkComboboxContract(): Promise<void> {
 async function checkMenuPopoverInteractionContract(): Promise<void> {
   const menuPath = 'src/lib/components/Menu.svelte';
   const popoverPath = 'src/lib/components/Popover.svelte';
-  const dismissLayerPath = 'src/lib/dismiss-layer.ts';
   const menu = await readFile(join(root, menuPath), 'utf8');
   const popover = await readFile(join(root, popoverPath), 'utf8');
-  const dismissLayer = await readFile(join(root, dismissLayerPath), 'utf8');
 
   for (const requiredText of [
-    'handleTriggerKeydown',
-    "event.key === 'ArrowDown'",
-    "event.key === 'ArrowUp'",
-    "event.key === 'Tab'",
-    "'ArrowDown', 'ArrowUp', 'Home', 'End'",
-    'moveActiveItem',
-    'focusActiveItem',
-    'restorePreviousFocus',
-    'const enabledItems = $derived(items.filter((item) => !item.disabled))',
+    'role="menu"',
+    'role="menuitem"',
     'tabindex={item.id === activeItemId && !item.disabled ? 0 : -1}',
-    'createZdpDismissLayer',
-    'dismissLayer.setActive(open, rootElement'
+    "aria-disabled={item.disabled ? 'true' : undefined}"
   ]) {
     if (!menu.includes(requiredText)) {
       failures.push(`${menuPath} is missing menu interaction contract text ${requiredText}.`);
@@ -1032,10 +1008,6 @@ async function checkMenuPopoverInteractionContract(): Promise<void> {
   for (const requiredText of [
     'closeOnEscape = true',
     'closeOnOutside = true',
-    'capturePreviousFocus',
-    'restorePreviousFocus',
-    'createZdpDismissLayer',
-    'dismissLayer.setActive(open, rootElement',
     'slot name="trigger" open={open} toggle={toggle} close={close} panelId={panelId} triggerId={triggerId}',
     'role={role ?? undefined}',
     'aria-labelledby={labelledBy ?? triggerId}',
@@ -1046,21 +1018,6 @@ async function checkMenuPopoverInteractionContract(): Promise<void> {
     }
   }
 
-  for (const requiredText of [
-    'const documentStates = new WeakMap<Document, ZdpDismissDocumentState>()',
-    "state.document.addEventListener('click', state.handleClick, true)",
-    "state.document.addEventListener('keydown', state.handleKeydown, true)",
-    "state.document.removeEventListener('click', state.handleClick, true)",
-    "state.document.removeEventListener('keydown', state.handleKeydown, true)",
-    'const topLayer = state.layers.at(-1)',
-    'findTopOutsideLayer(state.layers)',
-    'event.composedPath().includes(topLayer.root)',
-    'event.stopPropagation()'
-  ]) {
-    if (!dismissLayer.includes(requiredText)) {
-      failures.push(`${dismissLayerPath} is missing shared dismiss stack contract text ${requiredText}.`);
-    }
-  }
 }
 
 async function readPackageJson(path: string): Promise<PackageJson> {

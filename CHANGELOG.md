@@ -5,6 +5,7 @@
 - Isolated modal layer stacks, inert ownership, scroll locks, and nesting levels per owner `Document`, including same-realm iframe mounts.
 - Narrowed `Input` and `CommandField` types to value-based text and date entry modes, directing checked, file, hidden, range, and color controls to purpose-built or native elements.
 - Centralized owner-document-aware roving focus for Tabs, Menu, SegmentedControl, LocaleSwitcher, and TextScaleControl while preserving original keyboard events for selection callbacks and RTL arrow order.
+- Removed implementation-sentence assertions for focus trapping, dismiss stacks, pointer capture, and roving selection where Chromium interaction and SSR tests now verify the behavior directly; retained static checks for public markup, exports, assets, and package surfaces.
 
 ## 0.57.5
 
