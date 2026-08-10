@@ -1,11 +1,12 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from 'svelte/elements';
+  import type { ZdpInputType } from '../input';
 
   type DescribedBy = string | readonly string[] | null;
 
   export let id: string | null = null;
   export let name: string | null = null;
-  export let type: HTMLInputAttributes['type'] = 'text';
+  export let type: ZdpInputType = 'text';
   export let value = '';
   export let placeholder: string | null = null;
   export let autocomplete: HTMLInputAttributes['autocomplete'] | null = null;

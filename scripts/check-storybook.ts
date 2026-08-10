@@ -2048,13 +2048,13 @@ assertNoDecorativeEffects(failures, 'CodeBlock component', codeBlock);
 assertNoOverRoundedUsage(failures, 'CodeBlock component', codeBlock);
 
 for (const requiredText of [
-  "import type { ZdpCommandFieldSize }",
+  "import type { ZdpCommandFieldSize, ZdpCommandFieldType }",
   "import ShortcutHint from './ShortcutHint.svelte'",
   'type DescribedBy = string | readonly string[] | null',
   "type AriaAutocomplete = 'none' | 'inline' | 'list' | 'both'",
   'id: string | null = null',
   'name: string | null = null',
-  "type: HTMLInputAttributes['type'] = 'search'",
+  "type: ZdpCommandFieldType = 'search'",
   "label: string | null = 'Search'",
   'labelVisible = false',
   "placeholder: string | null = 'Search query'",

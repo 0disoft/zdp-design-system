@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Isolated modal layer stacks, inert ownership, scroll locks, and nesting levels per owner `Document`, including same-realm iframe mounts.
+- Narrowed `Input` and `CommandField` types to value-based text and date entry modes, directing checked, file, hidden, range, and color controls to purpose-built or native elements.
 
 ## 0.57.5
 

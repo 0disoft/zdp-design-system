@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from 'svelte/elements';
-  import type { ZdpCommandFieldSize } from '../command';
+  import type { ZdpCommandFieldSize, ZdpCommandFieldType } from '../command';
   import ShortcutHint from './ShortcutHint.svelte';
 
   type DescribedBy = string | readonly string[] | null;
@@ -9,7 +9,7 @@
   export let id: string | null = null;
   export let name: string | null = null;
   export let value = '';
-  export let type: HTMLInputAttributes['type'] = 'search';
+  export let type: ZdpCommandFieldType = 'search';
   export let label: string | null = 'Search';
   export let labelVisible = false;
   export let ariaLabel: string | null = null;
