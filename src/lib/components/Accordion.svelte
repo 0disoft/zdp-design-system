@@ -19,14 +19,18 @@
     | null = null;
 
   let openIds: readonly string[] = [];
-  let itemOpenSignature = '';
+  let knownItemIds: readonly string[] = [];
+  let itemStateSignature = '';
+  let initialized = false;
 
-  $: nextItemOpenSignature = `${mode}|${items
+  $: nextItemStateSignature = `${mode}|${items
     .map((item) => `${item.id}:${item.open === true}:${item.disabled === true}`)
     .join('|')}`;
-  $: if (nextItemOpenSignature !== itemOpenSignature) {
-    openIds = normalizeInitialOpenIds(items, mode);
-    itemOpenSignature = nextItemOpenSignature;
+  $: if (nextItemStateSignature !== itemStateSignature) {
+    openIds = reconcileOpenIds(items, mode, openIds, knownItemIds, initialized);
+    knownItemIds = items.map((item) => item.id);
+    initialized = true;
+    itemStateSignature = nextItemStateSignature;
   }
 
   function normalizeInitialOpenIds(
@@ -36,6 +40,27 @@
     const initialOpenIds = sourceItems.filter((item) => item.open && !item.disabled).map((item) => item.id);
 
     return currentMode === 'single' ? initialOpenIds.slice(0, 1) : initialOpenIds;
+  }
+
+  function reconcileOpenIds(
+    sourceItems: readonly ZdpAccordionItem[],
+    currentMode: ZdpAccordionMode,
+    currentOpenIds: readonly string[],
+    previousItemIds: readonly string[],
+    hasInitialized: boolean
+  ): readonly string[] {
+    if (!hasInitialized) {
+      return normalizeInitialOpenIds(sourceItems, currentMode);
+    }
+
+    const enabledIds = new Set(sourceItems.filter((item) => !item.disabled).map((item) => item.id));
+    const retainedOpenIds = currentOpenIds.filter((id) => enabledIds.has(id));
+    const newDefaultOpenIds = sourceItems
+      .filter((item) => item.open && !item.disabled && !previousItemIds.includes(item.id))
+      .map((item) => item.id);
+    const reconciledOpenIds = [...new Set([...retainedOpenIds, ...newDefaultOpenIds])];
+
+    return currentMode === 'single' ? reconciledOpenIds.slice(0, 1) : reconciledOpenIds;
   }
 
   function isItemOpen(id: string): boolean {

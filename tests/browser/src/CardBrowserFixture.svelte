@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import Button from '../../../src/lib/components/Button.svelte';
+  import Accordion from '../../../src/lib/components/Accordion.svelte';
   import Breadcrumb from '../../../src/lib/components/Breadcrumb.svelte';
   import Card from '../../../src/lib/components/Card.svelte';
   import CardHeader from '../../../src/lib/components/CardHeader.svelte';
@@ -26,6 +27,7 @@
   import TextScaleControl from '../../../src/lib/components/TextScaleControl.svelte';
   import Toast from '../../../src/lib/components/Toast.svelte';
   import type { ZdpComboboxOption } from '../../../src/lib/combobox';
+  import type { ZdpAccordionItem } from '../../../src/lib/disclosure';
   import type { ZdpMenuItem } from '../../../src/lib/menu';
   import type { ZdpTextScale } from '../../../src/lib/preferences';
   import type { ZdpShareDockItem } from '../../../src/lib/share';
@@ -41,6 +43,10 @@
     { id: 'release notes', label: 'Release notes' },
     { id: 'release-notes', label: 'Release history' }
   ] as const;
+  let statefulAccordionItems: readonly ZdpAccordionItem[] = [
+    { id: 'preserved-panel', title: 'Preserved panel', content: 'Preserved content' },
+    { id: 'mutable-panel', title: 'Mutable panel', content: 'Mutable content' }
+  ];
   const ownerOptions: readonly ZdpComboboxOption[] = [
     { id: 'security', value: 'security', label: 'Security' },
     { id: 'platform', value: 'platform', label: 'Platform' }
@@ -193,14 +199,6 @@
 </script>
 
 <main class="zdp-surface-reset">
-  <Breadcrumb
-    ariaLabel="Explicit current breadcrumb"
-    items={[
-      { label: 'Workspace', href: '#workspace' },
-      { label: 'Current project', current: true },
-      { label: 'Release history', href: '#release-history' }
-    ]}
-  />
   <Card as="section" ariaLabelledBy="release-summary-title" hover>
     <svelte:fragment slot="header">
       <CardHeader id="release-summary-title">Release summary</CardHeader>
@@ -791,6 +789,29 @@
   </section>
 
   <ModalBoundaryFixture />
+
+  <Breadcrumb
+    ariaLabel="Explicit current breadcrumb"
+    items={[
+      { label: 'Workspace', href: '#workspace' },
+      { label: 'Current project', current: true },
+      { label: 'Release history', href: '#release-history' }
+    ]}
+  />
+  <Accordion ariaLabel="State preserving accordion" items={statefulAccordionItems} />
+  <label>
+    <input
+      data-testid="disable-accordion-peer"
+      type="checkbox"
+      onchange={(event) => {
+        const disabled = event.currentTarget.checked;
+        statefulAccordionItems = statefulAccordionItems.map((item) =>
+          item.id === 'mutable-panel' ? { ...item, disabled } : item
+        );
+      }}
+    />
+    Disable peer panel
+  </label>
 
   <section id="release-details" aria-label="Release details">
     <p>Keyboard navigation reached the explicit link.</p>

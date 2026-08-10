@@ -18,6 +18,16 @@ export async function verifyOverlayContracts(page) {
     'A final breadcrumb item must remain a link when another item is explicitly current.'
   );
 
+  const preservedAccordionTrigger = page.getByRole('button', { name: 'Preserved panel' });
+  await preservedAccordionTrigger.click();
+  assert.equal(await preservedAccordionTrigger.getAttribute('aria-expanded'), 'true');
+  await page.getByTestId('disable-accordion-peer').check();
+  assert.equal(
+    await preservedAccordionTrigger.getAttribute('aria-expanded'),
+    'true',
+    'Changing a peer item disabled state must not reset an Accordion panel opened by the user.'
+  );
+
   assert.deepEqual(
     await readDismissListenerCounts(page),
     { click: 0, keydown: 0 },
@@ -66,7 +76,10 @@ export async function verifyOverlayContracts(page) {
 
   const externalMenuTrigger = page.getByRole('button', { name: 'External actions' });
   await externalMenuTrigger.click();
+  const externalPagePromise = page.waitForEvent('popup');
   await page.getByRole('menuitem', { name: 'Open external release' }).click();
+  const externalPage = await externalPagePromise;
+  await externalPage.close();
   assert.equal(
     await externalMenuTrigger.evaluate((element) => document.activeElement === element),
     true,

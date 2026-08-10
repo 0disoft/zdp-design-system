@@ -424,6 +424,7 @@ Dismissible surface는 닫혀 있을 때 component별 document listener를 유�
 
 Menu의 href item은 현재 문서의 실제 navigation을 전제로 focus를 복원하지 않지만, 새 문서를 여는 `target="_blank"` item이나 SPA router·소비 callback이 click에서 `preventDefault()`한 item은 현재 문서의 trigger focus를 복원한다. Pointer hover는 시각적 hover만 제공하며 roving keyboard 기준을 바꾸지 않고, 실제 item focus가 이동했을 때 keyboard 기준을 동기화한다.
 Breadcrumb는 첫 번째 명시적 `current` item 하나만 `aria-current="page"`로 노출한다. 명시값이 없을 때만 마지막 item을 현재 페이지로 간주하므로, 중간 경로를 현재로 지정해도 마지막 링크가 중복 current가 되지 않는다.
+Accordion의 `item.open`은 초기 항목과 새로 삽입된 항목의 기본 열림 상태다. 이후 항목 metadata 변경은 사용자가 연 패널을 유지하고, 제거되거나 disabled가 된 항목만 열린 목록에서 제외한다. 완전한 외부 제어가 필요한 소비처는 `onOpenChange` receipt를 소유한 별도 controlled flow를 둔다.
 Sheet root는 `data-zdp-sheet-placement`, `data-zdp-sheet-size`, `data-zdp-sheet-surface="sheet"`를 남겨 QA와 소비 앱이 surface identity를 확인할 수 있게 한다.
 Toast와 StatusToast는 저장, 동기화, 실패, 경고처럼 짧은 상태 알림 표면과 dismiss/action/live-region 연결만 제공하며 알림 발생 조건, 큐 순서, 자동 닫힘 타이머, 중복 제거, 재시도 정책, 권한, 서버 상태 판단은 소비 앱이 계속 소유한다. StatusToast의 기본 ID는 SSR과 hydration에서 안정적이며, 소비 앱이 명시적인 `idPrefix`를 전달하는 계약도 유지한다. Toast와 StatusToast는 페이지 안 피드백이나 modal decision을 대체하지 않고, 오래 읽어야 하는 안내는 Callout 또는 소비 앱의 별도 흐름으로 남긴다.
 Progress, Spinner, Skeleton은 작업 진행, 응답 대기, 콘텐츠 자리 예약 표면만 제공하며 로딩 조건, 진행률 계산, 완료/실패 전환, 데이터 fetch, 재시도, 권한, 서버 상태 판단은 소비 앱이 계속 소유한다. Skeleton은 최종 레이아웃 크기를 예약하는 용도로 쓰고, 실제 텍스트 의미나 빈 상태 판단은 EmptyState 또는 소비 앱의 상태 흐름에 남긴다.

@@ -7,6 +7,7 @@
 - Closed an open Combobox when it becomes disabled or readonly while continuing to block only new open attempts in those states.
 - Restored Menu trigger focus after `target="_blank"` selections and kept pointer hover from replacing the keyboard roving-focus origin.
 - Resolved Breadcrumb current-page semantics to exactly one item, preferring the first explicit `current` item over the final-item fallback.
+- Preserved user-opened Accordion panels when peer item metadata changes, while pruning removed or disabled panels and applying `open` defaults only at initialization or insertion.
 
 ## 0.57.4
 
