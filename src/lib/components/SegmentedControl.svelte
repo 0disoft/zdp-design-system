@@ -1,5 +1,6 @@
 <script lang="ts">
   import { toZdpDomId } from '../dom-id';
+  import { moveZdpRovingFocus } from '../roving-focus';
   import type { ZdpSegmentedControlItem, ZdpSegmentedControlSize } from '../segmented';
 
   interface Props {
@@ -52,48 +53,22 @@
   }
 
   function handleKeydown(event: KeyboardEvent): void {
-    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
-      return;
-    }
-
     const target = event.currentTarget as HTMLElement;
     const options = Array.from(target.querySelectorAll<HTMLButtonElement>('[role="radio"]:not(:disabled)'));
+    const result = moveZdpRovingFocus({
+      container: target,
+      event,
+      fallbackElement: options.find((option) => option.getAttribute('aria-checked') === 'true') ?? null,
+      orientation: 'horizontal',
+      selector: '[role="radio"]:not(:disabled)'
+    });
+    const nextItem = result === null ? undefined : items.filter((item) => !item.disabled)[result.index];
 
-    if (options.length === 0) {
+    if (nextItem === undefined) {
       return;
     }
 
-    event.preventDefault();
-
-    const currentIndex = Math.max(
-      0,
-      options.findIndex((option) => option.getAttribute('aria-checked') === 'true')
-    );
-    const nextIndex = getNextIndex(event.key, currentIndex, options.length);
-    const nextOption = options[nextIndex];
-
-    if (nextOption === undefined) {
-      return;
-    }
-
-    nextOption.focus();
-    nextOption.click();
-  }
-
-  function getNextIndex(key: string, currentIndex: number, length: number): number {
-    if (key === 'Home') {
-      return 0;
-    }
-
-    if (key === 'End') {
-      return length - 1;
-    }
-
-    if (key === 'ArrowLeft') {
-      return (currentIndex - 1 + length) % length;
-    }
-
-    return (currentIndex + 1) % length;
+    selectItem(event, nextItem);
   }
 
   function itemId(id: string): string {

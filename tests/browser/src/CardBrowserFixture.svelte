@@ -105,6 +105,7 @@
   let browserRadioValue: string | null = 'weekly';
   let normalizedTabId: string | null = 'missing-tab';
   let normalizedSegmentId: string | null = 'missing-segment';
+  let normalizedSegmentEventType = '';
   let normalizedLocale = 'missing-locale';
   let normalizedTextScale = 'missing-scale' as ZdpTextScale;
   let confirmActionDisabled = false;
@@ -228,8 +229,10 @@
     ariaLabel="Normalized contrast choices"
     items={forcedColorItems}
     bind:selectedId={normalizedSegmentId}
+    onChange={(event) => (normalizedSegmentEventType = event.constructor.name)}
   />
   <output data-testid="normalized-segment-value">{normalizedSegmentId}</output>
+  <output data-testid="normalized-segment-event-type">{normalizedSegmentEventType}</output>
   <LocaleSwitcher ariaLabel="Normalized language" bind:value={normalizedLocale} />
   <output data-testid="normalized-locale-value">{normalizedLocale}</output>
   <TextScaleControl ariaLabel="Normalized text size" bind:value={normalizedTextScale} />

@@ -4,6 +4,7 @@
 
 - Isolated modal layer stacks, inert ownership, scroll locks, and nesting levels per owner `Document`, including same-realm iframe mounts.
 - Narrowed `Input` and `CommandField` types to value-based text and date entry modes, directing checked, file, hidden, range, and color controls to purpose-built or native elements.
+- Centralized owner-document-aware roving focus for Tabs, Menu, SegmentedControl, LocaleSwitcher, and TextScaleControl while preserving original keyboard events for selection callbacks and RTL arrow order.
 
 ## 0.57.5
 

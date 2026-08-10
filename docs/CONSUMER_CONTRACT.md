@@ -422,6 +422,8 @@ Sheet는 right, left, bottom edge panel로 설정, 필터, 보조 흐름을 여�
 
 Dismissible surface는 닫혀 있을 때 component별 document listener를 유지하지 않는다. 활성 Menu, Popover, Combobox, Tooltip, Dialog, Sheet, TermSheet는 owner document의 공용 dismiss stack에 활성 순서로 등록되고, 문서당 공유 capture click/keydown listener가 최상단 layer 하나에만 outside click 또는 Escape를 전달한다. `closeOnEscape=false`나 `closeOnOutside=false`인 최상단 layer는 해당 입력이 아래 layer로 관통하지 않게 막는다. Tooltip은 outside-click 후보에서는 건너뛰지만 Escape top layer로는 참여하므로 focus tooltip → Menu → Sheet → Dialog가 실제 DOM으로 중첩돼도 Escape 한 번에 하나만 닫힌다. light DOM과 open shadow root는 `composedPath()` 기준으로 내부 입력과 outside 입력을 구분한다.
 
+Tabs, Menu, SegmentedControl, LocaleSwitcher, TextScaleControl의 roving focus는 실제 `event.target`, container의 `ownerDocument`, computed RTL direction을 기준으로 이동한다. Keyboard selection callback은 합성 click이 아니라 원래 `KeyboardEvent`를 받으므로 소비 앱은 pointer와 keyboard 입력 출처를 구분할 수 있다.
+
 Menu의 href item은 현재 문서의 실제 navigation을 전제로 focus를 복원하지 않지만, 새 문서를 여는 `target="_blank"` item이나 SPA router·소비 callback이 click에서 `preventDefault()`한 item은 현재 문서의 trigger focus를 복원한다. Pointer hover는 시각적 hover만 제공하며 roving keyboard 기준을 바꾸지 않고, 실제 item focus가 이동했을 때 keyboard 기준을 동기화한다.
 Breadcrumb는 첫 번째 명시적 `current` item 하나만 `aria-current="page"`로 노출한다. 명시값이 없을 때만 마지막 item을 현재 페이지로 간주하므로, 중간 경로를 현재로 지정해도 마지막 링크가 중복 current가 되지 않는다.
 Accordion의 `item.open`은 초기 항목과 새로 삽입된 항목의 기본 열림 상태다. 이후 항목 metadata 변경은 사용자가 연 패널을 유지하고, 제거되거나 disabled가 된 항목만 열린 목록에서 제외한다. 완전한 외부 제어가 필요한 소비처는 `onOpenChange` receipt를 소유한 별도 controlled flow를 둔다.

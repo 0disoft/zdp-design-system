@@ -60,6 +60,16 @@ export async function verifyFoundationAndFormContracts(page) {
   assert.equal(await tabs.nth(1).getAttribute('aria-selected'), 'true');
   assert.equal(await releaseTablist.locator('..').getByRole('tabpanel').getAttribute('id'), controlledPanelIds[1]);
 
+  const normalizedSegment = page.getByRole('radiogroup', { name: 'Normalized contrast choices' });
+  await normalizedSegment.getByRole('radio', { checked: true }).focus();
+  await page.keyboard.press('ArrowRight');
+  assert.equal(await page.getByTestId('normalized-segment-value').textContent(), 'available');
+  assert.equal(
+    await page.getByTestId('normalized-segment-event-type').textContent(),
+    'KeyboardEvent',
+    'Roving selection callbacks must receive the original KeyboardEvent instead of a synthetic click.'
+  );
+
   const releaseStatus = page.getByRole('combobox', { name: 'Release status', exact: true });
   const selectPickerStyle = await releaseStatus.evaluate((element) => {
     const supportsCustomizableSelect = CSS.supports('appearance', 'base-select');

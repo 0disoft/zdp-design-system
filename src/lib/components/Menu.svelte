@@ -3,6 +3,7 @@
   import { createZdpDismissLayer } from '../dismiss-layer';
   import { toZdpDomId } from '../dom-id';
   import { getZdpActiveElement } from '../focusable';
+  import { moveZdpRovingFocus } from '../roving-focus';
   import type { ZdpMenuItem } from '../menu';
 
   type Placement = 'top' | 'right' | 'bottom' | 'left';
@@ -159,7 +160,7 @@
     }
 
     event.preventDefault();
-    moveActiveItem(event.key);
+    moveActiveItem(event);
   }
 
   function handleItemClick(event: MouseEvent, item: ZdpMenuItem): void {
@@ -173,34 +174,25 @@
     closeMenu(!item.href || event.defaultPrevented || item.target === '_blank');
   }
 
-  function moveActiveItem(key: string): void {
-    if (enabledItems.length === 0) {
+  function moveActiveItem(event: KeyboardEvent): void {
+    if (enabledItems.length === 0 || panelElement === null) {
       return;
     }
 
-    const currentIndex = Math.max(
-      0,
-      enabledItems.findIndex((item) => item.id === activeItemId)
+    const currentElement = Array.from(panelElement.querySelectorAll<HTMLElement>('[role="menuitem"]')).find(
+      (element) => element.dataset.menuItemId === activeItemId
     );
-    const nextIndex = getNextIndex(key, currentIndex, enabledItems.length);
-    activeItemId = enabledItems[nextIndex]?.id ?? activeItemId;
-    focusActiveItem();
-  }
+    const result = moveZdpRovingFocus({
+      container: panelElement,
+      event,
+      fallbackElement: currentElement ?? null,
+      orientation: 'vertical',
+      selector: '[role="menuitem"]:not([aria-disabled="true"]):not(:disabled)'
+    });
 
-  function getNextIndex(key: string, currentIndex: number, length: number): number {
-    if (key === 'Home') {
-      return 0;
+    if (result !== null) {
+      activeItemId = result.element.dataset.menuItemId ?? activeItemId;
     }
-
-    if (key === 'End') {
-      return length - 1;
-    }
-
-    if (key === 'ArrowUp') {
-      return (currentIndex - 1 + length) % length;
-    }
-
-    return (currentIndex + 1) % length;
   }
 
   function focusActiveItem(): void {
