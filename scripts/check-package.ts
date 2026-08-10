@@ -91,7 +91,8 @@ const expectedScripts = {
   'ssr:hydration:check': 'node scripts/check-ssr-hydration.mjs',
   'type:check': 'svelte-check --tsconfig ./tsconfig.json',
   'package:build': 'bun scripts/generate-tokens.ts && bun scripts/generate-share.ts && bun scripts/build-package.ts',
-  'package:check': 'bun scripts/check-package.ts',
+  'package:build:check': 'bun scripts/check-package-build.ts',
+  'package:check': 'bun run package:build:check && bun scripts/check-package.ts',
   'publish:check': 'bun scripts/check-publish-readiness.ts',
   'fixtures:check': 'bun scripts/check-consumer-fixtures.ts'
 } as const;

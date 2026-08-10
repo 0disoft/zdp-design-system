@@ -1,5 +1,7 @@
 /node_modules/
 /dist/
+/dist.__staging__/
+/dist.__previous__/
 /build/
 /coverage/
 /.svelte-kit/

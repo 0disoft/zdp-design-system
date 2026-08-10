@@ -4,6 +4,7 @@
 
 ## 0.58.0
 
+- Built package output in a validated staging directory before promotion, restored the previous `dist` on failed or interrupted swaps, and preserved direct exported declarations in generated public entries.
 - Isolated modal layer stacks, inert ownership, scroll locks, and nesting levels per owner `Document`, including same-realm iframe mounts.
 - Narrowed `Input` and `CommandField` types to value-based text and date entry modes, directing checked, file, hidden, range, and color controls to purpose-built or native elements.
 - Centralized owner-document-aware roving focus for Tabs, Menu, SegmentedControl, LocaleSwitcher, and TextScaleControl while preserving original keyboard events for selection callbacks and RTL arrow order.

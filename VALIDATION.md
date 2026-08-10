@@ -23,6 +23,7 @@
 - Token source: `tokens/zdp.tokens.json`
 - Web token CSS: `src/styles/tokens.css`
 - Package build/check scripts: `scripts/build-package.ts`, `scripts/check-package.ts`, `scripts/check-publish-readiness.ts`
+- Atomic package-build regression: `scripts/check-package-build.ts` verifies rollback after promotion failure, interrupted-swap recovery, cleanup, and direct exported declaration preservation.
 - Release workflow: `.github/workflows/publish-npm.yml`, `scripts/check-release-workflow.ts`
 - Token/share generators: `scripts/generate-tokens.ts`, `scripts/generate-share.ts`
 - Consumer contract docs: `docs/CONSUMER_CONTRACT.md`
