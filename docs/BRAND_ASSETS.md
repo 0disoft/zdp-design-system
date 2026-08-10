@@ -70,6 +70,7 @@ Raster derivatives are encoded without retained source metadata. WebP and JPEG f
 - The OG background contains no text. The consumer owns title, logo lockup, locale, and social metadata composition inside the right safe area.
 - The square raster already contains the official ship mark. Do not overlay another mark.
 - 새 배치에서는 `ship-mark-simple-mono.svg`를 기본 심볼로 쓴다. 기존 `ship-mark.svg`는 이미 배포된 상세형 표면과 호환할 때만 유지한다.
+- 제품 헤더와 계정·결제 같은 공용 앱 셸은 공간이 허용되더라도 심볼 단독 표시를 기본으로 한다. `8ailors` 워드마크 lockup은 회사 소개, 캠페인, 넓은 editorial 표면처럼 브랜드명을 반복해서 보여줄 이유가 있는 곳에서만 선택한다.
 - 어두운 고정 배경에는 `ship-mark-simple-inverse.svg`를 쓴다. 단색을 임의 필터나 opacity로 뒤집지 않는다.
 - 소비처 색을 따라야 할 때는 `ship-mark-simple-current-color.svg`를 inline SVG로 삽입한다. 외부 `<img>`는 소비처 CSS의 `color`를 상속하지 않으므로 이 파일을 `<img>` 색상 변경 수단으로 쓰지 않는다.
 - `ship-mark-simple-tricolor.svg`는 넓은 브랜드 소개·캠페인 표면에서만 32 CSS px 이상으로 쓴다. 작은 아이콘, 상태 표시, 본문 장식에는 단색을 쓴다.

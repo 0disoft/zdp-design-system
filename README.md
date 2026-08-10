@@ -110,11 +110,13 @@ import 'zdp-design-system/expressive-fonts.css';
 
 패키지 export는 `dist/` 산출물을 가리킨다. root runtime entry는 `dist/index.js`, type entry는 `dist/index.d.ts`이며 호환용이다. 새 Svelte 코드는 `zdp-design-system/components/ComponentName`과 `zdp-design-system/tokens.css`를 기본으로 쓴다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `bun run package:build`가 소비자용 `dist/` 표면을 다시 만든다. 소비 저장소와 문서 예시는 `zdp-design-system` public export만 쓰고 내부 `src/` 경로를 직접 import하지 않는다.
 
-ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.57.3`을 기본으로 쓴다.
+ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.57.4`를 기본으로 쓴다.
 
 ### Brand fallback assets
 
 공용 Open Graph, square, editorial 4:3, landscape 16:9 fallback과 ship mark는 package asset subpath로 제공한다. 기존 상세형 `ship-mark.svg`는 보존되며, 새 기본 단색·역상·inline `currentColor`·표시용 3색 심볼은 각각 `ship-mark-simple-*` 이름으로 분리한다. 이미지에는 제품명이나 locale 문구가 없고 소비처가 의미와 대체 텍스트를 소유한다.
+
+제품 헤더와 공용 앱 셸은 simple ship mark 단독 표시가 기본이다. `8ailors` 워드마크 lockup은 회사 소개, 캠페인, 넓은 editorial 표면에서만 선택적으로 쓴다.
 
 ```ts
 import { zdpBrandAssets } from 'zdp-design-system/brand-assets';

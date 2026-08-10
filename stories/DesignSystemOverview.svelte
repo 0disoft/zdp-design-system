@@ -53,6 +53,8 @@
   import type { ZdpShareDockItem } from '../src/lib/share.ts';
   import type { ZdpStatusToastItem } from '../src/lib/toast.ts';
 
+  const simpleShipMark = new URL('../src/lib/assets/brand/ship-mark-simple-mono.svg', import.meta.url).href;
+
   let lightDialogOpen = false;
   let darkDialogOpen = false;
   let lightShareCount = 0;
@@ -186,17 +188,9 @@
   <header class="storybook-preview__header">
     <div>
       <p class="eyebrow">Sunlit parchment kit</p>
-      <div class="zdp-brand-lockup">
-        <span class="zdp-brand-lockup__mark" aria-hidden="true">
-          <svg viewBox="0 0 48 48" fill="none" focusable="false">
-            <path d="M24 5v29" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-            <path d="M24 7 12 31h12Z" stroke="currentColor" stroke-width="3" stroke-linejoin="round" />
-            <path d="M25 13v18h13Z" stroke="currentColor" stroke-width="3" stroke-linejoin="round" />
-            <path d="M10 37h28" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-            <path d="M15 42h18" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity="0.48" />
-          </svg>
-        </span>
-        <h1 class="zdp-brand-wordmark">8ailors</h1>
+      <div class="storybook-preview__brand">
+        <img src={simpleShipMark} alt="" width="48" height="48" />
+        <h1 class="zdp-visually-hidden">ZDP Design System</h1>
       </div>
       <p>Bright town-square surfaces, soft heraldic color, and quiet working controls.</p>
     </div>
@@ -216,6 +210,7 @@
       <span class="type-specimen type-specimen--editorial"><small>Editorial</small><strong>Quiet policy</strong></span>
       <span class="type-specimen type-specimen--sans"><small>Sans</small><strong>Campaign line</strong></span>
       <span class="type-specimen type-specimen--keyboard"><small>Keyboard</small><strong>⌘ K</strong></span>
+      <span class="type-specimen type-specimen--brand"><small>Brand wordmark · optional</small><strong class="zdp-brand-wordmark zdp-brand-wordmark--compact">8ailors</strong></span>
     </div>
   </section>
 
@@ -1093,13 +1088,15 @@
     text-transform: uppercase;
   }
 
-  .storybook-preview__header h1 {
-    color: var(--zdp-color-ink-strong);
-    font-family: var(--zdp-font-family-brand);
-    font-size: calc(var(--zdp-type-page-title-size) - 0.8rem);
-    font-weight: var(--zdp-font-weight-semibold);
-    line-height: var(--zdp-type-page-title-line-height);
-    margin: 0;
+  .storybook-preview__brand {
+    align-items: center;
+    display: inline-flex;
+  }
+
+  .storybook-preview__brand img {
+    block-size: 3rem;
+    display: block;
+    inline-size: 3rem;
   }
 
   .storybook-preview__header p:not(.eyebrow) {
@@ -1202,6 +1199,13 @@
 
   .type-specimen--keyboard strong {
     font-family: var(--zdp-font-family-expression-keyboard);
+  }
+
+  .type-specimen--brand strong {
+    font-family: var(--zdp-font-family-brand);
+    font-size: calc(var(--zdp-type-page-title-size) - 0.8rem);
+    font-weight: var(--zdp-font-weight-semibold);
+    line-height: var(--zdp-type-page-title-line-height);
   }
 
   .theme-panel {
@@ -1487,15 +1491,15 @@
       display: grid;
     }
 
-    .storybook-preview__header h1 {
-      font-size: calc(var(--zdp-type-page-title-compact-size) - 0.5rem);
-    }
-
     .storybook-preview__grid,
     .foundation-strip,
     .type-specimens,
     .surface-grid {
       grid-template-columns: 1fr;
+    }
+
+    .type-specimen--brand strong {
+      font-size: calc(var(--zdp-type-page-title-compact-size) - 0.5rem);
     }
   }
 

@@ -12,7 +12,7 @@ Default component text is English. 소비 앱은 화면 locale에 맞춰 user-fa
 - 소비 저장소는 `zdp-design-system`의 public export만 사용하고 내부 `src/` deep import를 만들지 않는다.
 - package export는 `dist/` 산출물을 통해 소비한다. root runtime entry는 `dist/index.js`, type entry는 `dist/index.d.ts`다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `dist/`는 release 전 `bun run package:build`로 다시 만든다.
 - ZDP monorepo 안의 active sibling 소비처는 unpublished local changes와 package surface를 함께 검증하기 위해 `file:../zdp-design-system`을 유지할 수 있다. 이 경우 CI는 sibling `zdp-design-system`을 checkout하고 `bun run package:build`를 먼저 실행해야 한다.
-- standalone consumer, public template, external example처럼 sibling checkout을 전제로 하지 않는 표면은 npm registry package를 사용한다. 0.57.3 이상에서는 `zdp-design-system: ^0.57.3`을 기본 semver 범위로 쓰고, 재현 가능한 release proof가 필요한 곳만 exact version을 pin한다.
+- standalone consumer, public template, external example처럼 sibling checkout을 전제로 하지 않는 표면은 npm registry package를 사용한다. 0.57.4 이상에서는 `zdp-design-system: ^0.57.4`를 기본 semver 범위로 쓰고, 재현 가능한 release proof가 필요한 곳만 exact version을 pin한다.
 - open shadow root 안에 component를 mount하는 소비처는 document-level import에 기대지 않고 `zdp-design-system/styles.css` 내용을 해당 root 안의 `<style>` 또는 `<link rel="stylesheet">`로 직접 설치한다. stylesheet가 설치된 open root에서 Tooltip, Combobox, Menu, Popover, Dialog, Sheet, TermSheet의 documented interaction contract를 지원한다. closed shadow root는 지원하지 않는다.
 - `zdpTokenNames`, `share.js`, `share.d.ts`는 손으로 맞추지 않고 `tokens:generate`, `share-icons:generate` 산출물로 유지한다.
 - 새 버전은 소비 저장소가 opt-in으로 채택한다. broad adoption 전에는 대표 소비처에서 시각과 build를 확인한다.
@@ -23,6 +23,7 @@ Default component text is English. 소비 앱은 화면 locale에 맞춰 user-fa
 - 외부 headless primitive가 내부 구현에 쓰이더라도 public API, CSS class, token, dist export는 ZDP 계약으로만 노출한다.
 - 공용 이미지 fallback은 `zdp-design-system/brand-assets` manifest와 `zdp-design-system/assets/brand/*` 파일만 사용한다. 원본 PNG 또는 내부 `src/` 경로를 import하지 않으며, 비율과 crop 규칙은 `docs/BRAND_ASSETS.md`를 따른다.
 - 새 심볼 표면은 `ship-mark-simple-mono.svg`를 기본으로 사용하고, 상세형 호환·역상·inline `currentColor`·표시용 3색 요구가 있을 때만 각 명시적 variant를 선택한다. 3색 variant는 32 CSS px 미만에서 쓰지 않는다.
+- 제품 헤더와 공용 앱 셸은 simple ship mark 단독 표시가 기본이다. `.zdp-brand-lockup`과 `brand-fonts.css`를 쓰는 `8ailors` 워드마크 결합형은 넓은 회사 소개·캠페인·editorial 표면의 선택 계약이며, 소비 앱이 모든 헤더에 반복 적용하지 않는다.
 - 공용 레몬과 크레딧 팩 함선은 `zdp-design-system/credit-assets` manifest와 `zdp-design-system/assets/credits/*` 파일만 사용한다. 구매·보너스·무료·보상 레몬을 색상만으로 구분하지 않고 localized text 또는 Badge를 함께 제공하며, 함선 asset ID를 가격·지급량·판매 상태의 정본으로 사용하지 않는다.
 
 ## Svelte 소비 표면
@@ -69,7 +70,7 @@ import 'zdp-design-system/expressive-fonts.css';
 페이지 루트 또는 주요 section에는 `.zdp-surface-reset`을 붙여 font, link, input, focus 기본값을 받는다.
 Svelte island 없이 정적 HTML만 쓰는 곳은 스크린리더 전용 보조 텍스트에 `.zdp-visually-hidden` utility를 사용한다.
 페이지 root는 `.zdp-page`, 본문 폭은 `.zdp-container`와 `.zdp-container--lg`, 섹션 간격은 `.zdp-section`과 `.zdp-section--spacing-*`, 상단 제목과 액션 흐름은 `.zdp-page-header` utility로 맞춘다.
-브랜드 헤더나 로고 옆 워드마크는 `.zdp-brand-lockup`, `.zdp-brand-lockup__mark`, `.zdp-brand-wordmark` utility로 맞추되 제품 기능 제목, CTA, 표 데이터, 본문에는 브랜드 폰트를 쓰지 않는다. `lang="ko"` 같은 locale surface 안에서도 실제 워드마크 텍스트에는 `.zdp-brand-wordmark`를 직접 붙여야 하며 `.zdp-surface-reset .zdp-brand-wordmark`가 locale font override보다 뒤에서 브랜드 스택, `font-size: calc(var(--zdp-type-page-title-size) - 0.8rem)`, `font-size: calc(var(--zdp-type-page-title-compact-size) - 0.5rem)`, `font-weight: var(--zdp-font-weight-semibold)`을 유지한다.
+넓은 마케팅·editorial 표면에서 로고와 워드마크를 함께 쓸 때만 `.zdp-brand-lockup`, `.zdp-brand-lockup__mark`, `.zdp-brand-wordmark` utility로 맞춘다. 제품 헤더와 앱 셸은 simple ship mark 단독 표시를 기본으로 하고, 제품 기능 제목, CTA, 표 데이터, 본문에는 브랜드 폰트를 쓰지 않는다. `lang="ko"` 같은 locale surface 안에서도 실제 워드마크 텍스트에는 `.zdp-brand-wordmark`를 직접 붙여야 하며 `.zdp-surface-reset .zdp-brand-wordmark`가 locale font override보다 뒤에서 브랜드 스택, `font-size: calc(var(--zdp-type-page-title-size) - 0.8rem)`, `font-size: calc(var(--zdp-type-page-title-compact-size) - 0.5rem)`, `font-weight: var(--zdp-font-weight-semibold)`을 유지한다.
 가까운 요소의 세로 흐름은 `.zdp-stack`과 `.zdp-stack--gap-*` utility로 맞춘다.
 가까운 버튼, 배지, 작은 링크 묶음의 가로 흐름은 `.zdp-inline`과 `.zdp-inline--gap-*` utility로 맞춘다.
 가까운 내용 사이의 얇은 구분선은 `.zdp-divider`와 `.zdp-divider--horizontal` utility로 맞추되, section spacing은 소비처가 소유한다.

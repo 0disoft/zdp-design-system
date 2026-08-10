@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.57.4
+
+- Made the simple ship mark the default identity in the Storybook and static-preview headers, matching compact consumer app shells instead of presenting the optional wide `8ailors` wordmark lockup as the default.
+- Kept the wordmark as an explicit optional specimen and documented its use for roomy company, campaign, and editorial surfaces only.
+
 ## 0.57.3
 
 - Loaded the optional locale font bundle in Storybook so the 12-locale stress fixture exercises the published Manrope and Noto Sans webfont contract instead of silently relying on platform fallbacks.

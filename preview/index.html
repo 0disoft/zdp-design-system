@@ -40,13 +40,15 @@
         text-transform: uppercase;
       }
 
-      .preview-title {
-        color: var(--zdp-color-ink-strong);
-        font-family: var(--zdp-font-family-brand);
-        font-size: calc(var(--zdp-type-page-title-size) - 0.8rem);
-        font-weight: var(--zdp-font-weight-semibold);
-        line-height: var(--zdp-type-page-title-line-height);
-        margin: 0;
+      .preview-brand {
+        align-items: center;
+        display: inline-flex;
+      }
+
+      .preview-brand img {
+        block-size: 3rem;
+        display: block;
+        inline-size: 3rem;
       }
 
       .preview-meta {
@@ -116,6 +118,13 @@
 
       .type-specimen--keyboard strong {
         font-family: var(--zdp-font-family-expression-keyboard);
+      }
+
+      .type-specimen--brand strong {
+        font-family: var(--zdp-font-family-brand);
+        font-size: calc(var(--zdp-type-page-title-size) - 0.8rem);
+        font-weight: var(--zdp-font-weight-semibold);
+        line-height: var(--zdp-type-page-title-line-height);
       }
 
       .layout-preview {
@@ -445,9 +454,10 @@
           display: grid;
         }
 
-        .preview-title {
+        .type-specimen--brand strong {
           font-size: calc(var(--zdp-type-page-title-compact-size) - 0.5rem);
         }
+
       }
 
       @media (max-width: 520px) {
@@ -463,17 +473,9 @@
       <header class="preview-header">
         <div>
           <p class="preview-eyebrow">Sunlit parchment kit</p>
-          <div class="zdp-brand-lockup">
-            <span class="zdp-brand-lockup__mark" aria-hidden="true">
-              <svg viewBox="0 0 48 48" fill="none" focusable="false">
-                <path d="M24 5v29" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-                <path d="M24 7 12 31h12Z" stroke="currentColor" stroke-width="3" stroke-linejoin="round" />
-                <path d="M25 13v18h13Z" stroke="currentColor" stroke-width="3" stroke-linejoin="round" />
-                <path d="M10 37h28" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-                <path d="M15 42h18" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity="0.48" />
-              </svg>
-            </span>
-            <h1 class="preview-title zdp-brand-wordmark">8ailors</h1>
+          <div class="preview-brand">
+            <img src="../src/lib/assets/brand/ship-mark-simple-mono.svg" alt="" width="48" height="48" />
+            <h1 class="zdp-visually-hidden">ZDP Design System</h1>
           </div>
           <p class="preview-meta">Bright town-square surfaces, soft heraldic color, and quiet working controls.</p>
         </div>
@@ -500,6 +502,7 @@
             <span class="type-specimen type-specimen--editorial"><small>Editorial</small><strong>Quiet policy</strong></span>
             <span class="type-specimen type-specimen--sans"><small>Sans</small><strong>Campaign line</strong></span>
             <span class="type-specimen type-specimen--keyboard"><small>Keyboard</small><strong>⌘ K</strong></span>
+            <span class="type-specimen type-specimen--brand"><small>Brand wordmark · optional</small><strong class="zdp-brand-wordmark zdp-brand-wordmark--compact">8ailors</strong></span>
           </div>
         </div>
       </section>
