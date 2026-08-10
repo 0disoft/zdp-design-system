@@ -99,6 +99,12 @@
   });
 
   $effect.pre(() => {
+    if ((disabled || readonly) && open) {
+      setOpen(false);
+    }
+  });
+
+  $effect.pre(() => {
     const valueChanged = value !== lastSyncedValue;
     const optionLabelChanged = selectedOptionLabel !== lastSyncedOptionLabel;
 
@@ -136,7 +142,7 @@
   });
 
   function setOpen(nextOpen: boolean): void {
-    if (disabled || readonly || open === nextOpen) {
+    if (open === nextOpen || (nextOpen && (disabled || readonly))) {
       return;
     }
 

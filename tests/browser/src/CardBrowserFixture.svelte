@@ -87,6 +87,10 @@
   let asyncOwnerValue = 'async-owner-24';
   let asyncOwnerQuery = '';
   let loadedAsyncOwnerOptions: readonly ZdpComboboxOption[] = [];
+  let transitionOwnerValue = '';
+  let transitionOwnerQuery = '';
+  let transitionOwnerDisabled = false;
+  let transitionOwnerReadonly = false;
   let browserRadioValue: string | null = 'weekly';
   let normalizedTabId: string | null = 'missing-tab';
   let normalizedSegmentId: string | null = 'missing-segment';
@@ -294,6 +298,24 @@
     bind:query={asyncOwnerQuery}
   />
   <button data-testid="combobox-focus-target" type="button">Combobox focus target</button>
+
+  <Combobox
+    id="transition-browser-combobox"
+    label="Transition owner"
+    options={ownerOptions}
+    disabled={transitionOwnerDisabled}
+    readonly={transitionOwnerReadonly}
+    bind:value={transitionOwnerValue}
+    bind:query={transitionOwnerQuery}
+  />
+  <label>
+    <input data-testid="combobox-disabled-toggle" type="checkbox" bind:checked={transitionOwnerDisabled} />
+    Disable transition owner
+  </label>
+  <label>
+    <input data-testid="combobox-readonly-toggle" type="checkbox" bind:checked={transitionOwnerReadonly} />
+    Make transition owner readonly
+  </label>
 
   <div role="radiogroup" aria-label="Browser frequency">
     <Radio id="browser-radio-weekly" name="browser-frequency" value="weekly" bind:selectedValue={browserRadioValue}>

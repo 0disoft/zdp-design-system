@@ -197,6 +197,32 @@ export async function verifyOverlayContracts(page) {
   assert.equal(await listbox.count(), 0, 'The completed outside click must not reopen the Combobox.');
   assert.equal(await combobox.getAttribute('aria-expanded'), 'false');
   assert.equal(await combobox.getAttribute('aria-controls'), null);
+
+  const transitionCombobox = page.getByRole('combobox', { name: 'Transition owner', exact: true });
+  const transitionListbox = page.getByRole('listbox', { name: 'Transition owner list' });
+  await transitionCombobox.click();
+  assert.equal(await transitionListbox.count(), 1);
+  await setCheckboxState(page.getByTestId('combobox-disabled-toggle'), true);
+  assert.equal(await transitionListbox.count(), 0, 'Disabling an open Combobox must close its listbox immediately.');
+  assert.equal(await transitionCombobox.getAttribute('aria-expanded'), 'false');
+  assert.equal(await transitionCombobox.getAttribute('aria-controls'), null);
+
+  await setCheckboxState(page.getByTestId('combobox-disabled-toggle'), false);
+  await transitionCombobox.click();
+  assert.equal(await transitionListbox.count(), 1);
+  await setCheckboxState(page.getByTestId('combobox-readonly-toggle'), true);
+  assert.equal(await transitionListbox.count(), 0, 'Making an open Combobox readonly must close its listbox immediately.');
+  assert.equal(await transitionCombobox.getAttribute('aria-expanded'), 'false');
+  assert.equal(await transitionCombobox.getAttribute('aria-controls'), null);
+  await setCheckboxState(page.getByTestId('combobox-readonly-toggle'), false);
+}
+
+async function setCheckboxState(locator, checked) {
+  await locator.evaluate((element, nextChecked) => {
+    element.checked = nextChecked;
+    element.dispatchEvent(new Event('change', { bubbles: true }));
+  }, checked);
+  await locator.evaluate(() => new Promise((resolve) => queueMicrotask(resolve)));
 }
 
 async function readDismissListenerCounts(page) {
