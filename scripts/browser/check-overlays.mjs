@@ -2,6 +2,22 @@ import assert from 'node:assert/strict';
 import { hasInertAncestor, isDeepActive } from './browser-assertions.mjs';
 
 export async function verifyOverlayContracts(page) {
+  const explicitCurrentBreadcrumb = page.getByRole('navigation', { name: 'Explicit current breadcrumb' });
+  assert.equal(
+    await explicitCurrentBreadcrumb.locator('[aria-current="page"]').count(),
+    1,
+    'Breadcrumb must expose exactly one current page when a non-final item is explicitly current.'
+  );
+  assert.equal(
+    await explicitCurrentBreadcrumb.locator('[aria-current="page"]').textContent(),
+    'Current project'
+  );
+  assert.equal(
+    await explicitCurrentBreadcrumb.getByRole('link', { name: 'Release history' }).count(),
+    1,
+    'A final breadcrumb item must remain a link when another item is explicitly current.'
+  );
+
   assert.deepEqual(
     await readDismissListenerCounts(page),
     { click: 0, keydown: 0 },

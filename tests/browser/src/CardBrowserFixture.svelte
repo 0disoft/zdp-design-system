@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import Button from '../../../src/lib/components/Button.svelte';
+  import Breadcrumb from '../../../src/lib/components/Breadcrumb.svelte';
   import Card from '../../../src/lib/components/Card.svelte';
   import CardHeader from '../../../src/lib/components/CardHeader.svelte';
   import Combobox from '../../../src/lib/components/Combobox.svelte';
@@ -192,6 +193,14 @@
 </script>
 
 <main class="zdp-surface-reset">
+  <Breadcrumb
+    ariaLabel="Explicit current breadcrumb"
+    items={[
+      { label: 'Workspace', href: '#workspace' },
+      { label: 'Current project', current: true },
+      { label: 'Release history', href: '#release-history' }
+    ]}
+  />
   <Card as="section" ariaLabelledBy="release-summary-title" hover>
     <svelte:fragment slot="header">
       <CardHeader id="release-summary-title">Release summary</CardHeader>

@@ -6,6 +6,7 @@
 - Cancelled SplitPane drags when pointer capture fails or orientation changes, preventing stuck selection locks and mixed-axis resize commits.
 - Closed an open Combobox when it becomes disabled or readonly while continuing to block only new open attempts in those states.
 - Restored Menu trigger focus after `target="_blank"` selections and kept pointer hover from replacing the keyboard roving-focus origin.
+- Resolved Breadcrumb current-page semantics to exactly one item, preferring the first explicit `current` item over the final-item fallback.
 
 ## 0.57.4
 

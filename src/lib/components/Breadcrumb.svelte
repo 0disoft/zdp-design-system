@@ -8,9 +8,11 @@
   export let items: readonly BreadcrumbItem[] = [];
   export let ariaLabel = 'Breadcrumb';
 
+  $: explicitCurrentIndex = items.findIndex((item) => item.current === true);
+  $: resolvedCurrentIndex = explicitCurrentIndex >= 0 ? explicitCurrentIndex : items.length - 1;
   $: normalizedItems = items.map((item, index) => ({
     ...item,
-    current: item.current === true || index === items.length - 1
+    current: index === resolvedCurrentIndex
   }));
 </script>
 
