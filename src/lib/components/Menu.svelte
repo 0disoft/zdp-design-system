@@ -120,7 +120,7 @@
       return;
     }
 
-    const activeElement = getZdpActiveElement();
+    const activeElement = getZdpActiveElement(rootElement?.ownerDocument ?? document);
     previousFocusElement = activeElement instanceof HTMLElement ? activeElement : triggerElement;
 
     if (focusIntent === 'first') {

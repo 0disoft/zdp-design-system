@@ -52,7 +52,7 @@
       return;
     }
 
-    previousFocusElement = getZdpActiveElement();
+    previousFocusElement = getZdpActiveElement(layerElement?.ownerDocument ?? document);
     modalLayer.setFocusReturnTarget(previousFocusElement);
 
     await tick();
@@ -112,7 +112,7 @@
       return;
     }
 
-    const activeElement = getZdpActiveElement();
+    const activeElement = getZdpActiveElement(panelElement?.ownerDocument ?? document);
 
     if (event.shiftKey && activeElement === firstElement) {
       event.preventDefault();

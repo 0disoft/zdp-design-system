@@ -320,6 +320,73 @@ async function verifyFocusableCache(page) {
   );
 
   await page.getByTestId('dynamic-dialog-action').evaluate((element) => element.remove());
+
+  await dialog.evaluate((element) => {
+    const editable = document.createElement('div');
+    editable.dataset.testid = 'dialog-contenteditable-action';
+    editable.setAttribute('contenteditable', '');
+    editable.textContent = 'Editable dialog action';
+    element.append(editable);
+  });
+  await page.evaluate(() => new Promise((resolve) => queueMicrotask(resolve)));
+  await closeButton.focus();
+  await page.keyboard.press('Shift+Tab');
+  assert.equal(
+    await page.getByTestId('dialog-contenteditable-action').evaluate((element) => document.activeElement === element),
+    true,
+    'A contenteditable element with an omitted attribute value must remain inside the modal Tab cycle.'
+  );
+  await page.getByTestId('dialog-contenteditable-action').evaluate((element) => element.remove());
+
+  await dialog.evaluate((element) => {
+    const checked = document.createElement('input');
+    checked.type = 'radio';
+    checked.name = 'dialog-runtime-choice';
+    checked.checked = true;
+    checked.dataset.testid = 'dialog-checked-radio';
+    const unchecked = document.createElement('input');
+    unchecked.type = 'radio';
+    unchecked.name = 'dialog-runtime-choice';
+    unchecked.dataset.testid = 'dialog-unchecked-radio';
+    element.append(checked, unchecked);
+  });
+  await page.evaluate(() => new Promise((resolve) => queueMicrotask(resolve)));
+  await closeButton.focus();
+  await page.keyboard.press('Shift+Tab');
+  assert.equal(
+    await page.getByTestId('dialog-checked-radio').evaluate((element) => document.activeElement === element),
+    true,
+    'A radio group must contribute only its checked member to the modal Tab cycle.'
+  );
+  await dialog.locator('input[name="dialog-runtime-choice"]').evaluateAll((elements) => {
+    for (const element of elements) element.remove();
+  });
+
+  await dialog.evaluate((element) => {
+    const second = document.createElement('button');
+    second.type = 'button';
+    second.tabIndex = 2;
+    second.dataset.testid = 'dialog-positive-tabindex-second';
+    second.textContent = 'Second positive tab stop';
+    const first = document.createElement('button');
+    first.type = 'button';
+    first.tabIndex = 1;
+    first.dataset.testid = 'dialog-positive-tabindex-first';
+    first.textContent = 'First positive tab stop';
+    element.append(second, first);
+  });
+  await page.evaluate(() => new Promise((resolve) => queueMicrotask(resolve)));
+  await lastAction.focus();
+  await page.keyboard.press('Tab');
+  assert.equal(
+    await page.getByTestId('dialog-positive-tabindex-first').evaluate((element) => document.activeElement === element),
+    true,
+    'Positive tabindex candidates must wrap in ascending tabindex order before regular candidates.'
+  );
+  await dialog.locator('[data-testid^="dialog-positive-tabindex-"]').evaluateAll((elements) => {
+    for (const element of elements) element.remove();
+  });
+
   await closeButton.click();
   await page.evaluate(() => {
     window.getComputedStyle = window.__zdpOriginalGetComputedStyle;

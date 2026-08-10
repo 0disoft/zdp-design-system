@@ -49,7 +49,7 @@
 
   async function handleSheetOpened(): Promise<void> {
     if (typeof document !== 'undefined') {
-      previousFocusElement = getZdpActiveElement();
+      previousFocusElement = getZdpActiveElement(layerElement?.ownerDocument ?? document);
       modalLayer.setFocusReturnTarget(previousFocusElement);
     }
 
@@ -104,7 +104,7 @@
       panelElement?.focus();
       return;
     }
-    const activeElement = getZdpActiveElement();
+    const activeElement = getZdpActiveElement(panelElement?.ownerDocument ?? document);
 
     if (event.shiftKey && activeElement === firstElement) {
       event.preventDefault();

@@ -719,7 +719,11 @@ async function checkSharedFocusContract(): Promise<void> {
     'cachedElements',
     'getClientRects().length > 0',
     "closest('[hidden], [aria-hidden=\"true\"], [inert]')",
-    "window.getComputedStyle(element)"
+    '[contenteditable]:not([contenteditable="false"])',
+    'element.ownerDocument.defaultView',
+    'isRadioGroupTabStop',
+    'sortZdpTabbableElements',
+    'isZdpHtmlElement'
   ]) {
     if (!source.includes(requiredText)) {
       failures.push(`${focusablePath} is missing shared focusability contract text ${requiredText}.`);

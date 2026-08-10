@@ -9,12 +9,12 @@ export const zdpFocusableSelector = [
   'object',
   'embed',
   'details > summary:first-of-type',
-  '[contenteditable="true"]',
+  '[contenteditable]:not([contenteditable="false"])',
   '[tabindex]'
 ].join(', ');
 
 export function isZdpFocusableElement(element: HTMLElement): boolean {
-  if (element.tabIndex < 0) {
+  if (element.tabIndex < 0 && !isImplicitContentEditableTabStop(element)) {
     return false;
   }
 
@@ -26,9 +26,10 @@ export function isZdpFocusableElement(element: HTMLElement): boolean {
     return false;
   }
 
-  const style = window.getComputedStyle(element);
+  const view = element.ownerDocument.defaultView;
+  const style = view?.getComputedStyle(element);
 
-  if (style.display === 'none' || style.visibility === 'hidden') {
+  if (style === undefined || style.display === 'none' || style.visibility === 'hidden') {
     return false;
   }
 
@@ -114,9 +115,11 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
     }
 
     if (cachedElements === null) {
-      cachedElements = Array.from(root.querySelectorAll<HTMLElement>(zdpFocusableSelector)).filter(
-        isZdpFocusableElement
-      );
+      const candidates = Array.from(root.querySelectorAll<HTMLElement>(zdpFocusableSelector))
+        .filter(isZdpFocusableElement);
+      cachedElements = sortZdpTabbableElements(candidates.filter((element) => (
+        !isRadioInput(element) || isRadioGroupTabStop(element, candidates)
+      )));
     }
 
     return cachedElements;
@@ -137,9 +140,72 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
 export function getZdpActiveElement(root: Document | ShadowRoot = document): HTMLElement | null {
   let activeElement = root.activeElement;
 
-  while (activeElement instanceof HTMLElement && activeElement.shadowRoot?.activeElement) {
+  while (isZdpHtmlElement(activeElement) && activeElement.shadowRoot?.activeElement) {
     activeElement = activeElement.shadowRoot.activeElement;
   }
 
-  return activeElement instanceof HTMLElement ? activeElement : null;
+  return isZdpHtmlElement(activeElement) ? activeElement : null;
+}
+
+function isImplicitContentEditableTabStop(element: HTMLElement): boolean {
+  if (!element.isContentEditable || element.hasAttribute('tabindex')) {
+    return false;
+  }
+
+  return element.parentElement?.closest('[contenteditable]:not([contenteditable="false"])') === null;
+}
+
+function isRadioInput(element: HTMLElement): element is HTMLInputElement {
+  return element.tagName === 'INPUT' && (element as HTMLInputElement).type === 'radio';
+}
+
+function isRadioGroupTabStop(radio: HTMLInputElement, candidates: readonly HTMLElement[]): boolean {
+  if (radio.name === '') {
+    return true;
+  }
+
+  const group = candidates.filter((candidate): candidate is HTMLInputElement => (
+    isRadioInput(candidate) &&
+    candidate.name === radio.name &&
+    candidate.form === radio.form &&
+    candidate.getRootNode() === radio.getRootNode()
+  ));
+  const checkedRadio = group.find((candidate) => candidate.checked);
+
+  return checkedRadio === undefined ? group[0] === radio : checkedRadio === radio;
+}
+
+function sortZdpTabbableElements(elements: readonly HTMLElement[]): HTMLElement[] {
+  return elements
+    .map((element, documentOrder) => ({
+      documentOrder,
+      element,
+      tabIndex: Math.max(0, element.tabIndex)
+    }))
+    .sort((left, right) => {
+      const leftPositive = left.tabIndex > 0;
+      const rightPositive = right.tabIndex > 0;
+
+      if (leftPositive !== rightPositive) {
+        return leftPositive ? -1 : 1;
+      }
+
+      if (leftPositive && left.tabIndex !== right.tabIndex) {
+        return left.tabIndex - right.tabIndex;
+      }
+
+      return left.documentOrder - right.documentOrder;
+    })
+    .map(({ element }) => element);
+}
+
+function isZdpHtmlElement(element: Element | null): element is HTMLElement {
+  if (element === null) {
+    return false;
+  }
+
+  const view = element.ownerDocument.defaultView;
+  return view === null
+    ? element.namespaceURI === 'http://www.w3.org/1999/xhtml'
+    : element instanceof view.HTMLElement;
 }

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Corrected modal Tab ordering for implicit `contenteditable`, radio groups, and positive `tabindex` candidates, and resolved active elements through each surface's owning document instead of the ambient window realm.
+
 ## 0.57.4
 
 - Made the simple ship mark the default identity in the Storybook and static-preview headers, matching compact consumer app shells instead of presenting the optional wide `8ailors` wordmark lockup as the default.
