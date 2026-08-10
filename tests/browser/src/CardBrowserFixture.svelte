@@ -57,6 +57,9 @@
   const routerMenuItems: readonly ZdpMenuItem[] = [
     { id: 'router-release', label: 'Open routed release', href: '#routed-release' }
   ];
+  const externalMenuItems: readonly ZdpMenuItem[] = [
+    { id: 'external-release', label: 'Open external release', href: '#external-release', target: '_blank' }
+  ];
   const forcedColorItems = [
     { id: 'selected', label: 'Selected contrast' },
     { id: 'available', label: 'Available contrast' }
@@ -453,6 +456,14 @@
     <svelte:fragment slot="trigger">Router actions</svelte:fragment>
   </Menu>
   <output data-testid="router-menu-selection">{routerMenuSelection}</output>
+
+  <Menu
+    idPrefix="external-browser-menu"
+    triggerLabel="External actions"
+    items={externalMenuItems}
+  >
+    <svelte:fragment slot="trigger">External actions</svelte:fragment>
+  </Menu>
 
   <Popover bind:open={popoverOpen} idPrefix="browser-popover" let:close>
     <svelte:fragment slot="trigger" let:open let:toggle let:panelId>

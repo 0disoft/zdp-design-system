@@ -48,6 +48,15 @@ export async function verifyOverlayContracts(page) {
     'A router-prevented Menu link must restore focus because no navigation occurred.'
   );
 
+  const externalMenuTrigger = page.getByRole('button', { name: 'External actions' });
+  await externalMenuTrigger.click();
+  await page.getByRole('menuitem', { name: 'Open external release' }).click();
+  assert.equal(
+    await externalMenuTrigger.evaluate((element) => document.activeElement === element),
+    true,
+    'A target=_blank Menu link must restore focus because the original document remains active.'
+  );
+
   await menuTrigger.click();
   menu = page.getByRole('menu', { name: 'Browser actions' });
   await pointerDownOn(page, outsideOverlayTarget);
@@ -74,11 +83,12 @@ export async function verifyOverlayContracts(page) {
   assert.equal(await editMenuItem.evaluate((element) => document.activeElement === element), true);
   assert.equal(await deleteMenuItem.getAttribute('aria-disabled'), 'true');
   assert.equal(await deleteMenuItem.getAttribute('tabindex'), '-1');
+  await archiveMenuItem.evaluate((element) => element.dispatchEvent(new MouseEvent('mouseenter')));
   await page.keyboard.press('ArrowDown');
   assert.equal(
     await archiveMenuItem.evaluate((element) => document.activeElement === element),
     true,
-    'ArrowDown must skip disabled items.'
+    'ArrowDown must use the focused item rather than a separately hovered item as its movement origin.'
   );
   await page.keyboard.press('ArrowDown');
   assert.equal(

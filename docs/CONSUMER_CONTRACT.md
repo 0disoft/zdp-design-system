@@ -422,7 +422,7 @@ Sheet는 right, left, bottom edge panel로 설정, 필터, 보조 흐름을 여�
 
 Dismissible surface는 닫혀 있을 때 component별 document listener를 유지하지 않는다. 활성 Menu, Popover, Combobox, Tooltip, Dialog, Sheet, TermSheet는 owner document의 공용 dismiss stack에 활성 순서로 등록되고, 문서당 공유 capture click/keydown listener가 최상단 layer 하나에만 outside click 또는 Escape를 전달한다. `closeOnEscape=false`나 `closeOnOutside=false`인 최상단 layer는 해당 입력이 아래 layer로 관통하지 않게 막는다. Tooltip은 outside-click 후보에서는 건너뛰지만 Escape top layer로는 참여하므로 focus tooltip → Menu → Sheet → Dialog가 실제 DOM으로 중첩돼도 Escape 한 번에 하나만 닫힌다. light DOM과 open shadow root는 `composedPath()` 기준으로 내부 입력과 outside 입력을 구분한다.
 
-Menu의 href item은 실제 navigation을 전제로 focus를 복원하지 않지만, SPA router나 소비 callback이 click에서 `preventDefault()`를 호출하면 navigation이 발생하지 않은 것으로 보고 trigger focus를 복원한다.
+Menu의 href item은 현재 문서의 실제 navigation을 전제로 focus를 복원하지 않지만, 새 문서를 여는 `target="_blank"` item이나 SPA router·소비 callback이 click에서 `preventDefault()`한 item은 현재 문서의 trigger focus를 복원한다. Pointer hover는 시각적 hover만 제공하며 roving keyboard 기준을 바꾸지 않고, 실제 item focus가 이동했을 때 keyboard 기준을 동기화한다.
 Sheet root는 `data-zdp-sheet-placement`, `data-zdp-sheet-size`, `data-zdp-sheet-surface="sheet"`를 남겨 QA와 소비 앱이 surface identity를 확인할 수 있게 한다.
 Toast와 StatusToast는 저장, 동기화, 실패, 경고처럼 짧은 상태 알림 표면과 dismiss/action/live-region 연결만 제공하며 알림 발생 조건, 큐 순서, 자동 닫힘 타이머, 중복 제거, 재시도 정책, 권한, 서버 상태 판단은 소비 앱이 계속 소유한다. StatusToast의 기본 ID는 SSR과 hydration에서 안정적이며, 소비 앱이 명시적인 `idPrefix`를 전달하는 계약도 유지한다. Toast와 StatusToast는 페이지 안 피드백이나 modal decision을 대체하지 않고, 오래 읽어야 하는 안내는 Callout 또는 소비 앱의 별도 흐름으로 남긴다.
 Progress, Spinner, Skeleton은 작업 진행, 응답 대기, 콘텐츠 자리 예약 표면만 제공하며 로딩 조건, 진행률 계산, 완료/실패 전환, 데이터 fetch, 재시도, 권한, 서버 상태 판단은 소비 앱이 계속 소유한다. Skeleton은 최종 레이아웃 크기를 예약하는 용도로 쓰고, 실제 텍스트 의미나 빈 상태 판단은 EmptyState 또는 소비 앱의 상태 흐름에 남긴다.

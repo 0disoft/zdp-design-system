@@ -170,7 +170,7 @@
 
     item.onclick?.(event, item);
     onSelect?.(event, item);
-    closeMenu(!item.href || event.defaultPrevented);
+    closeMenu(!item.href || event.defaultPrevented || item.target === '_blank');
   }
 
   function moveActiveItem(key: string): void {
@@ -283,7 +283,7 @@
             tabindex={item.id === activeItemId && !item.disabled ? 0 : -1}
             data-menu-item-id={item.id}
             onclick={(event) => handleItemClick(event, item)}
-            onmouseenter={() => {
+            onfocus={() => {
               if (!item.disabled) activeItemId = item.id;
             }}
           >
@@ -299,7 +299,7 @@
             tabindex={item.id === activeItemId && !item.disabled ? 0 : -1}
             data-menu-item-id={item.id}
             onclick={(event) => handleItemClick(event, item)}
-            onmouseenter={() => {
+            onfocus={() => {
               if (!item.disabled) activeItemId = item.id;
             }}
           >
