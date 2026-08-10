@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { hasInertAncestor, isDeepActive } from './browser-assertions.mjs';
 
 export async function verifyModalContracts(page) {
+  await verifyIndependentModalDocuments(page);
+
   await verifyModalKeyboardContract({
     page,
     triggerTestId: 'dialog-trigger',
@@ -189,6 +191,40 @@ export async function verifyModalContracts(page) {
     lastRole: 'link',
     lastName: 'View details'
   });
+}
+
+async function verifyIndependentModalDocuments(page) {
+  const primaryRoot = page.getByTestId('primary-document-modal-root');
+  const secondaryDocument = page.getByTitle('Secondary modal document').contentFrame();
+  const secondaryRoot = secondaryDocument.getByTestId('secondary-document-modal-root');
+
+  await primaryRoot.getByRole('button', { name: 'Activate primary document modal' }).click();
+  await secondaryRoot.getByRole('button', { name: 'Activate secondary document modal' }).click();
+
+  assert.equal(
+    await page.locator('html').getAttribute('data-zdp-modal-layer-count'),
+    '1',
+    'The primary document must count only its own active modal layer.'
+  );
+  assert.equal(
+    await secondaryDocument.locator('html').getAttribute('data-zdp-modal-layer-count'),
+    '1',
+    'A secondary owner document must maintain its own active modal count.'
+  );
+  assert.equal(await primaryRoot.getAttribute('data-zdp-modal-layer-level'), '1');
+  assert.equal(await secondaryRoot.getAttribute('data-zdp-modal-layer-level'), '1');
+  assert.equal(await page.locator('body').evaluate((element) => element.style.overflow), 'hidden');
+  assert.equal(await secondaryDocument.locator('body').evaluate((element) => element.style.overflow), 'hidden');
+
+  await secondaryRoot.getByRole('button', { name: 'Close secondary document modal' }).click();
+  assert.equal(await secondaryDocument.locator('html').getAttribute('data-zdp-modal-layer-count'), null);
+  assert.equal(await secondaryDocument.locator('body').evaluate((element) => element.style.overflow), '');
+  assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), '1');
+  assert.equal(await page.locator('body').evaluate((element) => element.style.overflow), 'hidden');
+
+  await primaryRoot.getByRole('button', { name: 'Close primary document modal' }).click();
+  assert.equal(await page.locator('html').getAttribute('data-zdp-modal-layer-count'), null);
+  assert.equal(await page.locator('body').evaluate((element) => element.style.overflow), '');
 }
 
 async function verifyModalDocumentOwnership(page) {

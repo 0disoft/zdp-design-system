@@ -12,6 +12,7 @@
   import Menu from '../../../src/lib/components/Menu.svelte';
   import LocaleSwitcher from '../../../src/lib/components/LocaleSwitcher.svelte';
   import ModalBoundaryFixture from './ModalBoundaryFixture.svelte';
+  import ModalDocumentFixture from './ModalDocumentFixture.svelte';
   import Popover from '../../../src/lib/components/Popover.svelte';
   import ResizableSplitPane from '../../../src/lib/components/ResizableSplitPane.svelte';
   import Radio from '../../../src/lib/components/Radio.svelte';
@@ -789,6 +790,7 @@
   </section>
 
   <ModalBoundaryFixture />
+  <ModalDocumentFixture />
 
   <Breadcrumb
     ariaLabel="Explicit current breadcrumb"

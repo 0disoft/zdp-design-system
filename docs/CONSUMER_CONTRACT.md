@@ -459,7 +459,7 @@ Input, Textarea, Select는 `describedBy`에 하나 이상의 id를 연결할 수
 Switch도 `describedBy` id 배열과 `errorMessageId`를 통해 invalid 상태의 보조 설명과 에러 메시지를 native switch input에 연결한다.
 Input과 Textarea의 `readonly` 상태는 제출과 포커스를 유지하는 읽기 전용 값에 사용한다. 권한 때문에 값을 바꾸면 안 되는지, 단순히 고정 식별자를 보여주는지는 소비 앱이 결정한다.
 Tabs는 가까운 정보 묶음 전환을 표현하되 라우팅, 권한, 데이터 로딩 판단은 소비 앱이 계속 소유한다. 기본 tab/panel prefix는 인스턴스마다 다르고 SSR과 hydration에서 안정적이며, 소비 앱이 명시적인 `idPrefix`를 전달하는 계약도 유지한다. 기존 `let:selectedId`, `let:selectedItem`, `bind:selectedId` 계약은 계속 지원한다.
-Dialog는 modal layer, backdrop, close, scroll lock, focus trap, aria 구조만 제공하며 저장, 삭제, 인증, 결제, 권한 판단은 소비 앱이 계속 소유한다. Dialog, Sheet, TermSheet의 modal registry는 browser document lifecycle에만 등록되므로 반복되거나 실패한 SSR 렌더 사이에 layer 상태를 공유하지 않는다. 처음부터 열린 modal을 SSR한 소비처는 hydration 뒤 단일 active layer, body scroll lock, background inert가 활성화되고 close 뒤 모두 복구되는 계약을 유지한다.
+Dialog는 modal layer, backdrop, close, scroll lock, focus trap, aria 구조만 제공하며 저장, 삭제, 인증, 결제, 권한 판단은 소비 앱이 계속 소유한다. Dialog, Sheet, TermSheet의 modal registry는 `root.ownerDocument`별 `WeakMap`에 귀속되므로 같은 JavaScript realm에서 iframe이나 별도 document에 mount해도 layer count, nesting level, inert ownership, body scroll lock을 섞지 않으며 반복되거나 실패한 SSR 렌더 사이에도 상태를 공유하지 않는다. 처음부터 열린 modal을 SSR한 소비처는 hydration 뒤 해당 owner document에서 단일 active layer, body scroll lock, background inert가 활성화되고 close 뒤 모두 복구되는 계약을 유지한다.
 
 ## Flutter와 Native 소비 표면
 

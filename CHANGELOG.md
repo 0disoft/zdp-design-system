@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Isolated modal layer stacks, inert ownership, scroll locks, and nesting levels per owner `Document`, including same-realm iframe mounts.
+
 ## 0.57.5
 
 - Corrected modal Tab ordering for implicit `contenteditable`, radio groups, and positive `tabindex` candidates, and resolved active elements through each surface's owning document instead of the ambient window realm.

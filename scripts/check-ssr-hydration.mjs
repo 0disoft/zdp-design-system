@@ -55,10 +55,8 @@ const server = await createServer({
           code: `${code}
 export function __getZdpModalLayerSsrSnapshot() {
   return {
-    activeLayerCount: activeLayerIds.length,
-    managedInertElementCount: managedInertElements.size,
-    previousBodyOverflow,
-    registeredLayerCount: layers.size
+    nextLayerId,
+    usesPerDocumentRegistry: documentStates instanceof WeakMap
   };
 }`,
           map: null
@@ -436,8 +434,6 @@ async function verifyInitiallyOpenModalHydration(browserInstance, port, modalCas
 }
 
 function assertModalLayerSsrSnapshot(snapshot, phase) {
-  assert.equal(snapshot.registeredLayerCount, 0, `${phase}: modal handles must not remain registered.`);
-  assert.equal(snapshot.activeLayerCount, 0, `${phase}: active modal layer ids must not survive the render.`);
-  assert.equal(snapshot.managedInertElementCount, 0, `${phase}: managed inert state must be empty.`);
-  assert.equal(snapshot.previousBodyOverflow, null, `${phase}: body overflow state must be released.`);
+  assert.equal(snapshot.nextLayerId, 1, `${phase}: SSR must not allocate a browser modal layer id.`);
+  assert.equal(snapshot.usesPerDocumentRegistry, true, `${phase}: modal state must remain document-scoped.`);
 }
