@@ -305,6 +305,7 @@
   }
 
   .component-story__panel {
+    align-content: start;
     background: var(--zdp-color-surface-panel);
     border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);

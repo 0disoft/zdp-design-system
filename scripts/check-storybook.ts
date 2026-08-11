@@ -302,6 +302,10 @@ for (const [storyName, storySource] of [
   ['Interaction', interactionComponent],
   ['Navigation', navigationComponent]
 ] as const) {
+  if (!storySource.includes('align-content: start')) {
+    failures.push(`${storyName} story must top-align light and dark preview panel content.`);
+  }
+
   if (!storySource.includes('border: var(--zdp-control-border-width) solid transparent')) {
     failures.push(`${storyName} story must not add a visible border around its light and dark preview panels.`);
   }
