@@ -519,7 +519,7 @@
 
   .zdp-combobox__control:hover {
     background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    border-color: var(--zdp-color-line-subtle);
   }
 
   .zdp-combobox__control:focus-within {
@@ -584,7 +584,7 @@
   .zdp-combobox__toggle:hover:not(:disabled),
   .zdp-combobox__toggle:focus-visible {
     background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    border-color: transparent;
     color: var(--zdp-color-ink-strong);
     outline: 0;
   }
@@ -613,8 +613,8 @@
   }
 
   .zdp-combobox__panel {
-    background: var(--zdp-color-surface-panel);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
+    background: var(--zdp-color-surface-raised);
+    border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     color: var(--zdp-color-ink-normal);
     display: grid;
@@ -662,14 +662,14 @@
 
   .zdp-combobox__option:hover:not(:disabled),
   .zdp-combobox__option[data-active="true"] {
-    background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    background: var(--zdp-color-surface-panel);
+    border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-combobox__option[data-selected="true"] {
     background: var(--zdp-color-focus-surface);
-    border-color: var(--zdp-color-focus-line);
+    border-color: transparent;
     color: var(--zdp-color-focus-text);
   }
 

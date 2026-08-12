@@ -11,7 +11,7 @@
   .zdp-badge {
     align-items: center;
     background: var(--zdp-color-surface-panel);
-    border: 1px solid var(--zdp-color-line-strong);
+    border: 1px solid transparent;
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-strong);
@@ -24,6 +24,16 @@
     min-width: 0;
     text-decoration: none;
     white-space: nowrap;
+  }
+
+  .zdp-badge::before {
+    background: var(--zdp-color-line-strong);
+    border-radius: 50%;
+    content: '';
+    flex: 0 0 auto;
+    height: 0.4em;
+    margin-inline-end: var(--zdp-space-1);
+    width: 0.4em;
   }
 
   .zdp-badge--sm {
@@ -40,22 +50,34 @@
 
   .zdp-badge--primary {
     background: var(--zdp-color-accent-primary-soft);
-    border-color: var(--zdp-color-accent-primary-strong);
     color: var(--zdp-color-ink-strong);
+  }
+
+  .zdp-badge--primary::before {
+    background: var(--zdp-color-accent-primary-strong);
   }
 
   .zdp-badge--success {
-    border-color: var(--zdp-color-accent-success);
     color: var(--zdp-color-ink-strong);
+  }
+
+  .zdp-badge--success::before {
+    background: var(--zdp-color-accent-success);
   }
 
   .zdp-badge--warning {
-    border-color: var(--zdp-color-accent-warning);
     color: var(--zdp-color-ink-strong);
   }
 
+  .zdp-badge--warning::before {
+    background: var(--zdp-color-accent-warning);
+  }
+
   .zdp-badge--danger {
-    border-color: var(--zdp-color-accent-danger);
     color: var(--zdp-color-accent-danger);
+  }
+
+  .zdp-badge--danger::before {
+    background: var(--zdp-color-accent-danger);
   }
 </style>

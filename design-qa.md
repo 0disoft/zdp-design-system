@@ -148,3 +148,37 @@ The locale-specific font-family tokens were correct, but the QA environment load
 Browser platform-font inspection confirmed the intended custom webfont families for all 12 locale samples, with no mixed-family line, clipped text, horizontal page overflow, or console font error. No actionable P0, P1, or P2 mismatch remains.
 
 final result: passed
+
+---
+
+# Border-light component surfaces design QA
+
+## Source captures
+
+- `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-12280d9d-b5b6-4f26-949b-60572865d5c0.png`: Combobox with stacked control, panel, and active-option borders.
+- `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-e0686ec6-08e7-4f7c-9223-838277903219.png`: Avatar and IdentityChip with overlapping resting outlines.
+- `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-92421642-3a42-437a-9d8f-000261e4cfb5.png`: Badge tones expressed primarily through four separate outlines.
+
+## Implementation captures
+
+- `C:\Users\cherr\AppData\Local\Temp\zdp-design-system-borderless-combobox.png`: Storybook Form Controls, light and dark themes.
+- `C:\Users\cherr\AppData\Local\Temp\zdp-design-system-borderless-identity.png`: Storybook Data Display identity section, light and dark themes.
+- `C:\Users\cherr\AppData\Local\Temp\zdp-design-system-borderless-feedback.png`: Storybook Feedback status badges, light and dark themes.
+- viewport: 1280 x 720 Storybook isolation view.
+
+## Findings and resolution
+
+- Combobox: kept the input boundary and visible focus/invalid states, removed panel and option resting borders, and separated the active row with tonal surfaces.
+- Avatar: changed the normal and primary outlines to transparent while preserving shape and tonal identity.
+- IdentityChip: removed the resting frame, retained hover and focus feedback, and expressed selected/current state with a soft accent surface.
+- Badge: replaced tone-colored outlines with compact status dots and retained both text and color, so status is not color-only.
+- Forced colors: restored system `ButtonText` boundaries and status dots for all affected surfaces.
+
+## Comparison history
+
+1. Original captures showed two to four nested borders around controls and compact identity/status elements.
+2. First implementation removed decorative borders but briefly weakened the Combobox focus contract.
+3. Final implementation restored the established focus-line border and focus-surface outline while leaving only resting decorative borders transparent.
+4. Storybook light/dark captures confirm that component grouping and selected states remain readable without stacked outlines.
+
+final result: passed

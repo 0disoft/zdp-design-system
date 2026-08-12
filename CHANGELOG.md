@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.58.2
+
+- Reworked Badge, Avatar, IdentityChip, and Combobox secondary surfaces around tonal fills instead of stacked resting borders.
+- Preserved visible focus, invalid controls, selected states, and forced-colors system boundaries while keeping decorative component outlines transparent in normal themes.
+
 ## 0.58.0
 
 - Built package output in a validated staging directory before promotion, restored the previous `dist` on failed or interrupted swaps, and preserved direct exported declarations in generated public entries.

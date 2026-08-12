@@ -191,7 +191,22 @@ export async function verifyFoundationAndFormContracts(page) {
 
   const combobox = page.getByRole('combobox', { name: 'Owner', exact: true });
   await combobox.focus();
-  assert.equal(await page.getByRole('listbox', { name: 'Owner list' }).count(), 1);
+  const ownerListbox = page.getByRole('listbox', { name: 'Owner list' });
+  assert.equal(await ownerListbox.count(), 1);
+  const borderlessComboboxState = await ownerListbox.evaluate((listbox) => {
+    const panel = listbox.closest('.zdp-combobox__panel');
+    const activeOption = listbox.querySelector('.zdp-combobox__option[data-active="true"]');
+    const control = listbox.closest('.zdp-combobox')?.querySelector('.zdp-combobox__control');
+
+    return {
+      activeOptionBorderColor: activeOption ? getComputedStyle(activeOption).borderTopColor : null,
+      controlOutlineStyle: control ? getComputedStyle(control).outlineStyle : null,
+      panelBorderColor: panel ? getComputedStyle(panel).borderTopColor : null
+    };
+  });
+  assert.equal(borderlessComboboxState.panelBorderColor, 'rgba(0, 0, 0, 0)');
+  assert.equal(borderlessComboboxState.activeOptionBorderColor, 'rgba(0, 0, 0, 0)');
+  assert.notEqual(borderlessComboboxState.controlOutlineStyle, 'none');
   for (const legacyKeyCode of [null, 229]) {
     const dispatchResult = await combobox.evaluate((element, keyCode) => {
       const event = new KeyboardEvent('keydown', {

@@ -51,8 +51,8 @@
 <style>
   .zdp-identity-chip {
     align-items: center;
-    background: var(--zdp-color-surface-panel);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+    background: transparent;
+    border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-normal);
@@ -86,7 +86,6 @@
 
   .zdp-identity-chip--link:hover {
     background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);
   }
 
@@ -98,7 +97,7 @@
 
   .zdp-identity-chip[data-selected='true'],
   .zdp-identity-chip[aria-current] {
-    border-color: var(--zdp-color-accent-primary-strong);
+    background: var(--zdp-color-accent-primary-soft);
     color: var(--zdp-color-ink-strong);
   }
 

@@ -32,7 +32,7 @@
   .zdp-avatar {
     align-items: center;
     background: var(--zdp-color-surface-raised);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+    border: var(--zdp-control-border-width) solid transparent;
     border-radius: 50%;
     box-sizing: border-box;
     color: var(--zdp-color-ink-strong);
@@ -67,7 +67,6 @@
 
   .zdp-avatar--primary {
     background: var(--zdp-color-accent-primary-soft);
-    border-color: var(--zdp-color-accent-primary-strong);
   }
 
   .zdp-avatar__image {
