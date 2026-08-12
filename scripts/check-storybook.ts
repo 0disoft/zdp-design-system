@@ -12,6 +12,7 @@ interface PackageJson {
 const root = process.cwd();
 const packagePath = join(root, 'package.json');
 const mainPath = join(root, '.storybook', 'main.ts');
+const faviconPath = join(root, '.storybook', 'public', 'favicon.svg');
 const previewPath = join(root, '.storybook', 'preview.ts');
 const previewStylePath = join(root, '.storybook', 'preview.css');
 const brandFontStylePath = join(root, 'src', 'styles', 'brand-fonts.css');
@@ -105,6 +106,7 @@ const failures: string[] = [];
 const [
   packageJson,
   main,
+  favicon,
   preview,
   story,
   component,
@@ -194,6 +196,7 @@ const [
   await Promise.all([
     readPackageJson(packagePath),
     readFile(mainPath, 'utf8'),
+    readFile(faviconPath, 'utf8'),
     readFile(previewPath, 'utf8'),
     readFile(storyPath, 'utf8'),
     readFile(componentPath, 'utf8'),
@@ -320,6 +323,21 @@ for (const [scriptName, expectedCommand] of Object.entries({
 })) {
   if (packageJson.scripts?.[scriptName] !== expectedCommand) {
     failures.push(`Missing package script ${scriptName}.`);
+  }
+}
+
+if (!main.includes("staticDirs: [{ from: './public', to: '/' }]")) {
+  failures.push('Storybook must publish its repository-owned favicon from the static public root.');
+}
+
+for (const requiredText of [
+  '<svg viewBox="0 0 48 48"',
+  'fill="#f7e9cf"',
+  'fill="#e2c898"',
+  'stroke="#b66a24"'
+]) {
+  if (!favicon.includes(requiredText)) {
+    failures.push(`Storybook favicon must preserve the official detailed ship mark: ${requiredText}.`);
   }
 }
 
