@@ -51,6 +51,8 @@ export const expectedPackageExports = {
   './assets/brand/ship-mark-simple-inverse.svg': './dist/assets/brand/ship-mark-simple-inverse.svg',
   './assets/brand/ship-mark-simple-current-color.svg': './dist/assets/brand/ship-mark-simple-current-color.svg',
   './assets/brand/ship-mark-simple-tricolor.svg': './dist/assets/brand/ship-mark-simple-tricolor.svg',
+  './assets/brand/rodi-mark.svg': './dist/assets/brand/rodi-mark.svg',
+  './assets/brand/rodi-mark-1254.png': './dist/assets/brand/rodi-mark-1254.png',
   './assets/credits/credit-lemon-simple-mono.svg': './dist/assets/credits/credit-lemon-simple-mono.svg',
   './assets/credits/credit-lemon-simple-inverse.svg': './dist/assets/credits/credit-lemon-simple-inverse.svg',
   './assets/credits/credit-lemon-simple-current-color.svg': './dist/assets/credits/credit-lemon-simple-current-color.svg',

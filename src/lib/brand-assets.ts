@@ -1,4 +1,4 @@
-export type ZdpBrandAssetFormat = 'jpeg' | 'webp' | 'svg';
+export type ZdpBrandAssetFormat = 'jpeg' | 'png' | 'webp' | 'svg';
 export type ZdpBrandAssetTheme = 'light' | 'dark';
 export type ZdpBrandAssetCropPolicy = 'none' | 'safe-area-preserved';
 
@@ -104,6 +104,30 @@ export const zdpBrandAssets = Object.freeze({
     ['brand-mark-display', 'minimum-32px', 'tricolor'],
     false,
     '3e21ad6b22129cb28bcce07d211f2118dfe34b212aa575e75c70c5cd46134ff5'
+  ),
+  rodiMark: createAsset(
+    'zdp-brand-rodi-mark',
+    'rodi-mark.svg',
+    'svg',
+    1254,
+    1254,
+    '1:1',
+    ['light'],
+    ['company-mark', 'print', 'scalable'],
+    false,
+    '85fe4d251ee46f8f78233e0e2d11c4f8eb18f56fc0c81bbc1ada45743336d299'
+  ),
+  rodiMarkRaster: createAsset(
+    'zdp-brand-rodi-mark-1254',
+    'rodi-mark-1254.png',
+    'png',
+    1254,
+    1254,
+    '1:1',
+    ['light'],
+    ['company-mark', 'raster-fallback', 'preview'],
+    false,
+    'c1290cfad13aa0dccf6b01f64d920e28e6dc607919e5c85fefd0e39cfeb1b492'
   )
 } as const satisfies Readonly<Record<string, ZdpBrandAsset | readonly ZdpBrandAsset[]>>);
 

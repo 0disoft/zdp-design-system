@@ -58,6 +58,8 @@ import landscapeFallback from 'zdp-design-system/assets/brand/landscape-640x360.
 | Simple ship mark, inverse | `ship-mark-simple-inverse.svg` | 1:1 | none | dark |
 | Simple ship mark, inheritable | `ship-mark-simple-current-color.svg` | 1:1 | none | inline SVG; light or dark |
 | Simple ship mark, display tricolor | `ship-mark-simple-tricolor.svg` | 1:1 | none | light; 32 CSS px or larger |
+| Rodisoft company mark | `rodi-mark.svg` | 1:1 | none | light; print and company identity |
+| Rodisoft company mark fallback | `rodi-mark-1254.png` | 1:1 | none | light; SVG-incompatible tools |
 
 Raster derivatives are encoded without retained source metadata. WebP and JPEG files use the browser-standard untagged sRGB interpretation; the maintainer generator passes explicit sRGB output intent and does not preserve an input profile. AVIF is intentionally absent until a measured consumer need justifies another format.
 
@@ -75,12 +77,13 @@ Raster derivatives are encoded without retained source metadata. WebP and JPEG f
 - 소비처 색을 따라야 할 때는 `ship-mark-simple-current-color.svg`를 inline SVG로 삽입한다. 외부 `<img>`는 소비처 CSS의 `color`를 상속하지 않으므로 이 파일을 `<img>` 색상 변경 수단으로 쓰지 않는다.
 - `ship-mark-simple-tricolor.svg`는 넓은 브랜드 소개·캠페인 표면에서만 32 CSS px 이상으로 쓴다. 작은 아이콘, 상태 표시, 본문 장식에는 단색을 쓴다.
 - simple 제품군은 왼쪽 작은 직각삼각형, 오른쪽 큰 직각삼각형, 아래 사다리꼴의 정확히 세 path와 그 사이 여백으로 구성한다. path 비율, 순서, 간격, 지정 색을 소비처에서 따로 바꾸지 않는다.
+- `rodi-mark.svg`는 Rodisoft 회사 식별과 인쇄의 정본이다. `rodi-mark-1254.png`는 SVG를 받지 않는 도구에만 사용하고, PNG를 다시 트레이싱해 별도 정본을 만들지 않는다.
 
 Decorative backgrounds use `alt=""`. When an image itself conveys content, the consumer owns a context-specific localized `alt`; the design system does not invent product copy. A ship mark inside an already named brand link is decorative and also uses `alt=""`.
 
 ## Source and generation boundary
 
-Large source PNGs are deliberately not stored in this repository or included in the npm package. Keep them in the maintainer-owned brand/media asset store. `src/lib/assets/brand/` contains only the allowlisted publishable derivatives, the detailed ship SVG, and the exact simple ship SVG variants.
+Generated fallback-background source PNGs are deliberately not stored in this repository or included in the npm package. Keep them in the maintainer-owned brand/media asset store. `src/lib/assets/brand/` contains only allowlisted publishable derivatives and approved marks. The approved `rodi-mark-1254.png` is a public compatibility asset paired with the authoritative `rodi-mark.svg`, not a generator source.
 
 When intentionally rebuilding derivatives, materialize the four files below in one external directory and run `bun run brand-assets:generate -- --source-dir <directory>`. Then visually review Storybook before accepting changed output hashes. The generator rejects any source whose SHA-256 differs, uses Lanczos resizing, renders the exact SVG with the repository's existing Chromium runtime, strips source metadata, and writes only the declared derivatives. `bun run brand-assets:check` validates output hashes, dimensions, formats, byte budgets, allowlists, SVG paths, repository/package source exclusion, and the forbidden distorted-logo hash.
 
@@ -91,4 +94,4 @@ When intentionally rebuilding derivatives, materialize the four files below in o
 | `editorial-background.png` | 1448 × 1086 | `71a3dd0095ae1a2dfcac4b9cee3e1b14510fae5fcb047d214d80b12a8bedcdb4` |
 | `landscape-background.png` | 1672 × 941 | `5961de6a4693fb317cd18ea0104407f083ede84238ee105e981bfab5c4738204` |
 
-The four raster source images were generated with OpenAI image generation at the repository maintainer's direction, selected by the maintainer, and supplied for this package. The maintainer authorizes the checked derivatives to be redistributed as part of `zdp-design-system` under this package's MIT license. The detailed and simple ship SVGs are ZDP brand marks maintained in this repository; they are distributed under the same package license. No stock-image or third-party asset source is asserted for this asset set.
+The four raster source images were generated with OpenAI image generation at the repository maintainer's direction, selected by the maintainer, and supplied for this package. The maintainer authorizes the checked derivatives to be redistributed as part of `zdp-design-system` under this package's MIT license. The detailed and simple ship SVGs and the approved Rodisoft `rodi` SVG/PNG pair are maintainer-supplied ZDP brand marks maintained in this repository; they are distributed under the same package license. No stock-image or third-party asset source is asserted for this asset set.

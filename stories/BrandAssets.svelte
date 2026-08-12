@@ -13,7 +13,9 @@
     shipMark: new URL('../src/lib/assets/brand/ship-mark.svg', import.meta.url).href,
     shipMarkSimpleMono: new URL('../src/lib/assets/brand/ship-mark-simple-mono.svg', import.meta.url).href,
     shipMarkSimpleInverse: new URL('../src/lib/assets/brand/ship-mark-simple-inverse.svg', import.meta.url).href,
-    shipMarkSimpleTricolor: new URL('../src/lib/assets/brand/ship-mark-simple-tricolor.svg', import.meta.url).href
+    shipMarkSimpleTricolor: new URL('../src/lib/assets/brand/ship-mark-simple-tricolor.svg', import.meta.url).href,
+    rodiMark: new URL('../src/lib/assets/brand/rodi-mark.svg', import.meta.url).href,
+    rodiMarkRaster: new URL('../src/lib/assets/brand/rodi-mark-1254.png', import.meta.url).href
   } as const;
 </script>
 
@@ -77,6 +79,14 @@
       <figure class="asset-frame asset-frame--mark">
         <img src={assets.shipMarkSimpleTricolor} alt="" width="48" height="48" />
         <figcaption>Simple tricolor mark · 32 px minimum</figcaption>
+      </figure>
+      <figure class="asset-frame asset-frame--mark asset-frame--rodi">
+        <img src={assets.rodiMark} alt="" width="1254" height="1254" />
+        <figcaption>Rodisoft company mark · scalable SVG</figcaption>
+      </figure>
+      <figure class="asset-frame asset-frame--mark asset-frame--rodi">
+        <img src={assets.rodiMarkRaster} alt="" width="1254" height="1254" />
+        <figcaption>Rodisoft company mark · approved PNG fallback</figcaption>
       </figure>
       <figure class="asset-frame asset-frame--missing">
         {#if unavailableAsset}
@@ -193,6 +203,10 @@
 
   .asset-frame--inverse img {
     background: var(--zdp-color-surface-canvas);
+  }
+
+  .asset-frame--rodi img {
+    max-inline-size: 24rem;
   }
 
   .asset-mark-preview {

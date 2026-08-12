@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.59.0
+
+- Added the approved Rodisoft `rodi` company mark as a scalable SVG source and a 1254 px PNG fallback with package exports, manifest hashes, Storybook review, and asset-integrity checks.
+
 ## 0.58.5
 
 - Increased the spacing between Badge status dots and their labels without changing badge size or tone semantics.

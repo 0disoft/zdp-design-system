@@ -66,7 +66,9 @@ async function checkOutputs(): Promise<void> {
     assertManifestMetadata(output.fileName, manifest, output);
 
     if (output.format === 'svg') {
-      checkShipSvg(output.fileName, bytes.toString('utf8'));
+      const source = bytes.toString('utf8');
+      if (output.fileName === 'rodi-mark.svg') checkRodiSvg(source);
+      else checkShipSvg(output.fileName, source);
       continue;
     }
 
@@ -105,7 +107,7 @@ async function checkPackageExclusions(): Promise<void> {
   try {
     const files = await readdir(distRoot, { recursive: true });
     for (const file of files) {
-      if (/\.(png)$/i.test(file) || Object.values(brandSourceContract).some((source) => file.endsWith(source.fileName))) {
+      if ((/\.(png)$/i.test(file) && !file.endsWith('rodi-mark-1254.png')) || Object.values(brandSourceContract).some((source) => file.endsWith(source.fileName))) {
         failures.push(`dist must not contain source image ${file}.`);
       }
     }
@@ -199,6 +201,21 @@ function checkShipSvg(fileName: string, source: string): void {
     ]) {
       if (!source.includes(requiredPath)) failures.push(`${fileName} must preserve tricolor path ${requiredPath}.`);
     }
+  }
+}
+
+function checkRodiSvg(source: string): void {
+  if (!source.includes('viewBox="0 0 1254.000000 1254.000000"')) {
+    failures.push('rodi-mark.svg must preserve the approved 1254 square viewBox.');
+  }
+  if ((source.match(/<path\b/g) ?? []).length !== 3) {
+    failures.push('rodi-mark.svg must preserve exactly three traced paths.');
+  }
+  if (!source.includes('fill="#000000"') || !source.includes('stroke="none"')) {
+    failures.push('rodi-mark.svg must preserve its approved black fill-only rendering.');
+  }
+  if (/<text\b|<image\b|href=|xlink:href=|<!DOCTYPE/i.test(source)) {
+    failures.push('rodi-mark.svg must not embed text, raster images, external references, or a remote DTD.');
   }
 }
 

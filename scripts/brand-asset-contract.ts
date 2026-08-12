@@ -27,5 +27,7 @@ export const brandOutputContract = Object.freeze([
   Object.freeze({ fileName: 'ship-mark-simple-mono.svg', width: 48, height: 48, format: 'svg', maxBytes: 1_000 }),
   Object.freeze({ fileName: 'ship-mark-simple-inverse.svg', width: 48, height: 48, format: 'svg', maxBytes: 1_000 }),
   Object.freeze({ fileName: 'ship-mark-simple-current-color.svg', width: 48, height: 48, format: 'svg', maxBytes: 1_000 }),
-  Object.freeze({ fileName: 'ship-mark-simple-tricolor.svg', width: 48, height: 48, format: 'svg', maxBytes: 1_000 })
+  Object.freeze({ fileName: 'ship-mark-simple-tricolor.svg', width: 48, height: 48, format: 'svg', maxBytes: 1_000 }),
+  Object.freeze({ fileName: 'rodi-mark.svg', width: 1254, height: 1254, format: 'svg', maxBytes: 3_000 }),
+  Object.freeze({ fileName: 'rodi-mark-1254.png', width: 1254, height: 1254, format: 'png', maxBytes: 800_000 })
 ]);
