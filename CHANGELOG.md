@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.58.3
+
+- Matched Menu panel backgrounds to the darker Popover surface while preserving the brighter trigger and interaction-state hierarchy.
+
 ## 0.58.2
 
 - Reworked Badge, Avatar, IdentityChip, and Combobox secondary surfaces around tonal fills instead of stacked resting borders.

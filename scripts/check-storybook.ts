@@ -2474,6 +2474,7 @@ for (const requiredText of [
   '.zdp-menu__item--danger',
   '.zdp-menu__separator',
   'border: var(--zdp-control-border-width) solid transparent',
+  'background: var(--zdp-color-surface-panel)',
   'background: var(--zdp-color-surface-raised)',
   'background: var(--zdp-color-accent-primary-soft)',
   'border-color: ButtonText',

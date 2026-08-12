@@ -377,7 +377,7 @@
   }
 
   .zdp-menu__panel {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-surface-panel);
     border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     color: var(--zdp-color-ink-normal);

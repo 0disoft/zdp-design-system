@@ -40,6 +40,19 @@ export async function verifyOverlayContracts(page) {
   let menu = page.getByRole('menu', { name: 'Browser actions' });
   assert.equal(await menu.count(), 1);
   assert.equal(await menuTrigger.getAttribute('aria-expanded'), 'true');
+  const floatingPanelSurface = await page.locator('html').evaluate((element) => {
+    const probe = document.createElement('span');
+    probe.style.backgroundColor = 'var(--zdp-color-surface-panel)';
+    element.append(probe);
+    const color = getComputedStyle(probe).backgroundColor;
+    probe.remove();
+    return color;
+  });
+  assert.equal(
+    await menu.evaluate((element) => getComputedStyle(element).backgroundColor),
+    floatingPanelSurface,
+    'Menu panels must use the darker floating-panel surface shared with Popover.'
+  );
   assert.deepEqual(
     await readDismissListenerCounts(page),
     { click: 1, keydown: 1 },
