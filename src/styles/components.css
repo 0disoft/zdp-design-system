@@ -385,7 +385,7 @@
   content: '';
   flex: 0 0 auto;
   height: 0.4em;
-  margin-inline-end: var(--zdp-space-1);
+  margin-inline-end: var(--zdp-space-2);
   width: 0.4em;
 }
 

@@ -151,6 +151,22 @@ final result: passed
 
 ---
 
+# Badge status-dot spacing design QA
+
+## Source capture
+
+- `C:\Users\cherr\AppData\Local\Temp\codex-clipboard-550c4198-6fa3-484f-85da-3b2c02393867.png`: the status dot and `검토 중` label visually touched because the inline gap was too narrow.
+
+## Implementation check
+
+- Storybook: `design-system-components-feedback--states`, light and dark themes at a 1280 x 720 viewport.
+- The dot remains `5.6px` wide and every status badge now renders an `8px` inline gap.
+- Badge height remains `36px`; only the dot-to-label spacing changed.
+
+final result: passed
+
+---
+
 # Border-light component surfaces design QA
 
 ## Source captures

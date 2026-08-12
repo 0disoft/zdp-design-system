@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.58.5
+
+- Increased the spacing between Badge status dots and their labels without changing badge size or tone semantics.
+
 ## 0.58.4
 
 - Added the official detailed ship mark as the Storybook browser favicon.
