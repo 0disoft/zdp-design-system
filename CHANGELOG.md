@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.59.1
+
+- Isolated npm trusted-publishing OIDC permission to the minimal publish job and verified the prepared tarball before publication.
+- Made generated DOM ids deterministic and non-throwing for malformed UTF-16 input across shared components.
+- Removed the remote Pretendard stylesheet from the default token CSS path; optional font entries remain explicit consumer choices.
+
 ## 0.59.0
 
 - Added the approved Rodisoft `rodi` company mark as a scalable SVG source and a 1254 px PNG fallback with package exports, manifest hashes, Storybook review, and asset-integrity checks.

@@ -4,6 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { join, relative } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { compile, type Warning } from 'svelte/compiler';
+import { toZdpDomId } from '../src/lib/dom-id';
 import {
   expectedPackageExportTargets,
   expectedPackageExports,
@@ -97,6 +98,21 @@ const expectedScripts = {
   'fixtures:check': 'bun scripts/check-consumer-fixtures.ts'
 } as const;
 const failures: string[] = [];
+
+for (const [input, expected] of [
+  ['safe id', 'safe%20id'],
+  ['emoji \ud83d\ude80', 'emoji%20%F0%9F%9A%80'],
+  ['lone high \ud800 surrogate', 'lone%20high%20%EF%BF%BD%20surrogate'],
+  ['lone low \udc00 surrogate', 'lone%20low%20%EF%BF%BD%20surrogate']
+] as const) {
+  if (toZdpDomId(input, 'fallback') !== expected) {
+    failures.push(`DOM id encoding must be deterministic and non-throwing for ${JSON.stringify(input)}.`);
+  }
+}
+
+if (toZdpDomId('   ', 'fallback') !== 'fallback') {
+  failures.push('DOM id encoding must preserve the empty-value fallback contract.');
+}
 
 const packageJson = await readPackageJson(packagePath);
 

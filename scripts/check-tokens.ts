@@ -241,12 +241,8 @@ for (const [familyName, expectedText] of Object.entries({
   }
 }
 
-if (
-  !css.includes(
-    '@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");'
-  )
-) {
-  failures.push('Token CSS must load Pretendard Variable dynamic subset.');
+if (/@import\s+(?:url\()?['"]?https?:\/\//iu.test(css)) {
+  failures.push('Token CSS must not load remote styles; webfonts belong in explicit optional entries.');
 }
 
 if (!css.includes('font-family: var(--zdp-font-family-sans);')) {
