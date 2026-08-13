@@ -22,28 +22,28 @@ assert.equal(packageJson.repository?.url, 'git+https://github.com/0disoft/zdp-de
 assert.match(workflow, /^name: Publish npm package$/m);
 assert.match(workflow, /^\s+tags:$/m);
 assert.ok(workflow.includes('- "v*"'));
-assert.ok(workflow.includes('contents: write'));
-assert.ok(workflow.includes('id-token: write'));
+assert.ok(workflow.includes('permissions:\n  contents: read'));
+assert.equal(workflow.match(/id-token: write/g)?.length, 1);
+assert.match(workflow, /publish:\n\s+needs: prepare[\s\S]*?permissions:\n\s+contents: read\n\s+id-token: write/);
+assert.doesNotMatch(workflow, /prepare:[\s\S]*?id-token: write[\s\S]*?publish:/);
 assert.ok(workflow.includes('group: npm-release-${{ github.repository }}-${{ github.ref }}'));
 assert.ok(workflow.includes('cancel-in-progress: false'));
 assert.ok(workflow.includes('timeout-minutes: 20'));
+assert.equal(workflow.match(/timeout-minutes: 5/g)?.length, 2);
 assert.ok(workflow.includes('uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7'));
 assert.ok(workflow.includes('fetch-depth: 0'));
 assert.ok(workflow.includes('persist-credentials: false'));
-assert.equal(
-  workflow.match(/if: steps\.npm_state\.outputs\.already_published != 'true'/g)?.length,
-  1
-);
-assert.ok(workflow.includes('name: Verify existing npm source anchor'));
-assert.ok(workflow.includes("if: steps.npm_state.outputs.already_published == 'true'"));
-assert.ok(workflow.includes('npm view "${package_name}@${package_version}" gitHead'));
-assert.ok(workflow.includes('does not match release tag SHA ${GITHUB_SHA}'));
+assert.ok(workflow.includes('name: Upload verified release inputs'));
+assert.ok(workflow.includes('name: Download verified release inputs'));
+assert.ok(workflow.includes('name: Verify release artifact'));
 assert.ok(workflow.includes('name: Verify tagged commit is on main'));
 assert.ok(workflow.includes('git merge-base --is-ancestor "$GITHUB_SHA" "origin/main"'));
 assert.ok(workflow.includes('Release tag must point to a commit contained in origin/main.'));
 assert.ok(workflow.includes('uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6'));
 assert.ok(workflow.includes('registry-url: https://registry.npmjs.org'));
 assert.ok(workflow.includes('uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2'));
+assert.ok(workflow.includes('uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4'));
+assert.ok(workflow.includes('uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4'));
 assert.ok(actionReferences.length > 0, 'Release workflow must use at least one external action.');
 assert.ok(
   actionReferences.every((reference) => /@[0-9a-f]{40}$/.test(reference)),
@@ -70,15 +70,16 @@ assert.ok(workflow.includes('run: bun run check'));
 assert.ok(workflow.includes('id: package_artifact'));
 assert.ok(workflow.includes('bun scripts/build-release-artifact.ts --git-head "$GITHUB_SHA" --github-output "$GITHUB_OUTPUT"'));
 assert.ok(workflow.includes('steps.package_artifact.outputs.tarball'));
-assert.ok(workflow.includes('steps.package_artifact.outputs.integrity'));
 assert.ok(workflow.includes('steps.package_artifact.outputs.manifest'));
-assert.ok(workflow.includes('already_published=true'));
-assert.ok(workflow.includes('npm publish "${{ steps.package_artifact.outputs.tarball }}" --access public --provenance'));
+assert.ok(workflow.includes('Release artifact integrity mismatch.'));
+assert.ok(workflow.includes('needs: publish'));
+assert.match(workflow, /release:\n\s+needs: publish[\s\S]*?permissions:\n\s+contents: write/);
+assert.ok(workflow.includes('npm publish "${{ steps.artifact.outputs.tarball }}" --access public --provenance'));
 assert.ok(!workflow.includes('NPM_TOKEN'));
 assert.ok(!workflow.includes('NODE_AUTH_TOKEN'));
 assert.ok(workflow.includes('dist.integrity'));
-assert.ok(workflow.includes('does not match packed artifact integrity'));
-assert.ok(workflow.includes('npm view "${package_name}@${package_version}" dist.tarball'));
+assert.ok(workflow.includes('Published npm metadata does not match the verified release artifact.'));
+assert.ok(workflow.includes('npm view "${{ steps.artifact.outputs.package }}@${{ steps.artifact.outputs.version }}" dist.tarball'));
 assert.ok(workflow.includes('CHANGELOG.md does not contain'));
 assert.ok(workflow.includes('gh release create "$GITHUB_REF_NAME"'));
 assert.ok(workflow.includes('gh release download "$GITHUB_REF_NAME"'));
@@ -88,7 +89,6 @@ assert.ok(workflow.includes('"$RELEASE_TARBALL#npm package tarball"'));
 assert.ok(workflow.includes('"$RELEASE_MANIFEST#npm release artifact manifest"'));
 assert.ok(!workflow.includes('gh release upload'));
 assert.ok(!workflow.includes('--clobber'));
-assert.ok(!workflow.includes('release:\n'));
 assert.ok(serviceContract.includes('required_secrets: []'));
 assert.ok(
   changelog.includes(`## ${packageJson.version}`),

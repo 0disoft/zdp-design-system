@@ -6,15 +6,14 @@ on:
       - "v*"
 
 permissions:
-  contents: write
-  id-token: write
+  contents: read
 
 concurrency:
   group: npm-release-${{ github.repository }}-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  publish:
+  prepare:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -39,45 +38,12 @@ jobs:
         with:
           bun-version: 1.3.14
 
-      - name: Verify npm trusted publishing support
-        run: |
-          npm_version="$(npm --version)"
-          node -e '
-            const [major, minor, patch] = process.argv[1].split(".").map(Number);
-            if (![major, minor, patch].every(Number.isInteger) || major < 11 || (major === 11 && (minor < 5 || (minor === 5 && patch < 1)))) {
-              throw new Error(`npm ${process.argv[1]} does not support trusted publishing; npm 11.5.1 or later is required.`);
-            }
-          ' "$npm_version"
-
       - name: Verify release tag
         run: |
           package_version="$(node -p "require('./package.json').version")"
           expected_tag="v${package_version}"
           if [ "$GITHUB_REF_NAME" != "$expected_tag" ]; then
             echo "::error::Release tag ${GITHUB_REF_NAME} does not match package.json version ${package_version}."
-            exit 1
-          fi
-
-      - name: Check npm registry state
-        id: npm_state
-        run: |
-          package_name="$(node -p "require('./package.json').name")"
-          package_version="$(node -p "require('./package.json').version")"
-          if npm view "${package_name}@${package_version}" version >/dev/null 2>&1; then
-            echo "already_published=true" >> "$GITHUB_OUTPUT"
-            echo "${package_name}@${package_version} is already published."
-          else
-            echo "already_published=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Verify existing npm source anchor
-        if: steps.npm_state.outputs.already_published == 'true'
-        run: |
-          package_name="$(node -p "require('./package.json').name")"
-          package_version="$(node -p "require('./package.json').version")"
-          published_git_head="$(npm view "${package_name}@${package_version}" gitHead 2>/dev/null || true)"
-          if [ "$published_git_head" != "$GITHUB_SHA" ]; then
-            echo "::error::Published npm gitHead ${published_git_head:-unavailable} does not match release tag SHA ${GITHUB_SHA}."
             exit 1
           fi
 
@@ -90,44 +56,6 @@ jobs:
       - name: Build package artifact
         id: package_artifact
         run: bun scripts/build-release-artifact.ts --git-head "$GITHUB_SHA" --github-output "$GITHUB_OUTPUT"
-
-      - name: Publish package
-        if: steps.npm_state.outputs.already_published != 'true'
-        run: npm publish "${{ steps.package_artifact.outputs.tarball }}" --access public --provenance
-
-      - name: Verify npm registry result
-        run: |
-          package_name="$(node -p "require('./package.json').name")"
-          package_version="$(node -p "require('./package.json').version")"
-          max_attempts=12
-          attempt=1
-
-          while [ "$attempt" -le "$max_attempts" ]; do
-            published_version="$(npm view "${package_name}@${package_version}" version 2>/dev/null || true)"
-            published_git_head="$(npm view "${package_name}@${package_version}" gitHead 2>/dev/null || true)"
-            published_integrity="$(npm view "${package_name}@${package_version}" dist.integrity 2>/dev/null || true)"
-            if [ "$published_version" = "$package_version" ] && [ "$published_git_head" = "$GITHUB_SHA" ] && [ "$published_integrity" = "${{ steps.package_artifact.outputs.integrity }}" ]; then
-              npm view "${package_name}@${package_version}" dist.tarball
-              exit 0
-            fi
-
-            if [ "$published_version" = "$package_version" ] && [ -n "$published_git_head" ] && [ "$published_git_head" != "$GITHUB_SHA" ]; then
-              echo "::error::Published npm gitHead ${published_git_head} does not match release tag SHA ${GITHUB_SHA}."
-              exit 1
-            fi
-
-            if [ "$published_version" = "$package_version" ] && [ -n "$published_integrity" ] && [ "$published_integrity" != "${{ steps.package_artifact.outputs.integrity }}" ]; then
-              echo "::error::Published npm integrity ${published_integrity} does not match packed artifact integrity ${{ steps.package_artifact.outputs.integrity }}."
-              exit 1
-            fi
-
-            echo "npm version/source metadata is not ready for ${package_name}@${package_version}; retrying (${attempt}/${max_attempts})."
-            sleep 5
-            attempt=$((attempt + 1))
-          done
-
-          echo "::error::npm did not expose ${package_name}@${package_version} after ${max_attempts} attempts."
-          exit 1
 
       - name: Write release notes
         run: |
@@ -146,11 +74,116 @@ jobs:
           process.stdout.write(changelog.slice(start, end).trim() + "\n");
           NODE
 
+      - name: Upload verified release inputs
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: npm-release-inputs
+          path: |
+            ${{ steps.package_artifact.outputs.tarball }}
+            ${{ steps.package_artifact.outputs.manifest }}
+            release-notes.md
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      id-token: write
+    outputs:
+      tarball: ${{ steps.artifact.outputs.tarball }}
+      manifest: release-artifact.json
+    steps:
+      - name: Download verified release inputs
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: npm-release-inputs
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - name: Verify npm trusted publishing support
+        run: |
+          npm_version="$(npm --version)"
+          node -e '
+            const [major, minor, patch] = process.argv[1].split(".").map(Number);
+            if (![major, minor, patch].every(Number.isInteger) || major < 11 || (major === 11 && (minor < 5 || (minor === 5 && patch < 1)))) {
+              throw new Error(`npm ${process.argv[1]} does not support trusted publishing; npm 11.5.1 or later is required.`);
+            }
+          ' "$npm_version"
+
+      - name: Verify release artifact
+        id: artifact
+        run: |
+          node --input-type=commonjs <<'NODE'
+          const crypto = require('node:crypto');
+          const fs = require('node:fs');
+          const manifest = JSON.parse(fs.readFileSync('release-artifact.json', 'utf8'));
+          if (manifest.schemaVersion !== 'zdp.npm-release-artifact/v1' || manifest.gitHead !== process.env.GITHUB_SHA) {
+            throw new Error('Release artifact manifest does not match the tagged commit.');
+          }
+          if (typeof manifest.package !== 'string' || typeof manifest.version !== 'string' || !/^[A-Za-z0-9._-]+\.tgz$/.test(manifest.tarball)) {
+            throw new Error('Release artifact metadata is invalid.');
+          }
+          const archive = fs.readFileSync(manifest.tarball);
+          const integrity = `sha512-${crypto.createHash('sha512').update(archive).digest('base64')}`;
+          if (integrity !== manifest.integrity) throw new Error('Release artifact integrity mismatch.');
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `package=${manifest.package}\nversion=${manifest.version}\ntarball=${manifest.tarball}\nintegrity=${manifest.integrity}\n`);
+          NODE
+
+      - name: Publish verified package artifact
+        run: |
+          published_version="$(npm view "${{ steps.artifact.outputs.package }}@${{ steps.artifact.outputs.version }}" version 2>/dev/null || true)"
+          if [ "$published_version" = "${{ steps.artifact.outputs.version }}" ]; then
+            echo "${{ steps.artifact.outputs.package }}@${{ steps.artifact.outputs.version }} is already published."
+          else
+            npm publish "${{ steps.artifact.outputs.tarball }}" --access public --provenance
+          fi
+
+      - name: Verify npm registry result
+        run: |
+          max_attempts=12
+          attempt=1
+          while [ "$attempt" -le "$max_attempts" ]; do
+            published_version="$(npm view "${{ steps.artifact.outputs.package }}@${{ steps.artifact.outputs.version }}" version 2>/dev/null || true)"
+            published_git_head="$(npm view "${{ steps.artifact.outputs.package }}@${{ steps.artifact.outputs.version }}" gitHead 2>/dev/null || true)"
+            published_integrity="$(npm view "${{ steps.artifact.outputs.package }}@${{ steps.artifact.outputs.version }}" dist.integrity 2>/dev/null || true)"
+            if [ "$published_version" = "${{ steps.artifact.outputs.version }}" ] && [ "$published_git_head" = "$GITHUB_SHA" ] && [ "$published_integrity" = "${{ steps.artifact.outputs.integrity }}" ]; then
+              npm view "${{ steps.artifact.outputs.package }}@${{ steps.artifact.outputs.version }}" dist.tarball
+              exit 0
+            fi
+            if [ "$published_version" = "${{ steps.artifact.outputs.version }}" ] && { [ "$published_git_head" != "$GITHUB_SHA" ] || [ "$published_integrity" != "${{ steps.artifact.outputs.integrity }}" ]; }; then
+              echo "::error::Published npm metadata does not match the verified release artifact."
+              exit 1
+            fi
+            echo "npm version/source metadata is not ready; retrying (${attempt}/${max_attempts})."
+            sleep 5
+            attempt=$((attempt + 1))
+          done
+          echo "::error::npm did not expose the expected package after ${max_attempts} attempts."
+          exit 1
+
+  release:
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Download verified release inputs
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: npm-release-inputs
+
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
-          RELEASE_MANIFEST: ${{ steps.package_artifact.outputs.manifest }}
-          RELEASE_TARBALL: ${{ steps.package_artifact.outputs.tarball }}
+          RELEASE_MANIFEST: ${{ needs.publish.outputs.manifest }}
+          RELEASE_TARBALL: ${{ needs.publish.outputs.tarball }}
         run: |
           if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
             release_assets="$(mktemp -d)"
@@ -164,7 +197,6 @@ jobs:
             echo "Release ${GITHUB_REF_NAME} and its package assets already exist and match."
             exit 0
           fi
-
           gh release create "$GITHUB_REF_NAME" \
             "$RELEASE_TARBALL#npm package tarball" \
             "$RELEASE_MANIFEST#npm release artifact manifest" \
