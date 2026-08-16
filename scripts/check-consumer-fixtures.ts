@@ -419,9 +419,9 @@ async function packCurrentPackage(packedRoot: string): Promise<string> {
     repoRoot,
     'npm pack'
   );
-  const parsed: unknown = JSON.parse(stdout);
-  assert.ok(Array.isArray(parsed) && parsed.length === 1, 'npm pack must return exactly one package result.');
-  const result: unknown = parsed[0];
+  const results = parseNpmPackResults(stdout);
+  assert.equal(results.length, 1, 'npm pack must return exactly one package result.');
+  const result: unknown = results[0];
   assert.ok(isRecord(result), 'npm pack result must be an object.');
   const filename = result.filename;
   assert.ok(typeof filename === 'string', 'npm pack must return a tarball filename.');
@@ -681,6 +681,25 @@ function isBuildOutput(value: unknown): value is BuildOutput {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+/**
+ * npm >= 12 emits `npm pack --json` as a single object keyed by package name
+ * (`{ "<name>": { filename, ... } }`) instead of the npm 11 array
+ * (`[{ filename, ... }]`). Accept both shapes.
+ */
+function parseNpmPackResults(stdout: string): unknown[] {
+  const parsed: unknown = JSON.parse(stdout);
+
+  if (Array.isArray(parsed)) {
+    return parsed;
+  }
+
+  if (isRecord(parsed)) {
+    return Object.values(parsed);
+  }
+
+  return [];
 }
 
 async function checkConsumerFixtureTokenUsage(sourceRoot: string): Promise<void> {

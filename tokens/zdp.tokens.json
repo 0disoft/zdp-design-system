@@ -240,7 +240,8 @@
     "focusOutlineOffset": "2px",
     "focusUnderlineWidth": "3px",
     "scrollbarSize": "0.5rem",
-    "hitTarget": "2.75rem"
+    "hitTarget": "2.75rem",
+    "disabledOpacity": "0.56"
   },
   "i18n": {
     "textWrap": "pretty",

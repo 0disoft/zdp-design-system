@@ -30,10 +30,14 @@
   export let ariaActivedescendant: string | null = null;
   export let inputmode: HTMLInputAttributes['inputmode'] | null = null;
   export let enterkeyhint: HTMLInputAttributes['enterkeyhint'] | null = null;
+  export let clearLabel: string | null = null;
   export let oninput: ((event: Event) => void) | null = null;
   export let onfocus: ((event: FocusEvent) => void) | null = null;
   export let onblur: ((event: FocusEvent) => void) | null = null;
   export let onkeydown: ((event: KeyboardEvent) => void) | null = null;
+
+  let inputElement: HTMLInputElement | null = null;
+  $: showClearButton = value.length > 0 && !disabled && !readonly;
 
   $: ariaDescribedBy = normalizeIdRefs(describedBy);
   $: resolvedErrorMessageId = invalid && errorMessageId ? errorMessageId : null;
@@ -49,6 +53,16 @@
   function handleInput(event: Event): void {
     value = (event.currentTarget as HTMLInputElement).value;
     oninput?.(event);
+  }
+
+  function handleClear(): void {
+    if (inputElement === null) {
+      return;
+    }
+    value = '';
+    inputElement.value = '';
+    inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+    inputElement.focus();
   }
 
   function normalizeIdRefs(value: DescribedBy): string | null {
@@ -101,11 +115,35 @@
       {required}
       inputmode={inputmode ?? undefined}
       enterkeyhint={enterkeyhint ?? undefined}
+      bind:this={inputElement}
       oninput={handleInput}
       onfocus={onfocus ?? undefined}
       onblur={onblur ?? undefined}
       onkeydown={onkeydown ?? undefined}
     />
+    {#if showClearButton}
+      <button
+        type="button"
+        class="zdp-command-field__clear"
+        aria-label={clearLabel ?? 'Clear search'}
+        onclick={handleClear}
+      >
+        <svg
+          aria-hidden="true"
+          class="zdp-command-field__clear-icon"
+          viewBox="0 0 16 16"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4 4l8 8M12 4l-8 8"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            fill="none"
+          />
+        </svg>
+      </button>
+    {/if}
     {#if hasShortcut}
       <span class="zdp-command-field__shortcut" aria-hidden="true">
         <ShortcutHint keys={shortcutKeys} size={size} />
@@ -197,7 +235,7 @@
 
   .zdp-command-field-shell[data-disabled="true"] .zdp-command-field {
     cursor: not-allowed;
-    opacity: 0.56;
+    opacity: var(--zdp-control-disabled-opacity);
   }
 
   .zdp-command-field__input {
@@ -225,6 +263,41 @@
 
   .zdp-command-field__input::-webkit-calendar-picker-indicator {
     display: none !important;
+  }
+
+  .zdp-command-field__input::-webkit-search-cancel-button {
+    display: none !important;
+  }
+
+  .zdp-command-field__clear {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: var(--zdp-radius-sm);
+    color: var(--zdp-color-ink-muted);
+    cursor: pointer;
+    display: inline-flex;
+    flex: 0 0 auto;
+    inline-size: var(--zdp-control-hit-target);
+    block-size: var(--zdp-control-hit-target);
+    justify-content: center;
+    margin-inline-end: calc(-1 * var(--zdp-space-1));
+    padding: 0;
+  }
+
+  .zdp-command-field__clear:hover {
+    background: var(--zdp-color-surface-raised);
+    color: var(--zdp-color-ink-strong);
+  }
+
+  .zdp-command-field__clear:focus-visible {
+    outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
+    outline-offset: var(--zdp-control-focus-outline-offset);
+  }
+
+  .zdp-command-field__clear-icon {
+    block-size: var(--zdp-control-glyph-md);
+    inline-size: var(--zdp-control-glyph-md);
   }
 
   .zdp-command-field__shortcut {

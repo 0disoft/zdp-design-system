@@ -183,7 +183,7 @@
 
   .zdp-segmented-control__item:disabled {
     cursor: not-allowed;
-    opacity: 0.56;
+    opacity: var(--zdp-control-disabled-opacity);
   }
 
   @media (forced-colors: active) {

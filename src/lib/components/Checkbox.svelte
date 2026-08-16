@@ -118,7 +118,7 @@
 
   .zdp-choice:has(.zdp-choice__input:disabled) {
     cursor: not-allowed;
-    opacity: 0.56;
+    opacity: var(--zdp-control-disabled-opacity);
   }
 
   .zdp-choice__body {

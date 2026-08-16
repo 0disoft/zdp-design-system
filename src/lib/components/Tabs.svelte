@@ -181,7 +181,7 @@
 
   .zdp-tabs__tab:disabled {
     cursor: not-allowed;
-    opacity: 0.56;
+    opacity: var(--zdp-control-disabled-opacity);
   }
 
   .zdp-tabs__panel {

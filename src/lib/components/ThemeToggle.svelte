@@ -98,7 +98,7 @@
 
   .zdp-theme-toggle:disabled {
     cursor: not-allowed;
-    opacity: 0.56;
+    opacity: var(--zdp-control-disabled-opacity);
   }
 
   .zdp-theme-toggle__icon {

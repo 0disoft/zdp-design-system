@@ -226,7 +226,7 @@
   .zdp-share-action:disabled,
   .zdp-share-action[aria-disabled="true"] {
     cursor: not-allowed;
-    opacity: 0.56;
+    opacity: var(--zdp-control-disabled-opacity);
   }
 
   .zdp-share-action__mark,

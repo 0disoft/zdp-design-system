@@ -191,7 +191,7 @@
 
   .zdp-text-scale-control__item:disabled {
     cursor: not-allowed;
-    opacity: 0.56;
+    opacity: var(--zdp-control-disabled-opacity);
   }
 
   .zdp-text-scale-control__sample {

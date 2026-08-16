@@ -124,6 +124,7 @@ export const zdpTokenNames = [
   'control.focusUnderlineWidth',
   'control.scrollbarSize',
   'control.hitTarget',
+  'control.disabledOpacity',
   'i18n.textWrap',
   'i18n.wordBreak',
   'i18n.overflowWrap',

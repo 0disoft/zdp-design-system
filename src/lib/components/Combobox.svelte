@@ -534,7 +534,7 @@
 
   .zdp-combobox[data-disabled="true"] .zdp-combobox__control {
     cursor: not-allowed;
-    opacity: 0.56;
+    opacity: var(--zdp-control-disabled-opacity);
   }
 
   .zdp-combobox__input {
@@ -676,7 +676,7 @@
   .zdp-combobox__option:disabled,
   .zdp-combobox__option[aria-disabled="true"] {
     cursor: not-allowed;
-    opacity: 0.56;
+    opacity: var(--zdp-control-disabled-opacity);
   }
 
   .zdp-combobox__option-label {

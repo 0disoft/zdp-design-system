@@ -135,7 +135,7 @@
 
   .zdp-switch:has(.zdp-switch__input:disabled) {
     cursor: not-allowed;
-    opacity: 0.56;
+    opacity: var(--zdp-control-disabled-opacity);
   }
 
   .zdp-switch__body {

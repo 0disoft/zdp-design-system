@@ -284,7 +284,7 @@
 
   .zdp-pagination__link:disabled {
     cursor: not-allowed;
-    opacity: 0.56;
+    opacity: var(--zdp-control-disabled-opacity);
   }
 
   .zdp-pagination__link[aria-current='page']:disabled {

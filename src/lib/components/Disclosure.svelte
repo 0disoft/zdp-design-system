@@ -145,7 +145,7 @@
 
   .zdp-disclosure__trigger:disabled {
     cursor: not-allowed;
-    opacity: 0.56;
+    opacity: var(--zdp-control-disabled-opacity);
   }
 
   .zdp-disclosure__title {

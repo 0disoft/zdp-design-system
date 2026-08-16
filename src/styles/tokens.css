@@ -128,6 +128,7 @@
   --zdp-control-focus-underline-width: 3px;
   --zdp-control-scrollbar-size: 0.5rem;
   --zdp-control-hit-target: 2.75rem;
+  --zdp-control-disabled-opacity: 0.56;
   --zdp-i18n-text-wrap: pretty;
   --zdp-i18n-word-break: normal;
   --zdp-i18n-overflow-wrap: anywhere;

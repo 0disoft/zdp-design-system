@@ -19,6 +19,25 @@ interface PackResult {
   readonly integrity?: unknown;
 }
 
+/**
+ * npm >= 12 emits `npm pack --json` as a single object keyed by package name
+ * (`{ "<name>": { filename, integrity, ... } }`) instead of the npm 11 array
+ * (`[{ filename, integrity, ... }]`). Accept both shapes.
+ */
+function parseNpmPackResults(stdout: string): PackResult[] {
+  const parsed: unknown = JSON.parse(stdout);
+
+  if (Array.isArray(parsed)) {
+    return parsed;
+  }
+
+  if (typeof parsed === 'object' && parsed !== null) {
+    return Object.values(parsed);
+  }
+
+  return [];
+}
+
 const root = fileURLToPath(new URL('..', import.meta.url));
 const checkGitHead = '0123456789abcdef0123456789abcdef01234567';
 
@@ -97,7 +116,7 @@ async function buildArtifact(gitHead: string, artifactDirectory: string): Promis
     );
     assert.equal(packed.status, 0, packed.stderr || 'npm pack failed.');
 
-    const results = JSON.parse(packed.stdout) as PackResult[];
+    const results = parseNpmPackResults(packed.stdout);
     assert.equal(results.length, 1, 'npm pack must create exactly one tarball.');
     const [result] = results;
     assert.ok(result, 'npm pack did not return a result.');

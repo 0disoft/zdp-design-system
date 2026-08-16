@@ -35,4 +35,10 @@
   .zdp-field[data-disabled="true"] :global(.zdp-help-text) {
     color: var(--zdp-color-ink-muted);
   }
+
+  .zdp-field[data-disabled="true"] :global(.zdp-input:not(:disabled)),
+  .zdp-field[data-disabled="true"] :global(.zdp-textarea:not(:disabled)),
+  .zdp-field[data-disabled="true"] :global(.zdp-select:not(:disabled)) {
+    opacity: var(--zdp-control-disabled-opacity);
+  }
 </style>

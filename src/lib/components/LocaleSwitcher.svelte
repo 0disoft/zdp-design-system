@@ -197,7 +197,7 @@
 
   .zdp-locale-switcher__item:disabled {
     cursor: not-allowed;
-    opacity: 0.56;
+    opacity: var(--zdp-control-disabled-opacity);
   }
 
   .zdp-locale-switcher__label {

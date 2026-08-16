@@ -440,7 +440,7 @@
   .zdp-menu__item:disabled,
   .zdp-menu__item[aria-disabled="true"] {
     cursor: not-allowed;
-    opacity: 0.56;
+    opacity: var(--zdp-control-disabled-opacity);
   }
 
   .zdp-menu__separator {

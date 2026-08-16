@@ -79,6 +79,27 @@
     color: var(--zdp-color-ink-muted);
   }
 
+  .zdp-input::-webkit-search-cancel-button {
+    display: none !important;
+  }
+
+  .zdp-input::-webkit-calendar-picker-indicator {
+    display: none !important;
+  }
+
+  .zdp-input::-webkit-inner-spin-button,
+  .zdp-input::-webkit-outer-spin-button {
+    appearance: none;
+  }
+
+  .zdp-input:-webkit-autofill,
+  .zdp-input:-webkit-autofill:hover,
+  .zdp-input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--zdp-color-ink-strong);
+    caret-color: var(--zdp-color-ink-strong);
+    transition: background-color 9999s ease-out;
+  }
+
   .zdp-input:hover:not(:disabled) {
     background: var(--zdp-color-surface-raised);
     border-color: var(--zdp-color-line-strong);
@@ -105,6 +126,6 @@
 
   .zdp-input:disabled {
     cursor: not-allowed;
-    opacity: 0.56;
+    opacity: var(--zdp-control-disabled-opacity);
   }
 </style>

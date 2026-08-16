@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.61.0
+
+- Added an optional localized clear label and keyboard-reachable clear action to `CommandField`, while suppressing inconsistent browser-native search cancellation controls.
+- Centralized disabled-control opacity in a reusable token and aligned input autofill, native adornment suppression, and select-arrow rendering across component and bundled CSS surfaces.
+- Kept release-artifact and packed-consumer checks compatible with both npm 11 array and npm 12 package-keyed `npm pack --json` output.
+
 ## 0.60.0
 
 - Removed the TermSheet detail-page action, including the `canonicalPath` term field and `detailLabel` component prop, so sheets end with the explanation content instead of a permanent related-screen link.

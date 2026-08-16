@@ -176,6 +176,7 @@
             name="interaction-probe-command"
             label="빠른 이동"
             labelVisible
+            clearLabel="검색어 지우기"
             placeholder="문서와 설정 검색"
             value={commandQuery}
             describedBy={['interaction-probe-command-help', 'interaction-probe-command-state']}

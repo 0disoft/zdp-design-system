@@ -94,6 +94,19 @@ export const Probe: StoryObj<typeof InteractionProbe> = {
       await expect(canvas.getByText('Command 설정 · 키 Escape')).toBeVisible();
     });
 
+    await step('command field clear button is keyboard reachable, clears value, and keeps focus', async () => {
+      const commandField = canvas.getByRole('searchbox', { name: '빠른 이동' });
+      const clearButton = canvas.getByRole('button', { name: '검색어 지우기' });
+
+      await expect(clearButton).toBeVisible();
+      await userEvent.tab();
+      await expect(clearButton).toHaveFocus();
+      await userEvent.keyboard('{Enter}');
+      await expect(commandField).toHaveValue('');
+      await expect(canvas.queryByRole('button', { name: '검색어 지우기' })).not.toBeInTheDocument();
+      await expect(commandField).toHaveFocus();
+    });
+
     await step('combobox supports listbox navigation, disabled skip, selection, and Escape close', async () => {
       const comboboxInput = canvas.getByRole('combobox', { name: '빠른 이동' });
       const comboboxToggle = canvas.getByRole('button', { name: '선택 열기' });
