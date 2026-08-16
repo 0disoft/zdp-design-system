@@ -3447,7 +3447,6 @@ for (const requiredText of [
   'class="zdp-term-sheet__close"',
   'class="zdp-term-sheet__related-button"',
   'data-term-id={relatedTerm.id}',
-  'class="zdp-term-sheet__detail-link"',
   '.zdp-term-sheet__backdrop',
   '.zdp-term-sheet--right',
   '.zdp-term-sheet--bottom',
@@ -3460,6 +3459,17 @@ for (const requiredText of [
 ]) {
   if (!termSheet.includes(requiredText)) {
     failures.push(`TermSheet component is missing ${requiredText}.`);
+  }
+}
+
+for (const [label, source] of [
+  ['TermSheet component', termSheet],
+  ['Interaction story', interactionComponent]
+] as const) {
+  for (const forbiddenText of ['canonicalPath', 'detailLabel', 'zdp-term-sheet__footer', 'zdp-term-sheet__detail-link']) {
+    if (source.includes(forbiddenText)) {
+      failures.push(`${label} must not restore the removed TermSheet detail action contract ${forbiddenText}.`);
+    }
   }
 }
 

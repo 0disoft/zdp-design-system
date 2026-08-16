@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.60.0
+
+- Removed the TermSheet detail-page action, including the `canonicalPath` term field and `detailLabel` component prop, so sheets end with the explanation content instead of a permanent related-screen link.
+
 ## 0.59.1
 
 - Isolated npm trusted-publishing OIDC permission to the minimal publish job and verified the prepared tarball before publication.

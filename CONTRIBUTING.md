@@ -125,7 +125,7 @@
 - SortHeader와 TableToolbar는 sortable column affordance, 선택 행 액션 자리, 밀도 전환 표면만 담당하며 실제 정렬 계산, 선택 상태, 필터, 권한, 데이터 로딩 판단을 직접 수행하지 않는다.
 - SortHeader는 `aria-sort`를 직접 소유하지 않는다. 소비 화면은 정렬 중인 owning `th` 또는 columnheader에 `aria-sort`를 둔다.
 - SortHeader와 `.zdp-sort-header`, TableToolbar와 `.zdp-table-toolbar`는 그림자, 그라데이션, hover 이동 없이 focus-visible, wrapping, density control 배치 계약만 유지한다.
-- TermTrigger와 TermSheet는 용어 설명을 클릭으로 여는 trigger, right sheet, bottom sheet 표면만 담당하며 Escape 닫기, backdrop 닫기, Tab 순환, 이전 focus 복귀를 유지하고 glossary manifest, locale fallback, 공개 가능 여부, detail page 라우팅 판단을 직접 수행하지 않는다.
+- TermTrigger와 TermSheet는 용어 설명을 클릭으로 여는 trigger, right sheet, bottom sheet 표면만 담당하며 Escape 닫기, backdrop 닫기, Tab 순환, 이전 focus 복귀를 유지한다. TermSheet는 detail page 링크나 라우팅 action을 제공하지 않고, glossary manifest, locale fallback, 공개 가능 여부, detail page 라우팅 판단도 직접 수행하지 않는다.
 - TermTrigger는 inline interactive text다. 본문 안 의미 있는 단어와 짧은 구문은 선택 가능해야 하므로 `user-select: none`을 쓰지 않고, hover는 배경만 강조하며 글자색은 주변 문장색을 상속한다. 좌우 padding은 너무 붙어 보이지 않게 최소 여백을 두고, focus-visible은 focus token으로만 강조한다.
 - TermSheet root에는 stable `term_id`를 `data-term-id`와 `data-zdp-term-id`로 남기고, placement와 sheet surface도 data attribute로 노출해 소비 앱, QA, linter가 같은 용어 identity를 확인할 수 있게 한다.
 - TermSheet에는 광고 slot을 넣지 않는다. root의 `data-zdp-ad-exclude`를 유지하고 광고가 필요한 긴 설명은 별도 detail page에서 처리한다.

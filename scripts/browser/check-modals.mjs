@@ -26,8 +26,8 @@ export async function verifyModalContracts(page) {
     dialogName: 'Browser term',
     closeName: 'Close term',
     backdropSelector: '.zdp-term-sheet__backdrop',
-    lastRole: 'link',
-    lastName: 'View details'
+    lastRole: 'button',
+    lastName: 'Close term'
   });
 
   await verifyModalDocumentOwnership(page);
@@ -188,8 +188,8 @@ export async function verifyModalContracts(page) {
     triggerTestId: 'shadow-term-trigger',
     dialogName: 'Shadow term',
     closeName: 'Close shadow term',
-    lastRole: 'link',
-    lastName: 'View details'
+    lastRole: 'button',
+    lastName: 'Close shadow term'
   });
 }
 

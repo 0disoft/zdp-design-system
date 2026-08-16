@@ -10,7 +10,6 @@ export interface ZdpTermSheetTerm {
   readonly long?: string;
   readonly example?: string;
   readonly relatedTerms?: readonly ZdpTermRelatedTerm[];
-  readonly canonicalPath?: string;
 }
 
 export type ZdpTermSheetPlacement = 'right' | 'bottom';

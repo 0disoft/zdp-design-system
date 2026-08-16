@@ -151,8 +151,7 @@
     relatedTerms: [
       { id: 'fallback', label: 'fallback' },
       { id: 'runbook', label: 'runbook' }
-    ],
-    canonicalPath: '#term-operational-resilience'
+    ]
   };
 
   function shortcutIntentLabel(intent: ZdpShortcutIntent): string {

@@ -28,8 +28,7 @@
   const shadowTerm: ZdpTermSheetTerm = {
     id: 'shadow-term',
     label: 'Shadow term',
-    short: 'A term rendered inside an open shadow root.',
-    canonicalPath: '#shadow-term-details'
+    short: 'A term rendered inside an open shadow root.'
   };
 </script>
 

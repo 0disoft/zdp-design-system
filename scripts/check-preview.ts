@@ -278,8 +278,6 @@ for (const requiredText of [
   'zdp-term-sheet__section',
   'zdp-term-sheet__related',
   'zdp-term-sheet__related-button',
-  'zdp-term-sheet__footer',
-  'zdp-term-sheet__detail-link',
   '운영 복원력',
   '관련 용어',
   'zdp-dialog',
@@ -995,8 +993,6 @@ for (const requiredText of [
   '.zdp-term-sheet__section',
   '.zdp-term-sheet__related',
   '.zdp-term-sheet__related-button',
-  '.zdp-term-sheet__footer',
-  '.zdp-term-sheet__detail-link',
   '.zdp-dialog',
   '.zdp-dialog__backdrop',
   '.zdp-dialog__panel',
@@ -1075,6 +1071,17 @@ for (const requiredText of [
 ]) {
   if (!componentStyle.includes(requiredText)) {
     failures.push(`Component style contract is missing ${requiredText}.`);
+  }
+}
+
+for (const [label, source] of [
+  ['static preview markup', preview],
+  ['framework-neutral component CSS', componentStyle]
+] as const) {
+  for (const forbiddenText of ['zdp-term-sheet__footer', 'zdp-term-sheet__detail-link']) {
+    if (source.includes(forbiddenText)) {
+      failures.push(`${label} must not restore the removed TermSheet detail action contract ${forbiddenText}.`);
+    }
   }
 }
 

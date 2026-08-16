@@ -458,13 +458,11 @@ async function checkUserFacingLabelOverrideContract(): Promise<void> {
       requiredTexts: [
         "closeLabel = 'Close'",
         "eyebrow = 'Term'",
-        "detailLabel = 'View details'",
         "relatedLabel = 'Related terms'",
         "exampleLabel = 'Example'",
         'const componentId = $props.id()',
         'aria-label={closeLabel}',
         '{eyebrow}',
-        '{detailLabel}',
         'aria-label={exampleLabel}',
         'aria-label={relatedLabel}'
       ]
@@ -500,6 +498,8 @@ async function checkUserFacingLabelOverrideContract(): Promise<void> {
 async function checkTermSheetContract(): Promise<void> {
   const relativePath = 'src/lib/components/TermSheet.svelte';
   const source = await readFile(join(root, relativePath), 'utf8');
+  const termTypePath = 'src/lib/term.ts';
+  const termTypeSource = await readFile(join(root, termTypePath), 'utf8');
 
   for (const requiredText of [
     '<div class="zdp-term-layer" bind:this={layerElement}>',
@@ -517,6 +517,17 @@ async function checkTermSheetContract(): Promise<void> {
 
   if (source.includes('offsetParent')) {
     failures.push(`${relativePath} must not use offsetParent to decide sheet focusability.`);
+  }
+
+  for (const [sourcePath, sourceText] of [
+    [relativePath, source],
+    [termTypePath, termTypeSource]
+  ] as const) {
+    for (const forbiddenText of ['canonicalPath', 'detailLabel', 'zdp-term-sheet__footer', 'zdp-term-sheet__detail-link']) {
+      if (sourceText.includes(forbiddenText)) {
+        failures.push(`${sourcePath} must not restore the removed TermSheet detail action contract ${forbiddenText}.`);
+      }
+    }
   }
 }
 

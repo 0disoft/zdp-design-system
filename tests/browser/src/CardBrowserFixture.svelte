@@ -145,8 +145,7 @@
   const browserTerm: ZdpTermSheetTerm = {
     id: 'browser-term',
     label: 'Browser term',
-    short: 'A term used to verify the modal sheet contract.',
-    canonicalPath: '#browser-term-details'
+    short: 'A term used to verify the modal sheet contract.'
   };
   const asyncBrowserTerm: ZdpTermSheetTerm = {
     id: 'async-browser-term',

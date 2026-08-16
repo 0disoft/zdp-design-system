@@ -12,7 +12,6 @@
     placement?: ZdpTermSheetPlacement;
     closeLabel?: string;
     eyebrow?: string;
-    detailLabel?: string;
     relatedLabel?: string;
     exampleLabel?: string;
     closeOnEscape?: boolean;
@@ -30,7 +29,6 @@
     placement = 'right',
     closeLabel = 'Close',
     eyebrow = 'Term',
-    detailLabel = 'View details',
     relatedLabel = 'Related terms',
     exampleLabel = 'Example',
     closeOnEscape = true,
@@ -245,12 +243,6 @@
           </section>
         {/if}
       </div>
-
-      {#if term.canonicalPath}
-        <footer class="zdp-term-sheet__footer">
-          <a class="zdp-term-sheet__detail-link" href={term.canonicalPath}>{detailLabel}</a>
-        </footer>
-      {/if}
     </div>
   </div>
 {/if}
@@ -359,8 +351,7 @@
   }
 
   .zdp-term-sheet__close:focus-visible,
-  .zdp-term-sheet__related-button:focus-visible,
-  .zdp-term-sheet__detail-link:focus-visible {
+  .zdp-term-sheet__related-button:focus-visible {
     border-color: var(--zdp-color-focus-line);
     outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
     outline-offset: var(--zdp-control-focus-outline-offset);
@@ -411,18 +402,6 @@
     padding: 0 var(--zdp-space-2);
     -webkit-user-select: none;
     user-select: none;
-  }
-
-  .zdp-term-sheet__footer {
-    border-block-start: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
-    padding-block-start: var(--zdp-space-3);
-  }
-
-  .zdp-term-sheet__detail-link {
-    color: var(--zdp-color-ink-strong);
-    font-weight: var(--zdp-font-weight-semibold);
-    text-decoration: underline;
-    text-underline-offset: 0.16em;
   }
 
   @media (max-width: 720px) {
