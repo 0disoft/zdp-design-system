@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -129,7 +130,7 @@ jobs:
               esac
 
               case "$path" in
-                fixtures/*)
+                fixtures/*|.changes/*)
                   package=true
                   ;;
               esac
@@ -246,6 +247,9 @@ jobs:
       - run: bun install --frozen-lockfile
       - name: Verify distributable package
         run: |
+          bun run surface:check
+          bun run release:changes:test
+          bun run release:changes:check
           bun run package:build
           bun run package:check
           bun run publish:check

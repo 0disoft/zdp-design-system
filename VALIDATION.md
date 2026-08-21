@@ -26,7 +26,8 @@
 - Web token CSS: `src/styles/tokens.css`
 - Package build/check scripts: `scripts/build-package.ts`, `scripts/check-package.ts`, `scripts/check-publish-readiness.ts`
 - Atomic package-build regression: `scripts/check-package-build.ts` verifies rollback after promotion failure, interrupted-swap recovery, cleanup, and direct exported declaration preservation.
-- Release workflow: `.github/workflows/publish-npm.yml`, `scripts/check-release-workflow.ts`
+- Release preparation: `.changes/**`, `.github/workflows/release-pr.yml`, `scripts/release-changes.ts`
+- Release publishing: `.github/workflows/publish-npm.yml`, `scripts/check-release-workflow.ts`
 - Token/share generators: `scripts/generate-tokens.ts`, `scripts/generate-share.ts`
 - Consumer contract docs: `docs/CONSUMER_CONTRACT.md`
 - External UI rules: `docs/EXTERNAL_UI_ADOPTION.md`, `docs/INTERACTIVE_PRIMITIVE_AUDIT.md`, `THIRD_PARTY_NOTICES.md`
@@ -43,9 +44,12 @@
 - UI primitives must not own authorization, billing, identity, consent, admin, routing, data fetching, search execution, ads policy, or locale fallback truth.
 - External UI dependency types, Tailwind/shadcn class contracts, or copied proprietary snippets must not leak into public API.
 - Storybook, preview, fixtures, package metadata, and docs must not contradict the same token or component contract.
+- Generated release pull requests must not publish packages, create tags, request OIDC, or bypass the explicit human review gate.
 
 ## Version Impact
 
 `package.json` version is the package version source. `docs/**`, `README.md`, `CHANGELOG.md`, `SECURITY.md`, `THIRD_PARTY_NOTICES.md`, `dist/**`, and package metadata are included in the package surface. Changes to those files require package version impact review. Source-only agent docs under `.agents/**`, `CHECKLIST.md`, `VALIDATION.md`, and `AGENTS.md` are not part of the current package `files` allowlist.
+
+Consumer-visible package changes and release-tooling changes add one validated `.changes/*.md` fragment. The generated release pull request applies the highest requested bump and consumes those fragments; it cannot replace explicit review of the resulting version and changelog.
 
 Source-text checks may protect public exports, semantic markup, stable CSS hooks, token names, generated assets, and package metadata. They must not require a particular private function name or event implementation when a configured Chromium, SSR, hydration, or type contract already verifies the behavior. Focus movement, pointer capture, dismissal, controlled-state transitions, and focus restoration belong in runtime regression checks.
