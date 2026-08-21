@@ -208,7 +208,7 @@ await test('keeps privileged Pages workflows on trusted code and immutable actio
   assert.match(publishWorkflow, /ref: main/);
   assert.match(publishWorkflow, /run-id: \$\{\{ github\.event\.workflow_run\.id \}\}/);
   assert.ok(publishWorkflow.includes('actions/runs/$WORKFLOW_RUN_ID/artifacts'));
-  assert.match(publishWorkflow, /steps\\.artifact\\.outputs\\.available == 'true'/);
+  assert.ok(publishWorkflow.includes("steps.artifact.outputs.available == 'true'"));
   assert.match(publishWorkflow, /pr_state=.*gh api/);
   assert.doesNotMatch(publishWorkflow, /pull_request_target:/);
   assert.doesNotMatch(publishWorkflow, /ref: \$\{\{ github\.event\.workflow_run\.head_sha \}\}/);
