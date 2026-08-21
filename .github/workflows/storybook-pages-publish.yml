@@ -1,0 +1,218 @@
+name: Publish Storybook Pages
+
+on:
+  workflow_run:
+    workflows:
+      - zdp-design-system
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+concurrency:
+  group: storybook-pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      ((github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.head_repository.full_name == github.repository) ||
+      (github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: write
+      pages: read
+      pull-requests: write
+    steps:
+      - name: Check out trusted deployment code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Configure ephemeral git authentication
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh auth setup-git
+
+      - name: Resolve trusted deployment context
+        id: context
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WORKFLOW_EVENT: ${{ github.event.workflow_run.event }}
+          WORKFLOW_PR_NUMBER: ${{ github.event.workflow_run.pull_requests[0].number }}
+        run: |
+          kind=main
+          pr_number=''
+
+          if [ "$WORKFLOW_EVENT" = 'pull_request' ]; then
+            kind=pull-request
+            pr_number="$WORKFLOW_PR_NUMBER"
+            if ! [[ "$pr_number" =~ ^[1-9][0-9]*$ ]]; then
+              echo '::error::The successful workflow run did not expose a valid pull request number.'
+              exit 1
+            fi
+
+            pr_state="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$pr_number" --jq '.state')"
+            if [ "$pr_state" != 'open' ]; then
+              printf 'eligible=false\nskip_reason=pull-request-%s\n' "$pr_state" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+
+          printf 'eligible=true\nkind=%s\npr_number=%s\n' "$kind" "$pr_number" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve Storybook artifact
+        id: artifact
+        if: steps.context.outputs.eligible == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WORKFLOW_RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          artifact_count="$(
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$WORKFLOW_RUN_ID/artifacts" \
+              --jq '[.artifacts[] | select(.name == "storybook-pages" and .expired == false)] | length'
+          )"
+
+          if [ "$artifact_count" != '1' ]; then
+            printf 'available=false\nskip_reason=storybook-artifact-count-%s\n' "$artifact_count" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          printf 'available=true\n' >> "$GITHUB_OUTPUT"
+
+      - name: Download successful CI artifact
+        if: steps.artifact.outputs.available == 'true'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: storybook-pages
+          path: storybook-pages-artifact
+          github-token: ${{ github.token }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Publish Storybook tree
+        id: publish
+        if: steps.artifact.outputs.available == 'true'
+        env:
+          KIND: ${{ steps.context.outputs.kind }}
+          PR_NUMBER: ${{ steps.context.outputs.pr_number }}
+          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          node scripts/storybook-pages.mjs publish \
+            --storybook storybook-pages-artifact \
+            --repository "$GITHUB_REPOSITORY" \
+            --source-sha "$SOURCE_SHA" \
+            --kind "$KIND" \
+            --pr-number "$PR_NUMBER"
+
+      - name: Resolve Pages URL
+        id: pages
+        if: steps.artifact.outputs.available == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_PATH: ${{ steps.publish.outputs.target_path }}
+        run: |
+          pages_url="$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq '.html_url // empty' 2>/dev/null || true)"
+          pages_enabled=true
+
+          if [ -z "$pages_url" ]; then
+            owner="${GITHUB_REPOSITORY%%/*}"
+            repository_name="${GITHUB_REPOSITORY#*/}"
+            pages_url="https://${owner}.github.io/${repository_name}"
+            pages_enabled=false
+          fi
+
+          pages_url="${pages_url%/}/"
+          if [ "$TARGET_PATH" = '.' ]; then
+            deployment_url="$pages_url"
+          else
+            deployment_url="${pages_url}${TARGET_PATH}/"
+          fi
+
+          printf 'pages_enabled=%s\ndeployment_url=%s\n' "$pages_enabled" "$deployment_url" >> "$GITHUB_OUTPUT"
+
+      - name: Update pull request preview comment
+        if: >-
+          steps.artifact.outputs.available == 'true' &&
+          steps.context.outputs.kind == 'pull-request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PAGES_ENABLED: ${{ steps.pages.outputs.pages_enabled }}
+          PREVIEW_URL: ${{ steps.pages.outputs.deployment_url }}
+          PR_NUMBER: ${{ steps.context.outputs.pr_number }}
+          SOURCE_SHA: ${{ steps.publish.outputs.source_sha }}
+        run: |
+          marker='<!-- zdp-storybook-preview -->'
+          pages_note=''
+          if [ "$PAGES_ENABLED" != 'true' ]; then
+            pages_note=$'\n> GitHub Pages is not enabled yet. Select `gh-pages` and `/ (root)` once in the repository Pages settings.'
+          fi
+
+          body="$(cat <<EOF_BODY
+          $marker
+          ### Storybook preview
+
+          [Open this pull request preview]($PREVIEW_URL)
+
+          Build commit: \`$SOURCE_SHA\`$pages_note
+
+          The preview is refreshed after each successful CI run and removed when the pull request closes.
+          EOF_BODY
+          )"
+
+          comment_id="$(
+            gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+              --jq '.[] | select(.user.login == "github-actions[bot]" and (.body | contains("<!-- zdp-storybook-preview -->"))) | .id' \
+              | head -n 1
+          )"
+
+          if [ -n "$comment_id" ]; then
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" -f body="$body" >/dev/null
+          else
+            gh api --method POST "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" -f body="$body" >/dev/null
+          fi
+
+      - name: Write deployment summary
+        if: steps.artifact.outputs.available == 'true'
+        env:
+          DEPLOYMENT_URL: ${{ steps.pages.outputs.deployment_url }}
+          KIND: ${{ steps.context.outputs.kind }}
+          SOURCE_SHA: ${{ steps.publish.outputs.source_sha }}
+        run: |
+          {
+            echo '### Storybook Pages deployment'
+            echo
+            echo "Kind: \`$KIND\`"
+            echo "Build commit: \`$SOURCE_SHA\`"
+            echo "URL: $DEPLOYMENT_URL"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Write missing artifact summary
+        if: >-
+          steps.context.outputs.eligible == 'true' &&
+          steps.artifact.outputs.available != 'true'
+        env:
+          SKIP_REASON: ${{ steps.artifact.outputs.skip_reason }}
+        run: |
+          {
+            echo '### Storybook Pages deployment skipped'
+            echo
+            echo "Reason: \`$SKIP_REASON\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Write skipped deployment summary
+        if: steps.context.outputs.eligible == 'false'
+        env:
+          SKIP_REASON: ${{ steps.context.outputs.skip_reason }}
+        run: |
+          {
+            echo '### Storybook Pages deployment skipped'
+            echo
+            echo "Reason: \`$SKIP_REASON\`"
+          } >> "$GITHUB_STEP_SUMMARY"
