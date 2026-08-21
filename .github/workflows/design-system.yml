@@ -233,6 +233,7 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
+          fetch-depth: 0
           persist-credentials: false
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
@@ -246,10 +247,18 @@ jobs:
             ${{ runner.os }}-bun-${{ env.BUN_VERSION }}-
       - run: bun install --frozen-lockfile
       - name: Verify distributable package
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          COMPARE_API: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
         run: |
           bun run surface:check
           bun run release:changes:test
           bun run release:changes:check
+          if [ "$COMPARE_API" = "true" ] && [ -n "$BASE_SHA" ] && [ "$BASE_SHA" != "0000000000000000000000000000000000000000" ]; then
+            bun scripts/check-public-api-contract.ts --base-ref "$BASE_SHA"
+          else
+            bun run api:check
+          fi
           bun run package:build
           bun run package:check
           bun run publish:check
