@@ -3,6 +3,8 @@ name: zdp-design-system
 on:
   pull_request:
   push:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -11,8 +13,189 @@ concurrency:
   group: design-system-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  BUN_VERSION: 1.3.14
+
 jobs:
-  check:
+  changes:
+    name: classify changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      static: ${{ steps.classify.outputs.static }}
+      package: ${{ steps.classify.outputs.package }}
+      storybook: ${{ steps.classify.outputs.storybook }}
+      browser: ${{ steps.classify.outputs.browser }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Classify changed paths
+        id: classify
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+          CURRENT_SHA: ${{ github.sha }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+
+          readonly zero_sha='0000000000000000000000000000000000000000'
+          static=false
+          package=false
+          storybook=false
+          browser=false
+          run_all=false
+          changed_files=()
+
+          if [[ "$EVENT_NAME" == 'pull_request' ]]; then
+            base_sha="$PR_BASE_SHA"
+            head_sha="$PR_HEAD_SHA"
+          else
+            base_sha="$BEFORE_SHA"
+            head_sha="$CURRENT_SHA"
+          fi
+
+          if [[ -z "$head_sha" ]]; then
+            echo '::error::Unable to resolve the head commit for change classification.'
+            exit 1
+          fi
+
+          if [[ -z "$base_sha" || "$base_sha" == "$zero_sha" ]]; then
+            run_all=true
+          else
+            if ! git cat-file -e "${base_sha}^{commit}" 2>/dev/null; then
+              echo "::error::Base commit ${base_sha} is unavailable after a full checkout."
+              exit 1
+            fi
+            if ! git cat-file -e "${head_sha}^{commit}" 2>/dev/null; then
+              echo "::error::Head commit ${head_sha} is unavailable after a full checkout."
+              exit 1
+            fi
+
+            mapfile -t changed_files < <(
+              git diff --name-only --diff-filter=ACDMRTUXB "$base_sha" "$head_sha"
+            )
+          fi
+
+          if [[ "$run_all" == 'true' ]]; then
+            static=true
+            package=true
+            storybook=true
+            browser=true
+          else
+            for path in "${changed_files[@]}"; do
+              case "$path" in
+                .github/workflows/*|package.json|bun.lock|bunfig.toml|tsconfig.json|svelte.config.js|vite.config.*)
+                  static=true
+                  package=true
+                  storybook=true
+                  browser=true
+                  ;;
+              esac
+
+              case "$path" in
+                src/*|tokens/*)
+                  static=true
+                  package=true
+                  storybook=true
+                  browser=true
+                  ;;
+              esac
+
+              case "$path" in
+                schemas/*|share.js|share.d.ts)
+                  static=true
+                  package=true
+                  ;;
+              esac
+
+              case "$path" in
+                .storybook/*|stories/*)
+                  static=true
+                  package=true
+                  storybook=true
+                  ;;
+              esac
+
+              case "$path" in
+                preview/*)
+                  static=true
+                  ;;
+              esac
+
+              case "$path" in
+                fixtures/*)
+                  package=true
+                  ;;
+              esac
+
+              case "$path" in
+                tests/browser/*|tests/ssr/*|scripts/browser/*|scripts/check-browser-accessibility.mjs|scripts/check-ssr-hydration.mjs)
+                  browser=true
+                  ;;
+              esac
+
+              case "$path" in
+                scripts/check-storybook*|scripts/browser/render-brand-mark.mjs)
+                  storybook=true
+                  ;;
+              esac
+
+              case "$path" in
+                scripts/*)
+                  static=true
+                  package=true
+                  ;;
+              esac
+
+              case "$path" in
+                docs/*|README.md|CHANGELOG.md|LICENSE|SECURITY.md|THIRD_PARTY_NOTICES.md|RUNBOOK.md|service.yaml)
+                  package=true
+                  ;;
+              esac
+            done
+          fi
+
+          {
+            printf 'static=%s\n' "$static"
+            printf 'package=%s\n' "$package"
+            printf 'storybook=%s\n' "$storybook"
+            printf 'browser=%s\n' "$browser"
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo '### CI path classification'
+            echo
+            echo '| Group | Selected |'
+            echo '| --- | --- |'
+            printf '| static | `%s` |\n' "$static"
+            printf '| package | `%s` |\n' "$package"
+            printf '| storybook | `%s` |\n' "$storybook"
+            printf '| browser | `%s` |\n' "$browser"
+            echo
+
+            if [[ "$run_all" == 'true' ]]; then
+              echo 'The event has no usable base SHA, so every validation group is selected.'
+            elif (( ${#changed_files[@]} == 0 )); then
+              echo 'No changed paths were reported.'
+            else
+              echo '<details><summary>Changed paths</summary>'
+              echo
+              printf -- '- `%s`\n' "${changed_files[@]}"
+              echo
+              echo '</details>'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  static:
+    name: static contracts
+    needs: changes
+    if: ${{ needs.changes.outputs.static == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -21,8 +204,162 @@ jobs:
           persist-credentials: false
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
-          bun-version: 1.3.14
+          bun-version: ${{ env.BUN_VERSION }}
+      - name: Restore Bun package cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ env.BUN_VERSION }}-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-${{ env.BUN_VERSION }}-
       - run: bun install --frozen-lockfile
-      - run: bun run check
-      - run: bun run browser:check
-      - run: bun run build
+      - name: Verify generated and source contracts
+        run: |
+          bun run tokens:check
+          bun run consumer:check
+          bun run share-icons:check
+          bun run brand-assets:check
+          bun run credit-assets:check
+          bun run preview:check
+          bun run type:check
+
+  package:
+    name: package contracts
+    needs: changes
+    if: ${{ needs.changes.outputs.package == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - name: Restore Bun package cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ env.BUN_VERSION }}-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-${{ env.BUN_VERSION }}-
+      - run: bun install --frozen-lockfile
+      - name: Verify distributable package
+        run: |
+          bun run package:build
+          bun run package:check
+          bun run publish:check
+          bun run release:check
+          bun run fixtures:check
+
+  storybook:
+    name: Storybook and runtime accessibility
+    needs: changes
+    if: ${{ needs.changes.outputs.storybook == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - name: Restore Bun package cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ env.BUN_VERSION }}-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-${{ env.BUN_VERSION }}-
+      - run: bun install --frozen-lockfile
+      - name: Verify Storybook contracts
+        run: |
+          bun run storybook:check
+          bun run a11y:check
+          bun run a11y:runtime:check
+
+  browser:
+    name: browser and hydration contracts
+    needs: changes
+    if: ${{ needs.changes.outputs.browser == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - name: Restore Bun package cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ env.BUN_VERSION }}-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-${{ env.BUN_VERSION }}-
+      - run: bun install --frozen-lockfile
+      - name: Verify browser behavior
+        run: |
+          bun run ssr:hydration:check
+          bun run browser:check
+
+  check:
+    name: check
+    if: ${{ always() }}
+    needs:
+      - changes
+      - static
+      - package
+      - storybook
+      - browser
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require successful selected checks
+        shell: bash
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          STATIC_SELECTED: ${{ needs.changes.outputs.static }}
+          STATIC_RESULT: ${{ needs.static.result }}
+          PACKAGE_SELECTED: ${{ needs.changes.outputs.package }}
+          PACKAGE_RESULT: ${{ needs.package.result }}
+          STORYBOOK_SELECTED: ${{ needs.changes.outputs.storybook }}
+          STORYBOOK_RESULT: ${{ needs.storybook.result }}
+          BROWSER_SELECTED: ${{ needs.changes.outputs.browser }}
+          BROWSER_RESULT: ${{ needs.browser.result }}
+        run: |
+          set -euo pipefail
+
+          failed=false
+
+          if [[ "$CHANGES_RESULT" != 'success' ]]; then
+            echo "::error::Change classification finished with ${CHANGES_RESULT}."
+            failed=true
+          fi
+
+          require_selected_success() {
+            local name="$1"
+            local selected="$2"
+            local result="$3"
+
+            printf '%-12s selected=%-5s result=%s\n' "$name" "${selected:-false}" "$result"
+
+            if [[ "$selected" == 'true' && "$result" != 'success' ]]; then
+              echo "::error::Selected ${name} validation finished with ${result}."
+              failed=true
+            elif [[ "$selected" != 'true' && "$result" != 'skipped' ]]; then
+              echo "::error::Unselected ${name} validation unexpectedly finished with ${result}."
+              failed=true
+            fi
+          }
+
+          require_selected_success static "$STATIC_SELECTED" "$STATIC_RESULT"
+          require_selected_success package "$PACKAGE_SELECTED" "$PACKAGE_RESULT"
+          require_selected_success storybook "$STORYBOOK_SELECTED" "$STORYBOOK_RESULT"
+          require_selected_success browser "$BROWSER_SELECTED" "$BROWSER_RESULT"
+
+          if [[ "$failed" == 'true' ]]; then
+            exit 1
+          fi
