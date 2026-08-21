@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.62.0
+
+- Added opt-in `foundation.css` and per-component `components/<Component>.css` package exports for Astro, static HTML, and other framework-neutral consumers while preserving the existing `styles.css` compatibility entry.
+- Added a base-commit public API compatibility guard that accepts either a sufficient direct version bump or a newly declared release fragment, keeping feature pull requests aligned with release preparation.
+- Added release change fragments and an automatically refreshed release pull request that prepares package versions and changelog sections without weakening the explicit tag-triggered npm publishing boundary.
+
 ## 0.61.0
 
 - Added an optional localized clear label and keyboard-reachable clear action to `CommandField`, while suppressing inconsistent browser-native search cancellation controls.
