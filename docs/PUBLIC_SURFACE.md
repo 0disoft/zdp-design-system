@@ -8,10 +8,12 @@ This file is generated from `scripts/public-surface.ts`. Do not edit it directly
 | --- | --- | --- | --- |
 | `zdp-design-system` | runtime | Compatibility root barrel for Svelte components and helpers. | `svelte: ./dist/index.js; types: ./dist/index.d.ts; import: ./dist/index.js; default: ./dist/index.js` |
 | `zdp-design-system/styles.css` | style | Tokens plus framework-neutral component CSS. | `./dist/styles/index.css` |
+| `zdp-design-system/foundation.css` | style | Design tokens plus shared framework-neutral foundation rules. | `./dist/styles/foundation.css` |
 | `zdp-design-system/tokens.css` | style | Design tokens without the full component stylesheet. | `./dist/styles/tokens.css` |
 | `zdp-design-system/brand-fonts.css` | style | Optional brand wordmark font faces. | `./dist/styles/brand-fonts.css` |
 | `zdp-design-system/expressive-fonts.css` | style | Optional expressive display font faces. | `./dist/styles/expressive-fonts.css` |
 | `zdp-design-system/locale-fonts.css` | style | Optional multilingual webfont faces. | `./dist/styles/locale-fonts.css` |
+| `zdp-design-system/components/*.css` | style | Generated framework-neutral CSS for one public component. | `./dist/styles/components/*.css` |
 | `zdp-design-system/share` | runtime | Framework-neutral share icon definitions. | `types: ./dist/share.d.ts; import: ./dist/share.js; default: ./dist/share.js` |
 | `zdp-design-system/brand-assets` | runtime | Brand asset metadata and integrity manifest. | `types: ./dist/brand-assets.ts; import: ./dist/brand-assets.js; default: ./dist/brand-assets.js` |
 | `zdp-design-system/credit-assets` | runtime | Credit asset metadata and integrity manifest. | `types: ./dist/credit-assets.ts; import: ./dist/credit-assets.js; default: ./dist/credit-assets.js` |

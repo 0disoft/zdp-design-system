@@ -18,10 +18,12 @@
       "default": "./dist/index.js"
     },
     "./styles.css": "./dist/styles/index.css",
+    "./foundation.css": "./dist/styles/foundation.css",
     "./tokens.css": "./dist/styles/tokens.css",
     "./brand-fonts.css": "./dist/styles/brand-fonts.css",
     "./expressive-fonts.css": "./dist/styles/expressive-fonts.css",
     "./locale-fonts.css": "./dist/styles/locale-fonts.css",
+    "./components/*.css": "./dist/styles/components/*.css",
     "./components/*": {
       "svelte": "./dist/components/*.svelte",
       "default": "./dist/components/*.svelte"
@@ -93,11 +95,13 @@
   ],
   "sideEffects": [
     "./dist/styles/index.css",
+    "./dist/styles/foundation.css",
     "./dist/styles/brand-fonts.css",
     "./dist/styles/expressive-fonts.css",
     "./dist/styles/locale-fonts.css",
     "./dist/styles/tokens.css",
-    "./dist/styles/components.css"
+    "./dist/styles/components.css",
+    "./dist/styles/components/*.css"
   ],
   "scripts": {
     "dev": "storybook dev -p 6006",
@@ -115,6 +119,7 @@
     "credit-assets:check": "bun scripts/check-credit-assets.ts",
     "preview:check": "bun scripts/check-preview.ts && bun run styles:parity:check",
     "styles:parity:check": "bun scripts/check-component-style-parity.ts",
+    "granular-css:check": "bun scripts/check-granular-css.ts",
     "a11y:check": "bun scripts/check-storybook-a11y.ts",
     "a11y:runtime:check": "node scripts/check-storybook-runtime-a11y.mjs",
     "ssr:hydration:check": "node scripts/check-ssr-hydration.mjs",
@@ -122,7 +127,7 @@
     "type:check": "svelte-check --tsconfig ./tsconfig.json",
     "package:build": "bun scripts/generate-tokens.ts && bun scripts/generate-share.ts && bun scripts/build-package.ts",
     "package:build:check": "bun scripts/check-package-build.ts",
-    "package:check": "bun run package:build:check && bun scripts/check-package.ts",
+    "package:check": "bun run package:build:check && bun run granular-css:check && bun scripts/check-package.ts",
     "publish:check": "bun scripts/check-publish-readiness.ts",
     "release:change:add": "bun scripts/release-changes.ts add",
     "release:changes:check": "bun scripts/release-changes.ts check",

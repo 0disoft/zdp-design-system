@@ -87,13 +87,14 @@ const expectedScripts = {
   'tokens:check': 'bun scripts/generate-tokens.ts --check && bun scripts/check-tokens.ts',
   'preview:check': 'bun scripts/check-preview.ts && bun run styles:parity:check',
   'styles:parity:check': 'bun scripts/check-component-style-parity.ts',
+  'granular-css:check': 'bun scripts/check-granular-css.ts',
   'a11y:check': 'bun scripts/check-storybook-a11y.ts',
   'a11y:runtime:check': 'node scripts/check-storybook-runtime-a11y.mjs',
   'ssr:hydration:check': 'node scripts/check-ssr-hydration.mjs',
   'type:check': 'svelte-check --tsconfig ./tsconfig.json',
   'package:build': 'bun scripts/generate-tokens.ts && bun scripts/generate-share.ts && bun scripts/build-package.ts',
   'package:build:check': 'bun scripts/check-package-build.ts',
-  'package:check': 'bun run package:build:check && bun scripts/check-package.ts',
+  'package:check': 'bun run package:build:check && bun run granular-css:check && bun scripts/check-package.ts',
   'publish:check': 'bun scripts/check-publish-readiness.ts',
   'fixtures:check': 'bun scripts/check-consumer-fixtures.ts'
 } as const;
