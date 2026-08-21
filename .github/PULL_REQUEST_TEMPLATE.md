@@ -11,6 +11,10 @@ Describe the contract, template, implementation, or documentation change.
 - [ ] The change does not include payment payloads, payment data, or card data.
 - [ ] The change does not include customer raw data, raw customer data copies, private message bodies, prompt bodies, or account identifiers.
 
+## Release Impact
+
+- [ ] A `.changes/*.md` fragment is included for consumer-visible package or release-tooling changes, or the pull request explains why no package release is needed.
+
 ## Verification
 
 List the configured command intents or manual checks used to verify the change.
