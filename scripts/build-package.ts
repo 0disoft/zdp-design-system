@@ -8,12 +8,12 @@ import {
   createPublicTypeEntry,
   createRuntimeModule
 } from './package-entry';
+import { publicRuntimeModuleNames } from './public-surface';
 
 const repoRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const distRoot = resolve(repoRoot, 'dist');
 const stagingRoot = resolve(repoRoot, 'dist.__staging__');
 const backupRoot = resolve(repoRoot, 'dist.__previous__');
-const runtimeModuleNames = ['brand-assets', 'credit-assets', 'preferences', 'shortcuts', 'split-pane', 'tokens'] as const;
 const atomicPaths = { backupRoot, stagingRoot, targetRoot: distRoot };
 
 for (const path of [distRoot, stagingRoot, backupRoot]) {
@@ -52,7 +52,7 @@ async function buildPackage(outputRoot: string): Promise<void> {
   await writeFile(resolve(outputRoot, 'index.js'), createPublicRuntimeEntry(publicEntrySource));
   await writeFile(resolve(outputRoot, 'index.d.ts'), createPublicTypeEntry(publicEntrySource));
 
-  for (const moduleName of runtimeModuleNames) {
+  for (const moduleName of publicRuntimeModuleNames) {
     const source = await readFile(resolve(repoRoot, `src/lib/${moduleName}.ts`), 'utf8');
     await writeFile(
       resolve(outputRoot, `${moduleName}.js`),
@@ -70,7 +70,7 @@ function assertCompletedPackage(outputRoot: string): void {
     'styles/tokens.css',
     'tokens/zdp.tokens.json',
     'schemas/design-tokens.schema.json',
-    ...runtimeModuleNames.map((moduleName) => `${moduleName}.js`)
+    ...publicRuntimeModuleNames.map((moduleName) => `${moduleName}.js`)
   ];
 
   for (const relativePath of requiredPaths) {

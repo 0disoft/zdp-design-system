@@ -1,8 +1,8 @@
 /**
  * mf:anchor zdp.design-system.public-barrel
- * purpose: Locate the package public Svelte component and helper export surface.
+ * purpose: Locate the generated package public Svelte component and helper export surface.
  * search: public exports, package surface, Svelte components, helper exports, barrel
- * invariant: Consumers import through package exports instead of internal src paths.
+ * invariant: This file is generated from scripts/public-surface.ts; consumers import through package exports instead of internal src paths.
  * risk: config
  */
 export { default as Accordion } from './components/Accordion.svelte';
@@ -120,7 +120,12 @@ export {
   zdpShortcutRecommendations,
   zdpShortcutReservedExamples
 } from './shortcuts';
-export type { ZdpShortcutGuardOptions, ZdpShortcutIntent, ZdpShortcutRecommendation, ZdpShortcutRisk } from './shortcuts';
+export type {
+  ZdpShortcutGuardOptions,
+  ZdpShortcutIntent,
+  ZdpShortcutRecommendation,
+  ZdpShortcutRisk
+} from './shortcuts';
 export type { ZdpStatusToastItem } from './toast';
 export type { ZdpToastTone } from './toast';
 export type { ZdpThemeMode, ZdpThemeToggleSize } from './theme';

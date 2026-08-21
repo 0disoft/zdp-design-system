@@ -20,6 +20,8 @@
 
 - Service boundary: `service.yaml`
 - Package metadata: `package.json`
+- Public package surface manifest: `scripts/public-surface.ts`
+- Generated public surface: `src/lib/index.ts`, the `package.json` `exports` field, and `docs/PUBLIC_SURFACE.md`; `bun run surface:check` rejects drift
 - Token source: `tokens/zdp.tokens.json`
 - Web token CSS: `src/styles/tokens.css`
 - Package build/check scripts: `scripts/build-package.ts`, `scripts/check-package.ts`, `scripts/check-publish-readiness.ts`
@@ -33,6 +35,8 @@
 
 ## Forbidden Drift Checks
 
+- Public component names, root-barrel exports, package subpaths, and generated public-surface documentation must agree with `scripts/public-surface.ts`.
+- Brand and credit asset package subpaths must derive from the `packagePath` values in `src/lib/brand-assets.ts` and `src/lib/credit-assets.ts`.
 - Public package exports must not point at `src/**`.
 - Component CSS must not introduce raw product-specific colors, raw spacing, unreviewed z-index numbers, or unmanaged viewport units.
 - `preview:check` invokes `styles:parity:check`, which requires every Svelte component interaction-state selector plus every conditional `@media`, `@supports`, `@container`, `@scope`, and `@starting-style` selector and declaration to remain represented under the same conditional context in `src/styles/components.css`, while allowing shared utility-only selectors.
