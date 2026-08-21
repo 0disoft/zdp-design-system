@@ -8,4 +8,6 @@
 - `files` allowlist includes only intended package artifacts.
 - `sideEffects` includes intended CSS entries.
 - Package build and check scripts agree on generated token, share icon, component, CSS, and docs surfaces.
+- Package-size metrics stay below the absolute budgets in `.github/package-size-budget.json`.
+- Published-package deltas are reviewed when tarball, compressed JavaScript or CSS, image assets, or file count grows.
 - Package version impact is evaluated when packaged files change.

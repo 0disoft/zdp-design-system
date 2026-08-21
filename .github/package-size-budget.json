@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "zdp.package-size-budget/v1",
+  "warnAtPercent": 90,
+  "baseline": {
+    "strategy": "published-same-version-or-latest",
+    "required": false
+  },
+  "limits": {
+    "tarballBytes": 3000000,
+    "unpackedBytes": 4000000,
+    "javascriptGzipBytes": 160000,
+    "cssBrotliBytes": 80000,
+    "imageAssetBytes": 2400000,
+    "largestImageAssetBytes": 900000,
+    "fileCount": 260
+  }
+}
