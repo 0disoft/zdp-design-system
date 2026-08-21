@@ -35,7 +35,9 @@ const visualCases = [
     prepare: async (page) => {
       await waitForFormFixture(page);
       const lightPanel = page.locator('[aria-labelledby="forms-light-title"]');
-      await lightPanel.getByRole('button', { name: 'Open selection' }).click();
+      const combobox = lightPanel.getByRole('combobox', { name: '담당' });
+      await combobox.focus();
+      await combobox.press('ArrowDown');
       await lightPanel.locator('[role="listbox"]').waitFor({ state: 'visible' });
       await settleLayout(page);
     },
