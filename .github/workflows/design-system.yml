@@ -214,6 +214,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-bun-${{ env.BUN_VERSION }}-
       - run: bun install --frozen-lockfile
+      - name: Verify Storybook Pages deployment contract
+        run: node --test scripts/storybook-pages.test.mjs
       - name: Verify generated and source contracts
         run: |
           bun run tokens:check
@@ -323,6 +325,21 @@ jobs:
           bun run storybook:check
           bun run a11y:check
           bun run a11y:runtime:check
+      - name: Build Storybook Pages artifact
+        if: >-
+          github.event_name == 'pull_request' ||
+          (github.event_name == 'push' && github.ref == 'refs/heads/main')
+        run: bun run storybook:build
+      - name: Upload Storybook Pages artifact
+        if: >-
+          github.event_name == 'pull_request' ||
+          (github.event_name == 'push' && github.ref == 'refs/heads/main')
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: storybook-pages
+          path: storybook-static/
+          if-no-files-found: error
+          retention-days: 2
 
   browser:
     name: browser and hydration contracts
