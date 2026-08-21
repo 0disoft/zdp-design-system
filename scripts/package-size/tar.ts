@@ -37,12 +37,12 @@ export function readTarEntries(archive: Buffer): readonly TarEntry[] {
       const terminator = longName.indexOf('\0');
       pendingPath = (terminator >= 0 ? longName.slice(0, terminator) : longName).trimEnd();
     } else {
-      const path = pendingPax.path ?? pendingPath ?? headerPath;
+      const entryPath: string = pendingPax.path ?? pendingPath ?? headerPath;
       if (type === '' || type === '0') {
-        assertSafeTarPath(path);
-        assert.ok(!seenPaths.has(path), `Duplicate tar entry path: ${path}`);
-        seenPaths.add(path);
-        entries.push({ path, content: Buffer.from(content) });
+        assertSafeTarPath(entryPath);
+        assert.ok(!seenPaths.has(entryPath), `Duplicate tar entry path: ${entryPath}`);
+        seenPaths.add(entryPath);
+        entries.push({ path: entryPath, content: Buffer.from(content) });
       }
       pendingPath = null;
       pendingPax = {};
