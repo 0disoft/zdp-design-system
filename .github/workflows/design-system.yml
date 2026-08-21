@@ -91,7 +91,7 @@ jobs:
           else
             for path in "${changed_files[@]}"; do
               case "$path" in
-                .github/workflows/*|package.json|bun.lock|bunfig.toml|tsconfig.json|svelte.config.js|vite.config.*)
+                .github/workflows/*|.github/package-size-budget.json|package.json|bun.lock|bunfig.toml|tsconfig.json|svelte.config.js|vite.config.*)
                   static=true
                   package=true
                   storybook=true
@@ -256,6 +256,38 @@ jobs:
           bun run release:check
           bun run fixtures:check
 
+      - name: Measure package size
+        id: package_size
+        continue-on-error: true
+        run: |
+          bun scripts/check-package-size.ts \
+            --report reports/package-size.md \
+            --json reports/package-size.json
+      - name: Preserve package size report
+        if: always()
+        run: |
+          mkdir -p reports
+          if [ ! -f reports/package-size.md ]; then
+            cat > reports/package-size.md <<'REPORT'
+          <!-- zdp-package-size-report -->
+          ## 📦 Package size report
+
+          Measurement did not produce a report. Inspect the package job logs for the earlier failure.
+          REPORT
+          fi
+          cat reports/package-size.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload package size report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: package-size-report
+          path: reports/package-size.*
+          if-no-files-found: error
+          retention-days: 7
+      - name: Enforce package size budget
+        if: always() && steps.package_size.outcome == 'failure'
+        run: exit 1
+
   storybook:
     name: Storybook and runtime accessibility
     needs: changes
@@ -367,3 +399,47 @@ jobs:
           if [[ "$failed" == 'true' ]]; then
             exit 1
           fi
+
+  package-size-comment:
+    if: ${{ always() && needs.changes.outputs.package == 'true' && needs.package.result != 'cancelled' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
+    needs:
+      - changes
+      - package
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Download package size report
+        id: download
+        continue-on-error: true
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: package-size-report
+          path: reports
+      - name: Upsert pull request report
+        if: steps.download.outcome == 'success'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          marker='<!-- zdp-package-size-report -->'
+          comment_id="$(
+            gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments?per_page=100" \
+              --jq ".[] | select(.user.login == \"github-actions[bot]\" and (.body | contains(\"${marker}\"))) | .id" \
+              | tail -n 1
+          )"
+
+          if [ -n "$comment_id" ]; then
+            gh api --method PATCH \
+              "repos/${GITHUB_REPOSITORY}/issues/comments/${comment_id}" \
+              -F body=@reports/package-size.md
+          else
+            gh api --method POST \
+              "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" \
+              -F body=@reports/package-size.md
+          fi
+

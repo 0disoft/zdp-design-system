@@ -16,6 +16,8 @@
 
 `zdp_design_system_install_frozen` is needed only when dependencies are missing or package metadata changes require dependency installation. Publish dry-run and public publish intents remain gated by explicit release approval and network access.
 
+Package-size enforcement is a CI guard that runs after package verification has already built `dist`. `scripts/check-package-size.ts` packs that exact working-tree surface, enforces `.github/package-size-budget.json`, and emits Markdown plus JSON evidence. It first compares with the published package at the same version and falls back to the latest published version. Registry or baseline failure never disables the absolute limits unless `baseline.required` is explicitly enabled.
+
 ## Source Of Truth Checks
 
 - Service boundary: `service.yaml`
@@ -25,6 +27,7 @@
 - Token source: `tokens/zdp.tokens.json`
 - Web token CSS: `src/styles/tokens.css`
 - Package build/check scripts: `scripts/build-package.ts`, `scripts/check-package.ts`, `scripts/check-publish-readiness.ts`
+- Package-size budget and reporting: `.github/package-size-budget.json`, `scripts/check-package-size.ts`, `scripts/package-size/**`, `.github/workflows/design-system.yml`
 - Atomic package-build regression: `scripts/check-package-build.ts` verifies rollback after promotion failure, interrupted-swap recovery, cleanup, and direct exported declaration preservation.
 - Release preparation: `.changes/**`, `.github/workflows/release-pr.yml`, `scripts/release-changes.ts`
 - Release publishing: `.github/workflows/publish-npm.yml`, `scripts/check-release-workflow.ts`
@@ -45,6 +48,8 @@
 - External UI dependency types, Tailwind/shadcn class contracts, or copied proprietary snippets must not leak into public API.
 - Storybook, preview, fixtures, package metadata, and docs must not contradict the same token or component contract.
 - Generated release pull requests must not publish packages, create tags, request OIDC, or bypass the explicit human review gate.
+- Published-package deltas are informational and must not become an automatic regression threshold. Only reviewed absolute limits block CI.
+- Do not raise package-size limits merely to silence a failure. Explain the new public surface or asset growth in the pull request before changing a limit.
 
 ## Version Impact
 
