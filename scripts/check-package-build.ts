@@ -4,6 +4,11 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { recoverAtomicDirectory, replaceDirectoryAtomically } from './atomic-directory';
+import {
+  createComponentStyleEntry,
+  readPublicComponentExports,
+  unwrapSvelteGlobalSelectors
+} from './component-style-entries';
 import { createPublicRuntimeEntry, createPublicTypeEntry } from './package-entry';
 
 const fixtureRoot = await mkdtemp(join(tmpdir(), 'zdp-package-build-'));
@@ -50,6 +55,7 @@ try {
   assert.equal(existsSync(stagingRoot), false, 'Recovery must discard an incomplete staging tree.');
 
   const entrySource = `
+export { default as Field } from './components/Field.svelte';
 export { default as Button } from './components/Button.svelte';
 export interface DirectInterface { readonly id: string; }
 export type DirectAlias = 'ready';
@@ -64,6 +70,33 @@ const internalValue = 2;
   assert.doesNotMatch(typeEntry, /internalValue/);
   assert.match(runtimeEntry, /export const directValue = 1/);
   assert.doesNotMatch(runtimeEntry, /DirectInterface|DirectAlias|internalValue/);
+
+  const publicComponents = readPublicComponentExports(entrySource);
+  assert.deepEqual(publicComponents, [
+    { name: 'Button', fileName: 'Button.svelte' },
+    { name: 'Field', fileName: 'Field.svelte' }
+  ]);
+
+  const componentCss = createComponentStyleEntry(
+    publicComponents[0]!,
+    `<style>
+      :global([data-zdp-theme="dark"]) .zdp-button { color: white; }
+      .zdp-button :global(svg) { display: block; }
+      .zdp-button :global(:where(span:not(.muted), strong)) { margin: 0; }
+    </style>`
+  );
+  assert.match(componentCss, /\[data-zdp-theme="dark"\] \.zdp-button/);
+  assert.match(componentCss, /\.zdp-button svg/);
+  assert.match(componentCss, /\.zdp-button :where\(span:not\(\.muted\), strong\)/);
+  assert.doesNotMatch(componentCss, /:global/);
+  assert.throws(
+    () => unwrapSvelteGlobalSelectors('.zdp-button :global(svg'),
+    /Unbalanced :global/
+  );
+  assert.throws(
+    () => readPublicComponentExports("export { default as Action } from './components/Button.svelte';"),
+    /must match its Svelte file name/
+  );
 } finally {
   await rm(fixtureRoot, { force: true, recursive: true });
 }

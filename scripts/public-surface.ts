@@ -242,6 +242,12 @@ export const publicPackageEntries: readonly PublicPackageEntry[] = Object.freeze
     target: './dist/styles/index.css'
   },
   {
+    subpath: './foundation.css',
+    category: 'style',
+    description: 'Design tokens plus shared framework-neutral foundation rules.',
+    target: './dist/styles/foundation.css'
+  },
+  {
     subpath: './tokens.css',
     category: 'style',
     description: 'Design tokens without the full component stylesheet.',
@@ -264,6 +270,12 @@ export const publicPackageEntries: readonly PublicPackageEntry[] = Object.freeze
     category: 'style',
     description: 'Optional multilingual webfont faces.',
     target: './dist/styles/locale-fonts.css'
+  },
+  {
+    subpath: './components/*.css',
+    category: 'style',
+    description: 'Generated framework-neutral CSS for one public component.',
+    target: './dist/styles/components/*.css'
   },
   {
     subpath: './components/*',
