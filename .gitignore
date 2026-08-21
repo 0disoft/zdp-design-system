@@ -11,3 +11,4 @@
 /.env.*
 /tmp/
 /reports/
+/tests/visual/__snapshots__/

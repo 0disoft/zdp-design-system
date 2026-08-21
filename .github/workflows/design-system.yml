@@ -330,6 +330,55 @@ jobs:
           github.event_name == 'pull_request' ||
           (github.event_name == 'push' && github.ref == 'refs/heads/main')
         run: bun run storybook:build
+      - name: Check targeted visual regressions against PR base
+        if: github.event_name == 'pull_request'
+        id: visual
+        continue-on-error: true
+        env:
+          ZDP_VISUAL_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+
+          base_worktree="${RUNNER_TEMP}/zdp-visual-base"
+          baseline_root="${RUNNER_TEMP}/zdp-visual-baseline"
+          rm -rf "$base_worktree" "$baseline_root"
+
+          cleanup() {
+            git worktree remove --force "$base_worktree" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+
+          git fetch --no-tags --depth=1 origin "$ZDP_VISUAL_BASE_SHA"
+          git worktree add --detach "$base_worktree" "$ZDP_VISUAL_BASE_SHA"
+
+          (
+            cd "$base_worktree"
+            bun install --frozen-lockfile
+            bun run build
+          )
+
+          node scripts/check-visual-regressions.mjs \
+            --update \
+            --storybook-root "$base_worktree/storybook-static" \
+            --snapshot-root "$baseline_root"
+
+          node scripts/check-visual-regressions.mjs \
+            --storybook-root "$GITHUB_WORKSPACE/storybook-static" \
+            --snapshot-root "$baseline_root"
+
+      - name: Upload targeted visual regression report
+        if: always() && github.event_name == 'pull_request' && steps.visual.outcome == 'failure'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: targeted-visual-regression-report
+          path: reports/visual-regression/
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Report advisory visual regression result
+        if: always() && github.event_name == 'pull_request' && steps.visual.outcome == 'failure'
+        run: echo "::warning::Targeted visual regression differences were detected. Review the uploaded artifact before merge."
+
       - name: Upload Storybook Pages artifact
         if: >-
           github.event_name == 'pull_request' ||
