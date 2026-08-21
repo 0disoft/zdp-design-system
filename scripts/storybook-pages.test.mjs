@@ -218,6 +218,17 @@ await test('keeps privileged Pages workflows on trusted code and immutable actio
   assert.match(cleanupWorkflow, /ref: main/);
   assert.doesNotMatch(cleanupWorkflow, /github\.event\.pull_request\.head\.sha/);
 
+  const publishStep = publishWorkflow.slice(
+    publishWorkflow.indexOf('      - name: Publish Storybook tree'),
+    publishWorkflow.indexOf('      - name: Resolve Pages URL')
+  );
+  const cleanupStep = cleanupWorkflow.slice(
+    cleanupWorkflow.indexOf('      - name: Remove Storybook preview'),
+    cleanupWorkflow.indexOf('      - name: Mark preview comment as removed')
+  );
+  assert.ok(publishStep.includes('GH_TOKEN: ${{ github.token }}'));
+  assert.ok(cleanupStep.includes('GH_TOKEN: ${{ github.token }}'));
+
   for (const workflow of [ciWorkflow, publishWorkflow, cleanupWorkflow]) {
     const actionReferences = [...workflow.matchAll(/^\s+(?:-\s+)?uses:\s+([^\s#]+)/gm)]
       .flatMap((match) => match[1] ? [match[1]] : []);
