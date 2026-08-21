@@ -8,6 +8,7 @@
 | --- | --- |
 | tokens, CSS, components, stories, preview, fixtures, package readiness | `zdp_design_system_package_verify` |
 | browser accessibility semantics, responsive geometry, forced colors, and keyboard focus order | `zdp_design_system_browser_accessibility_check` |
+| high-risk component geometry and theme rendering | GitHub Actions advisory gate backed by `scripts/check-visual-regressions.mjs` |
 | Storybook static build or bundle evidence | `zdp_design_system_bundle_analyze` |
 | npm package contents or release readiness | `zdp_design_system_npm_pack_dry_run` |
 | repository architecture contract | `zdp_architecture_validate_design_system_repository` |
@@ -35,7 +36,22 @@ Package-size enforcement is a CI guard that runs after package verification has 
 - Consumer contract docs: `docs/CONSUMER_CONTRACT.md`
 - External UI rules: `docs/EXTERNAL_UI_ADOPTION.md`, `docs/INTERACTIVE_PRIMITIVE_AUDIT.md`, `THIRD_PARTY_NOTICES.md`
 - Storybook and preview surfaces: `.storybook/**`, `stories/**`, `preview/**`
+- Targeted visual regression surface: `scripts/check-visual-regressions.mjs`, `.github/workflows/design-system.yml`, `tests/visual/README.md`
 - Consumer fixtures: `fixtures/**`
+
+## Targeted Visual Regression
+
+The visual gate deliberately covers only surfaces where CSS drift is expensive to spot manually: light and dark form controls, an open Combobox, an open Menu, Dialog, Sheet, and the mobile light Theme / Locale Stress fixture. It does not capture every Storybook story.
+
+For each pull request, GitHub Actions checks out the exact base SHA in a temporary worktree and builds both base and head Storybooks on the same hosted runner. The checker captures ephemeral expected images from the base build and immediately compares the head build against them. PNG baselines are not committed, so approved visual changes do not create snapshot-update churn in the repository.
+
+The capture context fixes the viewport, device scale factor, locale, timezone, color scheme, and reduced-motion preference. Animation, transitions, smooth scrolling, and caret rendering are disabled. A pinned Noto Sans KR stylesheet is loaded before capture so Korean text does not depend on the runner image. External browser requests are blocked except for the pinned jsDelivr font host.
+
+A pixel is considered changed only when a channel differs by more than 20. A case reports a mismatch when more than 0.1% of pixels change or its dimensions change. Each mismatched case records `failure.txt` and, where available, `expected.png`, `actual.png`, and `diff.png` under `reports/visual-regression/`.
+
+The GitHub Actions step starts as advisory through `continue-on-error`. A mismatch uploads the `targeted-visual-regression-report` artifact and emits a workflow warning without blocking unrelated delivery. Promote the step to blocking only after repeated stable runs on the hosted runner.
+
+For local diagnosis, build Storybook and capture temporary expected images with `node scripts/check-visual-regressions.mjs --update`. Rebuild after the candidate change, then run `node scripts/check-visual-regressions.mjs` to compare it. The local images are written to `tests/visual/__snapshots__/`; that directory is ignored and must not be committed.
 
 ## Forbidden Drift Checks
 
