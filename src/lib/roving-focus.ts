@@ -1,3 +1,13 @@
+/* llmnav/1 module
+id=zdp.design.focus.roving
+role=Move focus among caller-selected elements using directional keys, endpoints, and horizontal text direction.
+owns=roving focus movement|owner-document focus resolution
+excludes=disabled-item selection policy|menu open state
+search=roving focus|arrow key movement|RTL keyboard
+invariant=Focus candidates belong to the container's document and are selected by the caller.
+stability=contract
+*/
+
 export type ZdpRovingFocusOrientation = 'horizontal' | 'vertical';
 export type ZdpRovingFocusKey =
   | 'ArrowDown'

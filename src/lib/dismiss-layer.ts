@@ -1,3 +1,13 @@
+/* llmnav/1 module
+id=zdp.design.overlay.dismiss
+role=Coordinate Escape and outside-click dismissal across active overlay layers in each document.
+owns=overlay dismissal ordering|document listener lifecycle
+excludes=focus restoration|overlay rendering
+search=overlay dismissal|Escape layer|outside click
+invariant=Escape targets only the top active layer while outside clicks respect outside-dismiss eligibility.
+stability=contract
+*/
+
 export interface ZdpDismissLayerOptions {
   closeOnEscape?: boolean;
   closeOnOutside?: boolean;

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.61.2
+
+- Added repository-local semantic navigation for Menu interaction, shared roving focus, and overlay dismissal, without changing component behavior or public props.
+
 ## 0.61.1
 
 - Refreshed compatible dependencies, including Storybook 10.6, Svelte 5.57, Vite 8.2.2, and Playwright 1.63.

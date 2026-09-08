@@ -2,7 +2,140 @@
   "partitions": [
     {
       "edges": [],
-      "inputHash": "037f8383700272283a3e9f965696ac4c71910118d59c2f3207b5a5b8689c9176",
+      "inputHash": "3d684a1fcad9b249ba11da8c94ebfcdc153894fd43cbb22c48818cc605f97906",
+      "key": "card:zdp-design-system/zdp.design.focus.roving",
+      "nodes": [
+        {
+          "definitions": [],
+          "external": false,
+          "key": "zdp-design-system/zdp.design.focus.roving",
+          "location": {
+            "declarationLine": null,
+            "endLine": 9,
+            "exported": null,
+            "kind": null,
+            "language": null,
+            "path": "src/lib/roving-focus.ts",
+            "receiver": null,
+            "signature": null,
+            "startLine": 1,
+            "symbol": null,
+            "visibility": null
+          },
+          "repositoryId": "zdp-design-system",
+          "role": "Move focus among caller-selected elements using directional keys, endpoints, and horizontal text direction.",
+          "semanticId": "zdp.design.focus.roving"
+        }
+      ],
+      "outputHash": "d680032864cdfc275cdc4a11347d5ad3edc5c0ba19ca1b2b9a4d6377a1627c89"
+    },
+    {
+      "edges": [
+        {
+          "confidence": 0.85,
+          "from": "zdp-design-system/zdp.design.menu.interaction",
+          "id": "37e170668fd3051c22734a22216df941c093c8014693ea7972f684d29a42531c",
+          "kind": "imports",
+          "provenance": {
+            "generator": "llmnav",
+            "line": null,
+            "path": "src/lib/components/Menu.svelte",
+            "source": "src/lib/components/Menu.svelte",
+            "type": "local-import"
+          },
+          "to": "zdp-design-system/zdp.design.focus.roving"
+        },
+        {
+          "confidence": 1,
+          "from": "zdp-design-system/zdp.design.menu.interaction",
+          "id": "bf3fc3556598daaf68023e20ecd80b2e10373b5b99be850e972939bc7551a3df",
+          "kind": "workflow",
+          "provenance": {
+            "generator": null,
+            "line": 1,
+            "path": "src/lib/components/Menu.svelte",
+            "source": "src/lib/components/Menu.svelte",
+            "type": "source-card"
+          },
+          "to": "zdp-design-system/zdp.design.focus.roving"
+        },
+        {
+          "confidence": 0.85,
+          "from": "zdp-design-system/zdp.design.menu.interaction",
+          "id": "b561c98069045180d4929e51b09262be4380613422b3c5ca06d990b37fdead84",
+          "kind": "imports",
+          "provenance": {
+            "generator": "llmnav",
+            "line": null,
+            "path": "src/lib/components/Menu.svelte",
+            "source": "src/lib/components/Menu.svelte",
+            "type": "local-import"
+          },
+          "to": "zdp-design-system/zdp.design.overlay.dismiss"
+        },
+        {
+          "confidence": 1,
+          "from": "zdp-design-system/zdp.design.menu.interaction",
+          "id": "7128509834a56e1766a4a2c935db4cda089238f336bf16ba112bb9c5aa2afae1",
+          "kind": "workflow",
+          "provenance": {
+            "generator": null,
+            "line": 1,
+            "path": "src/lib/components/Menu.svelte",
+            "source": "src/lib/components/Menu.svelte",
+            "type": "source-card"
+          },
+          "to": "zdp-design-system/zdp.design.overlay.dismiss"
+        }
+      ],
+      "inputHash": "b78962911e19d3d3c8f86f3104e7fba2d9909fb82da82f96d012faae2e1f48d6",
+      "key": "card:zdp-design-system/zdp.design.menu.interaction",
+      "nodes": [
+        {
+          "definitions": [],
+          "external": false,
+          "key": "zdp-design-system/zdp.design.focus.roving",
+          "location": null,
+          "repositoryId": "zdp-design-system",
+          "role": null,
+          "semanticId": "zdp.design.focus.roving"
+        },
+        {
+          "definitions": [],
+          "external": false,
+          "key": "zdp-design-system/zdp.design.menu.interaction",
+          "location": {
+            "declarationLine": null,
+            "endLine": 11,
+            "exported": null,
+            "kind": null,
+            "language": null,
+            "path": "src/lib/components/Menu.svelte",
+            "receiver": null,
+            "signature": null,
+            "startLine": 1,
+            "symbol": null,
+            "visibility": null
+          },
+          "repositoryId": "zdp-design-system",
+          "role": "Render an accessible action menu with keyboard opening, enabled-item navigation, dismissal, and focus return.",
+          "semanticId": "zdp.design.menu.interaction"
+        },
+        {
+          "definitions": [],
+          "external": false,
+          "key": "zdp-design-system/zdp.design.overlay.dismiss",
+          "location": null,
+          "repositoryId": "zdp-design-system",
+          "role": null,
+          "semanticId": "zdp.design.overlay.dismiss"
+        }
+      ],
+      "outputHash": "84124d83318a4411d2bb7678eb04cc087afa3cde0684043930412a2fff908fb9"
+    },
+    {
+      "edges": [],
+      "inputHash": "e497153fa784d1d21a5877730bb8e0ca8158dfa63ee42ab552d91bffe2a96add",
       "key": "card:zdp-design-system/zdp.design.navigation.request",
       "nodes": [
         {
@@ -30,6 +163,35 @@
       "outputHash": "6a210a093b21ec888014f7856e1ba7e5dc51e7fab82628ec3393cb2975e46965"
     },
     {
+      "edges": [],
+      "inputHash": "f9fbcc4c8dfcef3d500581b96f5256b26c1537a5431e69353a798f2a9e206d22",
+      "key": "card:zdp-design-system/zdp.design.overlay.dismiss",
+      "nodes": [
+        {
+          "definitions": [],
+          "external": false,
+          "key": "zdp-design-system/zdp.design.overlay.dismiss",
+          "location": {
+            "declarationLine": null,
+            "endLine": 9,
+            "exported": null,
+            "kind": null,
+            "language": null,
+            "path": "src/lib/dismiss-layer.ts",
+            "receiver": null,
+            "signature": null,
+            "startLine": 1,
+            "symbol": null,
+            "visibility": null
+          },
+          "repositoryId": "zdp-design-system",
+          "role": "Coordinate Escape and outside-click dismissal across active overlay layers in each document.",
+          "semanticId": "zdp.design.overlay.dismiss"
+        }
+      ],
+      "outputHash": "2561a3b4067af7d42bacdeb0306d31e535e61dee8567ff7785a611b3b61b601a"
+    },
+    {
       "edges": [
         {
           "confidence": 0.85,
@@ -46,7 +208,7 @@
           "to": "zdp-design-system/zdp.design.package.recovery"
         }
       ],
-      "inputHash": "234a3c1bdbe08346f23c9e99b4b8b1586b476e14e1499f0b455e1ee8a0bb28e5",
+      "inputHash": "4603e37da2217c04d4e1c23c3b0cc64590584bbd267e3b58a40e1b6d82cf94c0",
       "key": "card:zdp-design-system/zdp.design.package.build",
       "nodes": [
         {
@@ -84,7 +246,7 @@
     },
     {
       "edges": [],
-      "inputHash": "beb077ce9f4a7a04fcb87af90dc933c4b6a02e581c2ab3ae4cab366032091d25",
+      "inputHash": "f5494e98179427ac331577d50823cfdc3a36b4bff93c20a084fc896b2ef35690",
       "key": "card:zdp-design-system/zdp.design.package.recovery",
       "nodes": [
         {
@@ -113,7 +275,7 @@
     },
     {
       "edges": [],
-      "inputHash": "e980b5a99512b4419b362891f043549ffe31ad7b548b4039b222f69bf40abfeb",
+      "inputHash": "55c984a4b80d9916303990f3235f3f4858a8d4e749de9a97ec13d1c7b04b7bd9",
       "key": "card:zdp-design-system/zdp.design.styles.parity",
       "nodes": [
         {
@@ -142,7 +304,7 @@
     },
     {
       "edges": [],
-      "inputHash": "3135332682974360938a4892447ca46110272a2e67acf7d86ef8315084dfb713",
+      "inputHash": "be6d57e521ca4ac15ce9f875186cee395be9a94fe6a4e27a78384293499ed959",
       "key": "card:zdp-design-system/zdp.design.tokens.generate",
       "nodes": [
         {
@@ -171,6 +333,6 @@
     }
   ],
   "repositoryId": "zdp-design-system",
-  "resolutionHash": "d72ed1cbf527b2077a0f60e7ed03715572eb0a1930c46bf830b51515aaa79be3",
+  "resolutionHash": "280fb44df840651dec93ac8ac83e0d3a69c341322647dca6a65cd7b47cfd3189",
   "schemaVersion": 1
 }

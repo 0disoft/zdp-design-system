@@ -1,6 +1,6 @@
 # Repository navigation
 
-LLMNav currently indexes only `scripts/`. Reviewed module cards cover token-name generation, package assembly, interrupted replacement recovery, component/shared-CSS parity, and navigation request dispatch. Components, stories, tokens and production helpers are not covered; use the existing context map and text search for them.
+LLMNav indexes `scripts/` plus three exact menu-related source files: `src/lib/components/Menu.svelte`, `src/lib/roving-focus.ts`, and `src/lib/dismiss-layer.ts`. Cards distinguish menu state, keyboard movement, and overlay dismissal as well as the development-tool boundaries. Other components, stories and token data remain outside the scope; use the existing context map and text search for them.
 
 This workspace uses its existing LLMNav checkout. No npm dependency, installation or release is introduced. A standalone clone does not have a bundled navigation runner. Command authority remains `.mustflow/config/commands/zdp-design-system.toml` in the workspace.
 
@@ -30,8 +30,8 @@ Use these through `mf run <intent> --repo projects/zdp-platforms/client-surfaces
 
 The English/Korean queries are development-set checks, not independent performance observations. Initialization and annotation are not real-task trials. For the next independently arising task, record the original query, fallback searches, files actually opened, and acceptance evidence; leave unavailable timing and token measurements unknown. No background collection is installed.
 
-These changes are development-only and outside the npm files allowlist; the package version remains unchanged.
+The request runner remains development-only. Menu-related source comments also appear in the packaged source copies, so this navigation expansion increments the package patch version without changing public props or behavior.
 
 The scoped audit reports the release-artifact builder as a medium candidate. Its publication responsibility is real, but release tooling is outside this pilot; it is not suppressed as a false positive. Other unannotated scripts remain discoverable through ordinary search.
 
-During setup, a module card appended to the CSS parity checker was not recognized. Moving the card before imports made validation succeed. Keep cards at the file header; the underlying parser cause has not been diagnosed here.
+The original trailing-card omission was reproduced and fixed in LLMNav commit `9439d2d` (0.9.2, not yet published): regex quotes no longer enter ordinary string masking. The current workspace checkout contains that fix; an older standalone npm installation does not. Header placement remains a readability convention, not a workaround requirement.

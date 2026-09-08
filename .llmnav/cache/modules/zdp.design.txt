@@ -30,3 +30,22 @@ role Read bounded navigation requests as data and dispatch them against the fixe
 owns navigation request validation, read-only navigation dispatch
 excludes shell execution, repository selection, source mutation
 invariant Request data cannot choose an executable, repository root, or write operation.
+
+@zdp.design.focus.roving
+role Move focus among caller-selected elements using directional keys, endpoints, and horizontal text direction.
+owns roving focus movement, owner-document focus resolution
+excludes disabled-item selection policy, menu open state
+invariant Focus candidates belong to the container's document and are selected by the caller.
+
+@zdp.design.menu.interaction
+role Render an accessible action menu with keyboard opening, enabled-item navigation, dismissal, and focus return.
+owns menu interaction state, menu item activation
+excludes authorization decisions, routing decisions
+invariant Disabled items do not participate in menu navigation or activation.
+rel workflow>zdp.design.focus.roving, workflow>zdp.design.overlay.dismiss
+
+@zdp.design.overlay.dismiss
+role Coordinate Escape and outside-click dismissal across active overlay layers in each document.
+owns overlay dismissal ordering, document listener lifecycle
+excludes focus restoration, overlay rendering
+invariant Escape targets only the top active layer while outside clicks respect outside-dismiss eligibility.

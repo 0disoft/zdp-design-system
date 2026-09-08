@@ -235,11 +235,148 @@
         "검색 요청"
       ],
       "stability": "contract"
+    },
+    {
+      "boundaries": [],
+      "excludes": [
+        "disabled-item selection policy",
+        "menu open state"
+      ],
+      "hashes": {
+        "body": "c12716f3690dede08cc6811be1c0bfd23f96215aa4b816dfbe3c19a016c1ae61",
+        "semantic": "09e7fb0501ec385b8ae52b13a3d80e00fb5e94f684ddced2ba0313a1d309792e",
+        "structure": "4fdf2e9fd700b39dd103f55b5b6553ddca5e6baa01091ded0e63ff5e34291bfe"
+      },
+      "id": "zdp.design.focus.roving",
+      "imports": [],
+      "invariant": [
+        "Focus candidates belong to the container's document and are selected by the caller."
+      ],
+      "location": {
+        "declarationLine": null,
+        "endLine": 9,
+        "exported": null,
+        "kind": null,
+        "language": null,
+        "path": "src/lib/roving-focus.ts",
+        "receiver": null,
+        "signature": null,
+        "startLine": 1,
+        "symbol": null,
+        "visibility": null
+      },
+      "owns": [
+        "roving focus movement",
+        "owner-document focus resolution"
+      ],
+      "role": "Move focus among caller-selected elements using directional keys, endpoints, and horizontal text direction.",
+      "scope": "module",
+      "search": [
+        "roving focus",
+        "arrow key movement",
+        "RTL keyboard"
+      ],
+      "stability": "contract"
+    },
+    {
+      "boundaries": [],
+      "excludes": [
+        "authorization decisions",
+        "routing decisions"
+      ],
+      "hashes": {
+        "body": "51941ec96eea3060903008a1aad79147836b1c4d87f47c93518d45d463627e9b",
+        "semantic": "1b7bca6f2426e109bc3eef5524d01b73028eecf9c87a0e579e2a537572cf074a",
+        "structure": "8b43f818a1a0a28e9415cedfda0bd8ea9ca9c9feb00ad25ea319c2a1e289fe39"
+      },
+      "id": "zdp.design.menu.interaction",
+      "imports": [
+        "../dismiss-layer",
+        "../dom-id",
+        "../focusable",
+        "../menu",
+        "../roving-focus",
+        "svelte"
+      ],
+      "invariant": [
+        "Disabled items do not participate in menu navigation or activation."
+      ],
+      "location": {
+        "declarationLine": null,
+        "endLine": 11,
+        "exported": null,
+        "kind": null,
+        "language": null,
+        "path": "src/lib/components/Menu.svelte",
+        "receiver": null,
+        "signature": null,
+        "startLine": 1,
+        "symbol": null,
+        "visibility": null
+      },
+      "owns": [
+        "menu interaction state",
+        "menu item activation"
+      ],
+      "rel": [
+        "workflow>zdp.design.focus.roving",
+        "workflow>zdp.design.overlay.dismiss"
+      ],
+      "role": "Render an accessible action menu with keyboard opening, enabled-item navigation, dismissal, and focus return.",
+      "scope": "module",
+      "search": [
+        "menu keyboard",
+        "menu dismissal",
+        "menu trigger"
+      ],
+      "stability": "contract"
+    },
+    {
+      "boundaries": [],
+      "excludes": [
+        "focus restoration",
+        "overlay rendering"
+      ],
+      "hashes": {
+        "body": "1397478d14d9e95a055410bcb8071a2dff91ea80101c7397558fd7781c43ac4e",
+        "semantic": "62243910a3bbb3f8117fc29a6fe5cd49e03c41f05fa51382866771333495dce2",
+        "structure": "1366b917efa4beb9011c33e8173b2be906423af0c058246a6e903178c91c0ee4"
+      },
+      "id": "zdp.design.overlay.dismiss",
+      "imports": [],
+      "invariant": [
+        "Escape targets only the top active layer while outside clicks respect outside-dismiss eligibility."
+      ],
+      "location": {
+        "declarationLine": null,
+        "endLine": 9,
+        "exported": null,
+        "kind": null,
+        "language": null,
+        "path": "src/lib/dismiss-layer.ts",
+        "receiver": null,
+        "signature": null,
+        "startLine": 1,
+        "symbol": null,
+        "visibility": null
+      },
+      "owns": [
+        "overlay dismissal ordering",
+        "document listener lifecycle"
+      ],
+      "role": "Coordinate Escape and outside-click dismissal across active overlay layers in each document.",
+      "scope": "module",
+      "search": [
+        "overlay dismissal",
+        "Escape layer",
+        "outside click"
+      ],
+      "stability": "contract"
     }
   ],
   "contractFingerprints": {
     "configuration": {
-      "sha256": "4fbd65b4e8a6950541e6c6f9257b04a54f54a81293a4196f3db9390e0be72003"
+      "sha256": "d6131c8ab5cb939ef8c39914aec54ca5fb01ee9f98545d74d6bd25689fe9e3a8"
     },
     "exportedApi": {
       "count": 0,
@@ -247,9 +384,9 @@
     },
     "schemaVersion": 1
   },
-  "generatedBy": "llmnav@0.9.1",
+  "generatedBy": "llmnav@0.9.2",
   "repositoryId": "zdp-design-system",
   "schemaVersion": 1,
-  "sourceHash": "190e1eb78a0a130ef60844c7ee0d59ec47996ecea3385ee87ae529874572cd25",
+  "sourceHash": "6ba839381fabc2cdbed1ee58bf73e5c4c74857789c596f58d9ec2c7143b98c1e",
   "specVersion": "1"
 }

@@ -3,7 +3,10 @@
   "audit": {
     "dispositions": []
   },
-  "coverageRules": [{"name":"development navigation pilot","match":["scripts/generate-tokens.ts","scripts/build-package.ts","scripts/atomic-directory.ts","scripts/check-component-style-parity.ts","scripts/llmnav-request.mjs"],"scope":"module","requiredFields":["owns","search","invariant"]}],
+  "coverageRules": [
+    {"name":"development navigation pilot","match":["scripts/generate-tokens.ts","scripts/build-package.ts","scripts/atomic-directory.ts","scripts/check-component-style-parity.ts","scripts/llmnav-request.mjs"],"scope":"module","requiredFields":["owns","search","invariant"]},
+    {"name":"menu interaction boundaries","match":["src/lib/components/Menu.svelte","src/lib/roving-focus.ts","src/lib/dismiss-layer.ts"],"scope":"module","requiredFields":["owns","search","invariant"]}
+  ],
   "evaluation": {
     "minimumRecallAt1": 0.75,
     "minimumRecallAt5": 0.9,
@@ -137,7 +140,10 @@
   },
   "repositoryId": "zdp-design-system",
   "sourceRoots": [
-    "scripts"
+    "scripts",
+    "src/lib/components/Menu.svelte",
+    "src/lib/roving-focus.ts",
+    "src/lib/dismiss-layer.ts"
   ],
   "version": 1
 }

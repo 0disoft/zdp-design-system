@@ -321,9 +321,10 @@
     },
     {
       "blocks": [],
-      "contentHash": "5c922aff390d734337a82612ea2e241a961e8bb39da559d67cc7309a4445af03",
+      "contentHash": "14279072b3dc828e286ace7c005af6e20d531d7ead731ff13d5947c122bbdfbe",
       "declarations": [],
       "imports": [
+        "./npm-command",
         "node:assert/strict",
         "node:child_process",
         "node:crypto",
@@ -335,7 +336,7 @@
       ],
       "path": "scripts/build-release-artifact.ts",
       "semanticBytes": 0,
-      "sourceBytes": 7331
+      "sourceBytes": 7473
     },
     {
       "blocks": [],
@@ -490,9 +491,10 @@
     },
     {
       "blocks": [],
-      "contentHash": "cc218eec6b8b16f1abfeef6295af10015436cab8414874cefd25b29fa754ff69",
+      "contentHash": "8e5c515bb5bef2d776ae4dbe0814f73a67534e9075f13fe830446aae861f4c9d",
       "declarations": [],
       "imports": [
+        "./npm-command",
         "@sveltejs/vite-plugin-svelte",
         "node:assert/strict",
         "node:child_process",
@@ -503,7 +505,7 @@
       ],
       "path": "scripts/check-consumer-fixtures.ts",
       "semanticBytes": 0,
-      "sourceBytes": 25126
+      "sourceBytes": 25078
     },
     {
       "blocks": [],
@@ -644,7 +646,7 @@
     },
     {
       "blocks": [],
-      "contentHash": "178d524f2a0b8d8bf658fd8a1c4e0503f6d0e8f540810e4fb05e9a220de32c63",
+      "contentHash": "d287a094461eb9198c4916c3ef0d72c2caa8bcea56fbe3d77518f7cb41afe242",
       "declarations": [],
       "imports": [
         "node:fs/promises",
@@ -652,7 +654,7 @@
       ],
       "path": "scripts/check-storybook-a11y.ts",
       "semanticBytes": 0,
-      "sourceBytes": 1853
+      "sourceBytes": 1884
     },
     {
       "blocks": [],
@@ -948,6 +950,18 @@
     },
     {
       "blocks": [],
+      "contentHash": "e279973262b70c7e4c5050e50639a8cae278eab22eb0eaa37a978a76fd349026",
+      "declarations": [],
+      "imports": [
+        "node:fs",
+        "node:path"
+      ],
+      "path": "scripts/npm-command.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 1025
+    },
+    {
+      "blocks": [],
       "contentHash": "336df63a3ae128bc48542a39b33c6b32fc2790d4621eda83bbefd7e45daaa68e",
       "declarations": [],
       "imports": [
@@ -988,8 +1002,321 @@
       "path": "scripts/type-contracts/input-types.ts",
       "semanticBytes": 0,
       "sourceBytes": 903
+    },
+    {
+      "blocks": [
+        {
+          "card": {
+            "effect": [],
+            "excludes": [
+              "authorization decisions",
+              "routing decisions"
+            ],
+            "id": "zdp.design.menu.interaction",
+            "invariant": [
+              "Disabled items do not participate in menu navigation or activation."
+            ],
+            "owns": [
+              "menu interaction state",
+              "menu item activation"
+            ],
+            "rel": [
+              "workflow>zdp.design.focus.roving",
+              "workflow>zdp.design.overlay.dismiss"
+            ],
+            "risk": [],
+            "role": "Render an accessible action menu with keyboard opening, enabled-item navigation, dismissal, and focus return.",
+            "scope": "module",
+            "search": [
+              "menu keyboard",
+              "menu dismissal",
+              "menu trigger"
+            ],
+            "stability": "contract",
+            "unknown": []
+          },
+          "end": 493,
+          "endLine": 11,
+          "entries": [
+            {
+              "key": "id",
+              "line": 2,
+              "order": 0,
+              "value": "zdp.design.menu.interaction"
+            },
+            {
+              "key": "role",
+              "line": 3,
+              "order": 1,
+              "value": "Render an accessible action menu with keyboard opening, enabled-item navigation, dismissal, and focus return."
+            },
+            {
+              "key": "owns",
+              "line": 4,
+              "order": 2,
+              "value": "menu interaction state|menu item activation"
+            },
+            {
+              "key": "excludes",
+              "line": 5,
+              "order": 3,
+              "value": "authorization decisions|routing decisions"
+            },
+            {
+              "key": "search",
+              "line": 6,
+              "order": 4,
+              "value": "menu keyboard|menu dismissal|menu trigger"
+            },
+            {
+              "key": "invariant",
+              "line": 7,
+              "order": 5,
+              "value": "Disabled items do not participate in menu navigation or activation."
+            },
+            {
+              "key": "rel",
+              "line": 8,
+              "order": 6,
+              "value": "workflow>zdp.design.focus.roving"
+            },
+            {
+              "key": "rel",
+              "line": 9,
+              "order": 7,
+              "value": "workflow>zdp.design.overlay.dismiss"
+            },
+            {
+              "key": "stability",
+              "line": 10,
+              "order": 8,
+              "value": "contract"
+            }
+          ],
+          "filePath": "src/lib/components/Menu.svelte",
+          "indent": "",
+          "newline": "\n",
+          "prefix": null,
+          "raw": "<!-- llmnav/1 module\nid=zdp.design.menu.interaction\nrole=Render an accessible action menu with keyboard opening, enabled-item navigation, dismissal, and focus return.\nowns=menu interaction state|menu item activation\nexcludes=authorization decisions|routing decisions\nsearch=menu keyboard|menu dismissal|menu trigger\ninvariant=Disabled items do not participate in menu navigation or activation.\nrel=workflow>zdp.design.focus.roving\nrel=workflow>zdp.design.overlay.dismiss\nstability=contract\n-->",
+          "scope": "module",
+          "specVersion": "1",
+          "start": 0,
+          "startLine": 1,
+          "style": "html",
+          "syntaxErrors": []
+        }
+      ],
+      "contentHash": "51941ec96eea3060903008a1aad79147836b1c4d87f47c93518d45d463627e9b",
+      "declarations": [
+        null
+      ],
+      "imports": [
+        "../dismiss-layer",
+        "../dom-id",
+        "../focusable",
+        "../menu",
+        "../roving-focus",
+        "svelte"
+      ],
+      "path": "src/lib/components/Menu.svelte",
+      "semanticBytes": 493,
+      "sourceBytes": 14565
+    },
+    {
+      "blocks": [
+        {
+          "card": {
+            "effect": [],
+            "excludes": [
+              "focus restoration",
+              "overlay rendering"
+            ],
+            "id": "zdp.design.overlay.dismiss",
+            "invariant": [
+              "Escape targets only the top active layer while outside clicks respect outside-dismiss eligibility."
+            ],
+            "owns": [
+              "overlay dismissal ordering",
+              "document listener lifecycle"
+            ],
+            "rel": [],
+            "risk": [],
+            "role": "Coordinate Escape and outside-click dismissal across active overlay layers in each document.",
+            "scope": "module",
+            "search": [
+              "overlay dismissal",
+              "Escape layer",
+              "outside click"
+            ],
+            "stability": "contract",
+            "unknown": []
+          },
+          "end": 434,
+          "endLine": 9,
+          "entries": [
+            {
+              "key": "id",
+              "line": 2,
+              "order": 0,
+              "value": "zdp.design.overlay.dismiss"
+            },
+            {
+              "key": "role",
+              "line": 3,
+              "order": 1,
+              "value": "Coordinate Escape and outside-click dismissal across active overlay layers in each document."
+            },
+            {
+              "key": "owns",
+              "line": 4,
+              "order": 2,
+              "value": "overlay dismissal ordering|document listener lifecycle"
+            },
+            {
+              "key": "excludes",
+              "line": 5,
+              "order": 3,
+              "value": "focus restoration|overlay rendering"
+            },
+            {
+              "key": "search",
+              "line": 6,
+              "order": 4,
+              "value": "overlay dismissal|Escape layer|outside click"
+            },
+            {
+              "key": "invariant",
+              "line": 7,
+              "order": 5,
+              "value": "Escape targets only the top active layer while outside clicks respect outside-dismiss eligibility."
+            },
+            {
+              "key": "stability",
+              "line": 8,
+              "order": 6,
+              "value": "contract"
+            }
+          ],
+          "filePath": "src/lib/dismiss-layer.ts",
+          "indent": "",
+          "newline": "\n",
+          "prefix": null,
+          "raw": "/* llmnav/1 module\nid=zdp.design.overlay.dismiss\nrole=Coordinate Escape and outside-click dismissal across active overlay layers in each document.\nowns=overlay dismissal ordering|document listener lifecycle\nexcludes=focus restoration|overlay rendering\nsearch=overlay dismissal|Escape layer|outside click\ninvariant=Escape targets only the top active layer while outside clicks respect outside-dismiss eligibility.\nstability=contract\n*/",
+          "scope": "module",
+          "specVersion": "1",
+          "start": 0,
+          "startLine": 1,
+          "style": "block",
+          "syntaxErrors": []
+        }
+      ],
+      "contentHash": "1397478d14d9e95a055410bcb8071a2dff91ea80101c7397558fd7781c43ac4e",
+      "declarations": [
+        null
+      ],
+      "imports": [],
+      "path": "src/lib/dismiss-layer.ts",
+      "semanticBytes": 434,
+      "sourceBytes": 4017
+    },
+    {
+      "blocks": [
+        {
+          "card": {
+            "effect": [],
+            "excludes": [
+              "disabled-item selection policy",
+              "menu open state"
+            ],
+            "id": "zdp.design.focus.roving",
+            "invariant": [
+              "Focus candidates belong to the container's document and are selected by the caller."
+            ],
+            "owns": [
+              "roving focus movement",
+              "owner-document focus resolution"
+            ],
+            "rel": [],
+            "risk": [],
+            "role": "Move focus among caller-selected elements using directional keys, endpoints, and horizontal text direction.",
+            "scope": "module",
+            "search": [
+              "roving focus",
+              "arrow key movement",
+              "RTL keyboard"
+            ],
+            "stability": "contract",
+            "unknown": []
+          },
+          "end": 441,
+          "endLine": 9,
+          "entries": [
+            {
+              "key": "id",
+              "line": 2,
+              "order": 0,
+              "value": "zdp.design.focus.roving"
+            },
+            {
+              "key": "role",
+              "line": 3,
+              "order": 1,
+              "value": "Move focus among caller-selected elements using directional keys, endpoints, and horizontal text direction."
+            },
+            {
+              "key": "owns",
+              "line": 4,
+              "order": 2,
+              "value": "roving focus movement|owner-document focus resolution"
+            },
+            {
+              "key": "excludes",
+              "line": 5,
+              "order": 3,
+              "value": "disabled-item selection policy|menu open state"
+            },
+            {
+              "key": "search",
+              "line": 6,
+              "order": 4,
+              "value": "roving focus|arrow key movement|RTL keyboard"
+            },
+            {
+              "key": "invariant",
+              "line": 7,
+              "order": 5,
+              "value": "Focus candidates belong to the container's document and are selected by the caller."
+            },
+            {
+              "key": "stability",
+              "line": 8,
+              "order": 6,
+              "value": "contract"
+            }
+          ],
+          "filePath": "src/lib/roving-focus.ts",
+          "indent": "",
+          "newline": "\n",
+          "prefix": null,
+          "raw": "/* llmnav/1 module\nid=zdp.design.focus.roving\nrole=Move focus among caller-selected elements using directional keys, endpoints, and horizontal text direction.\nowns=roving focus movement|owner-document focus resolution\nexcludes=disabled-item selection policy|menu open state\nsearch=roving focus|arrow key movement|RTL keyboard\ninvariant=Focus candidates belong to the container's document and are selected by the caller.\nstability=contract\n*/",
+          "scope": "module",
+          "specVersion": "1",
+          "start": 0,
+          "startLine": 1,
+          "style": "block",
+          "syntaxErrors": []
+        }
+      ],
+      "contentHash": "c12716f3690dede08cc6811be1c0bfd23f96215aa4b816dfbe3c19a016c1ae61",
+      "declarations": [
+        null
+      ],
+      "imports": [],
+      "path": "src/lib/roving-focus.ts",
+      "semanticBytes": 441,
+      "sourceBytes": 3178
     }
   ],
-  "indexerVersion": 6,
+  "indexerVersion": 7,
   "schemaVersion": 1
 }

@@ -1,4 +1,8 @@
 {
-  "aliases": {},
+  "aliases": {
+    "메뉴": "zdp.design.menu.interaction",
+    "방향키 이동": "zdp.design.focus.roving",
+    "오버레이 닫기": "zdp.design.overlay.dismiss"
+  },
   "version": 1
 }

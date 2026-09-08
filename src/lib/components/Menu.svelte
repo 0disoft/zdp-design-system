@@ -1,3 +1,15 @@
+<!-- llmnav/1 module
+id=zdp.design.menu.interaction
+role=Render an accessible action menu with keyboard opening, enabled-item navigation, dismissal, and focus return.
+owns=menu interaction state|menu item activation
+excludes=authorization decisions|routing decisions
+search=menu keyboard|menu dismissal|menu trigger
+invariant=Disabled items do not participate in menu navigation or activation.
+rel=workflow>zdp.design.focus.roving
+rel=workflow>zdp.design.overlay.dismiss
+stability=contract
+-->
+
 <script lang="ts">
   import { onDestroy, tick } from 'svelte';
   import { createZdpDismissLayer } from '../dismiss-layer';

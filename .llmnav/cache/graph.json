@@ -2,6 +2,62 @@
   "edges": [
     {
       "confidence": 0.85,
+      "from": "zdp-design-system/zdp.design.menu.interaction",
+      "id": "37e170668fd3051c22734a22216df941c093c8014693ea7972f684d29a42531c",
+      "kind": "imports",
+      "provenance": {
+        "generator": "llmnav",
+        "line": null,
+        "path": "src/lib/components/Menu.svelte",
+        "source": "src/lib/components/Menu.svelte",
+        "type": "local-import"
+      },
+      "to": "zdp-design-system/zdp.design.focus.roving"
+    },
+    {
+      "confidence": 1,
+      "from": "zdp-design-system/zdp.design.menu.interaction",
+      "id": "bf3fc3556598daaf68023e20ecd80b2e10373b5b99be850e972939bc7551a3df",
+      "kind": "workflow",
+      "provenance": {
+        "generator": null,
+        "line": 1,
+        "path": "src/lib/components/Menu.svelte",
+        "source": "src/lib/components/Menu.svelte",
+        "type": "source-card"
+      },
+      "to": "zdp-design-system/zdp.design.focus.roving"
+    },
+    {
+      "confidence": 0.85,
+      "from": "zdp-design-system/zdp.design.menu.interaction",
+      "id": "b561c98069045180d4929e51b09262be4380613422b3c5ca06d990b37fdead84",
+      "kind": "imports",
+      "provenance": {
+        "generator": "llmnav",
+        "line": null,
+        "path": "src/lib/components/Menu.svelte",
+        "source": "src/lib/components/Menu.svelte",
+        "type": "local-import"
+      },
+      "to": "zdp-design-system/zdp.design.overlay.dismiss"
+    },
+    {
+      "confidence": 1,
+      "from": "zdp-design-system/zdp.design.menu.interaction",
+      "id": "7128509834a56e1766a4a2c935db4cda089238f336bf16ba112bb9c5aa2afae1",
+      "kind": "workflow",
+      "provenance": {
+        "generator": null,
+        "line": 1,
+        "path": "src/lib/components/Menu.svelte",
+        "source": "src/lib/components/Menu.svelte",
+        "type": "source-card"
+      },
+      "to": "zdp-design-system/zdp.design.overlay.dismiss"
+    },
+    {
+      "confidence": 0.85,
       "from": "zdp-design-system/zdp.design.package.build",
       "id": "22d99bcfc26b6feb0a6aa0167ebdd7093fb5f8094cc9d747568b5129b495f12d",
       "kind": "imports",
@@ -16,6 +72,50 @@
     }
   ],
   "nodes": [
+    {
+      "definitions": [],
+      "external": false,
+      "key": "zdp-design-system/zdp.design.focus.roving",
+      "location": {
+        "declarationLine": null,
+        "endLine": 9,
+        "exported": null,
+        "kind": null,
+        "language": null,
+        "path": "src/lib/roving-focus.ts",
+        "receiver": null,
+        "signature": null,
+        "startLine": 1,
+        "symbol": null,
+        "visibility": null
+      },
+      "repositoryId": "zdp-design-system",
+      "role": "Move focus among caller-selected elements using directional keys, endpoints, and horizontal text direction.",
+      "semanticId": "zdp.design.focus.roving",
+      "unresolved": false
+    },
+    {
+      "definitions": [],
+      "external": false,
+      "key": "zdp-design-system/zdp.design.menu.interaction",
+      "location": {
+        "declarationLine": null,
+        "endLine": 11,
+        "exported": null,
+        "kind": null,
+        "language": null,
+        "path": "src/lib/components/Menu.svelte",
+        "receiver": null,
+        "signature": null,
+        "startLine": 1,
+        "symbol": null,
+        "visibility": null
+      },
+      "repositoryId": "zdp-design-system",
+      "role": "Render an accessible action menu with keyboard opening, enabled-item navigation, dismissal, and focus return.",
+      "semanticId": "zdp.design.menu.interaction",
+      "unresolved": false
+    },
     {
       "definitions": [],
       "external": false,
@@ -36,6 +136,28 @@
       "repositoryId": "zdp-design-system",
       "role": "Read bounded navigation requests as data and dispatch them against the fixed design-system repository.",
       "semanticId": "zdp.design.navigation.request",
+      "unresolved": false
+    },
+    {
+      "definitions": [],
+      "external": false,
+      "key": "zdp-design-system/zdp.design.overlay.dismiss",
+      "location": {
+        "declarationLine": null,
+        "endLine": 9,
+        "exported": null,
+        "kind": null,
+        "language": null,
+        "path": "src/lib/dismiss-layer.ts",
+        "receiver": null,
+        "signature": null,
+        "startLine": 1,
+        "symbol": null,
+        "visibility": null
+      },
+      "repositoryId": "zdp-design-system",
+      "role": "Coordinate Escape and outside-click dismissal across active overlay layers in each document.",
+      "semanticId": "zdp.design.overlay.dismiss",
       "unresolved": false
     },
     {
@@ -129,11 +251,11 @@
   ],
   "repositoryId": "zdp-design-system",
   "schemaVersion": 1,
-  "sourceHash": "f6b2d8130a6eb32e675a0f51b62d7137a9969c7d966f5b749dcea8066739b5d7",
+  "sourceHash": "55b639e01d7133702bc7e364b68a25412d49d1e4b8c31d66a97257f248fc0e7f",
   "stats": {
-    "edgeCount": 1,
+    "edgeCount": 5,
     "importedIndexCount": 0,
-    "nodeCount": 5,
+    "nodeCount": 8,
     "unresolvedNodeCount": 0
   }
 }

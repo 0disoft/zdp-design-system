@@ -1,17 +1,17 @@
 {
-  "cardCount": 5,
+  "cardCount": 8,
   "fileStateSchemaVersion": 1,
   "files": {
-    ".llmnav/cache/agent-context.md": "7d44e9b887daeab3bdecbd36348a8e1931545e6690f2e734e0e8c157ba25bdcf",
-    ".llmnav/cache/cards.jsonl": "75404b9c19b2d9983aaace35ca245808cc3877c919d66e0a889cedd19f2c1fae",
-    ".llmnav/cache/file-state.json": "832dadfa789097df618fdfae9b086836df9010eda11b5565fde865c04b0cb1dc",
-    ".llmnav/cache/graph-state.json": "8c3da98235b002b70f7d04d61e07469cb90b56cbc7013f9bec21dc3c6ab369d4",
-    ".llmnav/cache/graph.json": "eb6c28fdf7cc8ad29a4a117f245d270c26a6123e6b7af79529b651c6bd0405bc",
-    ".llmnav/cache/index.json": "00c4cdebb4386f342d12f101b71bc89a032a7641c3de4f0366a8b7540f9096ee",
-    ".llmnav/cache/modules/zdp.design.txt": "349b1cf2a9cce5c84dea7e8875c1861f2f97f0729899a0dccc19579067a595e6",
-    ".llmnav/cache/prompt-prefix.json": "67ffc58c7ae20777a084da0fc1e7a29132cd96b970fb5a7ef2568fc81551db0b",
+    ".llmnav/cache/agent-context.md": "b930ed2b07f40eec1e82d9e2f3d5c8805c6468db3a8d5eb4d71db68f2788af95",
+    ".llmnav/cache/cards.jsonl": "9b61966023f4ecf1abdc91fb4705e609827da8b951d81d73496438c42dd38192",
+    ".llmnav/cache/file-state.json": "231bdb256bdaffc2604283062d3f500db42a97fe20f40529894cb21c22ed27d9",
+    ".llmnav/cache/graph-state.json": "6ad291ada8afb81f07a65da11f6368320624c319aa21db09b2aafa21d294a155",
+    ".llmnav/cache/graph.json": "14cfa7f1a95e5e6b6d4af04787709ea41a593a36d24eab8461f1dcf9353d5698",
+    ".llmnav/cache/index.json": "c44cce017217b704f568c0ef2811fdb45f756ff4e68e81f936442db3ba6246ca",
+    ".llmnav/cache/modules/zdp.design.txt": "c730d22c32d12f73956c828538a13ee84d27ab9603da5a40a16805701dfda34f",
+    ".llmnav/cache/prompt-prefix.json": "59294aee040ccd65a29c64144b71318b3b8bf0b6b1b475168f5b96751c13e4a1",
     ".llmnav/cache/repo-core.txt": "aeddbcc90f61a4899a4b7d3647f73f14aef2acf4705a20e8d874e718fb0dc48f",
-    ".llmnav/cache/search-index.json": "8c9a6bc82620c91d901d44ea29be560179ba33c87ed1e88e4cf787589e576769"
+    ".llmnav/cache/search-index.json": "078ace0bc82bd62fe7ed6869a38dd5240f8748447cfcd4198269786aeb8c9d18"
   },
   "graphSchemaVersion": 1,
   "graphStateSchemaVersion": 1,
@@ -19,9 +19,9 @@
   "promptBundleSchemaVersion": 1,
   "repositoryId": "zdp-design-system",
   "schemaVersion": 1,
-  "searchCardSetHash": "b63d91f9de56560981a62ac748bf2cec37d9b2bc8bf4c696df3fc728bc623908",
+  "searchCardSetHash": "5117163a9c6b15217e8db7b997676af190cff61ba08ae4b0d1a967a5710527bf",
   "searchIndexSchemaVersion": 2,
   "searchShardSchemaVersion": null,
-  "sourceHash": "190e1eb78a0a130ef60844c7ee0d59ec47996ecea3385ee87ae529874572cd25",
+  "sourceHash": "6ba839381fabc2cdbed1ee58bf73e5c4c74857789c596f58d9ec2c7143b98c1e",
   "specVersion": "1"
 }

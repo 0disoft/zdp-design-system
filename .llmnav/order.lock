@@ -3,3 +3,6 @@ zdp.design.package.recovery
 zdp.design.styles.parity
 zdp.design.tokens.generate
 zdp.design.navigation.request
+zdp.design.focus.roving
+zdp.design.menu.interaction
+zdp.design.overlay.dismiss
