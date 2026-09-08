@@ -1,3 +1,13 @@
+/* llmnav/1 module
+id=zdp.design.package.recovery
+role=Recover interrupted package replacement and restore the previous directory when promotion fails.
+owns=directory replacement|failed promotion recovery
+excludes=package assembly|npm publication
+search=rollback|롤백|이전 패키지 복원
+invariant=A failed promotion restores the previous target when its backup exists.
+stability=architecture
+*/
+
 import { existsSync } from 'node:fs';
 import { rename, rm } from 'node:fs/promises';
 

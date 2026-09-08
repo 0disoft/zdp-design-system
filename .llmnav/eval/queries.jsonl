@@ -1,0 +1,8 @@
+{"query":"token names out of sync","expected":["zdp.design.tokens.generate"]}
+{"query":"토큰 이름 목록이 원본과 달라요","expected":["zdp.design.tokens.generate"]}
+{"query":"package entrypoints runtime types","expected":["zdp.design.package.build"]}
+{"query":"패키지 진입점 생성","expected":["zdp.design.package.build"]}
+{"query":"rollback after failed promotion","expected":["zdp.design.package.recovery"]}
+{"query":"이전 패키지 복원 롤백","expected":["zdp.design.package.recovery"]}
+{"query":"CSS parity hover state","expected":["zdp.design.styles.parity"]}
+{"query":"공유 CSS hover 스타일 누락","expected":["zdp.design.styles.parity"]}

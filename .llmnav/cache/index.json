@@ -1,0 +1,205 @@
+{
+  "cards": [
+    {
+      "boundaries": [],
+      "excludes": [
+        "npm publication",
+        "token value design"
+      ],
+      "hashes": {
+        "body": "e379465c6b4269f61fce4d8ea792f46cf349564209766ba7d28d749a38effeb5",
+        "semantic": "81f1dc9b5731036c11ecc2ceccf73502298e6c217398dc1e01e36e31a5a05398",
+        "structure": "91b0f6cd93b62b0d68fca1cf61b500458b8667dfebf0d77d215bb4e696ab12d7"
+      },
+      "id": "zdp.design.package.build",
+      "imports": [
+        "./atomic-directory",
+        "./package-entry",
+        "node:fs",
+        "node:fs/promises",
+        "node:path",
+        "node:url"
+      ],
+      "invariant": [
+        "The staging tree must contain all required public files before replacing the package output."
+      ],
+      "location": {
+        "declarationLine": null,
+        "endLine": 9,
+        "exported": null,
+        "kind": null,
+        "language": null,
+        "path": "scripts/build-package.ts",
+        "receiver": null,
+        "signature": null,
+        "startLine": 1,
+        "symbol": null,
+        "visibility": null
+      },
+      "owns": [
+        "package assembly",
+        "runtime and type entry generation"
+      ],
+      "role": "Assemble and validate a complete package staging tree before publishing it locally.",
+      "scope": "module",
+      "search": [
+        "package entrypoints",
+        "패키지 진입점",
+        "타입 진입점"
+      ],
+      "stability": "architecture"
+    },
+    {
+      "boundaries": [],
+      "excludes": [
+        "package assembly",
+        "npm publication"
+      ],
+      "hashes": {
+        "body": "6e30f70540f43f7051e87613164879ea6e7abe007b627753b4ff202150c9b3e8",
+        "semantic": "cc98f2cfbb00178fd1f43468280dbc3583b867569280b66440259eef0f30ccce",
+        "structure": "2f7f782a443924e7c197b4d72ac7fd0989393d2baa568a39f65cb5793de24514"
+      },
+      "id": "zdp.design.package.recovery",
+      "imports": [
+        "node:fs",
+        "node:fs/promises"
+      ],
+      "invariant": [
+        "A failed promotion restores the previous target when its backup exists."
+      ],
+      "location": {
+        "declarationLine": null,
+        "endLine": 9,
+        "exported": null,
+        "kind": null,
+        "language": null,
+        "path": "scripts/atomic-directory.ts",
+        "receiver": null,
+        "signature": null,
+        "startLine": 1,
+        "symbol": null,
+        "visibility": null
+      },
+      "owns": [
+        "directory replacement",
+        "failed promotion recovery"
+      ],
+      "role": "Recover interrupted package replacement and restore the previous directory when promotion fails.",
+      "scope": "module",
+      "search": [
+        "rollback",
+        "롤백",
+        "이전 패키지 복원"
+      ],
+      "stability": "architecture"
+    },
+    {
+      "boundaries": [],
+      "excludes": [
+        "token generation",
+        "component business decisions"
+      ],
+      "hashes": {
+        "body": "725be0bdcc0c29b065bfe1cd3785007e905c959074e26925ce06949045189181",
+        "semantic": "e6e0ca58eaef1a345658271ea648c3714d7f698c68ea4c46d28a207188dddbd9",
+        "structure": "e08a44c28b4c44c574f14fdd6c1e79dc42b64b989e061d3a78dc77c723a74ff6"
+      },
+      "id": "zdp.design.styles.parity",
+      "imports": [
+        "node:assert/strict",
+        "node:fs/promises",
+        "node:path"
+      ],
+      "invariant": [
+        "Shared styles must retain component state declarations under their original conditional context."
+      ],
+      "location": {
+        "declarationLine": null,
+        "endLine": 9,
+        "exported": null,
+        "kind": null,
+        "language": null,
+        "path": "scripts/check-component-style-parity.ts",
+        "receiver": null,
+        "signature": null,
+        "startLine": 1,
+        "symbol": null,
+        "visibility": null
+      },
+      "owns": [
+        "interaction style parity",
+        "conditional declaration parity"
+      ],
+      "role": "Check that component interaction states and conditional CSS remain represented in shared styles.",
+      "scope": "module",
+      "search": [
+        "CSS parity",
+        "공유 CSS",
+        "hover 스타일"
+      ],
+      "stability": "architecture"
+    },
+    {
+      "boundaries": [],
+      "excludes": [
+        "token value design",
+        "CSS rendering"
+      ],
+      "hashes": {
+        "body": "470c1a09327963c6aa2aa6dcbcf54a1431c6119ee0d01158e6726f4d14eab329",
+        "semantic": "7070c5e1044f17c5e6b4e6bca1ea329d75bf8dc1c6f27041ded7a03c843c27d2",
+        "structure": "0261493f85413a9eb62211d07ba97139815d7b403925293bfb9b723d60a331ed"
+      },
+      "id": "zdp.design.tokens.generate",
+      "imports": [
+        "node:fs/promises",
+        "node:path",
+        "node:url"
+      ],
+      "invariant": [
+        "Generated token names mirror the source token tree without manual edits."
+      ],
+      "location": {
+        "declarationLine": null,
+        "endLine": 9,
+        "exported": null,
+        "kind": null,
+        "language": null,
+        "path": "scripts/generate-tokens.ts",
+        "receiver": null,
+        "signature": null,
+        "startLine": 1,
+        "symbol": null,
+        "visibility": null
+      },
+      "owns": [
+        "token name generation",
+        "token leaf flattening"
+      ],
+      "role": "Derive the public token name list from the design token tree.",
+      "scope": "module",
+      "search": [
+        "token names",
+        "토큰 이름",
+        "토큰 목록"
+      ],
+      "stability": "architecture"
+    }
+  ],
+  "contractFingerprints": {
+    "configuration": {
+      "sha256": "92d03f24db037d7451d2c56830d04e618cbb64772070d48a735e6e2db624168f"
+    },
+    "exportedApi": {
+      "count": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "schemaVersion": 1
+  },
+  "generatedBy": "llmnav@0.9.1",
+  "repositoryId": "zdp-design-system",
+  "schemaVersion": 1,
+  "sourceHash": "de30ecaf758a561ec4adfa41d1eec99667a6afc1b8972a58c8b23ad92bdc0a19",
+  "specVersion": "1"
+}

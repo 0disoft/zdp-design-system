@@ -1,0 +1,27 @@
+{
+  "cardCount": 4,
+  "fileStateSchemaVersion": 1,
+  "files": {
+    ".llmnav/cache/agent-context.md": "04edfeb93e478648fc826b41d1ebf950a05d38bf2a36c60aba39ae794d5c023c",
+    ".llmnav/cache/cards.jsonl": "e503e6c02048313a151a1b1378d7121cb32a9b1955f636369a3dd49a1d498c45",
+    ".llmnav/cache/file-state.json": "2a21cf1087ba64e9a133e512249772b0e39b2cd95a798b395cbe799998dad2e3",
+    ".llmnav/cache/graph-state.json": "1488ff5b880246dac4b6e965e8373334ccdf8aed858975e9ed11e603cc160ac4",
+    ".llmnav/cache/graph.json": "06fcf9ad3fe8bcf40fb74984d26d25f4261fb3cd78e8ac1d37c0e21dc0f9fe1c",
+    ".llmnav/cache/index.json": "d4938a0831be1cf4aa1d02d4e300e6e1b03f626289f17aa05748464d6880c2f2",
+    ".llmnav/cache/modules/zdp.design.txt": "e53e587ac89e6c2cf07e4c15572abaee48048e118944d548c27a82bd844fef2e",
+    ".llmnav/cache/prompt-prefix.json": "8915c1787a3009a5f55eb5f7d24b4b03ce4f0ebc64b642fc8810170ea33e319e",
+    ".llmnav/cache/repo-core.txt": "aeddbcc90f61a4899a4b7d3647f73f14aef2acf4705a20e8d874e718fb0dc48f",
+    ".llmnav/cache/search-index.json": "b7747522b60d9c47624076ff13dfe556a46bbb6bdb53ff34cd5984fb836a4fe8"
+  },
+  "graphSchemaVersion": 1,
+  "graphStateSchemaVersion": 1,
+  "moduleCount": 1,
+  "promptBundleSchemaVersion": 1,
+  "repositoryId": "zdp-design-system",
+  "schemaVersion": 1,
+  "searchCardSetHash": "74bccb3085dd7db37cf720bf0c5a7289d37668a3f6f76e6bfee275395bc3995e",
+  "searchIndexSchemaVersion": 2,
+  "searchShardSchemaVersion": null,
+  "sourceHash": "de30ecaf758a561ec4adfa41d1eec99667a6afc1b8972a58c8b23ad92bdc0a19",
+  "specVersion": "1"
+}

@@ -1,3 +1,13 @@
+/* llmnav/1 module
+id=zdp.design.styles.parity
+role=Check that component interaction states and conditional CSS remain represented in shared styles.
+owns=interaction style parity|conditional declaration parity
+excludes=token generation|component business decisions
+search=CSS parity|공유 CSS|hover 스타일
+invariant=Shared styles must retain component state declarations under their original conditional context.
+stability=architecture
+*/
+
 import assert from 'node:assert/strict';
 import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';

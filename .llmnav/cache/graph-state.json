@@ -1,0 +1,147 @@
+{
+  "partitions": [
+    {
+      "edges": [
+        {
+          "confidence": 0.85,
+          "from": "zdp-design-system/zdp.design.package.build",
+          "id": "22d99bcfc26b6feb0a6aa0167ebdd7093fb5f8094cc9d747568b5129b495f12d",
+          "kind": "imports",
+          "provenance": {
+            "generator": "llmnav",
+            "line": null,
+            "path": "scripts/build-package.ts",
+            "source": "scripts/build-package.ts",
+            "type": "local-import"
+          },
+          "to": "zdp-design-system/zdp.design.package.recovery"
+        }
+      ],
+      "inputHash": "3078360bd0070fc09e35c3f32adda7aa9fda63b550132a2569413e52fb0e74b4",
+      "key": "card:zdp-design-system/zdp.design.package.build",
+      "nodes": [
+        {
+          "definitions": [],
+          "external": false,
+          "key": "zdp-design-system/zdp.design.package.build",
+          "location": {
+            "declarationLine": null,
+            "endLine": 9,
+            "exported": null,
+            "kind": null,
+            "language": null,
+            "path": "scripts/build-package.ts",
+            "receiver": null,
+            "signature": null,
+            "startLine": 1,
+            "symbol": null,
+            "visibility": null
+          },
+          "repositoryId": "zdp-design-system",
+          "role": "Assemble and validate a complete package staging tree before publishing it locally.",
+          "semanticId": "zdp.design.package.build"
+        },
+        {
+          "definitions": [],
+          "external": false,
+          "key": "zdp-design-system/zdp.design.package.recovery",
+          "location": null,
+          "repositoryId": "zdp-design-system",
+          "role": null,
+          "semanticId": "zdp.design.package.recovery"
+        }
+      ],
+      "outputHash": "7bc661a86cf5b9025b9dcdd186fa1ea6360aec3fc3959c22bc1759d81712022b"
+    },
+    {
+      "edges": [],
+      "inputHash": "b1c5d2b3096cf9af351428cbdc25059b8ce330684b3a9b763e5ed147c081312b",
+      "key": "card:zdp-design-system/zdp.design.package.recovery",
+      "nodes": [
+        {
+          "definitions": [],
+          "external": false,
+          "key": "zdp-design-system/zdp.design.package.recovery",
+          "location": {
+            "declarationLine": null,
+            "endLine": 9,
+            "exported": null,
+            "kind": null,
+            "language": null,
+            "path": "scripts/atomic-directory.ts",
+            "receiver": null,
+            "signature": null,
+            "startLine": 1,
+            "symbol": null,
+            "visibility": null
+          },
+          "repositoryId": "zdp-design-system",
+          "role": "Recover interrupted package replacement and restore the previous directory when promotion fails.",
+          "semanticId": "zdp.design.package.recovery"
+        }
+      ],
+      "outputHash": "6f6eafff37db1482d2110d37ff54fd52296cfe800ae451b58bfce32a7ab92392"
+    },
+    {
+      "edges": [],
+      "inputHash": "5954105c5e2418f9822cf9351915bd0348e7b7246b310b0293fd1540aaba93ba",
+      "key": "card:zdp-design-system/zdp.design.styles.parity",
+      "nodes": [
+        {
+          "definitions": [],
+          "external": false,
+          "key": "zdp-design-system/zdp.design.styles.parity",
+          "location": {
+            "declarationLine": null,
+            "endLine": 9,
+            "exported": null,
+            "kind": null,
+            "language": null,
+            "path": "scripts/check-component-style-parity.ts",
+            "receiver": null,
+            "signature": null,
+            "startLine": 1,
+            "symbol": null,
+            "visibility": null
+          },
+          "repositoryId": "zdp-design-system",
+          "role": "Check that component interaction states and conditional CSS remain represented in shared styles.",
+          "semanticId": "zdp.design.styles.parity"
+        }
+      ],
+      "outputHash": "91ef1dc400882ea284f5e567a4d4caeff76a63835e77b877923f1d119bb3df60"
+    },
+    {
+      "edges": [],
+      "inputHash": "64632edcdd1d462dc7d08c7fb9eb0153d4ee0a31d4808b5d03d7715a7b436f63",
+      "key": "card:zdp-design-system/zdp.design.tokens.generate",
+      "nodes": [
+        {
+          "definitions": [],
+          "external": false,
+          "key": "zdp-design-system/zdp.design.tokens.generate",
+          "location": {
+            "declarationLine": null,
+            "endLine": 9,
+            "exported": null,
+            "kind": null,
+            "language": null,
+            "path": "scripts/generate-tokens.ts",
+            "receiver": null,
+            "signature": null,
+            "startLine": 1,
+            "symbol": null,
+            "visibility": null
+          },
+          "repositoryId": "zdp-design-system",
+          "role": "Derive the public token name list from the design token tree.",
+          "semanticId": "zdp.design.tokens.generate"
+        }
+      ],
+      "outputHash": "f7a74c7ef0a352e5aeaaa92a404779ab96e5e38ffc6f1736731647379fae9379"
+    }
+  ],
+  "repositoryId": "zdp-design-system",
+  "resolutionHash": "09bf800d8c769ada6dac4a16975a426b41ba63e52ef8562f0203638a9d94788f",
+  "schemaVersion": 1
+}

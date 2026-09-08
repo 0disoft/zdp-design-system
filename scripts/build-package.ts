@@ -1,3 +1,13 @@
+/* llmnav/1 module
+id=zdp.design.package.build
+role=Assemble and validate a complete package staging tree before publishing it locally.
+owns=package assembly|runtime and type entry generation
+excludes=npm publication|token value design
+search=package entrypoints|패키지 진입점|타입 진입점
+invariant=The staging tree must contain all required public files before replacing the package output.
+stability=architecture
+*/
+
 import { existsSync } from 'node:fs';
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { basename, resolve, sep } from 'node:path';

@@ -1,0 +1,26 @@
+llmnav-catalog/1 repository=zdp-design-system catalog=zdp.design
+Read semantic cards before opening source. Resolve current paths and signatures with llmnav query or show.
+
+@zdp.design.package.build
+role Assemble and validate a complete package staging tree before publishing it locally.
+owns package assembly, runtime and type entry generation
+excludes npm publication, token value design
+invariant The staging tree must contain all required public files before replacing the package output.
+
+@zdp.design.package.recovery
+role Recover interrupted package replacement and restore the previous directory when promotion fails.
+owns directory replacement, failed promotion recovery
+excludes package assembly, npm publication
+invariant A failed promotion restores the previous target when its backup exists.
+
+@zdp.design.styles.parity
+role Check that component interaction states and conditional CSS remain represented in shared styles.
+owns interaction style parity, conditional declaration parity
+excludes token generation, component business decisions
+invariant Shared styles must retain component state declarations under their original conditional context.
+
+@zdp.design.tokens.generate
+role Derive the public token name list from the design token tree.
+owns token name generation, token leaf flattening
+excludes token value design, CSS rendering
+invariant Generated token names mirror the source token tree without manual edits.

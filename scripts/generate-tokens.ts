@@ -1,3 +1,13 @@
+/* llmnav/1 module
+id=zdp.design.tokens.generate
+role=Derive the public token name list from the design token tree.
+owns=token name generation|token leaf flattening
+excludes=token value design|CSS rendering
+search=token names|토큰 이름|토큰 목록
+invariant=Generated token names mirror the source token tree without manual edits.
+stability=architecture
+*/
+
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
