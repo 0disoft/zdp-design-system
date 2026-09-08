@@ -9,4 +9,4 @@ Keep semantic IDs stable across moves and renames.
 
 ## Module catalogs
 
-* zdp.design: .llmnav/cache/modules/zdp.design.txt (4 cards)
+* zdp.design: .llmnav/cache/modules/zdp.design.txt (5 cards)

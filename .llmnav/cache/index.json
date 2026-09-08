@@ -185,11 +185,61 @@
         "토큰 목록"
       ],
       "stability": "architecture"
+    },
+    {
+      "boundaries": [],
+      "excludes": [
+        "shell execution",
+        "repository selection",
+        "source mutation"
+      ],
+      "hashes": {
+        "body": "15fd4208acfbc0f8a3d52853af21a0354d271f25c7fdb33e1bf418da92f6d56d",
+        "semantic": "30d0a7116b4f0869abe8eb89b408616d3e347f77cf2e2ed1f9dfb0e69b6612da",
+        "structure": "58467d2790a2604ed261af9e34555298a765df15e008d0b82b6ea954df3b095e"
+      },
+      "id": "zdp.design.navigation.request",
+      "imports": [
+        "../../../../hobby/opensource/llmnav/src/index.js",
+        "node:fs",
+        "node:fs/promises",
+        "node:path",
+        "node:url"
+      ],
+      "invariant": [
+        "Request data cannot choose an executable, repository root, or write operation."
+      ],
+      "location": {
+        "declarationLine": null,
+        "endLine": 9,
+        "exported": null,
+        "kind": null,
+        "language": null,
+        "path": "scripts/llmnav-request.mjs",
+        "receiver": null,
+        "signature": null,
+        "startLine": 1,
+        "symbol": null,
+        "visibility": null
+      },
+      "owns": [
+        "navigation request validation",
+        "read-only navigation dispatch"
+      ],
+      "role": "Read bounded navigation requests as data and dispatch them against the fixed design-system repository.",
+      "scope": "module",
+      "search": [
+        "free query",
+        "JSON request",
+        "자유 질의",
+        "검색 요청"
+      ],
+      "stability": "contract"
     }
   ],
   "contractFingerprints": {
     "configuration": {
-      "sha256": "92d03f24db037d7451d2c56830d04e618cbb64772070d48a735e6e2db624168f"
+      "sha256": "4fbd65b4e8a6950541e6c6f9257b04a54f54a81293a4196f3db9390e0be72003"
     },
     "exportedApi": {
       "count": 0,
@@ -200,6 +250,6 @@
   "generatedBy": "llmnav@0.9.1",
   "repositoryId": "zdp-design-system",
   "schemaVersion": 1,
-  "sourceHash": "de30ecaf758a561ec4adfa41d1eec99667a6afc1b8972a58c8b23ad92bdc0a19",
+  "sourceHash": "190e1eb78a0a130ef60844c7ee0d59ec47996ecea3385ee87ae529874572cd25",
   "specVersion": "1"
 }

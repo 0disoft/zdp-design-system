@@ -3,7 +3,7 @@
   "audit": {
     "dispositions": []
   },
-  "coverageRules": [{"name":"development navigation pilot","match":["scripts/generate-tokens.ts","scripts/build-package.ts","scripts/atomic-directory.ts","scripts/check-component-style-parity.ts"],"scope":"module","requiredFields":["owns","search","invariant"]}],
+  "coverageRules": [{"name":"development navigation pilot","match":["scripts/generate-tokens.ts","scripts/build-package.ts","scripts/atomic-directory.ts","scripts/check-component-style-parity.ts","scripts/llmnav-request.mjs"],"scope":"module","requiredFields":["owns","search","invariant"]}],
   "evaluation": {
     "minimumRecallAt1": 0.75,
     "minimumRecallAt5": 0.9,

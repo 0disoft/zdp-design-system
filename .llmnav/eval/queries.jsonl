@@ -6,3 +6,4 @@
 {"query":"이전 패키지 복원 롤백","expected":["zdp.design.package.recovery"]}
 {"query":"CSS parity hover state","expected":["zdp.design.styles.parity"]}
 {"query":"공유 CSS hover 스타일 누락","expected":["zdp.design.styles.parity"]}
+{"query":"자유 질의 JSON request","expected":["zdp.design.navigation.request"]}

@@ -24,3 +24,9 @@ role Derive the public token name list from the design token tree.
 owns token name generation, token leaf flattening
 excludes token value design, CSS rendering
 invariant Generated token names mirror the source token tree without manual edits.
+
+@zdp.design.navigation.request
+role Read bounded navigation requests as data and dispatch them against the fixed design-system repository.
+owns navigation request validation, read-only navigation dispatch
+excludes shell execution, repository selection, source mutation
+invariant Request data cannot choose an executable, repository root, or write operation.

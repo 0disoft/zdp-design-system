@@ -10,7 +10,7 @@
     ],
     "volatileContextAfter": true
   },
-  "bundleHash": "70c96da46b6086d443641eec5fd5d2731dcdbba8368ba36c9bbb3645d3fff766",
+  "bundleHash": "b6c2a82540e37aa190c62ea7ac3a288cb7907b249522388c086b217a884d2575",
   "partitions": [
     {
       "cacheBoundaryAfter": true,
@@ -42,10 +42,10 @@
     {
       "cacheBoundaryAfter": true,
       "cacheScope": "module",
-      "content": "llmnav-catalog/1 repository=zdp-design-system catalog=zdp.design\nRead semantic cards before opening source. Resolve current paths and signatures with llmnav query or show.\n\n@zdp.design.package.build\nrole Assemble and validate a complete package staging tree before publishing it locally.\nowns package assembly, runtime and type entry generation\nexcludes npm publication, token value design\ninvariant The staging tree must contain all required public files before replacing the package output.\n\n@zdp.design.package.recovery\nrole Recover interrupted package replacement and restore the previous directory when promotion fails.\nowns directory replacement, failed promotion recovery\nexcludes package assembly, npm publication\ninvariant A failed promotion restores the previous target when its backup exists.\n\n@zdp.design.styles.parity\nrole Check that component interaction states and conditional CSS remain represented in shared styles.\nowns interaction style parity, conditional declaration parity\nexcludes token generation, component business decisions\ninvariant Shared styles must retain component state declarations under their original conditional context.\n\n@zdp.design.tokens.generate\nrole Derive the public token name list from the design token tree.\nowns token name generation, token leaf flattening\nexcludes token value design, CSS rendering\ninvariant Generated token names mirror the source token tree without manual edits.\n",
-      "contentHash": "e53e587ac89e6c2cf07e4c15572abaee48048e118944d548c27a82bd844fef2e",
+      "content": "llmnav-catalog/1 repository=zdp-design-system catalog=zdp.design\nRead semantic cards before opening source. Resolve current paths and signatures with llmnav query or show.\n\n@zdp.design.package.build\nrole Assemble and validate a complete package staging tree before publishing it locally.\nowns package assembly, runtime and type entry generation\nexcludes npm publication, token value design\ninvariant The staging tree must contain all required public files before replacing the package output.\n\n@zdp.design.package.recovery\nrole Recover interrupted package replacement and restore the previous directory when promotion fails.\nowns directory replacement, failed promotion recovery\nexcludes package assembly, npm publication\ninvariant A failed promotion restores the previous target when its backup exists.\n\n@zdp.design.styles.parity\nrole Check that component interaction states and conditional CSS remain represented in shared styles.\nowns interaction style parity, conditional declaration parity\nexcludes token generation, component business decisions\ninvariant Shared styles must retain component state declarations under their original conditional context.\n\n@zdp.design.tokens.generate\nrole Derive the public token name list from the design token tree.\nowns token name generation, token leaf flattening\nexcludes token value design, CSS rendering\ninvariant Generated token names mirror the source token tree without manual edits.\n\n@zdp.design.navigation.request\nrole Read bounded navigation requests as data and dispatch them against the fixed design-system repository.\nowns navigation request validation, read-only navigation dispatch\nexcludes shell execution, repository selection, source mutation\ninvariant Request data cannot choose an executable, repository root, or write operation.\n",
+      "contentHash": "349b1cf2a9cce5c84dea7e8875c1861f2f97f0729899a0dccc19579067a595e6",
       "contentType": "text/plain",
-      "estimatedTokens": 358,
+      "estimatedTokens": 448,
       "id": "module:zdp.design"
     }
   ],

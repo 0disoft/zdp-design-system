@@ -19,6 +19,28 @@
     {
       "definitions": [],
       "external": false,
+      "key": "zdp-design-system/zdp.design.navigation.request",
+      "location": {
+        "declarationLine": null,
+        "endLine": 9,
+        "exported": null,
+        "kind": null,
+        "language": null,
+        "path": "scripts/llmnav-request.mjs",
+        "receiver": null,
+        "signature": null,
+        "startLine": 1,
+        "symbol": null,
+        "visibility": null
+      },
+      "repositoryId": "zdp-design-system",
+      "role": "Read bounded navigation requests as data and dispatch them against the fixed design-system repository.",
+      "semanticId": "zdp.design.navigation.request",
+      "unresolved": false
+    },
+    {
+      "definitions": [],
+      "external": false,
       "key": "zdp-design-system/zdp.design.package.build",
       "location": {
         "declarationLine": null,
@@ -107,11 +129,11 @@
   ],
   "repositoryId": "zdp-design-system",
   "schemaVersion": 1,
-  "sourceHash": "cebdbc9487eb203e74d06a0f34ef85aa7327246158a98455a7e0734e6ad75e0e",
+  "sourceHash": "f6b2d8130a6eb32e675a0f51b62d7137a9969c7d966f5b749dcea8066739b5d7",
   "stats": {
     "edgeCount": 1,
     "importedIndexCount": 0,
-    "nodeCount": 4,
+    "nodeCount": 5,
     "unresolvedNodeCount": 0
   }
 }

@@ -33,7 +33,7 @@ This repository owns ZDP design tokens, shared CSS, icon guidance, and Svelte UI
 
 ## Verification
 
-For development-tool tasks, read `.agents/llmnav.md` and try the configured LLMNav query/show intents before broad search. This pilot covers only `scripts/`, not components or the whole repository. Existing command authority and context routes still apply.
+For development-tool tasks, read `.agents/llmnav.md` and use the configured LLMNav request intent before broad search. Queries and semantic IDs are JSON data; command authority and the repository root stay fixed. This pilot covers only `scripts/`, not components or the whole repository. Existing context routes still apply.
 
 - `zdp_architecture_validate_design_system_repository`: repository architecture validation.
 - `zdp_design_system_package_verify`: tokens, CSS, components, stories, preview, fixtures, package readiness, and accessibility gate.

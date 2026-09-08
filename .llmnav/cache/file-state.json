@@ -522,6 +522,22 @@
     },
     {
       "blocks": [],
+      "contentHash": "e8fe33fdd48a3c18830e39e55c81446d56dc5d01998353c51dcf65695e884a73",
+      "declarations": [],
+      "imports": [
+        "./llmnav-request.mjs",
+        "node:assert/strict",
+        "node:fs/promises",
+        "node:os",
+        "node:path",
+        "node:test"
+      ],
+      "path": "scripts/check-llmnav-request.mjs",
+      "semanticBytes": 0,
+      "sourceBytes": 3811
+    },
+    {
+      "blocks": [],
       "contentHash": "43be8661a4e6c0808f49b9ec17fe71efd33c8174ecbfebd59f9d93767bb7bc00",
       "declarations": [],
       "imports": [
@@ -824,6 +840,111 @@
       "path": "scripts/generate-tokens.ts",
       "semanticBytes": 362,
       "sourceBytes": 2568
+    },
+    {
+      "blocks": [
+        {
+          "card": {
+            "effect": [],
+            "excludes": [
+              "shell execution",
+              "repository selection",
+              "source mutation"
+            ],
+            "id": "zdp.design.navigation.request",
+            "invariant": [
+              "Request data cannot choose an executable, repository root, or write operation."
+            ],
+            "owns": [
+              "navigation request validation",
+              "read-only navigation dispatch"
+            ],
+            "rel": [],
+            "risk": [],
+            "role": "Read bounded navigation requests as data and dispatch them against the fixed design-system repository.",
+            "scope": "module",
+            "search": [
+              "free query",
+              "JSON request",
+              "자유 질의",
+              "검색 요청"
+            ],
+            "stability": "contract",
+            "unknown": []
+          },
+          "end": 440,
+          "endLine": 9,
+          "entries": [
+            {
+              "key": "id",
+              "line": 2,
+              "order": 0,
+              "value": "zdp.design.navigation.request"
+            },
+            {
+              "key": "role",
+              "line": 3,
+              "order": 1,
+              "value": "Read bounded navigation requests as data and dispatch them against the fixed design-system repository."
+            },
+            {
+              "key": "owns",
+              "line": 4,
+              "order": 2,
+              "value": "navigation request validation|read-only navigation dispatch"
+            },
+            {
+              "key": "excludes",
+              "line": 5,
+              "order": 3,
+              "value": "shell execution|repository selection|source mutation"
+            },
+            {
+              "key": "search",
+              "line": 6,
+              "order": 4,
+              "value": "free query|JSON request|자유 질의|검색 요청"
+            },
+            {
+              "key": "invariant",
+              "line": 7,
+              "order": 5,
+              "value": "Request data cannot choose an executable, repository root, or write operation."
+            },
+            {
+              "key": "stability",
+              "line": 8,
+              "order": 6,
+              "value": "contract"
+            }
+          ],
+          "filePath": "scripts/llmnav-request.mjs",
+          "indent": "",
+          "newline": "\n",
+          "prefix": null,
+          "raw": "/* llmnav/1 module\nid=zdp.design.navigation.request\nrole=Read bounded navigation requests as data and dispatch them against the fixed design-system repository.\nowns=navigation request validation|read-only navigation dispatch\nexcludes=shell execution|repository selection|source mutation\nsearch=free query|JSON request|자유 질의|검색 요청\ninvariant=Request data cannot choose an executable, repository root, or write operation.\nstability=contract\n*/",
+          "scope": "module",
+          "specVersion": "1",
+          "start": 0,
+          "startLine": 1,
+          "style": "block",
+          "syntaxErrors": []
+        }
+      ],
+      "contentHash": "15fd4208acfbc0f8a3d52853af21a0354d271f25c7fdb33e1bf418da92f6d56d",
+      "declarations": [
+        null
+      ],
+      "imports": [
+        "../../../../hobby/opensource/llmnav/src/index.js",
+        "node:fs",
+        "node:fs/promises",
+        "node:path",
+        "node:url"
+      ],
+      "path": "scripts/llmnav-request.mjs",
+      "semanticBytes": 456,
+      "sourceBytes": 4855
     },
     {
       "blocks": [],

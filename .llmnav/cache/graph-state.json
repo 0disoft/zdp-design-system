@@ -1,6 +1,35 @@
 {
   "partitions": [
     {
+      "edges": [],
+      "inputHash": "037f8383700272283a3e9f965696ac4c71910118d59c2f3207b5a5b8689c9176",
+      "key": "card:zdp-design-system/zdp.design.navigation.request",
+      "nodes": [
+        {
+          "definitions": [],
+          "external": false,
+          "key": "zdp-design-system/zdp.design.navigation.request",
+          "location": {
+            "declarationLine": null,
+            "endLine": 9,
+            "exported": null,
+            "kind": null,
+            "language": null,
+            "path": "scripts/llmnav-request.mjs",
+            "receiver": null,
+            "signature": null,
+            "startLine": 1,
+            "symbol": null,
+            "visibility": null
+          },
+          "repositoryId": "zdp-design-system",
+          "role": "Read bounded navigation requests as data and dispatch them against the fixed design-system repository.",
+          "semanticId": "zdp.design.navigation.request"
+        }
+      ],
+      "outputHash": "6a210a093b21ec888014f7856e1ba7e5dc51e7fab82628ec3393cb2975e46965"
+    },
+    {
       "edges": [
         {
           "confidence": 0.85,
@@ -17,7 +46,7 @@
           "to": "zdp-design-system/zdp.design.package.recovery"
         }
       ],
-      "inputHash": "3078360bd0070fc09e35c3f32adda7aa9fda63b550132a2569413e52fb0e74b4",
+      "inputHash": "234a3c1bdbe08346f23c9e99b4b8b1586b476e14e1499f0b455e1ee8a0bb28e5",
       "key": "card:zdp-design-system/zdp.design.package.build",
       "nodes": [
         {
@@ -55,7 +84,7 @@
     },
     {
       "edges": [],
-      "inputHash": "b1c5d2b3096cf9af351428cbdc25059b8ce330684b3a9b763e5ed147c081312b",
+      "inputHash": "beb077ce9f4a7a04fcb87af90dc933c4b6a02e581c2ab3ae4cab366032091d25",
       "key": "card:zdp-design-system/zdp.design.package.recovery",
       "nodes": [
         {
@@ -84,7 +113,7 @@
     },
     {
       "edges": [],
-      "inputHash": "5954105c5e2418f9822cf9351915bd0348e7b7246b310b0293fd1540aaba93ba",
+      "inputHash": "e980b5a99512b4419b362891f043549ffe31ad7b548b4039b222f69bf40abfeb",
       "key": "card:zdp-design-system/zdp.design.styles.parity",
       "nodes": [
         {
@@ -113,7 +142,7 @@
     },
     {
       "edges": [],
-      "inputHash": "64632edcdd1d462dc7d08c7fb9eb0153d4ee0a31d4808b5d03d7715a7b436f63",
+      "inputHash": "3135332682974360938a4892447ca46110272a2e67acf7d86ef8315084dfb713",
       "key": "card:zdp-design-system/zdp.design.tokens.generate",
       "nodes": [
         {
@@ -142,6 +171,6 @@
     }
   ],
   "repositoryId": "zdp-design-system",
-  "resolutionHash": "09bf800d8c769ada6dac4a16975a426b41ba63e52ef8562f0203638a9d94788f",
+  "resolutionHash": "d72ed1cbf527b2077a0f60e7ed03715572eb0a1930c46bf830b51515aaa79be3",
   "schemaVersion": 1
 }
