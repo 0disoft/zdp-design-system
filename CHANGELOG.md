@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.61.1
+
+- Refreshed compatible dependencies, including Storybook 10.6, Svelte 5.57, Vite 8.2.2, and Playwright 1.63.
+- Allowed stable updates within the existing major versions for previously exact development dependencies; retained TypeScript 6 for framework compiler API compatibility.
+- Fixed shell-free npm invocation on Windows for release tarball and packed-consumer verification.
+
 ## 0.61.0
 
 - Added an optional localized clear label and keyboard-reachable clear action to `CommandField`, while suppressing inconsistent browser-native search cancellation controls.

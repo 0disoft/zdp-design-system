@@ -5,6 +5,7 @@ import { cp, mkdir, mkdtemp, readdir, readFile, rm, stat, writeFile } from 'node
 import { basename, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { npmCommand } from './npm-command';
 
 const repoRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const fixtureRoot = resolve(repoRoot, 'fixtures/consumer-svelte-vite');
@@ -412,10 +413,10 @@ async function packCurrentPackage(packedRoot: string): Promise<string> {
   const artifactRoot = resolve(packedRoot, 'artifacts');
   await mkdir(artifactRoot, { recursive: true });
 
-  const npmExecutable = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+  const npm = npmCommand(['pack', '--json', '--pack-destination', artifactRoot]);
   const stdout = runCommand(
-    npmExecutable,
-    ['pack', '--json', '--pack-destination', artifactRoot],
+    npm.executable,
+    npm.args,
     repoRoot,
     'npm pack'
   );
@@ -437,19 +438,19 @@ async function installPackedPackage(packedRoot: string, tarball: string): Promis
     'utf8'
   );
 
-  const npmExecutable = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+  const npm = npmCommand([
+    'install',
+    '--offline',
+    '--ignore-scripts',
+    '--no-audit',
+    '--no-fund',
+    '--no-package-lock',
+    '--legacy-peer-deps',
+    tarball
+  ]);
   runCommand(
-    npmExecutable,
-    [
-      'install',
-      '--offline',
-      '--ignore-scripts',
-      '--no-audit',
-      '--no-fund',
-      '--no-package-lock',
-      '--legacy-peer-deps',
-      tarball
-    ],
+    npm.executable,
+    npm.args,
     packedRoot,
     'offline packed-package install'
   );

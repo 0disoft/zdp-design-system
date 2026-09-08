@@ -6,6 +6,7 @@ import { basename, isAbsolute, join, relative, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { gunzipSync } from 'node:zlib';
 import { fileURLToPath } from 'node:url';
+import { npmCommand } from './npm-command';
 
 interface PackageManifest {
   readonly name?: unknown;
@@ -108,12 +109,13 @@ async function buildArtifact(gitHead: string, artifactDirectory: string): Promis
     );
     await mkdir(artifactDirectory, { recursive: true });
 
-    const npmExecutable = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+    const npm = npmCommand(['pack', '--json', '--pack-destination', artifactDirectory]);
     const packed = spawnSync(
-      npmExecutable,
-      ['pack', '--json', '--pack-destination', artifactDirectory],
-      { cwd: stagingDirectory, encoding: 'utf8', shell: false }
+      npm.executable,
+      npm.args,
+      { cwd: stagingDirectory, encoding: 'utf8', shell: false, windowsHide: true }
     );
+    assert.equal(packed.error, undefined, `npm pack failed to start: ${packed.error?.message ?? 'unknown error'}`);
     assert.equal(packed.status, 0, packed.stderr || 'npm pack failed.');
 
     const results = parseNpmPackResults(packed.stdout);
