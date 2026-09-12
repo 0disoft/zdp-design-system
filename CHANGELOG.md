@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.61.3
+
+- Updated Vite to 8.3.0, Node types to 26.5.1, and compatible transitive build and Storybook dependencies.
+
 ## 0.61.2
 
 - Added repository-local semantic navigation for Menu interaction, shared roving focus, and overlay dismissal, without changing component behavior or public props.

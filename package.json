@@ -1,6 +1,6 @@
 {
   "name": "zdp-design-system",
-  "version": "0.61.2",
+  "version": "0.61.3",
   "private": false,
   "license": "MIT",
   "type": "module",
@@ -134,7 +134,7 @@
     "@storybook/svelte-vite": "^10.6.0",
     "@sveltejs/vite-plugin-svelte": "^7.3.0",
     "@tsconfig/svelte": "^5.0.8",
-    "@types/node": "^26.5.0",
+    "@types/node": "^26.5.1",
     "axe-core": "^4.13.0",
     "playwright-core": "^1.63.0",
     "simple-icons": "^16.30.0",
@@ -142,7 +142,7 @@
     "svelte": "^5.57.0",
     "svelte-check": "^4.7.6",
     "typescript": "^6.0.3",
-    "vite": "^8.2.2"
+    "vite": "^8.3.0"
   },
   "peerDependencies": {
     "svelte": "^5.56.0"
