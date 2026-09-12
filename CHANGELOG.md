@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.61.7
+
+- Split shared CSS authoring into five ordered fragments below 40 KB and verify the generated aggregate before preview or package builds.
+- Preserved the published stylesheet path and cascade, and excluded authoring fragments from the package output.
+
 ## 0.61.6
 
 - Wrapped long Tooltip text and adjusted visible Svelte tooltips at viewport edges, including resize and scroll updates.

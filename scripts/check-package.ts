@@ -21,6 +21,9 @@ interface PackageJson {
 }
 
 const root = process.cwd();
+if (existsSync(join(root, 'dist/styles/component-parts'))) {
+  throw new Error('CSS authoring fragments must not be shipped in the package.');
+}
 const packagePath = join(root, 'package.json');
 const publicComponentPaths = await readPublicComponentPaths();
 const storyPaths = [
@@ -85,13 +88,15 @@ const expectedScripts = {
   'share-icons:check': 'bun scripts/generate-share.ts --check && bun scripts/check-share-icons.ts',
   'tokens:generate': 'bun scripts/generate-tokens.ts',
   'tokens:check': 'bun scripts/generate-tokens.ts --check && bun scripts/check-tokens.ts',
-  'preview:check': 'bun scripts/check-preview.ts && bun run styles:parity:check',
+  'styles:generate': 'bun scripts/generate-component-styles.ts',
+  'styles:check': 'bun scripts/generate-component-styles.ts --check',
+  'preview:check': 'bun run styles:check && bun scripts/check-preview.ts && bun run styles:parity:check',
   'styles:parity:check': 'bun scripts/check-component-style-parity.ts',
   'a11y:check': 'bun scripts/check-storybook-a11y.ts',
   'a11y:runtime:check': 'node scripts/check-storybook-runtime-a11y.mjs',
   'ssr:hydration:check': 'node scripts/check-ssr-hydration.mjs',
   'type:check': 'svelte-check --tsconfig ./tsconfig.json',
-  'package:build': 'bun scripts/generate-tokens.ts && bun scripts/generate-share.ts && bun scripts/build-package.ts',
+  'package:build': 'bun run styles:check && bun scripts/generate-tokens.ts && bun scripts/generate-share.ts && bun scripts/build-package.ts',
   'package:build:check': 'bun scripts/check-package-build.ts',
   'package:check': 'bun run package:build:check && bun scripts/check-package.ts',
   'publish:check': 'bun scripts/check-publish-readiness.ts',

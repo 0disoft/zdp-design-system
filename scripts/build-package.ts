@@ -44,7 +44,10 @@ try {
 
 async function buildPackage(outputRoot: string): Promise<void> {
   await cp(resolve(repoRoot, 'src/lib'), outputRoot, { recursive: true });
-  await cp(resolve(repoRoot, 'src/styles'), resolve(outputRoot, 'styles'), { recursive: true });
+  await cp(resolve(repoRoot, 'src/styles'), resolve(outputRoot, 'styles'), {
+    recursive: true,
+    filter: (source) => source !== resolve(repoRoot, 'src/styles/component-parts')
+  });
   await cp(resolve(repoRoot, 'tokens'), resolve(outputRoot, 'tokens'), { recursive: true });
   await cp(resolve(repoRoot, 'schemas'), resolve(outputRoot, 'schemas'), { recursive: true });
   await cp(resolve(repoRoot, 'share.js'), resolve(outputRoot, 'share.js'));
