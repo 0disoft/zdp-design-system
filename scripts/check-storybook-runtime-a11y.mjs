@@ -29,65 +29,91 @@ try {
   page.setDefaultTimeout(15_000);
   page.setDefaultNavigationTimeout(30_000);
 
-  for (const story of storyIndex) {
-    const storyUrl = `${staticServer.origin}/iframe.html?id=${encodeURIComponent(story.id)}&viewMode=story`;
-    const response = await page.goto(storyUrl, { waitUntil: 'networkidle' });
-    assert.ok(response?.ok(), `Storybook story ${story.id} failed to load: ${response?.status() ?? 'no response'}.`);
-    await page.waitForFunction(() => {
-      const storyRoot = document.getElementById('storybook-root');
-      const error = document.querySelector('.sb-errordisplay');
-      return Boolean(error || (storyRoot && storyRoot.innerHTML.trim().length > 0));
-    });
-    await page.waitForTimeout(1_200);
+  const scenarios = [
+    { name: 'desktop-light', theme: 'light', viewport: { width: 1280, height: 900 } },
+    { name: 'desktop-dark', theme: 'dark', viewport: { width: 1280, height: 900 } },
+    { name: 'mobile-light', theme: 'light', viewport: { width: 390, height: 844 } },
+    { name: 'mobile-dark', theme: 'dark', viewport: { width: 390, height: 844 } }
+  ];
+  assert.ok(storyIndex.some((story) => story.id.endsWith('--long-labels')), 'Include a long-label form story.');
+  for (const scenario of scenarios) {
+    await page.setViewportSize(scenario.viewport);
+    await page.emulateMedia({ colorScheme: scenario.theme });
+    for (const story of storyIndex) {
+      const storyUrl = `${staticServer.origin}/iframe.html?id=${encodeURIComponent(story.id)}&viewMode=story`;
+      const response = await page.goto(storyUrl, { waitUntil: 'networkidle' });
+      assert.ok(response?.ok(), `Storybook story ${story.id} failed to load: ${response?.status() ?? 'no response'}.`);
+      await page.waitForFunction(() => {
+        const storyRoot = document.getElementById('storybook-root');
+        const error = document.querySelector('.sb-errordisplay');
+        return Boolean(error || (storyRoot && storyRoot.innerHTML.trim().length > 0));
+      });
+      await page.waitForTimeout(1_200);
 
-    const storyError = await page.evaluate(() => {
-      const error = document.querySelector('.sb-errordisplay');
-      if (!(error instanceof HTMLElement) || getComputedStyle(error).display === 'none') {
-        return null;
-      }
-      return error.textContent?.trim() || 'Unknown Storybook render error.';
-    });
-    if (storyError) {
-      failures.push(`${story.id} failed to render: ${storyError}`);
-      continue;
-    }
-
-    await page.addScriptTag({ content: axeSource });
-    const result = await page.evaluate(async () => {
-      if (!globalThis.axe) {
-        throw new Error('axe-core did not initialize in the Storybook iframe.');
-      }
-
-      const audit = await globalThis.axe.run(document.body, {
-        resultTypes: ['violations'],
-        rules: {
-          region: { enabled: false }
+      const storyError = await page.evaluate(() => {
+        const error = document.querySelector('.sb-errordisplay');
+        if (!(error instanceof HTMLElement) || getComputedStyle(error).display === 'none') {
+          return null;
         }
+        return error.textContent?.trim() || 'Unknown Storybook render error.';
+      });
+      if (storyError) {
+        failures.push(`${scenario.name}/${story.id} failed to render: ${storyError}`);
+        continue;
+      }
+
+      await page.evaluate(async (theme) => {
+        document.documentElement.setAttribute('data-zdp-theme', theme);
+        document.querySelectorAll('[data-zdp-theme]').forEach((element) => element.setAttribute('data-zdp-theme', theme));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        await Promise.all(document.getAnimations().filter((animation) =>
+          animation.playState !== 'paused' && Number.isFinite(animation.effect?.getComputedTiming().endTime)
+        ).map((animation) => animation.finished.catch(() => {})));
+      }, scenario.theme);
+      if (story.id.endsWith('--long-labels')) {
+        const overflowingLabels = await page.locator('#storybook-root label').evaluateAll((labels) =>
+          labels.filter((label) => label.scrollWidth > label.clientWidth + 1).map((label) => label.textContent)
+        );
+        assert.deepEqual(overflowingLabels, [], `${scenario.name}: long form labels must fit their containers.`);
+      }
+      await page.addScriptTag({ content: axeSource });
+      const result = await page.evaluate(async () => {
+        if (!globalThis.axe) {
+          throw new Error('axe-core did not initialize in the Storybook iframe.');
+        }
+
+        const audit = await globalThis.axe.run(document.body, {
+          resultTypes: ['violations'],
+          rules: {
+            region: { enabled: false }
+          }
+        });
+
+        return audit.violations.map((violation) => ({
+          help: violation.help,
+          helpUrl: violation.helpUrl,
+          id: violation.id,
+          impact: violation.impact,
+          nodes: violation.nodes.slice(0, 5).map((node) => ({
+            failureSummary: node.failureSummary,
+            html: node.html,
+            target: node.target
+          }))
+        }));
       });
 
-      return audit.violations.map((violation) => ({
-        help: violation.help,
-        helpUrl: violation.helpUrl,
-        id: violation.id,
-        impact: violation.impact,
-        nodes: violation.nodes.slice(0, 5).map((node) => ({
-          failureSummary: node.failureSummary,
-          html: node.html,
-          target: node.target
-        }))
-      }));
-    });
-
-    for (const violation of result) {
-      failures.push(formatViolation(story, violation));
+      for (const violation of result) {
+        failures.push(`${scenario.name}: ${formatViolation(story, violation)}`);
+      }
     }
+    console.log(`Audited ${scenario.name}: ${storyIndex.length} stories.`);
   }
 
   if (failures.length > 0) {
     throw new Error(`Storybook runtime a11y check failed:\n- ${failures.join('\n- ')}`);
   }
 
-  console.log(`Storybook runtime a11y check passed for ${storyIndex.length} stories.`);
+  console.log(`Storybook runtime a11y check passed for ${storyIndex.length} stories across ${scenarios.length} viewport/theme scenarios (${storyIndex.length * scenarios.length} audits).`);
 } finally {
   await browser?.close();
   await staticServer?.close();

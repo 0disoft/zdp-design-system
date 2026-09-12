@@ -14,6 +14,10 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+export const LongLabels: Story = {
+  args: { longLabels: true }
+};
+
 export const States: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

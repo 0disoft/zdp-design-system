@@ -14,6 +14,8 @@
   import Textarea from '../src/lib/components/Textarea.svelte';
   import type { ZdpComboboxOption } from '../src/lib/combobox.ts';
 
+  export let longLabels = false;
+
   const ownerOptions: readonly ZdpComboboxOption[] = [
     { id: 'platform', label: '플랫폼 운영', value: 'platform', description: '공개 표면 검토' },
     { id: 'security', label: '보안 검토', value: 'security', description: '권한과 로그 확인' },
@@ -35,7 +37,7 @@
       <Surface padding="lg">
         <Stack gap="lg">
           <Field required>
-            <Label forId="forms-light-name" required>이름</Label>
+            <Label forId="forms-light-name" required>{longLabels ? '공개 프로필과 작업 알림에 표시할 담당자의 전체 이름' : '이름'}</Label>
             <Input id="forms-light-name" name="forms-light-name" placeholder="홍길동" describedBy="forms-light-name-help" required />
             <HelpText id="forms-light-name-help">공개 표기와 알림에 사용됩니다.</HelpText>
           </Field>
@@ -64,7 +66,7 @@
           </Field>
 
           <Field>
-            <Label forId="forms-light-owner">담당</Label>
+            <Label forId="forms-light-owner">{longLabels ? '플랫폼 운영과 보안 및 다국어 품질 검토를 맡을 담당 부서' : '담당'}</Label>
             <Combobox
               id="forms-light-owner"
               listboxLabel="담당 목록"
@@ -72,7 +74,7 @@
               closeLabel="선택 닫기"
               name="forms-light-owner"
               label={null}
-              ariaLabel="담당"
+              ariaLabel={longLabels ? '플랫폼 운영과 보안 및 다국어 품질 검토를 맡을 담당 부서' : '담당'}
               placeholder="담당 팀 찾기"
               options={ownerOptions}
               describedBy="forms-light-owner-help"
@@ -123,7 +125,7 @@
       <Surface padding="lg">
         <Stack gap="lg">
           <Field required>
-            <Label forId="forms-dark-name" required>이름</Label>
+            <Label forId="forms-dark-name" required>{longLabels ? '공개 프로필과 작업 알림에 표시할 담당자의 전체 이름' : '이름'}</Label>
             <Input id="forms-dark-name" name="forms-dark-name" placeholder="홍길동" describedBy="forms-dark-name-help" required />
             <HelpText id="forms-dark-name-help">공개 표기와 알림에 사용됩니다.</HelpText>
           </Field>
@@ -152,7 +154,7 @@
           </Field>
 
           <Field>
-            <Label forId="forms-dark-owner">담당</Label>
+            <Label forId="forms-dark-owner">{longLabels ? '플랫폼 운영과 보안 및 다국어 품질 검토를 맡을 담당 부서' : '담당'}</Label>
             <Combobox
               id="forms-dark-owner"
               listboxLabel="담당 목록"
@@ -160,7 +162,7 @@
               closeLabel="선택 닫기"
               name="forms-dark-owner"
               label={null}
-              ariaLabel="담당"
+              ariaLabel={longLabels ? '플랫폼 운영과 보안 및 다국어 품질 검토를 맡을 담당 부서' : '담당'}
               placeholder="담당 팀 찾기"
               options={ownerOptions}
               describedBy="forms-dark-owner-help"

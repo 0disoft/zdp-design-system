@@ -190,7 +190,7 @@
   }
 
   .layout-story__eyebrow {
-    color: var(--zdp-color-accent-danger);
+    color: var(--zdp-color-ink-strong);
     font-size: var(--zdp-type-label-size);
     font-weight: var(--zdp-font-weight-medium);
     line-height: var(--zdp-type-label-line-height);

@@ -18,6 +18,10 @@
 
 ## Source Of Truth Checks
 
+Runtime Storybook accessibility checks run every story in desktop/mobile and
+light/dark scenarios, including the long-label form story and label overflow
+checks. Automated axe results do not replace manual assistive-technology review.
+
 - Service boundary: `service.yaml`
 - Package metadata: `package.json`
 - Token source: `tokens/zdp.tokens.json`

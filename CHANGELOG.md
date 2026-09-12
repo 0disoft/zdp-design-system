@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.61.9
+
+- Added desktop/mobile and light/dark runtime accessibility scenarios for every story.
+- Added a long-label form story and checked label overflow alongside axe results.
+- Corrected dark-mode contrast for Layout story section labels using the strong text token.
+
 ## 0.61.8
 
 - Extended shared-style parity to base layout declarations and combined repeated selectors in cascade order.
