@@ -67,6 +67,9 @@
             <Label forId="forms-light-owner">담당</Label>
             <Combobox
               id="forms-light-owner"
+              listboxLabel="담당 목록"
+              openLabel="선택 열기"
+              closeLabel="선택 닫기"
               name="forms-light-owner"
               label={null}
               ariaLabel="담당"
@@ -152,6 +155,9 @@
             <Label forId="forms-dark-owner">담당</Label>
             <Combobox
               id="forms-dark-owner"
+              listboxLabel="담당 목록"
+              openLabel="선택 열기"
+              closeLabel="선택 닫기"
               name="forms-dark-owner"
               label={null}
               ariaLabel="담당"

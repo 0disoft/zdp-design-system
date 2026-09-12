@@ -276,6 +276,15 @@
   <output data-testid="combobox-selection-count">{ownerSelectionCount}</output>
 
   <Combobox
+    id="localized-browser-combobox"
+    label="담당"
+    listboxLabel="담당 목록"
+    openLabel="선택 열기"
+    closeLabel="선택 닫기"
+    options={ownerOptions}
+  />
+
+  <Combobox
     id="required-browser-combobox"
     name="required-owner"
     label="Required owner"

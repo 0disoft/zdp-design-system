@@ -190,6 +190,11 @@ export async function verifyFoundationAndFormContracts(page) {
   assert.equal(await disclosureTrigger.getAttribute('aria-controls'), null);
 
   const combobox = page.getByRole('combobox', { name: 'Owner', exact: true });
+  await page.getByRole('button', { name: '선택 열기', exact: true }).click();
+  assert.equal(await page.getByRole('listbox', { name: '담당 목록', exact: true }).count(), 1);
+  await page.getByRole('button', { name: '선택 닫기', exact: true }).click();
+  assert.equal(await page.getByRole('listbox', { name: '담당 목록', exact: true }).count(), 0);
+  assert.equal(await page.getByRole('button', { name: '선택 열기', exact: true }).count(), 1);
   await combobox.focus();
   const ownerListbox = page.getByRole('listbox', { name: 'Owner list' });
   assert.equal(await ownerListbox.count(), 1);

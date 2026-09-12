@@ -2187,7 +2187,7 @@ for (const requiredText of [
   "aria-invalid={invalid ? 'true' : undefined}",
   '<input type="hidden" {name} {value} disabled={disabled} />',
   'role="listbox"',
-  'aria-label={listboxLabel}',
+  'aria-label={resolvedListboxLabel}',
   'role="option"',
   'aria-selected={option.value === value}',
   'aria-disabled={option.disabled ?',

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.61.5
+
+- Added optional Combobox listboxLabel, openLabel and closeLabel overrides while preserving existing defaults.
+- Verified localized toggle/listbox names in the browser and aligned Korean form stories.
+- Fixed the toggle reopening its list while returning focus to the input after closing.
+
 ## 0.61.4
 
 - Fixed modal Tab wrapping after keyboard or programmatic radio selection changes while retaining cached visibility checks.

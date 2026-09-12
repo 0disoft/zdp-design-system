@@ -16,6 +16,9 @@
     label?: string | null;
     labelVisible?: boolean;
     ariaLabel?: string | null;
+    listboxLabel?: string | null;
+    openLabel?: string;
+    closeLabel?: string;
     placeholder?: string | null;
     autocomplete?: HTMLInputAttributes['autocomplete'] | null;
     describedBy?: DescribedBy;
@@ -43,6 +46,9 @@
     label = 'Search',
     labelVisible = false,
     ariaLabel = null,
+    listboxLabel = null,
+    openLabel = 'Open selection',
+    closeLabel = 'Close selection',
     placeholder = 'Search query',
     autocomplete = 'off',
     describedBy = null,
@@ -83,7 +89,7 @@
   const hasOptions = $derived(options.length > 0);
   const activeOptionDomId = $derived(open && activeOptionId ? optionDomId(activeOptionId) : null);
   const inputAriaLabel = $derived(label ? undefined : ariaLabel ?? 'Search');
-  const listboxLabel = $derived(`${label ?? ariaLabel ?? 'Selection'} list`);
+  const resolvedListboxLabel = $derived(listboxLabel ?? `${label ?? ariaLabel ?? 'Selection'} list`);
   const selectionMissing = $derived(required && !disabled && !readonly && selectedOption === null);
   const resolvedSelectionRequiredText = $derived(selectionRequiredText.trim() || 'Select an option');
 
@@ -258,8 +264,9 @@
   }
 
   function handleToggleClick(): void {
-    setOpen(!open);
+    const nextOpen = !open;
     inputElement?.focus();
+    setOpen(nextOpen);
   }
 
   function handleOptionPointermove(option: ZdpComboboxOption): void {
@@ -412,7 +419,7 @@
     <button
       class="zdp-combobox__toggle"
       type="button"
-      aria-label={open ? 'Close selection' : 'Open selection'}
+      aria-label={open ? closeLabel : openLabel}
       aria-controls={open && hasOptions ? listboxId : undefined}
       aria-expanded={open}
       disabled={disabled || readonly}
@@ -427,7 +434,7 @@
   {#if open}
     <span class="zdp-combobox__panel">
       {#if hasOptions}
-        <span class="zdp-combobox__listbox" id={listboxId} role="listbox" aria-label={listboxLabel}>
+        <span class="zdp-combobox__listbox" id={listboxId} role="listbox" aria-label={resolvedListboxLabel}>
           {#each options as option (option.id)}
             <button
               class="zdp-combobox__option"

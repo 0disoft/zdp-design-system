@@ -400,7 +400,9 @@ async function checkUserFacingLabelOverrideContract(): Promise<void> {
         "placeholder = 'Search query'",
         "noResultsText = 'No results'",
         'const componentId = $props.id()',
-        "aria-label={open ? 'Close selection' : 'Open selection'}",
+        "openLabel = 'Open selection'",
+        "closeLabel = 'Close selection'",
+        'aria-label={open ? closeLabel : openLabel}',
         'placeholder={placeholder ?? undefined}',
         '{noResultsText}'
       ]
