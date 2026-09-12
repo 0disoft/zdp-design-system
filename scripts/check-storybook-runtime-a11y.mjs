@@ -41,19 +41,20 @@ try {
     await page.emulateMedia({ colorScheme: scenario.theme });
     for (const story of storyIndex) {
       const storyUrl = `${staticServer.origin}/iframe.html?id=${encodeURIComponent(story.id)}&viewMode=story`;
-      const response = await page.goto(storyUrl, { waitUntil: 'networkidle' });
+      const response = await page.goto(storyUrl, { waitUntil: 'domcontentloaded' });
       assert.ok(response?.ok(), `Storybook story ${story.id} failed to load: ${response?.status() ?? 'no response'}.`);
-      await page.waitForFunction(() => {
-        const storyRoot = document.getElementById('storybook-root');
+      await page.waitForFunction((storyId) => {
+        const render = globalThis.__STORYBOOK_PREVIEW__?.currentRender;
         const error = document.querySelector('.sb-errordisplay');
-        return Boolean(error || (storyRoot && storyRoot.innerHTML.trim().length > 0));
-      });
-      await page.waitForTimeout(1_200);
+        return (error instanceof HTMLElement && getComputedStyle(error).display !== 'none') ||
+          (render?.id === storyId && ['finished', 'errored', 'aborted'].includes(render.phase));
+      }, story.id);
 
       const storyError = await page.evaluate(() => {
         const error = document.querySelector('.sb-errordisplay');
         if (!(error instanceof HTMLElement) || getComputedStyle(error).display === 'none') {
-          return null;
+          const phase = globalThis.__STORYBOOK_PREVIEW__?.currentRender?.phase;
+          return phase === 'finished' ? null : `Storybook render stopped in phase ${phase}.`;
         }
         return error.textContent?.trim() || 'Unknown Storybook render error.';
       });
@@ -66,10 +67,15 @@ try {
         document.documentElement.setAttribute('data-zdp-theme', theme);
         document.querySelectorAll('[data-zdp-theme]').forEach((element) => element.setAttribute('data-zdp-theme', theme));
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-        await Promise.all(document.getAnimations().filter((animation) =>
-          animation.playState !== 'paused' && Number.isFinite(animation.effect?.getComputedTiming().endTime)
-        ).map((animation) => animation.finished.catch(() => {})));
       }, scenario.theme);
+      await page.waitForFunction(() => document.fonts.status === 'loaded' &&
+        [...document.images].every((image) => image.loading === 'lazy' || image.complete) &&
+        document.getAnimations().every((animation) => animation.playState !== 'running' ||
+          !Number.isFinite(animation.effect?.getComputedTiming().endTime)));
+      if (story.id.endsWith('--delayed-readiness')) {
+        assert.equal(await page.locator('#storybook-root').getAttribute('data-readiness'), 'complete',
+          'Audit must wait for the asynchronous play function.');
+      }
       if (story.id.endsWith('--long-labels')) {
         const overflowingLabels = await page.locator('#storybook-root label').evaluateAll((labels) =>
           labels.filter((label) => label.scrollWidth > label.clientWidth + 1).map((label) => label.textContent)

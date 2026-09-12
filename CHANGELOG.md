@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.61.10
+
+- Replaced fixed runtime audit delays with bounded story completion, font, image and animation readiness checks.
+- Added a delayed asynchronous play regression to prove audits wait for story completion.
+
 ## 0.61.9
 
 - Added desktop/mobile and light/dark runtime accessibility scenarios for every story.

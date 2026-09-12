@@ -18,6 +18,14 @@ export const LongLabels: Story = {
   args: { longLabels: true }
 };
 
+export const DelayedReadiness: Story = {
+  play: async ({ canvasElement }) => {
+    // Deliberately outlast the old audit delay to exercise readiness synchronization.
+    await new Promise((resolve) => setTimeout(resolve, 2_000));
+    canvasElement.dataset.readiness = 'complete';
+  }
+};
+
 export const States: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
