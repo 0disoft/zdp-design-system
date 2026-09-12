@@ -216,6 +216,17 @@
     <button data-testid="tooltip-trigger" type="button" aria-describedby={describedBy ?? undefined}>Help</button>
   </Tooltip>
 
+  {#each ['top', 'right', 'bottom', 'left'] as placement}
+    <Tooltip
+      placement={placement as 'top' | 'right' | 'bottom' | 'left'}
+      text={'UnbrokenLocalizedHelpText'.repeat(12)}
+      id={`edge-tooltip-${placement}`}
+      let:describedBy
+    >
+      <button type="button" data-testid={`edge-tooltip-trigger-${placement}`} aria-describedby={describedBy ?? undefined}>Edge {placement}</button>
+    </Tooltip>
+  {/each}
+
   <Tabs items={collidingTabItems} selectedId="release notes" ariaLabel="Release views" idPrefix="browser tabs">
     <p>Selected release view</p>
   </Tabs>

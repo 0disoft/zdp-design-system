@@ -2263,7 +2263,9 @@ for (const requiredText of [
   '.zdp-tooltip:focus-within .zdp-tooltip__content',
   '.zdp-tooltip[data-dismissed="true"] .zdp-tooltip__content',
   'pointer-events: none',
-  'white-space: nowrap'
+  'white-space: normal',
+  'overflow-wrap: anywhere',
+  'max-inline-size: min('
 ]) {
   if (!tooltip.includes(requiredText)) {
     failures.push(`Tooltip component is missing ${requiredText}.`);

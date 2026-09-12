@@ -2,6 +2,26 @@ import assert from 'node:assert/strict';
 import { hasInertAncestor, isDeepActive } from './browser-assertions.mjs';
 
 export async function verifyOverlayContracts(page) {
+  const viewport = page.viewportSize();
+  await page.setViewportSize({ width: 320, height: 480 });
+  for (const placement of ['top', 'right', 'bottom', 'left']) {
+    const trigger = page.getByTestId(`edge-tooltip-trigger-${placement}`);
+    await trigger.evaluate((element) => {
+      Object.assign(element.closest('.zdp-tooltip').style, { position: 'fixed', right: '0', top: '0' });
+    });
+    await trigger.focus();
+    await page.waitForFunction((id) => {
+      const tooltip = document.getElementById(id);
+      const rect = tooltip.getBoundingClientRect();
+      return rect.left >= 0 && rect.top >= 0 && rect.right <= innerWidth && rect.bottom <= innerHeight;
+    }, `edge-tooltip-${placement}`);
+    const tooltip = page.locator(`#edge-tooltip-${placement}`);
+    assert.equal(await tooltip.evaluate((element) => element.scrollWidth <= element.clientWidth), true);
+    await page.keyboard.press('Escape');
+    assert.equal(await tooltip.evaluate((element) => getComputedStyle(element).opacity), '0');
+    await trigger.evaluate((element) => element.closest('.zdp-tooltip').removeAttribute('style'));
+  }
+  await page.setViewportSize(viewport);
   const explicitCurrentBreadcrumb = page.getByRole('navigation', { name: 'Explicit current breadcrumb' });
   assert.equal(
     await explicitCurrentBreadcrumb.locator('[aria-current="page"]').count(),

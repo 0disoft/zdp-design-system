@@ -1438,6 +1438,14 @@
   z-index: var(--zdp-layer-floating);
 }
 
+.zdp-tooltip__content {
+  box-sizing: border-box;
+  width: max-content;
+  max-inline-size: min(22rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-4)));
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
 .zdp-tooltip--top {
   --zdp-tooltip-bottom: calc(100% + var(--zdp-space-2));
   --zdp-tooltip-left: 0;

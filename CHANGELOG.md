@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.61.6
+
+- Wrapped long Tooltip text and adjusted visible Svelte tooltips at viewport edges, including resize and scroll updates.
+- Added narrow-viewport checks for all four placements and retained Escape dismissal.
+
 ## 0.61.5
 
 - Added optional Combobox listboxLabel, openLabel and closeLabel overrides while preserving existing defaults.
