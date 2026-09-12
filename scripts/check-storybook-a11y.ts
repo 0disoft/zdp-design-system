@@ -1,5 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import assert from 'node:assert/strict';
+import { checkDependencyPolicies } from './dependency-policy';
 
 const root = process.cwd();
 const previewPath = join(root, '.storybook', 'preview.ts');
@@ -16,13 +18,25 @@ if (!preview.includes("a11y: {\n      test: 'error'\n    }")) {
   failures.push('.storybook/preview.ts must keep addon-a11y test mode set to error.');
 }
 
-if (packageJson.devDependencies?.['@storybook/addon-a11y'] !== '^10.6.0') {
-  failures.push('package.json must keep the reviewed @storybook/addon-a11y 10.x range for the a11y gate contract.');
+const dependencies = [['@storybook/addon-a11y', '^10.6.0'], ['axe-core', '^4.13.0']] as const;
+const policies = await Promise.all(dependencies.map(async ([name, supported]) => ({
+  range: packageJson.devDependencies?.[name] ?? '',
+  installed: JSON.parse(await readFile(join(root, 'node_modules', name, 'package.json'), 'utf8')).version as string,
+  supported
+})));
+for (const [index, valid] of checkDependencyPolicies(policies).entries()) {
+  if (!valid) failures.push(`${dependencies[index]?.[0]} must install a supported stable version and allow same-major stable updates, excluding the next major.`);
 }
 
-if (packageJson.devDependencies?.['axe-core'] !== '^4.13.0') {
-  failures.push('package.json must keep the reviewed axe-core 4.x range; bun.lock fixes the audit version.');
-}
+assert.deepEqual(checkDependencyPolicies([
+  { range: '^10.6.1', installed: '10.6.2', supported: '^10.6.0' },
+  { range: '>=10.6.1 <11', installed: '10.6.2', supported: '^10.6.0' },
+  { range: '10.6.2', installed: '10.6.2', supported: '^10.6.0' },
+  { range: '~10.6.2', installed: '10.6.2', supported: '^10.6.0' },
+  { range: '*', installed: '10.6.2', supported: '^10.6.0' },
+  { range: '^11', installed: '11.0.0', supported: '^10.6.0' },
+  { range: '^10.6.0', installed: '10.6.1-beta.1', supported: '^10.6.0' }
+]), [true, true, false, false, false, false, false], 'Dependency compatibility policy regression.');
 
 if (packageJson.scripts?.['a11y:check'] !== 'bun scripts/check-storybook-a11y.ts') {
   failures.push('package.json scripts.a11y:check must run the Storybook a11y gate checker.');

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.61.11
+
+- Validate installed accessibility dependencies using semver compatibility rather than exact manifest range strings.
+- Cover raised minima, equivalent comparator ranges, pins, minor-only ranges and unsupported major/prerelease versions.
+
 ## 0.61.10
 
 - Replaced fixed runtime audit delays with bounded story completion, font, image and animation readiness checks.

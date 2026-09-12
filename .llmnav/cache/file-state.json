@@ -648,19 +648,21 @@
     },
     {
       "blocks": [],
-      "contentHash": "d287a094461eb9198c4916c3ef0d72c2caa8bcea56fbe3d77518f7cb41afe242",
+      "contentHash": "9e28f1640da36ea54c0528c9b449179d528c564b64ee0643aa7da4627413e293",
       "declarations": [],
       "imports": [
+        "./dependency-policy",
+        "node:assert/strict",
         "node:fs/promises",
         "node:path"
       ],
       "path": "scripts/check-storybook-a11y.ts",
       "semanticBytes": 0,
-      "sourceBytes": 1884
+      "sourceBytes": 2838
     },
     {
       "blocks": [],
-      "contentHash": "6ee3cf3594f42952a29225f8fac7d9660cd85a1fa90c4683bb9945529c871b30",
+      "contentHash": "9a8f3b0d7e0289868e105f90c1308b341e6052aac377d51d88acbd86458736d9",
       "declarations": [],
       "imports": [
         "node:assert/strict",
@@ -673,7 +675,7 @@
       ],
       "path": "scripts/check-storybook-runtime-a11y.mjs",
       "semanticBytes": 0,
-      "sourceBytes": 7427
+      "sourceBytes": 9946
     },
     {
       "blocks": [],
@@ -713,6 +715,17 @@
       "path": "scripts/credit-asset-contract.ts",
       "semanticBytes": 0,
       "sourceBytes": 2230
+    },
+    {
+      "blocks": [],
+      "contentHash": "d7664a15d30a9228cf462aba5b1121b6f863aa17388ee772359fb3e5b66a0a85",
+      "declarations": [],
+      "imports": [
+        "node:child_process"
+      ],
+      "path": "scripts/dependency-policy.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 1130
     },
     {
       "blocks": [],
