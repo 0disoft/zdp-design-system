@@ -97,7 +97,8 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
         'inert',
         'open',
         'style',
-        'tabindex'
+        'tabindex',
+        'type'
       ],
       attributes: true,
       childList: true,
@@ -115,14 +116,15 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
     }
 
     if (cachedElements === null) {
-      const candidates = Array.from(root.querySelectorAll<HTMLElement>(zdpFocusableSelector))
+      cachedElements = Array.from(root.querySelectorAll<HTMLElement>(zdpFocusableSelector))
         .filter(isZdpFocusableElement);
-      cachedElements = sortZdpTabbableElements(candidates.filter((element) => (
-        !isRadioInput(element) || isRadioGroupTabStop(element, candidates)
-      )));
     }
 
-    return cachedElements;
+    // Radio selection and group ownership can change without DOM mutations or events.
+    const candidates = cachedElements;
+    return sortZdpTabbableElements(candidates.filter((element) => (
+      !isRadioInput(element) || isRadioGroupTabStop(element, candidates)
+    )));
   }
 
   function destroy(): void {

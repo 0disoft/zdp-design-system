@@ -394,6 +394,32 @@ async function verifyFocusableCache(page) {
     true,
     'A radio group must contribute only its checked member to the modal Tab cycle.'
   );
+  await page.keyboard.press('ArrowRight');
+  assert.equal(await page.getByTestId('dialog-unchecked-radio').isChecked(), true);
+  await closeButton.focus();
+  await page.keyboard.press('Shift+Tab');
+  assert.equal(
+    await isDeepActive(page.getByTestId('dialog-unchecked-radio')),
+    true,
+    'Keyboard selection must replace the cached radio tab stop.'
+  );
+  await page.keyboard.press('Tab');
+  assert.equal(await isDeepActive(closeButton), true, 'The newly selected radio must wrap to the first modal control.');
+
+  const readsBeforeRadioUpdate = await page.evaluate(() => window.__zdpFocusableStyleReads);
+  await page.getByTestId('dialog-checked-radio').evaluate((element) => { element.checked = true; });
+  await closeButton.focus();
+  await page.keyboard.press('Shift+Tab');
+  assert.equal(
+    await isDeepActive(page.getByTestId('dialog-checked-radio')),
+    true,
+    'Silent checked property changes must update the radio tab stop without input/change events.'
+  );
+  assert.equal(
+    await page.evaluate(() => window.__zdpFocusableStyleReads),
+    readsBeforeRadioUpdate,
+    'Radio selection changes must not discard cached visibility and layout checks.'
+  );
   await dialog.locator('input[name="dialog-runtime-choice"]').evaluateAll((elements) => {
     for (const element of elements) element.remove();
   });

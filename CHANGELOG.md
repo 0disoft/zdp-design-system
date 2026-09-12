@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.61.4
+
+- Fixed modal Tab wrapping after keyboard or programmatic radio selection changes while retaining cached visibility checks.
+- Added real-browser regression coverage for selected radio tab stops and silent checked-property updates.
+
 ## 0.61.3
 
 - Updated Vite to 8.3.0, Node types to 26.5.1, and compatible transitive build and Storybook dependencies.
