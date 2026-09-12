@@ -123,18 +123,18 @@
     },
     {
       "blocks": [],
-      "contentHash": "89b011c7c4326c035463c5f054d2a35e142a04570864c65c603a2079b4a12994",
+      "contentHash": "f5f6e0f20abbff8ea787e3817dc2c48d31a56d03602aac4521d215372a156eac",
       "declarations": [],
       "imports": [
         "node:assert/strict"
       ],
       "path": "scripts/browser/check-foundation-and-forms.mjs",
       "semanticBytes": 0,
-      "sourceBytes": 33533
+      "sourceBytes": 33996
     },
     {
       "blocks": [],
-      "contentHash": "fdce1dff016f6ce9cb562c8e5f9815e2a5ed1b085b184af397a9b176f142b650",
+      "contentHash": "90fd652f1fac208b7d3fd8a9e21b8ae790e652e4c92aec6f26540ad77b38798f",
       "declarations": [],
       "imports": [
         "./browser-assertions.mjs",
@@ -142,11 +142,11 @@
       ],
       "path": "scripts/browser/check-modals.mjs",
       "semanticBytes": 0,
-      "sourceBytes": 33348
+      "sourceBytes": 34525
     },
     {
       "blocks": [],
-      "contentHash": "0b772e52419945b3b4cdddf56f2d220a6de630b2b633824a7cfa05cca4d65399",
+      "contentHash": "7eff66db40df3b5f74bbef422226fff2b7209ffe85544ec58683070dbc74bb41",
       "declarations": [],
       "imports": [
         "./browser-assertions.mjs",
@@ -154,7 +154,7 @@
       ],
       "path": "scripts/browser/check-overlays.mjs",
       "semanticBytes": 0,
-      "sourceBytes": 21518
+      "sourceBytes": 22671
     },
     {
       "blocks": [],
@@ -303,7 +303,7 @@
           "syntaxErrors": []
         }
       ],
-      "contentHash": "e379465c6b4269f61fce4d8ea792f46cf349564209766ba7d28d749a38effeb5",
+      "contentHash": "a469d573ce8787236921bac0a41ac1f93191343ffa0db1b5776bde9d637e9b59",
       "declarations": [
         null
       ],
@@ -317,7 +317,7 @@
       ],
       "path": "scripts/build-package.ts",
       "semanticBytes": 428,
-      "sourceBytes": 4159
+      "sourceBytes": 4249
     },
     {
       "blocks": [],
@@ -390,22 +390,24 @@
               "Shared styles must retain component state declarations under their original conditional context."
             ],
             "owns": [
+              "base layout parity",
               "interaction style parity",
               "conditional declaration parity"
             ],
             "rel": [],
             "risk": [],
-            "role": "Check that component interaction states and conditional CSS remain represented in shared styles.",
+            "role": "Check that component base layout, interaction states and conditional CSS remain represented in shared styles.",
             "scope": "module",
             "search": [
               "CSS parity",
               "공유 CSS",
-              "hover 스타일"
+              "hover 스타일",
+              "기본 레이아웃"
             ],
             "stability": "architecture",
             "unknown": []
           },
-          "end": 432,
+          "end": 472,
           "endLine": 9,
           "entries": [
             {
@@ -418,13 +420,13 @@
               "key": "role",
               "line": 3,
               "order": 1,
-              "value": "Check that component interaction states and conditional CSS remain represented in shared styles."
+              "value": "Check that component base layout, interaction states and conditional CSS remain represented in shared styles."
             },
             {
               "key": "owns",
               "line": 4,
               "order": 2,
-              "value": "interaction style parity|conditional declaration parity"
+              "value": "base layout parity|interaction style parity|conditional declaration parity"
             },
             {
               "key": "excludes",
@@ -436,7 +438,7 @@
               "key": "search",
               "line": 6,
               "order": 4,
-              "value": "CSS parity|공유 CSS|hover 스타일"
+              "value": "CSS parity|공유 CSS|hover 스타일|기본 레이아웃"
             },
             {
               "key": "invariant",
@@ -455,7 +457,7 @@
           "indent": "",
           "newline": "\n",
           "prefix": null,
-          "raw": "/* llmnav/1 module\nid=zdp.design.styles.parity\nrole=Check that component interaction states and conditional CSS remain represented in shared styles.\nowns=interaction style parity|conditional declaration parity\nexcludes=token generation|component business decisions\nsearch=CSS parity|공유 CSS|hover 스타일\ninvariant=Shared styles must retain component state declarations under their original conditional context.\nstability=architecture\n*/",
+          "raw": "/* llmnav/1 module\nid=zdp.design.styles.parity\nrole=Check that component base layout, interaction states and conditional CSS remain represented in shared styles.\nowns=base layout parity|interaction style parity|conditional declaration parity\nexcludes=token generation|component business decisions\nsearch=CSS parity|공유 CSS|hover 스타일|기본 레이아웃\ninvariant=Shared styles must retain component state declarations under their original conditional context.\nstability=architecture\n*/",
           "scope": "module",
           "specVersion": "1",
           "start": 0,
@@ -464,7 +466,7 @@
           "syntaxErrors": []
         }
       ],
-      "contentHash": "725be0bdcc0c29b065bfe1cd3785007e905c959074e26925ce06949045189181",
+      "contentHash": "fec6be073dca7f219d61607c598da072103f1bfa81583675f94d0336f151a665",
       "declarations": [
         null
       ],
@@ -474,8 +476,8 @@
         "node:path"
       ],
       "path": "scripts/check-component-style-parity.ts",
-      "semanticBytes": 442,
-      "sourceBytes": 18781
+      "semanticBytes": 494,
+      "sourceBytes": 21926
     },
     {
       "blocks": [],
@@ -557,7 +559,7 @@
     },
     {
       "blocks": [],
-      "contentHash": "7c3f7bcea45b67499d872bc83a2094d683d9657240372ffbd814bf911bd334af",
+      "contentHash": "715199c733dcbd4abce9fd7410ac7eef4cc2c55538614aaadcc35ceaa73588d0",
       "declarations": [],
       "imports": [
         "../src/lib/dom-id",
@@ -571,7 +573,7 @@
       ],
       "path": "scripts/check-package.ts",
       "semanticBytes": 0,
-      "sourceBytes": 40492
+      "sourceBytes": 40888
     },
     {
       "blocks": [],
@@ -675,7 +677,7 @@
     },
     {
       "blocks": [],
-      "contentHash": "f4db8903585afb0cc42435c3605529c6da0ed981589625e820f612a9ab4e040e",
+      "contentHash": "baac1954670c94e7914c8fca444a12d0b9649416d64f8241041f863b0b7c2973",
       "declarations": [],
       "imports": [
         "./style-contract",
@@ -684,7 +686,7 @@
       ],
       "path": "scripts/check-storybook.ts",
       "semanticBytes": 0,
-      "sourceBytes": 130612
+      "sourceBytes": 130676
     },
     {
       "blocks": [],
@@ -727,6 +729,20 @@
       "path": "scripts/generate-brand-assets.ts",
       "semanticBytes": 0,
       "sourceBytes": 4813
+    },
+    {
+      "blocks": [],
+      "contentHash": "84eb08882d860d8de9fea2153709d41371d137c383c38109688f5766835eb9cd",
+      "declarations": [],
+      "imports": [
+        "node:assert/strict",
+        "node:fs/promises",
+        "node:path",
+        "node:url"
+      ],
+      "path": "scripts/generate-component-styles.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 1567
     },
     {
       "blocks": [],

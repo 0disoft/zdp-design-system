@@ -84,7 +84,7 @@
     width: var(--zdp-control-choice-size);
   }
 
-  .zdp-choice__mark::after {
+  .zdp-choice--radio .zdp-choice__mark::after {
     background: currentcolor;
     border-radius: 50%;
     content: "";

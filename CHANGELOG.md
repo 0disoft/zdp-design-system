@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.61.8
+
+- Extended shared-style parity to base layout declarations and combined repeated selectors in cascade order.
+- Aligned card/AdSlot child constraints, card-header shrinking, menu sizing and tab alignment with component styles.
+- Scoped Checkbox and Radio indicator rules by their existing component variants.
+
 ## 0.61.7
 
 - Split shared CSS authoring into five ordered fragments below 40 KB and verify the generated aggregate before preview or package builds.

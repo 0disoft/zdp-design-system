@@ -924,6 +924,10 @@
   min-width: 0;
 }
 
+.zdp-card__body * {
+  margin-block: 0;
+}
+
 .zdp-card__body :where(h1, h2, h3, h4, h5, h6) {
   color: var(--zdp-color-ink-strong);
   font-family: var(--zdp-font-family-display);
@@ -964,6 +968,7 @@
 }
 
 .zdp-card-header__title {
+  min-width: 0;
   color: var(--zdp-color-ink-strong);
   font-family: var(--zdp-font-family-display);
   font-size: var(--zdp-type-title-size);
@@ -974,6 +979,7 @@
 }
 
 .zdp-card-header__subtitle {
+  min-width: 0;
   color: var(--zdp-color-ink-muted);
   font-size: var(--zdp-type-body-small-size);
   grid-column: 1 / -1;

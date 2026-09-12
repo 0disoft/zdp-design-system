@@ -823,7 +823,8 @@
   justify-content: center;
   line-height: var(--zdp-type-control-line-height);
   min-height: var(--zdp-control-height-md);
-  min-width: 0;
+  min-inline-size: 12rem;
+  min-width: 12rem;
   padding: 0 var(--zdp-space-3);
   transition:
     background-color var(--zdp-motion-fast) ease,
@@ -835,6 +836,11 @@
   background: var(--zdp-color-accent-primary-soft);
   border-color: transparent;
   color: var(--zdp-color-ink-strong);
+}
+
+.zdp-menu--bottom .zdp-menu__panel,
+.zdp-menu--top .zdp-menu__panel {
+  inline-size: 100%;
 }
 
 .zdp-menu__trigger:focus-visible {

@@ -796,6 +796,12 @@
   padding: 0;
 }
 
+.zdp-ad-slot--filled * {
+  margin: 0;
+  max-inline-size: 100%;
+  min-width: 0;
+}
+
 .zdp-ad-slot--filled > * {
   margin: 0;
   max-inline-size: 100%;

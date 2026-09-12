@@ -77,7 +77,7 @@
     width: var(--zdp-control-choice-size);
   }
 
-  .zdp-choice__mark::after {
+  .zdp-choice--checkbox .zdp-choice__mark::after {
     border-bottom: 2px solid currentcolor;
     border-left: 2px solid currentcolor;
     content: "";

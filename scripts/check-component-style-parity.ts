@@ -1,9 +1,9 @@
 /* llmnav/1 module
 id=zdp.design.styles.parity
-role=Check that component interaction states and conditional CSS remain represented in shared styles.
-owns=interaction style parity|conditional declaration parity
+role=Check that component base layout, interaction states and conditional CSS remain represented in shared styles.
+owns=base layout parity|interaction style parity|conditional declaration parity
 excludes=token generation|component business decisions
-search=CSS parity|공유 CSS|hover 스타일
+search=CSS parity|공유 CSS|hover 스타일|기본 레이아웃
 invariant=Shared styles must retain component state declarations under their original conditional context.
 stability=architecture
 */
@@ -29,10 +29,12 @@ interface ParityIssue {
   readonly component: string;
   readonly selector: string;
   readonly reason: string;
+  readonly properties?: readonly string[];
 }
 
 const statePattern =
   /:(?:hover|focus|focus-visible|focus-within|active|enabled|disabled|checked|indeterminate|read-only|read-write|required|optional|valid|invalid|user-valid|user-invalid|in-range|out-of-range|placeholder-shown|autofill|default|open|popover-open|modal|fullscreen|empty)\b|\[(?:(?:aria|data)-[^\]]+|disabled|readonly|required|open|hidden|inert)(?:=[^\]]+)?\]/;
+const layoutPropertyPattern = /^(?:display|box-sizing|position|(?:min-|max-)?(?:width|height|inline-size|block-size)|margin(?:-.+)?|padding(?:-.+)?|inset(?:-.+)?|gap|row-gap|column-gap|flex(?:-.+)?|grid(?:-.+)?|align-.+|justify-.+|place-.+|top|right|bottom|left|overflow(?:-.+)?|white-space|vertical-align)$/;
 const root = process.cwd();
 const componentDirectory = join(root, 'src', 'lib', 'components');
 const sharedStylePath = join(root, 'src', 'styles', 'components.css');
@@ -59,7 +61,7 @@ for (const componentFile of componentFiles) {
 
   styledComponentCount += 1;
   const componentRules = toSelectorRules(styleBlocks.flatMap((style) => extractCssRules(style)));
-  const parityRules = componentRules.filter(isParityRule);
+  const parityRules = selectParityRules(componentRules);
   paritySelectorCount += parityRules.length;
   failures.push(...findParityIssues(componentFile, parityRules, sharedRules));
 }
@@ -67,16 +69,44 @@ for (const componentFile of componentFiles) {
 if (failures.length > 0) {
   throw new Error(
     `Component style parity check failed:\n${failures
-      .map((failure) => `- ${failure.component}: ${failure.selector} (${failure.reason})`)
+      .map((failure) => `- ${failure.component}: ${failure.selector} (${failure.reason}${failure.properties ? ': ' + failure.properties.join(', ') : ''})`)
       .join('\n')}`
   );
 }
 
 console.log(
-  `Component style parity check passed for ${paritySelectorCount} state and conditional selectors across ${styledComponentCount} styled components.`
+  `Component style parity check passed for ${paritySelectorCount} layout, state and conditional selectors across ${styledComponentCount} styled components.`
 );
 
 function assertCheckerContract(): void {
+  const fixtureRules = (css: string) => toSelectorRules(extractCssRules(css));
+  const baseLayoutRules = selectParityRules(fixtureRules('.zdp-example { display: grid; gap: 1rem; color: red; }'));
+  assert.deepEqual([...baseLayoutRules[0]!.declarations.keys()], ['display', 'gap']);
+  assert.equal(findParityIssues('fixture.svelte', baseLayoutRules, []).length, 1, 'Missing base layout must fail.');
+  assert.equal(
+    findParityIssues('fixture.svelte', baseLayoutRules, fixtureRules('.zdp-example { display: grid; gap: 2rem; }'))[0]?.reason,
+    'declaration drift'
+  );
+  assert.equal(
+    findParityIssues('fixture.svelte', baseLayoutRules, fixtureRules('.zdp-example { display: grid; } .zdp-example { gap: 1rem; }')).length,
+    0,
+    'Split base declarations must compose in cascade order.'
+  );
+  assert.equal(
+    findParityIssues('fixture.svelte', baseLayoutRules, fixtureRules('.zdp-example { display: grid; gap: 1rem; } .zdp-example { gap: 2rem; }'))[0]?.reason,
+    'declaration drift',
+    'Later conflicting declarations must not be hidden by an earlier match.'
+  );
+  assert.equal(
+    findParityIssues('fixture.svelte', selectParityRules(fixtureRules('.zdp-body .zdp-example { display: grid; gap: 1rem; }')), baseLayoutRules).length,
+    0,
+    'A structural scoping ancestor may use the same shared class layout.'
+  );
+  assert.equal(
+    findParityIssues('fixture.svelte', selectParityRules(fixtureRules('.zdp-body--compact .zdp-example { display: grid; gap: 1rem; }')), baseLayoutRules).length,
+    1,
+    'A variant-specific layout must retain its ancestor scope.'
+  );
   const widenedGlobalRules = toSelectorRules(
     extractCssRules(`.zdp-toast__action:hover { color: var(--zdp-color-ink-strong); }`)
   );
@@ -248,7 +278,11 @@ function findParityIssues(
     }
 
     if (!candidates.some((candidate) => containsDeclarations(candidate.declarations, componentRule.declarations))) {
-      issues.push({ component, selector: formatSelectorRule(componentRule), reason: 'declaration drift' });
+      const properties = [...componentRule.declarations.keys()].filter((property) => {
+        const expected = new Map([[property, componentRule.declarations.get(property)!]]);
+        return !candidates.some((candidate) => containsDeclarations(candidate.declarations, expected));
+      });
+      issues.push({ component, selector: formatSelectorRule(componentRule), reason: 'declaration drift', properties });
     }
   }
 
@@ -271,14 +305,28 @@ function containsDeclarations(
 }
 
 function toSelectorRules(rules: readonly CssRule[]): readonly SelectorRule[] {
-  return rules.flatMap((rule) =>
-    rule.selectors.map((selector) => ({
-      selector,
-      stateKey: stateSelectorKey(selector),
-      declarations: rule.declarations,
-      conditions: rule.conditions
-    }))
-  );
+  const merged = new Map<string, SelectorRule>();
+  for (const rule of rules) {
+    for (const selector of rule.selectors) {
+      const key = JSON.stringify([rule.conditions, selector]);
+      const previous = merged.get(key);
+      merged.set(key, {
+        selector,
+        stateKey: stateSelectorKey(selector),
+        declarations: new Map([...(previous?.declarations ?? []), ...rule.declarations]),
+        conditions: rule.conditions
+      });
+    }
+  }
+  return [...merged.values()];
+}
+
+function selectParityRules(rules: readonly SelectorRule[]): readonly SelectorRule[] {
+  return rules.flatMap((rule) => {
+    if (isParityRule(rule)) return [rule];
+    const declarations = new Map([...rule.declarations].filter(([property]) => layoutPropertyPattern.test(property)));
+    return declarations.size > 0 ? [{ ...rule, declarations }] : [];
+  });
 }
 
 function haveSameConditions(left: readonly string[], right: readonly string[]): boolean {
@@ -295,6 +343,10 @@ function stateSelectorKey(selector: string): string {
   const lastCompound = selector.slice(lastCompoundStart);
 
   if (isStateSelector(lastCompound) && !isStateSelector(prefix)) {
+    return lastCompound;
+  }
+
+  if (lastCompound.startsWith('.zdp-') && !isStateSelector(prefix) && !/\.zdp-[\w-]+--[\w-]+/.test(prefix)) {
     return lastCompound;
   }
 

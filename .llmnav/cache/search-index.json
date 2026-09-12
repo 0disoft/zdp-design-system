@@ -9,7 +9,7 @@
     "zdp.design.styles.parity",
     "zdp.design.tokens.generate"
   ],
-  "cardSetHash": "5117163a9c6b15217e8db7b997676af190cff61ba08ae4b0d1a967a5710527bf",
+  "cardSetHash": "7fe4d5b0a9737eb7c46159c656796eaae843f2ce6a3c75e16a3100a10888def8",
   "documentCount": 8,
   "documents": [
     [
@@ -86,13 +86,15 @@
       ]
     ],
     [
-      "202620f35744976f1a8fe649f7429a999e7346bd01cebddf8fef2ffd6c61f490",
+      "02fbd2eb05c2420bf82942aff4db92b6b7089eb73c78415322d19fb1905fa17a",
       [
-        "check that component interaction states and conditional css remain represented in shared styles.",
+        "check that component base layout, interaction states and conditional css remain represented in shared styles.",
         "css parity",
         "공유 css",
         "hover 스타일",
+        "기본 레이아웃",
         "shared styles must retain component state declarations under their original conditional context.",
+        "base layout parity",
         "interaction style parity",
         "conditional declaration parity"
       ]
@@ -369,6 +371,17 @@
     ],
     [
       [
+        6,
+        [
+          1,
+          1,
+          3,
+          1
+        ]
+      ]
+    ],
+    [
+      [
         4,
         [
           1,
@@ -1273,6 +1286,17 @@
     ],
     [
       [
+        6,
+        [
+          1,
+          1,
+          3,
+          1
+        ]
+      ]
+    ],
+    [
+      [
         7,
         [
           3,
@@ -1679,7 +1703,7 @@
           2,
           1,
           3,
-          2,
+          3,
           9,
           1
         ]
@@ -2680,6 +2704,42 @@
     ],
     [
       [
+        6,
+        [
+          2,
+          1
+        ]
+      ]
+    ],
+    [
+      [
+        6,
+        [
+          2,
+          1
+        ]
+      ]
+    ],
+    [
+      [
+        6,
+        [
+          2,
+          1
+        ]
+      ]
+    ],
+    [
+      [
+        6,
+        [
+          2,
+          1
+        ]
+      ]
+    ],
+    [
+      [
         5,
         [
           2,
@@ -2725,6 +2785,15 @@
     ],
     [
       [
+        6,
+        [
+          2,
+          1
+        ]
+      ]
+    ],
+    [
+      [
         2,
         [
           2,
@@ -2735,6 +2804,24 @@
     [
       [
         7,
+        [
+          2,
+          1
+        ]
+      ]
+    ],
+    [
+      [
+        6,
+        [
+          2,
+          1
+        ]
+      ]
+    ],
+    [
+      [
+        6,
         [
           2,
           1
@@ -2894,6 +2981,7 @@
     "atomic",
     "authorization",
     "backup",
+    "base",
     "before",
     "belong",
     "bounded",
@@ -2969,6 +3057,7 @@
     "keys",
     "layer",
     "layers",
+    "layout",
     "leaf",
     "lib",
     "lifecycle",
@@ -3079,13 +3168,20 @@
     "zdp",
     "검색",
     "공유",
+    "기본",
+    "레이",
+    "레이아",
+    "레이아웃",
     "롤백",
     "목록",
     "복원",
     "스타",
     "스타일",
+    "아웃",
     "요청",
     "이름",
+    "이아",
+    "이아웃",
     "이전",
     "입점",
     "자유",

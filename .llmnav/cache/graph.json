@@ -222,7 +222,7 @@
         "visibility": null
       },
       "repositoryId": "zdp-design-system",
-      "role": "Check that component interaction states and conditional CSS remain represented in shared styles.",
+      "role": "Check that component base layout, interaction states and conditional CSS remain represented in shared styles.",
       "semanticId": "zdp.design.styles.parity",
       "unresolved": false
     },
@@ -251,7 +251,7 @@
   ],
   "repositoryId": "zdp-design-system",
   "schemaVersion": 1,
-  "sourceHash": "55b639e01d7133702bc7e364b68a25412d49d1e4b8c31d66a97257f248fc0e7f",
+  "sourceHash": "c99759b6445740516fd6810d0d1c75c3410bdf0488a7a6baac6026794eac45f3",
   "stats": {
     "edgeCount": 5,
     "importedIndexCount": 0,

@@ -275,7 +275,7 @@
     },
     {
       "edges": [],
-      "inputHash": "55c984a4b80d9916303990f3235f3f4858a8d4e749de9a97ec13d1c7b04b7bd9",
+      "inputHash": "3167810bfcf757cfb94f6dd065abe103dd67834382b76386d58c44b6ebf28838",
       "key": "card:zdp-design-system/zdp.design.styles.parity",
       "nodes": [
         {
@@ -296,11 +296,11 @@
             "visibility": null
           },
           "repositoryId": "zdp-design-system",
-          "role": "Check that component interaction states and conditional CSS remain represented in shared styles.",
+          "role": "Check that component base layout, interaction states and conditional CSS remain represented in shared styles.",
           "semanticId": "zdp.design.styles.parity"
         }
       ],
-      "outputHash": "91ef1dc400882ea284f5e567a4d4caeff76a63835e77b877923f1d119bb3df60"
+      "outputHash": "f2e322a29b757902db3e2debcf7434c875ffcd312a3539f500cd935d146050fa"
     },
     {
       "edges": [],

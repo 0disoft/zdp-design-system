@@ -975,6 +975,9 @@
 }
 
 .zdp-tabs__tab {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
   background: transparent;
   border: 0;
   border-bottom: var(--zdp-control-border-width) solid transparent;

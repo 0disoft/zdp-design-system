@@ -14,8 +14,8 @@ excludes package assembly, npm publication
 invariant A failed promotion restores the previous target when its backup exists.
 
 @zdp.design.styles.parity
-role Check that component interaction states and conditional CSS remain represented in shared styles.
-owns interaction style parity, conditional declaration parity
+role Check that component base layout, interaction states and conditional CSS remain represented in shared styles.
+owns base layout parity, interaction style parity, conditional declaration parity
 excludes token generation, component business decisions
 invariant Shared styles must retain component state declarations under their original conditional context.
 
