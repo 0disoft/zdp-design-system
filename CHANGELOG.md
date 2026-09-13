@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+## 0.63.0
+
+- Added localized Combobox labels and viewport-aware long Tooltip text.
+- Fixed modal radio focus, reduced shared stylesheet maintenance cost and enforced base layout parity.
+- Expanded accessibility coverage across themes and viewports, waiting for completed stories rather than fixed delays.
+- Integrated granular CSS exports, public API guards, package budgets and Storybook Pages delivery from main.
+- Updated compatible dependencies and replaced literal version checks with semantic compatibility probes.
+
+## 0.62.0
+
+- Added opt-in `foundation.css` and per-component `components/<Component>.css` package exports for Astro, static HTML, and other framework-neutral consumers while preserving the existing `styles.css` compatibility entry.
+- Added a base-commit public API compatibility guard that accepts either a sufficient direct version bump or a newly declared release fragment, keeping feature pull requests aligned with release preparation.
+- Added release change fragments and an automatically refreshed release pull request that prepares package versions and changelog sections without weakening the explicit tag-triggered npm publishing boundary.
+
 ## 0.61.11
 
 - Validate installed accessibility dependencies using semver compatibility rather than exact manifest range strings.

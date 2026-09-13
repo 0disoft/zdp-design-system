@@ -38,6 +38,12 @@
 - Skeleton, Flowbite Svelte, daisyUI, SmoothUI, Tailwind Plus, and Tailwind UI remain constrained by `docs/EXTERNAL_UI_ADOPTION.md`.
 - Copying, porting, runtime dependency adoption, and third-party notices must be reviewed before merge.
 
+## Release Boundary
+
+- Consumer-visible package changes and release-tooling changes add one validated `.changes/*.md` fragment.
+- `release/zdp-design-system` is a generated branch and must not receive hand-written commits.
+- The generated release pull request may update `package.json`, `CHANGELOG.md`, and consume fragments, but it must not publish, tag, request OIDC, or bypass human review.
+
 ## Manual Gates
 
 - Package release requires explicit approval and publish-specific mustflow intents.

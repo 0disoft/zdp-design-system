@@ -7,14 +7,16 @@
         "token value design"
       ],
       "hashes": {
-        "body": "a469d573ce8787236921bac0a41ac1f93191343ffa0db1b5776bde9d637e9b59",
+        "body": "ee88c41091d84c5f274d738ce1450dfec67f982768a8b97183e67b5b560b3fac",
         "semantic": "81f1dc9b5731036c11ecc2ceccf73502298e6c217398dc1e01e36e31a5a05398",
-        "structure": "91b0f6cd93b62b0d68fca1cf61b500458b8667dfebf0d77d215bb4e696ab12d7"
+        "structure": "1051dc9901448111db11b27edf45900512f9fe5740530ef97132355c70101679"
       },
       "id": "zdp.design.package.build",
       "imports": [
         "./atomic-directory",
+        "./component-style-entries",
         "./package-entry",
+        "./public-surface",
         "node:fs",
         "node:fs/promises",
         "node:path",
@@ -389,6 +391,6 @@
   "generatedBy": "llmnav@0.9.2",
   "repositoryId": "zdp-design-system",
   "schemaVersion": 1,
-  "sourceHash": "2afa764b80c2dafcd9ecf635dde97b09efcedda10e633eb10f5e744f41ef1857",
+  "sourceHash": "34981fe006d960111bbea1d4a00867655f23282e7e8b7392151839703c232d89",
   "specVersion": "1"
 }

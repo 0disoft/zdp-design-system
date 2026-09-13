@@ -303,13 +303,15 @@
           "syntaxErrors": []
         }
       ],
-      "contentHash": "a469d573ce8787236921bac0a41ac1f93191343ffa0db1b5776bde9d637e9b59",
+      "contentHash": "ee88c41091d84c5f274d738ce1450dfec67f982768a8b97183e67b5b560b3fac",
       "declarations": [
         null
       ],
       "imports": [
         "./atomic-directory",
+        "./component-style-entries",
         "./package-entry",
+        "./public-surface",
         "node:fs",
         "node:fs/promises",
         "node:path",
@@ -317,7 +319,7 @@
       ],
       "path": "scripts/build-package.ts",
       "semanticBytes": 428,
-      "sourceBytes": 4249
+      "sourceBytes": 4872
     },
     {
       "blocks": [],
@@ -526,6 +528,21 @@
     },
     {
       "blocks": [],
+      "contentHash": "75761ba2d547473149bcd5a8e4485c2a7a01b7eda7859a3df8fbf54b1ec91b6c",
+      "declarations": [],
+      "imports": [
+        "./component-style-entries",
+        "node:assert/strict",
+        "node:fs/promises",
+        "node:module",
+        "node:path"
+      ],
+      "path": "scripts/check-granular-css.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 6219
+    },
+    {
+      "blocks": [],
       "contentHash": "e8fe33fdd48a3c18830e39e55c81446d56dc5d01998353c51dcf65695e884a73",
       "declarations": [],
       "imports": [
@@ -542,10 +559,11 @@
     },
     {
       "blocks": [],
-      "contentHash": "43be8661a4e6c0808f49b9ec17fe71efd33c8174ecbfebd59f9d93767bb7bc00",
+      "contentHash": "d31e5ebf8b5037f0220ccc4dd654b378b9979cb2722c933ead76351d55ba195f",
       "declarations": [],
       "imports": [
         "./atomic-directory",
+        "./component-style-entries",
         "./package-entry",
         "node:assert/strict",
         "node:fs",
@@ -555,11 +573,29 @@
       ],
       "path": "scripts/check-package-build.ts",
       "semanticBytes": 0,
-      "sourceBytes": 3016
+      "sourceBytes": 4261
     },
     {
       "blocks": [],
-      "contentHash": "715199c733dcbd4abce9fd7410ac7eef4cc2c55538614aaadcc35ceaa73588d0",
+      "contentHash": "c2a16d258a9932fd90a1e661306034e6ecf66179bd19db4c571a394dbca07bf9",
+      "declarations": [],
+      "imports": [
+        "./package-size/model.ts",
+        "./package-size/package-measure.ts",
+        "./package-size/report.ts",
+        "node:assert/strict",
+        "node:fs/promises",
+        "node:os",
+        "node:path",
+        "node:url"
+      ],
+      "path": "scripts/check-package-size.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 7567
+    },
+    {
+      "blocks": [],
+      "contentHash": "986fbf86f8486da01078c1018ea336fdd527847fb04e6063902fc30901bdb49f",
       "declarations": [],
       "imports": [
         "../src/lib/dom-id",
@@ -573,7 +609,7 @@
       ],
       "path": "scripts/check-package.ts",
       "semanticBytes": 0,
-      "sourceBytes": 40888
+      "sourceBytes": 40979
     },
     {
       "blocks": [],
@@ -591,6 +627,17 @@
     },
     {
       "blocks": [],
+      "contentHash": "24320641c6e654ea3fa833fc39a8d56171682542f0902b91a5b7880d9f5e86b9",
+      "declarations": [],
+      "imports": [
+        "./public-api-contract"
+      ],
+      "path": "scripts/check-public-api-contract.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 5029
+    },
+    {
+      "blocks": [],
       "contentHash": "a6bdf69fc605ca685093ddfa86f85e47ee8fed2552552840fd97f390d8bda8e0",
       "declarations": [],
       "imports": [
@@ -605,7 +652,7 @@
     },
     {
       "blocks": [],
-      "contentHash": "9f4e365610a13d31a3b3a8c60daefb00aa61fdfa10311f3503379124f14714b0",
+      "contentHash": "041b23b9158743703eeb0a5978d3046ac89625d67f8be2f92c9c089bce4a89b5",
       "declarations": [],
       "imports": [
         "node:assert/strict",
@@ -615,7 +662,7 @@
       ],
       "path": "scripts/check-release-workflow.ts",
       "semanticBytes": 0,
-      "sourceBytes": 6491
+      "sourceBytes": 14781
     },
     {
       "blocks": [],
@@ -705,6 +752,33 @@
     },
     {
       "blocks": [],
+      "contentHash": "38cd980f3e5fbd41e98944a9e3594cbf756ef069a41aba830308e3f0cfc1d8fc",
+      "declarations": [],
+      "imports": [
+        "node:assert/strict",
+        "node:fs/promises",
+        "node:http",
+        "node:path",
+        "playwright-core"
+      ],
+      "path": "scripts/check-visual-regressions.mjs",
+      "semanticBytes": 0,
+      "sourceBytes": 18024
+    },
+    {
+      "blocks": [],
+      "contentHash": "d8a5a8f492157fd75dc6d8ea11a4fafd75f40d6bdd2d7624f30f21570d2c4de1",
+      "declarations": [],
+      "imports": [
+        "node:fs/promises",
+        "node:path"
+      ],
+      "path": "scripts/component-style-entries.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 6667
+    },
+    {
+      "blocks": [],
       "contentHash": "9c13f03481e24e22630c495e7f6dc645e5799d9928d0458bf7a7d0c6940ea91c",
       "declarations": [],
       "imports": [
@@ -756,6 +830,20 @@
       "path": "scripts/generate-component-styles.ts",
       "semanticBytes": 0,
       "sourceBytes": 1567
+    },
+    {
+      "blocks": [],
+      "contentHash": "a182bd1434da6e0a0c3c066f6bb9704480f7b99abe5bde5f4e3933570286a4c2",
+      "declarations": [],
+      "imports": [
+        "./public-surface",
+        "node:fs/promises",
+        "node:path",
+        "node:url"
+      ],
+      "path": "scripts/generate-public-surface.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 3589
     },
     {
       "blocks": [],
@@ -1002,14 +1090,253 @@
     },
     {
       "blocks": [],
-      "contentHash": "da1d9670c410967e0759602f1a37c0efa0e4ae7e23538ece21b730d604552535",
+      "contentHash": "73048c42d0b771d5066942f4113409b69f3e513dc947cf977520d07d6631da96",
       "declarations": [],
       "imports": [
+        "./public-surface",
         "node:path"
       ],
       "path": "scripts/package-exports.ts",
       "semanticBytes": 0,
-      "sourceBytes": 7438
+      "sourceBytes": 2941
+    },
+    {
+      "blocks": [],
+      "contentHash": "05309752ec9e445970dd6d67ab90e120832adcc5e88d309f65543c5ee64fec65",
+      "declarations": [],
+      "imports": [],
+      "path": "scripts/package-size/model.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 1933
+    },
+    {
+      "blocks": [],
+      "contentHash": "562fb0a5e2873d41d4b900641b51407ea3b13524be3b8241b95426700019eeae",
+      "declarations": [],
+      "imports": [
+        "./model.ts",
+        "./tar.ts",
+        "node:assert/strict",
+        "node:child_process",
+        "node:fs/promises",
+        "node:path",
+        "node:zlib"
+      ],
+      "path": "scripts/package-size/package-measure.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 5306
+    },
+    {
+      "blocks": [],
+      "contentHash": "d6ea35d80a3ac89d85c9a1d348e1e7afe43b22d9056638cd308cd9c385ea3528",
+      "declarations": [],
+      "imports": [
+        "./model.ts"
+      ],
+      "path": "scripts/package-size/report.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 4866
+    },
+    {
+      "blocks": [],
+      "contentHash": "9570601d7063c468b0fdb6560b0b02922520c2ccfe306971a54bd7bec291058e",
+      "declarations": [],
+      "imports": [
+        "node:assert/strict",
+        "node:path",
+        "node:zlib"
+      ],
+      "path": "scripts/package-size/tar.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 4304
+    },
+    {
+      "blocks": [],
+      "contentHash": "7a5eada4b71b26355561494660cae354820327e74beb3dcdd80e0bb920462514",
+      "declarations": [],
+      "imports": [
+        "typescript"
+      ],
+      "path": "scripts/public-api-contract/ast.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 2027
+    },
+    {
+      "blocks": [],
+      "contentHash": "6d3b0da5e7ed066d5b67a33c2111bf4367a52652268a2adc104af2710ff4fa52",
+      "declarations": [],
+      "imports": [
+        "./package",
+        "./types"
+      ],
+      "path": "scripts/public-api-contract/compare.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 9434
+    },
+    {
+      "blocks": [],
+      "contentHash": "942c64b6cdcb39e1828d0769b9ffd2cd2c22e9fb29fd1beff5620730d37383af",
+      "declarations": [],
+      "imports": [
+        "./props",
+        "./root",
+        "./types"
+      ],
+      "path": "scripts/public-api-contract/component.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 1989
+    },
+    {
+      "blocks": [],
+      "contentHash": "d1d97e6bbe0ab402a09ac528302524d7b863ace9eeb3a15c23fd84d2699fd3c4",
+      "declarations": [],
+      "imports": [
+        "./compare",
+        "./component",
+        "./package",
+        "./release-intent",
+        "./root",
+        "./source",
+        "./types"
+      ],
+      "path": "scripts/public-api-contract/index.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 1645
+    },
+    {
+      "blocks": [],
+      "contentHash": "047ce32191c53c5863926c811103f77287d66ac98044117d4ae05ede30fdc51e",
+      "declarations": [],
+      "imports": [
+        "./ast",
+        "./types",
+        "typescript"
+      ],
+      "path": "scripts/public-api-contract/package.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 3899
+    },
+    {
+      "blocks": [],
+      "contentHash": "5e84137cf16c132a6d562c7322395093434b28742a250385d00553dc6e8d45c2",
+      "declarations": [],
+      "imports": [
+        "./ast",
+        "./types",
+        "typescript"
+      ],
+      "path": "scripts/public-api-contract/props.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 10727
+    },
+    {
+      "blocks": [],
+      "contentHash": "ce8a51fb14f594993ae63d13f1d181ac1a9821c84c1604be41e687399ef3d850",
+      "declarations": [],
+      "imports": [
+        "./source",
+        "./types",
+        "node:child_process",
+        "node:fs/promises",
+        "node:path"
+      ],
+      "path": "scripts/public-api-contract/release-intent.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 3660
+    },
+    {
+      "blocks": [],
+      "contentHash": "babeeea609d98862442fc097c86bb1dcd3c7b0f647be6da827786426bf2b1ccb",
+      "declarations": [],
+      "imports": [
+        "./ast",
+        "./types",
+        "typescript"
+      ],
+      "path": "scripts/public-api-contract/root.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 4812
+    },
+    {
+      "blocks": [],
+      "contentHash": "a3c91e482ff9494d1826a2e5e2264a0561bec86170e8e9164ea5bdc50c331bc3",
+      "declarations": [],
+      "imports": [
+        "./types",
+        "node:child_process",
+        "node:fs/promises",
+        "node:path"
+      ],
+      "path": "scripts/public-api-contract/source.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 2230
+    },
+    {
+      "blocks": [],
+      "contentHash": "e97de55b8107c59aa9a414f30b4ba018d546294b74b3e9e62eb50887b30fd262",
+      "declarations": [],
+      "imports": [],
+      "path": "scripts/public-api-contract/types.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 1971
+    },
+    {
+      "blocks": [],
+      "contentHash": "1b059dde3cf95255ef0d666bbe957b569b4f5f22ac14e13054af749331e8c0a3",
+      "declarations": [],
+      "imports": [
+        "../src/lib/brand-assets",
+        "../src/lib/credit-assets"
+      ],
+      "path": "scripts/public-surface.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 18007
+    },
+    {
+      "blocks": [],
+      "contentHash": "85af7d5e67e77d1b07a45836a094977f6a7cc90a349565fe6ab4f4d053cd26ab",
+      "declarations": [],
+      "imports": [
+        "node:assert/strict",
+        "node:fs/promises",
+        "node:path",
+        "node:url"
+      ],
+      "path": "scripts/release-changes.ts",
+      "semanticBytes": 0,
+      "sourceBytes": 15740
+    },
+    {
+      "blocks": [],
+      "contentHash": "65eec80aa9055cc643f1498483f5bd182088e691cb1a78810d2a52c569ed9c35",
+      "declarations": [],
+      "imports": [
+        "node:child_process",
+        "node:fs",
+        "node:fs/promises",
+        "node:os",
+        "node:path"
+      ],
+      "path": "scripts/storybook-pages.mjs",
+      "semanticBytes": 0,
+      "sourceBytes": 12239
+    },
+    {
+      "blocks": [],
+      "contentHash": "8f39c52d7f4d9d6beb84eea6681eefa0626e1a96c50572e0df3a6c90b784feeb",
+      "declarations": [],
+      "imports": [
+        "node:assert/strict",
+        "node:child_process",
+        "node:fs/promises",
+        "node:os",
+        "node:path",
+        "node:test",
+        "node:url"
+      ],
+      "path": "scripts/storybook-pages.test.mjs",
+      "semanticBytes": 0,
+      "sourceBytes": 11069
     },
     {
       "blocks": [],
