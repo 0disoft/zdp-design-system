@@ -25,6 +25,7 @@
   import TabPanelFocusFixture from './TabPanelFocusFixture.svelte';
   import DisclosureFocusFixture from './DisclosureFocusFixture.svelte';
   import PopoverFocusFixture from './PopoverFocusFixture.svelte';
+  import ToastOverflowFixture from './ToastOverflowFixture.svelte';
   import DynamicPaginationFixture from './DynamicPaginationFixture.svelte';
   import DynamicMenuFixture from './DynamicMenuFixture.svelte';
   import AccordionInstancesFixture from './AccordionInstancesFixture.svelte';
@@ -465,6 +466,7 @@
   <TabPanelFocusFixture />
   <DisclosureFocusFixture />
   <PopoverFocusFixture />
+  <ToastOverflowFixture />
   <AccordionInstancesFixture />
   <FramePopoverFixture />
   <FrameModalFixture />

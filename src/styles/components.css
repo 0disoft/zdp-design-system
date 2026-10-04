@@ -3388,7 +3388,14 @@
 .zdp-status-toast--top-end,
 .zdp-status-toast--bottom-start,
 .zdp-status-toast--bottom-end {
+  grid-auto-rows: max-content;
+  max-block-size: max(0px, calc(var(--zdp-viewport-block) - max(var(--zdp-space-4), var(--zdp-viewport-safe-block-start)) - max(var(--zdp-space-4), var(--zdp-viewport-safe-block-end))));
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-block: contain;
+  pointer-events: auto;
   position: fixed;
+  scroll-padding-block: var(--zdp-space-2);
 }
 
 .zdp-status-toast--top-start {
