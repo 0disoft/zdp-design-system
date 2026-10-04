@@ -8,6 +8,14 @@
   export let tone: ZdpAvatarTone = 'neutral';
   export let decorative = false;
 
+  let imageFailed = false;
+  let knownImageSrc = imageSrc;
+
+  $: if (imageSrc !== knownImageSrc) {
+    knownImageSrc = imageSrc;
+    imageFailed = false;
+  }
+
   $: resolvedLabel = label?.trim() || 'User';
   $: resolvedInitials = initials?.trim() ?? '';
   $: accessibilityLabel = decorative ? undefined : resolvedLabel;
@@ -19,13 +27,18 @@
   aria-label={accessibilityLabel}
   aria-hidden={decorative ? 'true' : undefined}
 >
-  {#if imageSrc}
-    <img class="zdp-avatar__image" src={imageSrc} alt="" />
-  {:else if resolvedInitials}
-    <span class="zdp-avatar__initials" aria-hidden="true">{resolvedInitials}</span>
-  {:else}
-    <span class="zdp-avatar__initials" aria-hidden="true"></span>
-  {/if}
+  {#key imageSrc}
+    {#if imageSrc && !imageFailed}
+      <img class="zdp-avatar__image" src={imageSrc} alt="" onerror={(event) => {
+        // Ignore errors from an image removed after a source change.
+        if (event.currentTarget.isConnected && event.currentTarget.getAttribute('src') === imageSrc) imageFailed = true;
+      }} />
+    {:else if resolvedInitials}
+      <span class="zdp-avatar__initials" aria-hidden="true">{resolvedInitials}</span>
+    {:else}
+      <span class="zdp-avatar__initials" aria-hidden="true"></span>
+    {/if}
+  {/key}
 </span>
 
 <style>
