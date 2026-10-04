@@ -9,7 +9,7 @@ stability=architecture
 */
 
 import { existsSync } from 'node:fs';
-import { rename, rm } from 'node:fs/promises';
+import { open, rename, rm } from 'node:fs/promises';
 
 export interface AtomicDirectoryPaths {
   backupRoot: string;
@@ -17,11 +17,51 @@ export interface AtomicDirectoryPaths {
   targetRoot: string;
 }
 
-export interface AtomicDirectoryReplaceOptions extends AtomicDirectoryPaths {
+interface AtomicDirectoryReplaceOptions extends AtomicDirectoryPaths {
   beforePromote?: (() => Promise<void>) | undefined;
 }
 
-export async function recoverAtomicDirectory(paths: AtomicDirectoryPaths): Promise<void> {
+export interface AtomicDirectoryTransaction {
+  recover(): Promise<void>;
+  replace(beforePromote?: () => Promise<void>): Promise<void>;
+}
+
+/** Hold ownership from recovery through staging, promotion, and failure cleanup. */
+export async function withAtomicDirectory<T>(
+  paths: AtomicDirectoryPaths,
+  operation: (transaction: AtomicDirectoryTransaction) => Promise<T>
+): Promise<T> {
+  const lockPath = `${paths.targetRoot}.__lock__`;
+  const lock = await open(lockPath, 'wx').catch((error: NodeJS.ErrnoException) => {
+    if (error.code === 'EEXIST') {
+      throw new Error(`Package build already locked: ${lockPath}. Retry after the active build finishes. If a crashed build left this file, remove it only after confirming no build is running.`);
+    }
+    throw error;
+  });
+  let active = true;
+  function assertActive(): void {
+    if (!active) throw new Error('Atomic directory transaction is already closed.');
+  }
+  try {
+    await lock.writeFile(`${process.pid}\n`);
+    return await operation({
+      recover: async () => {
+        assertActive();
+        await recoverAtomicDirectory(paths);
+      },
+      replace: async (beforePromote) => {
+        assertActive();
+        await replaceDirectoryAtomically({ ...paths, beforePromote });
+      }
+    });
+  } finally {
+    active = false;
+    await lock.close();
+    await rm(lockPath, { force: true });
+  }
+}
+
+async function recoverAtomicDirectory(paths: AtomicDirectoryPaths): Promise<void> {
   const { backupRoot, stagingRoot, targetRoot } = paths;
 
   if (!existsSync(targetRoot) && existsSync(backupRoot)) {
@@ -33,7 +73,7 @@ export async function recoverAtomicDirectory(paths: AtomicDirectoryPaths): Promi
   await rm(stagingRoot, { force: true, recursive: true });
 }
 
-export async function replaceDirectoryAtomically(options: AtomicDirectoryReplaceOptions): Promise<void> {
+async function replaceDirectoryAtomically(options: AtomicDirectoryReplaceOptions): Promise<void> {
   const { backupRoot, beforePromote, stagingRoot, targetRoot } = options;
 
   if (!existsSync(stagingRoot)) {

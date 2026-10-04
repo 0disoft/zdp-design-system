@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { recoverAtomicDirectory, replaceDirectoryAtomically } from './atomic-directory';
+import { withAtomicDirectory } from './atomic-directory';
 import {
   createComponentStyleEntry,
   readPublicComponentExports,
@@ -24,14 +25,12 @@ try {
   await writeFile(join(stagingRoot, 'marker.txt'), 'candidate');
 
   await assert.rejects(
-    replaceDirectoryAtomically({
-      ...atomicPaths,
-      beforePromote: async () => {
-        throw new Error('intentional promotion failure');
-      }
-    }),
+    withAtomicDirectory(atomicPaths, (transaction) => transaction.replace(async () => {
+      throw new Error('intentional promotion failure');
+    })),
     /intentional promotion failure/
   );
+  assert.equal(existsSync(`${targetRoot}.__lock__`), false, 'Failure must release the build lock.');
   assert.equal(
     await readFile(join(targetRoot, 'marker.txt'), 'utf8'),
     'previous',
@@ -41,7 +40,7 @@ try {
   await rm(stagingRoot, { force: true, recursive: true });
   await mkdir(stagingRoot);
   await writeFile(join(stagingRoot, 'marker.txt'), 'candidate');
-  await replaceDirectoryAtomically(atomicPaths);
+  await withAtomicDirectory(atomicPaths, (transaction) => transaction.replace());
   assert.equal(await readFile(join(targetRoot, 'marker.txt'), 'utf8'), 'candidate');
   assert.equal(existsSync(backupRoot), false, 'A completed promotion must remove its backup.');
 
@@ -50,9 +49,30 @@ try {
   await writeFile(join(backupRoot, 'marker.txt'), 'recoverable');
   await mkdir(stagingRoot);
   await writeFile(join(stagingRoot, 'partial.txt'), 'partial');
-  await recoverAtomicDirectory(atomicPaths);
+  await withAtomicDirectory(atomicPaths, (transaction) => transaction.recover());
   assert.equal(await readFile(join(targetRoot, 'marker.txt'), 'utf8'), 'recoverable');
   assert.equal(existsSync(stagingRoot), false, 'Recovery must discard an incomplete staging tree.');
+
+  await withAtomicDirectory(atomicPaths, async (transaction) => {
+    await mkdir(stagingRoot);
+    await writeFile(join(stagingRoot, 'marker.txt'), 'concurrent-candidate');
+    await assert.rejects(
+      withAtomicDirectory(atomicPaths, (contender) => contender.recover()),
+      /Package build already locked/
+    );
+    const contender = spawnSync(process.execPath, ['--eval', `
+      import { withAtomicDirectory } from ${JSON.stringify(new URL('./atomic-directory.ts', import.meta.url).href)};
+      await withAtomicDirectory(${JSON.stringify(atomicPaths)}, (transaction) => transaction.recover());
+    `], { encoding: 'utf8', timeout: 10_000 });
+    assert.ifError(contender.error);
+    assert.notEqual(contender.status, 0, 'A separate build process must not acquire the active lock.');
+    assert.match(contender.stderr, /Package build already locked/);
+    assert.equal(await readFile(join(stagingRoot, 'marker.txt'), 'utf8'), 'concurrent-candidate', 'A competing recovery must preserve the active staging tree.');
+    await transaction.replace();
+  });
+  assert.equal(await readFile(join(targetRoot, 'marker.txt'), 'utf8'), 'concurrent-candidate');
+  assert.equal(existsSync(`${targetRoot}.__lock__`), false, 'Success must release the build lock.');
+  await withAtomicDirectory(atomicPaths, (transaction) => transaction.recover());
 
   const entrySource = `
 export { default as Field } from './components/Field.svelte';

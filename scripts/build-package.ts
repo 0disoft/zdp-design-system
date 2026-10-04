@@ -12,7 +12,7 @@ import { existsSync } from 'node:fs';
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { basename, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { recoverAtomicDirectory, replaceDirectoryAtomically } from './atomic-directory';
+import { withAtomicDirectory } from './atomic-directory';
 import {
   type PublicComponentExport,
   writePublicComponentStyleEntries
@@ -34,17 +34,19 @@ for (const path of [distRoot, stagingRoot, backupRoot]) {
   assertInsideRepo(path);
 }
 
-await recoverAtomicDirectory(atomicPaths);
-await mkdir(stagingRoot, { recursive: true });
+await withAtomicDirectory(atomicPaths, async (transaction) => {
+  await transaction.recover();
+  await mkdir(stagingRoot, { recursive: true });
 
-try {
-  const publicComponents = await buildPackage(stagingRoot);
-  assertCompletedPackage(stagingRoot, publicComponents);
-  await replaceDirectoryAtomically(atomicPaths);
-} catch (error) {
-  await rm(stagingRoot, { force: true, recursive: true });
-  throw error;
-}
+  try {
+    const publicComponents = await buildPackage(stagingRoot);
+    assertCompletedPackage(stagingRoot, publicComponents);
+    await transaction.replace();
+  } catch (error) {
+    await rm(stagingRoot, { force: true, recursive: true });
+    throw error;
+  }
+});
 
 async function buildPackage(outputRoot: string): Promise<readonly PublicComponentExport[]> {
   await cp(resolve(repoRoot, 'src/lib'), outputRoot, { recursive: true });

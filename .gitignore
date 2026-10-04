@@ -2,6 +2,7 @@
 /dist/
 /dist.__staging__/
 /dist.__previous__/
+/dist.__lock__
 /build/
 /coverage/
 /.svelte-kit/
