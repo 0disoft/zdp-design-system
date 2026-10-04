@@ -31,23 +31,26 @@
   let tabListElement = $state<HTMLElement | null>(null);
 
   $effect.pre(() => {
-    // Track item updates before keyed DOM moves can blur the focused button.
-    const nextTabIds = items.map((item) => tabId(item.id));
+    // Read order and enabled state before updates can remove or blur a tab.
+    items.map((item) => [item.id, item.disabled]);
     const list = tabListElement;
     const focused = list ? getZdpActiveElement(list.getRootNode() as Document | ShadowRoot) : null;
-    if (list && focused && list.contains(focused) && nextTabIds.includes(focused.id)) {
-      void restoreReorderedTabFocus(list, focused);
+    if (list && focused && list.contains(focused) && focused.getAttribute('role') === 'tab') {
+      void restoreTabFocus(list, focused);
     }
   });
 
-  async function restoreReorderedTabFocus(list: HTMLElement, previous: HTMLElement): Promise<void> {
+  async function restoreTabFocus(list: HTMLElement, previous: HTMLElement): Promise<void> {
     await tick();
-    if (tabListElement !== list || !previous.isConnected || !list.contains(previous) || previous.matches(':disabled')) return;
+    if (tabListElement !== list || !list.isConnected) return;
     const focused = getZdpActiveElement(list.getRootNode() as Document | ShadowRoot);
     const document = list.ownerDocument;
     // Preserve a consumer's deliberate focus move during the update.
     if (focused !== null && focused !== previous && focused !== document.body && focused !== document.documentElement) return;
-    if (focused !== previous) previous.focus();
+    const target = previous.isConnected && list.contains(previous) && !previous.matches(':disabled')
+      ? previous
+      : list.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]:not(:disabled)') ?? list;
+    if (focused !== target) target.focus();
   }
 
   const normalizedSelectedItem = $derived(

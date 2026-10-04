@@ -24,3 +24,27 @@ export async function verifyDynamicTabsContracts(page) {
     await page.evaluate(() => { delete window.__zdpReorderedTab; });
   }
 }
+
+export async function verifyRemovedTabFocusContracts(page) {
+  const fixture = page.getByTestId('dynamic-tabs');
+  const selected = () => fixture.getByRole('tab', { selected: true });
+  for (const testId of ['tabs-remove-focused', 'tabs-disable-focused', 'tabs-disable-all']) {
+    await fixture.getByTestId('tabs-restore-items').click();
+    await selected().focus();
+    await fixture.getByTestId(testId).evaluate((element) => element.click());
+    if (testId === 'tabs-disable-all') {
+      assert.equal(await selected().count(), 0);
+      assert.equal(await fixture.getByRole('tablist').evaluate((element) => document.activeElement === element), true, 'With no enabled tabs, retain focus on the list so Tab can leave it.');
+    } else {
+      assert.equal(await selected().textContent(), 'Dynamic A');
+      assert.equal(await selected().evaluate((element) => document.activeElement === element), true, 'Removing or disabling the focused tab must focus the new selection.');
+      await page.keyboard.press('ArrowRight');
+      assert.equal(await selected().textContent(), 'Dynamic C', 'Navigation must resume after focus recovery.');
+    }
+  }
+  await fixture.getByTestId('tabs-restore-items').click();
+  await selected().focus();
+  await fixture.getByTestId('tabs-remove-external-focus').evaluate((element) => element.click());
+  assert.equal(await fixture.getByTestId('tabs-outside-focus').evaluate((element) => document.activeElement === element), true, 'Removal must preserve a deliberate external focus move.');
+  await fixture.getByTestId('tabs-restore-items').click();
+}

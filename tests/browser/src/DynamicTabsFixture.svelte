@@ -3,7 +3,7 @@
   const a = { id: 'a', label: 'Dynamic A' };
   const b = { id: 'b', label: 'Dynamic B' };
   const c = { id: 'c', label: 'Dynamic C' };
-  let items = $state([a, b, c]);
+  let items = $state<{ id: string; label: string; disabled?: boolean }[]>([a, b, c]);
   let selectedId = $state('b');
   let outside = $state<HTMLButtonElement>();
 </script>
@@ -15,5 +15,10 @@
   <button type="button" data-testid="tabs-insert-first" onclick={() => items = [{ id: 'd', label: 'Dynamic D' }, b, c, a]}>Insert first tab</button>
   <button type="button" data-testid="tabs-reverse-in-place" onclick={() => items.reverse()}>Reverse tabs in place</button>
   <button type="button" data-testid="tabs-update-external-focus" onclick={() => { items = [a, b, c]; queueMicrotask(() => outside?.focus()); }}>Update tabs and move focus</button>
+  <button type="button" data-testid="tabs-restore-items" onclick={() => { items = [a, b, c]; selectedId = 'b'; }}>Restore tab items</button>
+  <button type="button" data-testid="tabs-remove-focused" onclick={() => items = items.filter((item) => item.id !== selectedId)}>Remove selected tab</button>
+  <button type="button" data-testid="tabs-disable-focused" onclick={() => { const item = items.find((item) => item.id === selectedId); if (item) item.disabled = true; }}>Disable selected tab</button>
+  <button type="button" data-testid="tabs-disable-all" onclick={() => items.forEach((item) => item.disabled = true)}>Disable all tabs</button>
+  <button type="button" data-testid="tabs-remove-external-focus" onclick={() => { items = items.filter((item) => item.id !== selectedId); queueMicrotask(() => outside?.focus()); }}>Remove tab and move focus</button>
   <button type="button" data-testid="tabs-outside-focus" bind:this={outside}>Outside tab control</button>
 </section>
