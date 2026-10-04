@@ -17,6 +17,7 @@
   import ShadowFormResetFixture from './ShadowFormResetFixture.svelte';
   import FormResetFixture from './FormResetFixture.svelte';
   import ActionLifecycleFixture from './ActionLifecycleFixture.svelte';
+  import EmptyTooltipFixture from './EmptyTooltipFixture.svelte';
   import PopoverGeometryFixture from './PopoverGeometryFixture.svelte';
   import TableInteractionFixture from './TableInteractionFixture.svelte';
   import DynamicSelectionFixture from './DynamicSelectionFixture.svelte';
@@ -453,6 +454,7 @@
   <ActionLifecycleFixture />
   <DynamicMenuFixture />
   <DynamicPaginationFixture />
+  <EmptyTooltipFixture />
   <PopoverGeometryFixture />
   <TableInteractionFixture />
   <DynamicSelectionFixture />

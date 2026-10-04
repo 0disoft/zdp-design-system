@@ -24,8 +24,9 @@
   const dismissLayer = createZdpDismissLayer();
 
   const tooltipId = $derived(id ?? fallbackId);
-  const describedBy = $derived(disabled ? null : tooltipId);
-  const visible = $derived(!disabled && !dismissed && (pointerInside || focusInside));
+  const hasContent = $derived(text.trim().length > 0);
+  const describedBy = $derived(disabled || !hasContent ? null : tooltipId);
+  const visible = $derived(!disabled && hasContent && !dismissed && (pointerInside || focusInside));
 
   $effect(() => {
     const root = rootElement;
@@ -166,7 +167,7 @@
     <!-- svelte-ignore slot_element_deprecated legacy default slot contract remains public -->
     <slot describedBy={describedBy} />
   </span>
-  {#if !disabled}
+  {#if !disabled && hasContent}
     <span
       id={tooltipId}
       class="zdp-tooltip__content"
