@@ -7,14 +7,20 @@ import { extname, isAbsolute, join, relative, resolve } from 'node:path';
 import { chromium } from 'playwright-core';
 
 const root = process.cwd();
-const temporaryRoot = await mkdtemp(join(tmpdir(), 'zdp-storybook-a11y-'));
-const storybookRoot = join(temporaryRoot, 'storybook-static');
+const suppliedStorybookRoot = process.env.ZDP_STORYBOOK_DIR?.trim();
+const temporaryRoot = suppliedStorybookRoot ? null : await mkdtemp(join(tmpdir(), 'zdp-storybook-a11y-'));
+const storybookRoot = suppliedStorybookRoot
+  ? resolve(root, suppliedStorybookRoot)
+  : join(temporaryRoot, 'storybook-static');
 const failures = [];
 let browser;
 let staticServer;
 
 try {
-  buildStorybook(storybookRoot);
+  if (temporaryRoot !== null) {
+    buildStorybook(storybookRoot);
+  }
+  assert.ok((await stat(join(storybookRoot, 'iframe.html'))).isFile(), 'Storybook artifact must contain iframe.html.');
 
   const storyIndex = parseStoryIndex(JSON.parse(await readFile(join(storybookRoot, 'index.json'), 'utf8')));
   assert.ok(storyIndex.length > 0, 'Storybook runtime a11y check requires at least one rendered story.');
@@ -123,7 +129,9 @@ try {
 } finally {
   await browser?.close();
   await staticServer?.close();
-  await rm(temporaryRoot, { force: true, recursive: true });
+  if (temporaryRoot !== null) {
+    await rm(temporaryRoot, { force: true, recursive: true });
+  }
 }
 
 function buildStorybook(outputDirectory) {

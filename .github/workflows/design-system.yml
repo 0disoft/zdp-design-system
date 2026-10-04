@@ -324,12 +324,12 @@ jobs:
         run: |
           bun run storybook:check
           bun run a11y:check
-          bun run a11y:runtime:check
       - name: Build Storybook Pages artifact
-        if: >-
-          github.event_name == 'pull_request' ||
-          (github.event_name == 'push' && github.ref == 'refs/heads/main')
         run: bun run storybook:build
+      - name: Audit the shared Storybook artifact
+        env:
+          ZDP_STORYBOOK_DIR: storybook-static
+        run: bun run a11y:runtime:check
       - name: Check targeted visual regressions against PR base
         if: github.event_name == 'pull_request'
         id: visual
