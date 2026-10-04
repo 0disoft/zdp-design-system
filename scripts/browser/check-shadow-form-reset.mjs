@@ -1,5 +1,53 @@
 import assert from 'node:assert/strict';
 
+export async function verifyReassociatedFormResetContracts(page) {
+  const controls = page.getByTestId('reassociated-controls');
+  const state = page.getByTestId('reassociated-state');
+  for (const destination of ['shadow', 'frame-shadow']) {
+    await controls.locator('input[type="text"]').fill('edited');
+    await controls.locator('select').selectOption('a');
+    await controls.locator('input[type="checkbox"]').uncheck();
+    await controls.evaluate((element, destination) => {
+      const parent = element.parentNode;
+      const next = element.nextSibling;
+      const host = document.createElement(destination === 'shadow' ? 'div' : 'iframe');
+      host.dataset.testid = 'reassociated-destination';
+      document.body.append(host);
+      const body = destination === 'shadow' ? host : host.contentDocument.body;
+      const container = body.ownerDocument.createElement('div');
+      body.append(container);
+      const shadow = container.attachShadow({ mode: 'open' });
+      const form = body.ownerDocument.createElement('form');
+      shadow.append(form);
+      form.append(element);
+      window.__reassociatedForm = form;
+      window.__restoreReassociatedControls = () => { parent.insertBefore(element, next); host.remove(); };
+    }, destination);
+    try {
+      // Ownership follows DOM changes at the mutation-observer checkpoint.
+      await page.evaluate(() => new Promise((resolve) => queueMicrotask(resolve)));
+      await page.evaluate(() => {
+        const form = window.__reassociatedForm;
+        form.addEventListener('reset', (event) => event.preventDefault(), { once: true });
+        form.reset();
+      });
+      await state.evaluate(() => new Promise((resolve) => setTimeout(resolve, 20)));
+      assert.deepEqual(JSON.parse(await state.textContent()), { text: 'edited', choice: 'a', checked: false }, 'Cancelling reset after reassociation must preserve bindings.');
+      assert.deepEqual(await page.evaluate(() => Object.fromEntries(new FormData(window.__reassociatedForm))), { text: 'edited', choice: 'a' });
+      await page.evaluate(() => window.__reassociatedForm.reset());
+      await page.waitForFunction(() => JSON.parse(document.querySelector('[data-testid="reassociated-state"]').textContent).text === 'seed');
+      assert.deepEqual(JSON.parse(await state.textContent()), { text: 'seed', choice: 'b', checked: true });
+      assert.deepEqual(await page.evaluate(() => Object.fromEntries(new FormData(window.__reassociatedForm))), { text: 'seed', choice: 'b', checked: 'on' }, 'Reset bindings and submission must agree in the new form.');
+    } finally {
+      await page.evaluate(() => {
+        window.__restoreReassociatedControls();
+        delete window.__restoreReassociatedControls;
+        delete window.__reassociatedForm;
+      });
+    }
+  }
+}
+
 export async function verifyShadowFormResetContracts(page) {
   const frame = page.frameLocator('[title="Embedded shadow form"]');
   const state = frame.getByTestId('reset-bound-state');

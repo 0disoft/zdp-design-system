@@ -15,6 +15,7 @@
   import ModalDocumentFixture from './ModalDocumentFixture.svelte';
   import NativeInputFixture from './NativeInputFixture.svelte';
   import ShadowFormResetFixture from './ShadowFormResetFixture.svelte';
+  import ReassociatedFormFixture from './ReassociatedFormFixture.svelte';
   import FormResetFixture from './FormResetFixture.svelte';
   import ActionLifecycleFixture from './ActionLifecycleFixture.svelte';
   import EmptyTooltipFixture from './EmptyTooltipFixture.svelte';
@@ -881,6 +882,7 @@
   <NativeInputFixture />
   <FormResetFixture />
   <ShadowFormResetFixture />
+  <ReassociatedFormFixture />
   <FilteredComboboxFixture />
 </main>
 

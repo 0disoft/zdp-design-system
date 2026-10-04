@@ -16,7 +16,7 @@ import { verifyPopoverFocusContracts } from './browser/check-popover-focus.mjs';
 import { verifyPopoverGeometryContracts } from './browser/check-popover-geometry.mjs';
 import { verifySortNameContracts, verifyTableDensityContracts } from './browser/check-table-interaction.mjs';
 import { verifyCommandFieldContracts } from './browser/check-command-field.mjs';
-import { verifyMovedFormResetContracts, verifyShadowFormResetContracts } from './browser/check-shadow-form-reset.mjs';
+import { verifyMovedFormResetContracts, verifyReassociatedFormResetContracts, verifyShadowFormResetContracts } from './browser/check-shadow-form-reset.mjs';
 import { verifyShortcutEditingContracts } from './browser/check-shortcuts.mjs';
 import { verifyModalContracts, verifyNestedModalContracts } from './browser/check-modals.mjs';
 import { verifyShadowFocusContracts } from './browser/check-shadow-focus.mjs';
@@ -112,6 +112,7 @@ try {
   await verifyFormResetContracts(page);
   await verifyShadowFormResetContracts(page);
   await verifyMovedFormResetContracts(page);
+  await verifyReassociatedFormResetContracts(page);
   await verifyCommandFieldContracts(page);
   await verifyTableDensityContracts(page);
   await verifySortNameContracts(page);
