@@ -20,6 +20,7 @@
   let dismissed = $state(false);
   let pointerInside = $state(false);
   let focusInside = $state(false);
+  let pointerLeaveTimer: ReturnType<typeof setTimeout> | null = null;
   const dismissLayer = createZdpDismissLayer();
 
   const tooltipId = $derived(id ?? fallbackId);
@@ -87,7 +88,10 @@
     });
   });
 
-  onDestroy(() => dismissLayer.destroy());
+  onDestroy(() => {
+    clearPointerLeaveTimer();
+    dismissLayer.destroy();
+  });
 
   onMount(() => {
     const root = rootElement;
@@ -110,13 +114,26 @@
   });
 
   function handleMouseenter(): void {
+    clearPointerLeaveTimer();
     pointerInside = true;
     dismissed = false;
   }
 
   function handleMouseleave(): void {
-    pointerInside = false;
-    dismissed = false;
+    clearPointerLeaveTimer();
+    // Keep the label available while crossing the gap to its content.
+    pointerLeaveTimer = setTimeout(() => {
+      pointerLeaveTimer = null;
+      pointerInside = false;
+      if (!focusInside) dismissed = false;
+    }, 200);
+  }
+
+  function clearPointerLeaveTimer(): void {
+    if (pointerLeaveTimer !== null) {
+      clearTimeout(pointerLeaveTimer);
+      pointerLeaveTimer = null;
+    }
   }
 
   function handleFocusin(): void {
@@ -142,6 +159,7 @@
   class={`zdp-tooltip zdp-tooltip--${placement}`}
   data-disabled={disabled ? 'true' : undefined}
   data-dismissed={dismissed ? 'true' : undefined}
+  data-visible={visible ? 'true' : 'false'}
   bind:this={rootElement}
 >
   <span class="zdp-tooltip__trigger">
@@ -253,12 +271,15 @@
   }
 
   .zdp-tooltip:hover .zdp-tooltip__content,
-  .zdp-tooltip:focus-within .zdp-tooltip__content {
+  .zdp-tooltip:focus-within .zdp-tooltip__content,
+  .zdp-tooltip[data-visible="true"] .zdp-tooltip__content {
     opacity: 1;
+    pointer-events: auto;
   }
 
   .zdp-tooltip[data-dismissed="true"] .zdp-tooltip__content {
     opacity: 0;
+    pointer-events: none;
   }
 
   .zdp-tooltip[data-disabled="true"] {

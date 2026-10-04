@@ -508,12 +508,15 @@
 }
 
 .zdp-tooltip:hover .zdp-tooltip__content,
-.zdp-tooltip:focus-within .zdp-tooltip__content {
+.zdp-tooltip:focus-within .zdp-tooltip__content,
+.zdp-tooltip[data-visible="true"] .zdp-tooltip__content {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .zdp-tooltip[data-dismissed="true"] .zdp-tooltip__content {
   opacity: 0;
+  pointer-events: none;
 }
 
 .zdp-tooltip[data-disabled="true"] {
