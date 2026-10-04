@@ -1,5 +1,21 @@
 import assert from 'node:assert/strict';
 
+export async function verifyTabPanelFocusContracts(page) {
+  const fixture = page.getByTestId('tab-panel-focus');
+  const editor = fixture.getByRole('textbox', { name: 'Tab panel editor', exact: true });
+  for (const action of ['switch', 'remove', 'disable-all', 'reorder', 'switch-outside']) {
+    await fixture.getByTestId('reset').click();
+    await editor.focus();
+    await fixture.getByTestId(action).evaluate((element) => element.click());
+    const target = action === 'disable-all' ? fixture.getByRole('tablist')
+      : action === 'reorder' ? editor
+      : action === 'switch-outside' ? fixture.getByTestId('outside')
+      : fixture.getByRole('tab', { selected: true });
+    assert.equal(await target.evaluate((element) => document.activeElement === element), true, `Panel updates must recover lost focus and preserve deliberate focus moves (${action}).`);
+  }
+  await fixture.getByTestId('reset').click();
+}
+
 export async function verifyDynamicTabsContracts(page) {
   const fixture = page.getByTestId('dynamic-tabs');
   const selected = fixture.getByRole('tab', { name: 'Dynamic B', exact: true });

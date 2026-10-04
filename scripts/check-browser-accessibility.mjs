@@ -21,7 +21,7 @@ import { verifyShadowFocusContracts } from './browser/check-shadow-focus.mjs';
 import { verifyModalMutationContracts } from './browser/check-modal-mutations.mjs';
 import { verifyImeOverlayContracts } from './browser/check-ime-overlays.mjs';
 import { verifySelectionFocusContracts } from './browser/check-selection-focus.mjs';
-import { verifyDynamicTabsContracts, verifyRemovedTabFocusContracts } from './browser/check-dynamic-tabs.mjs';
+import { verifyDynamicTabsContracts, verifyRemovedTabFocusContracts, verifyTabPanelFocusContracts } from './browser/check-dynamic-tabs.mjs';
 import { verifyDynamicPaginationContracts, verifyPaginationBoundsContracts } from './browser/check-dynamic-pagination.mjs';
 import { verifyDynamicMenuContracts } from './browser/check-dynamic-menu.mjs';
 import { verifyResponsiveFocusContracts } from './browser/check-responsive-focus.mjs';
@@ -133,6 +133,7 @@ try {
   await verifySelectionFocusContracts(page);
   await verifyDynamicTabsContracts(page);
   await verifyRemovedTabFocusContracts(page);
+  await verifyTabPanelFocusContracts(page);
   await verifyResponsiveFocusContracts(page);
   await verifyAccordionInstanceContracts(page);
   await verifyFramePopoverContracts(page);

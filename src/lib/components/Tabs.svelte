@@ -28,26 +28,30 @@
 
   const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
 
+  let rootElement = $state<HTMLElement | null>(null);
   let tabListElement = $state<HTMLElement | null>(null);
 
   $effect.pre(() => {
     // Read order and enabled state before updates can remove or blur a tab.
     items.map((item) => [item.id, item.disabled]);
+    selectedId;
+    const root = rootElement;
     const list = tabListElement;
-    const focused = list ? getZdpActiveElement(list.getRootNode() as Document | ShadowRoot) : null;
-    if (list && focused && list.contains(focused) && focused.getAttribute('role') === 'tab') {
-      void restoreTabFocus(list, focused);
+    const focused = root ? getZdpActiveElement(root.getRootNode() as Document | ShadowRoot) : null;
+    if (root && list && focused && root.contains(focused)) {
+      void restoreTabFocus(root, list, focused);
     }
   });
 
-  async function restoreTabFocus(list: HTMLElement, previous: HTMLElement): Promise<void> {
+  async function restoreTabFocus(root: HTMLElement, list: HTMLElement, previous: HTMLElement): Promise<void> {
     await tick();
-    if (tabListElement !== list || !list.isConnected) return;
+    if (rootElement !== root || tabListElement !== list || !root.isConnected) return;
     const focused = getZdpActiveElement(list.getRootNode() as Document | ShadowRoot);
     const document = list.ownerDocument;
     // Preserve a consumer's deliberate focus move during the update.
     if (focused !== null && focused !== previous && focused !== document.body && focused !== document.documentElement) return;
-    const target = previous.isConnected && list.contains(previous) && !previous.matches(':disabled')
+    const target = previous.isConnected && root.contains(previous) &&
+      !previous.matches(':disabled') && previous.getClientRects().length > 0
       ? previous
       : list.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]:not(:disabled)') ?? list;
     if (focused !== target) target.focus();
@@ -108,7 +112,7 @@
   }
 </script>
 
-<div class="zdp-tabs">
+<div class="zdp-tabs" bind:this={rootElement}>
   <div
     class="zdp-tabs__list"
     bind:this={tabListElement}
