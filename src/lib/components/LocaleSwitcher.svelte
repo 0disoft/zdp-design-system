@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { recoverZdpRadioGroupFocus } from '../radio-group-focus';
   import { toZdpDomId } from '../dom-id';
   import { moveZdpRovingFocus } from '../roving-focus';
   import {
@@ -28,6 +29,13 @@
     disabled = false,
     onChange = null
   }: Props = $props();
+
+  let groupElement = $state<HTMLElement | null>(null);
+  $effect.pre(() => {
+    options.map((item) => [item.value, item.disabled]);
+    disabled;
+    recoverZdpRadioGroupFocus(groupElement);
+  });
 
   const enabledOptions = $derived(options.filter((option) => !option.disabled));
   const activeOption = $derived(
@@ -86,6 +94,7 @@
 
 <div
   class={`zdp-locale-switcher zdp-locale-switcher--${size}`}
+  bind:this={groupElement}
   role="radiogroup"
   aria-label={ariaLabel}
   aria-disabled={disabled ? 'true' : undefined}

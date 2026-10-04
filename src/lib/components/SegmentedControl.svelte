@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { recoverZdpRadioGroupFocus } from '../radio-group-focus';
   import { toZdpDomId } from '../dom-id';
   import { moveZdpRovingFocus } from '../roving-focus';
   import type { ZdpSegmentedControlItem, ZdpSegmentedControlSize } from '../segmented';
@@ -22,6 +23,12 @@
     size = 'md',
     onChange = null
   }: Props = $props();
+
+  let groupElement = $state<HTMLElement | null>(null);
+  $effect.pre(() => {
+    items.map((item) => [item.id, item.disabled]);
+    recoverZdpRadioGroupFocus(groupElement);
+  });
 
   const normalizedSelectedItem = $derived(
     items.find((item) => item.id === selectedId && !item.disabled) ??
@@ -82,6 +89,7 @@
 
 <div
   class={`zdp-segmented-control zdp-segmented-control--${size}`}
+  bind:this={groupElement}
   role="radiogroup"
   aria-label={ariaLabel}
   tabindex="-1"
