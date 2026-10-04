@@ -12,7 +12,7 @@ import { verifyComboboxSelectionContracts } from './browser/check-combobox-selec
 import { verifyChangingConfirmDurationContracts, verifyConfirmDurationContracts, verifyConfirmRepeatContracts, verifyTouchConfirmContracts, verifyCopyLifecycleContracts } from './browser/check-action-lifecycles.mjs';
 import { verifyEmptyTooltipContracts } from './browser/check-empty-tooltip.mjs';
 import { verifyPopoverGeometryContracts } from './browser/check-popover-geometry.mjs';
-import { verifyTableDensityContracts } from './browser/check-table-interaction.mjs';
+import { verifySortNameContracts, verifyTableDensityContracts } from './browser/check-table-interaction.mjs';
 import { verifyCommandFieldContracts } from './browser/check-command-field.mjs';
 import { verifyMovedFormResetContracts, verifyShadowFormResetContracts } from './browser/check-shadow-form-reset.mjs';
 import { verifyShortcutEditingContracts } from './browser/check-shortcuts.mjs';
@@ -110,6 +110,7 @@ try {
   await verifyMovedFormResetContracts(page);
   await verifyCommandFieldContracts(page);
   await verifyTableDensityContracts(page);
+  await verifySortNameContracts(page);
   await verifyPopoverGeometryContracts(page);
   await verifyEmptyTooltipContracts(page);
   await verifyAsyncSelectResetContracts(page);

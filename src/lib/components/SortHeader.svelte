@@ -17,7 +17,7 @@
       : normalizedDirection === 'descending'
         ? 'Descending'
         : 'Not sorted';
-  $: resolvedAriaLabel = ariaLabel ?? `${label} ${directionLabel}`;
+  $: resolvedAriaLabel = ariaLabel ?? undefined;
 
   function handleClick(event: MouseEvent): void {
     if (disabled) {
@@ -50,6 +50,7 @@
   onclick={handleClick}
 >
   <span class="zdp-sort-header__label"><slot>{label}</slot></span>
+  <span class="zdp-sort-header__direction">{directionLabel}</span>
   <span class="zdp-sort-header__mark" aria-hidden="true"></span>
 </button>
 
@@ -104,6 +105,17 @@
   .zdp-sort-header__label {
     min-width: 0;
     overflow-wrap: var(--zdp-i18n-overflow-wrap);
+  }
+
+  .zdp-sort-header__direction {
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
   }
 
   .zdp-sort-header__mark {

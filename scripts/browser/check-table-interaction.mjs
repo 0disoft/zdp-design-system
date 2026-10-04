@@ -21,3 +21,17 @@ export async function verifyTableDensityContracts(page) {
   assert.ok((await table.getAttribute('class')).includes('zdp-table--density-default'));
   assert.equal(await fixture.getByTestId('density-changes').textContent(), '2', 'Automatic normalization must not fabricate user change callbacks.');
 }
+
+export async function verifySortNameContracts(page) {
+  const fixture = page.getByTestId('sort-names');
+  for (const label of ['Price', 'Created date', 'Status']) {
+    assert.equal(await fixture.getByRole('button', { name: `${label} Not sorted`, exact: true }).count(), 1, 'Sort buttons must combine their displayed labels and current direction.');
+  }
+  assert.equal(await fixture.getByRole('button', { name: 'Order by count', exact: true }).count(), 1, 'Explicit accessible labels must still override content naming.');
+  await fixture.getByTestId('sort-use-descending').click();
+  await fixture.getByTestId('sort-change-label').click();
+  for (const label of ['Cost', 'Created date', 'Status']) {
+    assert.equal(await fixture.getByRole('button', { name: `${label} Descending`, exact: true }).count(), 1, 'Dynamic slot labels and sort direction must update the accessible name.');
+  }
+  assert.equal(await fixture.getByRole('button', { name: 'Order by count', exact: true }).count(), 1);
+}
