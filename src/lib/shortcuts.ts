@@ -30,8 +30,6 @@ const textEntrySelector = [
   'input',
   'textarea',
   'select',
-  '[contenteditable=""]',
-  '[contenteditable="true"]',
   '[role="textbox"]',
   '[role="searchbox"]',
   '[role="combobox"]',
@@ -113,11 +111,17 @@ export const zdpShortcutReservedExamples = [
  * risk: state
  */
 export function isZdpTextEntryTarget(target: EventTarget | null): boolean {
-  if (!(target instanceof Element)) {
+  const element = target as Element | null;
+  const view = element?.ownerDocument?.defaultView;
+  if (!view || !(element instanceof view.Element)) {
     return false;
   }
 
-  return target.closest(textEntrySelector) !== null;
+  const editableElement = element instanceof view.HTMLElement
+    ? element
+    : element.closest<HTMLElement>('[contenteditable]');
+
+  return editableElement?.isContentEditable === true || element.closest(textEntrySelector) !== null;
 }
 
 export function isZdpBrowserReservedShortcut(event: KeyboardEvent): boolean {
@@ -148,7 +152,7 @@ export function shouldZdpIgnoreShortcutEvent(
     return true;
   }
 
-  if (!options.allowTextEntryTarget && isZdpTextEntryTarget(event.target)) {
+  if (!options.allowTextEntryTarget && isZdpTextEntryTarget(event.composedPath()[0] ?? event.target)) {
     return true;
   }
 
