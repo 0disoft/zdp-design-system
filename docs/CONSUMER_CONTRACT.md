@@ -477,6 +477,22 @@ Combobox는 검색 가능한 단일 선택의 label, input frame, listbox, activ
 
 Radio group은 부모의 단일 `string | null` 값을 각 Radio의 `selectedValue`에 bind한다. DOM checked 상태는 `selectedValue === value`로 계산되고 선택 변경이 같은 부모 값으로 전파된다. 개별 `checked` prop은 두 상태 정본을 만들기 때문에 제공하지 않는다.
 
+Radio의 `invalid`는 개별 선택지의 오류 스타일을 표시한다. 오류 상태는 소비 앱의 `radiogroup`에 `aria-invalid`로 전달하고, 오류 문구는 그룹과 각 Radio의 `describedBy`에 연결한다. 개별 `radio`의 `aria-invalid`와 `aria-errormessage`는 WAI-ARIA 1.2에서 deprecated되었으므로 사용하지 않는다. [WAI-ARIA radio와 radiogroup](https://www.w3.org/TR/wai-aria-1.2/#radio)
+
+```svelte
+<div role="radiogroup" aria-label="선택" aria-invalid={invalid ? 'true' : undefined}
+  aria-describedby={invalid ? 'selection-error' : undefined}>
+  <Radio name="selection" value="a" bind:selectedValue {invalid}
+    describedBy={invalid ? 'selection-error' : null}>옵션 A</Radio>
+  <Radio name="selection" value="b" bind:selectedValue {invalid}
+    describedBy={invalid ? 'selection-error' : null}>옵션 B</Radio>
+</div>
+{#if invalid}
+  <ErrorText id="selection-error">옵션을 선택해 주세요.</ErrorText>
+{/if}
+```
+
+
 Tabs, SegmentedControl, LocaleSwitcher, TextScaleControl에 전달된 선택값이 없거나 disabled·unknown 값이면 첫 enabled 항목으로 바인딩 값을 자동 보정한다. enabled 항목이 하나도 없으면 어떤 항목도 selected/checked로 표시하지 않는다. ARIA·시각 선택과 부모 상태는 항상 같은 값을 정본으로 공유한다.
 AdSlot은 광고나 후원 자리의 reserved layout, accessible label, placement/state data attribute만 제공한다. `placement`는 `inline`, `banner`, `rail`, `between-sections` 같은 layout hint이고, `state`는 `pending`, `filled`, `empty`, `blocked` 같은 표시 상태다. provider markup은 slot으로 소비 앱이 넣고, provider script, consent, slot id, ads.txt, personalized ads 판단은 소비 앱이 계속 소유한다.
 InlineCode와 CodeBlock은 문서, 보안, 아키텍처 페이지의 코드 표시, language label, horizontal overflow, 선택적 복사 버튼만 제공하며 syntax highlighting, 코드 실행, 비밀값 탐지, 보안 분류, command palette는 소비 앱이나 문서 파이프라인이 계속 소유한다. CodeBlock은 `code` prop이 있을 때만 복사 버튼을 노출하므로 slot으로 표시한 코드의 복사 문자열은 소비 앱이 명시적으로 넘긴다. 긴 코드는 기본적으로 horizontal overflow 표면에서 스크롤되고, code body는 선택 가능해야 한다.

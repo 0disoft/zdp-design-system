@@ -2,4 +2,4 @@
 bump: patch
 ---
 
-- Expose Radio invalid state through aria-invalid on the native input.
+- Document group-level Radio validity and error descriptions without deprecated per-radio ARIA attributes.
