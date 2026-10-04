@@ -15,6 +15,7 @@
   import ModalDocumentFixture from './ModalDocumentFixture.svelte';
   import NativeInputFixture from './NativeInputFixture.svelte';
   import FormResetFixture from './FormResetFixture.svelte';
+  import ActionLifecycleFixture from './ActionLifecycleFixture.svelte';
   import FilteredComboboxFixture from './FilteredComboboxFixture.svelte';
   import Popover from '../../../src/lib/components/Popover.svelte';
   import ResizableSplitPane from '../../../src/lib/components/ResizableSplitPane.svelte';
@@ -437,6 +438,7 @@
     Disable confirmation
   </button>
   <output data-testid="confirm-action-count">{confirmActionCount}</output>
+  <ActionLifecycleFixture />
 
   <ConfirmAction
     id="throwing-confirm-action"

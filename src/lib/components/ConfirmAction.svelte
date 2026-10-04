@@ -177,7 +177,7 @@
 
     event.preventDefault();
 
-    if (!active) {
+    if (!event.repeat && !active) {
       beginInteraction(null, event.currentTarget as HTMLButtonElement);
     }
   }
