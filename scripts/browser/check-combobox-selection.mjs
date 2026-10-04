@@ -6,7 +6,11 @@ export async function verifyComboboxEditingContracts(page) {
     ['Shift+Home', [0, 3]],
     ['Shift+End', [3, 5]],
     ['Control+Home', [0, 0]],
-    ['Control+End', [5, 5]]
+    ['Control+End', [5, 5]],
+    ['Shift+ArrowUp', [0, 3]],
+    ['Shift+ArrowDown', [3, 5]],
+    ['Control+Shift+ArrowUp', [0, 3]],
+    ['Control+Shift+ArrowDown', [3, 5]]
   ];
   for (const [key, expected] of cases) {
     await input.fill('Alpha');
@@ -15,6 +19,20 @@ export async function verifyComboboxEditingContracts(page) {
     await input.press(key);
     assert.deepEqual(await input.evaluate((element) => [element.selectionStart, element.selectionEnd]), expected, `${key} must preserve native text editing.`);
     assert.equal(await input.getAttribute('aria-activedescendant'), activeId, 'Editing shortcuts must not change the active option.');
+  }
+  for (const modifier of ['ctrlKey', 'altKey', 'metaKey', 'shiftKey']) {
+    for (const key of ['ArrowUp', 'ArrowDown', 'Enter']) {
+      const activeId = await input.getAttribute('aria-activedescendant');
+      const query = await input.inputValue();
+      const prevented = await input.evaluate((element, { modifier, key }) => {
+        const event = new KeyboardEvent('keydown', { key, [modifier]: true, bubbles: true, cancelable: true });
+        element.dispatchEvent(event);
+        return event.defaultPrevented;
+      }, { modifier, key });
+      assert.equal(prevented, false, `${modifier} + ${key} must remain available to native and consumer handlers.`);
+      assert.equal(await input.getAttribute('aria-activedescendant'), activeId);
+      assert.equal(await input.inputValue(), query);
+    }
   }
   await input.press('Escape');
 }
