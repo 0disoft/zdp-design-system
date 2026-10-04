@@ -431,7 +431,7 @@ export function createZdpSplitPaneController(
   }
 
   function handlePointerDown(event: PointerEvent): void {
-    if (isDisabled() || event.button !== 0 || event.isPrimary === false) {
+    if (dragging || isDisabled() || event.button !== 0 || event.isPrimary === false) {
       return;
     }
 
