@@ -46,6 +46,7 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
   let cachedElements: HTMLElement[] | null = null;
   let observedHeight: number | null = null;
   let observedRoot: HTMLElement | null = null;
+  let observedViewportSignature: string | null = null;
   let observedWidth: number | null = null;
   const mutationObserver = typeof MutationObserver === 'undefined'
     ? null
@@ -78,6 +79,7 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
     mutationObserver?.disconnect();
     resizeObserver?.disconnect();
     observedRoot = root;
+    observedViewportSignature = null;
     observedHeight = null;
     observedWidth = null;
     invalidate();
@@ -115,6 +117,18 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
       return [];
     }
 
+    // Media queries may change before a resize event is delivered, without
+    // changing the panel dimensions. Validate viewport state when using the cache.
+    const view = root.ownerDocument.defaultView;
+    const viewportSignature = view === null ? null : [
+      view.innerWidth, view.innerHeight, view.devicePixelRatio,
+      view.visualViewport?.width, view.visualViewport?.height
+    ].join(':');
+    if (viewportSignature !== observedViewportSignature) {
+      observedViewportSignature = viewportSignature;
+      invalidate();
+    }
+
     if (cachedElements === null) {
       cachedElements = Array.from(root.querySelectorAll<HTMLElement>(zdpFocusableSelector))
         .filter(isZdpFocusableElement);
@@ -131,6 +145,7 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
     mutationObserver?.disconnect();
     resizeObserver?.disconnect();
     observedRoot = null;
+    observedViewportSignature = null;
     observedHeight = null;
     observedWidth = null;
     cachedElements = null;
