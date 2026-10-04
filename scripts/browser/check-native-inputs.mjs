@@ -36,3 +36,32 @@ export async function verifyNativeInputContracts(page) {
     Object.fromEntries(new FormData(form))
   ), { quantity: '6', code: 'ABC', notes: 'Notes' });
 }
+
+export async function verifyFormResetContracts(page) {
+  await page.getByRole('button', { name: 'Edit reset values', exact: true }).click();
+  await page.getByRole('checkbox', { name: 'Cancel reset', exact: true }).check();
+  const editedState = await page.getByTestId('reset-bound-state').textContent();
+  await page.getByRole('button', { name: 'Reset values', exact: true }).click();
+  await page.evaluate(() => new Promise((resolve) => setTimeout(resolve, 0)));
+  assert.equal(await page.getByTestId('reset-bound-state').textContent(), editedState, 'Cancelled resets must preserve bindings.');
+  assert.equal(await page.getByRole('textbox', { name: 'Reset text', exact: true }).inputValue(), 'edited');
+  await page.getByRole('checkbox', { name: 'Cancel reset', exact: true }).uncheck();
+  await page.getByRole('button', { name: 'Reset values', exact: true }).click();
+  await page.waitForFunction(() => JSON.parse(document.querySelector('[data-testid="reset-bound-state"]').textContent).text === 'seed');
+  const initialState = {
+    text: 'seed', notes: 'note', choice: 'b', checked: true, switched: true,
+    radio: 'b', command: 'find', combo: 'beta', query: 'Beta', external: 'outside'
+  };
+  assert.deepEqual(JSON.parse(await page.getByTestId('reset-bound-state').textContent()), initialState, 'Reset must restore every native and custom binding.');
+  assert.equal(await page.getByRole('textbox', { name: 'External reset text', exact: true }).inputValue(), 'outside');
+  assert.equal(await page.getByRole('combobox', { name: 'Reset combo', exact: true }).inputValue(), 'Beta');
+  assert.equal(await page.getByRole('combobox', { name: 'Reset combo', exact: true }).evaluate((input) => input.checkValidity()), true);
+  assert.deepEqual(await page.locator('#reset-native-form').evaluate((form) => Object.fromEntries(new FormData(form))), {
+    text: 'seed', notes: 'note', choice: 'b', checked: 'on', switched: 'on',
+    radio: 'b', command: 'find', combo: 'beta', external: 'outside'
+  }, 'Submitted form values must match restored bindings.');
+  await page.getByRole('button', { name: 'Edit reset values', exact: true }).click();
+  await page.locator('#reset-native-form').evaluate((form) => form.reset());
+  await page.waitForFunction(() => JSON.parse(document.querySelector('[data-testid="reset-bound-state"]').textContent).text === 'seed');
+  assert.deepEqual(JSON.parse(await page.getByTestId('reset-bound-state').textContent()), initialState, 'Programmatic reset must synchronize the same initial values.');
+}

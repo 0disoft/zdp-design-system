@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { chromium } from 'playwright-core';
 import { createServer } from 'vite';
+import { verifyFormResetContracts } from './browser/check-native-inputs.mjs';
 
 const root = process.cwd();
 const cacheDir = await mkdtemp(join(tmpdir(), 'zdp-design-system-ssr-'));
@@ -241,6 +242,7 @@ try {
   assert.equal(await controlledQuery.inputValue(), '', 'An explicit query clear must stay empty.');
   await page.getByRole('button', { name: 'Replace controlled selection', exact: true }).click();
   assert.equal(await controlledQuery.inputValue(), 'Beta', 'Changing only the selection must synchronize its label.');
+  await verifyFormResetContracts(page);
 
   await page.getByTestId('tabs-hydration-fixture').getByRole('tab', { name: 'History' }).click();
   await page.getByTestId('tabs-slot-selection').getByText('history', { exact: true }).waitFor();

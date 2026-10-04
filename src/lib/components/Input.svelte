@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from 'svelte/elements';
   import type { ZdpInputType } from '../input';
+  import { syncZdpFormReset } from '../form-reset';
 
   type DescribedBy = string | readonly string[] | null;
 
@@ -84,6 +85,7 @@
   onfocus={onfocus ?? undefined}
   onblur={onblur ?? undefined}
   onkeydown={onkeydown ?? undefined}
+  use:syncZdpFormReset={{ initialValue: value, onReset: (input) => { value = input.value; } }}
 />
 
 <style>

@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { HTMLTextareaAttributes } from 'svelte/elements';
+  import { syncZdpFormReset } from '../form-reset';
 
   type DescribedBy = string | readonly string[] | null;
 
@@ -75,6 +76,7 @@
   onfocus={onfocus ?? undefined}
   onblur={onblur ?? undefined}
   onkeydown={onkeydown ?? undefined}
+  use:syncZdpFormReset={{ initialValue: value, onReset: (textarea) => { value = textarea.value; } }}
 ></textarea>
 
 <style>

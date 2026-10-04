@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { syncZdpFormReset } from '../form-reset';
   type DescribedBy = string | readonly string[] | null;
 
   export let id: string | null = null;
@@ -46,6 +47,7 @@
     {disabled}
     {required}
     onchange={handleChange}
+    use:syncZdpFormReset={{ initialChecked: checked, onReset: (input) => { checked = input.checked; } }}
   />
   <span class="zdp-switch__track" aria-hidden="true"></span>
   <span class="zdp-switch__body">

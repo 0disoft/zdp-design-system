@@ -2,6 +2,7 @@
   import type { HTMLInputAttributes } from 'svelte/elements';
   import type { ZdpCommandFieldSize, ZdpCommandFieldType } from '../command';
   import ShortcutHint from './ShortcutHint.svelte';
+  import { syncZdpFormReset } from '../form-reset';
 
   type DescribedBy = string | readonly string[] | null;
   type AriaAutocomplete = 'none' | 'inline' | 'list' | 'both';
@@ -120,6 +121,7 @@
       onfocus={onfocus ?? undefined}
       onblur={onblur ?? undefined}
       onkeydown={onkeydown ?? undefined}
+      use:syncZdpFormReset={{ initialValue: value, onReset: (input) => { value = input.value; } }}
     />
     {#if showClearButton}
       <button

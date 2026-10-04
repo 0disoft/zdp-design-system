@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { syncZdpFormReset } from '../form-reset';
   type DescribedBy = string | readonly string[] | null;
 
   export let id: string | null = null;
@@ -44,6 +45,7 @@
     {disabled}
     {required}
     onchange={handleChange}
+    use:syncZdpFormReset={{ initialValue: value, onReset: (select) => { value = select.value; } }}
   >
     <slot />
   </select>

@@ -4,6 +4,7 @@
   import type { ZdpComboboxOption, ZdpComboboxSize } from '../combobox';
   import { toZdpDomId } from '../dom-id';
   import { createZdpDismissLayer } from '../dismiss-layer';
+  import { syncZdpFormReset } from '../form-reset';
 
   type DescribedBy = string | readonly string[] | null;
 
@@ -67,6 +68,7 @@
 
   const initialQueryWasEdited = query.length > 0;
   const initialSelectedOption = untrack(() => options.find((option) => option.value === value) ?? null);
+  const initialValue = untrack(() => value);
   if (!initialQueryWasEdited && initialSelectedOption) {
     query = initialSelectedOption.label;
   }
@@ -180,6 +182,16 @@
     clearSelectionForQuery(nextQuery);
     setOpen(true);
     activeOptionId = enabledOptions[0]?.id ?? '';
+  }
+
+  function handleFormReset(input: HTMLInputElement): void {
+    value = initialValue;
+    query = input.value;
+    lastSyncedValue = value;
+    lastSyncedQuery = query;
+    lastSyncedOptionLabel = '';
+    queryDirty = initialQueryWasEdited;
+    setOpen(false);
   }
 
   function handleInputFocus(): void {
@@ -426,6 +438,7 @@
       onfocus={handleInputFocus}
       onfocusout={handleFocusout}
       onkeydown={handleInputKeydown}
+      use:syncZdpFormReset={{ initialValue: query, onReset: handleFormReset }}
     />
     {#if name}
       <input type="hidden" {name} {value} disabled={disabled} />

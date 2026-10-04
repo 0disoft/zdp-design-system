@@ -16,6 +16,7 @@
   import type { ZdpTermSheetTerm } from '../../src/lib/term';
   import type { ZdpStatusToastItem } from '../../src/lib/toast';
   import type { ZdpTextScale } from '../../src/lib/preferences';
+  import FormResetFixture from '../browser/src/FormResetFixture.svelte';
 
   let selectedTabId = 'overview';
   let comboboxValue = '';
@@ -176,6 +177,8 @@
     </button>
   </Tooltip>
 </section>
+
+<FormResetFixture />
 
 <TermSheet
   bind:open={termSheetOpen}

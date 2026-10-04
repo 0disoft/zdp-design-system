@@ -14,6 +14,7 @@
   import ModalBoundaryFixture from './ModalBoundaryFixture.svelte';
   import ModalDocumentFixture from './ModalDocumentFixture.svelte';
   import NativeInputFixture from './NativeInputFixture.svelte';
+  import FormResetFixture from './FormResetFixture.svelte';
   import Popover from '../../../src/lib/components/Popover.svelte';
   import ResizableSplitPane from '../../../src/lib/components/ResizableSplitPane.svelte';
   import Radio from '../../../src/lib/components/Radio.svelte';
@@ -842,6 +843,7 @@
     <p>Keyboard navigation reached the explicit link.</p>
   </section>
   <NativeInputFixture />
+  <FormResetFixture />
 </main>
 
 <style>
