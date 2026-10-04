@@ -1,5 +1,33 @@
 import assert from 'node:assert/strict';
 
+export async function verifyToastTitleOverflowContracts(page) {
+  const viewport = page.viewportSize();
+  try {
+    await page.setViewportSize({ width: 320, height: 480 });
+    const fixture = page.getByTestId('toast-long-title');
+    await fixture.waitFor();
+    const toasts = await fixture.locator('.zdp-toast').all();
+    assert.equal(toasts.length, 2, 'Both direct and StatusToast title variants must be exercised.');
+    for (const toast of toasts) {
+      const geometry = await toast.evaluate((element) => {
+        const title = element.querySelector('strong');
+        const titleRect = title.getBoundingClientRect();
+        const closeRect = element.querySelector('button').getBoundingClientRect();
+        return { width: element.clientWidth, content: element.scrollWidth, titleRight: titleRect.right, closeLeft: closeRect.left, titleHeight: titleRect.height, lineHeight: Number.parseFloat(getComputedStyle(title).lineHeight) };
+      });
+      assert.ok(geometry.content <= geometry.width, 'Long titles must not overflow their notification.');
+      assert.ok(geometry.titleRight <= geometry.closeLeft, 'Long titles must not overlap the dismiss control.');
+      assert.ok(geometry.titleHeight > geometry.lineHeight, 'Long titles must wrap across multiple lines.');
+      const close = toast.getByRole('button');
+      await close.focus();
+      assert.equal(await close.evaluate((element) => document.activeElement === element), true);
+      await close.click();
+    }
+  } finally {
+    await page.setViewportSize(viewport);
+  }
+}
+
 export async function verifyToastStackOverflowContracts(page) {
   const fixture = page.getByTestId('toast-overflow');
   const stack = fixture.getByRole('group', { name: 'Scrollable notifications', exact: true });

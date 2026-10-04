@@ -31,7 +31,7 @@ import { verifyAccordionInstanceContracts } from './browser/check-accordion-inst
 import { verifyAvatarFallbackContracts } from './browser/check-avatar-fallback.mjs';
 import { verifyFrameRovingContracts } from './browser/check-frame-roving.mjs';
 import { verifyReservedNavigationContracts } from './browser/check-reserved-navigation.mjs';
-import { verifyToastStackOverflowContracts } from './browser/check-toast-overflow.mjs';
+import { verifyToastStackOverflowContracts, verifyToastTitleOverflowContracts } from './browser/check-toast-overflow.mjs';
 import { verifyFrameModalContracts } from './browser/check-frame-modals.mjs';
 import { verifyFramePopoverContracts } from './browser/check-frame-popover.mjs';
 import { verifyTooltipHoverContracts } from './browser/check-tooltip-hover.mjs';
@@ -147,6 +147,7 @@ try {
   await verifyFrameRovingContracts(page);
   await verifyReservedNavigationContracts(page);
   await verifyToastStackOverflowContracts(page);
+  await verifyToastTitleOverflowContracts(page);
   await verifyAvatarFallbackContracts(page);
   await verifyTooltipHoverContracts(page);
   await verifyShadowOverlayContracts(page);

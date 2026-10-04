@@ -80,6 +80,8 @@
     font-size: var(--zdp-type-body-small-size);
     font-weight: var(--zdp-font-weight-medium);
     line-height: var(--zdp-type-body-small-line-height);
+    min-width: 0;
+    overflow-wrap: var(--zdp-i18n-overflow-wrap);
   }
 
   .zdp-toast__body :global(p),
