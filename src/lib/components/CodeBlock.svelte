@@ -179,6 +179,8 @@
     font-size: var(--zdp-type-body-small-size);
     font-weight: var(--zdp-font-weight-medium);
     line-height: var(--zdp-type-body-small-line-height);
+    min-width: 0;
+    overflow-wrap: var(--zdp-i18n-overflow-wrap);
   }
 
   .zdp-code-block__language {
@@ -186,6 +188,8 @@
     font-family: var(--zdp-font-family-mono);
     font-size: var(--zdp-type-caption-size);
     line-height: var(--zdp-type-caption-line-height);
+    min-width: 0;
+    overflow-wrap: var(--zdp-i18n-overflow-wrap);
   }
 
   .zdp-code-block__copy {
@@ -261,6 +265,8 @@
     font-size: var(--zdp-type-caption-size);
     line-height: var(--zdp-type-caption-line-height);
     margin: 0;
+    min-width: 0;
+    overflow-wrap: var(--zdp-i18n-overflow-wrap);
     padding: var(--zdp-space-2) var(--zdp-space-3);
   }
 

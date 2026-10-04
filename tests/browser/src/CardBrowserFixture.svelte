@@ -28,6 +28,7 @@
   import PopoverFocusFixture from './PopoverFocusFixture.svelte';
   import ToastOverflowFixture from './ToastOverflowFixture.svelte';
   import ThemeToggleFixture from './ThemeToggleFixture.svelte';
+  import CodeMetadataFixture from './CodeMetadataFixture.svelte';
   import DynamicPaginationFixture from './DynamicPaginationFixture.svelte';
   import DynamicMenuFixture from './DynamicMenuFixture.svelte';
   import AccordionInstancesFixture from './AccordionInstancesFixture.svelte';
@@ -470,6 +471,7 @@
   <PopoverFocusFixture />
   <ToastOverflowFixture />
   <ThemeToggleFixture />
+  <CodeMetadataFixture />
   <AccordionInstancesFixture />
   <FramePopoverFixture />
   <FrameModalFixture />
