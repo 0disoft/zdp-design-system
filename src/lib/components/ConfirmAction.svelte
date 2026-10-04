@@ -20,7 +20,7 @@
   let confirmTimer: number | null = null;
   let resetTimer: number | null = null;
 
-  $: safeDurationMs = Math.max(600, durationMs);
+  $: safeDurationMs = Math.min(2_147_483_647, Math.max(600, Number.isFinite(durationMs) ? durationMs : 2000));
   $: progressStyle = `--zdp-confirm-action-progress: ${progress};`;
   $: if (disabled && active) {
     cancelInteraction();

@@ -24,6 +24,33 @@ export async function verifyConfirmRepeatContracts(page) {
   }
 }
 
+export async function verifyConfirmDurationContracts(page) {
+  const button = page.locator('#invalid-duration-confirm-action');
+  const count = page.getByTestId('invalid-duration-confirm-count');
+  await button.focus();
+  await page.keyboard.down('Enter');
+  try {
+    await page.waitForTimeout(700);
+    assert.equal(await count.textContent(), '0', 'NaN must use the default hold duration instead of confirming immediately.');
+    await page.waitForFunction(() => document.querySelector('[data-testid="invalid-duration-confirm-count"]').textContent === '1');
+  } finally {
+    await page.keyboard.up('Enter');
+  }
+  await page.waitForFunction(() => !document.querySelector('#invalid-duration-confirm-action').hasAttribute('data-confirmed'));
+  for (const testId of ['confirm-duration-infinity', 'confirm-duration-overflow']) {
+    await page.getByTestId(testId).click();
+    await button.focus();
+    await page.keyboard.down('Enter');
+    try {
+      await page.waitForTimeout(700);
+      assert.equal(await count.textContent(), '1', 'Non-finite or overflowing delays must not bypass the hold.');
+    } finally {
+      await page.keyboard.up('Enter');
+    }
+    assert.equal(await button.getAttribute('data-active'), null, 'Releasing must still cancel the invalid-duration hold.');
+  }
+}
+
 export async function verifyCopyLifecycleContracts(page) {
   const fixture = page.getByTestId('copy-lifecycle');
   const button = fixture.locator('.zdp-code-block__copy');

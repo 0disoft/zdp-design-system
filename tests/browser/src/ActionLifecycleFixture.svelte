@@ -3,6 +3,8 @@
   import CodeBlock from '../../../src/lib/components/CodeBlock.svelte';
 
   let confirmationCount = 0;
+  let invalidDuration = Number.NaN;
+  let invalidConfirmationCount = 0;
   let code = 'alpha';
   let codeMounted = true;
 </script>
@@ -15,6 +17,15 @@
     onconfirm={() => (confirmationCount += 1)}
   />
   <output data-testid="repeat-confirm-count">{confirmationCount}</output>
+  <ConfirmAction
+    id="invalid-duration-confirm-action"
+    label="Confirm duration validation"
+    durationMs={invalidDuration}
+    onconfirm={() => (invalidConfirmationCount += 1)}
+  />
+  <output data-testid="invalid-duration-confirm-count">{invalidConfirmationCount}</output>
+  <button type="button" data-testid="confirm-duration-infinity" onclick={() => invalidDuration = Infinity}>Use infinite duration</button>
+  <button type="button" data-testid="confirm-duration-overflow" onclick={() => invalidDuration = 2_147_483_648}>Use overflowing duration</button>
   <div data-testid="copy-lifecycle">
     {#if codeMounted}
       <CodeBlock {code} label="Copy lifecycle" />
