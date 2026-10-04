@@ -142,7 +142,7 @@ jobs:
               esac
 
               case "$path" in
-                scripts/check-storybook*|scripts/browser/render-brand-mark.mjs)
+                scripts/check-storybook*|scripts/storybook-contracts/*|scripts/browser/render-brand-mark.mjs)
                   storybook=true
                   ;;
               esac
@@ -517,4 +517,3 @@ jobs:
               "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" \
               -F body=@reports/package-size.md
           fi
-
