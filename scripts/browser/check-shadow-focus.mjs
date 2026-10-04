@@ -40,6 +40,17 @@ export async function verifyShadowFocusContracts(page) {
     await panel.getByTestId(lastId).focus();
     await page.keyboard.press('Tab');
     assert.equal(await isDeepActive(close), true, 'Inert shadow hosts must exclude all inner controls.');
+    const host = panel.getByTestId('inner-focus-host');
+    await host.evaluate((element) => { element.inert = false; element.tabIndex = -1; });
+    await panel.getByTestId(lastId).focus();
+    await page.keyboard.press('Tab');
+    assert.equal(await isDeepActive(close), true, 'Negative shadow hosts must not prevent forward wrapping.');
+    await page.keyboard.press('Shift+Tab');
+    assert.equal(await isDeepActive(panel.getByTestId(lastId)), true, 'Negative shadow hosts must exclude their inner controls from backward wrapping.');
+    await host.evaluate((element) => element.removeAttribute('tabindex'));
+    await close.focus();
+    await page.keyboard.press('Shift+Tab');
+    assert.equal(await isDeepActive(slotted), true, 'Restoring the shadow focus scope must refresh the cached controls.');
     await page.keyboard.press('Escape');
   }
 

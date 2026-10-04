@@ -190,6 +190,8 @@ function collectComposedCandidates(root: HTMLElement, shadowRoots: Set<ShadowRoo
       candidates.push(element);
     }
     if (element.shadowRoot !== null) {
+      // An explicit negative host tabindex excludes its entire shadow focus scope.
+      if (isZdpHtmlElement(element) && element.hasAttribute('tabindex') && element.tabIndex < 0) return;
       shadowRoots.add(element.shadowRoot);
       for (const child of element.shadowRoot.children) visit(child);
     } else if (element.tagName === 'SLOT') {
