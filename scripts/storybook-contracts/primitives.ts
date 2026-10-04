@@ -904,7 +904,7 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
     '.zdp-popover__panel',
     '.zdp-popover__panel:focus-visible',
     '.zdp-popover--bottom .zdp-popover__panel',
-    '.zdp-popover--align-start .zdp-popover__panel',
+    '.zdp-popover--top.zdp-popover--align-start .zdp-popover__panel',
     'max-inline-size: min(22rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6)))',
     'translate: -50% 0',
     'translate: 0 -50%'
