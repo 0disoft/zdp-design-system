@@ -12,6 +12,7 @@ import { verifyChangingConfirmDurationContracts, verifyConfirmDurationContracts,
 import { verifyShadowFormResetContracts } from './browser/check-shadow-form-reset.mjs';
 import { verifyShortcutEditingContracts } from './browser/check-shortcuts.mjs';
 import { verifyModalContracts, verifyNestedModalContracts } from './browser/check-modals.mjs';
+import { verifyShadowFocusContracts } from './browser/check-shadow-focus.mjs';
 import { verifyModalMutationContracts } from './browser/check-modal-mutations.mjs';
 import { verifyImeOverlayContracts } from './browser/check-ime-overlays.mjs';
 import { verifyDynamicTabsContracts, verifyRemovedTabFocusContracts } from './browser/check-dynamic-tabs.mjs';
@@ -110,6 +111,7 @@ try {
   await verifyOverlayContracts(page);
   await verifyModalContracts(page);
   await verifyModalMutationContracts(page);
+  await verifyShadowFocusContracts(page);
   await verifyImeOverlayContracts(page);
   await verifyDynamicMenuContracts(page);
   await verifyDynamicPaginationContracts(page);

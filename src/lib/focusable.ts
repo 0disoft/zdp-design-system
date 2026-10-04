@@ -22,14 +22,22 @@ export function isZdpFocusableElement(element: HTMLElement): boolean {
     return false;
   }
 
-  if (element.closest('[hidden], [aria-hidden="true"], [inert]') !== null) {
-    return false;
+  // closest() stops at a shadow boundary; inspect each composed ancestor too.
+  let ancestor: Element | null = element;
+  while (ancestor !== null) {
+    if (ancestor.matches('[hidden], [aria-hidden="true"], [inert]')) {
+      return false;
+    }
+    const tree = ancestor.getRootNode();
+    ancestor = ancestor.assignedSlot ?? ancestor.parentElement ?? (
+      tree.nodeType === 11 ? (tree as ShadowRoot).host ?? null : null
+    );
   }
 
   const view = element.ownerDocument.defaultView;
   const style = view?.getComputedStyle(element);
 
-  if (style === undefined || style.display === 'none' || style.visibility === 'hidden') {
+  if (style === undefined || style.display === 'none' || (style.visibility === 'hidden' || style.visibility === 'collapse')) {
     return false;
   }
 
@@ -44,6 +52,7 @@ export interface ZdpFocusableCache {
 
 export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpFocusableCache {
   let cachedElements: HTMLElement[] | null = null;
+  let observedShadowRoots = new Set<ShadowRoot>();
   let observedHeight: number | null = null;
   let observedRoot: HTMLElement | null = null;
   let observedViewportSignature: string | null = null;
@@ -79,6 +88,7 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
     mutationObserver?.disconnect();
     resizeObserver?.disconnect();
     observedRoot = root;
+    observedShadowRoots.clear();
     observedViewportSignature = null;
     observedHeight = null;
     observedWidth = null;
@@ -88,6 +98,11 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
       return;
     }
 
+    observeTree(root);
+    resizeObserver?.observe(root);
+  }
+
+  function observeTree(root: HTMLElement | ShadowRoot): void {
     mutationObserver?.observe(root, {
       attributeFilter: [
         'aria-hidden',
@@ -99,6 +114,8 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
         'inert',
         'open',
         'style',
+        'slot',
+        'name',
         'tabindex',
         'type'
       ],
@@ -106,7 +123,6 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
       childList: true,
       subtree: true
     });
-    resizeObserver?.observe(root);
   }
 
   function get(): HTMLElement[] {
@@ -129,9 +145,18 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
       invalidate();
     }
 
+    // Discover roots on each lookup: attaching a shadow root emits no mutation.
+    const shadowRoots = new Set<ShadowRoot>();
+    const candidatesInTree = collectComposedCandidates(root, shadowRoots);
+    if (shadowRoots.size !== observedShadowRoots.size || [...shadowRoots].some((tree) => !observedShadowRoots.has(tree))) {
+      mutationObserver?.disconnect();
+      observeTree(root);
+      for (const tree of shadowRoots) observeTree(tree);
+      observedShadowRoots = shadowRoots;
+      invalidate();
+    }
     if (cachedElements === null) {
-      cachedElements = Array.from(root.querySelectorAll<HTMLElement>(zdpFocusableSelector))
-        .filter(isZdpFocusableElement);
+      cachedElements = candidatesInTree.filter(isZdpFocusableElement);
     }
 
     // Radio selection and group ownership can change without DOM mutations or events.
@@ -145,6 +170,7 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
     mutationObserver?.disconnect();
     resizeObserver?.disconnect();
     observedRoot = null;
+    observedShadowRoots.clear();
     observedViewportSignature = null;
     observedHeight = null;
     observedWidth = null;
@@ -152,6 +178,30 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
   }
 
   return { destroy, get, invalidate };
+}
+
+function collectComposedCandidates(root: HTMLElement, shadowRoots: Set<ShadowRoot>): HTMLElement[] {
+  const candidates: HTMLElement[] = [];
+  const visited = new Set<Element>();
+  function visit(element: Element): void {
+    if (visited.has(element)) return;
+    visited.add(element);
+    if (isZdpHtmlElement(element) && element.matches(zdpFocusableSelector)) {
+      candidates.push(element);
+    }
+    if (element.shadowRoot !== null) {
+      shadowRoots.add(element.shadowRoot);
+      for (const child of element.shadowRoot.children) visit(child);
+    } else if (element.tagName === 'SLOT') {
+      const slot = element as HTMLSlotElement;
+      const children = slot.assignedNodes().length > 0 ? slot.assignedElements({ flatten: true }) : slot.children;
+      for (const child of children) visit(child);
+    } else {
+      for (const child of element.children) visit(child);
+    }
+  }
+  for (const child of root.children) visit(child);
+  return candidates;
 }
 
 export function getZdpActiveElement(root: Document | ShadowRoot = document): HTMLElement | null {
