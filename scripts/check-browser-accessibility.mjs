@@ -10,6 +10,7 @@ import { verifyFoundationAndFormContracts } from './browser/check-foundation-and
 import { verifyAsyncSelectResetContracts, verifyFormResetContracts, verifyNativeInputContracts } from './browser/check-native-inputs.mjs';
 import { verifyComboboxSelectionContracts } from './browser/check-combobox-selection.mjs';
 import { verifyChangingConfirmDurationContracts, verifyConfirmDurationContracts, verifyConfirmRepeatContracts, verifyTouchConfirmContracts, verifyCopyLifecycleContracts } from './browser/check-action-lifecycles.mjs';
+import { verifyTableDensityContracts } from './browser/check-table-interaction.mjs';
 import { verifyCommandFieldContracts } from './browser/check-command-field.mjs';
 import { verifyMovedFormResetContracts, verifyShadowFormResetContracts } from './browser/check-shadow-form-reset.mjs';
 import { verifyShortcutEditingContracts } from './browser/check-shortcuts.mjs';
@@ -106,6 +107,7 @@ try {
   await verifyShadowFormResetContracts(page);
   await verifyMovedFormResetContracts(page);
   await verifyCommandFieldContracts(page);
+  await verifyTableDensityContracts(page);
   await verifyAsyncSelectResetContracts(page);
   await verifyComboboxSelectionContracts(page);
   await verifyConfirmRepeatContracts(page);

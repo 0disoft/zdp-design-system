@@ -30,7 +30,8 @@
     ...(item.ariaLabel === undefined ? {} : { ariaLabel: item.ariaLabel }),
     ...(item.disabled === undefined ? {} : { disabled: item.disabled })
   }));
-  $: activeDensity = normalizeDensity(density, densityItems);
+  $: density = normalizeDensity(density, densityItems);
+  $: activeDensity = density;
 
   function handleDensityChange(
     event: MouseEvent | KeyboardEvent,
@@ -39,6 +40,7 @@
     const densityItem = densityItems.find((entry) => entry.id === item.id);
 
     if (densityItem) {
+      density = densityItem.id;
       onDensityChange?.(event, densityItem.id, densityItem);
     }
   }

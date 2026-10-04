@@ -17,6 +17,7 @@
   import ShadowFormResetFixture from './ShadowFormResetFixture.svelte';
   import FormResetFixture from './FormResetFixture.svelte';
   import ActionLifecycleFixture from './ActionLifecycleFixture.svelte';
+  import TableInteractionFixture from './TableInteractionFixture.svelte';
   import DynamicSelectionFixture from './DynamicSelectionFixture.svelte';
   import DynamicTabsFixture from './DynamicTabsFixture.svelte';
   import DynamicPaginationFixture from './DynamicPaginationFixture.svelte';
@@ -451,6 +452,7 @@
   <ActionLifecycleFixture />
   <DynamicMenuFixture />
   <DynamicPaginationFixture />
+  <TableInteractionFixture />
   <DynamicSelectionFixture />
   <DynamicTabsFixture />
   <AccordionInstancesFixture />
