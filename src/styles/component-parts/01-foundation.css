@@ -811,7 +811,9 @@
 .zdp-page-header__title {
   color: var(--zdp-color-ink-strong);
   font-family: var(--zdp-font-family-display);
-  line-height: var(--zdp-type-title-line-height);
+  font-size: var(--zdp-type-page-title-size);
+  font-weight: var(--zdp-font-weight-medium);
+  line-height: var(--zdp-type-page-title-line-height);
   min-width: 0;
 }
 
@@ -845,6 +847,10 @@
 @media (max-width: 48rem) {
   .zdp-page-header {
     grid-template-columns: 1fr;
+  }
+
+  .zdp-page-header__title {
+    font-size: var(--zdp-type-page-title-compact-size);
   }
 
   .zdp-page-header__actions {

@@ -30,6 +30,7 @@
   import ThemeToggleFixture from './ThemeToggleFixture.svelte';
   import CodeMetadataFixture from './CodeMetadataFixture.svelte';
   import LocaleOverflowFixture from './LocaleOverflowFixture.svelte';
+  import PageHeaderTypeFixture from './PageHeaderTypeFixture.svelte';
   import DynamicPaginationFixture from './DynamicPaginationFixture.svelte';
   import DynamicMenuFixture from './DynamicMenuFixture.svelte';
   import AccordionInstancesFixture from './AccordionInstancesFixture.svelte';
@@ -474,6 +475,7 @@
   <ThemeToggleFixture />
   <CodeMetadataFixture />
   <LocaleOverflowFixture />
+  <PageHeaderTypeFixture />
   <AccordionInstancesFixture />
   <FramePopoverFixture />
   <FrameModalFixture />
