@@ -46,6 +46,6 @@
 
 ## Manual Gates
 
-- Package release requires explicit approval and publish-specific mustflow intents.
+- Package release requires explicit user authorization and the documented publish procedure.
 - Broad token or component API changes require consumer impact review.
 - Docs under `docs/**` are included in the package files allowlist, so changing them requires package version impact review.

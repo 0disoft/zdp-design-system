@@ -1,18 +1,18 @@
 # VALIDATION.md
 
-이 문서는 `zdp-design-system` 변경 후 확인할 기준을 모은다. 실행 권한은 mustflow command contract가 소유한다.
+이 문서는 `zdp-design-system` 변경 후 확인할 기준을 모은다. 관련 package scripts와 저장소 명령을 직접 실행한다.
 
-## Configured Validation
+## Direct Validation Commands
 
 | Change scope | Check |
 | --- | --- |
-| tokens, CSS, components, stories, preview, fixtures, package readiness | `zdp_design_system_package_verify` |
-| browser accessibility semantics, responsive geometry, forced colors, and keyboard focus order | `zdp_design_system_browser_accessibility_check` |
+| tokens, CSS, components, stories, preview, fixtures, package readiness | `bun run check` |
+| browser accessibility semantics, responsive geometry, forced colors, and keyboard focus order | `bun run browser:check` |
 | high-risk component geometry and theme rendering | GitHub Actions advisory gate backed by `scripts/check-visual-regressions.mjs` |
-| Storybook static build or bundle evidence | `zdp_design_system_bundle_analyze` |
-| npm package contents or release readiness | `zdp_design_system_npm_pack_dry_run` |
-| repository architecture contract | `zdp_architecture_validate_design_system_repository` |
-| architecture catalog or linter rule changes | `zdp_architecture_validate_fast` |
+| Storybook static build or bundle evidence | `bun run storybook:build` |
+| npm package contents or release readiness | `npm.cmd pack --dry-run --json` |
+| repository architecture contract | `bun src/cli.ts validate --architecture ../../docs/zdp-architecture --repository ../../client-surfaces/zdp-design-system` (cwd: `projects/zdp-platforms/architecture-tools/zdp-architecture-linter`) |
+| architecture catalog or linter rule changes | `bun run validate:architecture` (cwd: `projects/zdp-platforms/architecture-tools/zdp-architecture-linter`) |
 | docs-router-only changes outside packaged `docs/**` | `docs_validate_fast` |
 
 `zdp_design_system_install_frozen` is needed only when dependencies are missing or package metadata changes require dependency installation. Publish dry-run and public publish intents remain gated by explicit release approval and network access.
