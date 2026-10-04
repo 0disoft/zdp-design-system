@@ -7,49 +7,86 @@
   type DescribedBy = string | readonly string[] | null;
   type AriaAutocomplete = 'none' | 'inline' | 'list' | 'both';
 
-  export let id: string | null = null;
-  export let name: string | null = null;
-  export let value = '';
-  export let type: ZdpCommandFieldType = 'search';
-  export let label: string | null = 'Search';
-  export let labelVisible = false;
-  export let ariaLabel: string | null = null;
-  export let placeholder: string | null = 'Search query';
-  export let autocomplete: HTMLInputAttributes['autocomplete'] | null = 'off';
-  export let describedBy: DescribedBy = null;
-  export let errorMessageId: string | null = null;
-  export let invalid = false;
-  export let disabled = false;
-  export let readonly = false;
-  export let required = false;
-  export let size: ZdpCommandFieldSize = 'md';
-  export let shortcutKeys: readonly string[] = ['/'];
-  export let ariaKeyShortcuts: string | null = null;
-  export let ariaAutocomplete: AriaAutocomplete | null = null;
-  export let ariaControls: string | null = null;
-  export let ariaExpanded: boolean | null = null;
-  export let ariaActivedescendant: string | null = null;
-  export let inputmode: HTMLInputAttributes['inputmode'] | null = null;
-  export let enterkeyhint: HTMLInputAttributes['enterkeyhint'] | null = null;
-  export let clearLabel: string | null = null;
-  export let oninput: ((event: Event) => void) | null = null;
-  export let onfocus: ((event: FocusEvent) => void) | null = null;
-  export let onblur: ((event: FocusEvent) => void) | null = null;
-  export let onkeydown: ((event: KeyboardEvent) => void) | null = null;
+  interface Props {
+    id?: string | null;
+    name?: string | null;
+    value?: string;
+    type?: ZdpCommandFieldType;
+    label?: string | null;
+    labelVisible?: boolean;
+    ariaLabel?: string | null;
+    placeholder?: string | null;
+    autocomplete?: HTMLInputAttributes['autocomplete'] | null;
+    describedBy?: DescribedBy;
+    errorMessageId?: string | null;
+    invalid?: boolean;
+    disabled?: boolean;
+    readonly?: boolean;
+    required?: boolean;
+    size?: ZdpCommandFieldSize;
+    shortcutKeys?: readonly string[];
+    ariaKeyShortcuts?: string | null;
+    ariaAutocomplete?: AriaAutocomplete | null;
+    ariaControls?: string | null;
+    ariaExpanded?: boolean | null;
+    ariaActivedescendant?: string | null;
+    inputmode?: HTMLInputAttributes['inputmode'] | null;
+    enterkeyhint?: HTMLInputAttributes['enterkeyhint'] | null;
+    clearLabel?: string | null;
+    oninput?: ((event: Event) => void) | null;
+    onfocus?: ((event: FocusEvent) => void) | null;
+    onblur?: ((event: FocusEvent) => void) | null;
+    onkeydown?: ((event: KeyboardEvent) => void) | null;
+  }
 
-  let inputElement: HTMLInputElement | null = null;
-  $: showClearButton = value.length > 0 && !disabled && !readonly;
+  const componentId = $props.id();
+  let {
+    id = $bindable(null),
+    name = $bindable(null),
+    value = $bindable(''),
+    type = $bindable('search'),
+    label = $bindable('Search'),
+    labelVisible = $bindable(false),
+    ariaLabel = $bindable(null),
+    placeholder = $bindable('Search query'),
+    autocomplete = $bindable('off'),
+    describedBy = $bindable(null),
+    errorMessageId = $bindable(null),
+    invalid = $bindable(false),
+    disabled = $bindable(false),
+    readonly = $bindable(false),
+    required = $bindable(false),
+    size = $bindable('md'),
+    shortcutKeys = $bindable(['/']),
+    ariaKeyShortcuts = $bindable(null),
+    ariaAutocomplete = $bindable(null),
+    ariaControls = $bindable(null),
+    ariaExpanded = $bindable(null),
+    ariaActivedescendant = $bindable(null),
+    inputmode = $bindable(null),
+    enterkeyhint = $bindable(null),
+    clearLabel = $bindable(null),
+    oninput = $bindable(null),
+    onfocus = $bindable(null),
+    onblur = $bindable(null),
+    onkeydown = $bindable(null),
+  }: Props = $props();
 
-  $: ariaDescribedBy = normalizeIdRefs(describedBy);
-  $: resolvedErrorMessageId = invalid && errorMessageId ? errorMessageId : null;
-  $: hasShortcut = shortcutKeys.length > 0;
-  $: inputAriaLabel = label ? undefined : ariaLabel ?? 'Search';
-  $: hasComboboxContract =
+  let inputElement = $state<HTMLInputElement | null>(null);
+  const inputId = $derived(id ?? `zdp-command-field-${componentId}`);
+  const showClearButton = $derived(value.length > 0 && !disabled && !readonly);
+
+  const ariaDescribedBy = $derived(normalizeIdRefs(describedBy));
+  const resolvedErrorMessageId = $derived(invalid && errorMessageId ? errorMessageId : null);
+  const hasShortcut = $derived(shortcutKeys.length > 0);
+  const inputAriaLabel = $derived(label ? undefined : ariaLabel ?? 'Search');
+  const hasComboboxContract = $derived(
     ariaAutocomplete !== null ||
     ariaControls !== null ||
     ariaExpanded !== null ||
-    ariaActivedescendant !== null;
-  $: resolvedAriaExpanded = hasComboboxContract ? ariaExpanded ?? false : null;
+    ariaActivedescendant !== null
+  );
+  const resolvedAriaExpanded = $derived(hasComboboxContract ? ariaExpanded ?? false : null);
 
   function handleInput(event: Event): void {
     value = (event.currentTarget as HTMLInputElement).value;
@@ -62,7 +99,7 @@
     }
     value = '';
     inputElement.value = '';
-    inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+    inputElement.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
     inputElement.focus();
   }
 
@@ -81,20 +118,20 @@
   }
 </script>
 
-<label
+<div
   class={`zdp-command-field-shell zdp-command-field-shell--${size}`}
   data-invalid={invalid ? 'true' : undefined}
   data-disabled={disabled ? 'true' : undefined}
 >
   {#if label}
-    <span class={`zdp-command-field__label ${labelVisible ? '' : 'zdp-command-field__label--hidden'}`}>
+    <label for={inputId} class={`zdp-command-field__label ${labelVisible ? '' : 'zdp-command-field__label--hidden'}`}>
       {label}
-    </span>
+    </label>
   {/if}
   <span class={`zdp-command-field zdp-command-field--${size}`}>
     <input
       class="zdp-command-field__input"
-      id={id ?? undefined}
+      id={inputId}
       name={name ?? undefined}
       {type}
       {value}
@@ -152,7 +189,7 @@
       </span>
     {/if}
   </span>
-</label>
+</div>
 
 <style>
   .zdp-command-field-shell {

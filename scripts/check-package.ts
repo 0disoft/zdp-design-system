@@ -416,8 +416,8 @@ async function checkUserFacingLabelOverrideContract(): Promise<void> {
     {
       path: 'src/lib/components/CommandField.svelte',
       requiredTexts: [
-        "export let label: string | null = 'Search'",
-        "export let placeholder: string | null = 'Search query'",
+        "label = $bindable('Search')",
+        "placeholder = $bindable('Search query')",
         'placeholder={placeholder ?? undefined}',
         'aria-label={inputAriaLabel}',
         "role={hasComboboxContract ? 'combobox' : undefined}",
