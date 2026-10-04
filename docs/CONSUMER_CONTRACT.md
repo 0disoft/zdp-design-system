@@ -45,6 +45,20 @@ Default component text is English. 소비 앱은 화면 locale에 맞춰 user-fa
 
 ## Svelte 소비 표면
 
+Native form controls restore the values and checked states captured when mounted. After an uncancelled reset, their bindings synchronize with the browser's restored defaults on the next task. This also applies to externally associated Input/Textarea controls and to hydrated controls. Reset does not invoke input/change callbacks. Cancelled resets preserve the current values.
+
+Combobox `options` describes the current search candidates. A known selection remains valid when filtering removes it from the candidate list. For asynchronous search, pass `selectedOption` separately: a matching option object provides authoritative label and disabled metadata, while `null` invalidates the selected option. Omitting the prop uses current candidates and the last known selection. Unknown, empty, or explicitly disabled selections fail `required` validation. To remove a selection from submitted data, clear `value` as well.
+
+```svelte
+<Combobox
+  options={searchResults}
+  selectedOption={selectedRecord}
+  bind:value={selectedValue}
+  bind:query={searchQuery}
+  required
+/>
+```
+
 Input supports native `min`, `max`, `step`, `pattern`, `minlength`, and `maxlength` constraints. Input and Textarea both accept `form`, `inputmode`, `enterkeyhint`, `ariaLabel`, and `oninput`/`onchange`/`onfocus`/`onblur`/`onkeydown` callbacks. `oninput` receives the original DOM event after the component updates its bound string value; browser constraint validation and associated-form submission keep their native behavior.
 
 Svelte 앱과 Svelte island는 token-only CSS와 필요한 컴포넌트 subpath를 직접 불러온다.

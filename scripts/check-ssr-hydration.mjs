@@ -215,7 +215,8 @@ try {
     controlledQuery: 'Alpha',
     fallbackLanguage: ['true', '0'],
     fallbackTextSize: ['true', '0'],
-    unavailableCheckedCount: 0
+    unavailableCheckedCount: 0,
+    metadataSelection: 'Alpha'
   };
   assert.deepEqual(result.before.initialSelection, expectedInitialSelection, 'SSR must render default selections and preserve an explicit search query.');
   assert.deepEqual(result.after.initialSelection, expectedInitialSelection, 'Hydration must preserve the initial selected content.');
@@ -346,7 +347,8 @@ function createIdHydrationHtml(body) {
           controlledQuery: root.querySelectorAll('[data-testid="default-selection-fixture"] .zdp-combobox__input')[2].value,
           fallbackLanguage: ['aria-checked', 'tabindex'].map((attribute) => root.querySelector('[aria-label="Fallback language"] [role="radio"]:not(:disabled)').getAttribute(attribute)),
           fallbackTextSize: ['aria-checked', 'tabindex'].map((attribute) => root.querySelector('[aria-label="Fallback text size"] [role="radio"]:not(:disabled)').getAttribute(attribute)),
-          unavailableCheckedCount: root.querySelectorAll('[aria-label="Unavailable language"] [aria-checked="true"], [aria-label="Unavailable text size"] [aria-checked="true"]').length
+          unavailableCheckedCount: root.querySelectorAll('[aria-label="Unavailable language"] [aria-checked="true"], [aria-label="Unavailable text size"] [aria-checked="true"]').length,
+          metadataSelection: root.querySelector('#metadata-hydration-choice').value
         },
         ids: Array.from(root.querySelectorAll('[id]'), (element) => element.id),
         idReferences: Array.from(

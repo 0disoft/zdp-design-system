@@ -7,6 +7,7 @@ import { chromium } from 'playwright-core';
 import { createServer } from 'vite';
 import { verifyFoundationAndFormContracts } from './browser/check-foundation-and-forms.mjs';
 import { verifyFormResetContracts, verifyNativeInputContracts } from './browser/check-native-inputs.mjs';
+import { verifyComboboxSelectionContracts } from './browser/check-combobox-selection.mjs';
 import { verifyModalContracts, verifyNestedModalContracts } from './browser/check-modals.mjs';
 import { verifyOverlayContracts, verifyShadowOverlayContracts } from './browser/check-overlays.mjs';
 import { verifyPageGutterContracts } from './browser/check-page-gutters.mjs';
@@ -82,6 +83,7 @@ try {
   await verifyFoundationAndFormContracts(page);
   await verifyNativeInputContracts(page);
   await verifyFormResetContracts(page);
+  await verifyComboboxSelectionContracts(page);
   await verifyOverlayContracts(page);
   await verifyModalContracts(page);
   await verifyShadowOverlayContracts(page);

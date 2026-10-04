@@ -103,6 +103,7 @@
   <TextScaleControl ariaLabel="Fallback text size" options={[{ value: 'large', label: 'Large' }, { value: 'larger', label: 'Larger' }]} />
   <LocaleSwitcher ariaLabel="Unavailable language" options={[{ value: 'en', label: 'English', disabled: true }]} />
   <TextScaleControl ariaLabel="Unavailable text size" options={[{ value: 'base', label: 'Base', disabled: true }]} />
+  <Combobox id="metadata-hydration-choice" label="Metadata hydration choice" value="alpha" options={[comboboxOptions[1]!]} selectedOption={comboboxOptions[0]!} required />
 </section>
 
 <section data-testid="combobox-hydration-fixture" aria-label="Combobox hydration fixture">

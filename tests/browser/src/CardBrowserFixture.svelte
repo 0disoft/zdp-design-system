@@ -15,6 +15,7 @@
   import ModalDocumentFixture from './ModalDocumentFixture.svelte';
   import NativeInputFixture from './NativeInputFixture.svelte';
   import FormResetFixture from './FormResetFixture.svelte';
+  import FilteredComboboxFixture from './FilteredComboboxFixture.svelte';
   import Popover from '../../../src/lib/components/Popover.svelte';
   import ResizableSplitPane from '../../../src/lib/components/ResizableSplitPane.svelte';
   import Radio from '../../../src/lib/components/Radio.svelte';
@@ -844,6 +845,7 @@
   </section>
   <NativeInputFixture />
   <FormResetFixture />
+  <FilteredComboboxFixture />
 </main>
 
 <style>

@@ -14,6 +14,7 @@
     value?: string;
     query?: string;
     options?: readonly ZdpComboboxOption[];
+    selectedOption?: ZdpComboboxOption | null;
     label?: string | null;
     labelVisible?: boolean;
     ariaLabel?: string | null;
@@ -44,6 +45,7 @@
     value = $bindable(''),
     query = $bindable(''),
     options = [],
+    selectedOption: suppliedSelectedOption = undefined,
     label = 'Search',
     labelVisible = false,
     ariaLabel = null,
@@ -67,7 +69,7 @@
   }: Props = $props();
 
   const initialQueryWasEdited = query.length > 0;
-  const initialSelectedOption = untrack(() => options.find((option) => option.value === value) ?? null);
+  const initialSelectedOption = untrack(() => resolveSelectedOption(value, options, suppliedSelectedOption, null));
   const initialValue = untrack(() => value);
   if (!initialQueryWasEdited && initialSelectedOption) {
     query = initialSelectedOption.label;
@@ -80,16 +82,13 @@
   let lastSyncedValue = $state(value);
   let lastSyncedOptionLabel = $state(initialSelectedOption?.label ?? '');
   let lastSyncedQuery = $state(query);
-  let lastSelectedValue = $state('');
-  let lastSelectedLabel = $state('');
+  let cachedSelection = $state.raw<ZdpComboboxOption | null>(initialSelectedOption);
   let queryDirty = $state(initialQueryWasEdited);
   const dismissLayer = createZdpDismissLayer();
 
   const enabledOptions = $derived(options.filter((option) => !option.disabled));
-  const selectedOption = $derived(options.find((option) => option.value === value) ?? null);
-  const selectedOptionLabel = $derived(
-    selectedOption?.label ?? (value === lastSelectedValue ? lastSelectedLabel : '')
-  );
+  const selectedOption = $derived(resolveSelectedOption(value, options, suppliedSelectedOption, cachedSelection));
+  const selectedOptionLabel = $derived(selectedOption?.label ?? '');
   const resolvedIdPrefix = $derived(toDomId(id ?? fallbackIdPrefix));
   const inputId = $derived(id ?? `${resolvedIdPrefix}-input`);
   const listboxId = $derived(`${resolvedIdPrefix}-listbox`);
@@ -99,13 +98,14 @@
   const activeOptionDomId = $derived(open && activeOptionId ? optionDomId(activeOptionId) : null);
   const inputAriaLabel = $derived(label ? undefined : ariaLabel ?? 'Search');
   const resolvedListboxLabel = $derived(listboxLabel ?? `${label ?? ariaLabel ?? 'Selection'} list`);
-  const selectionMissing = $derived(required && !disabled && !readonly && selectedOption === null);
+  const selectionMissing = $derived(required && !disabled && !readonly &&
+    (value === '' || selectedOption === null || selectedOption.disabled === true));
   const resolvedSelectionRequiredText = $derived(selectionRequiredText.trim() || 'Select an option');
 
   $effect.pre(() => {
-    if (selectedOption) {
-      lastSelectedValue = selectedOption.value;
-      lastSelectedLabel = selectedOption.label;
+    if (cachedSelection !== selectedOption &&
+      (selectedOption !== null || value === '' || suppliedSelectedOption !== undefined)) {
+      cachedSelection = selectedOption;
     }
   });
 
@@ -169,7 +169,7 @@
     onOpenChange?.(nextOpen);
 
     if (nextOpen) {
-      activeOptionId = selectedOption?.id ?? enabledOptions[0]?.id ?? '';
+      activeOptionId = enabledOptions.find((option) => option.value === value)?.id ?? enabledOptions[0]?.id ?? '';
     }
   }
 
@@ -186,6 +186,7 @@
 
   function handleFormReset(input: HTMLInputElement): void {
     value = initialValue;
+    cachedSelection = initialSelectedOption;
     query = input.value;
     lastSyncedValue = value;
     lastSyncedQuery = query;
@@ -221,7 +222,7 @@
       if (wasOpen) {
         moveActiveOption('ArrowDown');
       } else {
-        activeOptionId = selectedOption?.id ?? enabledOptions[0]?.id ?? '';
+        activeOptionId = enabledOptions.find((option) => option.value === value)?.id ?? enabledOptions[0]?.id ?? '';
       }
       return;
     }
@@ -233,7 +234,7 @@
       if (wasOpen) {
         moveActiveOption('ArrowUp');
       } else {
-        activeOptionId = selectedOption?.id ?? enabledOptions[enabledOptions.length - 1]?.id ?? '';
+        activeOptionId = enabledOptions.find((option) => option.value === value)?.id ?? enabledOptions[enabledOptions.length - 1]?.id ?? '';
       }
       return;
     }
@@ -311,8 +312,7 @@
     queryDirty = false;
     lastSyncedValue = value;
     lastSyncedOptionLabel = option.label;
-    lastSelectedValue = option.value;
-    lastSelectedLabel = option.label;
+    cachedSelection = option;
     onQueryChange?.(query);
     onValueChange?.(value, option);
     setOpen(false);
@@ -320,15 +320,27 @@
   }
 
   function clearSelectionForQuery(nextQuery: string): void {
-    const currentOption = options.find((option) => option.value === value) ?? null;
+    const currentOption = selectedOption;
 
     if (currentOption === null || currentOption.label === nextQuery) {
       return;
     }
 
     value = '';
+    cachedSelection = null;
     lastSyncedValue = value;
     onValueChange?.('', null);
+  }
+
+  function resolveSelectedOption(
+    currentValue: string,
+    candidates: readonly ZdpComboboxOption[],
+    supplied: ZdpComboboxOption | null | undefined,
+    cached: ZdpComboboxOption | null
+  ): ZdpComboboxOption | null {
+    if (supplied !== undefined) return supplied?.value === currentValue ? supplied : null;
+    return candidates.find((option) => option.value === currentValue) ??
+      (cached?.value === currentValue ? cached : null);
   }
 
   async function scrollActiveOptionIntoView(optionId: string): Promise<void> {
