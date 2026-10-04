@@ -15,7 +15,7 @@ import { verifyModalContracts, verifyNestedModalContracts } from './browser/chec
 import { verifyModalMutationContracts } from './browser/check-modal-mutations.mjs';
 import { verifyImeOverlayContracts } from './browser/check-ime-overlays.mjs';
 import { verifyDynamicTabsContracts, verifyRemovedTabFocusContracts } from './browser/check-dynamic-tabs.mjs';
-import { verifyDynamicPaginationContracts } from './browser/check-dynamic-pagination.mjs';
+import { verifyDynamicPaginationContracts, verifyPaginationBoundsContracts } from './browser/check-dynamic-pagination.mjs';
 import { verifyDynamicMenuContracts } from './browser/check-dynamic-menu.mjs';
 import { verifyResponsiveFocusContracts } from './browser/check-responsive-focus.mjs';
 import { verifyAccordionInstanceContracts } from './browser/check-accordion-instances.mjs';
@@ -112,6 +112,7 @@ try {
   await verifyImeOverlayContracts(page);
   await verifyDynamicMenuContracts(page);
   await verifyDynamicPaginationContracts(page);
+  await verifyPaginationBoundsContracts(page);
   await verifyDynamicTabsContracts(page);
   await verifyRemovedTabFocusContracts(page);
   await verifyResponsiveFocusContracts(page);

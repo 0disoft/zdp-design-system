@@ -33,7 +33,9 @@
   $: hasNext = activePage < normalizedTotalPages;
 
   function normalizeInteger(value: number, fallback: number): number {
-    return Number.isFinite(value) ? Math.floor(value) : fallback;
+    return Number.isFinite(value)
+      ? Math.min(Number.MAX_SAFE_INTEGER, Math.max(Number.MIN_SAFE_INTEGER, Math.floor(value)))
+      : fallback;
   }
 
   function normalizePositiveInteger(value: number): number {
@@ -62,8 +64,10 @@
   ): readonly ZdpPaginationItem[] {
     const pages = new Set<number>([1, total]);
 
-    for (let page = current - siblings; page <= current + siblings; page += 1) {
-      if (page >= 1 && page <= total) {
+    // Iterate over the bounded sibling count, never an unbounded page value.
+    for (let offset = -siblings; offset <= siblings; offset += 1) {
+      const page = current + offset;
+      if (Number.isSafeInteger(page) && page >= 1 && page <= total) {
         pages.add(page);
       }
     }
