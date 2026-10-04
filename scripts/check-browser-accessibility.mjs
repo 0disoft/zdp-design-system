@@ -11,6 +11,7 @@ import { verifyAsyncSelectResetContracts, verifyFormResetContracts, verifyNative
 import { verifyComboboxEditingContracts, verifyComboboxSelectionContracts } from './browser/check-combobox-selection.mjs';
 import { verifyChangingConfirmDurationContracts, verifyConfirmDurationContracts, verifyConfirmRepeatContracts, verifyTouchConfirmContracts, verifyCopyLifecycleContracts } from './browser/check-action-lifecycles.mjs';
 import { verifyEmptyTooltipContracts } from './browser/check-empty-tooltip.mjs';
+import { verifyDisclosureFocusContracts } from './browser/check-disclosure-focus.mjs';
 import { verifyPopoverGeometryContracts } from './browser/check-popover-geometry.mjs';
 import { verifySortNameContracts, verifyTableDensityContracts } from './browser/check-table-interaction.mjs';
 import { verifyCommandFieldContracts } from './browser/check-command-field.mjs';
@@ -134,6 +135,7 @@ try {
   await verifyDynamicTabsContracts(page);
   await verifyRemovedTabFocusContracts(page);
   await verifyTabPanelFocusContracts(page);
+  await verifyDisclosureFocusContracts(page);
   await verifyResponsiveFocusContracts(page);
   await verifyAccordionInstanceContracts(page);
   await verifyFramePopoverContracts(page);

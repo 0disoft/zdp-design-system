@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { tick } from 'svelte';
+  import { getZdpActiveElement } from '../focusable';
   import { toZdpDomId } from '../dom-id';
   import type { ZdpDisclosureHeadingLevel } from '../disclosure';
 
@@ -26,6 +28,28 @@
   const triggerId = $derived(`${resolvedId}-trigger`);
   const panelId = $derived(`${resolvedId}-panel`);
 
+  let rootElement = $state<HTMLElement | null>(null);
+  let panelElement = $state<HTMLElement | null>(null);
+
+  $effect.pre(() => {
+    const root = rootElement;
+    const panel = panelElement;
+    if (open || !root || !panel) return;
+    const focused = getZdpActiveElement(root.getRootNode() as Document | ShadowRoot);
+    if (focused && panel.contains(focused)) {
+      void restoreCollapsedFocus(root, focused);
+    }
+  });
+
+  async function restoreCollapsedFocus(root: HTMLElement, previous: HTMLElement): Promise<void> {
+    await tick();
+    if (open || rootElement !== root || !root.isConnected) return;
+    const document = root.ownerDocument;
+    const focused = getZdpActiveElement(root.getRootNode() as Document | ShadowRoot);
+    if (focused !== previous && focused !== document.body && focused !== document.documentElement) return;
+    (root.querySelector<HTMLElement>('.zdp-disclosure__trigger:not(:disabled)') ?? root).focus();
+  }
+
   function setOpen(nextOpen: boolean): void {
     if (disabled || open === nextOpen) {
       return;
@@ -44,7 +68,7 @@
   }
 </script>
 
-<div class="zdp-disclosure" data-open={open ? 'true' : 'false'} data-disabled={disabled ? 'true' : undefined}>
+<div class="zdp-disclosure" bind:this={rootElement} tabindex="-1" data-open={open ? 'true' : 'false'} data-disabled={disabled ? 'true' : undefined}>
   {#if headingLevel}
     <div class="zdp-disclosure__heading" role="heading" aria-level={headingLevel}>
       <button
@@ -82,7 +106,7 @@
   {/if}
 
   {#if open}
-    <div class="zdp-disclosure__panel" id={panelId} role="group" aria-labelledby={triggerId}>
+    <div class="zdp-disclosure__panel" bind:this={panelElement} id={panelId} role="group" aria-labelledby={triggerId}>
       <!-- svelte-ignore slot_element_deprecated legacy default slot contract remains public -->
       <slot />
     </div>
