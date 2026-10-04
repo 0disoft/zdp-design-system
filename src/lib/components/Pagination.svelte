@@ -22,12 +22,13 @@
   $: activePage = clampPage(currentPage, normalizedTotalPages);
   $: safeSiblingCount = clampSiblingCount(siblingCount);
   $: paginationItems = toRenderItems(
-    buildPaginationItems(activePage, normalizedTotalPages, safeSiblingCount)
+    buildPaginationItems(activePage, normalizedTotalPages, safeSiblingCount),
+    hrefForPage
   );
   $: previousPage = Math.max(1, activePage - 1);
   $: nextPage = Math.min(normalizedTotalPages, activePage + 1);
-  $: previousHref = activePage > 1 ? hrefFor(previousPage) : null;
-  $: nextHref = activePage < normalizedTotalPages ? hrefFor(nextPage) : null;
+  $: previousHref = activePage > 1 ? hrefForPage?.(previousPage) ?? null : null;
+  $: nextHref = activePage < normalizedTotalPages ? hrefForPage?.(nextPage) ?? null : null;
   $: hasPrevious = activePage > 1;
   $: hasNext = activePage < normalizedTotalPages;
 
@@ -47,12 +48,11 @@
     return Math.min(3, Math.max(0, normalizeInteger(value, 1)));
   }
 
-  function hrefFor(page: number): string | null {
-    return hrefForPage?.(page) ?? null;
-  }
-
-  function toRenderItems(items: readonly ZdpPaginationItem[]): readonly ZdpPaginationRenderItem[] {
-    return items.map((item) => (item.type === 'page' ? { ...item, href: hrefFor(item.page) } : item));
+  function toRenderItems(
+    items: readonly ZdpPaginationItem[],
+    resolveHref: typeof hrefForPage
+  ): readonly ZdpPaginationRenderItem[] {
+    return items.map((item) => (item.type === 'page' ? { ...item, href: resolveHref?.(item.page) ?? null } : item));
   }
 
   function buildPaginationItems(
@@ -104,9 +104,6 @@
     onPageChange?.(event, page);
   }
 
-  function labelForPage(page: number): string {
-    return page === activePage ? currentLabel(page) : pageLabel(page);
-  }
 </script>
 
 <nav class="zdp-pagination" aria-label={ariaLabel}>
@@ -142,7 +139,7 @@
           <a
             class="zdp-pagination__link"
             href={item.href}
-            aria-label={labelForPage(item.page)}
+            aria-label={item.page === activePage ? currentLabel(item.page) : pageLabel(item.page)}
             aria-current={item.page === activePage ? 'page' : undefined}
             onclick={(event) => handlePageClick(event, item.page)}
           >
@@ -152,7 +149,7 @@
           <button
             class="zdp-pagination__link"
             type="button"
-            aria-label={labelForPage(item.page)}
+            aria-label={item.page === activePage ? currentLabel(item.page) : pageLabel(item.page)}
             aria-current={item.page === activePage ? 'page' : undefined}
             disabled={item.page === activePage}
             onclick={(event) => handlePageClick(event, item.page)}

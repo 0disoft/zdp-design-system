@@ -13,6 +13,7 @@ import { verifyShortcutEditingContracts } from './browser/check-shortcuts.mjs';
 import { verifyModalContracts, verifyNestedModalContracts } from './browser/check-modals.mjs';
 import { verifyModalMutationContracts } from './browser/check-modal-mutations.mjs';
 import { verifyImeOverlayContracts } from './browser/check-ime-overlays.mjs';
+import { verifyDynamicPaginationContracts } from './browser/check-dynamic-pagination.mjs';
 import { verifyDynamicMenuContracts } from './browser/check-dynamic-menu.mjs';
 import { verifyResponsiveFocusContracts } from './browser/check-responsive-focus.mjs';
 import { verifyAccordionInstanceContracts } from './browser/check-accordion-instances.mjs';
@@ -105,6 +106,7 @@ try {
   await verifyModalMutationContracts(page);
   await verifyImeOverlayContracts(page);
   await verifyDynamicMenuContracts(page);
+  await verifyDynamicPaginationContracts(page);
   await verifyResponsiveFocusContracts(page);
   await verifyAccordionInstanceContracts(page);
   await verifyFramePopoverContracts(page);
