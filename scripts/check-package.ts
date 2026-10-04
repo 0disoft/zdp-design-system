@@ -442,7 +442,7 @@ async function checkUserFacingLabelOverrideContract(): Promise<void> {
         'aria-label={ariaLabel}',
         'aria-label={previousLabel}',
         'aria-label={nextLabel}',
-        'aria-label={labelForPage(item.page)}'
+        'aria-label={item.page === activePage ? currentLabel(item.page) : pageLabel(item.page)}'
       ]
     },
     {
