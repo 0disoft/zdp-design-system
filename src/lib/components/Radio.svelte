@@ -31,6 +31,7 @@
     {value}
     checked={resolvedChecked}
     aria-describedby={describedBy ?? undefined}
+    aria-invalid={invalid ? 'true' : undefined}
     {disabled}
     {required}
     onchange={handleChange}
