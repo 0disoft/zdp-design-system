@@ -87,6 +87,20 @@
     return `${resolvedIdPrefix}-option-${toDomId(option.value)}`;
   }
 
+  function handleOptionFocus(event: FocusEvent): void {
+    const button = event.currentTarget as HTMLButtonElement;
+    const group = groupElement;
+    const view = group?.ownerDocument.defaultView;
+    if (!group || !view) return;
+    const groupRect = group.getBoundingClientRect();
+    const buttonRect = button.getBoundingClientRect();
+    const padding = Number.parseFloat(view.getComputedStyle(group).scrollPaddingInlineStart) || 0;
+    const left = groupRect.left + group.clientLeft + padding;
+    const right = groupRect.left + group.clientLeft + group.clientWidth - padding;
+    const delta = buttonRect.right > right ? buttonRect.right - right : buttonRect.left < left ? buttonRect.left - left : 0;
+    if (delta) group.scrollBy({ left: delta, behavior: 'instant' });
+  }
+
   function toDomId(value: string): string {
     return toZdpDomId(value, 'option');
   }
@@ -118,6 +132,7 @@
       disabled={disabled || option.disabled}
       data-zdp-locale-option
       data-zdp-locale-option-value={option.value}
+      onfocus={handleOptionFocus}
       onclick={(event) => selectOption(event, option)}
     >
       <span class="zdp-locale-switcher__label" aria-hidden="true">
@@ -129,6 +144,8 @@
 
 <style>
   .zdp-locale-switcher {
+    --zdp-locale-focus-bleed: calc(var(--zdp-control-focus-outline-width) + var(--zdp-control-focus-outline-offset));
+
     align-items: center;
     background: var(--zdp-color-surface-raised);
     border: var(--zdp-control-border-width) solid transparent;
@@ -141,7 +158,12 @@
     gap: var(--zdp-space-1);
     max-width: 100%;
     min-width: 0;
-    padding: var(--zdp-space-1);
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    padding: max(var(--zdp-space-1), var(--zdp-locale-focus-bleed));
+    scroll-padding-inline: var(--zdp-locale-focus-bleed);
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
   }
 
   .zdp-locale-switcher__item {
@@ -153,6 +175,7 @@
     color: var(--zdp-color-ink-muted);
     cursor: pointer;
     display: inline-grid;
+    flex: 0 0 auto;
     font-family: var(--zdp-font-family-sans);
     font-weight: var(--zdp-font-weight-semibold);
     justify-content: center;

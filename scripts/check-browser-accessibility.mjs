@@ -34,6 +34,7 @@ import { verifyReservedNavigationContracts } from './browser/check-reserved-navi
 import { verifyToastStackOverflowContracts, verifyToastTitleOverflowContracts } from './browser/check-toast-overflow.mjs';
 import { verifyThemeToggleActionContracts } from './browser/check-theme-toggle.mjs';
 import { verifyCodeMetadataOverflowContracts } from './browser/check-code-metadata.mjs';
+import { verifyLocaleOverflowContracts } from './browser/check-locale-overflow.mjs';
 import { verifyFrameModalContracts } from './browser/check-frame-modals.mjs';
 import { verifyFramePopoverContracts } from './browser/check-frame-popover.mjs';
 import { verifyTooltipHoverContracts } from './browser/check-tooltip-hover.mjs';
@@ -153,6 +154,7 @@ try {
   await verifyToastTitleOverflowContracts(page);
   await verifyThemeToggleActionContracts(page);
   await verifyCodeMetadataOverflowContracts(page);
+  await verifyLocaleOverflowContracts(page);
   await verifyAvatarFallbackContracts(page);
   await verifyTooltipHoverContracts(page);
   await verifyShadowOverlayContracts(page);

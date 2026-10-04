@@ -477,6 +477,8 @@
 }
 
 .zdp-locale-switcher {
+  --zdp-locale-focus-bleed: calc(var(--zdp-control-focus-outline-width) + var(--zdp-control-focus-outline-offset));
+
   align-items: center;
   background: var(--zdp-color-surface-raised);
   border: var(--zdp-control-border-width) solid transparent;
@@ -489,7 +491,12 @@
   gap: var(--zdp-space-1);
   max-width: 100%;
   min-width: 0;
-  padding: var(--zdp-space-1);
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  padding: max(var(--zdp-space-1), var(--zdp-locale-focus-bleed));
+  scroll-padding-inline: var(--zdp-locale-focus-bleed);
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
 }
 
 .zdp-locale-switcher__item {
@@ -501,6 +508,7 @@
   color: var(--zdp-color-ink-muted);
   cursor: pointer;
   display: inline-grid;
+  flex: 0 0 auto;
   font-family: var(--zdp-font-family-sans);
   font-weight: var(--zdp-font-weight-semibold);
   justify-content: center;
