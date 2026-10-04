@@ -16,6 +16,7 @@
   let startX = 0;
   let trackWidth = 1;
   let startedAt = 0;
+  let interactionDurationMs = 2000;
   let progressFrame: number | null = null;
   let confirmTimer: number | null = null;
   let resetTimer: number | null = null;
@@ -23,6 +24,10 @@
   $: safeDurationMs = Math.min(2_147_483_647, Math.max(600, Number.isFinite(durationMs) ? durationMs : 2000));
   $: progressStyle = `--zdp-confirm-action-progress: ${progress};`;
   $: if (disabled && active) {
+    cancelInteraction();
+  }
+
+  $: if (active && safeDurationMs !== interactionDurationMs) {
     cancelInteraction();
   }
 
@@ -36,10 +41,11 @@
     progress = 0;
     startX = clientX ?? 0;
     trackWidth = Math.max(1, element.getBoundingClientRect().width);
+    interactionDurationMs = safeDurationMs;
     startedAt = performance.now();
     addCancellationListeners();
     progressFrame = window.requestAnimationFrame(updateHoldProgress);
-    confirmTimer = window.setTimeout(confirmAction, safeDurationMs);
+    confirmTimer = window.setTimeout(confirmAction, interactionDurationMs);
   }
 
   function updateHoldProgress(now: number): void {
@@ -50,7 +56,7 @@
       return;
     }
 
-    progress = Math.max(progress, Math.min(1, (now - startedAt) / safeDurationMs));
+    progress = Math.max(progress, Math.min(1, (now - startedAt) / interactionDurationMs));
     progressFrame = window.requestAnimationFrame(updateHoldProgress);
   }
 

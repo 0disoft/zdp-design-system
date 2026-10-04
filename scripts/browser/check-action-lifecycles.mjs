@@ -51,6 +51,34 @@ export async function verifyConfirmDurationContracts(page) {
   }
 }
 
+export async function verifyChangingConfirmDurationContracts(page) {
+  const button = page.locator('#changing-duration-confirm-action');
+  const count = page.getByTestId('changing-duration-confirm-count');
+  await button.focus();
+  await page.keyboard.down('Enter');
+  try {
+    await page.getByTestId('confirm-duration-longer').evaluate((element) => element.click());
+    assert.equal(await button.getAttribute('data-active'), null, 'Increasing the duration must cancel the current hold.');
+    await page.waitForTimeout(750);
+    assert.equal(await count.textContent(), '0', 'The original shorter timer must not confirm after cancellation.');
+  } finally { await page.keyboard.up('Enter'); }
+  await page.keyboard.down('Enter');
+  try {
+    await page.waitForTimeout(700);
+    assert.equal(await count.textContent(), '0', 'A new hold must use the longer duration.');
+    await page.waitForFunction(() => document.querySelector('[data-testid="changing-duration-confirm-count"]').textContent === '1');
+  } finally { await page.keyboard.up('Enter'); }
+  await page.waitForFunction(() => !document.querySelector('#changing-duration-confirm-action').hasAttribute('data-confirmed'));
+  await page.keyboard.down('Enter');
+  try {
+    await page.getByTestId('confirm-duration-shorter').evaluate((element) => element.click());
+    assert.equal(await button.getAttribute('data-active'), null, 'Decreasing the duration must also cancel the current hold.');
+    assert.equal(await button.evaluate((element) => element.style.getPropertyValue('--zdp-confirm-action-progress')), '0');
+    await page.waitForTimeout(2100);
+    assert.equal(await count.textContent(), '1', 'The cancelled longer timer must not fire.');
+  } finally { await page.keyboard.up('Enter'); }
+}
+
 export async function verifyCopyLifecycleContracts(page) {
   const fixture = page.getByTestId('copy-lifecycle');
   const button = fixture.locator('.zdp-code-block__copy');
