@@ -37,7 +37,6 @@ export function moveZdpRovingFocus(options: ZdpRovingFocusOptions): ZdpRovingFoc
   }
 
   const document = container.ownerDocument;
-  const HTMLElementConstructor = document.defaultView?.HTMLElement;
   const elements = Array.from(container.querySelectorAll<HTMLElement>(selector)).filter(
     (element) => element.ownerDocument === document
   );
@@ -45,10 +44,9 @@ export function moveZdpRovingFocus(options: ZdpRovingFocusOptions): ZdpRovingFoc
     return null;
   }
 
-  const eventTarget = HTMLElementConstructor !== undefined && event.target instanceof HTMLElementConstructor
-    ? event.target
-    : null;
-  const currentElement = eventTarget !== null && elements.includes(eventTarget)
+  // Candidate identity remains valid when elements are adopted into another realm.
+  const eventTarget = elements.find((element) => element === event.target) ?? null;
+  const currentElement = eventTarget !== null
     ? eventTarget
     : fallbackElement !== null && elements.includes(fallbackElement)
       ? fallbackElement
