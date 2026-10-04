@@ -60,7 +60,7 @@ export function parseComponentProps(script: string, label: string): {
           name: declaration.name.text,
           type: declaration.type ? printType(declaration.type, file) : initializer ? inferType(initializer, file) : 'unknown',
           required: initializer === undefined,
-          bindable: false,
+          bindable: true,
           ...(initializer ? { defaultValue: printExpression(initializer, file) } : {})
         }, label);
       }
@@ -182,9 +182,12 @@ function bindingDefaults(
     const name = element.propertyName ? propertyName(element.propertyName, file) : element.name.text;
     if (element.initializer) {
       const expression = unwrapExpression(element.initializer);
+      const bindable = isCallExpression(expression) && isIdentifier(expression.expression) && expression.expression.text === '$bindable';
       result.set(name, {
-        value: printExpression(element.initializer, file),
-        bindable: isCallExpression(expression) && isIdentifier(expression.expression) && expression.expression.text === '$bindable'
+        value: bindable
+          ? expression.arguments[0] ? printExpression(expression.arguments[0], file) : 'undefined'
+          : printExpression(element.initializer, file),
+        bindable
       });
     }
   }

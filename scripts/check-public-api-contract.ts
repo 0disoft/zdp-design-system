@@ -1,3 +1,4 @@
+import { parseComponentProps } from './public-api-contract/props';
 import {
   comparePublicApiContracts,
   createGitRefReader,
@@ -81,6 +82,14 @@ function parseCliOptions(args: readonly string[]): CliOptions {
 }
 
 function runComparatorSelfTest(): void {
+  const legacy = parseComponentProps("export let value: string = '';", 'legacy fixture');
+  const runes = parseComponentProps("let { value = $bindable('') }: { value?: string } = $props();", 'runes fixture');
+  const readonly = parseComponentProps("let { value = '' }: { value?: string } = $props();", 'readonly fixture');
+  const legacyContract = createFixtureContract('0.63.0', [createFixtureComponent('Field', legacy.props)]);
+  assertEqual(legacy.props[0]?.bindable, true, 'legacy props support bindings');
+  assertEqual(runes.props[0]?.defaultValue, "''", 'bindable fallback extraction');
+  assertEqual(comparePublicApiContracts(legacyContract, createFixtureContract('0.63.0', [createFixtureComponent('Field', runes.props)])).level, 'none', 'equivalent legacy and rune contracts');
+  assertEqual(comparePublicApiContracts(legacyContract, createFixtureContract('0.63.0', [createFixtureComponent('Field', readonly.props)])).level, 'breaking', 'removed legacy binding');
   const base = createFixtureContract('0.61.0', [
     createFixtureComponent('Button', [
       { name: 'disabled', type: 'boolean', required: false, bindable: false, defaultValue: 'false' }
