@@ -112,13 +112,13 @@ export const zdpShortcutReservedExamples = [
  */
 export function isZdpTextEntryTarget(target: EventTarget | null): boolean {
   const element = target as Element | null;
-  const view = element?.ownerDocument?.defaultView;
-  if (!view || !(element instanceof view.Element)) {
+  // Adopted nodes keep their original constructors after ownerDocument changes.
+  if (element?.nodeType !== 1 || typeof element.closest !== 'function') {
     return false;
   }
 
-  const editableElement = element instanceof view.HTMLElement
-    ? element
+  const editableElement = element.namespaceURI === 'http://www.w3.org/1999/xhtml'
+    ? element as HTMLElement
     : element.closest<HTMLElement>('[contenteditable]');
 
   return editableElement?.isContentEditable === true || element.closest(textEntrySelector) !== null;
