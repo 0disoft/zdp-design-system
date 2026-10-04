@@ -30,6 +30,7 @@ import { verifyResponsiveFocusContracts } from './browser/check-responsive-focus
 import { verifyAccordionInstanceContracts } from './browser/check-accordion-instances.mjs';
 import { verifyAvatarFallbackContracts } from './browser/check-avatar-fallback.mjs';
 import { verifyFrameRovingContracts } from './browser/check-frame-roving.mjs';
+import { verifyReservedNavigationContracts } from './browser/check-reserved-navigation.mjs';
 import { verifyFrameModalContracts } from './browser/check-frame-modals.mjs';
 import { verifyFramePopoverContracts } from './browser/check-frame-popover.mjs';
 import { verifyTooltipHoverContracts } from './browser/check-tooltip-hover.mjs';
@@ -143,6 +144,7 @@ try {
   await verifyFramePopoverContracts(page);
   await verifyFrameModalContracts(page);
   await verifyFrameRovingContracts(page);
+  await verifyReservedNavigationContracts(page);
   await verifyAvatarFallbackContracts(page);
   await verifyTooltipHoverContracts(page);
   await verifyShadowOverlayContracts(page);

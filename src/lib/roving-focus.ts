@@ -32,7 +32,7 @@ export interface ZdpRovingFocusResult {
 
 export function moveZdpRovingFocus(options: ZdpRovingFocusOptions): ZdpRovingFocusResult | null {
   const { container, event, fallbackElement = null, orientation, selector } = options;
-  if (!isOrientationKey(event.key, orientation)) {
+  if (event.altKey || event.ctrlKey || event.metaKey || !isOrientationKey(event.key, orientation)) {
     return null;
   }
 

@@ -122,6 +122,7 @@ stability=contract
   }
 
   function handleTriggerKeydown(event: KeyboardEvent): void {
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
     if (event.key === 'ArrowDown') {
       event.preventDefault();
       openMenu('first');
@@ -168,6 +169,7 @@ stability=contract
   }
 
   function handlePanelKeydown(event: KeyboardEvent): void {
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
     if (event.key === 'Tab') {
       closeMenu(false);
       return;
