@@ -614,7 +614,7 @@
         <Surface padding="lg">
           <Stack gap="md">
             <h3>Theme Toggle</h3>
-            <p>어두운 표면에서도 토글은 같은 focus와 pressed 상태를 씁니다.</p>
+            <p>어두운 표면에서도 같은 포커스 표시와 전환 안내를 유지합니다.</p>
             <Inline gap="sm" align="center">
               <ThemeToggle
                 theme={darkTheme}

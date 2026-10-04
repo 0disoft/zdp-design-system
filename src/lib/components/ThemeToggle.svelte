@@ -28,7 +28,6 @@
   {type}
   {disabled}
   aria-label={ariaLabel}
-  aria-pressed={isDark}
   aria-controls={ariaControls ?? undefined}
   aria-describedby={ariaDescribedBy ?? undefined}
   data-zdp-theme-toggle

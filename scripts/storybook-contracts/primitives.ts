@@ -63,7 +63,7 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
     'size: ZdpThemeToggleSize',
     "lightLabel = 'Switch to light mode'",
     "darkLabel = 'Switch to dark mode'",
-    'aria-pressed={isDark}',
+    'aria-label={ariaLabel}',
     'data-zdp-theme-toggle',
     'data-zdp-theme-state={theme}',
     'class={`zdp-theme-toggle zdp-theme-toggle--${size}`}',
@@ -78,6 +78,9 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
     if (!themeToggle.includes(requiredText)) {
       failures.push(`ThemeToggle component is missing ${requiredText}.`);
     }
+  }
+  if (themeToggle.includes('aria-pressed=')) {
+    failures.push('ThemeToggle must expose its changing action label as an ordinary button.');
   }
 
   for (const requiredText of [
