@@ -84,6 +84,15 @@
   <output data-testid="tabs-bound-selection">{selectedTabId}</output>
 </section>
 
+<section data-testid="default-selection-fixture" aria-label="Default selection hydration fixture">
+  <Tabs items={tabItems} ariaLabel="Default sections" let:selectedId>
+    <p data-testid="default-tab-content">{selectedId}</p>
+  </Tabs>
+  <SegmentedControl items={segmentedItems} ariaLabel="Default view" />
+  <Combobox label="Initial hydration choice" value="alpha" options={comboboxOptions} />
+  <Combobox label="Edited hydration choice" value="alpha" query="Typed search" options={comboboxOptions} />
+</section>
+
 <section data-testid="combobox-hydration-fixture" aria-label="Combobox hydration fixture">
   <Combobox
     label="Hydration choice"

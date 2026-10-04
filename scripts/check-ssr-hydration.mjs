@@ -205,6 +205,15 @@ try {
   }));
 
   assert.equal(result.error, null, `Design system hydration failed: ${result.error}`);
+  const expectedInitialSelection = {
+    tab: 'true',
+    tabContent: 'overview',
+    segmented: 'true',
+    combobox: 'Alpha',
+    editedCombobox: 'Typed search'
+  };
+  assert.deepEqual(result.before.initialSelection, expectedInitialSelection, 'SSR must render default selections and preserve an explicit search query.');
+  assert.deepEqual(result.after.initialSelection, expectedInitialSelection, 'Hydration must preserve the initial selected content.');
   assert.deepEqual(result.after.ids, result.before.ids, 'Hydration must preserve generated DOM ids exactly.');
   assert.deepEqual(
     result.after.idReferences,
@@ -223,7 +232,7 @@ try {
   await page.getByTestId('term-sheet-bound-open').getByText('closed', { exact: true }).waitFor();
   assert.equal(await page.getByRole('dialog', { name: 'Hydration term' }).count(), 0, 'TermSheet must close after hydration.');
 
-  await page.getByRole('tab', { name: 'History' }).click();
+  await page.getByTestId('tabs-hydration-fixture').getByRole('tab', { name: 'History' }).click();
   await page.getByTestId('tabs-slot-selection').getByText('history', { exact: true }).waitFor();
   assert.equal(
     await page.getByTestId('tabs-bound-selection').textContent(),
@@ -231,7 +240,7 @@ try {
     'Tabs bind:selectedId contract must update after hydration.'
   );
 
-  const combobox = page.getByRole('combobox', { name: 'Hydration choice' });
+  const combobox = page.getByRole('combobox', { name: 'Hydration choice', exact: true });
   await combobox.click();
   const listboxId = await combobox.getAttribute('aria-controls');
   assert.ok(listboxId, 'Hydrated Combobox must expose its generated listbox id while open.');
@@ -313,6 +322,13 @@ function createIdHydrationHtml(body) {
     <main id="app">${body}</main>
     <script>
       window.__zdpCaptureHydrationContract = (root) => ({
+        initialSelection: {
+          tab: root.querySelector('[aria-label="Default sections"] [role="tab"]').getAttribute('aria-selected'),
+          tabContent: root.querySelector('[data-testid="default-tab-content"]').textContent,
+          segmented: root.querySelector('[aria-label="Default view"] [role="radio"]').getAttribute('aria-checked'),
+          combobox: root.querySelector('[data-testid="default-selection-fixture"] .zdp-combobox__input').value,
+          editedCombobox: root.querySelectorAll('[data-testid="default-selection-fixture"] .zdp-combobox__input')[1].value
+        },
         ids: Array.from(root.querySelectorAll('[id]'), (element) => element.id),
         idReferences: Array.from(
           root.querySelectorAll('[aria-activedescendant], [aria-controls], [aria-describedby], [aria-labelledby]')

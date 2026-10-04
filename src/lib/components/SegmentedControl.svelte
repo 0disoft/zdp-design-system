@@ -28,7 +28,7 @@
     items.find((item) => !item.disabled) ??
     null
   );
-  const selectedItem = $derived(items.find((item) => item.id === selectedId && !item.disabled) ?? null);
+  const selectedItem = $derived(normalizedSelectedItem);
   const activeId = $derived(selectedItem?.id ?? '');
   const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
 

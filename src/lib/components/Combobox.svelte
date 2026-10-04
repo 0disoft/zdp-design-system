@@ -81,6 +81,7 @@
   const selectedOptionLabel = $derived(
     selectedOption?.label ?? (value === lastSelectedValue ? lastSelectedLabel : '')
   );
+  const displayQuery = $derived(queryDirty ? query : selectedOptionLabel || query);
   const resolvedIdPrefix = $derived(toDomId(id ?? fallbackIdPrefix));
   const inputId = $derived(id ?? `${resolvedIdPrefix}-input`);
   const listboxId = $derived(`${resolvedIdPrefix}-listbox`);
@@ -391,7 +392,7 @@
       id={inputId}
       role="combobox"
       type="text"
-      value={query}
+      value={displayQuery}
       placeholder={placeholder ?? undefined}
       autocomplete={autocomplete ?? undefined}
       aria-label={inputAriaLabel}
