@@ -37,11 +37,16 @@ export function syncZdpFormReset<Control extends FormControl>(
   // Hydration may remove SSR value/checked attributes later in this turn.
   queueMicrotask(() => { if (active) restoreDefaults(); });
   const timers = new Set<ReturnType<typeof setTimeout>>();
-  const roots = new Set<EventTarget>([control.ownerDocument, control.getRootNode()]);
+  // A listener on the form travels with it across shadow roots and documents.
+  const roots = new Set<EventTarget>([
+    control.ownerDocument, control.getRootNode(), ...(control.form ? [control.form] : [])
+  ]);
+  const handledResets = new WeakSet<Event>();
   const handleReset = (event: Event): void => {
     // Shadow-root dispatch clears event.target after the listeners finish.
     const form = control.form;
-    if (event.target !== form || form === null) return;
+    if (event.target !== form || form === null || handledResets.has(event)) return;
+    handledResets.add(event);
     // Options can arrive or be replaced after mount. Set their defaults before
     // the native reset algorithm runs, while preserving a cancelled reset's value.
     if ('options' in control) restoreDefaults();

@@ -11,7 +11,7 @@ import { verifyAsyncSelectResetContracts, verifyFormResetContracts, verifyNative
 import { verifyComboboxSelectionContracts } from './browser/check-combobox-selection.mjs';
 import { verifyChangingConfirmDurationContracts, verifyConfirmDurationContracts, verifyConfirmRepeatContracts, verifyTouchConfirmContracts, verifyCopyLifecycleContracts } from './browser/check-action-lifecycles.mjs';
 import { verifyCommandFieldContracts } from './browser/check-command-field.mjs';
-import { verifyShadowFormResetContracts } from './browser/check-shadow-form-reset.mjs';
+import { verifyMovedFormResetContracts, verifyShadowFormResetContracts } from './browser/check-shadow-form-reset.mjs';
 import { verifyShortcutEditingContracts } from './browser/check-shortcuts.mjs';
 import { verifyModalContracts, verifyNestedModalContracts } from './browser/check-modals.mjs';
 import { verifyShadowFocusContracts } from './browser/check-shadow-focus.mjs';
@@ -103,6 +103,7 @@ try {
   await verifyNativeInputContracts(page);
   await verifyFormResetContracts(page);
   await verifyShadowFormResetContracts(page);
+  await verifyMovedFormResetContracts(page);
   await verifyCommandFieldContracts(page);
   await verifyAsyncSelectResetContracts(page);
   await verifyComboboxSelectionContracts(page);
