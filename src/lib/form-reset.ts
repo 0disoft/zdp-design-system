@@ -39,14 +39,16 @@ export function syncZdpFormReset<Control extends FormControl>(
   const timers = new Set<ReturnType<typeof setTimeout>>();
   const roots = new Set<EventTarget>([control.ownerDocument, control.getRootNode()]);
   const handleReset = (event: Event): void => {
-    if (event.target !== control.form || control.form === null) return;
+    // Shadow-root dispatch clears event.target after the listeners finish.
+    const form = control.form;
+    if (event.target !== form || form === null) return;
     // Options can arrive or be replaced after mount. Set their defaults before
     // the native reset algorithm runs, while preserving a cancelled reset's value.
     if ('options' in control) restoreDefaults();
     // A task waits for native restoration and later listeners that cancel reset.
     const timer = setTimeout(() => {
       timers.delete(timer);
-      if (active && control.isConnected && !event.defaultPrevented && event.target === control.form) {
+      if (active && control.isConnected && !event.defaultPrevented && control.form === form) {
         options.onReset(control);
       }
     }, 0);
