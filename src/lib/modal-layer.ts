@@ -26,6 +26,7 @@ interface ZdpModalLayerDocumentState {
   managedBodyOverflow: ManagedInlineStyle | null;
   managedBodyPaddingInlineEnd: ManagedInlineStyle | null;
   managedInertElements: Set<HTMLElement>;
+  isolationObserver: MutationObserver | null;
 }
 
 interface ManagedInlineStyle {
@@ -145,7 +146,8 @@ function getDocumentState(document: Document): ZdpModalLayerDocumentState {
     layers: new Set(),
     managedBodyOverflow: null,
     managedBodyPaddingInlineEnd: null,
-    managedInertElements: new Set()
+    managedInertElements: new Set(),
+    isolationObserver: null
   };
   documentStates.set(document, state);
   return state;
@@ -266,6 +268,12 @@ function syncDocumentIsolation(state: ZdpModalLayerDocumentState): void {
   const topLayer = Array.from(state.layers).find((layer) => layer.id === topLayerId);
   let activeBranch = topLayer?.root ?? null;
   const nextInertElements = new Set<HTMLElement>();
+  const observedParents = new Set<HTMLElement | ShadowRoot>();
+
+  state.isolationObserver?.disconnect();
+  if (topLayer !== undefined) {
+    observedParents.add(document.body);
+  }
 
   while (activeBranch !== null && activeBranch !== document.body) {
     const parentNode = activeBranch.parentNode;
@@ -274,8 +282,10 @@ function syncDocumentIsolation(state: ZdpModalLayerDocumentState): void {
       : null;
 
     if (parent === null) {
-      return;
+      break;
     }
+
+    observedParents.add(parent);
 
     for (const sibling of parent.children) {
       if (sibling === activeBranch || !isDocumentHTMLElement(document, sibling)) {
@@ -290,6 +300,24 @@ function syncDocumentIsolation(state: ZdpModalLayerDocumentState): void {
         ? parent.host
         : null
       : parent;
+  }
+
+  // A detached layer has no background branch to isolate until it is reinserted.
+  if (activeBranch !== document.body) {
+    nextInertElements.clear();
+  }
+
+  if (observedParents.size === 0) {
+    state.isolationObserver = null;
+  } else {
+    const Observer = document.defaultView?.MutationObserver;
+    if (state.isolationObserver === null && Observer !== undefined) {
+      state.isolationObserver = new Observer(() => syncDocumentIsolation(state));
+    }
+    for (const parent of observedParents) {
+      // Only sibling-list changes matter; content and attribute updates do not.
+      state.isolationObserver?.observe(parent, { childList: true });
+    }
   }
 
   for (const element of state.managedInertElements) {

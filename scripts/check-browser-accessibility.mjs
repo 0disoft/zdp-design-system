@@ -10,6 +10,7 @@ import { verifyFormResetContracts, verifyNativeInputContracts } from './browser/
 import { verifyComboboxSelectionContracts } from './browser/check-combobox-selection.mjs';
 import { verifyConfirmRepeatContracts } from './browser/check-action-lifecycles.mjs';
 import { verifyModalContracts, verifyNestedModalContracts } from './browser/check-modals.mjs';
+import { verifyModalMutationContracts } from './browser/check-modal-mutations.mjs';
 import { verifyOverlayContracts, verifyShadowOverlayContracts } from './browser/check-overlays.mjs';
 import { verifyPageGutterContracts } from './browser/check-page-gutters.mjs';
 import { verifyResponsiveAndForcedColorContracts } from './browser/check-responsive-and-forced-colors.mjs';
@@ -88,6 +89,7 @@ try {
   await verifyConfirmRepeatContracts(page);
   await verifyOverlayContracts(page);
   await verifyModalContracts(page);
+  await verifyModalMutationContracts(page);
   await verifyShadowOverlayContracts(page);
   await verifyNestedModalContracts(page);
   await verifyResponsiveAndForcedColorContracts(page);
