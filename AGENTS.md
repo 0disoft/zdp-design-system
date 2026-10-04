@@ -29,7 +29,7 @@ This repository owns ZDP design tokens, shared CSS, icon guidance, and Svelte UI
 - Keep tokens stable, named by purpose, and reusable across public web, app shell, product lab, and game surfaces.
 - User-visible component text must stay natural and product-facing; implementation descriptions must not leak into UI labels.
 - Prefer accessible defaults for focus, contrast, hit targets, reduced motion, and semantic markup.
-- Agent verification must use the configured root mustflow intents, not raw Bun, Storybook, npm, or package scripts copied from README, CI, or package metadata.
+- Run relevant validation commands directly from package scripts, repository tooling, or CI. Workspace command registration is not required.
 
 ## Verification
 
