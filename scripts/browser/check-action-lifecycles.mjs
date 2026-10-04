@@ -1,5 +1,31 @@
 import assert from 'node:assert/strict';
 
+export async function verifyConfirmCompositionContracts(page) {
+  const button = page.locator('#repeat-confirm-action');
+  const count = page.getByTestId('repeat-confirm-count');
+  const previousCount = await count.textContent();
+  await button.focus();
+  for (const composing of [{ isComposing: true }, { keyCode: 229 }]) {
+    for (const key of ['Enter', ' ']) {
+      const prevented = await button.evaluate((element, { key, composing }) => {
+        const event = new KeyboardEvent('keydown', { key, ...composing, bubbles: true, cancelable: true });
+        element.dispatchEvent(event);
+        return event.defaultPrevented;
+      }, { key, composing });
+      assert.equal(prevented, false, 'Composition keydown must remain available to the IME.');
+      assert.equal(await button.getAttribute('data-active'), null, 'Composition must not start a confirmation hold.');
+      await page.waitForTimeout(650);
+      assert.equal(await count.textContent(), previousCount, 'Composition must not invoke the confirmation callback.');
+      const keyupPrevented = await button.evaluate((element, { key, composing }) => {
+        const event = new KeyboardEvent('keyup', { key, ...composing, bubbles: true, cancelable: true });
+        element.dispatchEvent(event);
+        return event.defaultPrevented;
+      }, { key, composing });
+      assert.equal(keyupPrevented, false, 'Composition keyup must remain available to the IME.');
+    }
+  }
+}
+
 export async function verifyConfirmRepeatContracts(page) {
   const button = page.locator('#repeat-confirm-action');
   const count = page.getByTestId('repeat-confirm-count');

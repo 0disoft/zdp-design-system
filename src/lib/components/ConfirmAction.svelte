@@ -188,6 +188,10 @@
   }
 
   function handleKeydown(event: KeyboardEvent): void {
+    if (event.isComposing || event.keyCode === 229) {
+      return;
+    }
+
     if (event.key !== 'Enter' && event.key !== ' ') {
       return;
     }
@@ -200,6 +204,10 @@
   }
 
   function handleKeyup(event: KeyboardEvent): void {
+    if (event.isComposing || event.keyCode === 229) {
+      return;
+    }
+
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       cancelInteraction();

@@ -9,7 +9,7 @@ import { verifySplitPointerOwnership } from './browser/check-split-pointer.mjs';
 import { verifyFoundationAndFormContracts } from './browser/check-foundation-and-forms.mjs';
 import { verifyAsyncSelectResetContracts, verifyFormResetContracts, verifyNativeInputContracts } from './browser/check-native-inputs.mjs';
 import { verifyComboboxEditingContracts, verifyComboboxSelectionContracts } from './browser/check-combobox-selection.mjs';
-import { verifyChangingConfirmDurationContracts, verifyConfirmDurationContracts, verifyConfirmRepeatContracts, verifyTouchConfirmContracts, verifyCopyLifecycleContracts } from './browser/check-action-lifecycles.mjs';
+import { verifyChangingConfirmDurationContracts, verifyConfirmCompositionContracts, verifyConfirmDurationContracts, verifyConfirmRepeatContracts, verifyTouchConfirmContracts, verifyCopyLifecycleContracts } from './browser/check-action-lifecycles.mjs';
 import { verifyEmptyTooltipContracts } from './browser/check-empty-tooltip.mjs';
 import { verifyDisclosureFocusContracts } from './browser/check-disclosure-focus.mjs';
 import { verifyPopoverFocusContracts } from './browser/check-popover-focus.mjs';
@@ -124,6 +124,7 @@ try {
   await verifyAsyncSelectResetContracts(page);
   await verifyComboboxSelectionContracts(page);
   await verifyComboboxEditingContracts(page);
+  await verifyConfirmCompositionContracts(page);
   await verifyConfirmRepeatContracts(page);
   await verifyTouchConfirmContracts(page);
   await verifyConfirmDurationContracts(page);
