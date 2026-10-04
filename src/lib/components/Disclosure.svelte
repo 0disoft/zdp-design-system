@@ -1,6 +1,6 @@
 <script lang="ts">
   import { tick } from 'svelte';
-  import { getZdpActiveElement } from '../focusable';
+  import { getZdpActiveElement, hasZdpFocusMoved } from '../focusable';
   import { toZdpDomId } from '../dom-id';
   import type { ZdpDisclosureHeadingLevel } from '../disclosure';
 
@@ -44,9 +44,7 @@
   async function restoreCollapsedFocus(root: HTMLElement, previous: HTMLElement): Promise<void> {
     await tick();
     if (open || rootElement !== root || !root.isConnected) return;
-    const document = root.ownerDocument;
-    const focused = getZdpActiveElement(root.getRootNode() as Document | ShadowRoot);
-    if (focused !== previous && focused !== document.body && focused !== document.documentElement) return;
+    if (hasZdpFocusMoved(root, previous)) return;
     (root.querySelector<HTMLElement>('.zdp-disclosure__trigger:not(:disabled)') ?? root).focus();
   }
 

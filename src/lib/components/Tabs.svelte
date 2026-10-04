@@ -1,6 +1,6 @@
 <script lang="ts">
   import { tick } from 'svelte';
-  import { getZdpActiveElement } from '../focusable';
+  import { getZdpActiveElement, hasZdpFocusMoved } from '../focusable';
   import { toZdpDomId } from '../dom-id';
   import { moveZdpRovingFocus } from '../roving-focus';
 
@@ -47,9 +47,8 @@
     await tick();
     if (rootElement !== root || tabListElement !== list || !root.isConnected) return;
     const focused = getZdpActiveElement(list.getRootNode() as Document | ShadowRoot);
-    const document = list.ownerDocument;
     // Preserve a consumer's deliberate focus move during the update.
-    if (focused !== null && focused !== previous && focused !== document.body && focused !== document.documentElement) return;
+    if (hasZdpFocusMoved(root, previous)) return;
     const target = previous.isConnected && root.contains(previous) &&
       !previous.matches(':disabled') && previous.getClientRects().length > 0
       ? previous

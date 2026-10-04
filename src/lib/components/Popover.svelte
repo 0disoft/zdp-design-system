@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { onDestroy } from 'svelte';
+  import { onDestroy, tick } from 'svelte';
   import { createZdpDismissLayer } from '../dismiss-layer';
   import { toZdpDomId } from '../dom-id';
-  import { getZdpActiveElement } from '../focusable';
+  import { getZdpActiveElement, hasZdpFocusMoved } from '../focusable';
 
   type Placement = 'top' | 'right' | 'bottom' | 'left';
   type Alignment = 'start' | 'center' | 'end';
@@ -39,7 +39,7 @@
   let rootElement = $state<HTMLElement | null>(null);
   let previousFocusElement = $state<HTMLElement | null>(null);
   let knownOpenState = $state(false);
-  let restoreFocusAfterClose = $state(false);
+  let restoreFocusAfterClose = $state<boolean | null>(null);
   const dismissLayer = createZdpDismissLayer();
 
   const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
@@ -53,12 +53,32 @@
 
     knownOpenState = open;
     if (open) {
+      restoreFocusAfterClose = null;
       capturePreviousFocus();
-    } else if (restoreFocusAfterClose) {
-      restorePreviousFocus();
-      restoreFocusAfterClose = false;
+    } else {
+      if (restoreFocusAfterClose === true) restorePreviousFocus();
+      restoreFocusAfterClose = null;
     }
   });
+
+  $effect.pre(() => {
+    const root = rootElement;
+    if (open || restoreFocusAfterClose !== null || !root) return;
+    const focused = getZdpActiveElement(root.getRootNode() as Document | ShadowRoot);
+    const panel = root.querySelector('.zdp-popover__panel');
+    if (focused && panel?.contains(focused)) {
+      void restoreExternallyClosedFocus(root, focused, previousFocusElement);
+    }
+  });
+
+  async function restoreExternallyClosedFocus(
+    root: HTMLElement, previous: HTMLElement, returnTarget: HTMLElement | null
+  ): Promise<void> {
+    await tick();
+    if (open || rootElement !== root || !root.isConnected) return;
+    if (hasZdpFocusMoved(root, previous)) return;
+    if (returnTarget?.isConnected) returnTarget.focus();
+  }
 
   $effect.pre(() => {
     dismissLayer.setActive(open, rootElement, {
@@ -90,6 +110,7 @@
   }
 
   function close(restoreFocus = true): void {
+    if (!open) return;
     restoreFocusAfterClose = restoreFocus;
     setOpen(false);
   }

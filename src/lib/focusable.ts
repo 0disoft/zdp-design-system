@@ -206,6 +206,17 @@ function collectComposedCandidates(root: HTMLElement, shadowRoots: Set<ShadowRoo
   return candidates;
 }
 
+/** Whether rendering should preserve focus deliberately moved away from a control. */
+export function hasZdpFocusMoved(root: HTMLElement, previous: HTMLElement): boolean {
+  const document = root.ownerDocument;
+  const focused = getZdpActiveElement(document);
+  if (focused === null || focused === previous || focused === document.body || focused === document.documentElement) return false;
+  const tree = root.getRootNode();
+  // Removing a focused shadow descendant can leave its non-tabbable host active.
+  return !(tree.nodeType === 11 && focused === (tree as ShadowRoot).host &&
+    (tree as ShadowRoot).activeElement === null && focused.tabIndex < 0);
+}
+
 export function getZdpActiveElement(root: Document | ShadowRoot = document): HTMLElement | null {
   let activeElement = root.activeElement;
 
