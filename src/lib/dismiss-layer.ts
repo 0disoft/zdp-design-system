@@ -129,7 +129,7 @@ function findTopOutsideLayer(layers: readonly ZdpDismissLayerEntry[]): ZdpDismis
 }
 
 function dismissEscape(state: ZdpDismissDocumentState, event: KeyboardEvent): void {
-  if (event.key !== 'Escape') {
+  if (event.key !== 'Escape' || event.isComposing || event.keyCode === 229) {
     return;
   }
 
