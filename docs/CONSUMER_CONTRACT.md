@@ -45,6 +45,8 @@ Default component text is English. 소비 앱은 화면 locale에 맞춰 user-fa
 
 ## Svelte 소비 표면
 
+Input supports native `min`, `max`, `step`, `pattern`, `minlength`, and `maxlength` constraints. Input and Textarea both accept `form`, `inputmode`, `enterkeyhint`, `ariaLabel`, and `oninput`/`onchange`/`onfocus`/`onblur`/`onkeydown` callbacks. `oninput` receives the original DOM event after the component updates its bound string value; browser constraint validation and associated-form submission keep their native behavior.
+
 Svelte 앱과 Svelte island는 token-only CSS와 필요한 컴포넌트 subpath를 직접 불러온다.
 
 ```ts

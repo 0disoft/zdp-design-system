@@ -1,10 +1,24 @@
 <script lang="ts">
+  import type { HTMLTextareaAttributes } from 'svelte/elements';
+
   type DescribedBy = string | readonly string[] | null;
 
   export let id: string | null = null;
   export let name: string | null = null;
   export let value = '';
   export let placeholder: string | null = null;
+  export let autocomplete: HTMLTextareaAttributes['autocomplete'] | null = null;
+  export let form: string | null = null;
+  export let minlength: number | null = null;
+  export let maxlength: number | null = null;
+  export let inputmode: HTMLTextareaAttributes['inputmode'] | null = null;
+  export let enterkeyhint: HTMLTextareaAttributes['enterkeyhint'] | null = null;
+  export let ariaLabel: string | null = null;
+  export let oninput: ((event: Event) => void) | null = null;
+  export let onchange: ((event: Event) => void) | null = null;
+  export let onfocus: ((event: FocusEvent) => void) | null = null;
+  export let onblur: ((event: FocusEvent) => void) | null = null;
+  export let onkeydown: ((event: KeyboardEvent) => void) | null = null;
   export let describedBy: DescribedBy = null;
   export let errorMessageId: string | null = null;
   export let invalid = false;
@@ -18,6 +32,7 @@
 
   function handleInput(event: Event): void {
     value = (event.currentTarget as HTMLTextAreaElement).value;
+    oninput?.(event);
   }
 
   function normalizeIdRefs(value: DescribedBy): string | null {
@@ -41,6 +56,13 @@
   name={name ?? undefined}
   {value}
   placeholder={placeholder ?? undefined}
+  autocomplete={autocomplete ?? undefined}
+  form={form ?? undefined}
+  minlength={minlength ?? undefined}
+  maxlength={maxlength ?? undefined}
+  inputmode={inputmode ?? undefined}
+  enterkeyhint={enterkeyhint ?? undefined}
+  aria-label={ariaLabel ?? undefined}
   aria-describedby={ariaDescribedBy ?? undefined}
   aria-errormessage={resolvedErrorMessageId ?? undefined}
   aria-invalid={invalid ? 'true' : undefined}
@@ -49,6 +71,10 @@
   {required}
   {rows}
   oninput={handleInput}
+  onchange={onchange ?? undefined}
+  onfocus={onfocus ?? undefined}
+  onblur={onblur ?? undefined}
+  onkeydown={onkeydown ?? undefined}
 ></textarea>
 
 <style>

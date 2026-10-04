@@ -13,6 +13,7 @@
   import LocaleSwitcher from '../../../src/lib/components/LocaleSwitcher.svelte';
   import ModalBoundaryFixture from './ModalBoundaryFixture.svelte';
   import ModalDocumentFixture from './ModalDocumentFixture.svelte';
+  import NativeInputFixture from './NativeInputFixture.svelte';
   import Popover from '../../../src/lib/components/Popover.svelte';
   import ResizableSplitPane from '../../../src/lib/components/ResizableSplitPane.svelte';
   import Radio from '../../../src/lib/components/Radio.svelte';
@@ -840,6 +841,7 @@
   <section id="release-details" aria-label="Release details">
     <p>Keyboard navigation reached the explicit link.</p>
   </section>
+  <NativeInputFixture />
 </main>
 
 <style>
