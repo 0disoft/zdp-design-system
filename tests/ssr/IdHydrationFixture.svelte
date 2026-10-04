@@ -99,6 +99,10 @@
   <button type="button" onclick={() => (controlledQuery = 'Beta')}>Replace controlled query</button>
   <button type="button" onclick={() => (controlledQuery = '')}>Clear controlled query</button>
   <button type="button" onclick={() => (controlledValue = 'beta')}>Replace controlled selection</button>
+  <LocaleSwitcher ariaLabel="Fallback language" options={[{ value: 'en', label: 'English', disabled: true }, { value: 'ko', label: 'Korean' }]} />
+  <TextScaleControl ariaLabel="Fallback text size" options={[{ value: 'large', label: 'Large' }, { value: 'larger', label: 'Larger' }]} />
+  <LocaleSwitcher ariaLabel="Unavailable language" options={[{ value: 'en', label: 'English', disabled: true }]} />
+  <TextScaleControl ariaLabel="Unavailable text size" options={[{ value: 'base', label: 'Base', disabled: true }]} />
 </section>
 
 <section data-testid="combobox-hydration-fixture" aria-label="Combobox hydration fixture">
