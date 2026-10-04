@@ -62,6 +62,12 @@ stability=contract
 
   $effect.pre(() => {
     activeItemId = resolveActiveItemId(activeItemId, enabledItems);
+    const panel = panelElement;
+    const focused = panel ? getZdpActiveElement(panel.ownerDocument) : null;
+    if (open && panel && focused && panel.contains(focused) &&
+      (focused === panel || !enabledItems.some((item) => item.id === focused.dataset.menuItemId))) {
+      void recoverMenuFocus(panel, focused);
+    }
   });
 
   $effect.pre(() => {
@@ -212,7 +218,18 @@ stability=contract
       (element) => element.dataset.menuItemId === activeItemId
     );
 
-    nextItem?.focus();
+    (nextItem ?? panelElement)?.focus();
+  }
+
+  async function recoverMenuFocus(panel: HTMLElement, previous: HTMLElement): Promise<void> {
+    await tick();
+    if (!open || panelElement !== panel || !panel.isConnected) return;
+    const document = panel.ownerDocument;
+    const focused = getZdpActiveElement(document);
+    // A removed or disabled control may leave focus on the document. Do not
+    // override a consumer moving focus to another control during this update.
+    if (focused !== previous && focused !== document.body && focused !== document.documentElement) return;
+    focusActiveItem();
   }
 
   function resolveActiveItemId(currentId: string, availableItems: readonly ZdpMenuItem[]): string {

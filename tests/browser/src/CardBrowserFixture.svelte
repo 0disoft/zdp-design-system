@@ -16,6 +16,7 @@
   import NativeInputFixture from './NativeInputFixture.svelte';
   import FormResetFixture from './FormResetFixture.svelte';
   import ActionLifecycleFixture from './ActionLifecycleFixture.svelte';
+  import DynamicMenuFixture from './DynamicMenuFixture.svelte';
   import FilteredComboboxFixture from './FilteredComboboxFixture.svelte';
   import Popover from '../../../src/lib/components/Popover.svelte';
   import ResizableSplitPane from '../../../src/lib/components/ResizableSplitPane.svelte';
@@ -439,6 +440,7 @@
   </button>
   <output data-testid="confirm-action-count">{confirmActionCount}</output>
   <ActionLifecycleFixture />
+  <DynamicMenuFixture />
 
   <ConfirmAction
     id="throwing-confirm-action"

@@ -13,6 +13,7 @@ import { verifyShortcutEditingContracts } from './browser/check-shortcuts.mjs';
 import { verifyModalContracts, verifyNestedModalContracts } from './browser/check-modals.mjs';
 import { verifyModalMutationContracts } from './browser/check-modal-mutations.mjs';
 import { verifyImeOverlayContracts } from './browser/check-ime-overlays.mjs';
+import { verifyDynamicMenuContracts } from './browser/check-dynamic-menu.mjs';
 import { verifyTooltipHoverContracts } from './browser/check-tooltip-hover.mjs';
 import { verifyOverlayContracts, verifyShadowOverlayContracts } from './browser/check-overlays.mjs';
 import { verifyPageGutterContracts } from './browser/check-page-gutters.mjs';
@@ -97,6 +98,7 @@ try {
   await verifyModalContracts(page);
   await verifyModalMutationContracts(page);
   await verifyImeOverlayContracts(page);
+  await verifyDynamicMenuContracts(page);
   await verifyTooltipHoverContracts(page);
   await verifyShadowOverlayContracts(page);
   await verifyNestedModalContracts(page);
