@@ -17,6 +17,7 @@
   import type { ZdpStatusToastItem } from '../../src/lib/toast';
   import type { ZdpTextScale } from '../../src/lib/preferences';
   import FormResetFixture from '../browser/src/FormResetFixture.svelte';
+  import AccordionInstancesFixture from '../browser/src/AccordionInstancesFixture.svelte';
 
   let selectedTabId = 'overview';
   let comboboxValue = '';
@@ -79,6 +80,8 @@
   <StatusToast placement="inline" items={primaryItems} />
   <StatusToast placement="inline" items={secondaryItems} />
 </section>
+
+<AccordionInstancesFixture />
 
 <section data-testid="tabs-hydration-fixture" aria-label="Tabs hydration fixture">
   <Tabs items={tabItems} bind:selectedId={selectedTabId} ariaLabel="Hydration sections" let:selectedId>

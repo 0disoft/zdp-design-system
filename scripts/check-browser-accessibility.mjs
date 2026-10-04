@@ -15,6 +15,7 @@ import { verifyModalMutationContracts } from './browser/check-modal-mutations.mj
 import { verifyImeOverlayContracts } from './browser/check-ime-overlays.mjs';
 import { verifyDynamicMenuContracts } from './browser/check-dynamic-menu.mjs';
 import { verifyResponsiveFocusContracts } from './browser/check-responsive-focus.mjs';
+import { verifyAccordionInstanceContracts } from './browser/check-accordion-instances.mjs';
 import { verifyTooltipHoverContracts } from './browser/check-tooltip-hover.mjs';
 import { verifyOverlayContracts, verifyShadowOverlayContracts } from './browser/check-overlays.mjs';
 import { verifyPageGutterContracts } from './browser/check-page-gutters.mjs';
@@ -101,6 +102,7 @@ try {
   await verifyImeOverlayContracts(page);
   await verifyDynamicMenuContracts(page);
   await verifyResponsiveFocusContracts(page);
+  await verifyAccordionInstanceContracts(page);
   await verifyTooltipHoverContracts(page);
   await verifyShadowOverlayContracts(page);
   await verifyNestedModalContracts(page);
