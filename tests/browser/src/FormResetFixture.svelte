@@ -19,6 +19,10 @@
   let query = '';
   let external = 'outside';
   let cancelReset = false;
+  let asyncChoice = 'b';
+  let asyncOptionsLoaded = false;
+  let asyncOptionsRevision = 0;
+  let cancelAsyncReset = false;
   const options = [{ id: 'alpha', value: 'alpha', label: 'Alpha' }, { id: 'beta', value: 'beta', label: 'Beta' }];
 
   function edit(): void {
@@ -48,4 +52,19 @@
   <label><input type="checkbox" bind:checked={cancelReset} />Cancel reset</label>
   <button type="button" onclick={edit}>Edit reset values</button>
   <output data-testid="reset-bound-state">{JSON.stringify({ text, notes, choice, checked, switched, radio, command, combo, query, external })}</output>
+  <form id="async-reset-form" onreset={(event) => { if (cancelAsyncReset) event.preventDefault(); }}>
+    <label for="async-reset-choice">Async reset choice</label>
+    <Select id="async-reset-choice" name="asyncChoice" bind:value={asyncChoice}>
+      {#key asyncOptionsRevision}
+        {#if asyncOptionsLoaded}
+          <option value="a">Async A</option><option value="b">Async B</option>
+        {/if}
+      {/key}
+    </Select>
+    <button type="reset">Reset async choice</button>
+  </form>
+  <label><input type="checkbox" bind:checked={cancelAsyncReset} />Cancel async reset</label>
+  <button type="button" onclick={() => (asyncOptionsLoaded = true)}>Load reset options</button>
+  <button type="button" onclick={() => (asyncOptionsRevision += 1)}>Replace reset options</button>
+  <output data-testid="async-reset-value">{asyncChoice}</output>
 </section>

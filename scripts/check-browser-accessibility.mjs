@@ -6,7 +6,7 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { chromium } from 'playwright-core';
 import { createServer } from 'vite';
 import { verifyFoundationAndFormContracts } from './browser/check-foundation-and-forms.mjs';
-import { verifyFormResetContracts, verifyNativeInputContracts } from './browser/check-native-inputs.mjs';
+import { verifyAsyncSelectResetContracts, verifyFormResetContracts, verifyNativeInputContracts } from './browser/check-native-inputs.mjs';
 import { verifyComboboxSelectionContracts } from './browser/check-combobox-selection.mjs';
 import { verifyConfirmRepeatContracts, verifyCopyLifecycleContracts } from './browser/check-action-lifecycles.mjs';
 import { verifyShortcutEditingContracts } from './browser/check-shortcuts.mjs';
@@ -86,6 +86,7 @@ try {
   await verifyFoundationAndFormContracts(page);
   await verifyNativeInputContracts(page);
   await verifyFormResetContracts(page);
+  await verifyAsyncSelectResetContracts(page);
   await verifyComboboxSelectionContracts(page);
   await verifyConfirmRepeatContracts(page);
   await verifyCopyLifecycleContracts(page);

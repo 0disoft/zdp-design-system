@@ -65,3 +65,27 @@ export async function verifyFormResetContracts(page) {
   await page.waitForFunction(() => JSON.parse(document.querySelector('[data-testid="reset-bound-state"]').textContent).text === 'seed');
   assert.deepEqual(JSON.parse(await page.getByTestId('reset-bound-state').textContent()), initialState, 'Programmatic reset must synchronize the same initial values.');
 }
+
+export async function verifyAsyncSelectResetContracts(page) {
+  const select = page.getByRole('combobox', { name: 'Async reset choice', exact: true });
+  const value = page.getByTestId('async-reset-value');
+  await page.getByRole('button', { name: 'Load reset options', exact: true }).click();
+  assert.equal(await select.inputValue(), 'b');
+  await select.selectOption('a');
+  await page.getByRole('checkbox', { name: 'Cancel async reset', exact: true }).check();
+  await page.getByRole('button', { name: 'Reset async choice', exact: true }).click();
+  await page.evaluate(() => new Promise((resolve) => setTimeout(resolve, 0)));
+  assert.equal(await select.inputValue(), 'a');
+  assert.equal(await value.textContent(), 'a', 'Cancelled resets must preserve late-loaded selections.');
+  await page.getByRole('checkbox', { name: 'Cancel async reset', exact: true }).uncheck();
+  await page.getByRole('button', { name: 'Reset async choice', exact: true }).click();
+  await page.waitForFunction(() => document.querySelector('[data-testid="async-reset-value"]').textContent === 'b');
+  assert.equal(await select.inputValue(), 'b');
+  assert.deepEqual(await page.locator('#async-reset-form').evaluate((form) => Object.fromEntries(new FormData(form))), { asyncChoice: 'b' });
+
+  await select.selectOption('a');
+  await page.getByRole('button', { name: 'Replace reset options', exact: true }).click();
+  await page.locator('#async-reset-form').evaluate((form) => form.reset());
+  await page.waitForFunction(() => document.querySelector('[data-testid="async-reset-value"]').textContent === 'b');
+  assert.equal(await select.inputValue(), 'b', 'Replaced options must retain the initial reset value.');
+}
