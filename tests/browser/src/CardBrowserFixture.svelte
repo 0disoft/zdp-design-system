@@ -16,6 +16,7 @@
   import NativeInputFixture from './NativeInputFixture.svelte';
   import FormResetFixture from './FormResetFixture.svelte';
   import ActionLifecycleFixture from './ActionLifecycleFixture.svelte';
+  import DynamicTabsFixture from './DynamicTabsFixture.svelte';
   import DynamicPaginationFixture from './DynamicPaginationFixture.svelte';
   import DynamicMenuFixture from './DynamicMenuFixture.svelte';
   import AccordionInstancesFixture from './AccordionInstancesFixture.svelte';
@@ -447,6 +448,7 @@
   <ActionLifecycleFixture />
   <DynamicMenuFixture />
   <DynamicPaginationFixture />
+  <DynamicTabsFixture />
   <AccordionInstancesFixture />
   <FramePopoverFixture />
   <FrameModalFixture />

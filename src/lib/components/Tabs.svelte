@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { tick } from 'svelte';
+  import { getZdpActiveElement } from '../focusable';
   import { toZdpDomId } from '../dom-id';
   import { moveZdpRovingFocus } from '../roving-focus';
 
@@ -23,6 +25,30 @@
     ariaLabel = 'Tabs',
     idPrefix = null
   }: Props = $props();
+
+  const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
+
+  let tabListElement = $state<HTMLElement | null>(null);
+
+  $effect.pre(() => {
+    // Track item updates before keyed DOM moves can blur the focused button.
+    const nextTabIds = items.map((item) => tabId(item.id));
+    const list = tabListElement;
+    const focused = list ? getZdpActiveElement(list.getRootNode() as Document | ShadowRoot) : null;
+    if (list && focused && list.contains(focused) && nextTabIds.includes(focused.id)) {
+      void restoreReorderedTabFocus(list, focused);
+    }
+  });
+
+  async function restoreReorderedTabFocus(list: HTMLElement, previous: HTMLElement): Promise<void> {
+    await tick();
+    if (tabListElement !== list || !previous.isConnected || !list.contains(previous) || previous.matches(':disabled')) return;
+    const focused = getZdpActiveElement(list.getRootNode() as Document | ShadowRoot);
+    const document = list.ownerDocument;
+    // Preserve a consumer's deliberate focus move during the update.
+    if (focused !== null && focused !== previous && focused !== document.body && focused !== document.documentElement) return;
+    if (focused !== previous) previous.focus();
+  }
 
   const normalizedSelectedItem = $derived(
     items.find((item) => item.id === selectedId && !item.disabled) ??
@@ -66,8 +92,6 @@
     selectTab(nextItem);
   }
 
-  const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
-
   function tabId(id: string): string {
     return `${resolvedIdPrefix}-tab-${toDomId(id)}`;
   }
@@ -84,12 +108,13 @@
 <div class="zdp-tabs">
   <div
     class="zdp-tabs__list"
+    bind:this={tabListElement}
     role="tablist"
     aria-label={ariaLabel}
     tabindex="-1"
     onkeydown={handleKeydown}
   >
-    {#each items as item}
+    {#each items as item (item.id)}
       <button
         class={`zdp-tabs__tab ${item.id === activeId ? 'zdp-tabs__tab--active' : ''}`}
         id={tabId(item.id)}
