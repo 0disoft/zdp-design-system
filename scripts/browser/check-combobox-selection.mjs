@@ -1,5 +1,24 @@
 import assert from 'node:assert/strict';
 
+export async function verifyComboboxEditingContracts(page) {
+  const input = page.getByRole('combobox', { name: 'Cached filtered choice', exact: true });
+  const cases = [
+    ['Shift+Home', [0, 3]],
+    ['Shift+End', [3, 5]],
+    ['Control+Home', [0, 0]],
+    ['Control+End', [5, 5]]
+  ];
+  for (const [key, expected] of cases) {
+    await input.fill('Alpha');
+    await input.evaluate((element) => element.setSelectionRange(3, 3));
+    const activeId = await input.getAttribute('aria-activedescendant');
+    await input.press(key);
+    assert.deepEqual(await input.evaluate((element) => [element.selectionStart, element.selectionEnd]), expected, `${key} must preserve native text editing.`);
+    assert.equal(await input.getAttribute('aria-activedescendant'), activeId, 'Editing shortcuts must not change the active option.');
+  }
+  await input.press('Escape');
+}
+
 export async function verifyComboboxSelectionContracts(page) {
   const cached = page.getByRole('combobox', { name: 'Cached filtered choice', exact: true });
   const authoritative = page.getByRole('combobox', { name: 'Authoritative filtered choice', exact: true });

@@ -210,6 +210,12 @@
       return;
     }
 
+    // Preserve the browser's cursor movement and text selection shortcuts.
+    if ((event.key === 'Home' || event.key === 'End') &&
+      (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey)) {
+      return;
+    }
+
     if (event.key === 'Tab' && event.shiftKey) {
       setOpen(false);
       return;

@@ -8,7 +8,7 @@ import { createServer } from 'vite';
 import { verifySplitPointerOwnership } from './browser/check-split-pointer.mjs';
 import { verifyFoundationAndFormContracts } from './browser/check-foundation-and-forms.mjs';
 import { verifyAsyncSelectResetContracts, verifyFormResetContracts, verifyNativeInputContracts } from './browser/check-native-inputs.mjs';
-import { verifyComboboxSelectionContracts } from './browser/check-combobox-selection.mjs';
+import { verifyComboboxEditingContracts, verifyComboboxSelectionContracts } from './browser/check-combobox-selection.mjs';
 import { verifyChangingConfirmDurationContracts, verifyConfirmDurationContracts, verifyConfirmRepeatContracts, verifyTouchConfirmContracts, verifyCopyLifecycleContracts } from './browser/check-action-lifecycles.mjs';
 import { verifyEmptyTooltipContracts } from './browser/check-empty-tooltip.mjs';
 import { verifyPopoverGeometryContracts } from './browser/check-popover-geometry.mjs';
@@ -115,6 +115,7 @@ try {
   await verifyEmptyTooltipContracts(page);
   await verifyAsyncSelectResetContracts(page);
   await verifyComboboxSelectionContracts(page);
+  await verifyComboboxEditingContracts(page);
   await verifyConfirmRepeatContracts(page);
   await verifyTouchConfirmContracts(page);
   await verifyConfirmDurationContracts(page);
