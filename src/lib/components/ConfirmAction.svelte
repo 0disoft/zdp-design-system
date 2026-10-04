@@ -12,6 +12,7 @@
 
   let progress = 0;
   let active = false;
+  let activePointerId: number | null = null;
   let confirmed = false;
   let startX = 0;
   let trackWidth = 1;
@@ -84,6 +85,7 @@
 
     clearTimers();
     active = false;
+    activePointerId = null;
     confirmed = true;
     progress = 1;
     resetTimer = window.setTimeout(reset, 1000);
@@ -103,12 +105,14 @@
 
     clearTimers();
     active = false;
+    activePointerId = null;
     progress = 0;
   }
 
   function reset(): void {
     clearTimers();
     active = false;
+    activePointerId = null;
     confirmed = false;
     progress = 0;
   }
@@ -147,7 +151,7 @@
   }
 
   function handlePointerDown(event: PointerEvent): void {
-    if (event.button !== 0 || !event.isPrimary || disabled || confirmed) {
+    if (event.button !== 0 || !event.isPrimary || disabled || confirmed || active) {
       return;
     }
 
@@ -160,13 +164,20 @@
     }
 
     beginInteraction(event.clientX, button);
+    activePointerId = event.pointerId;
   }
 
   function handlePointerMove(event: PointerEvent): void {
-    updateSlideProgress(event.clientX);
+    if (event.pointerId === activePointerId) {
+      updateSlideProgress(event.clientX);
+    }
   }
 
   function handlePointerEnd(event: PointerEvent): void {
+    if (event.pointerId !== activePointerId) {
+      return;
+    }
+
     const button = event.currentTarget as HTMLButtonElement;
 
     if (button.hasPointerCapture(event.pointerId)) {
@@ -212,7 +223,7 @@
   onpointermove={handlePointerMove}
   onpointerup={handlePointerEnd}
   onpointercancel={handlePointerEnd}
-  onlostpointercapture={cancelInteraction}
+  onlostpointercapture={handlePointerEnd}
   onblur={cancelInteraction}
   onkeydown={handleKeydown}
   onkeyup={handleKeyup}

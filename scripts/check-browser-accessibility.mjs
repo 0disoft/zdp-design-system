@@ -8,7 +8,7 @@ import { createServer } from 'vite';
 import { verifyFoundationAndFormContracts } from './browser/check-foundation-and-forms.mjs';
 import { verifyAsyncSelectResetContracts, verifyFormResetContracts, verifyNativeInputContracts } from './browser/check-native-inputs.mjs';
 import { verifyComboboxSelectionContracts } from './browser/check-combobox-selection.mjs';
-import { verifyChangingConfirmDurationContracts, verifyConfirmDurationContracts, verifyConfirmRepeatContracts, verifyCopyLifecycleContracts } from './browser/check-action-lifecycles.mjs';
+import { verifyChangingConfirmDurationContracts, verifyConfirmDurationContracts, verifyConfirmRepeatContracts, verifyTouchConfirmContracts, verifyCopyLifecycleContracts } from './browser/check-action-lifecycles.mjs';
 import { verifyShadowFormResetContracts } from './browser/check-shadow-form-reset.mjs';
 import { verifyShortcutEditingContracts } from './browser/check-shortcuts.mjs';
 import { verifyModalContracts, verifyNestedModalContracts } from './browser/check-modals.mjs';
@@ -102,6 +102,7 @@ try {
   await verifyAsyncSelectResetContracts(page);
   await verifyComboboxSelectionContracts(page);
   await verifyConfirmRepeatContracts(page);
+  await verifyTouchConfirmContracts(page);
   await verifyConfirmDurationContracts(page);
   await verifyChangingConfirmDurationContracts(page);
   await verifyCopyLifecycleContracts(page);

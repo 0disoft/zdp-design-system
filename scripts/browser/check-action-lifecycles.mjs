@@ -144,3 +144,44 @@ export async function verifyCopyLifecycleContracts(page) {
     });
   }
 }
+
+export async function verifyTouchConfirmContracts(page) {
+  const button = page.locator('#repeat-confirm-action');
+  const count = page.getByTestId('repeat-confirm-count');
+  const previousCount = Number(await count.textContent());
+  await button.scrollIntoViewIfNeeded();
+  const box = await button.boundingBox();
+  const first = { x: box.x + 5, y: box.y + box.height / 2, id: 1 };
+  const second = { x: first.x + 10, y: first.y + 2, id: 2 };
+  const session = await page.context().newCDPSession(page);
+  try {
+    await session.send('Emulation.setTouchEmulationEnabled', { enabled: true });
+    await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [first] });
+    await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [first, second] });
+    await session.send('Input.dispatchTouchEvent', {
+      type: 'touchMove', touchPoints: [first, { ...second, x: first.x + box.width }]
+    });
+    assert.equal(await count.textContent(), String(previousCount), 'A second finger must not slide-confirm the first finger hold.');
+    // Also exercise cancellation and capture-loss events from an unrelated pointer.
+    await button.evaluate((element) => {
+      for (const type of ['pointercancel', 'lostpointercapture']) {
+        element.dispatchEvent(new PointerEvent(type, { pointerId: 999, bubbles: true }));
+      }
+    });
+    await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [{ ...second, x: first.x + box.width }] });
+    assert.equal(await button.getAttribute('data-active'), 'true', 'Lifting the second finger must preserve the first finger hold.');
+    await session.send('Input.dispatchTouchEvent', {
+      type: 'touchMove', touchPoints: [{ ...first, x: first.x + box.width }]
+    });
+    await page.waitForFunction((expected) => document.querySelector('[data-testid="repeat-confirm-count"]').textContent === String(expected), previousCount + 1);
+    await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    await page.waitForFunction(() => !document.querySelector('#repeat-confirm-action').hasAttribute('data-confirmed'));
+    await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [first] });
+    await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    assert.equal(await button.getAttribute('data-active'), null, 'Lifting the initiating finger must cancel its hold.');
+  } finally {
+    await session.send('Input.dispatchTouchEvent', { type: 'touchCancel', touchPoints: [] }).catch(() => {});
+    await session.send('Emulation.setTouchEmulationEnabled', { enabled: false });
+    await session.detach();
+  }
+}
