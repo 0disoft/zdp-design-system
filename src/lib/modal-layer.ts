@@ -277,7 +277,7 @@ function syncDocumentIsolation(state: ZdpModalLayerDocumentState): void {
 
   while (activeBranch !== null && activeBranch !== document.body) {
     const parentNode = activeBranch.parentNode;
-    const parent = isDocumentHTMLElement(document, parentNode) || isDocumentShadowRoot(document, parentNode)
+    const parent = isDocumentHTMLElement(parentNode) || isDocumentShadowRoot(parentNode)
       ? parentNode
       : null;
 
@@ -288,15 +288,15 @@ function syncDocumentIsolation(state: ZdpModalLayerDocumentState): void {
     observedParents.add(parent);
 
     for (const sibling of parent.children) {
-      if (sibling === activeBranch || !isDocumentHTMLElement(document, sibling)) {
+      if (sibling === activeBranch || !isDocumentHTMLElement(sibling)) {
         continue;
       }
 
       nextInertElements.add(sibling);
     }
 
-    activeBranch = isDocumentShadowRoot(document, parent)
-      ? isDocumentHTMLElement(document, parent.host)
+    activeBranch = isDocumentShadowRoot(parent)
+      ? isDocumentHTMLElement(parent.host)
         ? parent.host
         : null
       : parent;
@@ -386,14 +386,15 @@ function syncDocumentState(state: ZdpModalLayerDocumentState): void {
   state.managedBodyOverflow = null;
 }
 
-function isDocumentHTMLElement(document: Document, value: unknown): value is HTMLElement {
-  const HTMLElementConstructor = document.defaultView?.HTMLElement;
-  return HTMLElementConstructor !== undefined && value instanceof HTMLElementConstructor;
+// Adoption changes ownerDocument without changing the node's original realm.
+function isDocumentHTMLElement(value: unknown): value is HTMLElement {
+  const element = value as HTMLElement | null;
+  return element?.nodeType === 1 && element.namespaceURI === 'http://www.w3.org/1999/xhtml';
 }
 
-function isDocumentShadowRoot(document: Document, value: unknown): value is ShadowRoot {
-  const ShadowRootConstructor = document.defaultView?.ShadowRoot;
-  return ShadowRootConstructor !== undefined && value instanceof ShadowRootConstructor;
+function isDocumentShadowRoot(value: unknown): value is ShadowRoot {
+  const root = value as ShadowRoot | null;
+  return root?.nodeType === 11 && root.host?.nodeType === 1;
 }
 
 function applyInlineStyle(element: HTMLElement, property: string, value: string): ManagedInlineStyle {

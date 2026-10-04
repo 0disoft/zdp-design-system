@@ -157,8 +157,16 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
 export function getZdpActiveElement(root: Document | ShadowRoot = document): HTMLElement | null {
   let activeElement = root.activeElement;
 
-  while (isZdpHtmlElement(activeElement) && activeElement.shadowRoot?.activeElement) {
-    activeElement = activeElement.shadowRoot.activeElement;
+  while (isZdpHtmlElement(activeElement)) {
+    // A modal may capture focus before its iframe root is bound. Follow the
+    // document's focused frame just as we follow a focused shadow host.
+    const nestedActiveElement: Element | null | undefined = activeElement.shadowRoot?.activeElement ?? (
+      activeElement.tagName === 'IFRAME'
+        ? (activeElement as HTMLIFrameElement).contentDocument?.activeElement
+        : null
+    );
+    if (!nestedActiveElement) break;
+    activeElement = nestedActiveElement;
   }
 
   return isZdpHtmlElement(activeElement) ? activeElement : null;
