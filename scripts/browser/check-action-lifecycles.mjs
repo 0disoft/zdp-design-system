@@ -23,3 +23,69 @@ export async function verifyConfirmRepeatContracts(page) {
     }
   }
 }
+
+export async function verifyCopyLifecycleContracts(page) {
+  const fixture = page.getByTestId('copy-lifecycle');
+  const button = fixture.locator('.zdp-code-block__copy');
+  await page.evaluate(() => {
+    window.__zdpCopyDescriptor = Object.getOwnPropertyDescriptor(navigator, 'clipboard');
+    window.__zdpCopyRequests = [];
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText: (text) => new Promise((resolve, reject) => window.__zdpCopyRequests.push({ text, resolve, reject })) }
+    });
+  });
+  try {
+    await button.click();
+    await page.getByTestId('replace-copy-code').click();
+    assert.equal(await fixture.locator('code').textContent(), 'beta');
+    await page.evaluate(() => window.__zdpCopyRequests[0].resolve());
+    assert.equal((await button.textContent()).trim(), 'Copy', 'Completion for replaced code must be ignored.');
+
+    await button.click();
+    await button.click();
+    await page.evaluate(() => window.__zdpCopyRequests[2].reject(new Error('Copy rejected')));
+    await page.waitForFunction(() => document.querySelector('[data-testid="copy-lifecycle"] .zdp-code-block__copy').textContent.trim() === 'Copy failed');
+    await page.evaluate(() => window.__zdpCopyRequests[1].resolve());
+    assert.equal((await button.textContent()).trim(), 'Copy failed', 'Older success must not replace the latest result.');
+
+    await button.click();
+    await page.evaluate(() => window.__zdpCopyRequests[3].resolve());
+    await page.waitForFunction(() => document.querySelector('[data-testid="copy-lifecycle"] .zdp-code-block__copy').textContent.trim() === 'Copied');
+    await page.getByTestId('replace-copy-code').click();
+    assert.equal((await button.textContent()).trim(), 'Copy', 'Changing code must clear an existing copied status.');
+
+    await button.click();
+    await page.getByTestId('toggle-copy-mount').click();
+    await page.evaluate(async () => {
+      const originalTimeout = window.setTimeout;
+      window.__zdpLateCopyTimers = 0;
+      window.setTimeout = function (callback, delay, ...args) {
+        if (delay === 1800) window.__zdpLateCopyTimers += 1;
+        return originalTimeout.call(this, callback, delay, ...args);
+      };
+      try {
+        window.__zdpCopyRequests[4].resolve();
+        await Promise.resolve();
+        await Promise.resolve();
+      } finally {
+        window.setTimeout = originalTimeout;
+      }
+    });
+    assert.equal(await page.evaluate(() => window.__zdpLateCopyTimers), 0, 'Unmounted code blocks must not schedule feedback timers.');
+    await page.getByTestId('toggle-copy-mount').click();
+    assert.equal((await button.textContent()).trim(), 'Copy');
+    assert.deepEqual(await page.evaluate(() => window.__zdpCopyRequests.map((request) => request.text)), ['alpha', 'beta', 'beta', 'beta', 'alpha']);
+  } finally {
+    await page.evaluate(() => {
+      if (window.__zdpCopyDescriptor) {
+        Object.defineProperty(navigator, 'clipboard', window.__zdpCopyDescriptor);
+      } else {
+        delete navigator.clipboard;
+      }
+      delete window.__zdpCopyDescriptor;
+      delete window.__zdpCopyRequests;
+      delete window.__zdpLateCopyTimers;
+    });
+  }
+}

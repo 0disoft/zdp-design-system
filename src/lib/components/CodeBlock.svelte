@@ -21,16 +21,32 @@
 
   let copyState: CopyState = 'idle';
   let resetCopyStateTimer: ReturnType<typeof setTimeout> | null = null;
+  let copyRequestVersion = 0;
+  let destroyed = false;
+  let knownCode = code;
+  let knownShowCopy = showCopy;
 
   $: canCopy = showCopy && code.length > 0;
+  $: if (code !== knownCode || showCopy !== knownShowCopy) {
+    knownCode = code;
+    knownShowCopy = showCopy;
+    invalidateCopyState();
+  }
   $: resolvedAriaLabel = ariaLabel ?? (!labelledBy && label ? label : null);
   $: codeRegionLabel = [label ?? ariaLabel, language ? `${language} code` : 'Code'].filter(Boolean).join(' ');
   $: resolvedCopyLabel =
     copyState === 'copied' ? copiedLabel : copyState === 'failed' ? copyFailedLabel : copyLabel;
 
   onDestroy(() => {
-    clearResetCopyStateTimer();
+    destroyed = true;
+    invalidateCopyState();
   });
+
+  function invalidateCopyState(): void {
+    copyRequestVersion += 1;
+    clearResetCopyStateTimer();
+    copyState = 'idle';
+  }
 
   function clearResetCopyStateTimer(): void {
     if (resetCopyStateTimer !== null) {
@@ -53,17 +69,28 @@
       return;
     }
 
+    const requestVersion = ++copyRequestVersion;
+    const copiedCode = code;
+    let nextState: CopyState;
+    clearResetCopyStateTimer();
+    copyState = 'idle';
+
     try {
       if (typeof navigator === 'undefined' || !navigator.clipboard?.writeText) {
         throw new Error('Clipboard API unavailable');
       }
 
-      await navigator.clipboard.writeText(code);
-      copyState = 'copied';
+      await navigator.clipboard.writeText(copiedCode);
+      nextState = 'copied';
     } catch {
-      copyState = 'failed';
+      nextState = 'failed';
     }
 
+    if (destroyed || requestVersion !== copyRequestVersion || copiedCode !== code || !canCopy) {
+      return;
+    }
+
+    copyState = nextState;
     scheduleResetCopyState();
   }
 </script>

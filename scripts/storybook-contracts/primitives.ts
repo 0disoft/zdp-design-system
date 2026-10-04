@@ -513,7 +513,6 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
     "copyLabel = 'Copy'",
     "copiedLabel = 'Copied'",
     "copyFailedLabel = 'Copy failed'",
-    'navigator.clipboard.writeText(code)',
     'class={`zdp-code-block zdp-code-block--${size} zdp-code-block--${tone}`}',
     'data-wrap={wrap ?',
     'role="group"',
