@@ -18,6 +18,7 @@
   import ActionLifecycleFixture from './ActionLifecycleFixture.svelte';
   import DynamicMenuFixture from './DynamicMenuFixture.svelte';
   import AccordionInstancesFixture from './AccordionInstancesFixture.svelte';
+  import FramePopoverFixture from './FramePopoverFixture.svelte';
   import FilteredComboboxFixture from './FilteredComboboxFixture.svelte';
   import Popover from '../../../src/lib/components/Popover.svelte';
   import ResizableSplitPane from '../../../src/lib/components/ResizableSplitPane.svelte';
@@ -443,6 +444,7 @@
   <ActionLifecycleFixture />
   <DynamicMenuFixture />
   <AccordionInstancesFixture />
+  <FramePopoverFixture />
 
   <ConfirmAction
     id="throwing-confirm-action"

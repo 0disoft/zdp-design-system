@@ -217,12 +217,8 @@ function sortZdpTabbableElements(elements: readonly HTMLElement[]): HTMLElement[
 }
 
 function isZdpHtmlElement(element: Element | null): element is HTMLElement {
-  if (element === null) {
-    return false;
-  }
-
-  const view = element.ownerDocument.defaultView;
-  return view === null
-    ? element.namespaceURI === 'http://www.w3.org/1999/xhtml'
-    : element instanceof view.HTMLElement;
+  // Adoption changes ownerDocument but preserves the element's original realm.
+  return element !== null &&
+    element.namespaceURI === 'http://www.w3.org/1999/xhtml' &&
+    typeof (element as HTMLElement).focus === 'function';
 }

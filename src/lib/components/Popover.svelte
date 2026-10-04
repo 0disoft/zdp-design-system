@@ -99,8 +99,7 @@
       return;
     }
 
-    const activeElement = getZdpActiveElement(rootElement?.ownerDocument ?? document);
-    previousFocusElement = activeElement instanceof HTMLElement ? activeElement : null;
+    previousFocusElement = getZdpActiveElement(rootElement?.ownerDocument ?? document);
   }
 
   function restorePreviousFocus(): void {
