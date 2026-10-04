@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy, tick } from 'svelte';
+  import { onDestroy, tick, untrack } from 'svelte';
   import type { HTMLInputAttributes } from 'svelte/elements';
   import type { ZdpComboboxOption, ZdpComboboxSize } from '../combobox';
   import { toZdpDomId } from '../dom-id';
@@ -65,15 +65,22 @@
     onOpenChange = null
   }: Props = $props();
 
+  const initialQueryWasEdited = query.length > 0;
+  const initialSelectedOption = untrack(() => options.find((option) => option.value === value) ?? null);
+  if (!initialQueryWasEdited && initialSelectedOption) {
+    query = initialSelectedOption.label;
+  }
+
   let rootElement = $state<HTMLElement | null>(null);
   let inputElement = $state<HTMLInputElement | null>(null);
   let open = $state(false);
   let activeOptionId = $state('');
   let lastSyncedValue = $state(value);
-  let lastSyncedOptionLabel = $state('');
+  let lastSyncedOptionLabel = $state(initialSelectedOption?.label ?? '');
+  let lastSyncedQuery = $state(query);
   let lastSelectedValue = $state('');
   let lastSelectedLabel = $state('');
-  let queryDirty = $state(query.trim().length > 0);
+  let queryDirty = $state(initialQueryWasEdited);
   const dismissLayer = createZdpDismissLayer();
 
   const enabledOptions = $derived(options.filter((option) => !option.disabled));
@@ -81,7 +88,6 @@
   const selectedOptionLabel = $derived(
     selectedOption?.label ?? (value === lastSelectedValue ? lastSelectedLabel : '')
   );
-  const displayQuery = $derived(queryDirty ? query : selectedOptionLabel || query);
   const resolvedIdPrefix = $derived(toDomId(id ?? fallbackIdPrefix));
   const inputId = $derived(id ?? `${resolvedIdPrefix}-input`);
   const listboxId = $derived(`${resolvedIdPrefix}-listbox`);
@@ -113,11 +119,14 @@
 
   $effect.pre(() => {
     const valueChanged = value !== lastSyncedValue;
+    const queryChanged = query !== lastSyncedQuery;
     const optionLabelChanged = selectedOptionLabel !== lastSyncedOptionLabel;
 
     if (valueChanged) {
-      queryDirty = false;
+      queryDirty = queryChanged;
       lastSyncedValue = value;
+    } else if (queryChanged) {
+      queryDirty = true;
     }
 
     if (!queryDirty && (valueChanged || optionLabelChanged)) {
@@ -125,6 +134,7 @@
     }
 
     lastSyncedOptionLabel = selectedOptionLabel;
+    lastSyncedQuery = query;
   });
 
   $effect(() => {
@@ -164,6 +174,7 @@
   function handleInput(event: Event): void {
     const nextQuery = (event.currentTarget as HTMLInputElement).value;
     query = nextQuery;
+    lastSyncedQuery = nextQuery;
     queryDirty = true;
     onQueryChange?.(query);
     clearSelectionForQuery(nextQuery);
@@ -249,6 +260,7 @@
   function handleDismissEscape(): void {
     const nextQuery = selectedOptionLabel || query;
     query = nextQuery;
+    lastSyncedQuery = nextQuery;
     queryDirty = false;
     onQueryChange?.(nextQuery);
     setOpen(false);
@@ -283,6 +295,7 @@
 
     value = option.value;
     query = option.label;
+    lastSyncedQuery = option.label;
     queryDirty = false;
     lastSyncedValue = value;
     lastSyncedOptionLabel = option.label;
@@ -392,7 +405,7 @@
       id={inputId}
       role="combobox"
       type="text"
-      value={displayQuery}
+      value={query}
       placeholder={placeholder ?? undefined}
       autocomplete={autocomplete ?? undefined}
       aria-label={inputAriaLabel}

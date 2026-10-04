@@ -20,6 +20,8 @@
   let selectedTabId = 'overview';
   let comboboxValue = '';
   let comboboxQuery = '';
+  let controlledQuery = '';
+  let controlledValue = 'alpha';
   let disclosureOpen = true;
   let localeValue = 'en';
   let menuOpen = false;
@@ -91,6 +93,11 @@
   <SegmentedControl items={segmentedItems} ariaLabel="Default view" />
   <Combobox label="Initial hydration choice" value="alpha" options={comboboxOptions} />
   <Combobox label="Edited hydration choice" value="alpha" query="Typed search" options={comboboxOptions} />
+  <Combobox label="Controlled hydration query" bind:value={controlledValue} bind:query={controlledQuery} options={comboboxOptions} />
+  <output data-testid="controlled-query-value">{controlledQuery}</output>
+  <button type="button" onclick={() => (controlledQuery = 'Beta')}>Replace controlled query</button>
+  <button type="button" onclick={() => (controlledQuery = '')}>Clear controlled query</button>
+  <button type="button" onclick={() => (controlledValue = 'beta')}>Replace controlled selection</button>
 </section>
 
 <section data-testid="combobox-hydration-fixture" aria-label="Combobox hydration fixture">

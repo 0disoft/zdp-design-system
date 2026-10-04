@@ -210,7 +210,8 @@ try {
     tabContent: 'overview',
     segmented: 'true',
     combobox: 'Alpha',
-    editedCombobox: 'Typed search'
+    editedCombobox: 'Typed search',
+    controlledQuery: 'Alpha'
   };
   assert.deepEqual(result.before.initialSelection, expectedInitialSelection, 'SSR must render default selections and preserve an explicit search query.');
   assert.deepEqual(result.after.initialSelection, expectedInitialSelection, 'Hydration must preserve the initial selected content.');
@@ -231,6 +232,15 @@ try {
   await termSheet.getByRole('button', { name: 'Close hydration term' }).click();
   await page.getByTestId('term-sheet-bound-open').getByText('closed', { exact: true }).waitFor();
   assert.equal(await page.getByRole('dialog', { name: 'Hydration term' }).count(), 0, 'TermSheet must close after hydration.');
+
+  const controlledQuery = page.getByRole('combobox', { name: 'Controlled hydration query', exact: true });
+  assert.equal(await page.getByTestId('controlled-query-value').textContent(), 'Alpha', 'Hydration must synchronize the bound initial query.');
+  await page.getByRole('button', { name: 'Replace controlled query', exact: true }).click();
+  assert.equal(await controlledQuery.inputValue(), 'Beta', 'Parent query updates must replace the displayed input.');
+  await page.getByRole('button', { name: 'Clear controlled query', exact: true }).click();
+  assert.equal(await controlledQuery.inputValue(), '', 'An explicit query clear must stay empty.');
+  await page.getByRole('button', { name: 'Replace controlled selection', exact: true }).click();
+  assert.equal(await controlledQuery.inputValue(), 'Beta', 'Changing only the selection must synchronize its label.');
 
   await page.getByTestId('tabs-hydration-fixture').getByRole('tab', { name: 'History' }).click();
   await page.getByTestId('tabs-slot-selection').getByText('history', { exact: true }).waitFor();
@@ -327,7 +337,8 @@ function createIdHydrationHtml(body) {
           tabContent: root.querySelector('[data-testid="default-tab-content"]').textContent,
           segmented: root.querySelector('[aria-label="Default view"] [role="radio"]').getAttribute('aria-checked'),
           combobox: root.querySelector('[data-testid="default-selection-fixture"] .zdp-combobox__input').value,
-          editedCombobox: root.querySelectorAll('[data-testid="default-selection-fixture"] .zdp-combobox__input')[1].value
+          editedCombobox: root.querySelectorAll('[data-testid="default-selection-fixture"] .zdp-combobox__input')[1].value,
+          controlledQuery: root.querySelectorAll('[data-testid="default-selection-fixture"] .zdp-combobox__input')[2].value
         },
         ids: Array.from(root.querySelectorAll('[id]'), (element) => element.id),
         idReferences: Array.from(
