@@ -53,6 +53,8 @@ jobs:
           artifact_dir="$RUNNER_TEMP/release-pr-artifact"
           mkdir -p "$artifact_dir"
           cp package.json CHANGELOG.md "$artifact_dir/"
+          cp README.md "$artifact_dir/README.md"
+          cp docs/CONSUMER_CONTRACT.md "$artifact_dir/CONSUMER_CONTRACT.md"
           cp "$RUNNER_TEMP/release-notes.md" "$artifact_dir/release-notes.md"
           git diff --name-only --diff-filter=D -- .changes > "$artifact_dir/consumed-fragments.txt"
 
@@ -66,7 +68,7 @@ jobs:
           const fs = require('node:fs');
           const path = require('node:path');
           const directory = process.env.RELEASE_ARTIFACT_DIR;
-          const files = ['package.json', 'CHANGELOG.md', 'release-notes.md', 'consumed-fragments.txt'];
+          const files = ['package.json', 'CHANGELOG.md', 'README.md', 'CONSUMER_CONTRACT.md', 'release-notes.md', 'consumed-fragments.txt'];
           const manifest = {
             schemaVersion: 'zdp.release-pr-artifact/v1',
             sourceSha: process.env.GITHUB_SHA,
@@ -154,7 +156,7 @@ jobs:
           const fs = require('node:fs');
           const path = require('node:path');
           const directory = process.env.RELEASE_ARTIFACT_DIR;
-          const expectedFiles = ['package.json', 'CHANGELOG.md', 'release-notes.md', 'consumed-fragments.txt'];
+          const expectedFiles = ['package.json', 'CHANGELOG.md', 'README.md', 'CONSUMER_CONTRACT.md', 'release-notes.md', 'consumed-fragments.txt'];
           const expectedArchiveFiles = [...expectedFiles, 'manifest.json'].sort();
           const entries = fs.readdirSync(directory, { withFileTypes: true });
           const actualArchiveFiles = entries.map((entry) => entry.name).sort();
@@ -225,6 +227,8 @@ jobs:
           grep -Fx "fragment_count=$EXPECTED_FRAGMENT_COUNT" "$reproduced_output"
           cmp package.json "$artifact_dir/package.json"
           cmp CHANGELOG.md "$artifact_dir/CHANGELOG.md"
+          cmp README.md "$artifact_dir/README.md"
+          cmp docs/CONSUMER_CONTRACT.md "$artifact_dir/CONSUMER_CONTRACT.md"
           cmp "$reproduced_notes" "$artifact_dir/release-notes.md"
           cmp "$reproduced_fragments" "$artifact_dir/consumed-fragments.txt"
 
@@ -238,7 +242,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -B "$RELEASE_BRANCH"
-          git add package.json CHANGELOG.md .changes
+          git add package.json CHANGELOG.md .changes README.md docs/CONSUMER_CONTRACT.md
 
           if git diff --cached --quiet; then
             echo "::error::Release preparation reported changes but produced no staged diff."

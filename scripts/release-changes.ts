@@ -127,6 +127,10 @@ async function prepareRelease(options: PrepareOptions): Promise<void> {
   const changelogParts = splitChangelog(changelog);
   const releaseNotes = joinReleaseNotes(changelogParts.unreleasedBody, fragments);
   const nextChangelog = renderChangelog(changelogParts, nextVersion, releaseNotes);
+  const documentation = await Promise.all(['README.md', 'docs/CONSUMER_CONTRACT.md'].map(async (relativePath) => ({
+    path: join(root, relativePath),
+    content: updatePackageRange(await readFile(join(root, relativePath), 'utf8'), currentVersion, nextVersion)
+  })));
 
   assert.ok(
     !new RegExp(`^## ${escapeRegExp(nextVersion)}(?:\\s|$)`, 'm').test(changelog),
@@ -136,6 +140,9 @@ async function prepareRelease(options: PrepareOptions): Promise<void> {
   packageJson.version = nextVersion;
   await writeFile(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`, 'utf8');
   await writeFile(changelogPath, nextChangelog, 'utf8');
+  for (const document of documentation) {
+    await writeFile(document.path, document.content, 'utf8');
+  }
 
   for (const fragment of fragments) {
     await rm(join(changesDirectory, fragment.fileName));
@@ -432,6 +439,12 @@ function normalizeNewlines(source: string): string {
   return source.replace(/\r\n/g, '\n');
 }
 
+function updatePackageRange(source: string, currentVersion: string, nextVersion: string): string {
+  const currentRange = `zdp-design-system: ^${currentVersion}`;
+  assert.ok(source.includes(currentRange), `Release documentation must contain ${currentRange} before preparation.`);
+  return normalizeNewlines(source).replaceAll(currentRange, `zdp-design-system: ^${nextVersion}`);
+}
+
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
@@ -456,6 +469,11 @@ function runSelfTest(): void {
   assert.equal(bumpVersion('0.61.0', 'patch'), '0.61.1');
   assert.equal(bumpVersion('0.61.9', 'minor'), '0.62.0');
   assert.equal(bumpVersion('0.61.9', 'major'), '1.0.0');
+  assert.equal(
+    updatePackageRange('Use zdp-design-system: ^0.63.0.\r\nExample: zdp-design-system: ^0.63.0.\r\nOther: ^0.63.0.\r\n', '0.63.0', '0.64.0'),
+    'Use zdp-design-system: ^0.64.0.\nExample: zdp-design-system: ^0.64.0.\nOther: ^0.63.0.\n'
+  );
+  assert.throws(() => updatePackageRange('Missing current recommendation.', '0.63.0', '0.64.0'), /Release documentation/);
 
   const changelog = '# Changelog\n\n## Unreleased\n\n- Existing manual note.\n\n## 0.61.0\n\n- Previous release.\n';
   const parts = splitChangelog(changelog);

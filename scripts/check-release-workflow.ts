@@ -179,6 +179,8 @@ assert.ok(releasePrWorkflow.includes('grep -Fx \'has_changes=true\''));
 assert.ok(releasePrWorkflow.includes('grep -Fx "version=$EXPECTED_VERSION"'));
 assert.ok(releasePrWorkflow.includes('cmp package.json "$artifact_dir/package.json"'));
 assert.ok(releasePrWorkflow.includes('cmp CHANGELOG.md "$artifact_dir/CHANGELOG.md"'));
+assert.ok(releasePrWorkflow.includes('cmp README.md "$artifact_dir/README.md"'));
+assert.ok(releasePrWorkflow.includes('cmp docs/CONSUMER_CONTRACT.md "$artifact_dir/CONSUMER_CONTRACT.md"'));
 assert.ok(releasePrWorkflow.includes('cmp "$reproduced_notes" "$artifact_dir/release-notes.md"'));
 assert.ok(releasePrWorkflow.includes('cmp "$reproduced_fragments" "$artifact_dir/consumed-fragments.txt"'));
 assert.ok(releasePrWorkflow.includes('RELEASE_BRANCH: release/zdp-design-system'));
