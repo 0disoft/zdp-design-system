@@ -33,6 +33,7 @@
   import PageHeaderTypeFixture from './PageHeaderTypeFixture.svelte';
   import TooltipLifecycleFixture from './TooltipLifecycleFixture.svelte';
   import ToastFocusFixture from './ToastFocusFixture.svelte';
+  import LocalizedSortFixture from './LocalizedSortFixture.svelte';
   import DynamicPaginationFixture from './DynamicPaginationFixture.svelte';
   import DynamicMenuFixture from './DynamicMenuFixture.svelte';
   import AccordionInstancesFixture from './AccordionInstancesFixture.svelte';
@@ -480,6 +481,7 @@
   <PageHeaderTypeFixture />
   <TooltipLifecycleFixture />
   <ToastFocusFixture />
+  <LocalizedSortFixture />
   <AccordionInstancesFixture />
   <FramePopoverFixture />
   <FrameModalFixture />

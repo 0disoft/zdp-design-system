@@ -17,6 +17,12 @@ next dismiss control, then the previous one, or the empty stack's group. A
 callback that moves focus elsewhere keeps that choice. Dismissals that do not
 start with focus on the close button do not move focus.
 
+SortHeader `ascendingLabel`, `descendingLabel`, and `unsortedLabel` localize the
+current sort state in its accessible name. The visible column label remains
+part of the name unless `ariaLabel` supplies a complete override. Omitting these
+props preserves the existing English state labels; `aria-sort` stays on the
+owning header cell.
+
 Combobox `listboxLabel`, `openLabel`, and `closeLabel` let consuming apps supply
 localized accessible names. Omitting them preserves the existing English defaults;
 the package does not choose a locale or translate caller text.

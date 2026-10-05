@@ -16,7 +16,7 @@ import { verifyToastDismissFocusContracts } from './browser/check-toast-focus.mj
 import { verifyDisclosureFocusContracts } from './browser/check-disclosure-focus.mjs';
 import { verifyPopoverFocusContracts } from './browser/check-popover-focus.mjs';
 import { verifyPopoverGeometryContracts } from './browser/check-popover-geometry.mjs';
-import { verifySortNameContracts, verifyTableDensityContracts } from './browser/check-table-interaction.mjs';
+import { verifyLocalizedSortContracts, verifySortNameContracts, verifyTableDensityContracts } from './browser/check-table-interaction.mjs';
 import { verifyCommandFieldContracts } from './browser/check-command-field.mjs';
 import { verifyMovedFormResetContracts, verifyReassociatedFormResetContracts, verifyShadowFormResetContracts } from './browser/check-shadow-form-reset.mjs';
 import { verifyShortcutEditingContracts } from './browser/check-shortcuts.mjs';
@@ -122,6 +122,7 @@ try {
   await verifyCommandFieldContracts(page);
   await verifyTableDensityContracts(page);
   await verifySortNameContracts(page);
+  await verifyLocalizedSortContracts(page);
   await verifyPopoverGeometryContracts(page);
   await verifyEmptyTooltipContracts(page);
   await verifyTooltipLifecycleContracts(page);

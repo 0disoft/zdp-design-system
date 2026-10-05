@@ -1,5 +1,20 @@
 import assert from 'node:assert/strict';
 
+export async function verifyLocalizedSortContracts(page) {
+  const fixture = page.getByTestId('localized-sort');
+  await fixture.getByRole('button', { name: '이름 정렬 안 됨', exact: true }).click();
+  const ascending = fixture.getByRole('button', { name: '이름 오름차순', exact: true });
+  await ascending.focus();
+  await page.keyboard.press('Enter');
+  assert.equal(await fixture.getByRole('button', { name: '이름 내림차순', exact: true }).count(), 1);
+  assert.equal(await fixture.getByTestId('changes').textContent(), '2', 'Translation must preserve pointer and keyboard sorting callbacks.');
+  await fixture.getByTestId('locale').click();
+  assert.equal(await fixture.getByRole('button', { name: '이름 Descending', exact: true }).count(), 1, 'Locale updates must update the current state announcement.');
+  assert.equal(await fixture.getByRole('button', { name: '가격 기준 정렬', exact: true }).count(), 1, 'Explicit accessible names must remain complete overrides.');
+  await fixture.getByTestId('reset').click();
+  assert.equal(await fixture.getByRole('button', { name: '이름 Not sorted', exact: true }).count(), 1);
+}
+
 export async function verifyTableDensityContracts(page) {
   const fixture = page.getByTestId('table-interaction');
   const compact = fixture.getByRole('radio', { name: 'Compact', exact: true });

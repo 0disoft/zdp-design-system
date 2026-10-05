@@ -5,6 +5,9 @@
   export let direction: ZdpSortDirection = 'none';
   export let disabled = false;
   export let ariaLabel: string | null = null;
+  export let ascendingLabel = 'Ascending';
+  export let descendingLabel = 'Descending';
+  export let unsortedLabel = 'Not sorted';
   export let onSort:
     | ((event: MouseEvent, nextDirection: Exclude<ZdpSortDirection, 'none'>) => void)
     | null = null;
@@ -13,10 +16,10 @@
   $: nextDirection = getNextDirection(normalizedDirection);
   $: directionLabel =
     normalizedDirection === 'ascending'
-      ? 'Ascending'
+      ? ascendingLabel
       : normalizedDirection === 'descending'
-        ? 'Descending'
-        : 'Not sorted';
+        ? descendingLabel
+        : unsortedLabel;
   $: resolvedAriaLabel = ariaLabel ?? undefined;
 
   function handleClick(event: MouseEvent): void {
