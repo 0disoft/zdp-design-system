@@ -2,6 +2,70 @@
 
 ## Unreleased
 
+## 0.64.0
+
+- Generate SSR-stable, instance-unique Accordion trigger and panel IDs so repeated item IDs across separate accordions keep their accessibility references local.
+- Compare legacy and rune prop bindings consistently and read the fallback value inside $bindable when checking public API compatibility.
+- Wrap long CodeBlock titles, language labels, and captions within narrow containers while preserving code scrolling.
+- Clear CodeBlock copy feedback when its content changes, ignore stale clipboard completions, and avoid scheduling feedback timers after unmount.
+- Preserve external Combobox query replacements and clears while synchronizing initial selection labels during SSR and hydration.
+- Preserve native text selection and consumer shortcuts for modified Combobox arrow and Enter keys.
+- Preserve native cursor movement and text selection for modified Home and End keys in editable Combobox inputs.
+- Preserve known Combobox selections when search candidates change, and add optional selectedOption metadata for authoritative labels, disabled state, and required validation independent of the result list.
+- Associate CommandField labels with stable input IDs, keep clear controls outside the label, and propagate clear input events across shadow roots.
+- Include open shadow roots and slotted controls in modal focus navigation, refresh the cache for shadow mutations, and skip visibility: collapse controls.
+- Ignore IME composition key events in ConfirmAction so Enter and Space cannot start confirmation holds during composition.
+- Ignore repeated Enter and Space keydown events so a held key cannot confirm again after the completion state resets.
+- Ignore unrelated pointer movements, releases and capture loss during slide or hold confirmation.
+- Return focus from collapsed Disclosure content to its trigger, or its container when disabled, without overriding consumer focus moves.
+- Skip blank Tooltip content and description references, releasing the dismiss layer when content is cleared so parent overlays receive Escape.
+- Suppress global shortcuts while editing controls adopted into another document, including iframe inputs and contenteditable descendants.
+- Show avatar initials when an image fails, preserve its accessible label, and retry image rendering after the source changes.
+- Cancel an in-progress confirmation hold when its effective duration changes so timer completion and visual progress stay consistent; a new hold uses the new duration.
+- Keep confirmation holds from firing immediately for non-finite or overflowing durations; use the default for non-finite values and cap timer delays safely.
+- Preserve modal background isolation for elements and shadow roots adopted into iframe documents, and restore focus to the control inside the focused frame.
+- Use actual control identity for roving keyboard navigation across iframe realms, preserving focused-item movement and RTL behavior.
+- Hold an exclusive package build lock across recovery, staging, promotion, and cleanup so overlapping builds cannot remove each other's output.
+- Refresh pagination links and accessible labels when consumer-provided resolver callbacks change, including transitions between links and buttons.
+- Align package label contract validation with the reactive pagination label markup.
+- Clamp pagination inputs to safe integers and bound sibling iteration so very large finite page counts cannot stall rendering.
+- Recover focus to the current enabled selection when a focused tab is removed or disabled, and retain list focus when all tabs become unavailable.
+- Preserve the resetting form before shadow-root event targets are cleared so form bindings and submitted Combobox values restore correctly.
+- Keep tab button identity tied to each item ID so selection and focus stay on the same item when consumers reorder tabs.
+- Restore initial native form defaults and synchronize Input, Textarea, Select, Checkbox, Switch, Radio, CommandField, and Combobox bindings after uncancelled form resets.
+- Keep LocaleSwitcher options in a horizontally scrollable surface with space for keyboard focus outlines in narrow containers.
+- Recover keyboard focus when an open Menu's focused item is removed or disabled, keep empty menus navigable, and preserve focus deliberately moved outside.
+- Keep modal background isolation current when sibling controls are inserted or moved, including open shadow roots, and stop observing after the final modal closes.
+- Refresh modal tab stops on owner-window and visual viewport resize, including media-query changes that leave the panel dimensions unchanged.
+- Keep form reset binding synchronization working when existing forms move across shadow roots or documents, while preserving cancelled resets.
+- Add native form constraints, mobile keyboard hints, accessible labels, and input/change/focus/blur/keydown callbacks to Input and Textarea.
+- Keep fixed StatusToast stacks inside viewport safe areas and allow scrolling to read or dismiss every notification.
+- Leave Escape events during IME composition to the text editor instead of dismissing a modal or selection list; preserve regular Escape dismissal after composition ends.
+- Give PageHeader titles responsive page title typography by default in both Svelte and shared CSS.
+- Apply Popover alignment along the perpendicular axis so left and right placements remain beside their triggers in component and shared CSS.
+- Restore Popover focus to elements from its own document, including iframe surfaces mounted by a parent-window runtime, while preserving outside-click focus.
+- Recover focus from Popover content closed through its bound open state, preserving deliberate focus moves and explicit close(false) behavior.
+- Render the first enabled LocaleSwitcher and TextScaleControl option during SSR when the requested value is missing or disabled, preserving the initial keyboard entry point through hydration.
+- Preserve modified browser navigation keys in selection controls and menus without changing selection or focus.
+- Document group-level Radio validity and error descriptions without deprecated per-radio ARIA attributes.
+- Follow changes to form ownership and DOM roots so reassociated controls keep reset bindings and submitted values synchronized.
+- Synchronize documented consumer version ranges during release preparation and include those documents in release artifact integrity checks.
+- Restore the initial Select value on form reset even when its options load or are replaced after mount, while preserving cancelled resets.
+- Recover focus in locale, text-scale and segmented selection controls when focused options become disabled or are removed, without overriding deliberate external focus moves.
+- Exclude shadow focus scopes whose hosts have an explicit negative tabindex, keeping modal Tab wrapping aligned with browser navigation.
+- Protect actual editable targets, including plaintext-only editors and inherited editability, while respecting non-editable islands and keyboard events from open shadow roots or embedded documents.
+- Add ascendingLabel, descendingLabel, and unsortedLabel to localize SortHeader state announcements while retaining existing English defaults and ariaLabel overrides.
+- Derive SortHeader accessible names from visible slot labels and visually hidden sort direction while retaining explicit ariaLabel overrides.
+- Preserve the initiating split-pane drag when simultaneous primary pointers arrive, preventing leaked document text-selection locks.
+- Render default Tabs and SegmentedControl selections and initial Combobox labels during SSR while preserving explicitly edited search text.
+- Recover focus on the selected tab when focused panel content disappears, while preserving visible content focus and deliberate consumer focus moves.
+- Synchronize TableToolbar density changes and enabled fallbacks with parent bindings so controls and tables use the same density.
+- Expose ThemeToggle as an ordinary action button with a changing accessible label, avoiding a conflicting pressed state.
+- Recover focus on neighboring StatusToast dismiss controls after removing a focused notification, while preserving consumer focus choices.
+- Wrap long Toast and StatusToast titles within their notification width without covering dismiss controls.
+- Keep Tooltip explanations visible when hovered and briefly while crossing from the trigger, while preserving Escape dismissal and cleanup when leaving or unmounting.
+- Synchronize Tooltip focus after slot updates so replacing focused triggers does not cause reactive mutation errors or leave stale tooltips visible.
+
 ## 0.63.0
 
 - Added localized Combobox labels and viewport-aware long Tooltip text.
