@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte';
   import { createZdpDismissLayer } from '../dismiss-layer';
+  import { getZdpActiveElement } from '../focusable';
 
   type Placement = 'top' | 'right' | 'bottom' | 'left';
 
@@ -21,6 +22,7 @@
   let pointerInside = $state(false);
   let focusInside = $state(false);
   let pointerLeaveTimer: ReturnType<typeof setTimeout> | null = null;
+  let focusSyncQueued = false;
   const dismissLayer = createZdpDismissLayer();
 
   const tooltipId = $derived(id ?? fallbackId);
@@ -138,21 +140,25 @@
   }
 
   function handleFocusin(): void {
-    focusInside = true;
-    if (!pointerInside) {
-      dismissed = false;
-    }
+    scheduleFocusSync();
   }
 
-  function handleFocusout(event: FocusEvent): void {
-    if (event.relatedTarget instanceof Node && rootElement?.contains(event.relatedTarget)) {
-      return;
-    }
+  function handleFocusout(): void {
+    scheduleFocusSync();
+  }
 
-    focusInside = false;
-    if (!pointerInside) {
-      dismissed = false;
-    }
+  function scheduleFocusSync(): void {
+    if (focusSyncQueued) return;
+    focusSyncQueued = true;
+    const root = rootElement;
+    // Focus events can fire synchronously while Svelte replaces slot content.
+    queueMicrotask(() => {
+      focusSyncQueued = false;
+      if (!root || rootElement !== root || !root.isConnected) return;
+      const focused = getZdpActiveElement(root.getRootNode() as Document | ShadowRoot);
+      focusInside = focused !== null && root.contains(focused);
+      if (!pointerInside) dismissed = false;
+    });
   }
 </script>
 

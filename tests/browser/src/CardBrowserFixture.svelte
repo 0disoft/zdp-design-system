@@ -31,6 +31,7 @@
   import CodeMetadataFixture from './CodeMetadataFixture.svelte';
   import LocaleOverflowFixture from './LocaleOverflowFixture.svelte';
   import PageHeaderTypeFixture from './PageHeaderTypeFixture.svelte';
+  import TooltipLifecycleFixture from './TooltipLifecycleFixture.svelte';
   import DynamicPaginationFixture from './DynamicPaginationFixture.svelte';
   import DynamicMenuFixture from './DynamicMenuFixture.svelte';
   import AccordionInstancesFixture from './AccordionInstancesFixture.svelte';
@@ -476,6 +477,7 @@
   <CodeMetadataFixture />
   <LocaleOverflowFixture />
   <PageHeaderTypeFixture />
+  <TooltipLifecycleFixture />
   <AccordionInstancesFixture />
   <FramePopoverFixture />
   <FrameModalFixture />
