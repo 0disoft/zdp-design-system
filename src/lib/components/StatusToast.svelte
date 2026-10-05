@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { tick } from 'svelte';
   import { toZdpDomId } from '../dom-id';
+  import { getZdpActiveElement, hasZdpFocusMoved, isZdpFocusableElement } from '../focusable';
   import Toast from './Toast.svelte';
   import type { ZdpStatusToastItem } from '../toast';
 
@@ -31,6 +33,7 @@
   }: Props = $props();
 
   const resolvedIdPrefix = $derived(toZdpDomId(idPrefix, fallbackIdPrefix));
+  let rootElement = $state<HTMLElement | null>(null);
 
   function titleId(item: ZdpStatusToastItem): string | null {
     return item.title ? `${resolvedIdPrefix}-${toDomId(item.id)}-title` : null;
@@ -41,7 +44,21 @@
   }
 
   function handleDismiss(event: MouseEvent, item: ZdpStatusToastItem): void {
+    const root = rootElement;
+    const button = event.currentTarget as HTMLButtonElement;
+    const focused = root && getZdpActiveElement(root.getRootNode() as Document | ShadowRoot) === button;
+    const buttons = root ? Array.from(root.querySelectorAll<HTMLButtonElement>('.zdp-toast__close')) : [];
     onDismiss?.(event, item);
+    if (root && focused) void restoreDismissedFocus(root, button, buttons);
+  }
+
+  async function restoreDismissedFocus(root: HTMLElement, previous: HTMLButtonElement, buttons: HTMLButtonElement[]): Promise<void> {
+    await tick();
+    if (root !== rootElement || !root.isConnected || previous.isConnected || hasZdpFocusMoved(root, previous)) return;
+    const index = buttons.indexOf(previous);
+    const candidates = [...buttons.slice(index + 1), ...buttons.slice(0, index).reverse()];
+    const next = candidates.find((button) => button.isConnected && root.contains(button) && isZdpFocusableElement(button));
+    (next ?? root).focus();
   }
 
   function handleAction(event: MouseEvent, item: ZdpStatusToastItem): void {
@@ -62,6 +79,8 @@
   aria-label={labelledBy ? undefined : ariaLabel}
   aria-labelledby={labelledBy ?? undefined}
   role="group"
+  tabindex="-1"
+  bind:this={rootElement}
 >
   {#each items as item (item.id)}
     <Toast

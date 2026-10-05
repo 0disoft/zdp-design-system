@@ -12,6 +12,11 @@ parent DOM: consumers must avoid clipping overflow ancestors and keep tooltip
 copy short enough to fit the viewport height. Shared CSS provides text wrapping;
 collision updates require the Svelte component.
 
+When `onDismiss` synchronously removes a focused StatusToast, focus moves to the
+next dismiss control, then the previous one, or the empty stack's group. A
+callback that moves focus elsewhere keeps that choice. Dismissals that do not
+start with focus on the close button do not move focus.
+
 Combobox `listboxLabel`, `openLabel`, and `closeLabel` let consuming apps supply
 localized accessible names. Omitting them preserves the existing English defaults;
 the package does not choose a locale or translate caller text.

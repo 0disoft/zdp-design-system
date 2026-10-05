@@ -32,6 +32,7 @@
   import LocaleOverflowFixture from './LocaleOverflowFixture.svelte';
   import PageHeaderTypeFixture from './PageHeaderTypeFixture.svelte';
   import TooltipLifecycleFixture from './TooltipLifecycleFixture.svelte';
+  import ToastFocusFixture from './ToastFocusFixture.svelte';
   import DynamicPaginationFixture from './DynamicPaginationFixture.svelte';
   import DynamicMenuFixture from './DynamicMenuFixture.svelte';
   import AccordionInstancesFixture from './AccordionInstancesFixture.svelte';
@@ -478,6 +479,7 @@
   <LocaleOverflowFixture />
   <PageHeaderTypeFixture />
   <TooltipLifecycleFixture />
+  <ToastFocusFixture />
   <AccordionInstancesFixture />
   <FramePopoverFixture />
   <FrameModalFixture />
