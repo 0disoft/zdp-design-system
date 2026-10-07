@@ -47,6 +47,15 @@ export async function verifyComboboxSelectionContracts(page) {
   assert.equal(await authoritative.inputValue(), 'Alpha');
   assert.equal(await authoritative.evaluate(valid), true, 'Explicit selection metadata must work outside the search results.');
   assert.equal(await unknown.evaluate(valid), false, 'Unknown values must not become valid merely because they are nonempty.');
+  const optional = page.getByRole('combobox', { name: 'Optional unknown choice', exact: true });
+  await optional.fill('New search');
+  assert.equal(await optional.evaluate(submittedValue), '', 'Editing an unknown selection must clear its submitted ID.');
+  assert.equal(await optional.evaluate(input => new FormData(input.form).get('optional')), '',
+    'Native form submission must not retain the stale selection.');
+  assert.equal(await page.getByTestId('optional-selection-clears').textContent(), '1');
+  await optional.fill('Another search');
+  assert.equal(await page.getByTestId('optional-selection-clears').textContent(), '1', 'An already empty selection must not emit another clear.');
+  await optional.press('Escape');
   await page.getByRole('button', { name: 'Hide selected candidate', exact: true }).click();
   assert.equal(await cached.inputValue(), 'Alpha');
   assert.equal(await cached.evaluate(valid), true, 'Filtering candidates must preserve a known required selection.');

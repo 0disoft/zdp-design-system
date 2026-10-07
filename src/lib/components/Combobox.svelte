@@ -327,7 +327,7 @@
   function clearSelectionForQuery(nextQuery: string): void {
     const currentOption = selectedOption;
 
-    if (currentOption === null || currentOption.label === nextQuery) {
+    if (value === '' || currentOption?.label === nextQuery) {
       return;
     }
 
