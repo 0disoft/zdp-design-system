@@ -84,4 +84,12 @@ export async function verifyComboboxSelectionContracts(page) {
   await page.getByRole('button', { name: 'Invalidate selected metadata', exact: true }).click();
   assert.equal(await authoritative.inputValue(), '');
   assert.equal(await authoritative.evaluate(valid), false, 'Explicit null metadata must invalidate the selected option.');
+  const invalidated = page.getByRole('combobox', { name: 'Optional authoritative choice', exact: true });
+  assert.equal(await invalidated.evaluate(valid), true, 'An optional cleared selection must remain valid.');
+  assert.equal(await invalidated.evaluate(input => new FormData(input.form).get('invalidated')), '',
+    'Explicitly invalidated optional metadata must not submit the old ID.');
+  assert.equal(await page.getByTestId('invalidated-selection-value').textContent(), '');
+  assert.equal(await page.getByTestId('invalidated-selection-clears').textContent(), '1');
+  await page.getByRole('button', { name: 'Invalidate selected metadata', exact: true }).click();
+  assert.equal(await page.getByTestId('invalidated-selection-clears').textContent(), '1', 'Repeated invalidation must not emit another clear.');
 }

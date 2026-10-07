@@ -10,6 +10,8 @@
   let selectedOption: ZdpComboboxOption | null = alpha;
   let optionalValue = 'missing';
   let optionalClears = 0;
+  let invalidatedValue = 'alpha';
+  let invalidatedClears = 0;
 </script>
 
 <section aria-label="Filtered selection contracts">
@@ -17,6 +19,8 @@
     <Combobox label="Cached filtered choice" name="cached" options={options} bind:value bind:query required />
     <Combobox label="Authoritative filtered choice" name="authoritative" value="alpha" options={[beta]} {selectedOption} required />
     <Combobox label="Unknown filtered choice" name="unknown" value="missing" options={[]} required />
+    <Combobox label="Optional authoritative choice" name="invalidated" bind:value={invalidatedValue} options={[beta]} {selectedOption}
+      onValueChange={(next) => { if (next === '') invalidatedClears += 1; }} />
     <Combobox label="Optional unknown choice" name="optional" bind:value={optionalValue} options={[]}
       onValueChange={(next) => { if (next === '') optionalClears += 1; }} />
   </form>
@@ -27,4 +31,6 @@
   <button type="button" onclick={() => (selectedOption = null)}>Invalidate selected metadata</button>
   <output data-testid="filtered-selection-value">{value}</output>
   <output data-testid="optional-selection-clears">{optionalClears}</output>
+  <output data-testid="invalidated-selection-value">{invalidatedValue}</output>
+  <output data-testid="invalidated-selection-clears">{invalidatedClears}</output>
 </section>

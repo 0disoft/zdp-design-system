@@ -89,6 +89,7 @@
   const enabledOptions = $derived(options.filter((option) => !option.disabled));
   const selectedOption = $derived(resolveSelectedOption(value, options, suppliedSelectedOption, cachedSelection));
   const selectedOptionLabel = $derived(selectedOption?.label ?? '');
+  const submittedValue = $derived(suppliedSelectedOption !== undefined && selectedOption === null ? '' : value);
   const resolvedIdPrefix = $derived(toDomId(id ?? fallbackIdPrefix));
   const inputId = $derived(id ?? `${resolvedIdPrefix}-input`);
   const listboxId = $derived(`${resolvedIdPrefix}-listbox`);
@@ -111,6 +112,14 @@
 
   $effect.pre(() => {
     activeOptionId = resolveActiveOptionId(activeOptionId, enabledOptions);
+  });
+
+  $effect.pre(() => {
+    if (value !== '' && suppliedSelectedOption !== undefined && selectedOption === null) {
+      value = '';
+      cachedSelection = null;
+      onValueChange?.('', null);
+    }
   });
 
   $effect.pre(() => {
@@ -458,7 +467,7 @@
       use:syncZdpFormReset={{ initialValue: query, onReset: handleFormReset }}
     />
     {#if name}
-      <input type="hidden" {name} {value} disabled={disabled} />
+      <input type="hidden" {name} value={submittedValue} disabled={disabled} />
     {/if}
     <button
       class="zdp-combobox__toggle"
