@@ -15,6 +15,18 @@ export async function verifyFrameRovingContracts(page) {
     assert.equal(await second.getAttribute(selectedAttribute), 'true');
     assert.equal(await third.evaluate((element) => element instanceof element.ownerDocument.defaultView.HTMLElement), false, 'The fixture must exercise adopted controls.');
     await third.focus();
+    for (const composing of [{ isComposing: true }, { keyCode: 229 }]) {
+      for (const key of ['ArrowLeft', 'ArrowRight', 'Home', 'End']) {
+        const prevented = await third.evaluate((element, options) => {
+          const event = new KeyboardEvent('keydown', { ...options, bubbles: true, cancelable: true });
+          element.dispatchEvent(event);
+          return event.defaultPrevented;
+        }, { key, ...composing });
+        assert.equal(prevented, false, 'Composition keys must remain available to the IME.');
+        assert.equal(await third.evaluate((element) => element.ownerDocument.activeElement === element), true);
+        assert.equal(await second.getAttribute(selectedAttribute), 'true', 'Composition must not change selection.');
+      }
+    }
     await page.keyboard.press('ArrowLeft');
     assert.equal(await second.getAttribute(selectedAttribute), 'true', 'Movement must start at the focused control rather than the selected fallback.');
     assert.equal(await second.evaluate((element) => element.ownerDocument.activeElement === element), true);
