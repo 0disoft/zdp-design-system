@@ -989,7 +989,6 @@ async function checkComboboxContract(): Promise<void> {
     'const nextQuery = selectedOptionLabel || query',
     'onQueryChange?.(nextQuery)',
     'onValueChange?.(value, option)',
-    '<input type="hidden" {name} {value} disabled={disabled} />',
     '.zdp-combobox',
     '.zdp-combobox__control:focus-within',
     '.zdp-combobox__option[data-active="true"]',

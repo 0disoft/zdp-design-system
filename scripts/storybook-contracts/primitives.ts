@@ -683,7 +683,6 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
     'aria-describedby={ariaDescribedBy ?? undefined}',
     'aria-errormessage={resolvedErrorMessageId ?? undefined}',
     "aria-invalid={invalid ? 'true' : undefined}",
-    '<input type="hidden" {name} {value} disabled={disabled} />',
     'role="listbox"',
     'aria-label={resolvedListboxLabel}',
     'role="option"',
