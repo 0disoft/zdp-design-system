@@ -32,7 +32,14 @@ export async function verifyShadowFocusContracts(page) {
     }
     await page.keyboard.press('Shift+Tab');
     assert.equal(await isDeepActive(last), true, 'Backward wrapping must reach the last shadow control.');
-    await last.evaluate((element) => { element.disabled = true; });
+    await close.evaluate((element) => {
+      const host = element.closest('[role="dialog"]').querySelector('[data-testid="inner-focus-host"]');
+      host.shadowRoot.querySelector('button:last-of-type').disabled = true;
+      element.focus();
+      // Query the focus cache before MutationObserver callbacks can run.
+      element.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true }));
+    });
+    assert.equal(await isDeepActive(slotted), true, 'Same-task mutations must refresh the focus cache before backward wrapping.');
     await slotted.focus();
     await page.keyboard.press('Tab');
     assert.equal(await isDeepActive(close), true, 'Mutations inside the shadow root must invalidate the focus cache.');

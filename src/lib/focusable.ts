@@ -133,6 +133,12 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
       return [];
     }
 
+    // A consumer can change controls and move focus in the same task, before
+    // the observer callback runs. Consume queued changes before using the cache.
+    if (mutationObserver !== null && mutationObserver.takeRecords().length > 0) {
+      invalidate();
+    }
+
     // Media queries may change before a resize event is delivered, without
     // changing the panel dimensions. Validate viewport state when using the cache.
     const view = root.ownerDocument.defaultView;
