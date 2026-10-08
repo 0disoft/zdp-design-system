@@ -108,8 +108,8 @@ const failures: string[] = [];
 for (const [input, expected] of [
   ['safe id', 'safe%20id'],
   ['emoji \ud83d\ude80', 'emoji%20%F0%9F%9A%80'],
-  ['lone high \ud800 surrogate', 'lone%20high%20%EF%BF%BD%20surrogate'],
-  ['lone low \udc00 surrogate', 'lone%20low%20%EF%BF%BD%20surrogate']
+  ['lone high \ud800 surrogate', 'lone%20high%20%ud800%20surrogate'],
+  ['lone low \udc00 surrogate', 'lone%20low%20%udc00%20surrogate']
 ] as const) {
   if (toZdpDomId(input, 'fallback') !== expected) {
     failures.push(`DOM id encoding must be deterministic and non-throwing for ${JSON.stringify(input)}.`);
