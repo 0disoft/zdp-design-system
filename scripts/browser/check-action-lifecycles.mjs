@@ -1,5 +1,39 @@
 import assert from 'node:assert/strict';
 
+export async function verifyConfirmSlideThresholdContracts(page) {
+  const button = page.locator('#repeat-confirm-action');
+  const count = page.getByTestId('repeat-confirm-count');
+  const previousCount = Number(await count.textContent());
+  await button.scrollIntoViewIfNeeded();
+  const box = await button.boundingBox();
+  const x = box.x + 5;
+  const y = box.y + box.height / 2;
+  await page.evaluate(() => {
+    window.__zdpConfirmRaf = window.requestAnimationFrame;
+    window.__zdpConfirmTimeout = window.setTimeout;
+    window.requestAnimationFrame = callback => window.__zdpConfirmRaf.call(window, now => callback(now + 570));
+    window.setTimeout = (callback, delay, ...args) => window.__zdpConfirmTimeout.call(window, delay === 600 ? () => {} : callback, delay, ...args);
+  });
+  try {
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.waitForFunction(() => Number(document.querySelector('#repeat-confirm-action').style.getPropertyValue('--zdp-confirm-action-progress')) >= 0.92);
+    await page.mouse.move(x + 1, y);
+    assert.equal(Number(await count.textContent()), previousCount, 'Hold progress must not let a small pointer move confirm before the hold timer.');
+    await page.mouse.move(x + box.width * 0.94, y);
+    assert.equal(Number(await count.textContent()), previousCount + 1, 'A real slide past the threshold must still confirm.');
+  } finally {
+    await page.mouse.up();
+    await page.evaluate(() => {
+      window.requestAnimationFrame = window.__zdpConfirmRaf;
+      window.setTimeout = window.__zdpConfirmTimeout;
+      delete window.__zdpConfirmRaf;
+      delete window.__zdpConfirmTimeout;
+    });
+  }
+  await page.waitForFunction(() => !document.querySelector('#repeat-confirm-action').hasAttribute('data-confirmed'));
+}
+
 export async function verifyConfirmCompositionContracts(page) {
   const button = page.locator('#repeat-confirm-action');
   const count = page.getByTestId('repeat-confirm-count');

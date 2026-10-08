@@ -66,9 +66,10 @@
       return;
     }
 
-    progress = Math.max(progress, Math.min(1, (clientX - startX) / trackWidth));
+    const slideProgress = Math.min(1, (clientX - startX) / trackWidth);
+    progress = Math.max(progress, slideProgress);
 
-    if (progress >= 0.92) {
+    if (slideProgress >= 0.92) {
       confirmAction();
     }
   }
