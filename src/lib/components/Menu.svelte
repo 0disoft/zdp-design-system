@@ -169,7 +169,7 @@ stability=contract
   }
 
   function handlePanelKeydown(event: KeyboardEvent): void {
-    if (event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
     if (event.key === 'Tab') {
       closeMenu(false);
       return;
@@ -179,7 +179,6 @@ stability=contract
       return;
     }
 
-    event.preventDefault();
     moveActiveItem(event);
   }
 

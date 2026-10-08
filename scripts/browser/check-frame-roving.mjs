@@ -27,6 +27,14 @@ export async function verifyFrameRovingContracts(page) {
         assert.equal(await second.getAttribute(selectedAttribute), 'true', 'Composition must not change selection.');
       }
     }
+    await third.evaluate((element) => {
+      const event = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, cancelable: true });
+      event.preventDefault();
+      element.dispatchEvent(event);
+    });
+    assert.equal(await third.evaluate((element) => element.ownerDocument.activeElement === element), true,
+      'Already handled keyboard events must not move focus or select another control.');
+    assert.equal(await second.getAttribute(selectedAttribute), 'true');
     await page.keyboard.press('ArrowLeft');
     assert.equal(await second.getAttribute(selectedAttribute), 'true', 'Movement must start at the focused control rather than the selected fallback.');
     assert.equal(await second.evaluate((element) => element.ownerDocument.activeElement === element), true);
