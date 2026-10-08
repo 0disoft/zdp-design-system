@@ -37,9 +37,7 @@
   });
 
   function stateSignature(items: readonly ZdpAccordionItem[], mode: ZdpAccordionMode): string {
-    return `${mode}|${items
-    .map((item) => `${item.id}:${item.open === true}:${item.disabled === true}`)
-    .join('|')}`;
+    return JSON.stringify([mode, items.map((item) => [item.id, item.open === true, item.disabled === true])]);
   }
 
   function normalizeInitialOpenIds(

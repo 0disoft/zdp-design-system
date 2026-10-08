@@ -22,4 +22,13 @@ export async function verifyAccordionInstanceContracts(page) {
   await account.click();
   assert.equal(await page.getByTestId('accordion-change-item').textContent(), 'general');
   assert.equal(await page.getByTestId('accordion-change-open-ids').textContent(), 'general', 'Callback IDs must remain consumer-owned item IDs.');
+  const dynamic = page.getByTestId('accordion-signature');
+  const first = dynamic.getByRole('button', { name: 'First dynamic section', exact: true });
+  await first.click();
+  assert.equal(await first.getAttribute('aria-expanded'), 'true');
+  await dynamic.getByTestId('replace-items').click();
+  await dynamic.getByRole('button', { name: 'Replacement section', exact: true }).waitFor();
+  await dynamic.getByTestId('restore-items').click();
+  await first.waitFor();
+  assert.equal(await first.getAttribute('aria-expanded'), 'false', 'Removed item state must not survive an ID containing signature separators.');
 }
