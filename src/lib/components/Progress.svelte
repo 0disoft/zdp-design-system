@@ -14,8 +14,15 @@
   $: hasRange = Number.isFinite(min) && Number.isFinite(max) && max > min;
   $: hasValue = value !== null && Number.isFinite(value) && hasRange;
   $: clampedValue = hasValue ? Math.min(max, Math.max(min, value ?? min)) : min;
-  $: progressPercent = hasRange ? ((clampedValue - min) / (max - min)) * 100 : 0;
+  $: progressPercent = hasRange ? rangePercent(clampedValue, min, max) : 0;
   $: progressStyle = `--zdp-progress-value: ${progressPercent}%;`;
+
+  function rangePercent(current: number, lower: number, upper: number): number {
+    const range = upper - lower;
+    return Number.isFinite(range)
+      ? ((current - lower) / range) * 100
+      : ((current / 2 - lower / 2) / (upper / 2 - lower / 2)) * 100;
+  }
 </script>
 
 <div

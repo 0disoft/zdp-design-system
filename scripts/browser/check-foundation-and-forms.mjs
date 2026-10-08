@@ -1,5 +1,13 @@
 import assert from 'node:assert/strict';
 
+export async function verifyProgressRangeContracts(page) {
+  for (const [index, percent] of [0, 50, 100].entries()) {
+    const progress = page.getByTestId(`numeric-progress-${index}`).getByRole('progressbar');
+    assert.equal(await progress.evaluate(element => element.style.getPropertyValue('--zdp-progress-value').trim()), `${percent}%`);
+    assert.equal(Number(await progress.getAttribute('aria-valuenow')), [-Number.MAX_VALUE, 0, Number.MAX_VALUE][index]);
+  }
+}
+
 export async function verifyFoundationAndFormContracts(page) {
   const labelledSection = page.getByRole('region', { name: 'Release summary' });
   assert.equal(await labelledSection.count(), 1, 'A labelled section Card must expose one named region.');

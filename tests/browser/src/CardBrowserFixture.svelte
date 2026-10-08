@@ -1,4 +1,5 @@
 <script lang="ts">
+  import NumericProgressFixture from './NumericProgressFixture.svelte';
   import { onMount } from 'svelte';
   import Button from '../../../src/lib/components/Button.svelte';
   import Accordion from '../../../src/lib/components/Accordion.svelte';
@@ -229,6 +230,7 @@
 </script>
 
 <main class="zdp-surface-reset">
+  <NumericProgressFixture />
   <Card as="section" ariaLabelledBy="release-summary-title" hover>
     <svelte:fragment slot="header">
       <CardHeader id="release-summary-title">Release summary</CardHeader>
