@@ -1,6 +1,33 @@
 import assert from 'node:assert/strict';
 
 export async function verifySplitPointerOwnership(page) {
+  const finalPosition = await page.evaluate(async (rootPath) => {
+    const { createZdpSplitPaneController } = await import(`/@fs/${rootPath}/src/lib/split-pane.ts`);
+    const root = document.createElement('div');
+    root.style.cssText = 'width: 800px; height: 100px;';
+    const primary = document.createElement('div');
+    const separator = document.createElement('div');
+    root.append(primary, separator);
+    document.body.append(root);
+    // Synthetic events need capture stubs; geometry and listeners use the real DOM.
+    separator.setPointerCapture = () => {};
+    separator.hasPointerCapture = () => false;
+    const commits = [];
+    const controller = createZdpSplitPaneController({ root, primary, separator }, {
+      size: 280, minSize: 100, maxSize: 600,
+      onResizeCommit: (size) => commits.push(size)
+    });
+    try {
+      for (const [type, clientX] of [['pointerdown', 10], ['pointermove', 50], ['pointerup', 90]]) {
+        separator.dispatchEvent(new PointerEvent(type, { pointerId: 7, isPrimary: true, button: 0, clientX }));
+      }
+      return { size: controller.getSize(), commits };
+    } finally {
+      controller.destroy();
+      root.remove();
+    }
+  }, process.cwd().replaceAll('\\', '/'));
+  assert.deepEqual(finalPosition, { size: 360, commits: [360] }, 'Commit the release coordinate even when the final move has not been delivered.');
   const pane = page.locator('#browser-split-pane');
   const separator = pane.getByRole('separator');
   await separator.scrollIntoViewIfNeeded();

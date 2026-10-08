@@ -473,7 +473,9 @@ export function createZdpSplitPaneController(
       return;
     }
 
+    pointerMoved = pointerMoved || Math.abs(pointerCoordinate(event) - pointerStartCoordinate) >= 3;
     if (pointerMoved) {
+      schedulePointerResize(pointerStartSize + pointerSizeDelta(event), event);
       flushPointerResize();
       const committedSize = getRenderedSize();
       finishPointerInteraction();
