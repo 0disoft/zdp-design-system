@@ -36,7 +36,7 @@
     null
   );
   const selectedItem = $derived(normalizedSelectedItem);
-  const activeId = $derived(selectedItem?.id ?? '');
+  const activeId = $derived(selectedItem?.id ?? null);
   const resolvedIdPrefix = $derived(toZdpDomId(idPrefix ?? fallbackIdPrefix, fallbackIdPrefix));
 
   $effect.pre(() => {

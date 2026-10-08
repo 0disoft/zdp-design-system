@@ -14,6 +14,11 @@
   let outside = $state<HTMLButtonElement>();
 
   function change(kind: string, operation: string): void {
+    if (operation === 'empty') {
+      if (kind === 'locale') locales = [{ value: '', label: 'Empty locale value' }];
+      if (kind === 'segment') segments = [{ id: '', label: 'Empty segment ID' }];
+      return;
+    }
     const transform = <T extends { disabled?: boolean }>(items: T[], initial: T[]): T[] => {
       if (operation === 'restore') return initial.map((item) => ({ ...item }));
       if (operation === 'disable-all') return items.map((item) => ({ ...item, disabled: true }));
@@ -36,7 +41,7 @@
     {:else}
       <SegmentedControl items={segments} />
     {/if}
-    {#each ['restore', 'disable', 'remove', 'disable-all', 'external'] as operation}
+    {#each ['restore', 'disable', 'remove', 'disable-all', 'external', 'empty'] as operation}
       <button type="button" data-testid={`selection-${kind}-${operation}`} onclick={() => change(kind, operation)}>{operation}</button>
     {/each}
   </section>

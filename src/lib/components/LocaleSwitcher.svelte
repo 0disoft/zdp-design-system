@@ -42,7 +42,7 @@
     enabledOptions.find((option) => option.value === value) ?? null
   );
   const normalizedOption = $derived(activeOption ?? enabledOptions[0] ?? null);
-  const activeValue = $derived(normalizedOption?.value ?? '');
+  const activeValue = $derived(normalizedOption?.value ?? null);
   const resolvedIdPrefix = $derived(toZdpDomId(idPrefix ?? fallbackIdPrefix, fallbackIdPrefix));
 
   $effect.pre(() => {
