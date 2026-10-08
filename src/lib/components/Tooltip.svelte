@@ -107,6 +107,7 @@
     root.addEventListener('mouseleave', handleMouseleave);
     root.addEventListener('focusin', handleFocusin);
     root.addEventListener('focusout', handleFocusout);
+    scheduleFocusSync();
 
     return () => {
       root.removeEventListener('mouseenter', handleMouseenter);
