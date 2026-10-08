@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.64.2
+
+- Allow npm's registry processing to finish before verifying the already published package, source commit and integrity.
+
 ## 0.64.1
 
 - Combobox에 빈 ID나 공백 ID를 전달해도 기본 입력 ID를 생성해 라벨 연결과 SSR·hydration 식별자를 유지한다.
