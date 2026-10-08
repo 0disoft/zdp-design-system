@@ -1,6 +1,6 @@
 <script lang="ts">
   import { recoverZdpRadioGroupFocus } from '../radio-group-focus';
-  import { toZdpDomId } from '../dom-id';
+  import { toZdpDomId, toZdpDomKey } from '../dom-id';
   import { moveZdpRovingFocus } from '../roving-focus';
   import type { ZdpSegmentedControlItem, ZdpSegmentedControlSize } from '../segmented';
 
@@ -37,7 +37,7 @@
   );
   const selectedItem = $derived(normalizedSelectedItem);
   const activeId = $derived(selectedItem?.id ?? '');
-  const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
+  const resolvedIdPrefix = $derived(toZdpDomId(idPrefix ?? fallbackIdPrefix, fallbackIdPrefix));
 
   $effect.pre(() => {
     const normalizedId = normalizedSelectedItem?.id ?? null;
@@ -83,7 +83,7 @@
   }
 
   function toDomId(value: string): string {
-    return toZdpDomId(value, 'item');
+    return toZdpDomKey(value);
   }
 </script>
 

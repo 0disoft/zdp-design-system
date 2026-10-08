@@ -62,7 +62,7 @@
   }
 
   function toDomId(value: string): string {
-    return toZdpDomId(value, 'disclosure');
+    return toZdpDomId(value, fallbackId);
   }
 </script>
 

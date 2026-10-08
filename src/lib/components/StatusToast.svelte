@@ -1,6 +1,6 @@
 <script lang="ts">
   import { tick } from 'svelte';
-  import { toZdpDomId } from '../dom-id';
+  import { toZdpDomId, toZdpDomKey } from '../dom-id';
   import { getZdpActiveElement, hasZdpFocusMoved, isZdpFocusableElement } from '../focusable';
   import Toast from './Toast.svelte';
   import type { ZdpStatusToastItem } from '../toast';
@@ -70,7 +70,7 @@
   }
 
   function toDomId(id: string): string {
-    return toZdpDomId(id, 'item');
+    return toZdpDomKey(id);
   }
 </script>
 

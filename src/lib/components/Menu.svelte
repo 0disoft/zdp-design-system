@@ -251,7 +251,7 @@ stability=contract
   }
 
   function toDomId(id: string): string {
-    return toZdpDomId(id, 'menu');
+    return toZdpDomId(id, fallbackIdPrefix);
   }
 </script>
 

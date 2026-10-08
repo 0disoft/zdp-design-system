@@ -1,6 +1,6 @@
 <script lang="ts">
   import { recoverZdpRadioGroupFocus } from '../radio-group-focus';
-  import { toZdpDomId } from '../dom-id';
+  import { toZdpDomId, toZdpDomKey } from '../dom-id';
   import { moveZdpRovingFocus } from '../roving-focus';
   import {
     zdpTextScaleControlOptions,
@@ -44,7 +44,7 @@
   );
   const normalizedOption = $derived(activeOption ?? enabledOptions[0] ?? null);
   const activeValue = $derived(normalizedOption?.value ?? '');
-  const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
+  const resolvedIdPrefix = $derived(toZdpDomId(idPrefix ?? fallbackIdPrefix, fallbackIdPrefix));
 
   $effect.pre(() => {
     if (normalizedOption && value !== normalizedOption.value) {
@@ -89,7 +89,7 @@
   }
 
   function toDomId(value: string): string {
-    return toZdpDomId(value, 'option');
+    return toZdpDomKey(value);
   }
 </script>
 

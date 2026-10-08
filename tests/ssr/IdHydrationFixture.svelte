@@ -37,6 +37,7 @@
     { id: 'overview', label: 'Overview' },
     { id: 'history', label: 'History' }
   ] as const;
+  const unusualItems = ['', ' ', 'item', ' item', 'item ', '\ud800', '\ud801', '\ufffd'].map((id, index) => ({ id, label: `Unusual key ${index}` }));
 
   const comboboxOptions: readonly ZdpComboboxOption[] = [
     { id: 'alpha', label: 'Alpha', value: 'alpha' },
@@ -82,6 +83,17 @@
 </section>
 
 <AccordionInstancesFixture />
+
+<section data-testid="unusual-id-hydration-fixture" aria-label="Unusual item identities">
+  <Tabs items={unusualItems} idPrefix="" />
+  <Tabs items={unusualItems} idPrefix="  " />
+  <Disclosure id="" title="Blank disclosure one" />
+  <Disclosure id=" " title="Blank disclosure two" />
+  <Popover idPrefix="" />
+  <Popover idPrefix=" " />
+  <Menu idPrefix="" items={menuItems} />
+  <Menu idPrefix=" " items={menuItems} />
+</section>
 
 <section data-testid="tabs-hydration-fixture" aria-label="Tabs hydration fixture">
   <Tabs items={tabItems} bind:selectedId={selectedTabId} ariaLabel="Hydration sections" let:selectedId>

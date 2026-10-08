@@ -4,7 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { join, relative } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { compile, type Warning } from 'svelte/compiler';
-import { toZdpDomId } from '../src/lib/dom-id';
+import { toZdpDomId, toZdpDomKey } from '../src/lib/dom-id';
 import {
   expectedPackageExportTargets,
   expectedPackageExports,
@@ -118,6 +118,11 @@ for (const [input, expected] of [
 
 if (toZdpDomId('   ', 'fallback') !== 'fallback') {
   failures.push('DOM id encoding must preserve the empty-value fallback contract.');
+}
+
+const identityKeys = ['', ' ', '  ', 'item', 'item ', ' item', '\ud800', '\ud801', '\udc00', '\ufffd', '%ud800', '%empty', 'emoji 🚀'];
+if (new Set(identityKeys.map(toZdpDomKey)).size !== identityKeys.length) {
+  failures.push('Distinct item keys must retain distinct DOM identities, including blank and malformed Unicode keys.');
 }
 
 const packageJson = await readPackageJson(packagePath);

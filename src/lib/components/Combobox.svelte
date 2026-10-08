@@ -2,7 +2,7 @@
   import { onDestroy, tick, untrack } from 'svelte';
   import type { HTMLInputAttributes } from 'svelte/elements';
   import type { ZdpComboboxOption, ZdpComboboxSize } from '../combobox';
-  import { toZdpDomId } from '../dom-id';
+  import { toZdpDomId, toZdpDomKey } from '../dom-id';
   import { createZdpDismissLayer } from '../dismiss-layer';
   import { syncZdpFormReset } from '../form-reset';
 
@@ -90,7 +90,7 @@
   const selectedOption = $derived(resolveSelectedOption(value, options, suppliedSelectedOption, cachedSelection));
   const selectedOptionLabel = $derived(selectedOption?.label ?? '');
   const submittedValue = $derived(suppliedSelectedOption !== undefined && selectedOption === null ? '' : value);
-  const resolvedIdPrefix = $derived(toDomId(id ?? fallbackIdPrefix));
+  const resolvedIdPrefix = $derived(toZdpDomId(id ?? fallbackIdPrefix, fallbackIdPrefix));
   const inputId = $derived(id ?? `${resolvedIdPrefix}-input`);
   const listboxId = $derived(`${resolvedIdPrefix}-listbox`);
   const ariaDescribedBy = $derived(normalizeIdRefs(describedBy));
@@ -420,7 +420,7 @@
   }
 
   function toDomId(id: string): string {
-    return toZdpDomId(id, 'combobox');
+    return toZdpDomKey(id);
   }
 </script>
 

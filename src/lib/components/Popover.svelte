@@ -136,7 +136,7 @@
   }
 
   function toDomId(id: string): string {
-    return toZdpDomId(id, 'popover');
+    return toZdpDomId(id, fallbackIdPrefix);
   }
 </script>
 

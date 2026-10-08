@@ -1,7 +1,7 @@
 <script lang="ts">
   import { tick } from 'svelte';
   import { getZdpActiveElement, hasZdpFocusMoved } from '../focusable';
-  import { toZdpDomId } from '../dom-id';
+  import { toZdpDomId, toZdpDomKey } from '../dom-id';
   import { moveZdpRovingFocus } from '../roving-focus';
 
   interface TabItem {
@@ -26,7 +26,7 @@
     idPrefix = null
   }: Props = $props();
 
-  const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
+  const resolvedIdPrefix = $derived(toZdpDomId(idPrefix ?? fallbackIdPrefix, fallbackIdPrefix));
 
   let rootElement = $state<HTMLElement | null>(null);
   let tabListElement = $state<HTMLElement | null>(null);
@@ -107,7 +107,7 @@
   }
 
   function toDomId(id: string): string {
-    return toZdpDomId(id, 'item');
+    return toZdpDomKey(id);
   }
 </script>
 
