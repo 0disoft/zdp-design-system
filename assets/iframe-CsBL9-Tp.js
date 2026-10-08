@@ -1,0 +1,1 @@
+import{t as e}from"./iframe-Bgcan31C.js";e();
