@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 0.64.1
+
+- Combobox에서 선택 메타데이터를 명시적으로 무효화하면 연결된 값과 폼 제출 값도 비웁니다.
+- Combobox에서 알 수 없는 기존 선택값을 가진 상태로 검색어를 수정하면 제출용 ID를 지우고 소비 앱에 변경을 알린다.
+- Preserve distinct blank, whitespace, and malformed Unicode item keys in DOM IDs, and use unique component IDs when explicit prefixes are blank.
+- IME 조합 중 방향키와 Home/End를 눌러도 탭·선택 컨트롤의 포커스와 선택값이 이동하지 않습니다.
+
 ## 0.64.0
 
 - Generate SSR-stable, instance-unique Accordion trigger and panel IDs so repeated item IDs across separate accordions keep their accessibility references local.
