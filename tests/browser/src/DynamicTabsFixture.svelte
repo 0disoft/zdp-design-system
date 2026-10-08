@@ -19,6 +19,7 @@
   <button type="button" data-testid="tabs-remove-focused" onclick={() => items = items.filter((item) => item.id !== selectedId)}>Remove selected tab</button>
   <button type="button" data-testid="tabs-disable-focused" onclick={() => { const item = items.find((item) => item.id === selectedId); if (item) item.disabled = true; }}>Disable selected tab</button>
   <button type="button" data-testid="tabs-disable-all" onclick={() => items.forEach((item) => item.disabled = true)}>Disable all tabs</button>
+  <button type="button" data-testid="tabs-empty-id" onclick={() => { items = [{ id: '', label: 'Empty ID tab' }]; selectedId = ''; }}>Use empty tab ID</button>
   <button type="button" data-testid="tabs-remove-external-focus" onclick={() => { items = items.filter((item) => item.id !== selectedId); queueMicrotask(() => outside?.focus()); }}>Remove tab and move focus</button>
   <button type="button" data-testid="tabs-outside-focus" bind:this={outside}>Outside tab control</button>
 </section>

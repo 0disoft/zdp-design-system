@@ -44,6 +44,14 @@ export async function verifyDynamicTabsContracts(page) {
 export async function verifyRemovedTabFocusContracts(page) {
   const fixture = page.getByTestId('dynamic-tabs');
   const selected = () => fixture.getByRole('tab', { selected: true });
+  await fixture.getByTestId('tabs-empty-id').click();
+  assert.equal(await selected().textContent(), 'Empty ID tab', 'An empty string ID must remain selectable.');
+  await selected().focus();
+  await fixture.getByTestId('tabs-disable-all').evaluate((element) => element.click());
+  assert.equal(await selected().count(), 0, 'No disabled tab may inherit the empty selection sentinel.');
+  assert.equal(await fixture.getByRole('tabpanel').count(), 0, 'No panel may be exposed when all tabs are disabled.');
+  assert.equal(await fixture.locator('[role="tab"][tabindex="0"]').count(), 0);
+  assert.equal(await fixture.getByRole('tablist').evaluate((element) => document.activeElement === element), true);
   for (const testId of ['tabs-remove-focused', 'tabs-disable-focused', 'tabs-disable-all']) {
     await fixture.getByTestId('tabs-restore-items').click();
     await selected().focus();

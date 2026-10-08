@@ -62,7 +62,7 @@
     null
   );
   const selectedItem = $derived(normalizedSelectedItem);
-  const activeId = $derived(selectedItem?.id ?? '');
+  const activeId = $derived(selectedItem?.id ?? null);
 
   $effect.pre(() => {
     const normalizedId = normalizedSelectedItem?.id ?? null;
