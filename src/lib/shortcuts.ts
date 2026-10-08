@@ -148,7 +148,7 @@ export function shouldZdpIgnoreShortcutEvent(
   event: KeyboardEvent,
   options: ZdpShortcutGuardOptions = {}
 ): boolean {
-  if (event.defaultPrevented || event.isComposing || event.keyCode === 229) {
+  if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.getModifierState('AltGraph')) {
     return true;
   }
 
