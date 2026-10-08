@@ -85,6 +85,9 @@
 <AccordionInstancesFixture />
 
 <section data-testid="unusual-id-hydration-fixture" aria-label="Unusual item identities">
+  {#each ['\ud800', '\ud801', '\ufffd', '%ud800', '\udc00'] as prefix, index}
+    <Tabs idPrefix={`prefix-${prefix}`} items={[{ id: 'only', label: `Prefix identity ${index}` }]} />
+  {/each}
   <Tabs items={unusualItems} idPrefix="" />
   <Tabs items={unusualItems} idPrefix="  " />
   <Disclosure id="" title="Blank disclosure one" />
