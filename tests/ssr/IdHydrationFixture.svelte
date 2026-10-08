@@ -93,6 +93,7 @@
   <Popover idPrefix=" " />
   <Menu idPrefix="" items={menuItems} />
   <Menu idPrefix=" " items={menuItems} />
+  <Combobox label="Unusual option identity" options={unusualItems.map(item => ({ ...item, value: item.label }))} />
 </section>
 
 <section data-testid="tabs-hydration-fixture" aria-label="Tabs hydration fixture">

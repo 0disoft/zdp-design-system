@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Combobox에서 빈 문자열 옵션 ID도 활성 옵션으로 처리해 키보드 이동과 `aria-activedescendant` 참조를 유지한다.
+
 ## 0.64.0
 
 - Generate SSR-stable, instance-unique Accordion trigger and panel IDs so repeated item IDs across separate accordions keep their accessibility references local.

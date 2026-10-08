@@ -78,7 +78,7 @@
   let rootElement = $state<HTMLElement | null>(null);
   let inputElement = $state<HTMLInputElement | null>(null);
   let open = $state(false);
-  let activeOptionId = $state('');
+  let activeOptionId = $state<string | null>(null);
   let lastSyncedValue = $state(value);
   let lastSyncedOptionLabel = $state(initialSelectedOption?.label ?? '');
   let lastSyncedQuery = $state(query);
@@ -96,7 +96,7 @@
   const ariaDescribedBy = $derived(normalizeIdRefs(describedBy));
   const resolvedErrorMessageId = $derived(invalid && errorMessageId ? errorMessageId : null);
   const hasOptions = $derived(options.length > 0);
-  const activeOptionDomId = $derived(open && activeOptionId ? optionDomId(activeOptionId) : null);
+  const activeOptionDomId = $derived(open && activeOptionId !== null ? optionDomId(activeOptionId) : null);
   const inputAriaLabel = $derived(label ? undefined : ariaLabel ?? 'Search');
   const resolvedListboxLabel = $derived(listboxLabel ?? `${label ?? ariaLabel ?? 'Selection'} list`);
   const selectionMissing = $derived(required && !disabled && !readonly &&
@@ -178,7 +178,7 @@
     onOpenChange?.(nextOpen);
 
     if (nextOpen) {
-      activeOptionId = enabledOptions.find((option) => option.value === value)?.id ?? enabledOptions[0]?.id ?? '';
+      activeOptionId = enabledOptions.find((option) => option.value === value)?.id ?? enabledOptions[0]?.id ?? null;
     }
   }
 
@@ -190,7 +190,7 @@
     onQueryChange?.(query);
     clearSelectionForQuery(nextQuery);
     setOpen(true);
-    activeOptionId = enabledOptions[0]?.id ?? '';
+    activeOptionId = enabledOptions[0]?.id ?? null;
   }
 
   function handleFormReset(input: HTMLInputElement): void {
@@ -236,7 +236,7 @@
       if (wasOpen) {
         moveActiveOption('ArrowDown');
       } else {
-        activeOptionId = enabledOptions.find((option) => option.value === value)?.id ?? enabledOptions[0]?.id ?? '';
+        activeOptionId = enabledOptions.find((option) => option.value === value)?.id ?? enabledOptions[0]?.id ?? null;
       }
       return;
     }
@@ -248,20 +248,20 @@
       if (wasOpen) {
         moveActiveOption('ArrowUp');
       } else {
-        activeOptionId = enabledOptions.find((option) => option.value === value)?.id ?? enabledOptions[enabledOptions.length - 1]?.id ?? '';
+        activeOptionId = enabledOptions.find((option) => option.value === value)?.id ?? enabledOptions[enabledOptions.length - 1]?.id ?? null;
       }
       return;
     }
 
     if (event.key === 'Home' && open) {
       event.preventDefault();
-      activeOptionId = enabledOptions[0]?.id ?? '';
+      activeOptionId = enabledOptions[0]?.id ?? null;
       return;
     }
 
     if (event.key === 'End' && open) {
       event.preventDefault();
-      activeOptionId = enabledOptions[enabledOptions.length - 1]?.id ?? '';
+      activeOptionId = enabledOptions[enabledOptions.length - 1]?.id ?? null;
       return;
     }
 
@@ -376,7 +376,7 @@
 
   function moveActiveOption(key: 'ArrowDown' | 'ArrowUp'): void {
     if (enabledOptions.length === 0) {
-      activeOptionId = '';
+      activeOptionId = null;
       return;
     }
 
@@ -393,12 +393,12 @@
     activeOptionId = enabledOptions[nextIndex]?.id ?? activeOptionId;
   }
 
-  function resolveActiveOptionId(currentId: string, availableOptions: readonly ZdpComboboxOption[]): string {
+  function resolveActiveOptionId(currentId: string | null, availableOptions: readonly ZdpComboboxOption[]): string | null {
     if (availableOptions.some((option) => option.id === currentId)) {
       return currentId;
     }
 
-    return availableOptions[0]?.id ?? '';
+    return availableOptions[0]?.id ?? null;
   }
 
   function optionDomId(optionId: string): string {

@@ -248,6 +248,20 @@ try {
   assert.equal(await controlledQuery.inputValue(), 'Beta', 'Changing only the selection must synchronize its label.');
   await verifyFormResetContracts(page);
 
+  const unusualCombobox = page.getByRole('combobox', { name: 'Unusual option identity', exact: true });
+  await unusualCombobox.click();
+  for (let index = 0; index < 8; index += 1) {
+    const activeId = await unusualCombobox.getAttribute('aria-activedescendant');
+    assert.ok(activeId, 'Every option identity, including an empty key, must expose an active descendant.');
+    assert.equal(await page.locator(`[id="${activeId}"]`).getAttribute('data-active'), 'true');
+    assert.equal(await page.locator(`[id="${activeId}"]`).textContent().then(text => text.trim()), `Unusual key ${index}`);
+    if (index < 7) await unusualCombobox.press('ArrowDown');
+  }
+  await unusualCombobox.press('Home');
+  await unusualCombobox.press('Enter');
+  assert.equal(await unusualCombobox.inputValue(), 'Unusual key 0');
+  assert.equal(await unusualCombobox.getAttribute('aria-activedescendant'), null);
+
   await page.getByTestId('tabs-hydration-fixture').getByRole('tab', { name: 'History' }).click();
   await page.getByTestId('tabs-slot-selection').getByText('history', { exact: true }).waitFor();
   assert.equal(
