@@ -88,7 +88,7 @@ jobs:
   publish:
     needs: prepare
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     permissions:
       contents: read
       id-token: write
@@ -146,7 +146,7 @@ jobs:
 
       - name: Verify npm registry result
         run: |
-          max_attempts=12
+          max_attempts=60
           attempt=1
           while [ "$attempt" -le "$max_attempts" ]; do
             published_version="$(npm view "${{ steps.artifact.outputs.package }}@${{ steps.artifact.outputs.version }}" version 2>/dev/null || true)"

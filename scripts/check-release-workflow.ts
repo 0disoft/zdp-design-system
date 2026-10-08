@@ -41,7 +41,9 @@ assert.doesNotMatch(workflow, /prepare:[\s\S]*?id-token: write[\s\S]*?publish:/)
 assert.ok(workflow.includes('group: npm-release-${{ github.repository }}-${{ github.ref }}'));
 assert.ok(workflow.includes('cancel-in-progress: false'));
 assert.ok(workflow.includes('timeout-minutes: 20'));
-assert.equal(workflow.match(/timeout-minutes: 5/g)?.length, 2);
+assert.equal(workflow.match(/timeout-minutes: 5/g)?.length, 1);
+assert.match(workflow, /publish:\n\s+needs: prepare[\s\S]*?timeout-minutes: 10/);
+assert.ok(workflow.includes('max_attempts=60'));
 assert.ok(workflow.includes('uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7'));
 assert.ok(workflow.includes('fetch-depth: 0'));
 assert.ok(workflow.includes('persist-credentials: false'));
