@@ -5,6 +5,30 @@ export async function verifyConfirmCompositionContracts(page) {
   const count = page.getByTestId('repeat-confirm-count');
   const previousCount = await count.textContent();
   await button.focus();
+  for (const modifier of ['altKey', 'ctrlKey', 'metaKey', 'shiftKey']) {
+    for (const key of ['Enter', ' ']) {
+      const prevented = await button.evaluate((element, { key, modifier }) => {
+        const event = new KeyboardEvent('keydown', { key, [modifier]: true, bubbles: true, cancelable: true });
+        element.dispatchEvent(event);
+        return event.defaultPrevented;
+      }, { key, modifier });
+      assert.equal(prevented, false, 'Modified keys must remain available to shortcuts.');
+      assert.equal(await button.getAttribute('data-active'), null, 'Modified keys must not start a confirmation hold.');
+      const keyupPrevented = await button.evaluate((element, { key, modifier }) => {
+        const event = new KeyboardEvent('keyup', { key, [modifier]: true, bubbles: true, cancelable: true });
+        element.dispatchEvent(event);
+        return event.defaultPrevented;
+      }, { key, modifier });
+      assert.equal(keyupPrevented, false, 'Modified keyup must remain available to shortcuts.');
+      await button.evaluate((element, { key, modifier }) => {
+        element.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+        element.dispatchEvent(new KeyboardEvent('keyup', { key, [modifier]: true, bubbles: true, cancelable: true }));
+      }, { key, modifier });
+      assert.equal(await button.getAttribute('data-active'), null, 'Modified keyup must still cancel an ordinary hold.');
+    }
+  }
+  await page.waitForTimeout(650);
+  assert.equal(await count.textContent(), previousCount, 'Modified keys must not invoke the confirmation callback.');
   for (const composing of [{ isComposing: true }, { keyCode: 229 }]) {
     for (const key of ['Enter', ' ']) {
       const prevented = await button.evaluate((element, { key, composing }) => {

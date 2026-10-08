@@ -188,7 +188,7 @@
   }
 
   function handleKeydown(event: KeyboardEvent): void {
-    if (event.isComposing || event.keyCode === 229) {
+    if (event.isComposing || event.keyCode === 229 || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
       return;
     }
 
@@ -209,7 +209,9 @@
     }
 
     if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
+      if (!event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey) {
+        event.preventDefault();
+      }
       cancelInteraction();
     }
   }
