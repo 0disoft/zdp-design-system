@@ -91,7 +91,7 @@
   const selectedOptionLabel = $derived(selectedOption?.label ?? '');
   const submittedValue = $derived(suppliedSelectedOption !== undefined && selectedOption === null ? '' : value);
   const resolvedIdPrefix = $derived(toZdpDomId(id ?? fallbackIdPrefix, fallbackIdPrefix));
-  const inputId = $derived(id ?? `${resolvedIdPrefix}-input`);
+  const inputId = $derived(id?.trim() ? id : `${resolvedIdPrefix}-input`);
   const listboxId = $derived(`${resolvedIdPrefix}-listbox`);
   const ariaDescribedBy = $derived(normalizeIdRefs(describedBy));
   const resolvedErrorMessageId = $derived(invalid && errorMessageId ? errorMessageId : null);

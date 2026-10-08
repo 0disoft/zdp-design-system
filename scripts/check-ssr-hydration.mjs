@@ -248,6 +248,15 @@ try {
   assert.equal(await controlledQuery.inputValue(), 'Beta', 'Changing only the selection must synchronize its label.');
   await verifyFormResetContracts(page);
 
+  for (const name of ['Blank combobox identity', 'Whitespace combobox identity']) {
+    const input = page.getByRole('combobox', { name, exact: true });
+    const id = await input.getAttribute('id');
+    assert.ok(id?.trim(), 'A blank explicit ID must use the generated input identity.');
+    await page.locator(`label[for="${id}"]`).click();
+    assert.equal(await input.evaluate(element => element.ownerDocument.activeElement === element), true);
+    await input.press('Escape');
+  }
+
   const unusualCombobox = page.getByRole('combobox', { name: 'Unusual option identity', exact: true });
   await unusualCombobox.click();
   for (let index = 0; index < 8; index += 1) {

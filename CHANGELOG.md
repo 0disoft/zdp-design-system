@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Combobox에 빈 ID나 공백 ID를 전달해도 기본 입력 ID를 생성해 라벨 연결과 SSR·hydration 식별자를 유지한다.
+
 - Combobox에서 빈 문자열 옵션 ID도 활성 옵션으로 처리해 키보드 이동과 `aria-activedescendant` 참조를 유지한다.
 
 ## 0.64.0

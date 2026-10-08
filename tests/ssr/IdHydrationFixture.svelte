@@ -94,6 +94,8 @@
   <Menu idPrefix="" items={menuItems} />
   <Menu idPrefix=" " items={menuItems} />
   <Combobox label="Unusual option identity" options={unusualItems.map(item => ({ ...item, value: item.label }))} />
+  <Combobox id="" label="Blank combobox identity" labelVisible options={comboboxOptions} />
+  <Combobox id=" " label="Whitespace combobox identity" labelVisible options={comboboxOptions} />
 </section>
 
 <section data-testid="tabs-hydration-fixture" aria-label="Tabs hydration fixture">
