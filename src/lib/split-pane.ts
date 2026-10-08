@@ -403,7 +403,7 @@ export function createZdpSplitPaneController(
 
     options.onResize?.(nextRenderedSize, event);
 
-    if (commit) {
+    if (commit && !destroyed && !isDisabled()) {
       options.onResizeCommit?.(nextRenderedSize, event);
     }
   }
@@ -477,6 +477,7 @@ export function createZdpSplitPaneController(
     if (pointerMoved) {
       schedulePointerResize(pointerStartSize + pointerSizeDelta(event), event);
       flushPointerResize();
+      if (!dragging || destroyed || isDisabled()) return;
       const committedSize = getRenderedSize();
       finishPointerInteraction();
       options.onResizeCommit?.(committedSize, event);
@@ -499,6 +500,7 @@ export function createZdpSplitPaneController(
   function handleLostPointerCapture(event: PointerEvent): void {
     if (dragging && event.pointerId === activePointerId) {
       flushPointerResize();
+      if (!dragging || destroyed || isDisabled()) return;
       const committedSize = getRenderedSize();
       finishPointerInteraction();
       options.onResizeCommit?.(committedSize, event);

@@ -1,5 +1,48 @@
 import assert from 'node:assert/strict';
 
+export async function verifySplitReentrantCallbacks(page) {
+  const results = await page.evaluate(async (rootPath) => {
+    const { createZdpSplitPaneController } = await import(`/@fs/${rootPath}/src/lib/split-pane.ts`);
+    const results = [];
+    for (const mode of ['destroy', 'disable']) {
+      for (const interaction of ['keyboard', 'release', 'capture-loss']) {
+        const root = document.createElement('div');
+        root.style.cssText = 'width: 800px; height: 100px;';
+        const primary = document.createElement('div');
+        const separator = document.createElement('div');
+        root.append(primary, separator);
+        document.body.append(root);
+        separator.setPointerCapture = () => {};
+        separator.hasPointerCapture = () => false;
+        const commits = [];
+        const controller = createZdpSplitPaneController({ root, primary, separator }, {
+          size: 280, minSize: 100, maxSize: 600,
+          onResize: () => mode === 'destroy' ? controller.destroy() : controller.update({ disabled: true }),
+          onResizeCommit: (size) => commits.push(size)
+        });
+        try {
+          if (interaction === 'keyboard') {
+            separator.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+          } else {
+            separator.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 7, isPrimary: true, button: 0, clientX: 10 }));
+            if (interaction === 'capture-loss') separator.dispatchEvent(new PointerEvent('pointermove', { pointerId: 7, clientX: 60 }));
+            separator.dispatchEvent(new PointerEvent(interaction === 'release' ? 'pointerup' : 'lostpointercapture',
+              { pointerId: 7, clientX: 60 }));
+          }
+          results.push({ mode, interaction, commits, dragging: root.classList.contains('zdp-resizable-split-pane--dragging'),
+            selectionLocked: document.documentElement.classList.contains('zdp-user-select-dragging') });
+        } finally { controller.destroy(); root.remove(); }
+      }
+    }
+    return results;
+  }, process.cwd().replaceAll('\\', '/'));
+  for (const result of results) {
+    assert.deepEqual(result.commits, [], `A ${result.mode} callback must stop the ${result.interaction} commit.`);
+    assert.equal(result.dragging, false);
+    assert.equal(result.selectionLocked, false);
+  }
+}
+
 export async function verifySplitPointerOwnership(page) {
   const finalPosition = await page.evaluate(async (rootPath) => {
     const { createZdpSplitPaneController } = await import(`/@fs/${rootPath}/src/lib/split-pane.ts`);
