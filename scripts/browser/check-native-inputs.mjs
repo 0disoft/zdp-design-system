@@ -88,4 +88,6 @@ export async function verifyAsyncSelectResetContracts(page) {
   await page.locator('#async-reset-form').evaluate((form) => form.reset());
   await page.waitForFunction(() => document.querySelector('[data-testid="async-reset-value"]').textContent === 'b');
   assert.equal(await select.inputValue(), 'b', 'Replaced options must retain the initial reset value.');
+  assert.equal(await select.evaluate(element => element.selectedIndex), 1,
+    'Reset must preserve the first matching option when values are duplicated.');
 }

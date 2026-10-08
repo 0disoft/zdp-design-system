@@ -53,8 +53,10 @@ export function syncZdpFormReset<Control extends FormControl>(
     if (options.initialValue !== undefined) {
       if ('options' in control) {
         const selectedIndex = control.selectedIndex;
+        let matched = false;
         for (const option of control.options) {
-          option.defaultSelected = option.value === options.initialValue;
+          option.defaultSelected = !matched && option.value === options.initialValue;
+          matched ||= option.defaultSelected;
         }
         control.selectedIndex = selectedIndex;
       } else {

@@ -57,7 +57,7 @@
     <Select id="async-reset-choice" name="asyncChoice" bind:value={asyncChoice}>
       {#key asyncOptionsRevision}
         {#if asyncOptionsLoaded}
-          <option value="a">Async A</option><option value="b">Async B</option>
+          <option value="a">Async A</option><option value="b">Async B</option><option value="b">Duplicate B</option>
         {/if}
       {/key}
     </Select>
