@@ -448,6 +448,15 @@ export async function verifyFoundationAndFormContracts(page) {
   assert.ok((await separator.boundingBox()).width >= 24, 'The splitter hit target must be at least 24 CSS pixels wide.');
 
   await separator.focus();
+  const shortcutStates = await separator.evaluate(element => {
+    return [{ ctrlKey: true }, { altKey: true }, { metaKey: true }, { isComposing: true }, { keyCode: 229 }].map(modifier => {
+      const event = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true, ...modifier });
+      element.dispatchEvent(event);
+      return { value: element.getAttribute('aria-valuenow'), prevented: event.defaultPrevented };
+    });
+  });
+  assert.deepEqual(shortcutStates, Array(5).fill({ value: '280', prevented: false }),
+    'Modifier shortcuts and IME keys must not resize the panel or prevent browser behavior.');
   await page.keyboard.press('ArrowRight');
   assert.equal(await separator.getAttribute('aria-valuenow'), '288');
   await page.keyboard.press('Shift+ArrowRight');
