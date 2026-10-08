@@ -330,7 +330,7 @@
                 </Button>
               </Tooltip>
               <Tooltip text="닫기" placement="right" id="interaction-light-tooltip-close" let:describedBy>
-                <Button variant="secondary" ariaLabel="닫기" ariaDescribedBy={describedBy}>
+                <Button variant="secondary" ariaLabel="Esc 닫기" ariaDescribedBy={describedBy}>
                   <span aria-hidden="true">Esc</span>
                 </Button>
               </Tooltip>
@@ -656,7 +656,7 @@
                 </Button>
               </Tooltip>
               <Tooltip text="닫기" placement="right" id="interaction-dark-tooltip-close" let:describedBy>
-                <Button variant="secondary" ariaLabel="닫기" ariaDescribedBy={describedBy}>
+                <Button variant="secondary" ariaLabel="Esc 닫기" ariaDescribedBy={describedBy}>
                   <span aria-hidden="true">Esc</span>
                 </Button>
               </Tooltip>
