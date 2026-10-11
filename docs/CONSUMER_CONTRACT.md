@@ -44,8 +44,8 @@ Default component text is English. 소비 앱은 화면 locale에 맞춰 user-fa
 - `zdpTokenNames`, `share.js`, `share.d.ts`는 손으로 맞추지 않고 `tokens:generate`, `share-icons:generate` 산출물로 유지한다.
 - 새 버전은 소비 저장소가 opt-in으로 채택한다. broad adoption 전에는 대표 소비처에서 시각과 build를 확인한다.
 - Svelte 소비처는 `zdp-design-system/tokens.css`와 `zdp-design-system/components/ComponentName` direct subpath를 기본으로 사용해 scoped component CSS와 전역 `components.css`를 중복하지 않고 root barrel의 전체 개발 그래프를 피한다. 기존 root named export와 `styles.css`는 호환 및 framework-neutral/static utility 표면으로 유지한다.
-- keyboard focus, flat UI, framed control, Pretendard-first font stack은 소비처에서 임의로 낮추지 않는다.
-- 브랜드 워드마크는 `font.family.brand`와 `brand-fonts.css`를 쓰되, 본문과 제품 UI heading은 Pretendard-first sans/display stack을 유지한다.
+- keyboard focus, flat UI, framed control, Noto Sans KR-first font stack은 소비처에서 임의로 낮추지 않는다.
+- 브랜드 워드마크는 `font.family.brand`와 `brand-fonts.css`를 쓰되, 본문과 제품 UI heading은 Noto Sans KR-first sans/display stack을 유지한다.
 - 소비 저장소는 `zdp-design-system`을 쓰기 위해 Tailwind, UnoCSS, shadcn registry, daisyUI theme, Skeleton preset, Flowbite theme, external `cn()` helper를 알 필요가 없어야 한다.
 - 외부 headless primitive가 내부 구현에 쓰이더라도 public API, CSS class, token, dist export는 ZDP 계약으로만 노출한다.
 - 공용 이미지 fallback은 `zdp-design-system/brand-assets` manifest와 `zdp-design-system/assets/brand/*` 파일만 사용한다. 원본 PNG 또는 내부 `src/` 경로를 import하지 않으며, 비율과 crop 규칙은 `docs/BRAND_ASSETS.md`를 따른다.

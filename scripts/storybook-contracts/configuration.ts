@@ -429,7 +429,7 @@ export function checkConfigurationContracts(context: StorybookCheckContext): voi
     'font-weight: var(--zdp-font-weight-bold)',
     'data-zdp-theme="light"',
     'data-zdp-theme="dark"',
-    'Pretendard-first multiscript text',
+    'Noto Sans KR-first multiscript text',
     'lang="zh"',
     'lang="hi"',
     'swatch__paint--primary',

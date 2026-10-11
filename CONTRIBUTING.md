@@ -10,7 +10,7 @@
 
 - 토큰 이름이 특정 제품이나 캠페인에 묶이지 않는다.
 - 색상 토큰은 `hex` fallback과 `oklch` 값을 함께 추가하거나 함께 변경한다.
-- sans/display 폰트 스택은 `"Pretendard Variable", Pretendard`를 우선하고, CSS는 Pretendard Variable dynamic subset 로드를 유지한다.
+- sans/display 폰트 스택은 `"Noto Sans KR Variable", "Noto Sans KR"`를 우선하고, CSS는 Noto Sans KR Variable의 Unicode 범위별 웹폰트 로드를 유지한다.
 - `font.family.brand`는 Playwrite AU VIC Guides 기반 워드마크 전용 스택으로 유지하고, body/display stack을 대체하지 않는다.
 - `font.family.latin`, `font.family.korean`, `font.family.chinese`, `font.family.devanagari`, `font.family.japanese`, `font.family.thai`, `font.family.multiscript`는 `:lang()` CSS 계약과 함께 변경한다.
 - 선택형 `brand-fonts.css` public export를 바꾸면 `package.json` export, sideEffects, README, consumer contract, token/preview/storybook/package check를 함께 맞춘다.

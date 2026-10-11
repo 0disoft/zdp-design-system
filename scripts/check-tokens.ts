@@ -193,25 +193,32 @@ if (!publicEntry.includes("export { zdpTokenNames }")) {
 const sansFamily = tokenDocument.font.family.sans;
 const displayFamily = tokenDocument.font.family.display;
 
+for (const [familyName, family] of Object.entries(tokenDocument.font.family)) {
+  const cssName = familyName.replace(/[A-Z]/gu, (letter) => `-${letter.toLowerCase()}`);
+  if (!css.includes(`--zdp-font-family-${cssName}: ${family};`)) {
+    failures.push(`CSS font.family.${familyName} must match the JSON token.`);
+  }
+}
+
 if (
   !sansFamily?.startsWith(
-    '"Pretendard Variable", Pretendard, "Manrope Variable", Manrope, '
+    '"Noto Sans KR Variable", "Noto Sans KR", "Manrope Variable", Manrope, '
   )
 ) {
-  failures.push('font.family.sans must be a Pretendard Variable-first stack.');
+  failures.push('font.family.sans must be a Noto Sans KR Variable-first stack.');
 }
 
 if (
   !displayFamily?.startsWith(
-    '"Pretendard Variable", Pretendard, "Manrope Variable", Manrope, '
+    '"Noto Sans KR Variable", "Noto Sans KR", "Manrope Variable", Manrope, '
   )
 ) {
-  failures.push('font.family.display must be a Pretendard Variable-first stack.');
+  failures.push('font.family.display must be a Noto Sans KR Variable-first stack.');
 }
 
 if (
   !tokenDocument.font.family.brand?.startsWith(
-    '"Playwrite AU VIC Guides", "Pretendard Variable", Pretendard, '
+    '"Playwrite AU VIC Guides", "Noto Sans KR Variable", "Noto Sans KR", '
   )
 ) {
   failures.push('font.family.brand must be a Playwrite AU VIC Guides-first wordmark stack.');
@@ -223,17 +230,17 @@ if (displayFamily?.includes('Playwrite AU VIC Guides')) {
 
 for (const [familyName, expectedText] of Object.entries({
   latin: '"Manrope Variable", Manrope, "Inter Variable", Inter',
-  korean: '"Pretendard Variable", Pretendard, "Apple SD Gothic Neo"',
+  korean: '"Noto Sans KR Variable", "Noto Sans KR", "Apple SD Gothic Neo"',
   chinese: '"Noto Sans SC Variable", "Noto Sans SC", "PingFang SC"',
   devanagari: '"Noto Sans Devanagari Variable", "Noto Sans Devanagari", "Nirmala UI"',
   japanese: '"Noto Sans JP Variable", "Noto Sans JP", "Hiragino Sans"',
   thai: '"Noto Sans Thai Variable", "Noto Sans Thai", "Leelawadee UI"',
-  multiscript: '"Pretendard Variable", Pretendard, "Manrope Variable", Manrope',
+  multiscript: '"Noto Sans KR Variable", "Noto Sans KR", "Manrope Variable", Manrope',
   expressionScript: 'Tangerine, "Playwrite AU VIC Guides", cursive',
   expressionInscription: '"Caesar Dressing", "Fredericka the Great", fantasy',
   expressionSketch: '"Fredericka the Great", "Caesar Dressing", fantasy',
   expressionEditorial: 'Merriweather, Copse, Cardo, Georgia',
-  expressionSans: '"Google Sans", Cabin, "Pretendard Variable", Pretendard',
+  expressionSans: '"Google Sans", Cabin, "Noto Sans KR Variable", "Noto Sans KR"',
   expressionKeyboard: '"Libertinus Keyboard", "JetBrains Mono"'
 })) {
   if (!tokenDocument.font.family[familyName]?.includes(expectedText)) {

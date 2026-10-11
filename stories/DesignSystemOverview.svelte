@@ -247,7 +247,7 @@
         <h3 id="storybook-light-type">Type</h3>
         <p class="type-sample">
           <strong>마을 광장처럼 밝고 단단하게</strong>
-          <span>Pretendard-first multiscript text with warm contrast and enough air for product work.</span>
+          <span>Noto Sans KR-first multiscript text with warm contrast and enough air for product work.</span>
           <Link href="#foundation-tokens">자세히 보기</Link>
         </p>
       </section>

@@ -31,6 +31,12 @@ for (const importPath of ['./tokens.css', './components.css']) {
   }
 }
 
+for (const [entryName, entry] of [['styles.css', styleEntry], ['locale-fonts.css', localeFontStyle]]) {
+  if (!entry.includes('@fontsource-variable/noto-sans-kr@5/index.css')) {
+    failures.push(`${entryName} must load the Noto Sans KR variable webfont.`);
+  }
+}
+
 for (const requiredText of [
   '../src/styles/index.css',
   '../src/styles/brand-fonts.css',
@@ -55,7 +61,7 @@ for (const requiredText of [
   'type-specimen--keyboard',
   'data-zdp-theme="light"',
   'data-zdp-theme="dark"',
-  'Pretendard-first multiscript text',
+  'Noto Sans KR-first multiscript text',
   'lang="zh"',
   'lang="hi"',
   'lang="ja"',
@@ -529,7 +535,7 @@ for (const [iconName, expectedPath] of [
 for (const requiredText of [
   '.zdp-surface-reset a:not(.zdp-button):not(.zdp-icon-button):not(.zdp-share-action)',
   'font-family: var(--zdp-font-family-sans)',
-  'Pretendard Variable',
+  'Noto Sans KR Variable',
   '--zdp-font-family-latin',
   '--zdp-font-family-korean',
   '--zdp-font-family-chinese',
