@@ -44,11 +44,14 @@
     align-items: center;
     border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
+    box-sizing: border-box;
     cursor: pointer;
     display: inline-flex;
     font-family: var(--zdp-font-family-sans);
+    font-size: var(--zdp-type-control-size);
     font-weight: var(--zdp-font-weight-regular);
     justify-content: center;
+    line-height: var(--zdp-type-control-line-height);
     transition:
       background-color var(--zdp-motion-fast) ease,
       border-color var(--zdp-motion-fast) ease,

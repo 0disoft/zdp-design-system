@@ -41,6 +41,7 @@
     align-items: center;
     border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
+    box-sizing: border-box;
     cursor: pointer;
     display: inline-flex;
     font-family: var(--zdp-font-family-sans);
@@ -63,13 +64,13 @@
   .zdp-button--sm {
     font-size: var(--zdp-font-size-sm);
     min-height: var(--zdp-control-height-sm);
-    padding: 0 var(--zdp-space-3);
+    padding: 0 var(--zdp-control-padding-sm);
   }
 
   .zdp-button--md {
     font-size: var(--zdp-type-control-size);
     min-height: var(--zdp-control-height-md);
-    padding: 0 var(--zdp-space-4);
+    padding: 0 var(--zdp-control-padding-md);
   }
 
   .zdp-button--primary {

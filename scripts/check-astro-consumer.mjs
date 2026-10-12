@@ -55,6 +55,28 @@ try {
   page.on('pageerror', error => errors.push(error.message));
   await page.route('https://**', route => route.abort());
   await page.goto(`http://127.0.0.1:${server.port}/static/`);
+  const staticGeometry = await page.evaluate(async () => {
+    const input = document.querySelector('.zdp-input');
+    const select = document.querySelector('.zdp-select');
+    const arrow = document.querySelector('.zdp-select__arrow');
+    const mask = getComputedStyle(arrow).maskImage;
+    const maskUrl = mask.startsWith('url("') && mask.endsWith('")') ? mask.slice(5, -2) : null;
+    const response = maskUrl ? await fetch(maskUrl) : null;
+    return {
+      height: [input, select].map(element => element.getBoundingClientRect().height),
+      background: [input, select].map(element => getComputedStyle(element).backgroundColor),
+      glyphSize: arrow.getBoundingClientRect().width,
+      assetLoaded: Boolean(response?.ok && (await response.text()).includes('<svg')),
+      disclosureMask: getComputedStyle(document.querySelector('.zdp-disclosure__mark'), '::before').maskImage,
+      mask
+    };
+  });
+  assert.deepEqual(staticGeometry.height, [44, 44], 'Packed static fields share control height');
+  assert.equal(staticGeometry.background[0], staticGeometry.background[1]);
+  assert.equal(staticGeometry.glyphSize, 20);
+  assert.equal(staticGeometry.assetLoaded, true, 'Shared indicator asset must survive packing and Astro CSS bundling');
+  assert.equal(staticGeometry.disclosureMask, staticGeometry.mask, 'Static disclosure uses the same indicator');
+  await page.getByRole('combobox', { name: 'Static selection' }).selectOption({ label: 'Security team' });
   const separator = page.getByRole('separator');
   await separator.waitFor();
   await separator.focus();

@@ -582,7 +582,7 @@
     padding-inline: var(--zdp-control-padding-md) calc(var(--zdp-control-padding-md) - var(--zdp-control-border-width) - var(--zdp-combobox-toggle-gap));
   }
 
-  .zdp-combobox__control:hover {
+  :where(.zdp-combobox:not([data-disabled="true"])) .zdp-combobox__control:hover {
     background: var(--zdp-control-field-surface-hover);
     border-color: var(--zdp-control-field-border-hover);
   }

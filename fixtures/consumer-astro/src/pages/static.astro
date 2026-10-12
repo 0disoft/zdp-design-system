@@ -1,12 +1,27 @@
 ---
 import 'zdp-design-system/foundation.css';
 import 'zdp-design-system/components/Button.css';
+import 'zdp-design-system/components/Input.css';
+import 'zdp-design-system/components/Select.css';
+import 'zdp-design-system/components/Disclosure.css';
 import 'zdp-design-system/components/ResizableSplitPane.css';
 ---
 <html lang="en">
   <head><meta charset="UTF-8" /><title>Static design system consumer</title></head>
   <body>
     <button class="zdp-button zdp-button--primary zdp-button--md" type="button">Static action</button>
+    <section style="display:grid;gap:12px;max-width:400px;padding:16px">
+      <input class="zdp-input" aria-label="Static input" placeholder="Name" />
+      <span class="zdp-select-shell">
+        <select class="zdp-select" aria-label="Static selection"><option>Platform team</option><option>Security team</option></select>
+        <span class="zdp-select__arrow" aria-hidden="true"></span>
+      </span>
+      <div class="zdp-disclosure" data-open="false">
+        <button class="zdp-disclosure__trigger" type="button" aria-expanded="false">
+          <span class="zdp-disclosure__title">Static disclosure</span><span class="zdp-disclosure__mark" aria-hidden="true"></span>
+        </button>
+      </div>
+    </section>
     <div id="workspace" style="display:grid;grid-template-columns:240px 8px 1fr;width:800px;height:240px">
       <nav id="primary">Navigation</nav>
       <div id="separator"></div>

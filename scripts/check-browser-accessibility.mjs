@@ -131,8 +131,8 @@ try {
     await verifyReservedNavigationContracts(page);
     await verifyShadowOverlayContracts(page);
   } else if (process.argv.includes('--controls')) {
-    await verifyControlConsistency(page);
     await verifyFoundationAndFormContracts(page);
+    await verifyControlConsistency(page);
     await verifyNativeInputContracts(page);
     await verifyComboboxSelectionContracts(page);
     await verifyComboboxEditingContracts(page);

@@ -2,6 +2,8 @@
 
 Button과 IconButton은 native button 위의 control 표면이며 `onclick`, `ariaLabel`, `ariaControls`, `ariaExpanded`, `ariaPressed`, `ariaDescribedBy`, `ariaKeyShortcuts` 같은 액션 연결 props를 전달한다. 저장, 삭제, 권한, 결제 판단은 소비 앱이 계속 소유한다.
 
+Button의 md·sm 높이와 모서리는 입력 컴포넌트와 같은 control 토큰을 따른다. 좌우 padding은 md 12 CSS px, sm 8 CSS px이며 text variant는 기존 텍스트 액션 간격을 유지한다. Menu, Select, Combobox, Disclosure·Accordion의 펼침 표시는 같은 20 CSS px SVG와 inline-end 12 CSS px 여백을 공유한다. Disclosure·Accordion은 열린 상태에서 화살표를 위로 돌린다.
+
 Primary·secondary·danger Button과 solid IconButton은 채워진 또는 tonal surface로 우선순위를 구분하고, ghost IconButton은 hover/active에서만 surface를 드러낸다. 기본 상태의 시각적 border는 사용하지 않지만 크기 안정성을 위한 투명 border slot과 keyboard focus outline, Windows forced-colors의 system border는 유지한다.
 
 `Button variant="text"`와 framework-neutral `.zdp-button--text`는 콘텐츠·마케팅 화면의 경계 없는 텍스트 액션에 사용한다. 기본·hover·focus 상태는 배경 상자 대신 하단 선으로 구분하고, hover와 focus에서는 밝고 어두운 표면 모두에서 선 두께가 분명히 바뀌어야 하며, 최소 hit target은 그대로 유지한다. 실제 페이지 이동은 `<a class="zdp-button zdp-button--text zdp-button--md">`처럼 링크 의미를 유지하며, 폼 제출이나 상태 변경은 Svelte Button을 사용한다. 이 variant를 모든 버튼의 기본값으로 바꾸거나 파괴적·결제 확인 작업에 사용하지 않는다.

@@ -258,7 +258,7 @@
     padding: 0 var(--zdp-control-padding-md);
   }
 
-  .zdp-command-field:hover {
+  :where(.zdp-command-field-shell:not([data-disabled="true"])) .zdp-command-field:hover {
     background: var(--zdp-control-field-surface-hover);
     border-color: var(--zdp-control-field-border-hover);
   }

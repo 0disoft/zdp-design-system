@@ -6,6 +6,9 @@
   import Button from '../../../src/lib/components/Button.svelte';
   import IconButton from '../../../src/lib/components/IconButton.svelte';
   import Menu from '../../../src/lib/components/Menu.svelte';
+  import Disclosure from '../../../src/lib/components/Disclosure.svelte';
+  import Tabs from '../../../src/lib/components/Tabs.svelte';
+  import SegmentedControl from '../../../src/lib/components/SegmentedControl.svelte';
 </script>
 
 {#each ['light', 'dark'] as theme}
@@ -20,6 +23,9 @@
       <Button variant="secondary">Save</Button>
       <IconButton ariaLabel="Consistent icon action"><span aria-hidden="true">x</span></IconButton>
       <Menu triggerLabel="Consistent actions" items={[{id:'edit',label:'Edit'}]} />
+      <Disclosure title="Consistent disclosure">Details</Disclosure>
+      <Tabs ariaLabel="Consistent tabs" items={[{id:'one',label:'One'},{id:'two',label:'Two'}]} />
+      <SegmentedControl ariaLabel="Consistent segments" items={[{id:'one',label:'One'},{id:'two',label:'Two'}]} />
       <div data-testid="small-controls">
         <Combobox size="sm" label="Small selection" options={[{id:'team',value:'team',label:'Platform team'}]} />
         <CommandField size="sm" label="Small search" shortcutKeys={[]} />

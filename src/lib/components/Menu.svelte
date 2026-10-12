@@ -395,12 +395,13 @@ stability=contract
     font-size: var(--zdp-type-control-size);
     font-weight: var(--zdp-font-weight-medium);
     gap: var(--zdp-space-2);
-    justify-content: center;
+    justify-content: space-between;
     line-height: var(--zdp-type-control-line-height);
     min-height: var(--zdp-control-height-md);
     min-inline-size: 12rem;
     min-width: 12rem;
-    padding: 0 var(--zdp-space-3);
+    padding: 0 var(--zdp-control-padding-md);
+    padding-inline-end: calc(var(--zdp-control-padding-md) - var(--zdp-control-border-width));
     transition:
       background-color var(--zdp-motion-fast) ease,
       border-color var(--zdp-motion-fast) ease,
@@ -422,12 +423,14 @@ stability=contract
   }
 
   .zdp-menu__trigger-label {
+    flex: 1 1 auto;
     min-width: 0;
     overflow-wrap: var(--zdp-i18n-overflow-wrap);
   }
 
   .zdp-menu__trigger-mark {
     align-items: center;
+    color: var(--zdp-color-ink-muted);
     display: inline-flex;
     flex: 0 0 auto;
     justify-content: center;
@@ -437,13 +440,19 @@ stability=contract
   }
 
   .zdp-menu__trigger-mark::before {
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 4px solid currentColor;
+    background-color: currentColor;
+    block-size: var(--zdp-control-indicator-size);
     content: '';
     display: inline-block;
-    height: 0;
-    width: 0;
+    inline-size: var(--zdp-control-indicator-size);
+    mask-image: var(--zdp-control-indicator-mask);
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    -webkit-mask-image: var(--zdp-control-indicator-mask);
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
   }
 
   .zdp-menu__panel {
@@ -485,7 +494,7 @@ stability=contract
     min-height: var(--zdp-control-height-sm);
     min-width: 0;
     padding: var(--zdp-space-1) var(--zdp-space-2);
-    text-align: left;
+    text-align: start;
     text-decoration-line: none;
     transition:
       background-color var(--zdp-motion-fast) ease,
@@ -524,6 +533,12 @@ stability=contract
     .zdp-menu__panel,
     .zdp-menu__item {
       border-color: ButtonText;
+    }
+
+    .zdp-menu__trigger-mark::before {
+      background-color: currentColor;
+      color: ButtonText;
+      forced-color-adjust: none;
     }
   }
 

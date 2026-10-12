@@ -24,9 +24,20 @@ export async function verifyControlConsistency(page) {
         const markRect = mark.getBoundingClientRect();
         const endInset = (outer, inner) => root.dir === 'rtl' ? inner.left - outer.left : outer.right - inner.right;
         const glyph = getComputedStyle(mark, '::before');
+        const menu = root.querySelector('.zdp-menu__trigger');
+        const menuMark = root.querySelector('.zdp-menu__trigger-mark');
+        const disclosure = root.querySelector('.zdp-disclosure');
+        const disclosureMark = root.querySelector('.zdp-disclosure__mark');
+        const navigation = ['.zdp-tabs__tab', '.zdp-segmented-control__item'].map(selector => measure(root.querySelector(selector)));
         return { fields, actions, smallControls, expectedSurface: getComputedStyle(root.querySelector('[data-testid="field-surface-reference"]')).backgroundColor,
-          inset: [endInset(selectRect, arrowRect), endInset(controlRect, markRect)],
-          glyph: [getComputedStyle(arrow).maskImage, glyph.maskImage], glyphSize: [arrowRect.width, Number.parseFloat(glyph.width)],
+          navigation,
+          inset: [endInset(selectRect, arrowRect), endInset(controlRect, markRect),
+            endInset(menu.getBoundingClientRect(), menuMark.getBoundingClientRect()),
+            endInset(disclosure.getBoundingClientRect(), disclosureMark.getBoundingClientRect())],
+          glyph: [getComputedStyle(arrow).maskImage, glyph.maskImage, getComputedStyle(menuMark, '::before').maskImage, getComputedStyle(disclosureMark, '::before').maskImage],
+          glyphSize: [arrowRect.width, Number.parseFloat(glyph.width), menuMark.getBoundingClientRect().width, disclosureMark.getBoundingClientRect().width],
+          menuSurface: getComputedStyle(menu).backgroundColor,
+          buttonSurface: getComputedStyle(root.querySelector('.zdp-button')).backgroundColor,
           nativePickerDisplay: getComputedStyle(root.querySelector('.zdp-select'), '::picker-icon').display };
       });
       const baseline = styles.fields[0];
@@ -38,11 +49,25 @@ export async function verifyControlConsistency(page) {
       }
       assert.equal(styles.actions[0].font, baseline.font, 'Text actions and fields must share typography');
       assert.equal(styles.actions[2].font, baseline.font, 'Menu actions and fields must share typography');
+      for (const navigation of styles.navigation) {
+        assert.equal(navigation.height, baseline.height, 'Navigation controls share the md height');
+        assert.equal(navigation.font, baseline.font);
+        assert.equal(navigation.lineHeight, baseline.lineHeight);
+      }
+      assert.equal(styles.menuSurface, styles.buttonSurface, 'Secondary actions share the same resting surface');
       for (const control of styles.smallControls) assert.equal(control.height, styles.smallControls[0].height, 'All sm controls must share height');
-      assert.ok(Math.abs(styles.inset[0] - styles.inset[1]) < 0.6, `${theme}/${direction}: arrow inline-end inset must match`);
-      assert.deepEqual(styles.glyphSize, [20, 20]);
-      assert.equal(styles.glyph[0], styles.glyph[1], 'Select and Combobox must use the same source glyph');
+      for (const inset of styles.inset) assert.ok(Math.abs(inset - 12) < 0.6, `${theme}/${direction}: all indicators share the 12px inline-end inset (${styles.inset})`);
+      assert.deepEqual(styles.glyphSize, [20, 20, 20, 20]);
+      for (const glyph of styles.glyph) assert.equal(glyph, styles.glyph[0], 'Selection and expansion controls share the same source glyph');
       assert.equal(styles.nativePickerDisplay, 'none', 'Native picker must not replace the shared indicator');
+      const disclosureTrigger = fixture.locator('.zdp-disclosure__trigger');
+      await disclosureTrigger.click();
+      assert.equal(await disclosureTrigger.getAttribute('aria-expanded'), 'true');
+      await page.waitForFunction(testId => {
+        const mark = document.querySelector(`[data-testid="${testId}"] .zdp-disclosure__mark`);
+        return getComputedStyle(mark, '::before').rotate === '180deg';
+      }, `control-consistency-${theme}-${direction}`);
+      await disclosureTrigger.click();
     }
   }
 }

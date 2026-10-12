@@ -539,9 +539,12 @@ export async function verifyNestedModalContracts(page) {
   const domNestedMenu = page.getByRole('menu', { name: 'DOM nested actions' });
   assert.equal(await domNestedMenu.count(), 1);
   const domNestedTooltipTrigger = domNestedSheet.getByTestId('dom-nested-tooltip-trigger');
-  await domNestedTooltipTrigger.focus();
+  // Moving focus to this sibling closes Menu by its existing focus-out contract.
+  // Hover keeps Menu open so Escape can exercise the shared dismissal stack.
+  await domNestedTooltipTrigger.hover();
   const domNestedTooltip = page.getByRole('tooltip', { name: 'DOM nested keyboard help' });
   assert.equal(await domNestedTooltip.evaluate((element) => getComputedStyle(element).opacity), '1');
+  assert.equal(await domNestedMenu.count(), 1, 'Hovering the sibling Tooltip must preserve the active Menu.');
 
   await page.keyboard.press('Escape');
   assert.equal(await domNestedTooltip.locator('..').getAttribute('data-dismissed'), 'true');

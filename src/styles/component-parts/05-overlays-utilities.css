@@ -927,18 +927,6 @@
     outline-color: Highlight;
   }
 
-  .zdp-button:not(.zdp-button--text) {
-    border-color: ButtonText;
-  }
-
-  .zdp-icon-button {
-    border-color: ButtonText;
-  }
-
-  .zdp-button--text::after {
-    background: ButtonText;
-  }
-
   .zdp-locale-switcher {
     border-color: ButtonText;
   }
@@ -958,10 +946,7 @@
   }
 
   .zdp-confirm-action,
-  .zdp-confirm-action__thumb,
-  .zdp-menu__trigger,
-  .zdp-menu__panel,
-  .zdp-menu__item {
+  .zdp-confirm-action__thumb {
     border-color: ButtonText;
   }
 

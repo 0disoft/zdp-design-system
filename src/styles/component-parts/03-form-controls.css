@@ -23,136 +23,6 @@
   border-color: var(--zdp-color-line-strong);
 }
 
-.zdp-icon {
-  align-items: center;
-  display: inline-flex;
-  flex: 0 0 auto;
-  justify-content: center;
-  line-height: 1;
-  text-align: center;
-}
-
-.zdp-icon--sm {
-  font-size: var(--zdp-control-glyph-sm);
-  height: var(--zdp-control-glyph-sm);
-  width: var(--zdp-control-glyph-sm);
-}
-
-.zdp-icon--md {
-  font-size: var(--zdp-control-glyph-md);
-  height: var(--zdp-control-glyph-md);
-  width: var(--zdp-control-glyph-md);
-}
-
-.zdp-icon svg {
-  display: block;
-  flex: 0 0 auto;
-  height: 100%;
-  width: 100%;
-}
-
-.zdp-icon-button {
-  align-items: center;
-  border: var(--zdp-control-border-width) solid transparent;
-  border-radius: var(--zdp-control-radius);
-  cursor: pointer;
-  display: inline-flex;
-  font-family: var(--zdp-font-family-sans);
-  font-weight: var(--zdp-font-weight-regular);
-  justify-content: center;
-  transition:
-    background-color var(--zdp-motion-fast) ease,
-    border-color var(--zdp-motion-fast) ease,
-    color var(--zdp-motion-fast) ease;
-}
-
-.zdp-icon-button--sm {
-  height: var(--zdp-control-icon-sm);
-  width: var(--zdp-control-icon-sm);
-}
-
-.zdp-icon-button--md {
-  height: var(--zdp-control-icon-md);
-  width: var(--zdp-control-icon-md);
-}
-
-.zdp-icon-button--ghost {
-  background: transparent;
-  border-color: transparent;
-  color: var(--zdp-color-ink-normal);
-}
-
-.zdp-icon-button--ghost:hover:not(:disabled) {
-  background: var(--zdp-color-surface-raised);
-  border-color: transparent;
-  color: var(--zdp-color-ink-strong);
-}
-
-[data-zdp-theme="dark"] .zdp-icon-button--ghost {
-  background: transparent;
-  border-color: transparent;
-  color: var(--zdp-color-ink-muted);
-}
-
-[data-zdp-theme="dark"] .zdp-icon-button--ghost:hover:not(:disabled) {
-  background: var(--zdp-color-surface-raised);
-  border-color: transparent;
-  color: var(--zdp-color-ink-strong);
-}
-
-.zdp-icon-button--ghost:active:not(:disabled) {
-  background: var(--zdp-color-surface-raised);
-  border-color: transparent;
-  color: var(--zdp-color-ink-strong);
-}
-
-.zdp-icon-button--solid {
-  background: var(--zdp-color-accent-primary);
-  border-color: transparent;
-  color: var(--zdp-color-ink-strong);
-}
-
-.zdp-icon-button--solid:hover:not(:disabled) {
-  background: var(--zdp-color-accent-primary-strong);
-  border-color: transparent;
-}
-
-.zdp-icon-button--solid:active:not(:disabled) {
-  background: var(--zdp-color-accent-primary-strong);
-  border-color: transparent;
-}
-
-[data-zdp-theme="dark"] .zdp-icon-button--solid {
-  color: var(--zdp-color-ink-inverse);
-}
-
-.zdp-icon-button:focus-visible {
-  border-color: var(--zdp-color-focus-line);
-  outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
-  outline-offset: var(--zdp-control-focus-outline-offset);
-}
-
-.zdp-icon-button:disabled {
-  cursor: not-allowed;
-  opacity: var(--zdp-control-disabled-opacity);
-}
-
-.zdp-icon-button__glyph {
-  align-items: center;
-  display: inline-flex;
-  flex: 0 0 auto;
-  justify-content: center;
-  line-height: 1;
-  text-align: center;
-}
-
-.zdp-icon-button__glyph svg {
-  display: block;
-  flex: 0 0 auto;
-  height: 100%;
-  width: 100%;
-}
-
 .zdp-theme-toggle {
   align-items: center;
   background: var(--zdp-color-surface-panel);
@@ -921,6 +791,10 @@
   }
 
 /* Generated from src/lib/components/Combobox.svelte; do not edit directly. */
+
+/* Generated from src/lib/components/CommandField.svelte; do not edit directly. */
+
+/* Generated from src/lib/components/Combobox.svelte; do not edit directly. */
 .zdp-combobox {
     --zdp-combobox-toggle-size: calc(var(--zdp-control-height-sm) - 2 * var(--zdp-control-border-width));
     --zdp-combobox-toggle-gap: calc((var(--zdp-combobox-toggle-size) - var(--zdp-control-indicator-size)) / 2);
@@ -984,7 +858,7 @@
     padding-inline: var(--zdp-control-padding-md) calc(var(--zdp-control-padding-md) - var(--zdp-control-border-width) - var(--zdp-combobox-toggle-gap));
   }
 
-  .zdp-combobox__control:hover {
+  :where(.zdp-combobox:not([data-disabled="true"])) .zdp-combobox__control:hover {
     background: var(--zdp-control-field-surface-hover);
     border-color: var(--zdp-control-field-border-hover);
   }
@@ -1254,7 +1128,7 @@
     padding: 0 var(--zdp-control-padding-md);
   }
 
-  .zdp-command-field:hover {
+  :where(.zdp-command-field-shell:not([data-disabled="true"])) .zdp-command-field:hover {
     background: var(--zdp-control-field-surface-hover);
     border-color: var(--zdp-control-field-border-hover);
   }

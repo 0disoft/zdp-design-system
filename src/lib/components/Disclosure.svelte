@@ -82,7 +82,7 @@
           <!-- svelte-ignore slot_element_deprecated legacy named slot contract remains public -->
           <slot name="title">{title}</slot>
         </span>
-        <span class="zdp-disclosure__mark" aria-hidden="true">{open ? '-' : '+'}</span>
+        <span class="zdp-disclosure__mark" aria-hidden="true"></span>
       </button>
     </div>
   {:else}
@@ -99,7 +99,7 @@
         <!-- svelte-ignore slot_element_deprecated legacy named slot contract remains public -->
         <slot name="title">{title}</slot>
       </span>
-      <span class="zdp-disclosure__mark" aria-hidden="true">{open ? '-' : '+'}</span>
+      <span class="zdp-disclosure__mark" aria-hidden="true"></span>
     </button>
   {/if}
 
@@ -140,13 +140,14 @@
     font-family: var(--zdp-font-family-sans);
     font-size: var(--zdp-type-control-size);
     font-weight: var(--zdp-font-weight-medium);
-    gap: var(--zdp-space-3);
+    gap: var(--zdp-space-2);
     grid-template-columns: minmax(0, 1fr) auto;
     line-height: var(--zdp-type-control-line-height);
     min-block-size: var(--zdp-control-height-md);
     min-width: 0;
-    padding: var(--zdp-space-2) var(--zdp-space-3);
-    text-align: left;
+    padding: var(--zdp-space-2) var(--zdp-control-padding-md);
+    padding-inline-end: calc(var(--zdp-control-padding-md) - var(--zdp-control-border-width));
+    text-align: start;
     transition:
       background-color var(--zdp-motion-fast) ease,
       color var(--zdp-motion-fast) ease;
@@ -177,19 +178,34 @@
 
   .zdp-disclosure__mark {
     align-items: center;
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
-    border-radius: var(--zdp-control-radius);
-    box-sizing: border-box;
     color: var(--zdp-color-ink-muted);
     display: inline-flex;
     flex: 0 0 auto;
-    font-size: var(--zdp-type-caption-size);
-    inline-size: var(--zdp-control-glyph-md);
     justify-content: center;
     line-height: 1;
-    min-block-size: var(--zdp-control-glyph-md);
     -webkit-user-select: none;
     user-select: none;
+  }
+
+  .zdp-disclosure__mark::before {
+    background-color: currentColor;
+    block-size: var(--zdp-control-indicator-size);
+    content: '';
+    display: inline-block;
+    inline-size: var(--zdp-control-indicator-size);
+    mask-image: var(--zdp-control-indicator-mask);
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    transition: rotate var(--zdp-motion-fast) ease;
+    -webkit-mask-image: var(--zdp-control-indicator-mask);
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+  }
+
+  .zdp-disclosure[data-open="true"] .zdp-disclosure__mark::before {
+    rotate: 180deg;
   }
 
   .zdp-disclosure__panel {
@@ -205,5 +221,13 @@
 
   .zdp-disclosure__panel :global(*) {
     margin-block: 0;
+  }
+
+  @media (forced-colors: active) {
+    .zdp-disclosure__mark::before {
+      background-color: currentColor;
+      color: ButtonText;
+      forced-color-adjust: none;
+    }
   }
 </style>
