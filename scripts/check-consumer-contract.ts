@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { readConsumerContract } from './consumer-document';
 
 interface PackageJson {
   readonly version?: string;
@@ -25,7 +26,7 @@ const [
   readFile(join(root, 'README.md'), 'utf8'),
   readFile(join(root, 'CONTRIBUTING.md'), 'utf8'),
   readFile(join(root, 'service.yaml'), 'utf8'),
-  readFile(join(root, 'docs', 'CONSUMER_CONTRACT.md'), 'utf8'),
+  readConsumerContract(root),
   readFile(join(root, 'tokens', 'zdp.tokens.json'), 'utf8'),
   readFile(join(root, 'src', 'lib', 'index.ts'), 'utf8')
 ]);

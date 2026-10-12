@@ -1,0 +1,50 @@
+# 소비처 적용 체크리스트
+
+- Svelte component는 `tokens.css`와 `components/ComponentName` direct subpath를 기본으로 사용한다.
+- 다국어 웹폰트가 필요한 경우에만 `locale-fonts.css`를 추가한다.
+- 브랜드 워드마크가 필요한 경우에만 `brand-fonts.css`를 추가한다.
+- 표현용 섹션이나 캠페인 문구가 필요한 경우에만 `expressive-fonts.css`를 추가한다.
+- package root와 `styles.css`는 기존 호환 또는 framework-neutral/static utility가 필요한 표면에서만 사용한다.
+- Link를 쓰는 화면은 hover가 색상 변화 중심이고 focus가 sunlit gold highlight로 보이는지 확인한다.
+- SkipLink를 쓰는 화면은 첫 Tab 대상에서 보이고 본문 target id로 이동하는지 확인한다.
+- VisuallyHidden을 쓰는 화면은 화면에는 보이지 않지만 접근성 이름이나 설명에 포함되는지 확인한다.
+- Page, Container, Section, PageHeader를 쓰는 화면은 page root, width, section rhythm, header actions만 바뀌고 라우팅, SEO, 데이터, 권한 판단이 생기지 않는지 확인한다.
+- Stack을 쓰는 화면은 spacing만 바뀌고 색상, 그림자, hover, 제품별 layout 판단이 생기지 않는지 확인한다.
+- Inline을 쓰는 화면은 horizontal wrapping만 바뀌고 색상, 그림자, hover, 제품별 layout 판단이 생기지 않는지 확인한다.
+- Divider를 쓰는 화면은 구분선만 바뀌고 section spacing, 그림자, 배경 장식, 제품별 layout 판단이 생기지 않는지 확인한다.
+- Grid를 쓰는 화면은 반복되는 카드나 요약 묶음의 columns와 gap만 바뀌고 항목 의미, 데이터 로딩, 권한 판단이 생기지 않는지 확인한다.
+- Toolbar를 쓰는 화면은 가까운 도구와 액션 wrapping만 바뀌고 저장, 삭제, 필터, 권한 판단이 생기지 않는지 확인한다.
+- CommandField를 쓰는 화면은 label, help/error id, Tab focus, `/` 같은 shortcut 표시가 맞고, 실제 검색/라우팅/command 실행 판단은 소비 앱에 남는지 확인한다.
+- Combobox를 쓰는 화면은 combobox/listbox/option aria 구조, ArrowUp/ArrowDown/Enter/Escape 동작, IME composition 보호, disabled option skip, hidden submitted value가 맞고, 실제 필터링, async search, command 실행, 권한 판단은 소비 앱에 남는지 확인한다.
+- AdSlot을 쓰는 화면은 `data-zdp-ad-slot`, placement/state attribute, reserved size가 남고, provider script, consent, slot id, ads.txt, personalized ads 판단이 소비 앱에 남는지 확인한다.
+- Kbd와 ShortcutHint를 쓰는 화면은 보이는 단축키가 실제로 동작하는지 확인한다. 동작하지 않는 힌트는 제거하고, 실제 단축키가 있는 control에만 `ariaKeyShortcuts`를 붙인다.
+- Avatar와 IdentityChip을 쓰는 화면은 이름, 이니셜, 보조 텍스트, 현재 링크 상태만 표면에 남고, 실제 계정 식별, 온라인 상태, 권한, 초대 가능 여부 판단은 소비 앱 상태와 맞는지 확인한다.
+- Accordion과 Disclosure를 쓰는 화면은 trigger에 `aria-expanded`와 `aria-controls`가 남고, 실제 항목 노출, 권한, 데이터 fetch 판단은 소비 앱 상태와 맞는지 확인한다.
+- SegmentedControl을 쓰는 화면은 `radiogroup`, `radio`, `aria-checked`가 남고, 실제 필터 의미, URL state, 정렬, 데이터 로딩, 권한 판단은 소비 앱 상태와 맞는지 확인한다.
+- Table을 쓰는 화면은 caption 또는 labelledBy가 있고, `th scope="col"`과 `th scope="row"`가 필요한 곳에 남는지 확인한다.
+- SortHeader와 TableToolbar를 쓰는 화면은 정렬 중인 열의 owning `th`에 `aria-sort`가 남고, 선택 행 액션과 밀도 전환이 소비 앱 상태와 맞는지 확인한다.
+- TermTrigger와 TermSheet를 쓰는 화면은 클릭으로 열리고, Escape 닫기, Tab 순환, 이전 focus 복귀가 유지되는지 확인한다.
+- Dialog, Sheet, TermSheet를 쓰는 화면은 열린 동안 body scroll이 잠기고 닫힌 뒤 이전 scroll 상태가 복구되는지 확인한다. focus trap은 직접 disabled control뿐 아니라 disabled fieldset 안 control, hidden·`aria-hidden`·`inert` 조상 아래 control을 순환 후보에서 제외하고, 빈 값의 `contenteditable`, checked radio group의 단일 tab stop, positive `tabindex` 우선순위를 실제 브라우저 Tab 순서대로 처리해야 한다. `closeOnEscape=false`와 `closeOnBackdrop=false`에서는 해당 입력 뒤에도 modal과 scroll lock이 유지되고, 비활성 backdrop이 Close button으로 노출되지 않으며 panel focus를 빼앗지 않는지 확인한다. 둘 이상 겹치면 나중에 열린 layer가 실제로 위에 놓이고, 아래 layer가 먼저 닫혀도 위 layer의 focus와 scroll lock이 유지되며 마지막 layer가 닫힐 때 살아 있는 바깥 trigger로 focus가 돌아오는지 확인한다.
+- Sheet를 쓰는 화면은 `data-zdp-sheet-placement`, `data-zdp-sheet-size`, `data-zdp-sheet-surface="sheet"`가 남고 Drawer 변형을 별도 컴포넌트로 복제하지 않았는지 확인한다.
+- TermSheet root에는 `data-term-id`, `data-zdp-term-id`, `data-zdp-term-placement`, `data-zdp-term-surface="sheet"`가 남는지 확인한다.
+- TermSheet에는 광고 slot이 없고 root에 `data-zdp-ad-exclude="true"`가 남는지 확인한다.
+- Pagination을 쓰는 화면은 현재 페이지 항목에 `aria-current="page"`가 남고, URL 또는 버튼 콜백이 소비 앱의 실제 page state와 맞는지 확인한다.
+- KeyValue를 쓰는 화면은 용어와 값이 `dt`와 `dd`로 남고, 값의 생성/권한/결제 판단이 컴포넌트로 들어오지 않는지 확인한다.
+- EmptyState를 쓰는 화면은 제목 id가 연결되고 다음 액션 가능 여부를 소비 앱이 결정하는지 확인한다.
+- Input, Textarea, Select의 invalid 상태는 help id와 error id를 모두 `aria-describedby`로 연결하고, error id를 `aria-errormessage`로도 연결하는지 확인한다.
+- Input과 Textarea의 readonly 상태는 disabled처럼 흐려져 제출/복사/포커스 흐름을 끊지 않는지 확인한다.
+- Breadcrumb를 쓰는 화면은 현재 페이지 항목에 `aria-current="page"`가 남는지 확인한다.
+- Flutter/native adapter는 `tokens/zdp.tokens.json`의 token name을 유지한다.
+- 소비처 자체 CSS에서 `box-shadow`, gradient, hover transform으로 shared component 기본값을 덮어쓰지 않는다.
+- Overflow가 생기는 표, 패널, 페이지는 `.zdp-surface-reset` 범위 안에서 theme scrollbar가 보이는지 확인한다.
+- 드래그로 텍스트를 선택했을 때 `.zdp-surface-reset` 범위 안에서 theme selection surface/text가 보이고 브라우저 기본 파란색이 남지 않는지 확인한다.
+- Button, IconButton, MenuItem, SegmentedControl item, Pagination link, SortHeader, copy button, icon, separator, spinner, skeleton처럼 누르거나 장식인 표면만 선택되지 않는지 확인한다.
+- Table cell, code body, toast message, document body, card data, identity label, 주소, 이메일, ID, 날짜, 가격, 에러 메시지는 계속 선택하고 복사할 수 있는지 확인한다.
+- Drag interaction은 drag start부터 end/cancel/pointer release까지만 `.zdp-user-select-dragging`을 붙이고, 앱 root나 page/card/list/table container에 상시 `user-select: none`이 남지 않는지 확인한다.
+- ResizableSplitPane 또는 DOM controller를 쓰는 화면은 px `size`와 고유 persistence key를 소비 앱이 소유하고, separator의 이름·현재값·Arrow/Home/End 동작, 24px 이상 hit area, pointer cancel cleanup, RTL, 200% zoom, 긴 말줄임을 확인한다. `920px` 이하나 좁은 부모에서는 split pane을 계속 찌그러뜨리지 말고 controller를 비활성화한 뒤 Sheet나 접힘 메뉴로 바꾼다. 본문 옆 공유 dock은 secondary 폭 안에 넣지 않고 바깥 `auto` track에 둔다.
+- light/dark, keyboard focus, disabled, invalid 상태를 소비처 화면에서 확인한다.
+- Theme / Locale Stress story에서 선택형 `locale-fonts.css`를 로드하고 light/dark, ZDP Mobile 폭, 12개 target locale(`en`, `zh`, `es`, `fr`, `hi`, `ko`, `ja`, `vi`, `ru`, `id`, `ms`, `th`)의 긴 문장과 focus-visible 상태가 함께 무너지지 않는지 확인한다. 초기 active locale이 `ko`, `en`이어도 QA fixture는 target locale 전체를 줄이지 않는다.
+- Dialog를 쓰는 화면은 Tab 순환, Escape 닫기, backdrop 닫기, 이전 focus 복귀를 확인한다.
+- 새 디자인 시스템 버전은 대표 소비처 한 곳에서 build와 시각 QA를 통과한 뒤 확산한다.
+
+상위 개요와 금지 경계는 [docs/CONSUMER_CONTRACT.md](../CONSUMER_CONTRACT.md)를 따른다.

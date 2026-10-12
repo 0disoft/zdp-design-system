@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import { readConsumerContract } from '../consumer-document';
 import { join, relative } from 'node:path';
 import type { PackageCheckContext, PackageJson } from './context';
 
@@ -159,7 +160,7 @@ async function checkSheetContract(): Promise<void> {
   const relativePath = 'src/lib/components/Sheet.svelte';
   const source = await readFile(join(root, relativePath), 'utf8');
   const publicEntry = await readFile(join(root, 'src/lib/index.ts'), 'utf8');
-  const consumerContract = await readFile(join(root, 'docs/CONSUMER_CONTRACT.md'), 'utf8');
+  const consumerContract = await readConsumerContract(root);
 
   for (const requiredText of [
     "import type { ZdpSheetPlacement, ZdpSheetSize }",

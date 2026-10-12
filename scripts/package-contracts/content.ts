@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import { readConsumerContract } from '../consumer-document';
 import { join, relative } from 'node:path';
 import type { PackageCheckContext, PackageJson } from './context';
 
@@ -56,7 +57,7 @@ async function checkCardContract(): Promise<void> {
   const componentCss = await readFile(join(root, componentCssPath), 'utf8');
   const story = await readFile(join(root, storyPath), 'utf8');
   const fixture = await readFile(join(root, fixturePath), 'utf8');
-  const consumerContract = await readFile(join(root, consumerContractPath), 'utf8');
+  const consumerContract = await readConsumerContract(root);
   const cardCssStart = componentCss.indexOf('.zdp-card {');
   const cardCssEnd = componentCss.indexOf('.zdp-card-header {');
   const cardCss = componentCss.slice(cardCssStart, cardCssEnd);
@@ -130,7 +131,7 @@ async function checkAdSlotContract(): Promise<void> {
   const relativePath = 'src/lib/components/AdSlot.svelte';
   const source = await readFile(join(root, relativePath), 'utf8');
   const publicEntry = await readFile(join(root, 'src/lib/index.ts'), 'utf8');
-  const consumerContract = await readFile(join(root, 'docs/CONSUMER_CONTRACT.md'), 'utf8');
+  const consumerContract = await readConsumerContract(root);
 
   for (const requiredText of [
     "import type { ZdpAdSlotPlacement, ZdpAdSlotState }",
