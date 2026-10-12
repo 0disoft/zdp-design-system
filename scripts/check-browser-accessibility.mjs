@@ -15,6 +15,7 @@ import { verifyTooltipLifecycleContracts } from './browser/check-tooltip-lifecyc
 import { verifyToastDismissFocusContracts } from './browser/check-toast-focus.mjs';
 import { verifyDisclosureFocusContracts } from './browser/check-disclosure-focus.mjs';
 import { verifyPopoverFocusContracts } from './browser/check-popover-focus.mjs';
+import { verifyControlConsistency } from './browser/check-control-consistency.mjs';
 import { verifyPopoverGeometryContracts } from './browser/check-popover-geometry.mjs';
 import { verifyLocalizedSortContracts, verifySortNameContracts, verifyTableDensityContracts } from './browser/check-table-interaction.mjs';
 import { verifyCommandFieldContracts } from './browser/check-command-field.mjs';
@@ -129,6 +130,13 @@ try {
     await verifyDynamicMenuContracts(page);
     await verifyReservedNavigationContracts(page);
     await verifyShadowOverlayContracts(page);
+  } else if (process.argv.includes('--controls')) {
+    await verifyControlConsistency(page);
+    await verifyFoundationAndFormContracts(page);
+    await verifyNativeInputContracts(page);
+    await verifyComboboxSelectionContracts(page);
+    await verifyComboboxEditingContracts(page);
+    await verifyCommandFieldContracts(page);
   } else if (process.argv.includes('--popover')) {
     await verifyOverlayContracts(page);
     await verifyPopoverGeometryContracts(page);
@@ -137,6 +145,7 @@ try {
     await verifyShadowOverlayContracts(page);
   } else {
   await verifyFoundationAndFormContracts(page);
+  await verifyControlConsistency(page);
   await verifyProgressRangeContracts(page);
   await verifySplitPointerOwnership(page);
   await verifySplitReentrantCallbacks(page);

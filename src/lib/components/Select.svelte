@@ -49,21 +49,7 @@
   >
     <slot />
   </select>
-  <svg
-    class="zdp-select__arrow"
-    aria-hidden="true"
-    viewBox="0 0 16 16"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M4 6l4 4 4-4"
-      stroke="currentColor"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      fill="none"
-    />
-  </svg>
+  <span class="zdp-select__arrow" aria-hidden="true"></span>
 </span>
 
 <style>
@@ -77,8 +63,8 @@
 
   .zdp-select {
     appearance: none;
-    background: var(--zdp-color-surface-raised);
-    border: var(--zdp-control-border-width) solid transparent;
+    background: var(--zdp-control-field-surface);
+    border: var(--zdp-control-border-width) solid var(--zdp-control-field-border);
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-strong);
@@ -86,7 +72,8 @@
     font-size: var(--zdp-type-control-size);
     line-height: var(--zdp-type-control-line-height);
     min-height: var(--zdp-control-height-md);
-    padding: 0 calc(var(--zdp-space-3) + var(--zdp-control-glyph-md) + var(--zdp-space-2)) 0 var(--zdp-space-3);
+    padding-block: 0;
+    padding-inline: var(--zdp-control-padding-md) calc(var(--zdp-control-padding-md) + var(--zdp-control-indicator-size) + var(--zdp-space-2));
     transition:
       background-color var(--zdp-motion-fast) ease,
       border-color var(--zdp-motion-fast) ease,
@@ -95,13 +82,22 @@
   }
 
   .zdp-select__arrow {
-    block-size: var(--zdp-control-glyph-md);
-    inline-size: var(--zdp-control-glyph-md);
+    background-color: currentColor;
+    block-size: var(--zdp-control-indicator-size);
+    inline-size: var(--zdp-control-indicator-size);
     inset-block: 0;
+    inset-inline-end: var(--zdp-control-padding-md);
     margin-block: auto;
+    mask-image: var(--zdp-control-indicator-mask);
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
     pointer-events: none;
     position: absolute;
-    inset-inline-end: var(--zdp-space-3);
+    -webkit-mask-image: var(--zdp-control-indicator-mask);
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
   }
 
   .zdp-select-shell:has(.zdp-select:disabled) .zdp-select__arrow {
@@ -109,18 +105,18 @@
   }
 
   .zdp-select:hover:not(:disabled) {
-    background: var(--zdp-color-accent-primary-soft);
-    border-color: transparent;
+    background: var(--zdp-control-field-surface-hover);
+    border-color: var(--zdp-control-field-border-hover);
   }
 
   .zdp-select:focus-visible {
-    border-color: transparent;
+    border-color: var(--zdp-color-focus-line);
     outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
     outline-offset: var(--zdp-control-focus-outline-offset);
   }
 
   .zdp-select[aria-invalid="true"] {
-    border-color: transparent;
+    border-color: var(--zdp-color-accent-danger);
   }
 
   .zdp-select:disabled {
@@ -134,17 +130,14 @@
       appearance: base-select;
     }
 
-    .zdp-select__arrow {
-      display: none;
-    }
-
     .zdp-select {
-      padding-block: var(--zdp-space-3);
-      padding-inline-end: var(--zdp-space-2);
+      align-items: center;
+      display: inline-flex;
+      padding-block: 0;
     }
 
     .zdp-select::picker-icon {
-      margin-inline-end: 0;
+      display: none;
     }
 
     .zdp-select::picker(select) {
@@ -183,6 +176,12 @@
     .zdp-select,
     .zdp-select::picker(select) {
       border-color: ButtonText;
+    }
+
+    .zdp-select__arrow {
+      background-color: currentColor;
+      color: ButtonText;
+      forced-color-adjust: none;
     }
   }
 </style>

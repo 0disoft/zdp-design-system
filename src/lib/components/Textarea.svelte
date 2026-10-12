@@ -81,16 +81,16 @@
 
 <style>
   .zdp-textarea {
-    background: var(--zdp-color-surface-panel);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
+    background: var(--zdp-control-field-surface);
+    border: var(--zdp-control-border-width) solid var(--zdp-control-field-border);
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-strong);
     font-family: var(--zdp-font-family-sans);
     font-size: var(--zdp-type-control-size);
-    line-height: var(--zdp-font-line-height-normal);
+    line-height: var(--zdp-type-control-line-height);
     min-height: 7rem;
-    padding: var(--zdp-space-3);
+    padding: var(--zdp-control-padding-md);
     resize: vertical;
     transition:
       background-color var(--zdp-motion-fast) ease,
@@ -104,8 +104,8 @@
   }
 
   .zdp-textarea:hover:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    background: var(--zdp-control-field-surface-hover);
+    border-color: var(--zdp-control-field-border-hover);
   }
 
   .zdp-textarea:focus-visible {

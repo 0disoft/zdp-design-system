@@ -114,6 +114,14 @@
   --zdp-control-icon-md: 2.75rem;
   --zdp-control-glyph-sm: 1rem;
   --zdp-control-glyph-md: 1.25rem;
+  --zdp-control-padding-sm: 0.5rem;
+  --zdp-control-padding-md: 0.75rem;
+  --zdp-control-indicator-size: 1.25rem;
+  --zdp-control-indicator-mask: url('./control-chevron.svg');
+  --zdp-control-field-surface: var(--zdp-color-surface-panel);
+  --zdp-control-field-border: var(--zdp-color-line-subtle);
+  --zdp-control-field-surface-hover: var(--zdp-color-surface-raised);
+  --zdp-control-field-border-hover: var(--zdp-color-line-strong);
   --zdp-control-choice-size: 1.25rem;
   --zdp-control-choice-indicator-size: 0.5rem;
   --zdp-control-switch-width: 2.25rem;
@@ -139,6 +147,15 @@
   --zdp-shadow-md: none;
   --zdp-motion-fast: 120ms;
   --zdp-motion-normal: 180ms;
+}
+
+:root,
+[data-zdp-theme] {
+  /* Resolve semantic field aliases in each theme scope, including nested themes. */
+  --zdp-control-field-surface: var(--zdp-color-surface-panel);
+  --zdp-control-field-border: var(--zdp-color-line-subtle);
+  --zdp-control-field-surface-hover: var(--zdp-color-surface-raised);
+  --zdp-control-field-border-hover: var(--zdp-color-line-strong);
 }
 
 @supports (height: 100svh) {

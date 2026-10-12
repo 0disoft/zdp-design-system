@@ -230,9 +230,9 @@
 
   .zdp-command-field {
     align-items: center;
-    background: var(--zdp-color-surface-panel);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
-    border-radius: var(--zdp-radius-md);
+    background: var(--zdp-control-field-surface);
+    border: var(--zdp-control-border-width) solid var(--zdp-control-field-border);
+    border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-strong);
     display: flex;
@@ -240,6 +240,7 @@
     font-size: var(--zdp-type-control-size);
     gap: var(--zdp-space-2);
     inline-size: 100%;
+    line-height: var(--zdp-type-control-line-height);
     min-width: 0;
     transition:
       background-color var(--zdp-motion-fast) ease,
@@ -249,17 +250,23 @@
 
   .zdp-command-field--sm {
     min-height: var(--zdp-control-height-sm);
-    padding: 0 var(--zdp-space-2);
+    padding: 0 var(--zdp-control-padding-sm);
   }
 
   .zdp-command-field--md {
     min-height: var(--zdp-control-height-md);
-    padding: 0 var(--zdp-space-2) 0 var(--zdp-space-3);
+    padding: 0 var(--zdp-control-padding-md);
   }
 
   .zdp-command-field:hover {
+    background: var(--zdp-control-field-surface-hover);
+    border-color: var(--zdp-control-field-border-hover);
+  }
+
+  .zdp-command-field:has(.zdp-command-field__input[readonly]),
+  .zdp-command-field:has(.zdp-command-field__input[readonly]):hover {
     background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    color: var(--zdp-color-ink-normal);
   }
 
   .zdp-command-field:focus-within {
@@ -283,13 +290,13 @@
     color: inherit;
     flex: 1 1 auto;
     font: inherit;
-    min-height: calc(var(--zdp-control-height-md) - 2px);
+    min-height: calc(var(--zdp-control-height-md) - 2 * var(--zdp-control-border-width));
     min-width: 0;
     padding: 0;
   }
 
   .zdp-command-field--sm .zdp-command-field__input {
-    min-height: calc(var(--zdp-control-height-sm) - 2px);
+    min-height: calc(var(--zdp-control-height-sm) - 2 * var(--zdp-control-border-width));
   }
 
   .zdp-command-field__input::placeholder {

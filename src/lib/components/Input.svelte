@@ -90,8 +90,8 @@
 
 <style>
   .zdp-input {
-    background: var(--zdp-color-surface-panel);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
+    background: var(--zdp-control-field-surface);
+    border: var(--zdp-control-border-width) solid var(--zdp-control-field-border);
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-strong);
@@ -99,7 +99,7 @@
     font-size: var(--zdp-type-control-size);
     line-height: var(--zdp-type-control-line-height);
     min-height: var(--zdp-control-height-md);
-    padding: 0 var(--zdp-space-3);
+    padding: 0 var(--zdp-control-padding-md);
     transition:
       background-color var(--zdp-motion-fast) ease,
       border-color var(--zdp-motion-fast) ease,
@@ -133,8 +133,8 @@
   }
 
   .zdp-input:hover:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    background: var(--zdp-control-field-surface-hover);
+    border-color: var(--zdp-control-field-border-hover);
   }
 
   .zdp-input:focus-visible {

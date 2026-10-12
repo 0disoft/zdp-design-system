@@ -92,6 +92,7 @@ export async function verifyFoundationAndFormContracts(page) {
       paddingBlockEnd: Number.parseFloat(selectStyle.paddingBottom),
       paddingInlineEnd: Number.parseFloat(selectStyle.paddingInlineEnd),
       pickerMarginInlineEnd: Number.parseFloat(pickerStyle.marginInlineEnd),
+      pickerDisplay: pickerStyle.display,
       selectedOptionCheckmarkMarginInlineStart: Number.parseFloat(selectedOptionCheckmarkStyle.marginInlineStart),
       optionMarginBlockStart: Number.parseFloat(spacedOptionStyle.marginBlockStart),
       optionPaddingBlockStart: Number.parseFloat(spacedOptionStyle.paddingBlockStart),
@@ -107,20 +108,8 @@ export async function verifyFoundationAndFormContracts(page) {
       selectPickerStyle.paddingBlockEnd,
       'The customizable native Select must use symmetric block padding for vertical centering.'
     );
-    assert.ok(
-      selectPickerStyle.paddingBlockStart >= 8,
-      'The customizable native Select must retain enough block padding to center its value and picker icon.'
-    );
-    assert.equal(
-      selectPickerStyle.paddingInlineEnd,
-      8,
-      'The native Select control must keep its picker icon within a balanced 8 CSS pixel inline-end inset.'
-    );
-    assert.equal(
-      selectPickerStyle.pickerMarginInlineEnd,
-      0,
-      'The picker icon must not add a second inline-end margin beyond the Select control inset.'
-    );
+    assert.equal(selectPickerStyle.paddingBlockStart, 0, 'Native Select must keep the shared field height instead of adding browser-specific block padding.');
+    assert.equal(selectPickerStyle.pickerDisplay, 'none', 'The browser icon must not replace the shared control indicator.');
     assert.equal(
       selectPickerStyle.selectedOptionCheckmarkMarginInlineStart,
       4,

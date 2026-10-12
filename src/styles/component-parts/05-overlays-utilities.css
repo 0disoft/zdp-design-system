@@ -949,10 +949,7 @@
 
   .zdp-badge,
   .zdp-avatar,
-  .zdp-identity-chip,
-  .zdp-combobox__control,
-  .zdp-combobox__panel,
-  .zdp-combobox__option {
+  .zdp-identity-chip {
     border-color: ButtonText;
   }
 
@@ -962,8 +959,6 @@
 
   .zdp-confirm-action,
   .zdp-confirm-action__thumb,
-  .zdp-select,
-  .zdp-select::picker(select),
   .zdp-menu__trigger,
   .zdp-menu__panel,
   .zdp-menu__item {

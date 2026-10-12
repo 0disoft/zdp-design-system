@@ -520,6 +520,8 @@
 
 <style>
   .zdp-combobox {
+    --zdp-combobox-toggle-size: calc(var(--zdp-control-height-sm) - 2 * var(--zdp-control-border-width));
+    --zdp-combobox-toggle-gap: calc((var(--zdp-combobox-toggle-size) - var(--zdp-control-indicator-size)) / 2);
     box-sizing: border-box;
     display: grid;
     gap: var(--zdp-space-2);
@@ -550,8 +552,8 @@
 
   .zdp-combobox__control {
     align-items: center;
-    background: var(--zdp-color-surface-panel);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+    background: var(--zdp-control-field-surface);
+    border: var(--zdp-control-border-width) solid var(--zdp-control-field-border);
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-strong);
@@ -560,6 +562,7 @@
     font-size: var(--zdp-type-control-size);
     gap: var(--zdp-space-1);
     inline-size: 100%;
+    line-height: var(--zdp-type-control-line-height);
     min-width: 0;
     transition:
       background-color var(--zdp-motion-fast) ease,
@@ -569,17 +572,25 @@
 
   .zdp-combobox--sm .zdp-combobox__control {
     min-height: var(--zdp-control-height-sm);
-    padding: 0 var(--zdp-space-1) 0 var(--zdp-space-2);
+    padding-block: 0;
+    padding-inline: var(--zdp-control-padding-sm) calc(var(--zdp-control-padding-sm) - var(--zdp-control-border-width) - var(--zdp-combobox-toggle-gap));
   }
 
   .zdp-combobox--md .zdp-combobox__control {
     min-height: var(--zdp-control-height-md);
-    padding: 0 var(--zdp-space-1) 0 var(--zdp-space-3);
+    padding-block: 0;
+    padding-inline: var(--zdp-control-padding-md) calc(var(--zdp-control-padding-md) - var(--zdp-control-border-width) - var(--zdp-combobox-toggle-gap));
   }
 
   .zdp-combobox__control:hover {
+    background: var(--zdp-control-field-surface-hover);
+    border-color: var(--zdp-control-field-border-hover);
+  }
+
+  .zdp-combobox__control:has(.zdp-combobox__input[readonly]),
+  .zdp-combobox__control:has(.zdp-combobox__input[readonly]):hover {
     background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-subtle);
+    color: var(--zdp-color-ink-normal);
   }
 
   .zdp-combobox__control:focus-within {
@@ -603,13 +614,13 @@
     color: inherit;
     flex: 1 1 auto;
     font: inherit;
-    min-height: calc(var(--zdp-control-height-md) - 2px);
+    min-height: calc(var(--zdp-control-height-md) - 2 * var(--zdp-control-border-width));
     min-width: 0;
     padding: 0;
   }
 
   .zdp-combobox--sm .zdp-combobox__input {
-    min-height: calc(var(--zdp-control-height-sm) - 2px);
+    min-height: calc(var(--zdp-control-height-sm) - 2 * var(--zdp-control-border-width));
   }
 
   .zdp-combobox__input::placeholder {
@@ -623,15 +634,16 @@
   .zdp-combobox__toggle {
     align-items: center;
     background: transparent;
+    block-size: calc(var(--zdp-control-height-md) - 2 * var(--zdp-control-border-width));
     border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
+    box-sizing: border-box;
     color: var(--zdp-color-ink-muted);
     cursor: pointer;
     display: inline-flex;
     flex: 0 0 auto;
+    inline-size: var(--zdp-combobox-toggle-size);
     justify-content: center;
-    min-height: calc(var(--zdp-control-height-sm) - 2px);
-    min-width: calc(var(--zdp-control-height-sm) - 2px);
     padding: 0;
     transition:
       background-color var(--zdp-motion-fast) ease,
@@ -649,6 +661,10 @@
     outline: 0;
   }
 
+  .zdp-combobox--sm .zdp-combobox__toggle {
+    block-size: calc(var(--zdp-control-height-sm) - 2 * var(--zdp-control-border-width));
+  }
+
   .zdp-combobox__toggle:disabled {
     cursor: not-allowed;
   }
@@ -663,13 +679,19 @@
   }
 
   .zdp-combobox__mark::before {
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 4px solid currentColor;
+    background-color: currentColor;
+    block-size: var(--zdp-control-indicator-size);
     content: '';
     display: inline-block;
-    height: 0;
-    width: 0;
+    inline-size: var(--zdp-control-indicator-size);
+    mask-image: var(--zdp-control-indicator-mask);
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    -webkit-mask-image: var(--zdp-control-indicator-mask);
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
   }
 
   .zdp-combobox__panel {
@@ -753,5 +775,13 @@
 
   .zdp-combobox__empty {
     padding: var(--zdp-space-2);
+  }
+
+  @media (forced-colors: active) {
+    .zdp-combobox__mark::before {
+      background-color: currentColor;
+      color: ButtonText;
+      forced-color-adjust: none;
+    }
   }
 </style>

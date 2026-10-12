@@ -8,6 +8,7 @@
 | --- | --- |
 | tokens, CSS, components, stories, preview, fixtures, package readiness | `bun run check` |
 | browser accessibility semantics, responsive geometry, forced colors, and keyboard focus order | `bun run browser:check` |
+| shared field/action geometry, indicator source and inset, nested light/dark themes, LTR/RTL, and form/Combobox behavior | `bun run browser:controls:check` |
 | Menu browser keyboard, dismissal, and focus regression | `bun run browser:menu:check` |
 | Popover browser dismissal/opt-out, focus, placement×align, open shadow root, iframe, Tab/Shift+Tab, IME Escape (panel-outside 포함), and nested Menu+Popover top-only dismiss regression | `bun run browser:popover:check` |
 | Astro consumer tarball install, build, static CSS and split-pane controller, and Menu hydration | `bun run consumer:astro:check` |

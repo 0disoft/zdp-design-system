@@ -1,5 +1,6 @@
 <script lang="ts">
   import NumericProgressFixture from './NumericProgressFixture.svelte';
+  import ControlConsistencyFixture from './ControlConsistencyFixture.svelte';
   import { onMount } from 'svelte';
   import Button from '../../../src/lib/components/Button.svelte';
   import Accordion from '../../../src/lib/components/Accordion.svelte';
@@ -895,6 +896,7 @@
   <section id="release-details" aria-label="Release details">
     <p>Keyboard navigation reached the explicit link.</p>
   </section>
+  <ControlConsistencyFixture />
   <NativeInputFixture />
   <FormResetFixture />
   <ShadowFormResetFixture />

@@ -1567,7 +1567,8 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
               </div>
               <div class="zdp-field zdp-field--md" data-invalid="true">
                 <label class="zdp-label" for="light-status">상태</label>
-                <select
+                <span class="zdp-select-shell">
+<select
                   class="zdp-select"
                   id="light-status"
                   name="light-status"
@@ -1577,6 +1578,8 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
                   <option value="ready">준비됨</option>
                   <option value="blocked" selected>확인 필요</option>
                 </select>
+<span class="zdp-select__arrow" aria-hidden="true"></span>
+</span>
                 <p class="zdp-error-text" id="light-status-error">다음 단계 전에 기준을 확인하세요.</p>
               </div>
               <div class="zdp-field zdp-field--md">
@@ -2564,7 +2567,8 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
               </div>
               <div class="zdp-field zdp-field--md" data-invalid="true">
                 <label class="zdp-label" for="dark-status">상태</label>
-                <select
+                <span class="zdp-select-shell">
+<select
                   class="zdp-select"
                   id="dark-status"
                   name="dark-status"
@@ -2574,6 +2578,8 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
                   <option value="ready">준비됨</option>
                   <option value="blocked" selected>확인 필요</option>
                 </select>
+<span class="zdp-select__arrow" aria-hidden="true"></span>
+</span>
                 <p class="zdp-error-text" id="dark-status-error">다음 단계 전에 기준을 확인하세요.</p>
               </div>
               <div class="zdp-field zdp-field--md">
