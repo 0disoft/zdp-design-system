@@ -1,4 +1,4 @@
-import { existsSync, statSync } from 'node:fs';
+import { existsSync, statSync, readdirSync, readFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { extname, join, relative } from 'node:path';
 import { expectedPackageExportTargets, validatePackageExports } from './package-exports';
@@ -151,8 +151,19 @@ function checkExports(): void {
 }
 
 function checkRuntimeDependencyBoundary(): void {
-  if (packageJson.dependencies && Object.keys(packageJson.dependencies).length > 0) {
-    failures.push('package.json dependencies must stay empty unless a runtime dependency is intentionally adopted.');
+  const dependencies = packageJson.dependencies ?? {};
+  if (dependencies['bits-ui'] !== '2' || Object.keys(dependencies).some(name => name !== 'bits-ui')) {
+    failures.push('Only the intentionally adopted bits-ui major 2 runtime dependency is allowed.');
+  }
+
+  const library = join(root, 'src/lib');
+  for (const path of readdirSync(library, { recursive: true })) {
+    if (typeof path !== 'string' || !/\.(?:svelte|ts|js)$/.test(path)) continue;
+    const source = readFileSync(join(library, path), 'utf8');
+    if (/(?:from\s*|import\s*\()(['"])bits-ui(?:\/[^'"]*)?\1/.test(source) &&
+      path.replaceAll('\\', '/') !== 'components/Menu.svelte') {
+      failures.push(`Bits UI must stay inside the Svelte Menu adapter: src/lib/${path}.`);
+    }
   }
 
   if (packageJson.peerDependencies?.svelte !== '^5.56.0') {

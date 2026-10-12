@@ -5,7 +5,7 @@
 
 ## 원칙
 
-- 외부 UI 라이브러리는 ZDP의 dependency source가 아니라 검증 source다.
+- 외부 UI 라이브러리는 ZDP의 dependency source가 아니라 검증 source다. 이는 기본 원칙이고, 명시적으로 채택한 `Menu`만 예외로 runtime dependency다.
 - 고난도 headless primitive는 public API와 styling contract가 ZDP 안에 갇혀 있다는 조건에서 내부 구현 의존성으로 허용할 수 있다.
 - Tailwind, UnoCSS, registry, `cn()` helper, class merge helper, 외부 theme preset은 ZDP core public contract로 새지 않는다.
 - ZDP public component props, DOM exposure policy, CSS class, token mapping, Storybook coverage, consumer fixture는 ZDP가 소유한다.
@@ -43,6 +43,7 @@ MIT 같은 허용 라이선스라도 원 저작권 고지와 license notice를 �
 외부 패키지를 dependency로 설치해 내부 구현에 쓰는 상태다.
 Bits UI 같은 headless primitive에 한해 후보가 될 수 있고, public export에 외부 타입, prop 이름, class, theme token이 새면 실패다.
 consumer fixture가 외부 패키지 설정 없이 `zdp-design-system` public export만으로 빌드되어야 한다.
+현재 `Menu`가 이 등급으로 Bits UI `DropdownMenu`(`Root`, `Trigger`, `ContentStatic`, `Item`)를 ZDP adapter 뒤에서 내부 구현으로 채택했다. public API, CSS class, token, Storybook, consumer fixture는 그대로 ZDP가 소유한다.
 
 ### Prohibited
 
@@ -56,6 +57,19 @@ Tailwind Plus/Tailwind UI 계열은 ZDP public package 재료로 쓰지 않는�
 Select, Combobox, Dialog, Popover, Menu, Command, Drawer, Sheet처럼 focus, keyboard, aria, nested overlay가 까다로운 primitive의 동작 명세와 테스트 후보로 검토한다.
 내부 구현 의존성은 허용할 수 있지만, public API와 CSS token, class naming, DOM exposure policy는 ZDP가 소유한다.
 `bits-ui` 타입, prop 이름, store shape, Tailwind class, shadcn registry 파일 구조가 ZDP public export로 새면 실패다.
+
+### Bits UI Menu 채택 범위
+
+`Menu.svelte`는 Bits UI `DropdownMenu`의 `Root`, `Trigger`, `ContentStatic`, `Item`을 ZDP adapter 뒤에서만 내부 구현으로 쓴다.
+
+- `ZdpMenuItem` public 타입과 `items`, `open`, `triggerLabel`, `idPrefix`, `placement`, `align`, `onOpenChange`, `onSelect` props 이름, Root 공개 props·콜백·type, named `trigger` slot, `.zdp-menu*` class, token mapping, Storybook story, consumer fixture는 그대로 ZDP가 소유한다.
+- 패널 위치는 기존 `.zdp-menu--{placement}`·`.zdp-menu--align-*` CSS 값을 유지한다. automatic portal을 켜지 않고 DOM 위치도 바꾸지 않는다.
+- 기존 ZDP custom Escape dismiss 공유 순서와 framework-neutral DOM controller·CSS 표면은 유지한다.
+- 바깥 pointerdown에서 닫고, 프로그램이 focus를 바깥으로 옮기면 `onfocusout`에서 `flushSync`로 scope를 정리하며 닫는다. 예전에는 바깥 클릭이 완료될 때까지 열려 있었다.
+- 도구 계약 노트(사용자 UI 문구 아님): Bits UI 적용 범위는 `Menu` 한정이다. 설치된 2.19.5에서 `ContentStatic`의 `trapFocus={false}`가 실제 `FocusScope`에 전달되지 않는 결함을 확인했고, `Menu.svelte` adapter가 외부 focusout `flushSync` close와 Tab capture 정리로 기존 focus 탈출 보장을 유지한다. 소프트웨어 결함이라 설치본에 로컬 패치를 넣지 않고 버전도 고정하지 않는다. 외부 라이브러리 기본 동작만 신뢰하지 않고 이 focus 탈출 계약을 회귀 검사로 계속 확인한다.
+- 정적 소비 표면은 `bits-ui`나 Svelte를 import할 수 없다. Astro plain HTML/CSS와 `zdp-design-system/split-pane` 같은 framework-neutral DOM controller entry는 인터랙티브 `Menu`를 제공하지 않는다. 인터랙티브 `Menu`는 Svelte island(`@astrojs/svelte`) 안에서만 쓴다.
+- `onclick` 같은 콜백을 담은 `items`는 Astro frontmatter에서 직렬화할 수 없으므로 소비처가 local Svelte wrapper 안에서 만든다.
+- Storybook interaction과 `addon-a11y` gate, consumer fixture build가 같은 변경 단위에 있어야 한다.
 
 ### Skeleton / Flowbite Svelte / daisyUI
 

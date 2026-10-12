@@ -1,0 +1,12 @@
+{
+  "name": "zdp-astro-consumer-fixture",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "astro build" },
+  "dependencies": {
+    "astro": "7",
+    "@astrojs/svelte": "9",
+    "svelte": "5",
+    "zdp-design-system": "file:../.."
+  }
+}

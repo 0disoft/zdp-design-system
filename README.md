@@ -54,8 +54,8 @@ Default component text is English. 제품별 화면은 필요한 모든 user-fac
 
 ## 외부 UI 흡수 기준
 
-외부 UI 라이브러리는 ZDP의 dependency source가 아니라 검증 source로 다룬다.
-Bits UI와 shadcn-svelte는 Select, Combobox, Dialog, Popover, Menu, Command 같은 고난도 interactive primitive의 동작 명세와 접근성 테스트 후보로만 검토한다.
+외부 UI 라이브러리의 기본은 ZDP의 dependency source가 아니라 검증 source로 다룬다. 명시적으로 채택한 `Menu`만 예외로 Bits UI `DropdownMenu`를 runtime dependency로 쓴다.
+Bits UI와 shadcn-svelte는 Select, Combobox, Dialog, Popover, Command 같은 나머지 고난도 interactive primitive의 동작 명세와 접근성 테스트 후보로 검토한다.
 내부 구현 의존성은 허용할 수 있지만 public API, CSS token, class, DOM 노출 정책은 ZDP가 소유하고 외부 타입이나 Tailwind/shadcn 구조가 package surface로 새면 실패다.
 Skeleton, Flowbite Svelte, daisyUI는 패턴 카탈로그로만 보고 core primitive에 직접 유입하지 않는다.
 Motion과 SmoothUI류는 marketing recipe로 격리하고 reduced motion 대체를 갖춘다.
@@ -166,7 +166,7 @@ import flagshipKeyArt from 'zdp-design-system/assets/credits/credit-pack-keyart-
 - Accordion과 Disclosure는 접힌 안내와 점진적 정보 공개를 담당한다.
 - SegmentedControl은 보기 방식이나 단일 모드 전환을 표현한다.
 - SortHeader와 TableToolbar는 sortable column affordance, 선택 행 액션, 밀도 조절 같은 표 주변 도구를 맡는다.
-- Popover와 Menu는 설정, 더보기, 필터, 계정 메뉴 표면을 제공하지만 메뉴 항목 권한 판단은 소비 앱이 한다. Menu trigger/panel/item은 tonal surface로 계층을 구분하고 resting/hover border를 사용하지 않는다. Popover의 Escape/outside dismissal은 명시적으로 끌 수 있지만, ARIA Menu의 Escape/outside dismissal은 키보드 탈출 계약이라 끄지 않는다. 두 컴포넌트의 내부 클릭 판정과 focus return은 light DOM과 open shadow root에서 유지하며 closed shadow root는 지원하지 않는다.
+- Popover와 Menu는 설정, 더보기, 필터, 계정 메뉴 표면을 제공하지만 메뉴 항목 권한 판단은 소비 앱이 한다. Menu trigger/panel/item은 tonal surface로 계층을 구분하고 resting/hover border를 사용하지 않는다. Popover의 Escape/outside dismissal은 명시적으로 끌 수 있지만, ARIA Menu의 Escape/outside dismissal은 키보드 탈출 계약이라 끄지 않는다. 두 컴포넌트의 내부 클릭 판정과 focus return은 light DOM과 open shadow root에서 유지하며 closed shadow root는 지원하지 않는다. Menu는 내부 구현으로 Bits UI `DropdownMenu`를 ZDP adapter 뒤에서 쓰고, `ZdpMenuItem` 타입, Root 공개 props·콜백·type, named `trigger` slot, `.zdp-menu*` class는 그대로 유지한다. Menu는 바깥 pointerdown에서 닫고(예전에는 바깥 클릭이 완료될 때까지 열려 있었음), 프로그램이 focus를 바깥으로 옮기면 `onfocusout`에서 `flushSync`로 scope를 정리하며 닫는다.
 - Disclosure, LocaleSwitcher, SegmentedControl, TextScaleControl, Menu, Popover, Tooltip은 명시적 `id` 또는 `idPrefix`를 생략해도 반복 SSR과 hydration 사이에서 같은 fallback ID와 ARIA 참조를 유지한다. 소비 앱이 외부 요소와 참조를 공유해야 할 때만 명시적 값을 넘긴다.
 - Sheet는 설정, 필터, 보조 흐름을 right, left, bottom edge panel로 열고, 저장, 권한, 데이터 fetch, 라우팅 판단은 소비 앱이 한다.
 - Pagination은 목록 페이지 이동을 표현하고 데이터 범위 계산은 소비 앱이 한다.

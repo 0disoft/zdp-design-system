@@ -122,7 +122,7 @@ export async function verifyOverlayContracts(page) {
   await menuTrigger.click();
   menu = page.getByRole('menu', { name: 'Browser actions' });
   await pointerDownOn(page, outsideOverlayTarget);
-  assert.equal(await menu.count(), 1, 'Menu must remain open until the outside pointer sequence produces a click.');
+  assert.equal(await menu.count(), 0, 'Bits Menu must dismiss on outside pointerdown before focus moves.');
   assert.equal(
     await outsideOverlayTarget.evaluate((element) => document.activeElement === element),
     true,
@@ -162,6 +162,21 @@ export async function verifyOverlayContracts(page) {
   assert.equal(await archiveMenuItem.evaluate((element) => document.activeElement === element), true);
   await page.keyboard.press('Home');
   assert.equal(await editMenuItem.evaluate((element) => document.activeElement === element), true);
+  for (const composition of [{ isComposing: true }, { keyCode: 229 }]) {
+    await editMenuItem.evaluate((element, composition) => {
+      element.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Enter', bubbles: true, composed: true, cancelable: true, ...composition
+      }));
+    }, composition);
+    assert.equal(await menu.count(), 1, 'IME Enter must not select a Bits Menu item.');
+  }
+  await page.keyboard.press('a');
+  assert.equal(
+    await archiveMenuItem.evaluate((element) => document.activeElement === element),
+    true,
+    'Bits Menu typeahead must focus the matching enabled item.'
+  );
+  await page.keyboard.press('Home');
   await page.keyboard.press('ArrowUp');
   assert.equal(
     await archiveMenuItem.evaluate((element) => document.activeElement === element),
@@ -324,8 +339,8 @@ export async function verifyShadowOverlayContracts(page) {
   await pointerDownOn(page, shadowOutsideTarget);
   assert.equal(
     await shadowMenu.count(),
-    1,
-    'A shadow-root Menu must remain open until the composed outside pointer sequence produces a click.'
+    0,
+    'A shadow-root Bits Menu must dismiss on composed outside pointerdown.'
   );
   assert.equal(
     await shadowOutsideTarget.evaluate((element) => document.activeElement === element),

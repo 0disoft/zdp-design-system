@@ -51,7 +51,7 @@ async function checkInteractivePrimitiveAuditContract(): Promise<void> {
     '`Combobox`는 searchable single-select를 ZDP-native로 제공하되 filtering, async search, command execution, permissions는 소비 앱에 남긴다.',
     '| Combobox | ZDP custom combobox/listbox | Medium |',
     '`Menu`와 `Popover`는 가장 높은 위험군이다.',
-    '| Menu | ZDP custom menu | High |',
+    '| Menu | Bits UI DropdownMenu adapter | High |',
     '| Popover | ZDP custom non-modal overlay | High |',
     '모바일 keyboard, 긴 옵션, async option, grouped option, virtualized list, collision 반복 요구는 `Menu`, `Popover`, `Combobox` 안에서 계속 키우지 않고 `Sheet` flow 또는 headless spike로 보낸다.',
     'InteractionProbe는 ArrowDown open, roving focus, disabled skip, Home/End, Escape close, focus return, click select를 계속 확인한다.',

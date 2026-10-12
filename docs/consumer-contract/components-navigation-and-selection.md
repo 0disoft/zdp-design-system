@@ -28,4 +28,6 @@ Pagination은 목록 페이지 이동의 `nav`, ordered list, link/button, ellip
 
 Tabs는 가까운 정보 묶음 전환을 표현하되 라우팅, 권한, 데이터 로딩 판단은 소비 앱이 계속 소유한다. 기본 tab/panel prefix는 인스턴스마다 다르고 SSR과 hydration에서 안정적이며, 소비 앱이 명시적인 `idPrefix`를 전달하는 계약도 유지한다. 기존 `let:selectedId`, `let:selectedItem`, `bind:selectedId` 계약은 계속 지원한다.
 
+Menu는 내부 구현으로 Bits UI `DropdownMenu`(`Root`, `Trigger`, `ContentStatic`, `Item`)를 ZDP adapter 뒤에서만 쓴다. `ZdpMenuItem` 타입, `items`·`placement`·`align`·`open`·`triggerLabel`·`idPrefix` props 이름, Root 공개 props·콜백·type, named `trigger` slot, `.zdp-menu*` class, 항목 라벨과 접근성 이름은 그대로 ZDP 계약이고 public API는 바뀌지 않는다. 패널 위치는 기존 `.zdp-menu--{placement}`·`.zdp-menu--align-*` CSS 값을 유지하며 자동 portal을 켜지 않는다. 기존 ZDP custom Escape dismiss 공유 순서와 DOM controller·CSS는 유지한다. Menu는 바깥 pointerdown에서 닫고, 프로그램이 focus를 바깥으로 옮기면 `onfocusout`에서 `flushSync`로 scope를 정리하며 닫는다. 예전에는 바깥 클릭이 완료될 때까지 열려 있었으므로 닫히는 시점이 pointerdown으로 앞당겨졌다. 정적 HTML 표면에는 `.zdp-menu*` utility만 있고, keyboard·focus 동작이 있는 인터랙티브 Menu는 Svelte 컴포넌트 또는 Astro Svelte island로만 쓴다. Astro island 구성과 콜백 항목 위치는 [docs/consumer-contract/astro.md](astro.md)를 따른다.
+
 상위 개요와 금지 경계는 [docs/CONSUMER_CONTRACT.md](../CONSUMER_CONTRACT.md)를 따른다.

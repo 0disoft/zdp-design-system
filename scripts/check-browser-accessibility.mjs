@@ -112,6 +112,24 @@ try {
     waitUntil: 'domcontentloaded'
   });
 
+  // Bits UI's mounted keyboard-modality tracker is separate from dismissal.
+  // Check overlay listener changes relative to the closed, mounted fixture.
+  await page.getByRole('button', { name: 'Browser actions', exact: true }).waitFor();
+  await page.evaluate(() => {
+    const rawCounts = window.__zdpDismissListenerCounts;
+    const baseline = rawCounts();
+    window.__zdpDismissListenerCounts = () => {
+      const current = rawCounts();
+      return { click: current.click - baseline.click, keydown: current.keydown - baseline.keydown };
+    };
+  });
+
+  if (process.argv.includes('--menu')) {
+    await verifyOverlayContracts(page);
+    await verifyDynamicMenuContracts(page);
+    await verifyReservedNavigationContracts(page);
+    await verifyShadowOverlayContracts(page);
+  } else {
   await verifyFoundationAndFormContracts(page);
   await verifyProgressRangeContracts(page);
   await verifySplitPointerOwnership(page);
@@ -173,6 +191,7 @@ try {
   await verifyResponsiveAndForcedColorContracts(page);
   await verifyPageGutterContracts(page, baseUrl);
 
+  }
   console.log('Design system browser accessibility check passed.');
 } finally {
   await browser?.close();

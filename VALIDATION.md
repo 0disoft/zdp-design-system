@@ -8,6 +8,8 @@
 | --- | --- |
 | tokens, CSS, components, stories, preview, fixtures, package readiness | `bun run check` |
 | browser accessibility semantics, responsive geometry, forced colors, and keyboard focus order | `bun run browser:check` |
+| Menu browser keyboard, dismissal, and focus regression | `bun run browser:menu:check` |
+| Astro consumer tarball install, build, static CSS and split-pane controller, and Menu hydration | `bun run consumer:astro:check` |
 | high-risk component geometry and theme rendering | GitHub Actions advisory gate backed by `scripts/check-visual-regressions.mjs` |
 | Storybook static build or bundle evidence | `bun run storybook:build` |
 | npm package contents or release readiness | `npm.cmd pack --dry-run --json` |

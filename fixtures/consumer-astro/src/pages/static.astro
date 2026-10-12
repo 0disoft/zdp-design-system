@@ -1,0 +1,26 @@
+---
+import 'zdp-design-system/foundation.css';
+import 'zdp-design-system/components/Button.css';
+import 'zdp-design-system/components/ResizableSplitPane.css';
+---
+<html lang="en">
+  <head><meta charset="UTF-8" /><title>Static design system consumer</title></head>
+  <body>
+    <button class="zdp-button zdp-button--primary zdp-button--md" type="button">Static action</button>
+    <div id="workspace" style="display:grid;grid-template-columns:240px 8px 1fr;width:800px;height:240px">
+      <nav id="primary">Navigation</nav>
+      <div id="separator"></div>
+      <main id="secondary">Static Astro content</main>
+    </div>
+    <script>
+      import { createZdpSplitPaneController } from 'zdp-design-system/split-pane';
+      const controller = createZdpSplitPaneController({
+        root: document.querySelector<HTMLElement>('#workspace')!,
+        primary: document.querySelector<HTMLElement>('#primary')!,
+        separator: document.querySelector<HTMLElement>('#separator')!,
+        secondary: document.querySelector<HTMLElement>('#secondary')!
+      }, { size: 240, minSize: 180, maxSize: 360, secondaryMinSize: 240 });
+      document.addEventListener('astro:before-swap', () => controller.destroy(), { once: true });
+    </script>
+  </body>
+</html>

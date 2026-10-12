@@ -126,6 +126,8 @@
     "a11y:runtime:check": "node scripts/check-storybook-runtime-a11y.mjs",
     "ssr:hydration:check": "node scripts/check-ssr-hydration.mjs",
     "browser:check": "node scripts/check-browser-accessibility.mjs",
+    "browser:menu:check": "node scripts/check-browser-accessibility.mjs --menu",
+    "consumer:astro:check": "bun scripts/check-astro-consumer.mjs",
     "type:check": "svelte-check --tsconfig ./tsconfig.json",
     "package:build": "bun run styles:check && bun scripts/generate-tokens.ts && bun scripts/generate-share.ts && bun scripts/build-package.ts",
     "package:build:check": "bun scripts/check-package-build.ts",
@@ -160,5 +162,8 @@
   },
   "peerDependencies": {
     "svelte": "^5.56.0"
+  },
+  "dependencies": {
+    "bits-ui": "2"
   }
 }

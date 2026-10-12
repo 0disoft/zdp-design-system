@@ -11,11 +11,11 @@ stability=contract
 -->
 
 <script lang="ts">
-  import { onDestroy, tick } from 'svelte';
+  import { flushSync, onDestroy, tick } from 'svelte';
+  import { DropdownMenu } from 'bits-ui';
   import { createZdpDismissLayer } from '../dismiss-layer';
   import { toZdpDomId } from '../dom-id';
   import { getZdpActiveElement } from '../focusable';
-  import { moveZdpRovingFocus } from '../roving-focus';
   import type { ZdpMenuItem } from '../menu';
 
   type Placement = 'top' | 'right' | 'bottom' | 'left';
@@ -112,6 +112,23 @@ stability=contract
     setOpen(false);
   }
 
+  function handleFocusOut(event: FocusEvent): void {
+    const target = event.relatedTarget;
+    if (target && panelElement && !panelElement.contains(target as Node)) {
+      // Dispose the Bits focus scope before the next focusin event so an
+      // external consumer focus move is preserved instead of trapped.
+      flushSync(() => closeMenu(false));
+    }
+  }
+
+  function handleOutsidePointer(event: PointerEvent): void {
+    if (event.composedPath().includes(triggerElement as EventTarget)) {
+      event.preventDefault();
+      return;
+    }
+    restoreFocusAfterClose = false;
+  }
+
   function handleTriggerClick(): void {
     if (open) {
       closeMenu(false);
@@ -122,6 +139,7 @@ stability=contract
   }
 
   function handleTriggerKeydown(event: KeyboardEvent): void {
+    if (event.isComposing || event.keyCode === 229) return;
     if (event.altKey || event.ctrlKey || event.metaKey) return;
     if (event.key === 'ArrowDown') {
       event.preventDefault();
@@ -168,18 +186,27 @@ stability=contract
     previousFocusElement = null;
   }
 
-  function handlePanelKeydown(event: KeyboardEvent): void {
+  function handlePanelKeydown(event: KeyboardEvent, handleBitsKeydown: unknown): void {
     if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
     if (event.key === 'Tab') {
       closeMenu(false);
       return;
     }
 
-    if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+    if (event.isComposing || event.keyCode === 229) return;
+    if (typeof handleBitsKeydown === 'function') handleBitsKeydown(event);
+  }
+
+  function handleTabExit(event: KeyboardEvent): void {
+    if (event.isComposing || event.keyCode === 229) {
+      event.stopImmediatePropagation();
       return;
     }
-
-    moveActiveItem(event);
+    if (event.key !== 'Tab' || event.altKey || event.ctrlKey || event.metaKey) return;
+    // Preserve native document tab order instead of Bits' modal Tab loop.
+    event.stopImmediatePropagation();
+    flushSync(() => closeMenu(false));
+    triggerElement?.focus();
   }
 
   function handleItemClick(event: MouseEvent, item: ZdpMenuItem): void {
@@ -191,27 +218,6 @@ stability=contract
     item.onclick?.(event, item);
     onSelect?.(event, item);
     closeMenu(!item.href || event.defaultPrevented || item.target === '_blank');
-  }
-
-  function moveActiveItem(event: KeyboardEvent): void {
-    if (enabledItems.length === 0 || panelElement === null) {
-      return;
-    }
-
-    const currentElement = Array.from(panelElement.querySelectorAll<HTMLElement>('[role="menuitem"]')).find(
-      (element) => element.dataset.menuItemId === activeItemId
-    );
-    const result = moveZdpRovingFocus({
-      container: panelElement,
-      event,
-      fallbackElement: currentElement ?? null,
-      orientation: 'vertical',
-      selector: '[role="menuitem"]:not([aria-disabled="true"]):not(:disabled)'
-    });
-
-    if (result !== null) {
-      activeItemId = result.element.dataset.menuItemId ?? activeItemId;
-    }
   }
 
   function focusActiveItem(): void {
@@ -254,12 +260,16 @@ stability=contract
   }
 </script>
 
+<DropdownMenu.Root bind:open onOpenChange={(nextOpen) => onOpenChange?.(nextOpen)}>
 <span
   class={`zdp-menu zdp-menu--${placement} zdp-menu--align-${align}`}
   data-open={open ? 'true' : 'false'}
   bind:this={rootElement}
 >
+  <DropdownMenu.Trigger id={triggerId} bind:ref={triggerElement}>
+  {#snippet child({ props })}
   <button
+    {...props}
     class="zdp-menu__trigger"
     id={triggerId}
     type="button"
@@ -269,6 +279,8 @@ stability=contract
     aria-controls={open ? panelId : undefined}
     bind:this={triggerElement}
     onclick={handleTriggerClick}
+    onpointerdown={() => {}}
+    onpointerup={() => {}}
     onkeydown={handleTriggerKeydown}
   >
     <span class="zdp-menu__trigger-label">
@@ -277,24 +289,46 @@ stability=contract
     </span>
     <span class="zdp-menu__trigger-mark" aria-hidden="true"></span>
   </button>
+  {/snippet}
+  </DropdownMenu.Trigger>
 
   {#if open}
+    <DropdownMenu.ContentStatic
+      id={panelId}
+      bind:ref={panelElement}
+      loop={true}
+      trapFocus={false}
+      preventScroll={false}
+      escapeKeydownBehavior="ignore"
+      interactOutsideBehavior="close"
+      onInteractOutside={handleOutsidePointer}
+      onOpenAutoFocus={(event) => event.preventDefault()}
+      onCloseAutoFocus={(event) => event.preventDefault()}
+      onFocusOutside={(event) => event.preventDefault()}
+    >
+    {#snippet child({ props })}
     <div
+      {...props}
       class="zdp-menu__panel"
       id={panelId}
       role="menu"
       aria-labelledby={triggerId}
       tabindex="-1"
       bind:this={panelElement}
-      onkeydown={handlePanelKeydown}
+      onkeydown={(event) => handlePanelKeydown(event, props.onkeydown)}
+      onkeydowncapture={handleTabExit}
+      onfocusout={handleFocusOut}
     >
       {#each items as item (item.id)}
         {#if item.separatorBefore}
           <span class="zdp-menu__separator" role="separator" aria-hidden="true"></span>
         {/if}
 
+        <DropdownMenu.Item disabled={item.disabled ?? false} textValue={item.label} closeOnSelect={false}>
+        {#snippet child({ props: itemProps })}
         {#if item.href}
           <a
+            {...itemProps}
             class={`zdp-menu__item ${item.tone === 'danger' ? 'zdp-menu__item--danger' : ''}`}
             href={item.disabled ? undefined : item.href}
             target={item.target ?? undefined}
@@ -313,6 +347,7 @@ stability=contract
           </a>
         {:else}
           <button
+            {...itemProps}
             class={`zdp-menu__item ${item.tone === 'danger' ? 'zdp-menu__item--danger' : ''}`}
             type="button"
             role="menuitem"
@@ -328,10 +363,15 @@ stability=contract
             {item.label}
           </button>
         {/if}
+        {/snippet}
+        </DropdownMenu.Item>
       {/each}
     </div>
+    {/snippet}
+    </DropdownMenu.ContentStatic>
   {/if}
 </span>
+</DropdownMenu.Root>
 
 <style>
   .zdp-menu {
