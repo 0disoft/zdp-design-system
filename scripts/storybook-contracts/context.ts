@@ -291,7 +291,7 @@ export async function loadStorybookContext() {
       readFile(faviconPath, 'utf8'),
       readFile(previewPath, 'utf8'),
       readFile(storyPath, 'utf8'),
-      readFile(componentPath, 'utf8'),
+      readOverviewSource(),
       readFile(buttonsStoryPath, 'utf8'),
       readFile(buttonsComponentPath, 'utf8'),
       readFile(buttonPlaygroundPath, 'utf8'),
@@ -450,6 +450,14 @@ export async function loadStorybookContext() {
   }
 
   return { failures, packageJson, main, favicon, preview, story, component, buttonsStory, buttonsComponent, buttonPlayground, dataDisplayStory, dataDisplayComponent, feedbackStory, feedbackComponent, formsStory, formsComponent, interactionStory, interactionComponent, interactionProbe, layoutStory, layoutComponent, navigationStory, navigationComponent, themeLocaleStressStory, themeLocaleStressComponent, accordion, avatar, badge, breadcrumb, button, callout, checkbox, codeBlock, combobox, commandField, confirmAction, container, dialog, disclosure, divider, emptyState, errorText, field, grid, input, kbd, keyValue, label, link, localeSwitcher, menu, page, pageHeader, pagination, popover, progress, radio, section, select, segmentedControl, shareDock, sheet, shortcutHint, shortcuts, skeleton, tooltip, skipLink, sortHeader, stack, statusToast, spinner, switchComponent, tabs, table, tableToolbar, termSheet, termTrigger, textarea, textScaleControl, themeToggle, toast, toolbar, visuallyHidden, icon, iconButton, inline, inlineCode, identityChip, surface, previewStyle, brandFontStyle, expressiveFontStyle, assertScopedSelectionBlocking, assertNoReadableSelectionBlocking };
+
+  async function readOverviewSource(): Promise<string> {
+    const paths = [componentPath,
+      join(root, 'stories/overview/LightOverview.svelte'),
+      join(root, 'stories/overview/DarkOverview.svelte'),
+      join(root, 'stories/overview/overview.css')];
+    return (await Promise.all(paths.map(path => readFile(path, 'utf8')))).join('\n');
+  }
 }
 
 export type StorybookCheckContext = Awaited<ReturnType<typeof loadStorybookContext>>;

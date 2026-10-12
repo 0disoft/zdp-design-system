@@ -29,6 +29,8 @@ const storyPaths = [
   'stories/ButtonPlayground.svelte',
   'stories/DataDisplay.svelte',
   'stories/DesignSystemOverview.svelte',
+  'stories/overview/LightOverview.svelte',
+  'stories/overview/DarkOverview.svelte',
   'stories/Feedback.svelte',
   'stories/Forms.svelte',
   'stories/Interaction.svelte',
