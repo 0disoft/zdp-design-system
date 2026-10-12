@@ -161,8 +161,8 @@ function checkRuntimeDependencyBoundary(): void {
     if (typeof path !== 'string' || !/\.(?:svelte|ts|js)$/.test(path)) continue;
     const source = readFileSync(join(library, path), 'utf8');
     if (/(?:from\s*|import\s*\()(['"])bits-ui(?:\/[^'"]*)?\1/.test(source) &&
-      path.replaceAll('\\', '/') !== 'components/Menu.svelte') {
-      failures.push(`Bits UI must stay inside the Svelte Menu adapter: src/lib/${path}.`);
+      !['components/Menu.svelte', 'components/Popover.svelte'].includes(path.replaceAll('\\', '/'))) {
+      failures.push(`Bits UI must stay inside the Svelte Menu and Popover adapters: src/lib/${path}.`);
     }
   }
 

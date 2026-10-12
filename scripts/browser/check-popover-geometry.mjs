@@ -25,4 +25,12 @@ export async function verifyPopoverGeometryContracts(page) {
       await page.keyboard.press('Escape');
     }
   }
+  for (const [testId, expectedRole] of [['geometry-role-group', 'group'], ['geometry-role-none', null]]) {
+    await fixture.getByTestId(testId).click();
+    await fixture.getByTestId('geometry-trigger').click();
+    const panel = fixture.locator('.zdp-popover__panel');
+    assert.equal(await panel.getAttribute('role'), expectedRole, 'Bits must preserve the ZDP role override.');
+    assert.equal(await panel.getAttribute('aria-describedby'), 'geometry-description');
+    await page.keyboard.press('Escape');
+  }
 }

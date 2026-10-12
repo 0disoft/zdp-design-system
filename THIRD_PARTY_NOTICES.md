@@ -23,7 +23,7 @@ APIs, and their types, prop names, class names, and stores are not part of the p
 
 | Source | Version | License | Copyright | Adoption Grade | Local Usage |
 | --- | --- | --- | --- | --- | --- |
-| [Bits UI](https://github.com/huntabyte/bits-ui) | 2.19.5 | MIT | Copyright (c) 2023 Hunter Johnston | Runtime Dependency | `src/lib/components/Menu.svelte` uses Bits UI `DropdownMenu` (`Root`, `Trigger`, `ContentStatic`, `Item`) behind a ZDP adapter. |
+| [Bits UI](https://github.com/huntabyte/bits-ui) | 2.19.5 | MIT | Copyright (c) 2023 Hunter Johnston | Runtime Dependency | `src/lib/components/Menu.svelte` uses Bits UI `DropdownMenu` and `src/lib/components/Popover.svelte` uses Bits UI `Popover` (`ContentStatic` included) behind ZDP adapters. |
 
 The installed MIT license text for the 2.19.5 snapshot is read from `node_modules/bits-ui/LICENSE` and is not
 modified. `docs/EXTERNAL_UI_ADOPTION.md` owns the runtime dependency adoption criteria.

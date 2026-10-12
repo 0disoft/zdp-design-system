@@ -35,9 +35,12 @@ try {
   const dist = resolve(working, 'dist');
   const staticHtml = await readFile(join(dist, 'static/index.html'), 'utf8');
   const menuHtml = await readFile(join(dist, 'menu/index.html'), 'utf8');
+  const popoverHtml = await readFile(join(dist, 'popover/index.html'), 'utf8');
   assert.ok(!staticHtml.includes('<astro-island'), 'Static CSS/controller page must not hydrate Svelte');
   assert.ok(menuHtml.includes('<astro-island'), 'Menu hydrates only through its Svelte island');
   assert.ok(menuHtml.includes('Astro actions'), 'Menu trigger is server rendered');
+  assert.ok(popoverHtml.includes('<astro-island'), 'Popover hydrates only through its Svelte island');
+  assert.ok(popoverHtml.includes('Astro filters'), 'Popover custom trigger is server rendered');
 
   server = Bun.serve({ hostname: '127.0.0.1', port: 0, async fetch(request) {
     const url = new URL(request.url);
@@ -70,8 +73,28 @@ try {
   await trigger.click();
   await page.getByRole('button', { name: 'Outside island', exact: true }).click();
   assert.equal(await page.getByRole('menu').count(), 0);
+  await page.goto(`http://127.0.0.1:${server.port}/popover/`);
+  await page.waitForSelector('astro-island:not([ssr])');
+  const popoverTrigger = page.getByRole('button', { name: 'Astro filters', exact: true });
+  const popover = page.getByRole('dialog', { name: 'Astro filter panel', exact: true });
+  const editor = page.getByRole('textbox', { name: 'Astro filter value', exact: true });
+  await popoverTrigger.click();
+  await popover.waitFor();
+  assert.equal(await popoverTrigger.evaluate(element => element === document.activeElement), true);
+  await editor.fill('release');
+  await page.keyboard.press('Escape');
+  assert.equal(await popover.count(), 0);
+  assert.equal(await popoverTrigger.evaluate(element => element === document.activeElement), true);
+  await popoverTrigger.click();
+  await page.getByRole('button', { name: 'Apply filters', exact: true }).click();
+  assert.equal(await popover.count(), 0);
+  assert.equal(await popoverTrigger.evaluate(element => element === document.activeElement), true);
+  await popoverTrigger.click();
+  await page.getByRole('button', { name: 'Outside island', exact: true }).click();
+  assert.equal(await popover.count(), 0);
+  assert.equal(await page.getByTestId('popover-events').textContent(), 'true,false,true,false,true,false', 'Popover callbacks must fire once per internal state change');
   assert.deepEqual(errors, [], 'Astro island must hydrate without runtime errors');
-  console.log('Packed Astro static CSS/controller and hydrated Menu consumer passed.');
+  console.log('Packed Astro static CSS/controller and hydrated Menu/Popover consumers passed.');
 } finally {
   await browser?.close();
   server?.stop(true);

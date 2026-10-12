@@ -110,7 +110,8 @@ export async function verifyOverlayContracts(page) {
   const externalMenuTrigger = page.getByRole('button', { name: 'External actions' });
   await externalMenuTrigger.click();
   const externalPagePromise = page.waitForEvent('popup');
-  await page.getByRole('menuitem', { name: 'Open external release' }).click();
+  // Popup creation is awaited explicitly; do not also wait for its navigation.
+  await page.getByRole('menuitem', { name: 'Open external release' }).click({ noWaitAfter: true });
   const externalPage = await externalPagePromise;
   await externalPage.close();
   assert.equal(
@@ -243,6 +244,12 @@ export async function verifyOverlayContracts(page) {
   const protectedPopoverAction = page.getByTestId('protected-popover-action');
   assert.equal(await protectedPopover.count(), 1);
   await protectedPopoverAction.focus();
+  const protectedEscapePrevented = await protectedPopoverAction.evaluate((element) => {
+    const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+    element.dispatchEvent(event);
+    return event.defaultPrevented;
+  });
+  assert.equal(protectedEscapePrevented, false, 'Escape opt-out must leave the editor key available.');
   await page.keyboard.press('Escape');
   assert.equal(await protectedPopover.count(), 1, 'Escape opt-out must keep the Popover open.');
   assert.equal(

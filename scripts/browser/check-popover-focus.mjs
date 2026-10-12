@@ -26,5 +26,54 @@ export async function verifyPopoverFocusContracts(page) {
     await fixture.getByTestId('outside').focus();
     await fixture.getByTestId('close').evaluate((element) => element.click());
     assert.equal(await fixture.getByTestId('outside').evaluate(isActive), true, 'Closing must not steal unrelated focus.');
+
+    await trigger.click();
+    assert.equal(await trigger.evaluate(isActive), true, 'Popover opening must keep focus on its custom trigger.');
+    await editor.focus();
+    await page.keyboard.press('Shift+Tab');
+    assert.equal(await trigger.evaluate(isActive), true, 'Shift+Tab must leave the first panel control in native order.');
+    const nestedTrigger = fixture.getByRole('button', { name: 'Nested popover trigger', exact: true });
+    await nestedTrigger.focus();
+    await page.keyboard.press('Tab');
+    assert.equal(await fixture.getByTestId('outside').evaluate(isActive), true, 'Tab must leave the last panel control without looping.');
+    assert.equal(await editor.count(), 1, 'A non-modal Popover must remain open when focus leaves.');
+    await editor.focus();
+    for (const composition of [{ isComposing: true }, { keyCode: 229 }]) {
+      const prevented = await editor.evaluate((element, composition) => {
+        const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true, cancelable: true, ...composition });
+        element.dispatchEvent(event);
+        return event.defaultPrevented;
+      }, composition);
+      assert.equal(prevented, false, 'IME Escape must remain available to the Popover editor.');
+      assert.equal(await editor.count(), 1, 'IME Escape must preserve the Popover.');
+      const outsidePrevented = await fixture.getByTestId('outside').evaluate((element, composition) => {
+        element.focus();
+        const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true, cancelable: true, ...composition });
+        element.dispatchEvent(event);
+        return event.defaultPrevented;
+      }, composition);
+      assert.equal(outsidePrevented, false, 'Open Popover must not consume IME Escape outside its panel.');
+      await editor.focus();
+    }
+
+    const menuTrigger = fixture.getByRole('button', { name: 'Nested popover actions', exact: true });
+    await menuTrigger.click();
+    await page.keyboard.press('Escape');
+    assert.equal(await fixture.getByRole('menu').count(), 0, 'Escape must dismiss the nested Bits Menu first.');
+    assert.equal(await editor.count(), 1, 'Nested Menu dismissal must keep the Popover open.');
+    assert.equal(await menuTrigger.evaluate(isActive), true, 'Nested Menu dismissal must return focus inside the Popover.');
+
+    await nestedTrigger.click();
+    await fixture.getByTestId('nested-action').focus();
+    await page.keyboard.press('Escape');
+    assert.equal(await fixture.getByTestId('nested-action').count(), 0, 'Escape must dismiss only the inner Bits Popover.');
+    assert.equal(await editor.count(), 1, 'The outer Popover must survive inner dismissal.');
+    assert.equal(await nestedTrigger.evaluate(isActive), true);
+    await nestedTrigger.click();
+    await fixture.getByTestId('outside').click();
+    assert.equal(await fixture.getByTestId('nested-action').count(), 0);
+    assert.equal(await editor.count(), 1, 'One outside click must dismiss only the top Popover.');
+    await fixture.getByTestId('outside').click();
+    assert.equal(await editor.count(), 0);
   }
 }

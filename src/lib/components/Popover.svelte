@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onDestroy, tick } from 'svelte';
+  import { Popover as BitsPopover } from 'bits-ui';
   import { createZdpDismissLayer } from '../dismiss-layer';
   import { toZdpDomId } from '../dom-id';
   import { getZdpActiveElement, hasZdpFocusMoved } from '../focusable';
@@ -45,6 +46,21 @@
   const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
   const triggerId = $derived(`${resolvedIdPrefix}-trigger`);
   const panelId = $derived(`${resolvedIdPrefix}-panel`);
+
+  $effect.pre(() => {
+    const document = open ? rootElement?.ownerDocument : null;
+    if (!document) return;
+    // Bits 2 consumes Escape even with behavior="ignore". Subscribe before
+    // its content mounts so IME and opt-out events reach the editor unchanged.
+    const preserveEscape = (event: KeyboardEvent): void => {
+      if (open && event.key === 'Escape' &&
+        (event.isComposing || event.keyCode === 229 || !closeOnEscape)) {
+        event.stopImmediatePropagation();
+      }
+    };
+    document.addEventListener('keydown', preserveEscape);
+    return () => document.removeEventListener('keydown', preserveEscape);
+  });
 
   $effect(() => {
     if (open === knownOpenState) {
@@ -140,6 +156,7 @@
   }
 </script>
 
+<BitsPopover.Root bind:open onOpenChange={(nextOpen) => onOpenChange?.(nextOpen)}>
 <span
   class={`zdp-popover zdp-popover--${placement} zdp-popover--align-${align}`}
   data-open={open ? 'true' : 'false'}
@@ -150,19 +167,37 @@
     <slot name="trigger" open={open} toggle={toggle} close={close} panelId={panelId} triggerId={triggerId} />
   </span>
   {#if open}
+    <!-- ZDP owns shared dismissal ordering and custom slotted triggers. -->
+    <BitsPopover.ContentStatic
+      id={panelId}
+      trapFocus={false}
+      preventScroll={false}
+      escapeKeydownBehavior="ignore"
+      interactOutsideBehavior="ignore"
+      onOpenAutoFocus={(event) => event.preventDefault()}
+      onCloseAutoFocus={(event) => event.preventDefault()}
+      onFocusOutside={(event) => event.preventDefault()}
+    >
+    {#snippet child({ props })}
     <div
+      {...props}
+      style={undefined}
       class="zdp-popover__panel"
       id={panelId}
       role={role ?? undefined}
       aria-labelledby={labelledBy ?? triggerId}
       aria-describedby={describedBy ?? undefined}
       tabindex="-1"
+      onkeydown={() => { /* Keep native Tab order instead of Bits' panel loop. */ }}
     >
       <!-- svelte-ignore slot_element_deprecated legacy default slot contract remains public -->
       <slot open={open} close={close} panelId={panelId} triggerId={triggerId} />
     </div>
+    {/snippet}
+    </BitsPopover.ContentStatic>
   {/if}
 </span>
+</BitsPopover.Root>
 
 <style>
   .zdp-popover {

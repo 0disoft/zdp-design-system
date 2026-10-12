@@ -1,6 +1,7 @@
 <script lang="ts">
   import { mount, onMount, unmount } from 'svelte';
   import Popover from '../../../src/lib/components/Popover.svelte';
+  import Menu from '../../../src/lib/components/Menu.svelte';
   import PopoverFocusFixture from './PopoverFocusFixture.svelte';
   let { embedded = false }: { embedded?: boolean } = $props();
   let open = $state(false);
@@ -22,6 +23,12 @@
     <button type="button" data-testid="close" onclick={() => open = false}>Close from parent</button>
     <button type="button" data-testid="close-outside" onclick={() => { open = false; queueMicrotask(() => outside.focus()); }}>Close and move focus</button>
     <button type="button" data-testid="close-document-outside" onclick={() => { open = false; queueMicrotask(() => outside.ownerDocument.querySelector<HTMLButtonElement>('[data-testid="document-popover-outside"]')?.focus()); }}>Close and leave shadow root</button>
+    <Menu triggerLabel="Nested popover actions" items={[{ id: 'edit', label: 'Nested edit' }]} />
+    <Popover labelledBy={embedded ? 'shadow-nested-title' : 'nested-title'}>
+      <button slot="trigger" type="button" let:toggle onclick={toggle}>Nested popover trigger</button>
+      <h2 id={embedded ? 'shadow-nested-title' : 'nested-title'}>Nested panel</h2>
+      <button type="button" data-testid="nested-action">Nested action</button>
+    </Popover>
   </Popover>
   <button type="button" data-testid="outside" bind:this={outside}>Outside popover</button>
 </section>

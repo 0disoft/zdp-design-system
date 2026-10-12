@@ -129,6 +129,12 @@ try {
     await verifyDynamicMenuContracts(page);
     await verifyReservedNavigationContracts(page);
     await verifyShadowOverlayContracts(page);
+  } else if (process.argv.includes('--popover')) {
+    await verifyOverlayContracts(page);
+    await verifyPopoverGeometryContracts(page);
+    await verifyPopoverFocusContracts(page);
+    await verifyFramePopoverContracts(page);
+    await verifyShadowOverlayContracts(page);
   } else {
   await verifyFoundationAndFormContracts(page);
   await verifyProgressRangeContracts(page);
