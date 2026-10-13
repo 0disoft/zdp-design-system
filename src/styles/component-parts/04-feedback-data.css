@@ -308,7 +308,7 @@
 }
 
 .zdp-progress--primary {
-  --zdp-progress-accent: var(--zdp-color-accent-primary);
+  --zdp-progress-accent: var(--zdp-color-accent-primary-strong);
 }
 
 .zdp-progress--success {

@@ -707,8 +707,8 @@
   }
 
   .zdp-combobox__panel {
-    background: var(--zdp-color-surface-raised);
-    border: var(--zdp-control-border-width) solid transparent;
+    background: var(--zdp-color-surface-panel);
+    border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
     border-radius: var(--zdp-control-radius);
     color: var(--zdp-color-ink-normal);
     display: grid;
@@ -772,9 +772,9 @@
   }
 
   .zdp-combobox__option[data-selected="true"] {
-    background: var(--zdp-color-focus-surface);
+    background: var(--zdp-color-accent-primary-soft);
     border-color: transparent;
-    color: var(--zdp-color-focus-text);
+    color: var(--zdp-color-ink-strong);
   }
 
   .zdp-combobox__option:disabled,

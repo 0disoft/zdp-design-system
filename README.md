@@ -14,7 +14,7 @@ ZDP의 디자인 토큰, CSS, 아이콘, Svelte UI 컴포넌트 경계를 고정
 
 ## 시각 방향
 
-기본 톤은 밝은 중세 유럽 마을 광장과 수채화 종이 질감이다. 토큰 값은 parchment, warm brass, muted sage, sunlit gold, umber, terracotta 계열을 쓰되, 토큰 이름은 `primary`, `surface`, `line`, `danger`처럼 역할 중심으로 유지한다.
+기본 톤은 밝은 아이보리 종이 위에 짙은 코코아 잉크를 얹은 Quiet Ivory다. light는 `#f8f6f0` canvas, `#fffefa` panel, `#302a24` ink, `#dfd8cd`/`#958774` line, `#a38454` brass accent를 쓰고, dark는 `#201d19` canvas, `#2a2621` panel, `#36312a` raised, `#f8f6f0` ink로 뒤집는다. 토큰 이름은 `primary`, `surface`, `line`, `danger`처럼 역할 중심으로 유지한다.
 
 ## Foundation 계약
 
@@ -606,9 +606,9 @@ preview/index.html
 
 **Hover / Active**
 - 버튼 hover/active는 배경색, 테두리색, 글자색만 바꾼다. 위치 이동·빛 반사 없음.
-- Secondary Button은 raised tonal surface, ghost IconButton은 투명 surface를 기본으로 사용하며 hover/active는 인접 surface 단계로 구분한다. 시각적 resting border는 사용하지 않되 레이아웃 보존용 투명 border slot은 유지한다.
+- 주 액션(primary Button, solid IconButton)은 `surface-inverse` 배경 + `ink-inverse` 글자를 쓰고 hover/active는 `ink-normal` 배경으로 이동한다. Secondary Button은 panel surface와 `line-strong` outline을 기본으로 쓰고 hover/active는 raised surface로 구분한다. ghost IconButton은 투명 surface + `ink-normal` 글자를 기본으로 쓴다. resting border가 없는 나머지 컨트롤은 레이아웃 보존용 투명 border slot을 유지한다.
 - Focus는 `focus.surface` outline + `focus.line` border로 표시한다.
-- ConfirmAction, Select, Menu는 resting/hover에서 surface 단계만 바꾸며 투명 border slot으로 크기를 유지한다. keyboard focus와 forced-colors에서는 outline 또는 system border를 복원한다.
+- Select·검색 입력·Menu 트리거와 펼친 패널은 같은 panel 표면과 1px `line-strong` 테두리를 쓴다. ConfirmAction은 raised 표면과 투명 border slot을 유지한다. keyboard focus와 forced-colors에서는 outline 또는 system border로 현재 위치를 표시한다.
 
 **Radius**
 - controls (Button, Input 등): `0.375rem`
@@ -621,7 +621,8 @@ preview/index.html
 - drag surface는 drag start~end까지만 `.zdp-user-select-dragging`을 붙인다.
 
 **색상**
-- `success`, `warning`, `danger`는 상태 의미 기준. 모두 parchment/brass/umber 계열에서 채도를 낮춰 튀지 않게 유지.
+- `success`, `warning`, `danger`는 상태 의미 기준. 모두 ivory/cocoa/brass 계열에서 채도를 낮춰 튀지 않게 유지.
+- 주 CTA는 `surface-inverse`/`ink-inverse` 쌍, 목록·탭 선택 상태는 옅은 `accent-primary-soft` 표면과 해당 테마의 `ink-strong`, 체크·스위치 표시는 `accent-primary-strong`과 `ink-inverse`를 쓴다. 포커스는 금색 `focus.surface` outline과 코코아 `focus.line`으로 구분한다.
 - `focus.surface/text/line`은 접근성 기능색. 브랜드 장식색·hover 색으로 재사용 금지.
 - `selection.surface/text`는 드래그 선택 전용. focus, hover, selected control과 이름 섞지 않기.
 

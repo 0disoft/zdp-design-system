@@ -254,7 +254,7 @@
 <style>
   .zdp-confirm-action {
     --zdp-confirm-action-progress: 0;
-    --zdp-confirm-action-fill: var(--zdp-color-accent-primary);
+    --zdp-confirm-action-fill: var(--zdp-color-accent-primary-soft);
 
     align-items: center;
     background: var(--zdp-color-surface-raised);
@@ -291,11 +291,11 @@
 
   .zdp-confirm-action__thumb {
     align-items: center;
-    background: var(--zdp-color-accent-primary);
+    background: var(--zdp-color-accent-primary-strong);
     border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
-    color: var(--zdp-color-ink-strong);
+    color: var(--zdp-color-ink-inverse);
     display: inline-flex;
     font-size: var(--zdp-control-glyph-sm);
     height: var(--zdp-control-height-sm);
@@ -315,13 +315,6 @@
     width: var(--zdp-control-glyph-sm);
   }
 
-  :global([data-zdp-theme="dark"]) .zdp-confirm-action__thumb {
-    color: var(--zdp-color-ink-inverse);
-  }
-
-  :global([data-zdp-theme="dark"]) .zdp-confirm-action {
-    --zdp-confirm-action-fill: var(--zdp-color-accent-primary-soft);
-  }
 
   .zdp-confirm-action__body {
     display: grid;

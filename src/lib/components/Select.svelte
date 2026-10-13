@@ -167,8 +167,8 @@
     }
 
     .zdp-select :global(option:checked) {
-      background-color: var(--zdp-color-focus-surface);
-      color: var(--zdp-color-focus-text);
+      background-color: var(--zdp-color-accent-primary-soft);
+      color: var(--zdp-color-ink-strong);
     }
   }
 

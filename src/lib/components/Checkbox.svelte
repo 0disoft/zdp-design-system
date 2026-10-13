@@ -96,11 +96,8 @@
   }
 
   .zdp-choice__input:checked + .zdp-choice__mark {
-    background: var(--zdp-color-accent-primary);
+    background: var(--zdp-color-accent-primary-strong);
     border-color: var(--zdp-color-accent-primary-strong);
-  }
-
-  :global([data-zdp-theme="dark"]) .zdp-choice__input:checked + .zdp-choice__mark {
     color: var(--zdp-color-ink-inverse);
   }
 

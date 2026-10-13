@@ -68,8 +68,9 @@ export function checkStoriesContracts(context: StorybookCheckContext): void {
     button.indexOf('.zdp-button--danger:active:not(:disabled)')
   );
 
-  if (!secondaryButtonBlock.includes('background: var(--zdp-color-surface-raised)')) {
-    failures.push('Button secondary variant must keep a visible tonal surface without relying on a border.');
+  if (!secondaryButtonBlock.includes('background: var(--zdp-color-surface-panel)') ||
+      !secondaryButtonBlock.includes('border-color: var(--zdp-color-line-strong)')) {
+    failures.push('Button secondary variant must use the Quiet Ivory panel surface and a visible outline.');
   }
 
   for (const requiredText of ['background: var(--zdp-color-accent-danger)', 'color: var(--zdp-color-ink-inverse)']) {

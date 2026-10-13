@@ -116,7 +116,7 @@
   }
 
   .zdp-switch__input:checked + .zdp-switch__track {
-    background: var(--zdp-color-accent-primary);
+    background: var(--zdp-color-accent-primary-strong);
     border-color: var(--zdp-color-accent-primary-strong);
   }
 

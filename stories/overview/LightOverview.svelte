@@ -77,11 +77,11 @@
           </span>
           <span class="swatch">
             <span class="swatch__paint swatch__paint--warning"></span>
-            <span class="swatch__label">Sunlit gold</span>
+            <span class="swatch__label">Brass</span>
           </span>
           <span class="swatch">
             <span class="swatch__paint swatch__paint--danger"></span>
-            <span class="swatch__label">Burgundy</span>
+            <span class="swatch__label">Terracotta</span>
           </span>
         </div>
       </section>
@@ -89,7 +89,7 @@
       <section class="preview-section">
         <h3 id="storybook-light-type">Type</h3>
         <p class="type-sample">
-          <strong>마을 광장처럼 밝고 단단하게</strong>
+          <strong>편안하게 읽고 분명하게 선택하기</strong>
           <span>Noto Sans KR-first multiscript text with warm contrast and enough air for product work.</span>
           <Link href="#foundation-tokens">자세히 보기</Link>
         </p>
@@ -454,7 +454,7 @@
         <h3 id="storybook-light-surfaces">Surfaces</h3>
         <div class="surface-grid">
           <Surface tone="panel" padding="lg">
-            <span class="surface-kicker">Parchment</span>
+            <span class="surface-kicker">Ivory</span>
             <strong>작업을 펼치는 자리</strong>
             <p>밝은 종이감 위에 내용, 선택지, 다음 액션이 또렷하게 올라온다.</p>
           </Surface>

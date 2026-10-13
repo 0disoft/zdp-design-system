@@ -11,6 +11,7 @@
   import SegmentedControl from '../../../src/lib/components/SegmentedControl.svelte';
 </script>
 
+<div data-zdp-theme="dark">
 {#each ['light', 'dark'] as theme}
   {#each ['ltr', 'rtl'] as direction}
     <section data-testid={`control-consistency-${theme}-${direction}`} data-zdp-theme={theme} dir={direction}
@@ -26,6 +27,8 @@
       <Disclosure title="Consistent disclosure">Details</Disclosure>
       <Tabs ariaLabel="Consistent tabs" items={[{id:'one',label:'One'},{id:'two',label:'Two'}]} />
       <SegmentedControl ariaLabel="Consistent segments" items={[{id:'one',label:'One'},{id:'two',label:'Two'}]} />
+      <Button variant="primary">Primary action</Button>
+      <IconButton variant="solid" ariaLabel="Primary icon action"><span aria-hidden="true">+</span></IconButton>
       <div data-testid="small-controls">
         <Combobox size="sm" label="Small selection" options={[{id:'team',value:'team',label:'Platform team'}]} />
         <CommandField size="sm" label="Small search" shortcutKeys={[]} />
@@ -35,3 +38,4 @@
     </section>
   {/each}
 {/each}
+</div>

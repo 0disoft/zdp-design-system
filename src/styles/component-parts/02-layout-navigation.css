@@ -605,14 +605,9 @@
 
 .zdp-segmented-control__item--selected,
 .zdp-segmented-control__item[aria-checked="true"] {
-  background: var(--zdp-color-accent-primary);
-  border-color: transparent;
+  background: var(--zdp-color-accent-primary-soft);
+  border-color: var(--zdp-color-accent-primary-strong);
   color: var(--zdp-color-ink-strong);
-}
-
-[data-zdp-theme="dark"] .zdp-segmented-control__item--selected,
-[data-zdp-theme="dark"] .zdp-segmented-control__item[aria-checked="true"] {
-  color: var(--zdp-color-ink-inverse);
 }
 
 .zdp-segmented-control__item:disabled {
@@ -787,52 +782,38 @@
   }
 
   .zdp-button--primary {
-    background: var(--zdp-color-accent-primary);
+    background: var(--zdp-color-surface-inverse);
     border-color: transparent;
-    color: var(--zdp-color-ink-strong);
+    color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-button--primary:hover:not(:disabled) {
-    background: var(--zdp-color-accent-primary-strong);
+    background: var(--zdp-color-ink-normal);
     border-color: transparent;
+    color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-button--primary:active:not(:disabled) {
-    background: var(--zdp-color-accent-primary-strong);
+    background: var(--zdp-color-ink-normal);
     border-color: transparent;
-  }
-
-  [data-zdp-theme="dark"] .zdp-button--primary {
     color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-button--secondary {
-    background: var(--zdp-color-surface-raised);
-    border-color: transparent;
+    background: var(--zdp-color-surface-panel);
+    border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-button--secondary:hover:not(:disabled) {
-    background: var(--zdp-color-surface-panel);
-    border-color: transparent;
+    background: var(--zdp-color-surface-raised);
+    border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-button--secondary:active:not(:disabled) {
-    background: var(--zdp-color-surface-panel);
-    border-color: transparent;
-  }
-
-  [data-zdp-theme="dark"] .zdp-button--secondary {
     background: var(--zdp-color-surface-raised);
-    border-color: transparent;
-    color: var(--zdp-color-ink-muted);
-  }
-
-  [data-zdp-theme="dark"] .zdp-button--secondary:hover:not(:disabled) {
-    background: var(--zdp-color-surface-panel);
-    border-color: transparent;
-    color: var(--zdp-color-ink-strong);
+    border-color: var(--zdp-color-line-strong);
   }
 
   .zdp-button--danger {
@@ -841,19 +822,7 @@
     color: var(--zdp-color-ink-inverse);
   }
 
-  [data-zdp-theme="dark"] .zdp-button--danger {
-    background: var(--zdp-color-accent-danger);
-    border-color: transparent;
-    color: var(--zdp-color-ink-inverse);
-  }
-
   .zdp-button--danger:hover:not(:disabled) {
-    background: var(--zdp-color-surface-panel);
-    border-color: transparent;
-    color: var(--zdp-color-accent-danger);
-  }
-
-  [data-zdp-theme="dark"] .zdp-button--danger:hover:not(:disabled) {
     background: var(--zdp-color-surface-panel);
     border-color: transparent;
     color: var(--zdp-color-accent-danger);
@@ -975,18 +944,6 @@
     color: var(--zdp-color-ink-strong);
   }
 
-  [data-zdp-theme="dark"] .zdp-icon-button--ghost {
-    background: transparent;
-    border-color: transparent;
-    color: var(--zdp-color-ink-muted);
-  }
-
-  [data-zdp-theme="dark"] .zdp-icon-button--ghost:hover:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
-    border-color: transparent;
-    color: var(--zdp-color-ink-strong);
-  }
-
   .zdp-icon-button--ghost:active:not(:disabled) {
     background: var(--zdp-color-surface-raised);
     border-color: transparent;
@@ -994,22 +951,20 @@
   }
 
   .zdp-icon-button--solid {
-    background: var(--zdp-color-accent-primary);
+    background: var(--zdp-color-surface-inverse);
     border-color: transparent;
-    color: var(--zdp-color-ink-strong);
+    color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-icon-button--solid:hover:not(:disabled) {
-    background: var(--zdp-color-accent-primary-strong);
+    background: var(--zdp-color-ink-normal);
     border-color: transparent;
+    color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-icon-button--solid:active:not(:disabled) {
-    background: var(--zdp-color-accent-primary-strong);
+    background: var(--zdp-color-ink-normal);
     border-color: transparent;
-  }
-
-  [data-zdp-theme="dark"] .zdp-icon-button--solid {
     color: var(--zdp-color-ink-inverse);
   }
 
@@ -1216,10 +1171,10 @@
 
   .zdp-menu__trigger {
     align-items: center;
-    background: var(--zdp-color-surface-raised);
-    border: var(--zdp-control-border-width) solid transparent;
+    background: var(--zdp-color-surface-panel);
+    border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
     border-radius: var(--zdp-control-radius);
-    color: var(--zdp-color-ink-normal);
+    color: var(--zdp-color-ink-strong);
     cursor: pointer;
     display: inline-flex;
     font-family: var(--zdp-font-family-sans);
@@ -1242,8 +1197,8 @@
   }
 
   .zdp-menu__trigger:hover {
-    background: var(--zdp-color-accent-primary-soft);
-    border-color: transparent;
+    background: var(--zdp-color-surface-raised);
+    border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);
   }
 
@@ -1288,7 +1243,7 @@
 
   .zdp-menu__panel {
     background: var(--zdp-color-surface-panel);
-    border: var(--zdp-control-border-width) solid transparent;
+    border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
     border-radius: var(--zdp-control-radius);
     color: var(--zdp-color-ink-normal);
     display: grid;

@@ -77,7 +77,7 @@
           </span>
           <span class="swatch">
             <span class="swatch__paint swatch__paint--warning"></span>
-            <span class="swatch__label">Lantern gold</span>
+            <span class="swatch__label">Warm brass</span>
           </span>
           <span class="swatch">
             <span class="swatch__paint swatch__paint--danger"></span>
@@ -89,8 +89,8 @@
       <section class="preview-section">
         <h3 id="storybook-dark-type">Type</h3>
         <p class="type-sample">
-          <strong>밤에도 종이결은 남기기</strong>
-          <span>Dark mode keeps the same market palette without turning into a separate console theme.</span>
+          <strong>어두운 화면에서도 편안하게</strong>
+          <span>Warm charcoal surfaces and ivory text keep the same visual hierarchy in dark mode.</span>
           <Link href="#foundation-tokens">자세히 보기</Link>
         </p>
       </section>
@@ -456,7 +456,7 @@
         <h3 id="storybook-dark-surfaces">Surfaces</h3>
         <div class="surface-grid">
           <Surface tone="panel" padding="lg">
-            <span class="surface-kicker">Parchment</span>
+            <span class="surface-kicker">Charcoal</span>
             <strong>어두운 배경의 작업지</strong>
             <p>톤은 낮추되 버튼과 상태 색은 같은 계열로 이어진다.</p>
           </Surface>

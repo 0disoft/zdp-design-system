@@ -142,12 +142,12 @@
 <main class="storybook-preview zdp-surface-reset" lang="ko">
   <header class="storybook-preview__header">
     <div>
-      <p class="eyebrow">Sunlit parchment kit</p>
+      <p class="eyebrow">Quiet Ivory</p>
       <div class="storybook-preview__brand">
         <img src={simpleShipMark} alt="" width="48" height="48" />
         <h1 class="zdp-visually-hidden">ZDP Design System</h1>
       </div>
-      <p>Bright town-square surfaces, soft heraldic color, and quiet working controls.</p>
+      <p>Ivory surfaces, warm cocoa text, and consistent working controls.</p>
     </div>
     <span>Storybook</span>
   </header>

@@ -52,7 +52,8 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
     'font-weight: var(--zdp-font-weight-medium)',
     'border: var(--zdp-control-border-width) solid transparent',
     'border-color: transparent',
-    'background: var(--zdp-color-accent-primary)',
+    'background: var(--zdp-color-surface-inverse)',
+    'color: var(--zdp-color-ink-inverse)',
     '.zdp-button--primary:hover:not(:disabled)',
     '.zdp-button--secondary:hover:not(:disabled)',
     '.zdp-button--danger:hover:not(:disabled)',
@@ -81,15 +82,15 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
     failures.push('Button text variant hover must strengthen the underline in light and dark themes.');
   }
 
-  const flatButtonBlock = button.slice(button.indexOf('.zdp-button {'), button.indexOf('.zdp-button:focus-visible'));
+  const primaryButtonBlock = button.slice(button.indexOf('.zdp-button--primary {'), button.indexOf('.zdp-button--secondary {'));
 
   for (const forbiddenText of [
     'border-color: var(--zdp-color-line-',
     'border-color: var(--zdp-color-accent-primary-strong)',
     'border-color: var(--zdp-color-accent-danger)'
   ]) {
-    if (flatButtonBlock.includes(forbiddenText)) {
-      failures.push(`Button visual variants must not restore visible borders: ${forbiddenText}.`);
+    if (primaryButtonBlock.includes(forbiddenText)) {
+      failures.push(`Button primary variant must keep its filled surface: ${forbiddenText}.`);
     }
   }
 
@@ -186,8 +187,8 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
     'background: var(--zdp-color-surface-raised)',
     '.zdp-select::picker(select)',
     'background-color: var(--zdp-color-surface-panel)',
-    'background-color: var(--zdp-color-focus-surface)',
-    'color: var(--zdp-color-focus-text)',
+    'background-color: var(--zdp-color-accent-primary-soft)',
+    'color: var(--zdp-color-ink-strong)',
     '.zdp-select :global(option:hover)',
     '.zdp-select :global(option:focus-visible)',
     '.zdp-select :global(option:checked)',

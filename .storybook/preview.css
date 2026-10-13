@@ -1,4 +1,11 @@
 html,
+body {
+  background: var(--zdp-color-surface-canvas);
+  color: var(--zdp-color-ink-normal);
+  font-family: var(--zdp-font-family-sans);
+}
+
+html,
 body,
 #storybook-root {
   scrollbar-color: var(--zdp-color-scrollbar-thumb) var(--zdp-color-scrollbar-track);

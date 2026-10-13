@@ -146,8 +146,8 @@ export async function verifyFoundationAndFormContracts(page) {
         document.documentElement.setAttribute('data-zdp-theme', selectedTheme);
         const selectedOption = element.selectedOptions[0];
         const probe = document.createElement('span');
-        probe.style.backgroundColor = 'var(--zdp-color-focus-surface)';
-        probe.style.color = 'var(--zdp-color-focus-text)';
+        probe.style.backgroundColor = 'var(--zdp-color-accent-primary-soft)';
+        probe.style.color = 'var(--zdp-color-ink-strong)';
         document.body.append(probe);
         const visuals = {
           backgroundColor: getComputedStyle(selectedOption).backgroundColor,
@@ -161,7 +161,7 @@ export async function verifyFoundationAndFormContracts(page) {
       assert.equal(
         selectedOptionVisuals.backgroundColor,
         selectedOptionVisuals.expectedBackgroundColor,
-        `The ${theme} native Select must use the themed focus surface instead of the browser selection color.`
+        `The ${theme} native Select must use the themed selected surface.`
       );
       assert.equal(
         selectedOptionVisuals.color,
@@ -195,7 +195,7 @@ export async function verifyFoundationAndFormContracts(page) {
   await combobox.focus();
   const ownerListbox = page.getByRole('listbox', { name: 'Owner list' });
   assert.equal(await ownerListbox.count(), 1);
-  const borderlessComboboxState = await ownerListbox.evaluate((listbox) => {
+  const comboboxFrameState = await ownerListbox.evaluate((listbox) => {
     const panel = listbox.closest('.zdp-combobox__panel');
     const activeOption = listbox.querySelector('.zdp-combobox__option[data-active="true"]');
     const control = listbox.closest('.zdp-combobox')?.querySelector('.zdp-combobox__control');
@@ -203,12 +203,14 @@ export async function verifyFoundationAndFormContracts(page) {
     return {
       activeOptionBorderColor: activeOption ? getComputedStyle(activeOption).borderTopColor : null,
       controlOutlineStyle: control ? getComputedStyle(control).outlineStyle : null,
-      panelBorderColor: panel ? getComputedStyle(panel).borderTopColor : null
+      panelBorderColor: panel ? getComputedStyle(panel).borderTopColor : null,
+      panelBorderWidth: panel ? getComputedStyle(panel).borderTopWidth : null
     };
   });
-  assert.equal(borderlessComboboxState.panelBorderColor, 'rgba(0, 0, 0, 0)');
-  assert.equal(borderlessComboboxState.activeOptionBorderColor, 'rgba(0, 0, 0, 0)');
-  assert.notEqual(borderlessComboboxState.controlOutlineStyle, 'none');
+  assert.notEqual(comboboxFrameState.panelBorderColor, 'rgba(0, 0, 0, 0)', 'Floating selection panel must have a visible boundary.');
+  assert.equal(comboboxFrameState.panelBorderWidth, '1px');
+  assert.equal(comboboxFrameState.activeOptionBorderColor, 'rgba(0, 0, 0, 0)');
+  assert.notEqual(comboboxFrameState.controlOutlineStyle, 'none');
   for (const legacyKeyCode of [null, 229]) {
     const dispatchResult = await combobox.evaluate((element, keyCode) => {
       const event = new KeyboardEvent('keydown', {

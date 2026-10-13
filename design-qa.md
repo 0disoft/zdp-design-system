@@ -198,3 +198,54 @@ final result: passed
 4. Storybook light/dark captures confirm that component grouping and selected states remain readable without stacked outlines.
 
 final result: passed
+
+---
+
+# Quiet Ivory direction design QA
+
+Date: 2026-10-13
+
+## Source truth and implementation
+
+- Source truth: `tmp/design-directions/quiet-ivory-reference.png` (1487x1058), actually viewed and selected as the Quiet Ivory direction.
+- Implementation captures: `tmp/design-directions/quiet-ivory-forms.jpg` (1567x1111), `tmp/design-directions/quiet-ivory-buttons.jpg` (1580x1111), `tmp/design-directions/quiet-ivory-mobile.jpg` (469x2333).
+- The request is a system-wide Quiet Ivory direction, not a copy of the mock's settings product screen.
+- Fidelity: source and buttons were compared in the same tool input, and the forms focus chevron and panels were seen. Screenshot physical scale differs, so comparison uses region and token styles; whole-layout pixel equality is not claimed.
+
+## Viewports and runtime evidence
+
+- Desktop requested 1280x900 -> actual CSS 1422x1000 at dpr 0.9 because of user zoom. Mobile requested 390x844 -> actual CSS 434x938 at dpr 0.9; fullpage scroll was positive as expected and horizontal overflow was false.
+- Runtime axe at actual CSS 1280x900 and 390x844, light and dark, 21 stories x 4 = 84 audits passed.
+- Nested theme isolation browser checks pass; dark ancestor overrides were removed.
+
+## Findings
+
+- Resolved P2: primary and secondary button state colors were stale.
+- Resolved P2: Menu secondary raised surface was inconsistent -> outlined panel.
+- Resolved P1: dark edge white Storybook background contrast 1.35 -> themed preview body, then 84 axe audits passed.
+- Evaluated: fonts and typography, spacing and layout, colors, assets (no new raster or icon geometry changes; existing brand art preserved), and copy.
+- Selected soft accents stay separate from focus gold; Checkbox/Radio/Switch use brass marks with ink inverse.
+- Primary click "저장" counts 1, verified in the actual UI; no console error or warning on forms, buttons, or overview, and browser control check whole flows pass.
+- package build and check pass; Astro packed static CSS/controller and hydrated Menu/Popover/Combobox pass.
+- preview and style parity cover 701 selectors across 68 components; storybook static, a11y, type, API, tokens, and release checks pass.
+- Win EPERM package rename with the dev server locked was resolved by stopping the specific server, rebuilding, and restarting; localhost:6006 is running.
+- Final result: exactly passed. No actionable P0/P1/P2.
+
+## Open Questions
+
+- No dark mock was provided, so the light direction was inferred into warm charcoal and ivory as analogous paired roles.
+- Intentional differences stay: existing Storybook layout and APIs, control size 44px, radius 6px, and Noto Sans KR are preserved; the mock's new product labels, navigation, avatar, and assets were not imported.
+- Screenshots live in local tmp and are not packaged; this report references local paths only.
+
+## Implementation Checklist
+
+- Tokens: Quiet Ivory light and dark palette in place.
+- Components: Button and IconButton follow inverse-fill primary and outlined secondary, with theme overrides cleaned.
+- Docs: README visual direction and visual rules updated.
+
+## Follow-up Polish
+
+- P3 optional items: none.
+- No release or push is in scope.
+
+final result: passed

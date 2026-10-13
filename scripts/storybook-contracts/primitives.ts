@@ -21,9 +21,9 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
     '.zdp-locale-switcher__item:hover:not(:disabled):not([aria-checked=',
     'background: var(--zdp-color-surface-panel)',
     'border-color: transparent',
-    'background: var(--zdp-color-accent-primary)',
-    ':global([data-zdp-theme="dark"]) .zdp-locale-switcher__item--selected',
-    'color: var(--zdp-color-ink-inverse)',
+    'background: var(--zdp-color-accent-primary-soft)',
+    'border-color: var(--zdp-color-accent-primary-strong)',
+    'color: var(--zdp-color-ink-strong)',
     '@media (forced-colors: active)',
     'border-color: ButtonText',
     '.zdp-locale-switcher__item:focus-visible',
@@ -852,9 +852,9 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
     '.zdp-segmented-control__item:hover:not(:disabled):not([aria-checked=',
     'background: var(--zdp-color-surface-panel)',
     'border-color: transparent',
-    'background: var(--zdp-color-accent-primary)',
-    ':global([data-zdp-theme="dark"]) .zdp-segmented-control__item--selected',
-    'color: var(--zdp-color-ink-inverse)',
+    'background: var(--zdp-color-accent-primary-soft)',
+    'border-color: var(--zdp-color-accent-primary-strong)',
+    'color: var(--zdp-color-ink-strong)',
     '@media (forced-colors: active)',
     'border-color: ButtonText',
     '.zdp-segmented-control__item',
@@ -877,12 +877,12 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
     ['LocaleSwitcher', localeSwitcher],
     ['SegmentedControl', segmentedControl]
   ] satisfies Array<readonly [string, string]>) {
-    for (const forbiddenText of [
-      'border-color: var(--zdp-color-line-strong)',
-      'border-color: var(--zdp-color-accent-primary-strong)'
+    for (const requiredText of [
+      'background: var(--zdp-color-accent-primary-soft)',
+      'color: var(--zdp-color-ink-strong)'
     ]) {
-      if (source.includes(forbiddenText)) {
-        failures.push(`${label} must express hover and selection with surfaces instead of visible borders: ${forbiddenText}.`);
+      if (!source.includes(requiredText)) {
+        failures.push(`${label} must use theme-local selection colors: ${requiredText}.`);
       }
     }
   }

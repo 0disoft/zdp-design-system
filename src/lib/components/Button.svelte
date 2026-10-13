@@ -74,52 +74,38 @@
   }
 
   .zdp-button--primary {
-    background: var(--zdp-color-accent-primary);
+    background: var(--zdp-color-surface-inverse);
     border-color: transparent;
-    color: var(--zdp-color-ink-strong);
+    color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-button--primary:hover:not(:disabled) {
-    background: var(--zdp-color-accent-primary-strong);
+    background: var(--zdp-color-ink-normal);
     border-color: transparent;
+    color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-button--primary:active:not(:disabled) {
-    background: var(--zdp-color-accent-primary-strong);
+    background: var(--zdp-color-ink-normal);
     border-color: transparent;
-  }
-
-  :global([data-zdp-theme="dark"]) .zdp-button--primary {
     color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-button--secondary {
-    background: var(--zdp-color-surface-raised);
-    border-color: transparent;
+    background: var(--zdp-color-surface-panel);
+    border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-button--secondary:hover:not(:disabled) {
-    background: var(--zdp-color-surface-panel);
-    border-color: transparent;
+    background: var(--zdp-color-surface-raised);
+    border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-button--secondary:active:not(:disabled) {
-    background: var(--zdp-color-surface-panel);
-    border-color: transparent;
-  }
-
-  :global([data-zdp-theme="dark"]) .zdp-button--secondary {
     background: var(--zdp-color-surface-raised);
-    border-color: transparent;
-    color: var(--zdp-color-ink-muted);
-  }
-
-  :global([data-zdp-theme="dark"]) .zdp-button--secondary:hover:not(:disabled) {
-    background: var(--zdp-color-surface-panel);
-    border-color: transparent;
-    color: var(--zdp-color-ink-strong);
+    border-color: var(--zdp-color-line-strong);
   }
 
   .zdp-button--danger {
@@ -128,19 +114,7 @@
     color: var(--zdp-color-ink-inverse);
   }
 
-  :global([data-zdp-theme="dark"]) .zdp-button--danger {
-    background: var(--zdp-color-accent-danger);
-    border-color: transparent;
-    color: var(--zdp-color-ink-inverse);
-  }
-
   .zdp-button--danger:hover:not(:disabled) {
-    background: var(--zdp-color-surface-panel);
-    border-color: transparent;
-    color: var(--zdp-color-accent-danger);
-  }
-
-  :global([data-zdp-theme="dark"]) .zdp-button--danger:hover:not(:disabled) {
     background: var(--zdp-color-surface-panel);
     border-color: transparent;
     color: var(--zdp-color-accent-danger);

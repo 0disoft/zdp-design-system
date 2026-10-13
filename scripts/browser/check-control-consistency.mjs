@@ -29,7 +29,27 @@ export async function verifyControlConsistency(page) {
         const disclosure = root.querySelector('.zdp-disclosure');
         const disclosureMark = root.querySelector('.zdp-disclosure__mark');
         const navigation = ['.zdp-tabs__tab', '.zdp-segmented-control__item'].map(selector => measure(root.querySelector(selector)));
+        const reference = document.createElement('span');
+        root.append(reference);
+        const colorsFor = (background, color, border) => {
+          reference.style.background = `var(--zdp-color-${background})`;
+          reference.style.color = `var(--zdp-color-${color})`;
+          reference.style.border = `1px solid var(--zdp-color-${border})`;
+          const style = getComputedStyle(reference);
+          return {background: style.backgroundColor, color: style.color, border: style.borderTopColor};
+        };
+        const expectedPrimary = colorsFor('surface-inverse', 'ink-inverse', 'line-strong');
+        const expectedSecondary = colorsFor('surface-panel', 'ink-strong', 'line-strong');
+        const expectedSelected = colorsFor('accent-primary-soft', 'ink-strong', 'accent-primary-strong');
+        reference.remove();
+        const colors = selector => {
+          const style = getComputedStyle(root.querySelector(selector));
+          return {background: style.backgroundColor, color: style.color, border: style.borderTopColor};
+        };
         return { fields, actions, smallControls, expectedSurface: getComputedStyle(root.querySelector('[data-testid="field-surface-reference"]')).backgroundColor,
+          primary: colors('.zdp-button--primary'), solid: colors('.zdp-icon-button--solid'),
+          secondary: colors('.zdp-button--secondary'), selected: colors('.zdp-segmented-control__item[aria-checked="true"]'),
+          expectedPrimary, expectedSecondary, expectedSelected,
           navigation,
           inset: [endInset(selectRect, arrowRect), endInset(controlRect, markRect),
             endInset(menu.getBoundingClientRect(), menuMark.getBoundingClientRect()),
@@ -41,6 +61,12 @@ export async function verifyControlConsistency(page) {
           nativePickerDisplay: getComputedStyle(root.querySelector('.zdp-select'), '::picker-icon').display };
       });
       const baseline = styles.fields[0];
+      for (const action of [styles.primary, styles.solid]) {
+        assert.equal(action.background, styles.expectedPrimary.background, `${theme}/${direction}: primary surface must resolve in its own theme`);
+        assert.equal(action.color, styles.expectedPrimary.color, `${theme}/${direction}: primary text must resolve in its own theme`);
+      }
+      assert.deepEqual(styles.secondary, styles.expectedSecondary, `${theme}/${direction}: secondary action must use the outlined panel surface`);
+      assert.deepEqual(styles.selected, styles.expectedSelected, `${theme}/${direction}: selected control must use its own theme's soft surface`);
       assert.equal(baseline.background, styles.expectedSurface, 'Field aliases must resolve in the current nested theme');
       for (const field of styles.fields) assert.deepEqual(field, baseline, `${theme}/${direction}: field frame and typography must match`);
       for (const action of styles.actions) {

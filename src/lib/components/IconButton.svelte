@@ -82,18 +82,6 @@
     color: var(--zdp-color-ink-strong);
   }
 
-  :global([data-zdp-theme="dark"]) .zdp-icon-button--ghost {
-    background: transparent;
-    border-color: transparent;
-    color: var(--zdp-color-ink-muted);
-  }
-
-  :global([data-zdp-theme="dark"]) .zdp-icon-button--ghost:hover:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
-    border-color: transparent;
-    color: var(--zdp-color-ink-strong);
-  }
-
   .zdp-icon-button--ghost:active:not(:disabled) {
     background: var(--zdp-color-surface-raised);
     border-color: transparent;
@@ -101,22 +89,20 @@
   }
 
   .zdp-icon-button--solid {
-    background: var(--zdp-color-accent-primary);
+    background: var(--zdp-color-surface-inverse);
     border-color: transparent;
-    color: var(--zdp-color-ink-strong);
+    color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-icon-button--solid:hover:not(:disabled) {
-    background: var(--zdp-color-accent-primary-strong);
+    background: var(--zdp-color-ink-normal);
     border-color: transparent;
+    color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-icon-button--solid:active:not(:disabled) {
-    background: var(--zdp-color-accent-primary-strong);
+    background: var(--zdp-color-ink-normal);
     border-color: transparent;
-  }
-
-  :global([data-zdp-theme="dark"]) .zdp-icon-button--solid {
     color: var(--zdp-color-ink-inverse);
   }
 

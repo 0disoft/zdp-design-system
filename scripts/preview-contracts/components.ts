@@ -501,7 +501,7 @@ if (staticTermTriggerBlock.includes('background: transparent')) {
 const staticBorderlessControlBlocks: Array<readonly [string, string]> = [
   [
     'Button',
-    componentStyle.slice(componentStyle.indexOf('.zdp-button {'), componentStyle.indexOf('.zdp-button:focus-visible'))
+    componentStyle.slice(componentStyle.indexOf('.zdp-button--primary {'), componentStyle.indexOf('.zdp-button--secondary {'))
   ],
   [
     'IconButton',
@@ -513,7 +513,7 @@ const staticBorderlessControlBlocks: Array<readonly [string, string]> = [
 ];
 
 for (const [label, block] of staticBorderlessControlBlocks) {
-  if (!block.includes('border: var(--zdp-control-border-width) solid transparent')) {
+  if (!block.includes('border-color: transparent')) {
     failures.push(`Static ${label} must preserve border geometry without a visible default border.`);
   }
 
@@ -543,8 +543,9 @@ const staticDangerButtonHoverBlock = componentStyle.slice(
   componentStyle.indexOf('.zdp-button--danger:active:not(:disabled)')
 );
 
-if (!staticSecondaryButtonBlock.includes('background: var(--zdp-color-surface-raised)')) {
-  failures.push('Static Button secondary variant must keep a visible tonal surface without relying on a border.');
+if (!staticSecondaryButtonBlock.includes('background: var(--zdp-color-surface-panel)') ||
+    !staticSecondaryButtonBlock.includes('border-color: var(--zdp-color-line-strong)')) {
+  failures.push('Static Button secondary variant must use the Quiet Ivory panel surface and a visible outline.');
 }
 
 for (const requiredText of ['background: var(--zdp-color-accent-danger)', 'color: var(--zdp-color-ink-inverse)']) {
@@ -583,7 +584,7 @@ for (const [label, selector] of [
 
   for (const requiredText of [
     'background: var(--zdp-color-surface-panel)',
-    'background: var(--zdp-color-accent-primary)',
+    'background: var(--zdp-color-accent-primary-soft)',
     'border-color: transparent'
   ]) {
     if (!interactionBlock.includes(requiredText)) {
@@ -591,12 +592,12 @@ for (const [label, selector] of [
     }
   }
 
-  for (const forbiddenText of [
-    'border-color: var(--zdp-color-line-strong)',
-    'border-color: var(--zdp-color-accent-primary-strong)'
+  for (const requiredText of [
+    'border-color: var(--zdp-color-accent-primary-strong)',
+    'color: var(--zdp-color-ink-strong)'
   ]) {
-    if (interactionBlock.includes(forbiddenText)) {
-      failures.push(`Static ${label} must not use visible borders for hover or selection: ${forbiddenText}.`);
+    if (!interactionBlock.includes(requiredText)) {
+      failures.push(`Static ${label} must use the shared selection colors: ${requiredText}.`);
     }
   }
 }

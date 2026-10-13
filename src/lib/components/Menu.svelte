@@ -436,10 +436,10 @@ stability=contract
 
   .zdp-menu__trigger {
     align-items: center;
-    background: var(--zdp-color-surface-raised);
-    border: var(--zdp-control-border-width) solid transparent;
+    background: var(--zdp-color-surface-panel);
+    border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
     border-radius: var(--zdp-control-radius);
-    color: var(--zdp-color-ink-normal);
+    color: var(--zdp-color-ink-strong);
     cursor: pointer;
     display: inline-flex;
     font-family: var(--zdp-font-family-sans);
@@ -462,8 +462,8 @@ stability=contract
   }
 
   .zdp-menu__trigger:hover {
-    background: var(--zdp-color-accent-primary-soft);
-    border-color: transparent;
+    background: var(--zdp-color-surface-raised);
+    border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);
   }
 
@@ -508,7 +508,7 @@ stability=contract
 
   .zdp-menu__panel {
     background: var(--zdp-color-surface-panel);
-    border: var(--zdp-control-border-width) solid transparent;
+    border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
     border-radius: var(--zdp-control-radius);
     color: var(--zdp-color-ink-normal);
     display: grid;

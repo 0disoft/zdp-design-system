@@ -179,14 +179,9 @@
 
   .zdp-segmented-control__item--selected,
   .zdp-segmented-control__item[aria-checked='true'] {
-    background: var(--zdp-color-accent-primary);
-    border-color: transparent;
+    background: var(--zdp-color-accent-primary-soft);
+    border-color: var(--zdp-color-accent-primary-strong);
     color: var(--zdp-color-ink-strong);
-  }
-
-  :global([data-zdp-theme="dark"]) .zdp-segmented-control__item--selected,
-  :global([data-zdp-theme="dark"]) .zdp-segmented-control__item[aria-checked='true'] {
-    color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-segmented-control__item:disabled {
