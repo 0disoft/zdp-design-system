@@ -1452,6 +1452,7 @@
 }
 
 .zdp-popover__trigger {
+  column-gap: var(--zdp-space-2);
   display: inline-flex;
   min-width: 0;
 }
@@ -1527,6 +1528,23 @@
 .zdp-popover--left.zdp-popover--align-center .zdp-popover__panel {
   top: 50%;
   translate: 0 -50%;
+}
+
+.zdp-popover__positioner {
+  z-index: var(--zdp-layer-floating);
+}
+
+.zdp-popover .zdp-popover__panel[data-zdp-positioned] {
+  box-sizing: border-box;
+  bottom: auto;
+  left: auto;
+  max-block-size: min(24rem, var(--zdp-popover-available-height, calc(var(--zdp-viewport-block) - var(--zdp-space-8))));
+  max-inline-size: min(22rem, var(--zdp-popover-available-width, calc(var(--zdp-viewport-inline) - var(--zdp-space-6))));
+  min-inline-size: min(12rem, var(--zdp-popover-available-width, calc(var(--zdp-viewport-inline) - var(--zdp-space-6))));
+  position: static;
+  right: auto;
+  top: auto;
+  translate: none;
 }
 
 .zdp-share-action .zdp-share-action__tooltip {

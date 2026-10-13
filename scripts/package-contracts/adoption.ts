@@ -53,7 +53,7 @@ async function checkInteractivePrimitiveAuditContract(): Promise<void> {
     '`Menu`와 `Popover`는 가장 높은 위험군이다.',
     '| Menu | Bits UI DropdownMenu adapter | High |',
     '| Popover | Bits UI Popover adapter | High |',
-    '모바일 keyboard, 긴 옵션, async option, grouped option, virtualized list, collision 반복 요구는 `Menu`, `Popover`, `Combobox` 안에서 계속 키우지 않고 `Sheet` flow 또는 headless spike로 보낸다.',
+    '모바일 keyboard, 긴 옵션, async option, grouped option, virtualized list, 복잡한 collision 요구는 `Menu`, `Popover`, `Combobox` 안에서 계속 키우지 않고 `Sheet` flow 또는 headless spike로 보낸다.',
     'InteractionProbe는 ArrowDown open, roving focus, disabled skip, Home/End, Escape close, focus return, click select를 계속 확인한다.',
     'InteractionProbe와 Chromium gate는 ArrowDown open, disabled skip, Enter select, Escape close, IME composition 보호, listbox label, selected value sync를 계속 확인한다.',
     'InteractionProbe는 trigger focus 유지, Escape close, focus return, outside click close를 계속 확인한다.',

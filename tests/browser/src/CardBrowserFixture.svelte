@@ -23,6 +23,7 @@
   import ActionLifecycleFixture from './ActionLifecycleFixture.svelte';
   import EmptyTooltipFixture from './EmptyTooltipFixture.svelte';
   import PopoverGeometryFixture from './PopoverGeometryFixture.svelte';
+  import PopoverEdgesFixture from './PopoverEdgesFixture.svelte';
   import TableInteractionFixture from './TableInteractionFixture.svelte';
   import DynamicSelectionFixture from './DynamicSelectionFixture.svelte';
   import DynamicTabsFixture from './DynamicTabsFixture.svelte';
@@ -472,6 +473,7 @@
   <DynamicPaginationFixture />
   <EmptyTooltipFixture />
   <PopoverGeometryFixture />
+  <PopoverEdgesFixture />
   <TableInteractionFixture />
   <DynamicSelectionFixture />
   <DynamicTabsFixture />

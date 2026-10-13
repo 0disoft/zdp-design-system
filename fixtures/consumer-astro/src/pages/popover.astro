@@ -5,7 +5,11 @@ import PopoverIsland from '../PopoverIsland.svelte';
 <html lang="en">
   <head><meta charset="UTF-8" /><title>Popover island consumer</title></head>
   <body>
-    <PopoverIsland client:load />
+    <div class="popover-island-positioner"><PopoverIsland client:load /></div>
     <button type="button">Outside island</button>
   </body>
 </html>
+
+<style>
+  .popover-island-positioner { position: fixed; right: 12px; bottom: 12px; }
+</style>

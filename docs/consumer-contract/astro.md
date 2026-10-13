@@ -63,3 +63,5 @@ Menu `items`의 `onclick` 같은 함수는 Astro frontmatter prop으로 직렬�
 packed Astro consumer fixture는 `static`, `menu`, `popover` 3페이지를 포함하고 기존 정적 경로를 유지한다. `menu`와 `popover` 페이지는 Svelte island 안에서 `zdp-design-system`의 `Menu`와 `Popover`를 mount하고, 공개 props, `trigger` slot과 default legacy slot, `.zdp-menu*`/`.zdp-popover*` class, token은 그대로 쓴다. 정적 HTML/CSS 경로는 기존대로 유지하고, Popover의 변경 콜백이 변경당 한 번만 호출되는지도 이 fixture에서 확인한다.
 
 상위 개요와 금지 경계는 [docs/CONSUMER_CONTRACT.md](../CONSUMER_CONTRACT.md)를 따른다.
+
+Menu와 Popover의 자동 배치는 Svelte island가 hydration된 뒤 동작한다. 정적 HTML/CSS 경로와 공개 export는 그대로 유지한다. Popover는 소비처가 만든 trigger slot을 기준으로 화면 경계에서 방향과 위치를 보정하고, 긴 내용은 가용 공간 안에서 스크롤한다.

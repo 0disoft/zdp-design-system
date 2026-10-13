@@ -38,6 +38,9 @@
   }: Props = $props();
 
   let rootElement = $state<HTMLElement | null>(null);
+  let triggerElement = $state<HTMLElement | null>(null);
+  let floatingGap = $state(0);
+  let floatingDirection = $state<'ltr' | 'rtl'>('ltr');
   let previousFocusElement = $state<HTMLElement | null>(null);
   let knownOpenState = $state(false);
   let restoreFocusAfterClose = $state<boolean | null>(null);
@@ -46,6 +49,15 @@
   const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
   const triggerId = $derived(`${resolvedIdPrefix}-trigger`);
   const panelId = $derived(`${resolvedIdPrefix}-panel`);
+
+  $effect(() => {
+    if (!open || !triggerElement) return;
+    const style = triggerElement.ownerDocument.defaultView?.getComputedStyle(triggerElement);
+    if (!style) return;
+    // Resolve rem-based spacing through CSS, as in Menu.
+    floatingGap = Number.parseFloat(style.columnGap) || 0;
+    floatingDirection = style.direction === 'rtl' ? 'rtl' : 'ltr';
+  });
 
   $effect.pre(() => {
     const document = open ? rootElement?.ownerDocument : null;
@@ -162,14 +174,24 @@
   data-open={open ? 'true' : 'false'}
   bind:this={rootElement}
 >
-  <span class="zdp-popover__trigger" id={triggerId}>
+  <span class="zdp-popover__trigger" id={triggerId} bind:this={triggerElement}>
     <!-- svelte-ignore slot_element_deprecated legacy named slot contract remains public -->
     <slot name="trigger" open={open} toggle={toggle} close={close} panelId={panelId} triggerId={triggerId} />
   </span>
   {#if open}
     <!-- ZDP owns shared dismissal ordering and custom slotted triggers. -->
-    <BitsPopover.ContentStatic
+    <BitsPopover.Content
       id={panelId}
+      customAnchor={triggerElement}
+      side={placement}
+      {align}
+      sideOffset={floatingGap}
+      collisionPadding={floatingGap}
+      avoidCollisions={true}
+      sticky="always"
+      strategy="fixed"
+      dir={floatingDirection}
+      style="--zdp-popover-available-width:var(--bits-popover-content-available-width);--zdp-popover-available-height:var(--bits-popover-content-available-height);"
       trapFocus={false}
       preventScroll={false}
       escapeKeydownBehavior="ignore"
@@ -178,11 +200,12 @@
       onCloseAutoFocus={(event) => event.preventDefault()}
       onFocusOutside={(event) => event.preventDefault()}
     >
-    {#snippet child({ props })}
+    {#snippet child({ props, wrapperProps })}
+    <div {...wrapperProps} class="zdp-popover__positioner">
     <div
       {...props}
-      style={undefined}
       class="zdp-popover__panel"
+      data-zdp-positioned
       id={panelId}
       role={role ?? undefined}
       aria-labelledby={labelledBy ?? triggerId}
@@ -193,8 +216,9 @@
       <!-- svelte-ignore slot_element_deprecated legacy default slot contract remains public -->
       <slot open={open} close={close} panelId={panelId} triggerId={triggerId} />
     </div>
+    </div>
     {/snippet}
-    </BitsPopover.ContentStatic>
+    </BitsPopover.Content>
   {/if}
 </span>
 </BitsPopover.Root>
@@ -209,6 +233,7 @@
 
   .zdp-popover__trigger {
     display: inline-flex;
+    column-gap: var(--zdp-space-2);
     min-width: 0;
     -webkit-user-select: none;
     user-select: none;
@@ -282,5 +307,22 @@
   .zdp-popover--left.zdp-popover--align-center .zdp-popover__panel {
     top: 50%;
     translate: 0 -50%;
+  }
+
+  .zdp-popover__positioner {
+    z-index: var(--zdp-layer-floating);
+  }
+
+  .zdp-popover .zdp-popover__panel[data-zdp-positioned] {
+    box-sizing: border-box;
+    bottom: auto;
+    left: auto;
+    max-block-size: min(24rem, var(--zdp-popover-available-height, calc(var(--zdp-viewport-block) - var(--zdp-space-8))));
+    max-inline-size: min(22rem, var(--zdp-popover-available-width, calc(var(--zdp-viewport-inline) - var(--zdp-space-6))));
+    min-inline-size: min(12rem, var(--zdp-popover-available-width, calc(var(--zdp-viewport-inline) - var(--zdp-space-6))));
+    position: static;
+    right: auto;
+    top: auto;
+    translate: none;
   }
 </style>

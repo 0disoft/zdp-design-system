@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { verifyPopoverEdgeContracts } from './check-popover-edges.mjs';
 
 export async function verifyPopoverGeometryContracts(page) {
   const fixture = page.getByTestId('popover-geometry');
@@ -6,6 +7,17 @@ export async function verifyPopoverGeometryContracts(page) {
     for (const align of ['start', 'center', 'end']) {
       await fixture.getByTestId(`geometry-${placement}-${align}`).evaluate((element) => element.click());
       await fixture.getByTestId('geometry-trigger').click();
+      await page.waitForFunction(({ placement, align }) => {
+        const trigger = document.querySelector('[data-testid="popover-geometry"] .zdp-popover__trigger')?.getBoundingClientRect();
+        const panel = document.querySelector('[data-testid="popover-geometry"] .zdp-popover__panel');
+        const rect = panel?.getBoundingClientRect();
+        if (!trigger || !rect) return false;
+        const gap = placement === 'right' ? rect.left - trigger.right
+          : placement === 'left' ? trigger.left - rect.right
+          : placement === 'top' ? trigger.top - rect.bottom : rect.top - trigger.bottom;
+        return panel?.dataset.side === placement && panel.dataset.align === align &&
+          gap > 0;
+      }, { placement, align });
       const { trigger, panel } = await fixture.evaluate((element) => ({
         trigger: element.querySelector('.zdp-popover').getBoundingClientRect().toJSON(),
         panel: element.querySelector('.zdp-popover__panel').getBoundingClientRect().toJSON()
@@ -33,4 +45,5 @@ export async function verifyPopoverGeometryContracts(page) {
     assert.equal(await panel.getAttribute('aria-describedby'), 'geometry-description');
     await page.keyboard.press('Escape');
   }
+  await verifyPopoverEdgeContracts(page);
 }
