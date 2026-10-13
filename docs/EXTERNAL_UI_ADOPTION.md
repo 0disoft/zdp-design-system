@@ -5,7 +5,7 @@
 
 ## 원칙
 
-- 외부 UI 라이브러리는 ZDP의 dependency source가 아니라 검증 source다. 이는 기본 원칙이고, 명시적으로 채택한 `Menu`와 `Popover`만 예외로 runtime dependency다.
+- 외부 UI 라이브러리는 ZDP의 dependency source가 아니라 검증 source다. 명시적으로 채택한 `Menu`와 `Popover`의 Bits UI, `Combobox` 위치 계산의 Floating UI DOM API는 runtime dependency 예외다.
 - 고난도 headless primitive는 public API와 styling contract가 ZDP 안에 갇혀 있다는 조건에서 내부 구현 의존성으로 허용할 수 있다.
 - Tailwind, UnoCSS, registry, `cn()` helper, class merge helper, 외부 theme preset은 ZDP core public contract로 새지 않는다.
 - ZDP public component props, DOM exposure policy, CSS class, token mapping, Storybook coverage, consumer fixture는 ZDP가 소유한다.
@@ -78,6 +78,10 @@ Popover는 같은 등급으로 Bits UI `Popover`의 `Root`와 `Content`를 ZDP a
 - Bits 중복 dismissal은 끄고(`escapeKeydownBehavior`/`interactOutsideBehavior`=`ignore`) 기존 ZDP shared dismissal stack·Escape 순서와 `closeOnEscape`/`closeOnOutside` opt-out을 그대로 쓴다. focus가 밖으로 이동하는 것만으로는 닫지 않고 scroll lock도 걸지 않는다.
 - `placement`와 `align`은 선호 배치다. 공간이 부족하면 flip/shift하고 긴 내용은 가용 폭·높이에 맞춰 스크롤한다. ZDP 토큰 간격을 쓰며 automatic portal 없이 기존 DOM 안에 내부 positioner만 추가한다.
 - 바깥 닫힘 시점은 Menu가 pointerdown, Popover는 포인터 완료 후 click으로 서로 다르고, Popover는 기존 시점을 유지한다.
+
+### Combobox 위치 계산
+
+Combobox 위치 계산은 별도 내부 모듈 `combobox-floating.ts`에서 Floating UI DOM API를 쓴다(2026-10-13, 설치본 1.8.0, 의존성 범위 `1`). 검색·선택·ARIA·IME·폼 상태와 공개 API는 기존 ZDP 구현이 소유한다. `offset`, `flip`, `shift`, `size`, `autoUpdate`로 입력창 폭, 가용 높이, 스크롤·리사이즈를 처리하고 unmount에서 observer/listener를 정리한다. 자동 portal 없이 기존 DOM과 정적 CSS 경로를 유지한다.
 
 ### Skeleton / Flowbite Svelte / daisyUI
 

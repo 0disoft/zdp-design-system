@@ -5,6 +5,7 @@
     "": {
       "name": "zdp-design-system",
       "dependencies": {
+        "@floating-ui/dom": "1",
         "bits-ui": "2",
       },
       "devDependencies": {

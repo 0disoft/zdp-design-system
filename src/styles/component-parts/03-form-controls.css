@@ -994,6 +994,16 @@
     min-width: 0;
   }
 
+  .zdp-combobox__panel[data-zdp-floating] {
+    box-sizing: border-box;
+    inline-size: var(--zdp-combobox-panel-width, 100%);
+    left: 0;
+    max-block-size: min(18rem, var(--zdp-combobox-available-height, calc(var(--zdp-viewport-block) - var(--zdp-space-8))));
+    position: fixed;
+    top: 0;
+    transform: translate(0, -200%);
+  }
+
   .zdp-combobox__option {
     align-items: start;
     background: transparent;

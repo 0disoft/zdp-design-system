@@ -17,6 +17,7 @@ import { verifyDisclosureFocusContracts } from './browser/check-disclosure-focus
 import { verifyPopoverFocusContracts } from './browser/check-popover-focus.mjs';
 import { verifyControlConsistency } from './browser/check-control-consistency.mjs';
 import { verifyPopoverGeometryContracts } from './browser/check-popover-geometry.mjs';
+import { verifyComboboxGeometryContracts } from './browser/check-combobox-geometry.mjs';
 import { verifyLocalizedSortContracts, verifySortNameContracts, verifyTableDensityContracts } from './browser/check-table-interaction.mjs';
 import { verifyCommandFieldContracts } from './browser/check-command-field.mjs';
 import { verifyMovedFormResetContracts, verifyReassociatedFormResetContracts, verifyShadowFormResetContracts } from './browser/check-shadow-form-reset.mjs';
@@ -139,6 +140,7 @@ try {
     await verifyComboboxSelectionContracts(page);
     await verifyComboboxEditingContracts(page);
     await verifyCommandFieldContracts(page);
+    await verifyComboboxGeometryContracts(page);
   } else if (process.argv.includes('--popover')) {
     await verifyOverlayContracts(page);
     await verifyPopoverGeometryContracts(page);
@@ -167,6 +169,7 @@ try {
   await verifyAsyncSelectResetContracts(page);
   await verifyComboboxSelectionContracts(page);
   await verifyComboboxEditingContracts(page);
+  await verifyComboboxGeometryContracts(page);
   await verifyConfirmCompositionContracts(page);
   await verifyConfirmRepeatContracts(page);
   await verifyConfirmSlideThresholdContracts(page);

@@ -1,0 +1,14 @@
+---
+import 'zdp-design-system/tokens.css';
+import ComboboxIsland from '../ComboboxIsland.svelte';
+---
+<html lang="en">
+  <head><meta charset="UTF-8" /><title>Combobox island consumer</title></head>
+  <body>
+    <div class="combobox-island-positioner"><ComboboxIsland client:load /></div>
+    <button type="button">Outside island</button>
+  </body>
+</html>
+<style>
+  .combobox-island-positioner { position: fixed; right: 12px; bottom: 12px; width: 260px; }
+</style>

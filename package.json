@@ -166,6 +166,7 @@
     "svelte": "^5.56.0"
   },
   "dependencies": {
+    "@floating-ui/dom": "1",
     "bits-ui": "2"
   }
 }

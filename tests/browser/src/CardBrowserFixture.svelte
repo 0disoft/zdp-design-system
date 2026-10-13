@@ -24,6 +24,7 @@
   import EmptyTooltipFixture from './EmptyTooltipFixture.svelte';
   import PopoverGeometryFixture from './PopoverGeometryFixture.svelte';
   import PopoverEdgesFixture from './PopoverEdgesFixture.svelte';
+  import ComboboxEdgesFixture from './ComboboxEdgesFixture.svelte';
   import TableInteractionFixture from './TableInteractionFixture.svelte';
   import DynamicSelectionFixture from './DynamicSelectionFixture.svelte';
   import DynamicTabsFixture from './DynamicTabsFixture.svelte';
@@ -474,6 +475,7 @@
   <EmptyTooltipFixture />
   <PopoverGeometryFixture />
   <PopoverEdgesFixture />
+  <ComboboxEdgesFixture />
   <TableInteractionFixture />
   <DynamicSelectionFixture />
   <DynamicTabsFixture />

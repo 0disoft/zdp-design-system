@@ -60,8 +60,10 @@ Svelte island 없이 Astro에서 공유 아이콘 shape만 필요하면 `zdp-des
 Astro 페이지는 Svelte island가 필요한 부분에서만 Svelte 컴포넌트를 가져온다.
 인터랙티브 Menu가 필요한 페이지는 `@astrojs/svelte`로 Svelte island을 만들고 그 안에서 `zdp-design-system`의 `Menu` 컴포넌트를 쓴다. 기본 CSS와 framework-neutral DOM controller 표면(Astro plain HTML/CSS, `zdp-design-system/split-pane`)은 `bits-ui`나 Svelte를 import할 수 없으므로 그 경로로는 Menu의 keyboard·focus 상호작용을 붙이지 않는다. 정적 마크업에는 `.zdp-menu`, `.zdp-menu__trigger`, `.zdp-menu__panel`, `.zdp-menu__item` utility만 쓴다.
 Menu `items`의 `onclick` 같은 함수는 Astro frontmatter prop으로 직렬화할 수 없어서, 페이지가 아니라 그 island의 local Svelte wrapper 안에서 만든다. 항목 노출, 권한, 라우팅 판단은 소비처가 계속 소유한다.
-packed Astro consumer fixture는 `static`, `menu`, `popover` 3페이지를 포함하고 기존 정적 경로를 유지한다. `menu`와 `popover` 페이지는 Svelte island 안에서 `zdp-design-system`의 `Menu`와 `Popover`를 mount하고, 공개 props, `trigger` slot과 default legacy slot, `.zdp-menu*`/`.zdp-popover*` class, token은 그대로 쓴다. 정적 HTML/CSS 경로는 기존대로 유지하고, Popover의 변경 콜백이 변경당 한 번만 호출되는지도 이 fixture에서 확인한다.
+packed Astro consumer fixture는 `static`, `menu`, `popover`, `combobox` 4페이지를 포함하고 기존 정적 경로를 유지한다. `menu`와 `popover` 페이지는 Svelte island 안에서 `zdp-design-system`의 `Menu`와 `Popover`를 mount하고, 공개 props, `trigger` slot과 default legacy slot, `.zdp-menu*`/`.zdp-popover*` class, token은 그대로 쓴다. 정적 HTML/CSS 경로는 기존대로 유지하고, Popover의 변경 콜백이 변경당 한 번만 호출되는지도 이 fixture에서 확인한다.
 
 상위 개요와 금지 경계는 [docs/CONSUMER_CONTRACT.md](../CONSUMER_CONTRACT.md)를 따른다.
 
 Menu와 Popover의 자동 배치는 Svelte island가 hydration된 뒤 동작한다. 정적 HTML/CSS 경로와 공개 export는 그대로 유지한다. Popover는 소비처가 만든 trigger slot을 기준으로 화면 경계에서 방향과 위치를 보정하고, 긴 내용은 가용 공간 안에서 스크롤한다.
+
+Combobox는 `zdp-design-system/components/Combobox`를 Svelte island 안에서 사용한다. hydration 후 화면 경계에 따라 목록을 위·아래로 배치하고 가용 높이를 제한한다. 소비처의 local Svelte wrapper가 option source와 filtering을 소유하며, 정적 HTML/CSS 경로는 JavaScript 위치 계산을 요구하지 않는다.

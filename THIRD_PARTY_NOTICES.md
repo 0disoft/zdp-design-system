@@ -23,7 +23,8 @@ APIs, and their types, prop names, class names, and stores are not part of the p
 
 | Source | Version | License | Copyright | Adoption Grade | Local Usage |
 | --- | --- | --- | --- | --- | --- |
-| [Bits UI](https://github.com/huntabyte/bits-ui) | 2.19.5 | MIT | Copyright (c) 2023 Hunter Johnston | Runtime Dependency | `src/lib/components/Menu.svelte` uses Bits UI `DropdownMenu` and `src/lib/components/Popover.svelte` uses Bits UI `Popover` (`ContentStatic` included) behind ZDP adapters. |
+| [Bits UI](https://github.com/huntabyte/bits-ui) | 2.19.5 | MIT | Copyright (c) 2023 Hunter Johnston | Runtime Dependency | `src/lib/components/Menu.svelte` uses Bits UI `DropdownMenu` and `src/lib/components/Popover.svelte` uses Bits UI `Popover` (`Content`) behind ZDP adapters. |
+| [Floating UI](https://github.com/floating-ui/floating-ui) | 1.8.0 | MIT | Copyright (c) 2021-present Floating UI contributors | Runtime Dependency | `src/lib/combobox-floating.ts` uses the public DOM positioning API behind the existing Combobox contract. No external source is copied. |
 
 The installed MIT license text for the 2.19.5 snapshot is read from `node_modules/bits-ui/LICENSE` and is not
 modified. `docs/EXTERNAL_UI_ADOPTION.md` owns the runtime dependency adoption criteria.

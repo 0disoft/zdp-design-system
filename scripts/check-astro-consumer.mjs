@@ -36,6 +36,8 @@ try {
   const staticHtml = await readFile(join(dist, 'static/index.html'), 'utf8');
   const menuHtml = await readFile(join(dist, 'menu/index.html'), 'utf8');
   const popoverHtml = await readFile(join(dist, 'popover/index.html'), 'utf8');
+  const comboboxHtml = await readFile(join(dist, 'combobox/index.html'), 'utf8');
+  assert.ok(comboboxHtml.includes('<astro-island') && comboboxHtml.includes('Astro team'), 'Combobox server-renders and hydrates through its Svelte island');
   assert.ok(!staticHtml.includes('<astro-island'), 'Static CSS/controller page must not hydrate Svelte');
   assert.ok(menuHtml.includes('<astro-island'), 'Menu hydrates only through its Svelte island');
   assert.ok(menuHtml.includes('Astro actions'), 'Menu trigger is server rendered');
@@ -132,7 +134,28 @@ try {
   assert.equal(await popover.count(), 0);
   assert.equal(await page.getByTestId('popover-events').textContent(), 'true,false,true,false,true,false', 'Popover callbacks must fire once per internal state change');
   assert.deepEqual(errors, [], 'Astro island must hydrate without runtime errors');
-  console.log('Packed Astro static CSS/controller and hydrated Menu/Popover consumers passed.');
+  await page.goto(`http://127.0.0.1:${server.port}/combobox/`);
+  await page.waitForSelector('astro-island:not([ssr])');
+  const choice = page.getByRole('combobox', { name: 'Astro team', exact: true });
+  await choice.click();
+  await page.waitForFunction(() => {
+    const panel = document.querySelector('.zdp-combobox__panel');
+    const rect = panel?.getBoundingClientRect();
+    return panel?.dataset.side === 'top' && rect.left >= 7 && rect.top >= 7 &&
+      rect.right <= innerWidth - 7 && rect.bottom <= innerHeight - 7;
+  });
+  await choice.press('End');
+  await choice.press('Enter');
+  assert.equal(await choice.inputValue(), 'Team 40');
+  assert.equal(await choice.evaluate(element => new FormData(element.form).get('team')), 'team-39');
+  await choice.fill('Team 3');
+  await page.getByRole('option', { name: 'Team 3', exact: true }).click();
+  assert.equal(await choice.evaluate(element => new FormData(element.form).get('team')), 'team-2');
+  await choice.fill('');
+  await page.getByRole('button', { name: 'Outside island', exact: true }).click();
+  assert.equal(await page.getByRole('listbox').count(), 0);
+  assert.deepEqual(errors, [], 'Astro islands must not emit browser errors');
+  console.log('Packed Astro static CSS/controller and hydrated Menu/Popover/Combobox consumers passed.');
 } finally {
   await browser?.close();
   server?.stop(true);

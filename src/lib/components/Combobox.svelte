@@ -5,6 +5,7 @@
   import { toZdpDomId, toZdpDomKey } from '../dom-id';
   import { createZdpDismissLayer } from '../dismiss-layer';
   import { syncZdpFormReset } from '../form-reset';
+  import { positionZdpComboboxPanel } from '../combobox-floating';
 
   type DescribedBy = string | readonly string[] | null;
 
@@ -77,6 +78,7 @@
 
   let rootElement = $state<HTMLElement | null>(null);
   let inputElement = $state<HTMLInputElement | null>(null);
+  let controlElement = $state<HTMLElement | null>(null);
   let open = $state(false);
   let activeOptionId = $state<string | null>(null);
   let lastSyncedValue = $state(value);
@@ -367,7 +369,16 @@
     const optionElement = Array.from(
       rootElement.querySelectorAll<HTMLElement>('.zdp-combobox__option')
     ).find((element) => element.id === optionId);
-    optionElement?.scrollIntoView({ block: 'nearest' });
+    const panel = optionElement?.closest<HTMLElement>('.zdp-combobox__panel');
+    if (!optionElement || !panel) return;
+    const optionRect = optionElement.getBoundingClientRect();
+    const panelRect = panel.getBoundingClientRect();
+    if (optionRect.top < panelRect.top) panel.scrollTop -= panelRect.top - optionRect.top;
+    else if (optionRect.bottom > panelRect.bottom) panel.scrollTop += optionRect.bottom - panelRect.bottom;
+  }
+
+  function handlePanelPosition(): void {
+    if (activeOptionDomId) void scrollActiveOptionIntoView(activeOptionDomId);
   }
 
   function syncInputValidity(element: HTMLInputElement | null, missing: boolean, message: string): void {
@@ -437,7 +448,7 @@
     </label>
   {/if}
 
-  <span class="zdp-combobox__control">
+  <span class="zdp-combobox__control" bind:this={controlElement}>
     <input
       class="zdp-combobox__input"
       id={inputId}
@@ -485,7 +496,8 @@
   </span>
 
   {#if open}
-    <span class="zdp-combobox__panel">
+    <span class="zdp-combobox__panel" data-zdp-floating
+      use:positionZdpComboboxPanel={{ anchor: controlElement, gapSource: rootElement, onPosition: handlePanelPosition }}>
       {#if hasOptions}
         <span class="zdp-combobox__listbox" id={listboxId} role="listbox" aria-label={resolvedListboxLabel}>
           {#each options as option (option.id)}
@@ -716,6 +728,16 @@
     display: grid;
     gap: var(--zdp-space-1);
     min-width: 0;
+  }
+
+  .zdp-combobox__panel[data-zdp-floating] {
+    box-sizing: border-box;
+    inline-size: var(--zdp-combobox-panel-width, 100%);
+    left: 0;
+    max-block-size: min(18rem, var(--zdp-combobox-available-height, calc(var(--zdp-viewport-block) - var(--zdp-space-8))));
+    position: fixed;
+    top: 0;
+    transform: translate(0, -200%);
   }
 
   .zdp-combobox__option {
