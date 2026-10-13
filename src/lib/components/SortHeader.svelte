@@ -90,7 +90,7 @@
 
   .zdp-sort-header:hover:not(:disabled) {
     background: var(--zdp-color-surface-panel);
-    border-color: var(--zdp-color-line-strong);
+    border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 

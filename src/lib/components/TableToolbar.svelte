@@ -112,7 +112,7 @@
   .zdp-table-toolbar {
     align-items: center;
     background: var(--zdp-color-surface-panel);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+    border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-normal);

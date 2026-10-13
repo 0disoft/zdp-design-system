@@ -38,7 +38,7 @@
   .zdp-toast {
     align-items: start;
     background: var(--zdp-color-surface-panel);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
+    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-normal);
@@ -96,7 +96,7 @@
     align-items: center;
     align-self: start;
     background: transparent;
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+    border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     color: var(--zdp-color-ink-strong);
     cursor: pointer;
@@ -120,7 +120,7 @@
 
   .zdp-toast__body :global(.zdp-toast__action:hover) {
     background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    border-color: transparent;
   }
 
   .zdp-toast__body :global(.zdp-toast__action:focus-visible) {
@@ -150,7 +150,7 @@
 
   .zdp-toast__close:hover {
     background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
@@ -161,7 +161,7 @@
   }
 
   .zdp-toast--info .zdp-toast__mark {
-    background: var(--zdp-color-accent-primary);
+    background: var(--zdp-color-accent-primary-strong);
   }
 
   .zdp-toast--success .zdp-toast__mark {
@@ -170,10 +170,6 @@
 
   .zdp-toast--warning .zdp-toast__mark {
     background: var(--zdp-color-accent-warning);
-  }
-
-  .zdp-toast--danger {
-    border-color: var(--zdp-color-accent-danger);
   }
 
   .zdp-toast--danger .zdp-toast__mark {

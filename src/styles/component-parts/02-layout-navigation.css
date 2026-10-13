@@ -241,7 +241,7 @@
 
 .zdp-inline-code {
   background: var(--zdp-color-surface-raised);
-  border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+  border: var(--zdp-control-border-width) solid transparent;
   border-radius: var(--zdp-radius-sm);
   box-decoration-break: clone;
   color: var(--zdp-color-ink-strong);
@@ -311,8 +311,8 @@
 }
 
 .zdp-code-block__copy {
-  background: var(--zdp-color-surface-panel);
-  border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+  background: transparent;
+  border: var(--zdp-control-border-width) solid transparent;
   border-radius: var(--zdp-control-radius);
   color: var(--zdp-color-ink-strong);
   cursor: pointer;
@@ -325,8 +325,8 @@
 }
 
 .zdp-code-block__copy:hover {
-  background: var(--zdp-color-surface-raised);
-  border-color: var(--zdp-color-line-strong);
+  background: var(--zdp-color-accent-primary-soft);
+  border-color: transparent;
 }
 
 .zdp-code-block__copy:focus-visible {

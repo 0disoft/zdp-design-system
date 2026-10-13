@@ -24,7 +24,7 @@ for (const requiredText of [
   '--zdp-confirm-action-progress: 0',
   'width: calc(var(--zdp-confirm-action-progress) * 100%)',
   'touch-action: none',
-  'background: var(--zdp-color-accent-primary)',
+  'background: var(--zdp-color-accent-primary-strong)',
   'background: var(--zdp-color-accent-danger)',
   'opacity: 0.24',
   '.zdp-button--primary:hover:not(:disabled)',

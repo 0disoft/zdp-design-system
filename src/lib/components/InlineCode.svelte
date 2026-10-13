@@ -14,7 +14,7 @@
 <style>
   .zdp-inline-code {
     background: var(--zdp-color-surface-raised);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+    border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-radius-sm);
     box-decoration-break: clone;
     color: var(--zdp-color-ink-strong);

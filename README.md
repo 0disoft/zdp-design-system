@@ -609,6 +609,7 @@ preview/index.html
 - 주 액션(primary Button, solid IconButton)은 `surface-inverse` 배경 + `ink-inverse` 글자를 쓰고 hover/active는 `ink-normal` 배경으로 이동한다. Secondary Button은 panel surface와 `line-strong` outline을 기본으로 쓰고 hover/active는 raised surface로 구분한다. ghost IconButton은 투명 surface + `ink-normal` 글자를 기본으로 쓴다. resting border가 없는 나머지 컨트롤은 레이아웃 보존용 투명 border slot을 유지한다.
 - Focus는 `focus.surface` outline + `focus.line` border로 표시한다.
 - Select·검색 입력·Menu 트리거와 펼친 패널은 같은 panel 표면과 1px `line-strong` 테두리를 쓴다. ConfirmAction은 raised 표면과 투명 border slot을 유지한다. keyboard focus와 forced-colors에서는 outline 또는 system border로 현재 위치를 표시한다.
+- 복사·정렬·알림 닫기 버튼은 마우스를 올려도 테두리 없이 배경색으로 반응하고, 키보드 포커스에서 `focus.line` 테두리와 outline으로 위치를 표시한다. TableToolbar는 외곽 테두리를 투명하게 두고 표 자체의 외곽선과 셀 구분선은 유지한다.
 
 **Radius**
 - controls (Button, Input 등): `0.375rem`
@@ -626,6 +627,7 @@ preview/index.html
 - `focus.surface/text/line`은 접근성 기능색. 브랜드 장식색·hover 색으로 재사용 금지.
 - `selection.surface/text`는 드래그 선택 전용. focus, hover, selected control과 이름 섞지 않기.
 - 글자 크기·언어·분할 선택·탭·페이지 번호의 선택 상태는 배경과 글자색으로 구분한다. 선택 테두리는 추가하지 않고 키보드 포커스 표시를 따로 유지한다.
+- Callout은 raised 표면과 색 표식으로 상태를 구분하며, 위험 상태에 빨간 테두리를 추가하지 않는다. 화면 위에 떠 있는 Toast는 얇은 `line-subtle` 경계로 위치를 구분한다.
 
 **폰트**
 - 브랜드 워드마크(`font.family.brand`)는 로고·헤더 워드마크에만. 제품 UI heading·CTA에 쓰지 않는다.

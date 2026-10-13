@@ -94,7 +94,7 @@
 - AdSlot은 광고나 후원 자리의 reserved layout, accessible label, placement/state data attribute만 담당하며 provider script, consent, slot id, ads.txt, personalized ads 판단은 소비 앱이 계속 소유한다.
 - AdSlot과 `.zdp-ad-slot`은 provider markup을 slot 또는 소비처 HTML로 받을 수 있지만, Google/AdSense 전용 속성, script loading, 동의 판단, 자동 본문 삽입 정책을 직접 수행하지 않는다.
 - InlineCode와 CodeBlock은 문서, 보안, 아키텍처 페이지의 코드 표시, language label, horizontal overflow, 선택적 복사 버튼만 담당하며 syntax highlighting, 코드 실행, 비밀값 탐지, 보안 분류, command palette를 직접 수행하지 않는다.
-- InlineCode, CodeBlock, `.zdp-inline-code`, `.zdp-code-block`은 그림자, 그라데이션, 실행 버튼 없이 mono font, framed surface, focus-visible, 복사 feedback, wrapping/overflow 계약만 유지한다. 긴 코드는 기본 horizontal overflow로 두고, code body에는 `user-select: none`을 적용하지 않는다.
+ - InlineCode, CodeBlock, `.zdp-inline-code`, `.zdp-code-block`은 그림자, 그라데이션, 실행 버튼 없이 mono font, focus-visible, 복사 feedback, wrapping/overflow 계약만 유지한다. InlineCode는 raised background와 mono 형태로 구분하고, 장문 코드 범위 경계를 설명하는 framed surface는 CodeBlock만 유지한다. 복사 버튼은 resting과 hover에서 테두리 없이 배경만 바꾸고 focus-visible에서 `focus.line` border와 outline을 표시한다. 긴 코드는 기본 horizontal overflow로 두고, code body에는 `user-select: none`을 적용하지 않는다.
 - Kbd와 ShortcutHint는 키캡과 단축키 힌트 표면만 담당하며 실제 keydown dispatcher, command palette, 검색 focus 이동, 저장, 닫기, 파일 이동 판단을 직접 수행하지 않는다.
 - Kbd, ShortcutHint, `.zdp-kbd`, `.zdp-shortcut-hint`는 그림자, 그라데이션, hover 장식을 만들지 않고 framed keycap과 간격 규칙만 유지한다.
 - LocaleSwitcher는 언어 선택의 `radiogroup`/`radio`/`aria-checked`, focus-visible, keyboard 이동 표면만 담당하며 실제 message catalog, routing, fallback locale, storage key, `<html lang>` 반영, 사용자 선호도 판단은 소비 앱이 소유한다.

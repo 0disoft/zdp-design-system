@@ -18,8 +18,8 @@
 <style>
   .zdp-callout {
     align-items: start;
-    background: var(--zdp-color-surface-panel);
-    border: 1px solid var(--zdp-color-line-subtle);
+    background: var(--zdp-color-surface-raised);
+    border: 1px solid transparent;
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-normal);
@@ -60,7 +60,7 @@
   }
 
   .zdp-callout--info .zdp-callout__mark {
-    background: var(--zdp-color-accent-primary);
+    background: var(--zdp-color-accent-primary-strong);
   }
 
   .zdp-callout--success .zdp-callout__mark {
@@ -69,10 +69,6 @@
 
   .zdp-callout--warning .zdp-callout__mark {
     background: var(--zdp-color-accent-warning);
-  }
-
-  .zdp-callout--danger {
-    border-color: var(--zdp-color-accent-danger);
   }
 
   .zdp-callout--danger .zdp-callout__mark {
