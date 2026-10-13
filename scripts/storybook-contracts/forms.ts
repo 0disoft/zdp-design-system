@@ -167,7 +167,13 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
       ':hover:not(:disabled)',
       ':focus-visible',
       'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
-      '[aria-invalid="true"]'
+      '[aria-invalid="true"]',
+      'border: var(--zdp-control-border-width) solid var(--zdp-control-field-border)',
+      'background: var(--zdp-control-field-surface)',
+      'background: var(--zdp-control-field-surface-hover)',
+      'border-color: var(--zdp-control-field-border-hover)',
+      'border-color: var(--zdp-color-focus-line)',
+      'border-color: var(--zdp-color-accent-danger)'
     ]) {
       if (!componentSource.includes(requiredText)) {
         failures.push(`${componentName} component is missing ${requiredText}.`);
@@ -175,31 +181,20 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
     }
   }
 
-  for (const [componentName, componentSource] of Object.entries({ Input: input, Textarea: textarea })) {
-    for (const requiredText of [
-      'border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong)',
-      'background: var(--zdp-color-surface-panel)',
-      'background: var(--zdp-color-surface-raised)',
-      'border-color: var(--zdp-color-focus-line)',
-      'border-color: var(--zdp-color-accent-danger)'
-    ]) {
-      if (!componentSource.includes(requiredText)) {
-        failures.push(`${componentName} component is missing framed input contract text ${requiredText}.`);
-      }
-    }
-  }
-
   for (const requiredText of [
     'border: var(--zdp-control-border-width) solid transparent',
     'background: var(--zdp-color-surface-raised)',
-      'background: var(--zdp-color-accent-primary-soft)',
-      '.zdp-select::picker(select)',
-      '.zdp-select:focus-visible',
-      '.zdp-select[aria-invalid="true"]',
-      'border-color: ButtonText'
+    '.zdp-select::picker(select)',
+    'background-color: var(--zdp-color-surface-panel)',
+    'background-color: var(--zdp-color-focus-surface)',
+    'color: var(--zdp-color-focus-text)',
+    '.zdp-select :global(option:hover)',
+    '.zdp-select :global(option:focus-visible)',
+    '.zdp-select :global(option:checked)',
+    'border-color: ButtonText'
   ]) {
     if (!select.includes(requiredText)) {
-      failures.push(`Select component is missing borderless surface contract text ${requiredText}.`);
+      failures.push(`Select component is missing picker surface contract text ${requiredText}.`);
     }
   }
 
