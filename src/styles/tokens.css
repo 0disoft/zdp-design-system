@@ -1,33 +1,33 @@
 :root,
 [data-zdp-theme="light"] {
-  --zdp-color-ink-strong: #2f2418;
-  --zdp-color-ink-normal: #4a3826;
-  --zdp-color-ink-muted: #776955;
-  --zdp-color-ink-inverse: #fff8ea;
-  --zdp-color-surface-canvas: #f7f1e3;
-  --zdp-color-surface-panel: #fff8ea;
-  --zdp-color-surface-raised: #f1e4cc;
-  --zdp-color-surface-inverse: #2f2418;
-  --zdp-color-line-subtle: #d8c8ac;
-  --zdp-color-line-strong: #b89a6a;
-  --zdp-color-line-focus: #8b6f45;
-  --zdp-color-focus-surface: #e7c97a;
-  --zdp-color-focus-text: #1f160d;
-  --zdp-color-focus-line: #1f160d;
-  --zdp-color-scrollbar-track: #f1e4cc;
-  --zdp-color-scrollbar-thumb: #b89a6a;
-  --zdp-color-scrollbar-thumb-hover: #8b6f45;
-  --zdp-color-selection-surface: #e7c97a;
-  --zdp-color-selection-text: #1f160d;
-  --zdp-color-backdrop-term-sheet: rgb(47 36 24 / 0.28);
-  --zdp-color-backdrop-sheet: rgb(47 36 24 / 0.32);
-  --zdp-color-backdrop-dialog: rgb(47 36 24 / 0.42);
-  --zdp-color-accent-primary: #d8c8ac;
-  --zdp-color-accent-primary-strong: #b89a6a;
-  --zdp-color-accent-primary-soft: #f1e4cc;
-  --zdp-color-accent-success: #8a9076;
-  --zdp-color-accent-warning: #a9824f;
-  --zdp-color-accent-danger: #8b5a4d;
+  --zdp-color-ink-strong: #302a24;
+  --zdp-color-ink-normal: #51483e;
+  --zdp-color-ink-muted: #72695e;
+  --zdp-color-ink-inverse: #fffefa;
+  --zdp-color-surface-canvas: #f8f6f0;
+  --zdp-color-surface-panel: #fffefa;
+  --zdp-color-surface-raised: #f0ece3;
+  --zdp-color-surface-inverse: #302a24;
+  --zdp-color-line-subtle: #dfd8cd;
+  --zdp-color-line-strong: #958774;
+  --zdp-color-line-focus: #8a6e44;
+  --zdp-color-focus-surface: #dfc38b;
+  --zdp-color-focus-text: #302a24;
+  --zdp-color-focus-line: #302a24;
+  --zdp-color-scrollbar-track: #f0ece3;
+  --zdp-color-scrollbar-thumb: #958774;
+  --zdp-color-scrollbar-thumb-hover: #8a6e44;
+  --zdp-color-selection-surface: #e8ddc6;
+  --zdp-color-selection-text: #302a24;
+  --zdp-color-backdrop-term-sheet: rgb(48 42 36 / .28);
+  --zdp-color-backdrop-sheet: rgb(48 42 36 / .32);
+  --zdp-color-backdrop-dialog: rgb(48 42 36 / .42);
+  --zdp-color-accent-primary: #e3d8c4;
+  --zdp-color-accent-primary-strong: #a38454;
+  --zdp-color-accent-primary-soft: #f0ece3;
+  --zdp-color-accent-success: #59664a;
+  --zdp-color-accent-warning: #84612f;
+  --zdp-color-accent-danger: #965644;
   --zdp-space-0: 0;
   --zdp-space-1: 0.25rem;
   --zdp-space-2: 0.5rem;
@@ -119,7 +119,7 @@
   --zdp-control-indicator-size: 1.25rem;
   --zdp-control-indicator-mask: url('./control-chevron.svg');
   --zdp-control-field-surface: var(--zdp-color-surface-panel);
-  --zdp-control-field-border: var(--zdp-color-line-subtle);
+  --zdp-control-field-border: var(--zdp-color-line-strong);
   --zdp-control-field-surface-hover: var(--zdp-color-surface-raised);
   --zdp-control-field-border-hover: var(--zdp-color-line-strong);
   --zdp-control-choice-size: 1.25rem;
@@ -153,7 +153,7 @@
 [data-zdp-theme] {
   /* Resolve semantic field aliases in each theme scope, including nested themes. */
   --zdp-control-field-surface: var(--zdp-color-surface-panel);
-  --zdp-control-field-border: var(--zdp-color-line-subtle);
+  --zdp-control-field-border: var(--zdp-color-line-strong);
   --zdp-control-field-surface-hover: var(--zdp-color-surface-raised);
   --zdp-control-field-border-hover: var(--zdp-color-line-strong);
 }
@@ -173,98 +173,98 @@
 }
 
 [data-zdp-theme="dark"] {
-  --zdp-color-ink-strong: #fff8ea;
-  --zdp-color-ink-normal: #f1e4cc;
-  --zdp-color-ink-muted: #d8c8ac;
-  --zdp-color-ink-inverse: #2f2418;
-  --zdp-color-surface-canvas: #241c14;
-  --zdp-color-surface-panel: #2f2418;
-  --zdp-color-surface-raised: #44321f;
-  --zdp-color-surface-inverse: #fff8ea;
-  --zdp-color-line-subtle: #68553a;
-  --zdp-color-line-strong: #b89a6a;
-  --zdp-color-line-focus: #d8c8ac;
-  --zdp-color-focus-surface: #e7c97a;
-  --zdp-color-focus-text: #1f160d;
-  --zdp-color-focus-line: #1f160d;
-  --zdp-color-scrollbar-track: #44321f;
-  --zdp-color-scrollbar-thumb: #b89a6a;
-  --zdp-color-scrollbar-thumb-hover: #d8c8ac;
-  --zdp-color-selection-surface: #e7c97a;
-  --zdp-color-selection-text: #1f160d;
+  --zdp-color-ink-strong: #f8f6f0;
+  --zdp-color-ink-normal: #e3ddd3;
+  --zdp-color-ink-muted: #b3aa9e;
+  --zdp-color-ink-inverse: #302a24;
+  --zdp-color-surface-canvas: #201d19;
+  --zdp-color-surface-panel: #2a2621;
+  --zdp-color-surface-raised: #36312a;
+  --zdp-color-surface-inverse: #f8f6f0;
+  --zdp-color-line-subtle: #4b443a;
+  --zdp-color-line-strong: #928575;
+  --zdp-color-line-focus: #d2b780;
+  --zdp-color-focus-surface: #dfc38b;
+  --zdp-color-focus-text: #302a24;
+  --zdp-color-focus-line: #302a24;
+  --zdp-color-scrollbar-track: #36312a;
+  --zdp-color-scrollbar-thumb: #928575;
+  --zdp-color-scrollbar-thumb-hover: #d2b780;
+  --zdp-color-selection-surface: #e8ddc6;
+  --zdp-color-selection-text: #302a24;
   --zdp-color-backdrop-term-sheet: rgb(10 8 5 / 0.64);
   --zdp-color-backdrop-sheet: rgb(10 8 5 / 0.66);
   --zdp-color-backdrop-dialog: rgb(10 8 5 / 0.72);
-  --zdp-color-accent-primary: #d8c8ac;
-  --zdp-color-accent-primary-strong: #e7c97a;
-  --zdp-color-accent-primary-soft: #68553a;
-  --zdp-color-accent-success: #a8ad91;
-  --zdp-color-accent-warning: #c6a46a;
-  --zdp-color-accent-danger: #bd8a78;
+  --zdp-color-accent-primary: #d2c3a8;
+  --zdp-color-accent-primary-strong: #c4a675;
+  --zdp-color-accent-primary-soft: #3d352a;
+  --zdp-color-accent-success: #a8b993;
+  --zdp-color-accent-warning: #d7b375;
+  --zdp-color-accent-danger: #dcaa99;
 }
 
 @supports (color: oklch(50% 0.1 240)) {
   :root,
   [data-zdp-theme="light"] {
-    --zdp-color-ink-strong: oklch(27% 0.04 70);
-    --zdp-color-ink-normal: oklch(36% 0.05 70);
-    --zdp-color-ink-muted: oklch(50% 0.035 82);
-    --zdp-color-ink-inverse: oklch(98% 0.025 86);
-    --zdp-color-surface-canvas: oklch(95% 0.03 86);
-    --zdp-color-surface-panel: oklch(98% 0.025 86);
-    --zdp-color-surface-raised: oklch(91% 0.045 82);
-    --zdp-color-surface-inverse: oklch(27% 0.04 70);
-    --zdp-color-line-subtle: oklch(82% 0.045 82);
-    --zdp-color-line-strong: oklch(70% 0.08 76);
-    --zdp-color-line-focus: oklch(55% 0.075 76);
-    --zdp-color-focus-surface: oklch(84% 0.1 86);
-    --zdp-color-focus-text: oklch(20% 0.035 70);
-    --zdp-color-focus-line: oklch(20% 0.035 70);
-    --zdp-color-scrollbar-track: oklch(91% 0.045 82);
-    --zdp-color-scrollbar-thumb: oklch(70% 0.08 76);
-    --zdp-color-scrollbar-thumb-hover: oklch(55% 0.075 76);
-    --zdp-color-selection-surface: oklch(84% 0.1 86);
-    --zdp-color-selection-text: oklch(20% 0.035 70);
-    --zdp-color-backdrop-term-sheet: oklch(27% 0.04 70 / 0.28);
-    --zdp-color-backdrop-sheet: oklch(27% 0.04 70 / 0.32);
-    --zdp-color-backdrop-dialog: oklch(27% 0.04 70 / 0.42);
-    --zdp-color-accent-primary: oklch(82% 0.045 82);
-    --zdp-color-accent-primary-strong: oklch(70% 0.08 76);
-    --zdp-color-accent-primary-soft: oklch(91% 0.045 82);
-    --zdp-color-accent-success: oklch(63% 0.035 105);
-    --zdp-color-accent-warning: oklch(60% 0.075 68);
-    --zdp-color-accent-danger: oklch(48% 0.06 35);
+    --zdp-color-ink-strong: oklch(28.9502% 0.013830 67.235);
+    --zdp-color-ink-normal: oklch(40.7535% 0.020276 70.152);
+    --zdp-color-ink-muted: oklch(52.5819% 0.020301 72.881);
+    --zdp-color-ink-inverse: oklch(99.6683% 0.005372 95.097);
+    --zdp-color-surface-canvas: oklch(97.3026% 0.008226 91.482);
+    --zdp-color-surface-panel: oklch(99.6683% 0.005372 95.097);
+    --zdp-color-surface-raised: oklch(94.3719% 0.012745 86.831);
+    --zdp-color-surface-inverse: oklch(28.9502% 0.013830 67.235);
+    --zdp-color-line-subtle: oklch(88.4760% 0.016758 79.345);
+    --zdp-color-line-strong: oklch(63.0590% 0.032314 75.497);
+    --zdp-color-line-focus: oklch(55.5710% 0.068316 76.746);
+    --zdp-color-focus-surface: oklch(82.7961% 0.079341 84.218);
+    --zdp-color-focus-text: oklch(28.9502% 0.013830 67.235);
+    --zdp-color-focus-line: oklch(28.9502% 0.013830 67.235);
+    --zdp-color-scrollbar-track: oklch(94.3719% 0.012745 86.831);
+    --zdp-color-scrollbar-thumb: oklch(63.0590% 0.032314 75.497);
+    --zdp-color-scrollbar-thumb-hover: oklch(55.5710% 0.068316 76.746);
+    --zdp-color-selection-surface: oklch(90.0238% 0.032950 85.480);
+    --zdp-color-selection-text: oklch(28.9502% 0.013830 67.235);
+    --zdp-color-backdrop-term-sheet: oklch(28.9502% 0.013830 67.235 / .28);
+    --zdp-color-backdrop-sheet: oklch(28.9502% 0.013830 67.235 / .32);
+    --zdp-color-backdrop-dialog: oklch(28.9502% 0.013830 67.235 / .42);
+    --zdp-color-accent-primary: oklch(88.5701% 0.029449 82.591);
+    --zdp-color-accent-primary-strong: oklch(63.1436% 0.075232 77.676);
+    --zdp-color-accent-primary-soft: oklch(94.3719% 0.012745 86.831);
+    --zdp-color-accent-success: oklch(49.1127% 0.045874 128.234);
+    --zdp-color-accent-warning: oklch(51.8144% 0.080700 74.082);
+    --zdp-color-accent-danger: oklch(52.2993% 0.089878 36.544);
   }
 
   [data-zdp-theme="dark"] {
-    --zdp-color-ink-strong: oklch(98% 0.025 86);
-    --zdp-color-ink-normal: oklch(91% 0.045 82);
-    --zdp-color-ink-muted: oklch(82% 0.045 82);
-    --zdp-color-ink-inverse: oklch(27% 0.04 70);
-    --zdp-color-surface-canvas: oklch(23% 0.035 70);
-    --zdp-color-surface-panel: oklch(27% 0.04 70);
-    --zdp-color-surface-raised: oklch(34% 0.05 70);
-    --zdp-color-surface-inverse: oklch(98% 0.025 86);
-    --zdp-color-line-subtle: oklch(43% 0.055 76);
-    --zdp-color-line-strong: oklch(70% 0.08 76);
-    --zdp-color-line-focus: oklch(82% 0.045 82);
-    --zdp-color-focus-surface: oklch(84% 0.1 86);
-    --zdp-color-focus-text: oklch(20% 0.035 70);
-    --zdp-color-focus-line: oklch(20% 0.035 70);
-    --zdp-color-scrollbar-track: oklch(34% 0.05 70);
-    --zdp-color-scrollbar-thumb: oklch(70% 0.08 76);
-    --zdp-color-scrollbar-thumb-hover: oklch(82% 0.045 82);
-    --zdp-color-selection-surface: oklch(84% 0.1 86);
-    --zdp-color-selection-text: oklch(20% 0.035 70);
+    --zdp-color-ink-strong: oklch(97.3026% 0.008226 91.482);
+    --zdp-color-ink-normal: oklch(89.9517% 0.014999 80.705);
+    --zdp-color-ink-muted: oklch(74.2152% 0.019855 75.269);
+    --zdp-color-ink-inverse: oklch(28.9502% 0.013830 67.235);
+    --zdp-color-surface-canvas: oklch(23.2664% 0.008815 75.174);
+    --zdp-color-surface-panel: oklch(27.1215% 0.010807 73.466);
+    --zdp-color-surface-raised: oklch(31.6069% 0.014063 76.362);
+    --zdp-color-surface-inverse: oklch(97.3026% 0.008226 91.482);
+    --zdp-color-line-subtle: oklch(39.0495% 0.018924 76.835);
+    --zdp-color-line-strong: oklch(62.3754% 0.028176 72.994);
+    --zdp-color-line-focus: oklch(78.9869% 0.078367 84.568);
+    --zdp-color-focus-surface: oklch(82.7961% 0.079341 84.218);
+    --zdp-color-focus-text: oklch(28.9502% 0.013830 67.235);
+    --zdp-color-focus-line: oklch(28.9502% 0.013830 67.235);
+    --zdp-color-scrollbar-track: oklch(31.6069% 0.014063 76.362);
+    --zdp-color-scrollbar-thumb: oklch(62.3754% 0.028176 72.994);
+    --zdp-color-scrollbar-thumb-hover: oklch(78.9869% 0.078367 84.568);
+    --zdp-color-selection-surface: oklch(90.0238% 0.032950 85.480);
+    --zdp-color-selection-text: oklch(28.9502% 0.013830 67.235);
     --zdp-color-backdrop-term-sheet: oklch(8% 0.01 70 / 0.64);
     --zdp-color-backdrop-sheet: oklch(8% 0.01 70 / 0.66);
     --zdp-color-backdrop-dialog: oklch(8% 0.01 70 / 0.72);
-    --zdp-color-accent-primary: oklch(82% 0.045 82);
-    --zdp-color-accent-primary-strong: oklch(84% 0.1 86);
-    --zdp-color-accent-primary-soft: oklch(43% 0.055 76);
-    --zdp-color-accent-success: oklch(72% 0.035 105);
-    --zdp-color-accent-warning: oklch(70% 0.065 70);
-    --zdp-color-accent-danger: oklch(66% 0.055 35);
+    --zdp-color-accent-primary: oklch(82.2487% 0.040281 82.312);
+    --zdp-color-accent-primary-strong: oklch(74.0205% 0.074089 79.464);
+    --zdp-color-accent-primary-soft: oklch(33.3955% 0.021718 75.671);
+    --zdp-color-accent-success: oklch(76.2469% 0.055859 127.300);
+    --zdp-color-accent-warning: oklch(78.4718% 0.090018 80.441);
+    --zdp-color-accent-danger: oklch(77.9455% 0.063859 39.601);
   }
 }
 
@@ -453,8 +453,8 @@
 }
 
 .zdp-surface-reset :where(input, textarea, select) {
-  background: var(--zdp-color-surface-panel);
-  border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
+  background: var(--zdp-control-field-surface);
+  border: var(--zdp-control-border-width) solid var(--zdp-control-field-border);
   border-radius: var(--zdp-control-radius);
   color: var(--zdp-color-ink-strong);
   font: inherit;

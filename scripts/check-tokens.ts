@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { checkThemeContrast } from './theme-contrast.ts';
 import { zdpTokenNames } from '../src/lib/tokens.ts';
 
 interface TokenDocument {
@@ -439,47 +440,7 @@ for (const [tokenName, expectedValue] of Object.entries({
   }
 }
 
-for (const [tokenName, expectedValue] of Object.entries({
-  track: '#f1e4cc',
-  thumb: '#b89a6a',
-  thumbHover: '#8b6f45'
-})) {
-  if (tokenDocument.color.scrollbar?.[tokenName]?.hex !== expectedValue) {
-    failures.push(`color.scrollbar.${tokenName}.hex must stay ${expectedValue}.`);
-  }
-}
-
-for (const [tokenName, expectedValue] of Object.entries({
-  surface: '#e7c97a',
-  text: '#1f160d'
-})) {
-  if (tokenDocument.color.selection?.[tokenName]?.hex !== expectedValue) {
-    failures.push(`color.selection.${tokenName}.hex must stay ${expectedValue}.`);
-  }
-}
-
-for (const [tokenName, expectedValue] of Object.entries({
-  surface: '#e7c97a',
-  text: '#1f160d',
-  line: '#1f160d'
-})) {
-  if (tokenDocument.color.focus?.[tokenName]?.hex !== expectedValue) {
-    failures.push(`color.focus.${tokenName}.hex must stay ${expectedValue}.`);
-  }
-}
-
-for (const [tokenName, expectedValue] of Object.entries({
-  primary: '#d8c8ac',
-  primaryStrong: '#b89a6a',
-  primarySoft: '#f1e4cc',
-  success: '#8a9076',
-  warning: '#a9824f',
-  danger: '#8b5a4d'
-})) {
-  if (tokenDocument.color.accent?.[tokenName]?.hex !== expectedValue) {
-    failures.push(`color.accent.${tokenName}.hex must stay ${expectedValue} for the unified parchment accent contract.`);
-  }
-}
+failures.push(...checkThemeContrast(css));
 
 for (const shadowName of ['focus', 'sm', 'md']) {
   if (tokenDocument.shadow[shadowName] !== 'none') {
