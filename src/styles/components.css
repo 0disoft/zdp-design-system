@@ -1552,221 +1552,6 @@
 }
 
 /* Generated from src/lib/components/Menu.svelte; do not edit directly. */
-.zdp-menu {
-    align-self: start;
-    display: inline-flex;
-    justify-self: start;
-    min-width: 0;
-    position: relative;
-    vertical-align: middle;
-  }
-
-  .zdp-menu__trigger {
-    align-items: center;
-    background: var(--zdp-color-surface-raised);
-    border: var(--zdp-control-border-width) solid transparent;
-    border-radius: var(--zdp-control-radius);
-    color: var(--zdp-color-ink-normal);
-    cursor: pointer;
-    display: inline-flex;
-    font-family: var(--zdp-font-family-sans);
-    font-size: var(--zdp-type-control-size);
-    font-weight: var(--zdp-font-weight-medium);
-    gap: var(--zdp-space-2);
-    justify-content: space-between;
-    line-height: var(--zdp-type-control-line-height);
-    min-height: var(--zdp-control-height-md);
-    min-inline-size: 12rem;
-    min-width: 12rem;
-    padding: 0 var(--zdp-control-padding-md);
-    padding-inline-end: calc(var(--zdp-control-padding-md) - var(--zdp-control-border-width));
-    transition:
-      background-color var(--zdp-motion-fast) ease,
-      border-color var(--zdp-motion-fast) ease,
-      color var(--zdp-motion-fast) ease;
-    -webkit-user-select: none;
-    user-select: none;
-  }
-
-  .zdp-menu__trigger:hover {
-    background: var(--zdp-color-accent-primary-soft);
-    border-color: transparent;
-    color: var(--zdp-color-ink-strong);
-  }
-
-  .zdp-menu__trigger:focus-visible {
-    border-color: var(--zdp-color-focus-line);
-    outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
-    outline-offset: var(--zdp-control-focus-outline-offset);
-  }
-
-  .zdp-menu__trigger-label {
-    flex: 1 1 auto;
-    min-width: 0;
-    overflow-wrap: var(--zdp-i18n-overflow-wrap);
-  }
-
-  .zdp-menu__trigger-mark {
-    align-items: center;
-    color: var(--zdp-color-ink-muted);
-    display: inline-flex;
-    flex: 0 0 auto;
-    justify-content: center;
-    line-height: 1;
-    -webkit-user-select: none;
-    user-select: none;
-  }
-
-  .zdp-menu__trigger-mark::before {
-    background-color: currentColor;
-    block-size: var(--zdp-control-indicator-size);
-    content: '';
-    display: inline-block;
-    inline-size: var(--zdp-control-indicator-size);
-    mask-image: var(--zdp-control-indicator-mask);
-    mask-position: center;
-    mask-repeat: no-repeat;
-    mask-size: contain;
-    -webkit-mask-image: var(--zdp-control-indicator-mask);
-    -webkit-mask-position: center;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-size: contain;
-  }
-
-  .zdp-menu__panel {
-    background: var(--zdp-color-surface-panel);
-    border: var(--zdp-control-border-width) solid transparent;
-    border-radius: var(--zdp-control-radius);
-    color: var(--zdp-color-ink-normal);
-    display: grid;
-    font-family: var(--zdp-font-family-sans);
-    gap: var(--zdp-space-1);
-    inline-size: max-content;
-    max-block-size: min(24rem, calc(var(--zdp-viewport-block) - var(--zdp-space-8)));
-    max-inline-size: min(18rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6)));
-    min-inline-size: 12rem;
-    overflow: auto;
-    padding: var(--zdp-space-1);
-    position: absolute;
-    z-index: var(--zdp-layer-floating);
-  }
-
-  .zdp-menu__panel:focus-visible {
-    border-color: var(--zdp-color-focus-line);
-    outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
-    outline-offset: var(--zdp-control-focus-outline-offset);
-  }
-
-  .zdp-menu__item {
-    align-items: center;
-    background: transparent;
-    border: var(--zdp-control-border-width) solid transparent;
-    border-radius: var(--zdp-control-radius);
-    color: var(--zdp-color-ink-normal);
-    cursor: pointer;
-    display: flex;
-    font-family: var(--zdp-font-family-sans);
-    font-size: var(--zdp-type-control-size);
-    gap: var(--zdp-space-2);
-    line-height: var(--zdp-type-control-line-height);
-    min-height: var(--zdp-control-height-sm);
-    min-width: 0;
-    padding: var(--zdp-space-1) var(--zdp-space-2);
-    text-align: start;
-    text-decoration-line: none;
-    transition:
-      background-color var(--zdp-motion-fast) ease,
-      border-color var(--zdp-motion-fast) ease,
-      color var(--zdp-motion-fast) ease;
-    -webkit-user-select: none;
-    user-select: none;
-  }
-
-  .zdp-menu__item:hover:not(:disabled):not([aria-disabled="true"]),
-  .zdp-menu__item:focus-visible {
-    background: var(--zdp-color-accent-primary-soft);
-    border-color: transparent;
-    color: var(--zdp-color-ink-strong);
-    outline: 0;
-  }
-
-  .zdp-menu__item--danger {
-    color: var(--zdp-color-accent-danger);
-  }
-
-  .zdp-menu__item:disabled,
-  .zdp-menu__item[aria-disabled="true"] {
-    cursor: not-allowed;
-    opacity: var(--zdp-control-disabled-opacity);
-  }
-
-  .zdp-menu__separator {
-    border-block-start: 1px solid var(--zdp-color-line-subtle);
-    display: block;
-    margin: var(--zdp-space-1) 0;
-  }
-
-  @media (forced-colors: active) {
-    .zdp-menu__trigger,
-    .zdp-menu__panel,
-    .zdp-menu__item {
-      border-color: ButtonText;
-    }
-
-    .zdp-menu__trigger-mark::before {
-      background-color: currentColor;
-      color: ButtonText;
-      forced-color-adjust: none;
-    }
-  }
-
-  .zdp-menu--top .zdp-menu__panel {
-    bottom: calc(100% + var(--zdp-space-2));
-  }
-
-  .zdp-menu--right .zdp-menu__panel {
-    left: calc(100% + var(--zdp-space-2));
-    top: 0;
-  }
-
-  .zdp-menu--bottom .zdp-menu__panel {
-    top: calc(100% + var(--zdp-space-2));
-  }
-
-  .zdp-menu--left .zdp-menu__panel {
-    right: calc(100% + var(--zdp-space-2));
-    top: 0;
-  }
-
-  .zdp-menu--align-start .zdp-menu__panel {
-    left: 0;
-  }
-
-  .zdp-menu--align-center .zdp-menu__panel {
-    left: 50%;
-    translate: -50% 0;
-  }
-
-  .zdp-menu--align-end .zdp-menu__panel {
-    right: 0;
-  }
-
-  .zdp-menu--right.zdp-menu--align-end .zdp-menu__panel,
-  .zdp-menu--left.zdp-menu--align-end .zdp-menu__panel {
-    bottom: 0;
-    top: auto;
-  }
-
-  .zdp-menu--right.zdp-menu--align-center .zdp-menu__panel,
-  .zdp-menu--left.zdp-menu--align-center .zdp-menu__panel {
-    top: 50%;
-    translate: 0 -50%;
-  }
-
-  .zdp-menu--bottom .zdp-menu__panel,
-  .zdp-menu--top .zdp-menu__panel {
-    inline-size: 100%;
-  }
 
 /* Generated from src/lib/components/Button.svelte; do not edit directly. */
 .zdp-button {
@@ -2204,6 +1989,265 @@
 /* Generated from src/lib/components/Combobox.svelte; do not edit directly. */
 
 /* Generated from src/lib/components/CommandField.svelte; do not edit directly. */
+
+/* Generated from src/lib/components/Menu.svelte; do not edit directly. */
+
+  .zdp-menu__panel[data-zdp-positioned] {
+    box-sizing: border-box;
+    bottom: auto;
+    inline-size: max-content;
+    left: auto;
+    max-block-size: min(24rem, var(--zdp-menu-available-height, calc(var(--zdp-viewport-block) - var(--zdp-space-8))));
+    max-inline-size: min(18rem, var(--zdp-menu-available-width, calc(var(--zdp-viewport-inline) - var(--zdp-space-6))));
+    min-inline-size: min(12rem, var(--zdp-menu-available-width, calc(var(--zdp-viewport-inline) - var(--zdp-space-6))));
+    position: static;
+    right: auto;
+    top: auto;
+    translate: none;
+  }
+
+/* Generated from src/lib/components/Menu.svelte; do not edit directly. */
+
+/* Generated from src/lib/components/Menu.svelte; do not edit directly. */
+.zdp-menu {
+    align-self: start;
+    display: inline-flex;
+    justify-self: start;
+    min-width: 0;
+    position: relative;
+    vertical-align: middle;
+  }
+
+  .zdp-menu__trigger {
+    align-items: center;
+    background: var(--zdp-color-surface-raised);
+    border: var(--zdp-control-border-width) solid transparent;
+    border-radius: var(--zdp-control-radius);
+    color: var(--zdp-color-ink-normal);
+    cursor: pointer;
+    display: inline-flex;
+    font-family: var(--zdp-font-family-sans);
+    font-size: var(--zdp-type-control-size);
+    font-weight: var(--zdp-font-weight-medium);
+    gap: var(--zdp-space-2);
+    justify-content: space-between;
+    line-height: var(--zdp-type-control-line-height);
+    min-height: var(--zdp-control-height-md);
+    min-inline-size: 12rem;
+    min-width: 12rem;
+    padding: 0 var(--zdp-control-padding-md);
+    padding-inline-end: calc(var(--zdp-control-padding-md) - var(--zdp-control-border-width));
+    transition:
+      background-color var(--zdp-motion-fast) ease,
+      border-color var(--zdp-motion-fast) ease,
+      color var(--zdp-motion-fast) ease;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .zdp-menu__trigger:hover {
+    background: var(--zdp-color-accent-primary-soft);
+    border-color: transparent;
+    color: var(--zdp-color-ink-strong);
+  }
+
+  .zdp-menu__trigger:focus-visible {
+    border-color: var(--zdp-color-focus-line);
+    outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
+    outline-offset: var(--zdp-control-focus-outline-offset);
+  }
+
+  .zdp-menu__trigger-label {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: var(--zdp-i18n-overflow-wrap);
+  }
+
+  .zdp-menu__trigger-mark {
+    align-items: center;
+    color: var(--zdp-color-ink-muted);
+    display: inline-flex;
+    flex: 0 0 auto;
+    justify-content: center;
+    line-height: 1;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .zdp-menu__trigger-mark::before {
+    background-color: currentColor;
+    block-size: var(--zdp-control-indicator-size);
+    content: '';
+    display: inline-block;
+    inline-size: var(--zdp-control-indicator-size);
+    mask-image: var(--zdp-control-indicator-mask);
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    -webkit-mask-image: var(--zdp-control-indicator-mask);
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+  }
+
+  .zdp-menu__panel {
+    background: var(--zdp-color-surface-panel);
+    border: var(--zdp-control-border-width) solid transparent;
+    border-radius: var(--zdp-control-radius);
+    color: var(--zdp-color-ink-normal);
+    display: grid;
+    font-family: var(--zdp-font-family-sans);
+    gap: var(--zdp-space-1);
+    inline-size: max-content;
+    max-block-size: min(24rem, calc(var(--zdp-viewport-block) - var(--zdp-space-8)));
+    max-inline-size: min(18rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-6)));
+    min-inline-size: 12rem;
+    overflow: auto;
+    padding: var(--zdp-space-1);
+    position: absolute;
+    z-index: var(--zdp-layer-floating);
+  }
+
+  .zdp-menu__panel:focus-visible {
+    border-color: var(--zdp-color-focus-line);
+    outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
+    outline-offset: var(--zdp-control-focus-outline-offset);
+  }
+
+  .zdp-menu__item {
+    align-items: center;
+    background: transparent;
+    border: var(--zdp-control-border-width) solid transparent;
+    border-radius: var(--zdp-control-radius);
+    color: var(--zdp-color-ink-normal);
+    cursor: pointer;
+    display: flex;
+    font-family: var(--zdp-font-family-sans);
+    font-size: var(--zdp-type-control-size);
+    gap: var(--zdp-space-2);
+    line-height: var(--zdp-type-control-line-height);
+    min-height: var(--zdp-control-height-sm);
+    min-width: 0;
+    padding: var(--zdp-space-1) var(--zdp-space-2);
+    overflow-wrap: var(--zdp-i18n-overflow-wrap);
+    text-align: start;
+    text-decoration-line: none;
+    transition:
+      background-color var(--zdp-motion-fast) ease,
+      border-color var(--zdp-motion-fast) ease,
+      color var(--zdp-motion-fast) ease;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .zdp-menu__item:hover:not(:disabled):not([aria-disabled="true"]),
+  .zdp-menu__item:focus-visible {
+    background: var(--zdp-color-accent-primary-soft);
+    border-color: transparent;
+    color: var(--zdp-color-ink-strong);
+    outline: 0;
+  }
+
+  .zdp-menu__item--danger {
+    color: var(--zdp-color-accent-danger);
+  }
+
+  .zdp-menu__item:disabled,
+  .zdp-menu__item[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: var(--zdp-control-disabled-opacity);
+  }
+
+  .zdp-menu__separator {
+    border-block-start: 1px solid var(--zdp-color-line-subtle);
+    display: block;
+    margin: var(--zdp-space-1) 0;
+  }
+
+  @media (forced-colors: active) {
+    .zdp-menu__trigger,
+    .zdp-menu__panel,
+    .zdp-menu__item {
+      border-color: ButtonText;
+    }
+
+    .zdp-menu__trigger-mark::before {
+      background-color: currentColor;
+      color: ButtonText;
+      forced-color-adjust: none;
+    }
+  }
+
+  .zdp-menu--top .zdp-menu__panel {
+    bottom: calc(100% + var(--zdp-space-2));
+  }
+
+  .zdp-menu--right .zdp-menu__panel {
+    left: calc(100% + var(--zdp-space-2));
+    top: 0;
+  }
+
+  .zdp-menu--bottom .zdp-menu__panel {
+    top: calc(100% + var(--zdp-space-2));
+  }
+
+  .zdp-menu--left .zdp-menu__panel {
+    right: calc(100% + var(--zdp-space-2));
+    top: 0;
+  }
+
+  .zdp-menu--align-start .zdp-menu__panel {
+    left: 0;
+  }
+
+  .zdp-menu--align-center .zdp-menu__panel {
+    left: 50%;
+    translate: -50% 0;
+  }
+
+  .zdp-menu--align-end .zdp-menu__panel {
+    right: 0;
+  }
+
+  .zdp-menu--right.zdp-menu--align-end .zdp-menu__panel,
+  .zdp-menu--left.zdp-menu--align-end .zdp-menu__panel {
+    bottom: 0;
+    top: auto;
+  }
+
+  .zdp-menu--right.zdp-menu--align-center .zdp-menu__panel,
+  .zdp-menu--left.zdp-menu--align-center .zdp-menu__panel {
+    top: 50%;
+    translate: 0 -50%;
+  }
+
+  .zdp-menu--bottom .zdp-menu__panel,
+  .zdp-menu--top .zdp-menu__panel {
+    inline-size: 100%;
+  }
+
+  .zdp-menu__positioner {
+    z-index: var(--zdp-layer-floating);
+  }
+
+  .zdp-menu .zdp-menu__panel[data-zdp-positioned] {
+    box-sizing: border-box;
+    bottom: auto;
+    inline-size: max-content;
+    left: auto;
+    max-block-size: min(24rem, var(--zdp-menu-available-height, calc(var(--zdp-viewport-block) - var(--zdp-space-8))));
+    max-inline-size: min(18rem, var(--zdp-menu-available-width, calc(var(--zdp-viewport-inline) - var(--zdp-space-6))));
+    min-inline-size: min(12rem, var(--zdp-menu-available-width, calc(var(--zdp-viewport-inline) - var(--zdp-space-6))));
+    position: static;
+    right: auto;
+    top: auto;
+    translate: none;
+  }
+
+  .zdp-menu--bottom .zdp-menu__panel[data-zdp-positioned],
+  .zdp-menu--top .zdp-menu__panel[data-zdp-positioned] {
+    inline-size: var(--zdp-menu-anchor-width, 100%);
+  }
 
 .zdp-divider {
   border: 0;

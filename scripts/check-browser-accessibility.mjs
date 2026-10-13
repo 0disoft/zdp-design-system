@@ -29,6 +29,7 @@ import { verifySelectionFocusContracts } from './browser/check-selection-focus.m
 import { verifyDynamicTabsContracts, verifyRemovedTabFocusContracts, verifyTabPanelFocusContracts } from './browser/check-dynamic-tabs.mjs';
 import { verifyDynamicPaginationContracts, verifyPaginationBoundsContracts } from './browser/check-dynamic-pagination.mjs';
 import { verifyDynamicMenuContracts } from './browser/check-dynamic-menu.mjs';
+import { verifyMenuGeometryContracts } from './browser/check-menu-geometry.mjs';
 import { verifyResponsiveFocusContracts } from './browser/check-responsive-focus.mjs';
 import { verifyAccordionInstanceContracts } from './browser/check-accordion-instances.mjs';
 import { verifyAvatarFallbackContracts } from './browser/check-avatar-fallback.mjs';
@@ -130,6 +131,7 @@ try {
     await verifyDynamicMenuContracts(page);
     await verifyReservedNavigationContracts(page);
     await verifyShadowOverlayContracts(page);
+    await verifyMenuGeometryContracts(page);
   } else if (process.argv.includes('--controls')) {
     await verifyFoundationAndFormContracts(page);
     await verifyControlConsistency(page);
@@ -179,6 +181,7 @@ try {
   await verifyShadowFocusContracts(page);
   await verifyImeOverlayContracts(page);
   await verifyDynamicMenuContracts(page);
+  await verifyMenuGeometryContracts(page);
   await verifyDynamicPaginationContracts(page);
   await verifyPaginationBoundsContracts(page);
   await verifySelectionFocusContracts(page);

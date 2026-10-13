@@ -53,12 +53,39 @@ stability=contract
   let restoreFocusAfterClose = $state(false);
   let focusIntent = $state<'first' | 'last' | 'current'>('first');
   let activeItemId = $state('');
+  let floatingGap = $state(0);
+  let floatingDirection = $state<'ltr' | 'rtl'>('ltr');
   const dismissLayer = createZdpDismissLayer();
 
   const enabledItems = $derived(items.filter((item) => !item.disabled));
   const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
   const triggerId = $derived(`${resolvedIdPrefix}-trigger`);
   const panelId = $derived(`${resolvedIdPrefix}-panel`);
+
+  $effect(() => {
+    if (!open || !triggerElement) return;
+    const style = triggerElement.ownerDocument.defaultView?.getComputedStyle(triggerElement);
+    if (!style) return;
+    // Read resolved pixels, so rem-based ZDP spacing remains the source of truth.
+    floatingGap = Number.parseFloat(style.columnGap) || 0;
+    floatingDirection = style.direction === 'rtl' ? 'rtl' : 'ltr';
+  });
+
+  $effect(() => {
+    const panel = panelElement;
+    const view = panel?.ownerDocument.defaultView;
+    if (!open || !panel || !view) return;
+    // Floating sizing can shorten the panel after the initial focus move.
+    // Keep the current item visible without changing focus during a resize.
+    const observer = new view.ResizeObserver(() => {
+      const focused = getZdpActiveElement(panel.ownerDocument);
+      if (focused && panel.contains(focused) && focused.getAttribute('role') === 'menuitem') {
+        scrollItemIntoPanel(focused, panel);
+      }
+    });
+    observer.observe(panel);
+    return () => observer.disconnect();
+  });
 
   $effect.pre(() => {
     activeItemId = resolveActiveItemId(activeItemId, enabledItems);
@@ -225,7 +252,15 @@ stability=contract
       (element) => element.dataset.menuItemId === activeItemId
     );
 
-    (nextItem ?? panelElement)?.focus();
+    (nextItem ?? panelElement)?.focus({ preventScroll: true });
+    if (nextItem && panelElement) scrollItemIntoPanel(nextItem, panelElement);
+  }
+
+  function scrollItemIntoPanel(item: HTMLElement, panel: HTMLElement): void {
+    const itemRect = item.getBoundingClientRect();
+    const panelRect = panel.getBoundingClientRect();
+    if (itemRect.top < panelRect.top) panel.scrollTop -= panelRect.top - itemRect.top;
+    else if (itemRect.bottom > panelRect.bottom) panel.scrollTop += itemRect.bottom - panelRect.bottom;
   }
 
   async function recoverMenuFocus(panel: HTMLElement, previous: HTMLElement): Promise<void> {
@@ -260,7 +295,7 @@ stability=contract
   }
 </script>
 
-<DropdownMenu.Root bind:open onOpenChange={(nextOpen) => onOpenChange?.(nextOpen)}>
+<DropdownMenu.Root bind:open dir={floatingDirection} onOpenChange={(nextOpen) => onOpenChange?.(nextOpen)}>
 <span
   class={`zdp-menu zdp-menu--${placement} zdp-menu--align-${align}`}
   data-open={open ? 'true' : 'false'}
@@ -293,8 +328,17 @@ stability=contract
   </DropdownMenu.Trigger>
 
   {#if open}
-    <DropdownMenu.ContentStatic
+    <DropdownMenu.Content
       id={panelId}
+      side={placement}
+      {align}
+      sideOffset={floatingGap}
+      collisionPadding={floatingGap}
+      avoidCollisions={true}
+      sticky="always"
+      strategy="fixed"
+      dir={floatingDirection}
+      style="--zdp-menu-available-width:var(--bits-dropdown-menu-content-available-width);--zdp-menu-available-height:var(--bits-dropdown-menu-content-available-height);--zdp-menu-anchor-width:var(--bits-dropdown-menu-anchor-width);"
       bind:ref={panelElement}
       loop={true}
       trapFocus={false}
@@ -306,10 +350,12 @@ stability=contract
       onCloseAutoFocus={(event) => event.preventDefault()}
       onFocusOutside={(event) => event.preventDefault()}
     >
-    {#snippet child({ props })}
+    {#snippet child({ props, wrapperProps })}
+    <div {...wrapperProps} class="zdp-menu__positioner">
     <div
       {...props}
       class="zdp-menu__panel"
+      data-zdp-positioned
       id={panelId}
       role="menu"
       aria-labelledby={triggerId}
@@ -367,8 +413,9 @@ stability=contract
         </DropdownMenu.Item>
       {/each}
     </div>
+    </div>
     {/snippet}
-    </DropdownMenu.ContentStatic>
+    </DropdownMenu.Content>
   {/if}
 </span>
 </DropdownMenu.Root>
@@ -494,6 +541,7 @@ stability=contract
     min-height: var(--zdp-control-height-sm);
     min-width: 0;
     padding: var(--zdp-space-1) var(--zdp-space-2);
+    overflow-wrap: var(--zdp-i18n-overflow-wrap);
     text-align: start;
     text-decoration-line: none;
     transition:
@@ -588,5 +636,28 @@ stability=contract
   .zdp-menu--bottom .zdp-menu__panel,
   .zdp-menu--top .zdp-menu__panel {
     inline-size: 100%;
+  }
+
+  .zdp-menu__positioner {
+    z-index: var(--zdp-layer-floating);
+  }
+
+  .zdp-menu .zdp-menu__panel[data-zdp-positioned] {
+    box-sizing: border-box;
+    bottom: auto;
+    inline-size: max-content;
+    left: auto;
+    max-block-size: min(24rem, var(--zdp-menu-available-height, calc(var(--zdp-viewport-block) - var(--zdp-space-8))));
+    max-inline-size: min(18rem, var(--zdp-menu-available-width, calc(var(--zdp-viewport-inline) - var(--zdp-space-6))));
+    min-inline-size: min(12rem, var(--zdp-menu-available-width, calc(var(--zdp-viewport-inline) - var(--zdp-space-6))));
+    position: static;
+    right: auto;
+    top: auto;
+    translate: none;
+  }
+
+  .zdp-menu--bottom .zdp-menu__panel[data-zdp-positioned],
+  .zdp-menu--top .zdp-menu__panel[data-zdp-positioned] {
+    inline-size: var(--zdp-menu-anchor-width, 100%);
   }
 </style>

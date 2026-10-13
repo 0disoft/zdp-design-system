@@ -353,6 +353,7 @@ function createIdHydrationHtml(body) {
   return `<!doctype html>
 <html lang="en">
   <head>
+    <link rel="stylesheet" href="/src/styles/foundation.css" />
     <meta charset="utf-8" />
     <link rel="icon" href="data:," />
     <title>SSR hydration check</title>

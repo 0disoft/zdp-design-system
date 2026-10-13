@@ -51,6 +51,7 @@ try {
   } });
   browser = await chromium.launch({ channel: process.env.ZDP_BROWSER_CHANNEL ?? 'chrome', headless: true });
   const page = await browser.newPage();
+  const originalViewport = page.viewportSize();
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.route('https://**', route => route.abort());
@@ -83,10 +84,17 @@ try {
   await page.keyboard.press('ArrowRight');
   await page.waitForFunction(() => Number(document.querySelector('#separator')?.getAttribute('aria-valuenow')) > 240);
   await page.goto(`http://127.0.0.1:${server.port}/menu/`);
+  await page.setViewportSize({ width: 320, height: 480 });
   await page.waitForSelector('astro-island:not([ssr])');
   const trigger = page.getByRole('button', { name: 'Astro actions', exact: true });
   await trigger.click();
   await page.getByRole('menuitem', { name: 'Edit', exact: true }).waitFor();
+  await page.waitForFunction(() => {
+    const panel = document.querySelector('.zdp-menu__panel');
+    const rect = panel?.getBoundingClientRect();
+    return panel?.getAttribute('data-side') === 'top' && rect.left >= 7 && rect.top >= 7 &&
+      rect.right <= innerWidth - 7 && rect.bottom <= innerHeight - 7;
+  });
   await page.keyboard.press('ArrowDown');
   assert.equal(await page.getByRole('menuitem', { name: 'Archive', exact: true }).evaluate(element => element === document.activeElement), true);
   await page.keyboard.press('Enter');
@@ -95,6 +103,7 @@ try {
   await trigger.click();
   await page.getByRole('button', { name: 'Outside island', exact: true }).click();
   assert.equal(await page.getByRole('menu').count(), 0);
+  await page.setViewportSize(originalViewport);
   await page.goto(`http://127.0.0.1:${server.port}/popover/`);
   await page.waitForSelector('astro-island:not([ssr])');
   const popoverTrigger = page.getByRole('button', { name: 'Astro filters', exact: true });
