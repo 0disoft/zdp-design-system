@@ -574,7 +574,7 @@ for (const [label, selector] of [
   );
 
   for (const requiredText of [
-    'background: var(--zdp-color-surface-raised)',
+    'background: var(--zdp-color-surface-panel)',
     'border: var(--zdp-control-border-width) solid transparent'
   ]) {
     if (!rootBlock.includes(requiredText)) {
@@ -583,7 +583,7 @@ for (const [label, selector] of [
   }
 
   for (const requiredText of [
-    'background: var(--zdp-color-surface-panel)',
+    'background: var(--zdp-color-surface-raised)',
     'background: var(--zdp-color-accent-primary-soft)',
     'border-color: transparent'
   ]) {
@@ -593,7 +593,7 @@ for (const [label, selector] of [
   }
 
   for (const requiredText of [
-    'border-color: var(--zdp-color-accent-primary-strong)',
+    'border-color: transparent',
     'color: var(--zdp-color-ink-strong)'
   ]) {
     if (!interactionBlock.includes(requiredText)) {

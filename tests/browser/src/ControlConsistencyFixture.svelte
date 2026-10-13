@@ -9,6 +9,8 @@
   import Disclosure from '../../../src/lib/components/Disclosure.svelte';
   import Tabs from '../../../src/lib/components/Tabs.svelte';
   import SegmentedControl from '../../../src/lib/components/SegmentedControl.svelte';
+  import TextScaleControl from '../../../src/lib/components/TextScaleControl.svelte';
+  import LocaleSwitcher from '../../../src/lib/components/LocaleSwitcher.svelte';
 </script>
 
 <div data-zdp-theme="dark">
@@ -27,6 +29,8 @@
       <Disclosure title="Consistent disclosure">Details</Disclosure>
       <Tabs ariaLabel="Consistent tabs" items={[{id:'one',label:'One'},{id:'two',label:'Two'}]} />
       <SegmentedControl ariaLabel="Consistent segments" items={[{id:'one',label:'One'},{id:'two',label:'Two'}]} />
+      <TextScaleControl ariaLabel="Consistent text size" />
+      <LocaleSwitcher ariaLabel="Consistent language" options={[{value:'en',label:'English'},{value:'ko',label:'한국어'}]} />
       <Button variant="primary">Primary action</Button>
       <IconButton variant="solid" ariaLabel="Primary icon action"><span aria-hidden="true">+</span></IconButton>
       <div data-testid="small-controls">

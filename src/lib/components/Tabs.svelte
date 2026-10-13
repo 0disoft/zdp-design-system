@@ -200,7 +200,8 @@
   }
 
   .zdp-tabs__tab--active {
-    border-bottom-color: var(--zdp-color-accent-primary-strong);
+    background: var(--zdp-color-accent-primary-soft);
+    border-bottom-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 

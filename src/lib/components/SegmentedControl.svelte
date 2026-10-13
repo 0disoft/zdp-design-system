@@ -115,7 +115,7 @@
 <style>
   .zdp-segmented-control {
     align-items: center;
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-surface-panel);
     border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
@@ -166,7 +166,14 @@
   }
 
   .zdp-segmented-control__item:hover:not(:disabled):not([aria-checked='true']) {
-    background: var(--zdp-color-surface-panel);
+    background: var(--zdp-color-surface-raised);
+    border-color: transparent;
+    color: var(--zdp-color-ink-strong);
+  }
+
+  .zdp-segmented-control__item--selected,
+  .zdp-segmented-control__item[aria-checked='true'] {
+    background: var(--zdp-color-accent-primary-soft);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
@@ -175,13 +182,6 @@
     border-color: var(--zdp-color-focus-line);
     outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
     outline-offset: var(--zdp-control-focus-outline-offset);
-  }
-
-  .zdp-segmented-control__item--selected,
-  .zdp-segmented-control__item[aria-checked='true'] {
-    background: var(--zdp-color-accent-primary-soft);
-    border-color: var(--zdp-color-accent-primary-strong);
-    color: var(--zdp-color-ink-strong);
   }
 
   .zdp-segmented-control__item:disabled {

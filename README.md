@@ -625,6 +625,7 @@ preview/index.html
 - 주 CTA는 `surface-inverse`/`ink-inverse` 쌍, 목록·탭 선택 상태는 옅은 `accent-primary-soft` 표면과 해당 테마의 `ink-strong`, 체크·스위치 표시는 `accent-primary-strong`과 `ink-inverse`를 쓴다. 포커스는 금색 `focus.surface` outline과 코코아 `focus.line`으로 구분한다.
 - `focus.surface/text/line`은 접근성 기능색. 브랜드 장식색·hover 색으로 재사용 금지.
 - `selection.surface/text`는 드래그 선택 전용. focus, hover, selected control과 이름 섞지 않기.
+- 글자 크기·언어·분할 선택·탭·페이지 번호의 선택 상태는 배경과 글자색으로 구분한다. 선택 테두리는 추가하지 않고 키보드 포커스 표시를 따로 유지한다.
 
 **폰트**
 - 브랜드 워드마크(`font.family.brand`)는 로고·헤더 워드마크에만. 제품 UI heading·CTA에 쓰지 않는다.

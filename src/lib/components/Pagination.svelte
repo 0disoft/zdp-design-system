@@ -270,17 +270,17 @@
     color: var(--zdp-color-ink-strong);
   }
 
+  .zdp-pagination__link[aria-current='page'] {
+    background: var(--zdp-color-accent-primary-soft);
+    border-color: transparent;
+    color: var(--zdp-color-ink-strong);
+    cursor: default;
+  }
+
   .zdp-pagination__link:focus-visible {
     border-color: var(--zdp-color-focus-line);
     outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
     outline-offset: var(--zdp-control-focus-outline-offset);
-  }
-
-  .zdp-pagination__link[aria-current='page'] {
-    background: var(--zdp-color-accent-primary-soft);
-    border-color: var(--zdp-color-accent-primary-strong);
-    color: var(--zdp-color-ink-strong);
-    cursor: default;
   }
 
   .zdp-pagination__link:disabled {

@@ -1358,7 +1358,7 @@
 
 .zdp-segmented-control {
   align-items: center;
-  background: var(--zdp-color-surface-raised);
+  background: var(--zdp-color-surface-panel);
   border: var(--zdp-control-border-width) solid transparent;
   border-radius: var(--zdp-control-radius);
   box-sizing: border-box;
@@ -1407,7 +1407,14 @@
 }
 
 .zdp-segmented-control__item:hover:not(:disabled):not([aria-checked="true"]) {
-  background: var(--zdp-color-surface-panel);
+  background: var(--zdp-color-surface-raised);
+  border-color: transparent;
+  color: var(--zdp-color-ink-strong);
+}
+
+.zdp-segmented-control__item--selected,
+.zdp-segmented-control__item[aria-checked="true"] {
+  background: var(--zdp-color-accent-primary-soft);
   border-color: transparent;
   color: var(--zdp-color-ink-strong);
 }
@@ -1416,13 +1423,6 @@
   border-color: var(--zdp-color-focus-line);
   outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
   outline-offset: var(--zdp-control-focus-outline-offset);
-}
-
-.zdp-segmented-control__item--selected,
-.zdp-segmented-control__item[aria-checked="true"] {
-  background: var(--zdp-color-accent-primary-soft);
-  border-color: var(--zdp-color-accent-primary-strong);
-  color: var(--zdp-color-ink-strong);
 }
 
 .zdp-segmented-control__item:disabled {
@@ -2337,7 +2337,7 @@
   --zdp-locale-focus-bleed: calc(var(--zdp-control-focus-outline-width) + var(--zdp-control-focus-outline-offset));
 
   align-items: center;
-  background: var(--zdp-color-surface-raised);
+  background: var(--zdp-color-surface-panel);
   border: var(--zdp-control-border-width) solid transparent;
   border-radius: var(--zdp-control-radius);
   box-sizing: border-box;
@@ -2392,7 +2392,14 @@
 }
 
 .zdp-locale-switcher__item:hover:not(:disabled):not([aria-checked="true"]) {
-  background: var(--zdp-color-surface-panel);
+  background: var(--zdp-color-surface-raised);
+  border-color: transparent;
+  color: var(--zdp-color-ink-strong);
+}
+
+.zdp-locale-switcher__item--selected,
+.zdp-locale-switcher__item[aria-checked="true"] {
+  background: var(--zdp-color-accent-primary-soft);
   border-color: transparent;
   color: var(--zdp-color-ink-strong);
 }
@@ -2401,13 +2408,6 @@
   border-color: var(--zdp-color-focus-line);
   outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
   outline-offset: var(--zdp-control-focus-outline-offset);
-}
-
-.zdp-locale-switcher__item--selected,
-.zdp-locale-switcher__item[aria-checked="true"] {
-  background: var(--zdp-color-accent-primary-soft);
-  border-color: var(--zdp-color-accent-primary-strong);
-  color: var(--zdp-color-ink-strong);
 }
 
 .zdp-locale-switcher__item:disabled {
@@ -2472,7 +2472,14 @@
 
 .zdp-text-scale-control__item:hover:not(:disabled):not([aria-checked="true"]) {
   background: var(--zdp-color-surface-raised);
-  border-color: var(--zdp-color-line-strong);
+  border-color: transparent;
+  color: var(--zdp-color-ink-strong);
+}
+
+.zdp-text-scale-control__item--selected,
+.zdp-text-scale-control__item[aria-checked="true"] {
+  background: var(--zdp-color-accent-primary-soft);
+  border-color: transparent;
   color: var(--zdp-color-ink-strong);
 }
 
@@ -2480,13 +2487,6 @@
   border-color: var(--zdp-color-focus-line);
   outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
   outline-offset: var(--zdp-control-focus-outline-offset);
-}
-
-.zdp-text-scale-control__item--selected,
-.zdp-text-scale-control__item[aria-checked="true"] {
-  background: var(--zdp-color-accent-primary-soft);
-  border-color: var(--zdp-color-accent-primary-strong);
-  color: var(--zdp-color-ink-strong);
 }
 
 .zdp-text-scale-control__item:disabled {
@@ -4018,17 +4018,17 @@
   color: var(--zdp-color-ink-strong);
 }
 
+.zdp-pagination__link[aria-current="page"] {
+  background: var(--zdp-color-accent-primary-soft);
+  border-color: transparent;
+  color: var(--zdp-color-ink-strong);
+  cursor: default;
+}
+
 .zdp-pagination__link:focus-visible {
   border-color: var(--zdp-color-focus-line);
   outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
   outline-offset: var(--zdp-control-focus-outline-offset);
-}
-
-.zdp-pagination__link[aria-current="page"] {
-  background: var(--zdp-color-accent-primary-soft);
-  border-color: var(--zdp-color-accent-primary-strong);
-  color: var(--zdp-color-ink-strong);
-  cursor: default;
 }
 
 .zdp-pagination__link:disabled {
@@ -4471,7 +4471,8 @@
 }
 
 .zdp-tabs__tab--active {
-  border-bottom-color: var(--zdp-color-accent-primary-strong);
+  background: var(--zdp-color-accent-primary-soft);
+  border-bottom-color: transparent;
   color: var(--zdp-color-ink-strong);
 }
 

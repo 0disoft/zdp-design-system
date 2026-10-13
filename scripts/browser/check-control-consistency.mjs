@@ -34,13 +34,13 @@ export async function verifyControlConsistency(page) {
         const colorsFor = (background, color, border) => {
           reference.style.background = `var(--zdp-color-${background})`;
           reference.style.color = `var(--zdp-color-${color})`;
-          reference.style.border = `1px solid var(--zdp-color-${border})`;
+          reference.style.border = border ? `1px solid var(--zdp-color-${border})` : '1px solid transparent';
           const style = getComputedStyle(reference);
           return {background: style.backgroundColor, color: style.color, border: style.borderTopColor};
         };
         const expectedPrimary = colorsFor('surface-inverse', 'ink-inverse', 'line-strong');
         const expectedSecondary = colorsFor('surface-panel', 'ink-strong', 'line-strong');
-        const expectedSelected = colorsFor('accent-primary-soft', 'ink-strong', 'accent-primary-strong');
+        const expectedSelected = colorsFor('accent-primary-soft', 'ink-strong', null);
         reference.remove();
         const colors = selector => {
           const style = getComputedStyle(root.querySelector(selector));
@@ -49,6 +49,10 @@ export async function verifyControlConsistency(page) {
         return { fields, actions, smallControls, expectedSurface: getComputedStyle(root.querySelector('[data-testid="field-surface-reference"]')).backgroundColor,
           primary: colors('.zdp-button--primary'), solid: colors('.zdp-icon-button--solid'),
           secondary: colors('.zdp-button--secondary'), selected: colors('.zdp-segmented-control__item[aria-checked="true"]'),
+          textScale: colors('.zdp-text-scale-control__item[aria-checked="true"]'),
+          locale: colors('.zdp-locale-switcher__item[aria-checked="true"]'),
+          segmentSurface: getComputedStyle(root.querySelector('.zdp-segmented-control')).backgroundColor,
+          localeSurface: getComputedStyle(root.querySelector('.zdp-locale-switcher')).backgroundColor,
           expectedPrimary, expectedSecondary, expectedSelected,
           navigation,
           inset: [endInset(selectRect, arrowRect), endInset(controlRect, markRect),
@@ -67,6 +71,10 @@ export async function verifyControlConsistency(page) {
       }
       assert.deepEqual(styles.secondary, styles.expectedSecondary, `${theme}/${direction}: secondary action must use the outlined panel surface`);
       assert.deepEqual(styles.selected, styles.expectedSelected, `${theme}/${direction}: selected control must use its own theme's soft surface`);
+      assert.deepEqual(styles.textScale, styles.expectedSelected, `${theme}/${direction}: selected text scale must use a background without an outline`);
+      assert.deepEqual(styles.locale, styles.expectedSelected, `${theme}/${direction}: selected language must use a background without an outline`);
+      assert.notEqual(styles.selected.background, styles.segmentSurface, 'Selected segment must remain distinct from the group surface');
+      assert.notEqual(styles.locale.background, styles.localeSurface, 'Selected language must remain distinct from the group surface');
       assert.equal(baseline.background, styles.expectedSurface, 'Field aliases must resolve in the current nested theme');
       for (const field of styles.fields) assert.deepEqual(field, baseline, `${theme}/${direction}: field frame and typography must match`);
       for (const action of styles.actions) {
@@ -88,6 +96,17 @@ export async function verifyControlConsistency(page) {
       assert.equal(styles.nativePickerDisplay, 'none', 'Native picker must not replace the shared indicator');
       const disclosureTrigger = fixture.locator('.zdp-disclosure__trigger');
       await disclosureTrigger.click();
+      const textScale = fixture.locator('.zdp-text-scale-control__item[aria-checked="true"]');
+      await textScale.focus();
+      await textScale.press('ArrowRight');
+      const focus = await textScale.evaluate(element => {
+        const style = getComputedStyle(element);
+        return {outline: style.outlineStyle, width: style.outlineWidth, border: style.borderTopColor};
+      });
+      assert.equal(focus.outline, 'solid', 'Selected controls must retain visible keyboard focus');
+      assert.equal(focus.width, '3px');
+      assert.notEqual(focus.border, 'rgba(0, 0, 0, 0)', 'Focus border must override the transparent selected border');
+      await textScale.press('Tab');
       assert.equal(await disclosureTrigger.getAttribute('aria-expanded'), 'true');
       await page.waitForFunction(testId => {
         const mark = document.querySelector(`[data-testid="${testId}"] .zdp-disclosure__mark`);
