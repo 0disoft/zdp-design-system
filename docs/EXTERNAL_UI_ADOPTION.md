@@ -79,6 +79,10 @@ Popover는 같은 등급으로 Bits UI `Popover`의 `Root`와 `Content`를 ZDP a
 - `placement`와 `align`은 선호 배치다. 공간이 부족하면 flip/shift하고 긴 내용은 가용 폭·높이에 맞춰 스크롤한다. ZDP 토큰 간격을 쓰며 automatic portal 없이 기존 DOM 안에 내부 positioner만 추가한다.
 - 바깥 닫힘 시점은 Menu가 pointerdown, Popover는 포인터 완료 후 click으로 서로 다르고, Popover는 기존 시점을 유지한다.
 
+### Menu·Popover 부모 경계
+
+Menu와 Popover의 fixed panel이 transform·paint containment 부모 안에 있으면 내부 `floating-boundary.ts`가 clipping ancestor를 감지해 Bits UI의 `collisionBoundary`에 전달한다. 일반 overflow 부모에서 fixed panel이 빠져나오는 기존 동작은 유지하며, transform+overflow hidden/auto 및 paint containment를 실제 browser hit-test로 검증했다(2026-10-13). 공개 boundary prop이나 자동 portal은 추가하지 않는다.
+
 ### Combobox 위치 계산
 
 Combobox 위치 계산은 별도 내부 모듈 `combobox-floating.ts`에서 Floating UI DOM API를 쓴다(2026-10-13, 설치본 1.8.0, 의존성 범위 `1`). 검색·선택·ARIA·IME·폼 상태와 공개 API는 기존 ZDP 구현이 소유한다. `offset`, `flip`, `shift`, `size`, `autoUpdate`로 입력창 폭, 가용 높이, 스크롤·리사이즈를 처리하고 unmount에서 observer/listener를 정리한다. 자동 portal 없이 기존 DOM과 정적 CSS 경로를 유지한다.

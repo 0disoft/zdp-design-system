@@ -9,8 +9,8 @@
 | tokens, CSS, components, stories, preview, fixtures, package readiness | `bun run check` |
 | browser accessibility semantics, responsive geometry, forced colors, and keyboard focus order | `bun run browser:check` |
 | shared field/action geometry, indicator source and inset, nested light/dark themes, LTR/RTL, form/Combobox behavior, viewport flip/shift, long lists, resize and scroll anchoring | `bun run browser:controls:check` |
-| Menu browser keyboard, dismissal, focus, viewport flip/shift, logical alignment, long menus, resize, and scroll anchoring | `bun run browser:menu:check` |
-| Popover browser dismissal/opt-out, focus, viewport flip/shift, LTR/RTL placement×align, long content, resize, scroll anchoring, open shadow root, iframe, Tab/Shift+Tab, IME Escape (panel-outside 포함), and nested Menu+Popover top-only dismiss regression | `bun run browser:popover:check` |
+| Menu browser keyboard, dismissal, focus, viewport flip/shift, transformed/paint clipping ancestors, logical alignment, long menus, resize, and scroll anchoring | `bun run browser:menu:check` |
+| Popover browser dismissal/opt-out, focus, viewport flip/shift, transformed/paint clipping ancestors, LTR/RTL placement×align, long content, resize, scroll anchoring, open shadow root, iframe, Tab/Shift+Tab, IME Escape (panel-outside 포함), and nested Menu+Popover top-only dismiss regression | `bun run browser:popover:check` |
 | Astro consumer tarball install, build, static CSS and split-pane controller, and Menu/Popover/Combobox hydration with viewport positioning | `bun run consumer:astro:check` |
 | high-risk component geometry and theme rendering | GitHub Actions advisory gate backed by `scripts/check-visual-regressions.mjs` |
 | Storybook static build or bundle evidence | `bun run storybook:build` |

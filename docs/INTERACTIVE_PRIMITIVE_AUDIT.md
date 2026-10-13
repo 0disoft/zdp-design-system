@@ -8,10 +8,11 @@
 - Bits UI를 runtime dependency로 쓰는 예외는 `Menu`와 `Popover`다. shadcn-svelte, Ark UI를 포함한 나머지 primitive는 신규 도입을 보류하고 기존 구현과 검토 후보 상태를 유지한다.
 - `Select`와 `CommandField`는 native element를 중심으로 둔 현재 구현을 유지한다.
 - `Combobox`는 searchable single-select를 ZDP-native로 제공하되 filtering, async search, command execution, permissions는 소비 앱에 남긴다.
+- `Combobox`의 위치 계산은 내부 Floating UI DOM adapter가 담당한다. 입력창 폭·가용 높이에 맞춰 위·아래 배치를 보정하고, 긴 목록과 active option은 panel 안에서 스크롤한다. 선택·검색·IME·폼 제출 로직과 공개 API는 기존 ZDP 구현을 유지한다.
 - `Dialog`, `Sheet`, `TermSheet`는 ZDP modal layer, focusable helper, scroll lock, focus return, activation-order stacking을 유지하되 inert sibling, portal, animation orchestration 요구가 커지면 headless 후보로 다시 평가한다.
 - `Sheet`는 settings, filter, drawer형 보조 흐름의 공통 modal edge panel이다. Drawer를 별도 primitive로 복제하지 않고 Sheet placement/use case로 먼저 다룬다.
-- `Menu`와 `Popover`는 가장 높은 위험군이다. 두 컴포넌트 모두 Bits UI를 ZDP adapter 뒤에서 내부 구현으로 채택했다. `Menu`의 typeahead는 구현과 검증을 마쳤고, Menu의 일반 화면 경계 보정은 구현했고, 남은 미래 범위는 submenu, portal, nested overlay와 Popover collision 같은 요구다.
-- `Menu`는 Bits UI `DropdownMenu`(`Root`, `Trigger`, `Content`, `Item`)를 ZDP adapter 뒤에서 내부 구현으로 채택한 첫 사례다. public API와 CSS는 그대로 유지하고, 바깥 pointerdown에서 닫으며 프로그램의 외부 focus 이동은 `onfocusout`의 `flushSync` scope 정리로 닫는다. 채택 동작 검증은 완료됐다: Menu browser `--menu` 통과, Astro 실제 tarball 2페이지(astro 7.3.8, @astrojs/svelte 9.0.1) build와 hydration 통과, SSR hydration 통과, type 0 error/0 warning, CSS parity 688 통과, package·publish check 통과.
+- `Menu`와 `Popover`는 가장 높은 위험군이다. 두 컴포넌트 모두 Bits UI를 ZDP adapter 뒤에서 내부 구현으로 채택했고, 화면 경계와 fixed panel을 가두는 transform·paint 부모 경계의 자동 보정을 구현·검증했다. `Menu`의 typeahead도 구현·검증을 마쳤다. 남은 미래 범위는 submenu, portal target과 복잡한 nested overlay다.
+- `Menu`는 Bits UI `DropdownMenu`(`Root`, `Trigger`, `Content`, `Item`)를 ZDP adapter 뒤에서 내부 구현으로 채택한 첫 사례다. public API와 CSS는 그대로 유지하고, 바깥 pointerdown에서 닫으며 프로그램의 외부 focus 이동은 `onfocusout`의 `flushSync` scope 정리로 닫는다. 최신 검증 결과는 문서 끝의 완료 기록을 따른다.
 - 모바일 keyboard, 긴 옵션, async option, grouped option, virtualized list, 복잡한 collision 요구는 `Menu`, `Popover`, `Combobox` 안에서 계속 키우지 않고 `Sheet` flow 또는 headless spike로 보낸다.
 - `Tooltip`은 짧은 non-interactive label로만 유지한다. 긴 안내, 클릭 가능한 내용, mobile-first 설명은 Popover, Disclosure, Dialog, 소비 앱 flow로 보낸다.
 
@@ -21,13 +22,13 @@
 | --- | --- | --- | --- | --- |
 | Select | Native `select` | Low | label/id/error/describedBy, invalid, disabled, required, focus-visible | Custom select나 combobox 요구 전까지 유지 |
 | CommandField | Native `input` | Low | label, shortcut hint, aria-keyshortcuts/autocomplete/controls/expanded/activedescendant passthrough, input keydown callback | result list, dispatcher, command palette는 별도 primitive로 분리 |
-| Combobox | ZDP custom combobox/listbox | Medium | input combobox role, listbox/option roles, ArrowUp/ArrowDown, Enter select, Escape close, disabled skip, hidden value, open shadow root, InteractionProbe와 Chromium coverage | grouped options, virtualized list, async option loading, multi-select, portal/collision, closed shadow root 요구 시 headless spike |
+| Combobox | ZDP custom combobox/listbox | Medium | input combobox role, listbox/option roles, ArrowUp/ArrowDown, Enter select, Escape close, disabled skip, hidden value, viewport flip/shift, 입력창 폭·가용 높이, 긴 목록, active option 내부 스크롤, resize/scroll 추적, open shadow root, SSR와 packed Astro coverage | grouped options, virtualized list, async option loading, multi-select, portal target, 복잡한 collision, closed shadow root 요구 시 headless spike |
 | Tooltip | Hover/focus label | Low | role tooltip, slot-provided `describedBy`, Escape dismiss, 설명 hover 유지와 짧은 이동 유예, open shadow root와 Chromium coverage | interactive content 금지와 shadow-root stylesheet 설치 계약 유지 |
 | Dialog | ZDP custom modal | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, background inert, body portal와 open shadow root 호환, activation-order modal layer, Chromium nested-layer coverage | package-owned portal API, closed shadow root, animation orchestration 요구가 생기면 headless spike |
 | Sheet | ZDP custom modal edge panel | Medium | right/left/bottom placement, Escape, backdrop close, focus trap, focus return, scroll lock, background inert, body portal와 open shadow root 호환, activation-order modal layer, InteractionProbe와 Chromium coverage | draggable sheet, snap point, package-owned portal API, closed shadow root 요구가 생기면 headless spike |
 | TermSheet | ZDP glossary sheet | Medium | Escape, backdrop close, focus trap, focus return, scroll lock, background inert, body portal와 open shadow root 호환, activation-order modal layer, stable term attributes | glossary 외 설정/필터/drawer 요구는 Sheet로 보내고 closed shadow root는 지원하지 않는다 |
-| Menu | Bits UI DropdownMenu adapter | High | trigger keyboard open, typeahead, IME 조합 보호, roving focus, disabled skip, Home/End, Escape, outside pointerdown close, 외부 focus 이동 close, focus return, viewport flip/shift, 가용 공간 스크롤, resize/scroll 추적, open shadow root, InteractionProbe와 Chromium coverage | Bits UI adapter와 자동 배치 검증 완료. submenu, portal, closed shadow root 요구는 계속 추적 |
-| Popover | Bits UI Popover adapter | High | Escape, outside click, trigger focus policy, focus return, role null/group/dialog, open shadow root, InteractionProbe와 Chromium coverage | Bits UI adapter 동작 검증 완료(2026-10-13). collision/portal, nested overlay, closed shadow root는 future 재평가 |
+| Menu | Bits UI DropdownMenu adapter | High | trigger keyboard open, typeahead, IME 조합 보호, roving focus, disabled skip, Home/End, Escape, outside pointerdown close, 외부 focus 이동 close, focus return, viewport·transform/paint 부모 경계 보정, 가용 공간 스크롤, resize/scroll 추적, open shadow root, InteractionProbe와 Chromium coverage | Bits UI adapter와 자동 배치 검증 완료. submenu, portal target, closed shadow root 요구는 계속 추적 |
+| Popover | Bits UI Popover adapter | High | Escape, outside click, trigger focus policy, focus return, role null/group/dialog, viewport·transform/paint 부모 경계 보정, LTR/RTL 정렬, 긴 내용, resize/scroll 추적, open shadow root, iframe, SSR와 packed Astro coverage | Bits UI adapter와 자동 배치 검증 완료(2026-10-13). portal target, 복잡한 nested overlay, closed shadow root는 future 재평가 |
 
 ## Component Notes
 
@@ -84,7 +85,7 @@ settings, filter, drawer형 보조 흐름은 TermSheet에 추가하지 않고 `S
 ### Menu
 
 `Menu`는 현재 가장 조심해야 하는 primitive다.
-typeahead는 구현과 검증을 마쳤으므로 더 이상 후보 조건이 아니다. 남은 미래 범위는 submenu, checkbox/radio menu item, collision, portal, nested menu 확장이다.
+typeahead와 일반 화면·부모 경계 보정은 구현과 검증을 마쳤다. 남은 미래 범위는 submenu, checkbox/radio menu item, portal target, 복잡한 nested menu 확장이다.
 그 확장 요구가 실제로 반복되면 이 컴포넌트 안에서 계속 키우지 않고 별도 headless spike로 분리한다.
 단, Bits UI를 쓰더라도 `ZdpMenuItem`, `.zdp-menu*` class, token mapping, Storybook examples, consumer fixture는 ZDP가 소유한다.
 `Menu`는 Bits UI `DropdownMenu`의 `Root`, `Trigger`, `Content`, `Item`을 ZDP adapter 뒤에서만 쓰는 Runtime Dependency로 채택했다. Root 공개 props·콜백·type, `ZdpMenuItem` public 타입, `items`·`placement`·`align`·`open`·`triggerLabel`·`idPrefix` props 이름, named `trigger` slot, `.zdp-menu*` class, token mapping, 기존 custom Escape dismiss 공유 순서, 기존 DOM controller·CSS는 그대로 유지한다.
@@ -139,3 +140,5 @@ spike 결과는 다음을 남겨야 한다.
 public API, class, token, consumer setup에 외부 철학이 새면 spike는 실패다.
 
 Menu 자동 배치 검증 범위(2026-10-13): 4방향·3정렬·LTR/RTL, 모바일 네 모서리, 긴 메뉴, 리사이즈, 트리거 이동, 스크롤 컨테이너 추적, 키보드·dismiss, SSR/hydration, 실제 tarball Astro island. 일반 화면 경계 대응은 Bits UI Content에 맡기며 추가 portal·submenu 요구는 별도로 평가한다.
+
+자동 배치 완료 기록(2026-10-13): Menu·Popover의 화면 경계, transform+overflow hidden/auto 부모, paint containment에서 실제 hit-test와 긴 panel 스크롤을 검증했다. Combobox의 네 모서리·LTR/RTL·긴 목록·리사이즈·스크롤·active option·폼 제출도 검증했다. browser:menu:check, browser:popover:check, browser:controls:check, ssr:hydration:check, type:check(0 error/0 warning), api:check, storybook:check, preview:check(CSS parity 701), a11y:check, package:check, fixtures:check와 packed Astro 4페이지 build·hydration이 통과했다. Astro 정적 HTML/CSS와 Svelte island 경로, 공개 API는 유지했고 자동 portal은 추가하지 않았다.
