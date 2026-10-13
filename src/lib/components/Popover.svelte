@@ -4,6 +4,7 @@
   import { createZdpDismissLayer } from '../dismiss-layer';
   import { toZdpDomId } from '../dom-id';
   import { getZdpActiveElement, hasZdpFocusMoved } from '../focusable';
+  import { getZdpFloatingBoundaries } from '../floating-boundary';
 
   type Placement = 'top' | 'right' | 'bottom' | 'left';
   type Alignment = 'start' | 'center' | 'end';
@@ -41,6 +42,7 @@
   let triggerElement = $state<HTMLElement | null>(null);
   let floatingGap = $state(0);
   let floatingDirection = $state<'ltr' | 'rtl'>('ltr');
+  let floatingBoundaries = $state<HTMLElement[]>([]);
   let previousFocusElement = $state<HTMLElement | null>(null);
   let knownOpenState = $state(false);
   let restoreFocusAfterClose = $state<boolean | null>(null);
@@ -57,6 +59,7 @@
     // Resolve rem-based spacing through CSS, as in Menu.
     floatingGap = Number.parseFloat(style.columnGap) || 0;
     floatingDirection = style.direction === 'rtl' ? 'rtl' : 'ltr';
+    floatingBoundaries = getZdpFloatingBoundaries(triggerElement);
   });
 
   $effect.pre(() => {
@@ -187,6 +190,7 @@
       {align}
       sideOffset={floatingGap}
       collisionPadding={floatingGap}
+      collisionBoundary={floatingBoundaries}
       avoidCollisions={true}
       sticky="always"
       strategy="fixed"

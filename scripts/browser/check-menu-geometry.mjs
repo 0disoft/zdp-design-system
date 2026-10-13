@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { verifyFloatingClippingContracts } from './check-floating-clipping.mjs';
 
 export async function verifyMenuGeometryContracts(page) {
   const originalViewport = page.viewportSize();
@@ -85,6 +86,8 @@ export async function verifyMenuGeometryContracts(page) {
     await page.keyboard.press('Escape');
     assert.equal(await trigger.evaluate(element => element === document.activeElement), true);
     await page.setViewportSize({ width: 600, height: 600 });
+    await configure({ corner: 'bottom-right', placement: 'bottom', align: 'end', count: 40 });
+    await verifyFloatingClippingContracts(page, { kind: 'menu', trigger, panel });
     await configure({ corner: 'top-left', placement: 'bottom', align: 'start', count: 4 });
     await page.getByTestId('edge-menu-anchor').evaluate(anchor => {
       const scroller = document.createElement('div');

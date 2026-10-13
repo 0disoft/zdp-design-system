@@ -16,6 +16,7 @@ stability=contract
   import { createZdpDismissLayer } from '../dismiss-layer';
   import { toZdpDomId } from '../dom-id';
   import { getZdpActiveElement } from '../focusable';
+  import { getZdpFloatingBoundaries } from '../floating-boundary';
   import type { ZdpMenuItem } from '../menu';
 
   type Placement = 'top' | 'right' | 'bottom' | 'left';
@@ -55,6 +56,7 @@ stability=contract
   let activeItemId = $state('');
   let floatingGap = $state(0);
   let floatingDirection = $state<'ltr' | 'rtl'>('ltr');
+  let floatingBoundaries = $state<HTMLElement[]>([]);
   const dismissLayer = createZdpDismissLayer();
 
   const enabledItems = $derived(items.filter((item) => !item.disabled));
@@ -69,6 +71,7 @@ stability=contract
     // Read resolved pixels, so rem-based ZDP spacing remains the source of truth.
     floatingGap = Number.parseFloat(style.columnGap) || 0;
     floatingDirection = style.direction === 'rtl' ? 'rtl' : 'ltr';
+    floatingBoundaries = getZdpFloatingBoundaries(triggerElement);
   });
 
   $effect(() => {
@@ -334,6 +337,7 @@ stability=contract
       {align}
       sideOffset={floatingGap}
       collisionPadding={floatingGap}
+      collisionBoundary={floatingBoundaries}
       avoidCollisions={true}
       sticky="always"
       strategy="fixed"
