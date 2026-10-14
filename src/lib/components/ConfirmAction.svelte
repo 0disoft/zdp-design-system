@@ -254,7 +254,7 @@
 <style>
   .zdp-confirm-action {
     --zdp-confirm-action-progress: 0;
-    --zdp-confirm-action-fill: var(--zdp-color-accent-primary-soft);
+    --zdp-confirm-action-fill: var(--zdp-color-accent-primary-strong);
 
     align-items: center;
     background: var(--zdp-color-surface-raised);
@@ -283,6 +283,7 @@
     background: var(--zdp-confirm-action-fill);
     bottom: 0;
     left: 0;
+    opacity: 0.24;
     position: absolute;
     top: 0;
     width: calc(var(--zdp-confirm-action-progress) * 100%);
@@ -331,7 +332,7 @@
   }
 
   .zdp-confirm-action__hint {
-    color: var(--zdp-color-ink-muted);
+    color: var(--zdp-color-ink-normal);
     font-size: var(--zdp-type-caption-size);
     line-height: var(--zdp-type-caption-line-height);
   }
