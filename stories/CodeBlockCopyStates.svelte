@@ -26,7 +26,7 @@
         <h2 id={`code-copy-${theme}-title`}>{theme === 'light' ? 'Light' : 'Dark'}</h2>
         <Stack gap="md">
           <CodeBlock
-            label="스타일 불러오기"
+            label={`스타일 불러오기 · ${theme === 'light' ? '밝은 테마' : '어두운 테마'}`}
             language="ts"
             code={exampleCode}
             caption="복사하는 동안에는 '복사 중', 끝나면 '복사됨', 실패하면 '복사 실패'로 바뀝니다."
