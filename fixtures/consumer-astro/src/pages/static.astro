@@ -5,6 +5,7 @@ import 'zdp-design-system/components/Input.css';
 import 'zdp-design-system/components/Select.css';
 import 'zdp-design-system/components/Disclosure.css';
 import 'zdp-design-system/components/ResizableSplitPane.css';
+import 'zdp-design-system/components/Progress.css';
 ---
 <html lang="en">
   <head><meta charset="UTF-8" /><title>Static design system consumer</title></head>
@@ -22,6 +23,9 @@ import 'zdp-design-system/components/ResizableSplitPane.css';
         </button>
       </div>
     </section>
+    <div class="zdp-progress zdp-progress--primary zdp-progress--md" data-indeterminate="true" role="progressbar" aria-label="Static waiting progress">
+      <span class="zdp-progress__track" aria-hidden="true"><span class="zdp-progress__bar"></span></span>
+    </div>
     <div id="workspace" style="display:grid;grid-template-columns:240px 8px 1fr;width:800px;height:240px">
       <nav id="primary">Navigation</nav>
       <div id="separator"></div>

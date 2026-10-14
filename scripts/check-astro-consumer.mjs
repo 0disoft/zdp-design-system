@@ -3,6 +3,7 @@ import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { join, resolve, sep } from 'node:path';
 import { chromium } from 'playwright-core';
 import { npmCommand } from './npm-command.ts';
+import { verifyWaitingProgress } from './browser/check-progress-waiting.mjs';
 
 const root = process.cwd();
 await mkdir(join(root, 'tmp'), { recursive: true });
@@ -58,6 +59,7 @@ try {
   page.on('pageerror', error => errors.push(error.message));
   await page.route('https://**', route => route.abort());
   await page.goto(`http://127.0.0.1:${server.port}/static/`);
+  await verifyWaitingProgress(page, page.getByRole('progressbar', { name: 'Static waiting progress', exact: true }));
   const staticGeometry = await page.evaluate(async () => {
     const input = document.querySelector('.zdp-input');
     const select = document.querySelector('.zdp-select');

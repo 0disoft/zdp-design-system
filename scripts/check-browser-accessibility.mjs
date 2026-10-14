@@ -134,6 +134,7 @@ try {
     await verifyShadowOverlayContracts(page);
     await verifyMenuGeometryContracts(page);
   } else if (process.argv.includes('--controls')) {
+    await verifyProgressRangeContracts(page);
     await verifyFoundationAndFormContracts(page);
     await verifyControlConsistency(page);
     await verifyNativeInputContracts(page);

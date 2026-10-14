@@ -8,4 +8,5 @@
       <Progress min={-Number.MAX_VALUE} max={Number.MAX_VALUE} {value} ariaLabel={`Range position ${index}`} />
     </div>
   {/each}
+  <Progress ariaLabel="Waiting progress" />
 </section>

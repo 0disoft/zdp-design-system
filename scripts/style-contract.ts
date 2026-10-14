@@ -38,6 +38,16 @@ export function assertNoDecorativeEffects(
   }
 }
 
+// Only the indeterminate Progress bar may use this functional waiting motion.
+export function withoutProgressWaitingMotion(source: string): string {
+  return source
+    .replace(/\.zdp-progress\[data-indeterminate="true"\] \.zdp-progress__bar\s*\{[^{}]*\}/g,
+      (rule) => rule
+        .replace('animation: zdp-progress-waiting 1.4s ease-in-out infinite alternate;', '')
+        .replace('animation: none;', ''))
+    .replace(/@keyframes zdp-progress-waiting\s*\{\s*from\s*\{\s*transform: translateX\(0\);\s*\}\s*to\s*\{\s*transform: translateX\(var\(--zdp-progress-waiting-travel\)\);\s*\}\s*\}/g, '');
+}
+
 export function assertNoOverRoundedUsage(
   failures: string[],
   targetName: string,

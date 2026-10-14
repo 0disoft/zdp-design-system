@@ -87,9 +87,23 @@
   }
 
   .zdp-progress[data-indeterminate="true"] .zdp-progress__bar {
-    background: color-mix(in oklch, var(--zdp-progress-accent) 35%, var(--zdp-color-ink-strong));
-    inline-size: 100%;
-    opacity: 0.64;
+    --zdp-progress-waiting-travel: 233.333333%;
+    animation: zdp-progress-waiting 1.4s ease-in-out infinite alternate;
+    inline-size: 30%;
+    transition: none;
+  }
+
+  .zdp-progress[data-indeterminate="true"]:dir(rtl) .zdp-progress__bar {
+    --zdp-progress-waiting-travel: -233.333333%;
+  }
+
+  @keyframes zdp-progress-waiting {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(var(--zdp-progress-waiting-travel));
+    }
   }
 
   .zdp-progress--neutral {
@@ -113,6 +127,11 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .zdp-progress[data-indeterminate="true"] .zdp-progress__bar {
+      animation: none;
+      margin-inline: auto;
+    }
+
     .zdp-progress__bar {
       transition: none;
     }

@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
+import { verifyWaitingProgress } from './check-progress-waiting.mjs';
 
 export async function verifyProgressRangeContracts(page) {
+  await verifyWaitingProgress(page, page.getByRole('progressbar', { name: 'Waiting progress', exact: true }));
   for (const [index, percent] of [0, 50, 100].entries()) {
     const progress = page.getByTestId(`numeric-progress-${index}`).getByRole('progressbar');
     assert.equal(await progress.evaluate(element => element.style.getPropertyValue('--zdp-progress-value').trim()), `${percent}%`);
