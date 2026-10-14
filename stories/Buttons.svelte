@@ -105,7 +105,7 @@
     <section class="component-story__panel" data-zdp-theme="dark" aria-labelledby="buttons-dark-title">
       <h2 id="buttons-dark-title">Dark</h2>
       <Stack gap="lg">
-        <Surface padding="lg">
+        <div class="text-action-demo-shell">
           <Stack gap="md">
             <h3>기본 작업</h3>
             <Inline gap="sm" align="center">
@@ -125,7 +125,7 @@
               <Button variant="text">가격 보기</Button>
               <IconButton
                 ariaLabel="추가"
-                variant="ghost"
+                variant="solid"
                 onclick={() => (darkIconPressed = !darkIconPressed)}
                 ariaPressed={darkIconPressed}
               >
@@ -137,9 +137,9 @@
               · {darkIconPressed ? '추가 선택됨' : '추가 대기'}
             </p>
           </Stack>
-        </Surface>
+        </div>
 
-        <Surface padding="lg">
+        <div class="text-action-demo-shell">
           <Stack gap="md">
             <h3>경계 없는 탐색</h3>
             <nav class="text-action-demo" aria-label="경계 없는 탐색 — 어두운 테마">
@@ -149,7 +149,7 @@
               <a class="zdp-button zdp-button--text zdp-button--md" href="#buttons-dark-title">고객 지원</a>
             </nav>
           </Stack>
-        </Surface>
+        </div>
 
         <Surface padding="lg">
           <Stack gap="md">
@@ -159,7 +159,7 @@
               <Button variant="secondary" disabled><Icon size="sm">+</Icon>추가</Button>
               <Button variant="danger" disabled>삭제</Button>
               <Button variant="text" disabled>가격 보기</Button>
-              <IconButton ariaLabel="추가" variant="ghost" disabled>+</IconButton>
+              <IconButton ariaLabel="추가" variant="solid" disabled>+</IconButton>
             </Inline>
           </Stack>
         </Surface>
