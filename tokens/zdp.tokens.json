@@ -116,6 +116,20 @@
         "hex": "#965644",
         "oklch": "oklch(52.2993% 0.089878 36.544)"
       }
+    },
+    "interaction": {
+      "hover": {
+        "hex": "#e8e2d7",
+        "oklch": "oklch(91.4483% 0.016141 82.792)"
+      },
+      "pressed": {
+        "hex": "#ddd3c4",
+        "oklch": "oklch(87.0803% 0.023131 78.203)"
+      },
+      "selected": {
+        "hex": "#e3d8c4",
+        "oklch": "oklch(88.5701% 0.029449 82.591)"
+      }
     }
   },
   "space": {

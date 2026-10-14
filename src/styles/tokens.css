@@ -28,6 +28,9 @@
   --zdp-color-accent-success: #59664a;
   --zdp-color-accent-warning: #84612f;
   --zdp-color-accent-danger: #965644;
+  --zdp-color-interaction-hover: #e8e2d7;
+  --zdp-color-interaction-pressed: #ddd3c4;
+  --zdp-color-interaction-selected: #e3d8c4;
   --zdp-space-0: 0;
   --zdp-space-1: 0.25rem;
   --zdp-space-2: 0.5rem;
@@ -201,6 +204,9 @@
   --zdp-color-accent-success: #a8b993;
   --zdp-color-accent-warning: #d7b375;
   --zdp-color-accent-danger: #dcaa99;
+  --zdp-color-interaction-hover: #443c32;
+  --zdp-color-interaction-pressed: #504638;
+  --zdp-color-interaction-selected: #51432f;
 }
 
 @supports (color: oklch(50% 0.1 240)) {
@@ -234,6 +240,9 @@
     --zdp-color-accent-success: oklch(49.1127% 0.045874 128.234);
     --zdp-color-accent-warning: oklch(51.8144% 0.080700 74.082);
     --zdp-color-accent-danger: oklch(52.2993% 0.089878 36.544);
+    --zdp-color-interaction-hover: oklch(91.4483% 0.016141 82.792);
+    --zdp-color-interaction-pressed: oklch(87.0803% 0.023131 78.203);
+    --zdp-color-interaction-selected: oklch(88.5701% 0.029449 82.591);
   }
 
   [data-zdp-theme="dark"] {
@@ -265,6 +274,9 @@
     --zdp-color-accent-success: oklch(76.2469% 0.055859 127.300);
     --zdp-color-accent-warning: oklch(78.4718% 0.090018 80.441);
     --zdp-color-accent-danger: oklch(77.9455% 0.063859 39.601);
+    --zdp-color-interaction-hover: oklch(36.1257% 0.020015 73.284);
+    --zdp-color-interaction-pressed: oklch(40.0065% 0.026277 76.128);
+    --zdp-color-interaction-selected: oklch(39.1846% 0.036898 76.191);
   }
 }
 

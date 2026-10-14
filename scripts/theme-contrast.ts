@@ -21,6 +21,9 @@ export function checkThemeContrast(css: string): string[] {
       for (const ink of ['strong', 'normal', 'muted']) pairs.push([`ink-${ink}`, `surface-${surface}`, 4.5]);
       for (const status of ['success', 'warning', 'danger']) pairs.push([`accent-${status}`, `surface-${surface}`, 4.5]);
     }
+    for (const state of ['hover', 'pressed', 'selected']) {
+      for (const ink of ['strong', 'normal']) pairs.push([`ink-${ink}`, `interaction-${state}`, 4.5]);
+    }
     for (const [foreground, background, minimum] of pairs) {
       const fg = colors.get(foreground);
       const bg = colors.get(background);
