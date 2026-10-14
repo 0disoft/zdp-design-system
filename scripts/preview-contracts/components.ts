@@ -244,7 +244,7 @@ for (const requiredText of [
   '.zdp-skeleton--text .zdp-skeleton__line',
   '.zdp-skeleton--block .zdp-skeleton__line',
   '.zdp-skeleton--avatar .zdp-skeleton__line',
-  '.zdp-skeleton[data-animated="false"] .zdp-skeleton__line',
+  '.zdp-skeleton[data-animated="true"] .zdp-skeleton__line',
   '.zdp-ad-slot',
   '.zdp-ad-slot--reserved',
   '.zdp-ad-slot--banner',

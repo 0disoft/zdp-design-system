@@ -38,7 +38,7 @@ export function assertNoDecorativeEffects(
   }
 }
 
-// Allow only the scoped Progress waiting motion and Spinner rotation.
+// Allow only the scoped functional loading animations.
 export function withoutLoadingMotion(source: string): string {
   return source
     .replace(/\.zdp-progress\[data-indeterminate="true"\] \.zdp-progress__bar\s*\{[^{}]*\}/g,
@@ -50,7 +50,12 @@ export function withoutLoadingMotion(source: string): string {
       (rule) => rule
         .replace('animation: zdp-spinner-rotate 1s linear infinite;', '')
         .replace('animation: none;', ''))
-    .replace(/@keyframes zdp-spinner-rotate\s*\{\s*to\s*\{\s*transform: rotate\(1turn\);\s*\}\s*\}/g, '');
+    .replace(/@keyframes zdp-spinner-rotate\s*\{\s*to\s*\{\s*transform: rotate\(1turn\);\s*\}\s*\}/g, '')
+    .replace(/\.zdp-skeleton\[data-animated="true"\] \.zdp-skeleton__line\s*\{[^{}]*\}/g,
+      (rule) => rule
+        .replace('animation: zdp-skeleton-pulse 1.8s ease-in-out infinite alternate;', '')
+        .replace('animation: none;', ''))
+    .replace(/@keyframes zdp-skeleton-pulse\s*\{\s*from\s*\{\s*opacity: 0\.72;\s*\}\s*to\s*\{\s*opacity: 1;\s*\}\s*\}/g, '');
 }
 
 export function assertNoOverRoundedUsage(

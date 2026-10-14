@@ -7,6 +7,7 @@ import 'zdp-design-system/components/Disclosure.css';
 import 'zdp-design-system/components/ResizableSplitPane.css';
 import 'zdp-design-system/components/Progress.css';
 import 'zdp-design-system/components/Spinner.css';
+import 'zdp-design-system/components/Skeleton.css';
 ---
 <html lang="en">
   <head><meta charset="UTF-8" /><title>Static design system consumer</title></head>
@@ -39,6 +40,15 @@ import 'zdp-design-system/components/Spinner.css';
       <div id="separator"></div>
       <main id="secondary">Static Astro content</main>
     </div>
+    {[true, false].map(animated => (
+      <div data-testid={`static-skeletons-${animated ? 'animated' : 'static'}`} style="max-width:300px">
+        {['text', 'block', 'avatar'].map(variant => (
+          <div class={`zdp-skeleton zdp-skeleton--${variant}`} data-animated={String(animated)} aria-hidden="true">
+            <span class="zdp-skeleton__line zdp-skeleton__line--last" aria-hidden="true"></span>
+          </div>
+        ))}
+      </div>
+    ))}
     <script>
       import { createZdpSplitPaneController } from 'zdp-design-system/split-pane';
       const controller = createZdpSplitPaneController({

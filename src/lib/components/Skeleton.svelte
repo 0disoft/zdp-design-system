@@ -76,7 +76,22 @@
     border-radius: 50%;
   }
 
-  .zdp-skeleton[data-animated="false"] .zdp-skeleton__line {
-    opacity: 0.72;
+  .zdp-skeleton[data-animated="true"] .zdp-skeleton__line {
+    animation: zdp-skeleton-pulse 1.8s ease-in-out infinite alternate;
+  }
+
+  @keyframes zdp-skeleton-pulse {
+    from {
+      opacity: 0.72;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .zdp-skeleton[data-animated="true"] .zdp-skeleton__line {
+      animation: none;
+    }
   }
 </style>

@@ -1,8 +1,17 @@
 import assert from 'node:assert/strict';
 import { verifyWaitingProgress } from './check-progress-waiting.mjs';
 import { verifySpinnerMotion } from './check-spinner-motion.mjs';
+import { verifySkeletonMotion } from './check-skeleton-motion.mjs';
 
 export async function verifyProgressRangeContracts(page) {
+  const skeletons = page.getByTestId('skeleton-motion-animated').locator('.zdp-skeleton');
+  await verifySkeletonMotion(page, skeletons, page.getByTestId('skeleton-motion-static').locator('.zdp-skeleton'));
+  await page.getByTestId('skeleton-motion-toggle').click();
+  assert.equal(await skeletons.first().getAttribute('data-animated'), 'false');
+  assert.equal(await skeletons.locator('.zdp-skeleton__line').evaluateAll(lines => lines.every(line => getComputedStyle(line).animationName === 'none')), true);
+  await page.getByTestId('skeleton-motion-toggle').click();
+  assert.equal(await skeletons.first().getAttribute('data-animated'), 'true');
+  assert.equal(await skeletons.locator('.zdp-skeleton__line').evaluateAll(lines => lines.every(line => getComputedStyle(line).animationName !== 'none')), true);
   await verifySpinnerMotion(page, page.getByTestId('spinner-motion-fixture').locator('.zdp-spinner'));
   await verifyWaitingProgress(page, page.getByRole('progressbar', { name: 'Waiting progress', exact: true }));
   for (const [index, percent] of [0, 50, 100].entries()) {

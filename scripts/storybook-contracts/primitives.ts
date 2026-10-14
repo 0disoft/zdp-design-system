@@ -371,7 +371,7 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
     '.zdp-skeleton--text .zdp-skeleton__line',
     '.zdp-skeleton--block .zdp-skeleton__line',
     '.zdp-skeleton--avatar .zdp-skeleton__line',
-    '.zdp-skeleton[data-animated="false"] .zdp-skeleton__line'
+    '.zdp-skeleton[data-animated="true"] .zdp-skeleton__line'
   ]) {
     if (!skeleton.includes(requiredText)) {
       failures.push(`Skeleton component is missing ${requiredText}.`);
@@ -379,7 +379,7 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
   }
 
   for (const source of [badge, callout, toast, statusToast, progress, spinner, skeleton]) {
-    assertNoDecorativeEffects(failures, 'Feedback component', source === progress || source === spinner ? withoutLoadingMotion(source) : source);
+    assertNoDecorativeEffects(failures, 'Feedback component', [progress, spinner, skeleton].includes(source) ? withoutLoadingMotion(source) : source);
     assertNoOverRoundedUsage(failures, 'Feedback component', source);
   }
 
