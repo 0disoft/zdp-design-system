@@ -11,7 +11,7 @@
 
 <section data-testid="button-loading-fixture" data-zdp-theme="light" aria-label="Loading actions">
   <button type="button" data-testid="button-loading-toggle" onclick={() => loading = !loading}>Toggle busy</button>
-  <div data-testid="button-loading-variants" style="display:flex;flex-wrap:wrap;gap:12px;padding:12px">
+  <div data-testid="button-loading-variants" style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:12px">
     {#each variants as variant}
       {#each sizes as size}
         <Button {variant} {size} {loading} onclick={() => clicks += 1}>Save {variant} {size}</Button>

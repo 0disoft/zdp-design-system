@@ -27,7 +27,7 @@ import 'zdp-design-system/components/Skeleton.css';
     </div>
     <button class="zdp-button zdp-button--primary zdp-button--md" type="button">Static action</button>
     <section data-testid="static-button-loading" data-zdp-theme="light">
-      <div data-testid="static-button-loading-variants" style="display:flex;flex-wrap:wrap;gap:12px;padding:12px">
+      <div data-testid="static-button-loading-variants" style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:12px">
         {['primary', 'secondary', 'danger', 'text'].map(variant => ['sm', 'md'].map(size => (
           <button class={`zdp-button zdp-button--${variant} zdp-button--${size}`} type="button" data-loading="false">
             <span class="zdp-button__spinner" aria-hidden="true"></span>

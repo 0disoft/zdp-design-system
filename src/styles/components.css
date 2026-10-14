@@ -1641,15 +1641,14 @@
     border-inline-end-color: currentColor;
     border-radius: 50%;
     box-sizing: border-box;
-    display: block;
+    display: none;
     flex: 0 0 auto;
     inline-size: var(--zdp-control-glyph-sm);
-    visibility: hidden;
   }
 
   .zdp-button[data-loading="true"] .zdp-button__spinner {
     animation: zdp-button-loading-rotate 1s linear infinite;
-    visibility: visible;
+    display: block;
   }
 
   .zdp-button[data-loading="true"]:not([data-disabled="true"]) {

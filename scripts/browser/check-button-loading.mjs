@@ -11,8 +11,36 @@ export async function verifyButtonLoadingAppearance(page, root, buttons, setLoad
         await page.emulateMedia({ reducedMotion: 'no-preference' });
         await setLoading(false);
         const before = await geometry(buttons);
+        if (!icon) {
+          const idleLayout = await buttons.evaluateAll(elements => elements.map(element => {
+            const spinner = element.querySelector('.zdp-button__spinner');
+            const box = element.getBoundingClientRect();
+            const range = document.createRange();
+            range.selectNodeContents(element);
+            const label = range.getBoundingClientRect();
+            const baseline = element.cloneNode(true);
+            baseline.querySelector('.zdp-button__spinner').remove();
+            baseline.removeAttribute('data-loading');
+            element.after(baseline);
+            const baselineWidth = baseline.getBoundingClientRect().width;
+            baseline.remove();
+            return {
+              display: getComputedStyle(spinner).display,
+              centered: Math.abs((box.left + box.right) / 2 - (label.left + label.right) / 2) <= 1,
+              normalWidth: Math.abs(box.width - baselineWidth) <= 1
+            };
+          }));
+          assert.ok(idleLayout.every(layout => layout.display === 'none' && layout.centered && layout.normalWidth),
+            'Idle loading-capable buttons must match ordinary button width with centered text and no reserved spinner gap.');
+        }
         await setLoading(true);
-        assert.deepEqual(await geometry(buttons), before, 'Busy buttons must preserve size and label.');
+        const busy = await geometry(buttons);
+        if (icon) assert.deepEqual(busy, before, 'Icon buttons must preserve size and name.');
+        else {
+          assert.deepEqual(busy.map(({ width, ...rest }) => rest), before.map(({ width, ...rest }) => rest),
+            'Busy text buttons must preserve height and label.');
+          assert.ok(busy.every((state, index) => state.width >= before[index].width), 'Only visible loading feedback may add width.');
+        }
         assert.equal(await buttons.count(), icon ? 4 : 8, 'Exercise both sizes of all action variants.');
         for (const button of await buttons.all()) {
           assert.equal(await button.isDisabled(), true);
@@ -49,8 +77,10 @@ export async function verifyButtonLoadingAppearance(page, root, buttons, setLoad
         assert.ok((await buttons.locator(spinnerSelector).evaluateAll(elements =>
           elements.map(element => getComputedStyle(element).animationName))).every(name => name === 'none'));
         await setLoading(false);
-        assert.ok((await buttons.locator(spinnerSelector).evaluateAll(elements =>
-          elements.map(element => getComputedStyle(element).visibility))).every(visibility => visibility === 'hidden'));
+        const hidden = await buttons.locator(spinnerSelector).evaluateAll((elements, icon) =>
+          elements.every(element => icon ? getComputedStyle(element).visibility === 'hidden' : getComputedStyle(element).display === 'none'), icon);
+        assert.ok(hidden);
+        assert.deepEqual(await geometry(buttons), before, 'Completion must restore the original button size and label.');
         if (icon) assert.ok((await buttons.locator('.zdp-icon-button__glyph').evaluateAll(elements =>
           elements.map(element => getComputedStyle(element).visibility))).every(visibility => visibility === 'visible'));
       }
