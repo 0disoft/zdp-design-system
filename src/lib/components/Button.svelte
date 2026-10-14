@@ -3,6 +3,7 @@
   export let size: 'sm' | 'md' = 'md';
   export let type: 'button' | 'submit' | 'reset' = 'button';
   export let disabled = false;
+  export let loading: boolean | undefined = undefined;
   export let id: string | null = null;
   export let name: string | null = null;
   export let value: string | null = null;
@@ -14,6 +15,26 @@
   export let ariaPressed: boolean | null = null;
   export let ariaKeyShortcuts: string | null = null;
   export let onclick: ((event: MouseEvent) => void) | null = null;
+
+  let clickLatch = false;
+
+  function releaseClickLatch() {
+    clickLatch = false;
+  }
+
+  function handleClick(event: MouseEvent) {
+    if (disabled || loading === true || clickLatch) {
+      event.preventDefault();
+      return;
+    }
+
+    if (loading !== undefined) {
+      clickLatch = true;
+      queueMicrotask(releaseClickLatch);
+    }
+
+    onclick?.(event);
+  }
 </script>
 
 <button
@@ -23,16 +44,22 @@
   {value}
   {form}
   {type}
-  {disabled}
-  aria-disabled={disabled}
+  disabled={disabled || loading === true}
+  aria-disabled={disabled || loading === true}
+  aria-busy={loading === true ? 'true' : undefined}
+  data-loading={loading === undefined ? undefined : loading ? 'true' : 'false'}
+  data-disabled={disabled ? 'true' : undefined}
   aria-label={ariaLabel ?? undefined}
   aria-controls={ariaControls ?? undefined}
   aria-describedby={ariaDescribedBy ?? undefined}
   aria-expanded={ariaExpanded ?? undefined}
   aria-pressed={ariaPressed ?? undefined}
   aria-keyshortcuts={ariaKeyShortcuts ?? undefined}
-  onclick={onclick ?? undefined}
+  onclick={handleClick}
 >
+  {#if loading !== undefined}
+    <span class="zdp-button__spinner" aria-hidden="true"></span>
+  {/if}
   <slot />
 </button>
 
@@ -183,6 +210,41 @@
   .zdp-button:disabled {
     cursor: not-allowed;
     opacity: var(--zdp-control-disabled-opacity);
+  }
+
+  .zdp-button__spinner {
+    block-size: var(--zdp-control-glyph-sm);
+    border: 2px solid var(--zdp-color-line-subtle);
+    border-block-start-color: currentColor;
+    border-inline-end-color: currentColor;
+    border-radius: 50%;
+    box-sizing: border-box;
+    display: block;
+    flex: 0 0 auto;
+    inline-size: var(--zdp-control-glyph-sm);
+    visibility: hidden;
+  }
+
+  .zdp-button[data-loading="true"] .zdp-button__spinner {
+    animation: zdp-button-loading-rotate 1s linear infinite;
+    visibility: visible;
+  }
+
+  .zdp-button[data-loading="true"]:not([data-disabled="true"]) {
+    cursor: progress;
+    opacity: 1;
+  }
+
+  @keyframes zdp-button-loading-rotate {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .zdp-button[data-loading="true"] .zdp-button__spinner {
+      animation: none;
+    }
   }
 
   @media (forced-colors: active) {

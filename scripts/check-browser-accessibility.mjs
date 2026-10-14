@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { verifyButtonLoadingContracts } from './browser/check-button-loading.mjs';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -127,7 +128,9 @@ try {
     };
   });
 
-  if (process.argv.includes('--menu')) {
+  if (process.argv.includes('--button')) {
+    await verifyButtonLoadingContracts(page);
+  } else if (process.argv.includes('--menu')) {
     await verifyOverlayContracts(page);
     await verifyDynamicMenuContracts(page);
     await verifyReservedNavigationContracts(page);
@@ -136,6 +139,7 @@ try {
   } else if (process.argv.includes('--controls')) {
     await verifyProgressRangeContracts(page);
     await verifyFoundationAndFormContracts(page);
+    await verifyButtonLoadingContracts(page);
     await verifyControlConsistency(page);
     await verifyNativeInputContracts(page);
     await verifyComboboxSelectionContracts(page);
@@ -150,6 +154,7 @@ try {
     await verifyShadowOverlayContracts(page);
   } else {
   await verifyFoundationAndFormContracts(page);
+  await verifyButtonLoadingContracts(page);
   await verifyControlConsistency(page);
   await verifyProgressRangeContracts(page);
   await verifySplitPointerOwnership(page);

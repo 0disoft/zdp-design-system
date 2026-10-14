@@ -9,6 +9,7 @@
   export let size: 'sm' | 'md' = 'md';
   export let label = '저장';
   export let disabled = false;
+  export let loading = false;
   export let showIcon = false;
   export let ariaKeyShortcuts: string | null = null;
 
@@ -25,6 +26,7 @@
           {variant}
           {size}
           {disabled}
+          {loading}
           {ariaKeyShortcuts}
           ariaDescribedBy="button-playground-status"
           onclick={() => (clickCount += 1)}
@@ -37,7 +39,7 @@
         </Button>
       </div>
       <p class="button-playground__status" id="button-playground-status">
-        {disabled ? '비활성 상태' : clickCount > 0 ? `선택 ${clickCount}회` : '선택 전'}
+        {disabled ? '비활성 상태' : loading ? '처리 중' : clickCount > 0 ? `선택 ${clickCount}회` : '선택 전'}
       </p>
     </Stack>
   </Surface>

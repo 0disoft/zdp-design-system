@@ -7,6 +7,11 @@ Button의 md·sm 높이와 모서리는 입력 컴포넌트와 같은 control �
 Primary·secondary·danger Button과 solid IconButton은 채워진 또는 tonal surface로 우선순위를 구분하고, ghost IconButton은 hover/active에서만 surface를 드러낸다. 기본 상태의 시각적 border는 사용하지 않지만 크기 안정성을 위한 투명 border slot과 keyboard focus outline, Windows forced-colors의 system border는 유지한다.
 
 `Button variant="text"`와 framework-neutral `.zdp-button--text`는 콘텐츠·마케팅 화면의 경계 없는 텍스트 액션에 사용한다. 기본·hover·focus 상태는 배경 상자 대신 하단 선으로 구분하고, hover와 focus에서는 밝고 어두운 표면 모두에서 선 두께가 분명히 바뀌어야 하며, 최소 hit target은 그대로 유지한다. 실제 페이지 이동은 `<a class="zdp-button zdp-button--text zdp-button--md">`처럼 링크 의미를 유지하며, 폼 제출이나 상태 변경은 Svelte Button을 사용한다. 이 variant를 모든 버튼의 기본값으로 바꾸거나 파괴적·결제 확인 작업에 사용하지 않는다.
+
+Button의 `loading` prop은 `boolean | undefined`이고 기본값은 `undefined`다. 생략하면 기존 버튼 크기를 유지한다. `loading={false}`는 `.zdp-button__spinner` 자리를 미리 확보하고, `true`는 같은 자리에서 spinner를 표시하므로 문구와 버튼 크기가 바뀌지 않는다. 처리 중에는 `native disabled`, `aria-disabled`, `aria-busy="true"`로 클릭·키보드 재실행과 submit·reset을 막는다. 같은 JavaScript task 안의 연속 클릭도 차단하며 첫 클릭의 기본 동작은 유지한다. 처리 중에는 투명도 1과 `progress` 커서를 쓰고, 명시적으로 `disabled`도 전달했으면 기존 비활성 표현을 유지한다. `prefers-reduced-motion: reduce`에서는 spinner 회전만 멈춘다. 요청 시작·완료와 오류 처리, 상태 안내 문구는 소비 앱이 소유한다.
+
+Astro 등 framework-neutral markup은 `<button class="zdp-button zdp-button--primary zdp-button--md" data-loading="true" disabled aria-disabled="true" aria-busy="true">` 안에서 문구 앞에 `<span class="zdp-button__spinner" aria-hidden="true"></span>`를 둔다. 대기 상태는 `data-loading="false"`로 바꾸고 native `disabled`와 `aria-busy`를 해제하며 `aria-disabled="false"`로 갱신한다. 별도로 비활성화한 버튼은 `data-disabled="true"`로 구분한다. CSS는 모양만 제공하므로 상태 속성 갱신과 동작 차단은 소비 앱에서 함께 처리한다.
+
 ConfirmAction은 중요한 액션을 밀기 또는 길게 누르기로 확인하는 표면이며 `onconfirm` 콜백만 전달한다. resting/hover/active/confirmed 상태는 outer border가 아니라 tonal surface, 진행 fill, thumb 색으로 구분하고 keyboard focus와 forced-colors에서만 의미 경계를 복원한다. 결제, 삭제, 권한, 환불 판단과 서버 요청은 소비 앱이 계속 소유한다.
 
 CommandField는 검색 입력의 label, frame, focus-within, shortcut keycap, help/error id, `ariaKeyShortcuts`, `ariaAutocomplete`, result id 연결, 입력 keydown callback만 제공하며 검색 인덱스, 결과 정렬, command palette, 라우팅, 권한 판단은 소비 앱이 계속 소유한다. `ariaAutocomplete`, `ariaControls`, `ariaExpanded`, `ariaActivedescendant` 중 하나를 전달하면 입력은 `combobox` 역할과 기본 `aria-expanded="false"`를 함께 노출한다. 결과 목록, keyboard dispatcher, command 실행 상태는 소비 앱이 계속 소유한다.

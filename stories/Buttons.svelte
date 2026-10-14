@@ -1,5 +1,6 @@
 <script lang="ts">
   import Button from '../src/lib/components/Button.svelte';
+  import ButtonLoadingStates from './ButtonLoadingStates.svelte';
   import ConfirmAction from '../src/lib/components/ConfirmAction.svelte';
   import Icon from '../src/lib/components/Icon.svelte';
   import IconButton from '../src/lib/components/IconButton.svelte';
@@ -26,6 +27,7 @@
     <section class="component-story__panel" data-zdp-theme="light" aria-labelledby="buttons-light-title">
       <h2 id="buttons-light-title">Light</h2>
       <Stack gap="lg">
+        <Surface padding="lg"><ButtonLoadingStates /></Surface>
         <div class="text-action-demo-shell">
           <Stack gap="md">
             <h3>기본 작업</h3>
@@ -105,6 +107,7 @@
     <section class="component-story__panel" data-zdp-theme="dark" aria-labelledby="buttons-dark-title">
       <h2 id="buttons-dark-title">Dark</h2>
       <Stack gap="lg">
+        <Surface padding="lg"><ButtonLoadingStates /></Surface>
         <div class="text-action-demo-shell">
           <Stack gap="md">
             <h3>기본 작업</h3>

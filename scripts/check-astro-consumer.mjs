@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { verifyButtonLoadingAppearance } from './browser/check-button-loading.mjs';
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { join, resolve, sep } from 'node:path';
 import { chromium } from 'playwright-core';
@@ -61,6 +62,17 @@ try {
   page.on('pageerror', error => errors.push(error.message));
   await page.route('https://**', route => route.abort());
   await page.goto(`http://127.0.0.1:${server.port}/static/`);
+  const loadingRoot = page.getByTestId('static-button-loading');
+  const loadingButtons = loadingRoot.getByTestId('static-button-loading-variants').locator('button');
+  await verifyButtonLoadingAppearance(page, loadingRoot, loadingButtons, async loading => {
+    await loadingButtons.evaluateAll((buttons, loading) => {
+      for (const button of buttons) {
+        button.setAttribute('data-loading', String(loading));
+        button.disabled = loading;
+        if (loading) button.setAttribute('aria-busy', 'true'); else button.removeAttribute('aria-busy');
+      }
+    }, loading);
+  });
   await verifyWaitingProgress(page, page.getByRole('progressbar', { name: 'Static waiting progress', exact: true }));
   await verifySpinnerMotion(page, page.getByTestId('static-spinners').locator('.zdp-spinner'));
   await verifySkeletonMotion(page, page.getByTestId('static-skeletons-animated').locator('.zdp-skeleton'), page.getByTestId('static-skeletons-static').locator('.zdp-skeleton'));

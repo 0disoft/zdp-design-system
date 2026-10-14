@@ -55,7 +55,12 @@ export function withoutLoadingMotion(source: string): string {
       (rule) => rule
         .replace('animation: zdp-skeleton-pulse 1.8s ease-in-out infinite alternate;', '')
         .replace('animation: none;', ''))
-    .replace(/@keyframes zdp-skeleton-pulse\s*\{\s*from\s*\{\s*opacity: 0\.72;\s*\}\s*to\s*\{\s*opacity: 1;\s*\}\s*\}/g, '');
+    .replace(/@keyframes zdp-skeleton-pulse\s*\{\s*from\s*\{\s*opacity: 0\.72;\s*\}\s*to\s*\{\s*opacity: 1;\s*\}\s*\}/g, '')
+    .replace(/(?:\.zdp-button\[data-loading="true"\] )?\.zdp-button__spinner\s*\{[^{}]*\}/g,
+      (rule) => rule
+        .replace('animation: zdp-button-loading-rotate 1s linear infinite;', '')
+        .replace('animation: none;', ''))
+    .replace(/@keyframes zdp-button-loading-rotate\s*\{\s*to\s*\{\s*transform: rotate\(1turn\);\s*\}\s*\}/g, '');
 }
 
 export function assertNoOverRoundedUsage(

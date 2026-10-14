@@ -129,6 +129,7 @@
     "browser:menu:check": "node scripts/check-browser-accessibility.mjs --menu",
     "browser:popover:check": "node scripts/check-browser-accessibility.mjs --popover",
     "browser:controls:check": "node scripts/check-browser-accessibility.mjs --controls",
+    "browser:button:check": "node scripts/check-browser-accessibility.mjs --button",
     "consumer:astro:check": "bun scripts/check-astro-consumer.mjs",
     "type:check": "svelte-check --tsconfig ./tsconfig.json",
     "package:build": "bun run styles:check && bun scripts/generate-tokens.ts && bun scripts/generate-share.ts && bun scripts/build-package.ts",

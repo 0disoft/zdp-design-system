@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ButtonLoadingFixture from './ButtonLoadingFixture.svelte';
   import NumericProgressFixture from './NumericProgressFixture.svelte';
   import ControlConsistencyFixture from './ControlConsistencyFixture.svelte';
   import MenuGeometryFixture from './MenuGeometryFixture.svelte';
@@ -908,6 +909,7 @@
   <ShadowFormResetFixture />
   <ReassociatedFormFixture />
   <FilteredComboboxFixture />
+  <ButtonLoadingFixture />
 </main>
 
 <style>

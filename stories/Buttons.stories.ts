@@ -27,6 +27,7 @@ export const Playground: StoryObj<typeof ButtonPlayground> = {
     size: 'md',
     label: '저장',
     disabled: false,
+    loading: false,
     showIcon: false,
     ariaKeyShortcuts: null
   },
@@ -43,6 +44,9 @@ export const Playground: StoryObj<typeof ButtonPlayground> = {
       control: 'text'
     },
     disabled: {
+      control: 'boolean'
+    },
+    loading: {
       control: 'boolean'
     },
     showIcon: {
