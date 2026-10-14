@@ -152,8 +152,9 @@ function checkExports(): void {
 
 function checkRuntimeDependencyBoundary(): void {
   const dependencies = packageJson.dependencies ?? {};
-  if (dependencies['bits-ui'] !== '2' || Object.keys(dependencies).some(name => name !== 'bits-ui')) {
-    failures.push('Only the intentionally adopted bits-ui major 2 runtime dependency is allowed.');
+  if (dependencies['bits-ui'] !== '2' || dependencies['@floating-ui/dom'] !== '1' ||
+    Object.keys(dependencies).some(name => !['bits-ui', '@floating-ui/dom'].includes(name))) {
+    failures.push('Only the intentionally adopted bits-ui major 2 and @floating-ui/dom major 1 runtime dependencies are allowed.');
   }
 
   const library = join(root, 'src/lib');
@@ -163,6 +164,10 @@ function checkRuntimeDependencyBoundary(): void {
     if (/(?:from\s*|import\s*\()(['"])bits-ui(?:\/[^'"]*)?\1/.test(source) &&
       !['components/Menu.svelte', 'components/Popover.svelte'].includes(path.replaceAll('\\', '/'))) {
       failures.push(`Bits UI must stay inside the Svelte Menu and Popover adapters: src/lib/${path}.`);
+    }
+    if (/(?:from\s*|import\s*\()(['"])@floating-ui\/dom(?:\/[^'"]*)?\1/.test(source) &&
+      path.replaceAll('\\', '/') !== 'combobox-floating.ts') {
+      failures.push(`Floating UI must stay inside the Combobox positioning adapter: src/lib/${path}.`);
     }
   }
 
