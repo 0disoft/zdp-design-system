@@ -337,7 +337,7 @@
     line-height: var(--zdp-type-caption-line-height);
   }
 
-  .zdp-confirm-action:hover:not(:disabled) {
+  .zdp-confirm-action:where(:hover:not(:disabled)) {
     background: var(--zdp-color-interaction-hover);
     border-color: transparent;
   }
@@ -362,8 +362,8 @@
     border-color: transparent;
   }
 
-  .zdp-confirm-action[data-active="true"],
-  .zdp-confirm-action[data-confirmed="true"] {
+  .zdp-confirm-action:where([data-active="true"]),
+  .zdp-confirm-action:where([data-confirmed="true"]) {
     border-color: transparent;
   }
 

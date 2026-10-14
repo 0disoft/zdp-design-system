@@ -64,8 +64,8 @@ export function checkStoriesContracts(context: StorybookCheckContext): void {
   );
 
   const dangerButtonHoverBlock = button.slice(
-    button.indexOf('.zdp-button--danger:hover:not(:disabled)'),
-    button.indexOf('.zdp-button--danger:active:not(:disabled)')
+    button.indexOf('.zdp-button--danger:where(:hover:not(:disabled))'),
+    button.indexOf('.zdp-button--danger:where(:active:not(:disabled))')
   );
 
   if (!secondaryButtonBlock.includes('background: var(--zdp-color-surface-panel)') ||

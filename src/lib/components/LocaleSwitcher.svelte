@@ -203,13 +203,13 @@
     min-width: calc(var(--zdp-control-icon-md) + var(--zdp-space-2));
   }
 
-  .zdp-locale-switcher__item:hover:not(:disabled):not([aria-checked='true']) {
+  .zdp-locale-switcher__item:where(:hover:not(:disabled):not([aria-checked='true'])) {
     background: var(--zdp-color-interaction-hover);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
-  .zdp-locale-switcher__item:active:not(:disabled):not([aria-checked='true']) {
+  .zdp-locale-switcher__item:where(:active:not(:disabled):not([aria-checked='true'])) {
     background: var(--zdp-color-interaction-pressed);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);

@@ -56,13 +56,13 @@
   width: var(--zdp-control-icon-md);
 }
 
-.zdp-theme-toggle:hover:not(:disabled) {
+.zdp-theme-toggle:where(:hover:not(:disabled)) {
   background: var(--zdp-color-interaction-hover);
   border-color: var(--zdp-color-line-strong);
   color: var(--zdp-color-ink-strong);
 }
 
-.zdp-theme-toggle:active:not(:disabled) {
+.zdp-theme-toggle:where(:active:not(:disabled)) {
   background: var(--zdp-color-interaction-pressed);
   border-color: var(--zdp-color-line-strong);
   color: var(--zdp-color-ink-strong);
@@ -180,13 +180,13 @@
   min-width: calc(var(--zdp-control-icon-md) + var(--zdp-space-2));
 }
 
-.zdp-locale-switcher__item:hover:not(:disabled):not([aria-checked="true"]) {
+.zdp-locale-switcher__item:where(:hover:not(:disabled):not([aria-checked="true"])) {
   background: var(--zdp-color-interaction-hover);
   border-color: transparent;
   color: var(--zdp-color-ink-strong);
 }
 
-.zdp-locale-switcher__item:active:not(:disabled):not([aria-checked="true"]) {
+.zdp-locale-switcher__item:where(:active:not(:disabled):not([aria-checked="true"])) {
   background: var(--zdp-color-interaction-pressed);
   border-color: transparent;
   color: var(--zdp-color-ink-strong);
@@ -265,13 +265,13 @@
   width: var(--zdp-control-icon-md);
 }
 
-.zdp-text-scale-control__item:hover:not(:disabled):not([aria-checked="true"]) {
+.zdp-text-scale-control__item:where(:hover:not(:disabled):not([aria-checked="true"])) {
   background: var(--zdp-color-interaction-hover);
   border-color: transparent;
   color: var(--zdp-color-ink-strong);
 }
 
-.zdp-text-scale-control__item:active:not(:disabled):not([aria-checked="true"]) {
+.zdp-text-scale-control__item:where(:active:not(:disabled):not([aria-checked="true"])) {
   background: var(--zdp-color-interaction-pressed);
   border-color: transparent;
   color: var(--zdp-color-ink-strong);
@@ -476,8 +476,8 @@
   width: var(--zdp-control-switch-thumb-size);
 }
 
-.zdp-choice:hover .zdp-choice__input:not(:checked):not(:disabled) + .zdp-choice__mark,
-.zdp-switch:hover .zdp-switch__input:not(:checked):not(:disabled) + .zdp-switch__track {
+:where(.zdp-choice:hover) .zdp-choice__input:where(:not(:checked):not(:disabled)) + .zdp-choice__mark,
+:where(.zdp-switch:hover) .zdp-switch__input:where(:not(:checked):not(:disabled)) + .zdp-switch__track {
   background: var(--zdp-color-surface-raised);
   border-color: var(--zdp-color-line-strong);
 }
@@ -588,7 +588,7 @@
     transition: background-color 9999s ease-out;
   }
 
-  .zdp-input:hover:not(:disabled) {
+  .zdp-input:where(:hover:not(:disabled)) {
     background: var(--zdp-control-field-surface-hover);
     border-color: var(--zdp-control-field-border-hover);
   }
@@ -641,7 +641,7 @@
     color: var(--zdp-color-ink-muted);
   }
 
-  .zdp-textarea:hover:not(:disabled) {
+  .zdp-textarea:where(:hover:not(:disabled)) {
     background: var(--zdp-control-field-surface-hover);
     border-color: var(--zdp-control-field-border-hover);
   }
@@ -722,7 +722,7 @@
     opacity: var(--zdp-control-disabled-opacity);
   }
 
-  .zdp-select:hover:not(:disabled) {
+  .zdp-select:where(:hover:not(:disabled)) {
     background: var(--zdp-control-field-surface-hover);
     border-color: var(--zdp-control-field-border-hover);
   }

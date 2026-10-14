@@ -83,13 +83,13 @@
     width: var(--zdp-control-icon-md);
   }
 
-  .zdp-theme-toggle:hover:not(:disabled) {
+  .zdp-theme-toggle:where(:hover:not(:disabled)) {
     background: var(--zdp-color-interaction-hover);
     border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);
   }
 
-  .zdp-theme-toggle:active:not(:disabled) {
+  .zdp-theme-toggle:where(:active:not(:disabled)) {
     background: var(--zdp-color-interaction-pressed);
     border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);

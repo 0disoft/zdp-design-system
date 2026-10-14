@@ -126,7 +126,7 @@
     font-size: var(--zdp-type-caption-size);
     line-height: var(--zdp-type-caption-line-height);
   }
-  .zdp-identity-chip--link:active:not([data-selected="true"]):not([aria-current]) {
+  .zdp-identity-chip--link:where(:active:not([data-selected="true"]):not([aria-current])) {
     background: var(--zdp-color-interaction-pressed);
   }
 

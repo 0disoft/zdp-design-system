@@ -89,7 +89,7 @@
     vertical-align: middle;
   }
 
-  .zdp-sort-header:hover:not(:disabled) {
+  .zdp-sort-header:where(:hover:not(:disabled)) {
     background: var(--zdp-color-interaction-hover);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
@@ -151,7 +151,7 @@
   .zdp-sort-header--descending .zdp-sort-header__mark {
     color: var(--zdp-color-accent-primary-strong);
   }
-  .zdp-sort-header:active:not(:disabled) {
+  .zdp-sort-header:where(:active:not(:disabled)) {
     background: var(--zdp-color-interaction-pressed);
   }
 </style>

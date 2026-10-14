@@ -55,6 +55,8 @@ It still loads `tokens.css` and the complete `components.css`. Existing consumer
 
 Neutral controls use `--zdp-color-interaction-hover`, `--zdp-color-interaction-pressed` and `--zdp-color-interaction-selected` for temporary and selected states. These theme-aware colors stay distinct from panel and raised surfaces; selected states remain visible without extra borders. Preserve the provided foreground and focus styles when customizing them.
 
+Transient state selectors use `:where()` where needed to keep hover and press from overriding keyboard focus or invalid borders. Preserve this priority when customizing controls: an invalid field keeps its error border and gains the keyboard outline when focused. Pass `invalid` and `disabled` to the control itself as well as its surrounding `Field`; wrapper flags do not set native input attributes.
+
 CSS entries provide presentation only. Dialog, Sheet, TermSheet, Menu, Popover, Combobox, Tabs, Accordion, ResizableSplitPane and other interactive primitives still require their Svelte component or the documented framework-neutral controller. Copying their classes does not reproduce focus management, dismissal, keyboard navigation, hydration or persistence behavior.
 
 An open shadow root must install `foundation.css` and the selected component CSS files inside that shadow root. Document-level styles do not cross the shadow boundary. Closed shadow roots remain unsupported.

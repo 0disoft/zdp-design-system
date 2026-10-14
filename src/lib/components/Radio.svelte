@@ -101,7 +101,7 @@
     width: var(--zdp-control-choice-indicator-size);
   }
 
-  .zdp-choice:hover .zdp-choice__input:not(:checked):not(:disabled) + .zdp-choice__mark {
+  :where(.zdp-choice:hover) .zdp-choice__input:where(:not(:checked):not(:disabled)) + .zdp-choice__mark {
     background: var(--zdp-color-surface-raised);
     border-color: var(--zdp-color-line-strong);
   }

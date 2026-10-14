@@ -79,13 +79,13 @@
     color: var(--zdp-color-ink-inverse);
   }
 
-  .zdp-button--primary:hover:not(:disabled) {
+  .zdp-button--primary:where(:hover:not(:disabled)) {
     background: color-mix(in oklch, var(--zdp-color-surface-inverse) 94%, var(--zdp-color-ink-inverse));
     border-color: transparent;
     color: var(--zdp-color-ink-inverse);
   }
 
-  .zdp-button--primary:active:not(:disabled) {
+  .zdp-button--primary:where(:active:not(:disabled)) {
     background: color-mix(in oklch, var(--zdp-color-surface-inverse) 88%, var(--zdp-color-ink-inverse));
     border-color: transparent;
     color: var(--zdp-color-ink-inverse);
@@ -97,13 +97,13 @@
     color: var(--zdp-color-ink-strong);
   }
 
-  .zdp-button--secondary:hover:not(:disabled) {
+  .zdp-button--secondary:where(:hover:not(:disabled)) {
     background: var(--zdp-color-interaction-hover);
     border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);
   }
 
-  .zdp-button--secondary:active:not(:disabled) {
+  .zdp-button--secondary:where(:active:not(:disabled)) {
     background: var(--zdp-color-interaction-pressed);
     border-color: var(--zdp-color-line-strong);
   }
@@ -114,14 +114,14 @@
     color: var(--zdp-color-ink-inverse);
   }
 
-  .zdp-button--danger:hover:not(:disabled) {
+  .zdp-button--danger:where(:hover:not(:disabled)) {
     background: var(--zdp-color-accent-danger);
     background: color-mix(in oklch, var(--zdp-color-accent-danger) 90%, var(--zdp-color-surface-inverse));
     border-color: transparent;
     color: var(--zdp-color-ink-inverse);
   }
 
-  .zdp-button--danger:active:not(:disabled) {
+  .zdp-button--danger:where(:active:not(:disabled)) {
     background: var(--zdp-color-accent-danger);
     background: color-mix(in oklch, var(--zdp-color-accent-danger) 82%, var(--zdp-color-surface-inverse));
     border-color: transparent;
@@ -151,15 +151,15 @@
       transform var(--zdp-motion-fast) ease;
   }
 
-  .zdp-button--text:hover:not(:disabled),
-  .zdp-button--text:active:not(:disabled) {
+  .zdp-button--text:where(:hover:not(:disabled)),
+  .zdp-button--text:where(:active:not(:disabled)) {
     background: transparent;
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
-  .zdp-button--text:hover:not(:disabled)::after,
-  .zdp-button--text:active:not(:disabled)::after {
+  .zdp-button--text:where(:hover:not(:disabled))::after,
+  .zdp-button--text:where(:active:not(:disabled))::after {
     background: var(--zdp-color-accent-primary-strong);
     min-block-size: var(--zdp-control-focus-underline-width);
     transform: scaleX(1.08);

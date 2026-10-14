@@ -304,7 +304,7 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
     '.zdp-sort-header--ascending .zdp-sort-header__mark::before',
     '.zdp-sort-header--descending .zdp-sort-header__mark::before',
     '.zdp-sort-header',
-    '.zdp-sort-header:hover:not(:disabled)',
+    '.zdp-sort-header:where(:hover:not(:disabled))',
     '.zdp-sort-header:focus-visible',
     '.zdp-sort-header--ascending .zdp-sort-header__mark'
   ]) {
@@ -516,7 +516,7 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
     '.zdp-share-dock--rail',
     '.zdp-share-dock--bottom',
     '.zdp-share-dock--inline',
-    '.zdp-share-action:hover:not(:disabled)',
+    '.zdp-share-action:where(:hover:not(:disabled):not([aria-disabled="true"]))',
     '.zdp-share-action:focus-visible',
     'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
     'max-inline-size: calc(var(--zdp-viewport-inline) - var(--zdp-space-6))'

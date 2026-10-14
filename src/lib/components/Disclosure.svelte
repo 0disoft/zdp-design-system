@@ -156,12 +156,12 @@
     width: 100%;
   }
 
-  .zdp-disclosure__trigger:hover:not(:disabled) {
+  .zdp-disclosure__trigger:where(:hover:not(:disabled)) {
     background: var(--zdp-color-interaction-hover);
     color: var(--zdp-color-ink-strong);
   }
 
-  .zdp-disclosure__trigger:active:not(:disabled) {
+  .zdp-disclosure__trigger:where(:active:not(:disabled)) {
     background: var(--zdp-color-interaction-pressed);
     color: var(--zdp-color-ink-strong);
   }

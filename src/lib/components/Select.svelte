@@ -104,7 +104,7 @@
     opacity: var(--zdp-control-disabled-opacity);
   }
 
-  .zdp-select:hover:not(:disabled) {
+  .zdp-select:where(:hover:not(:disabled)) {
     background: var(--zdp-control-field-surface-hover);
     border-color: var(--zdp-control-field-border-hover);
   }

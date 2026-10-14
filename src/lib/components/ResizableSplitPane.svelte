@@ -253,7 +253,7 @@
     inset-inline-start: 0;
   }
 
-  .zdp-resizable-split-pane__separator:hover::before,
+  .zdp-resizable-split-pane__separator:where(:hover:not([aria-disabled='true']))::before,
   .zdp-resizable-split-pane__separator:focus-visible::before,
   .zdp-resizable-split-pane--dragging > .zdp-resizable-split-pane__separator::before {
     background: var(--zdp-color-focus-line);

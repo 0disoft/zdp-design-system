@@ -272,7 +272,7 @@
     padding-inline: var(--zdp-space-3);
   }
 
-  .zdp-pagination__link:hover:not(:disabled):not([aria-current='page']) {
+  .zdp-pagination__link:where(:hover:not(:disabled):not([aria-current='page'])) {
     background: var(--zdp-color-interaction-hover);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
@@ -303,7 +303,7 @@
   .zdp-pagination__ellipsis {
     color: var(--zdp-color-ink-muted);
   }
-  .zdp-pagination__link:active:not(:disabled):not([aria-current="page"]) {
+  .zdp-pagination__link:where(:active:not(:disabled):not([aria-current="page"])) {
     background: var(--zdp-color-interaction-pressed);
   }
 </style>

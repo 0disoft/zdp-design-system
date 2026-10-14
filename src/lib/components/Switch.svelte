@@ -110,7 +110,7 @@
     width: var(--zdp-control-switch-thumb-size);
   }
 
-  .zdp-switch:hover .zdp-switch__input:not(:checked):not(:disabled) + .zdp-switch__track {
+  :where(.zdp-switch:hover) .zdp-switch__input:where(:not(:checked):not(:disabled)) + .zdp-switch__track {
     background: var(--zdp-color-surface-raised);
     border-color: var(--zdp-color-line-strong);
   }

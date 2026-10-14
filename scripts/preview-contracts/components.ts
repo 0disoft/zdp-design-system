@@ -27,14 +27,14 @@ for (const requiredText of [
   'background: var(--zdp-color-accent-primary-strong)',
   'background: var(--zdp-color-accent-danger)',
   'opacity: 0.24',
-  '.zdp-button--primary:hover:not(:disabled)',
-  '.zdp-button--secondary:hover:not(:disabled)',
-  '.zdp-button--danger:hover:not(:disabled)',
+  '.zdp-button--primary:where(:hover:not(:disabled))',
+  '.zdp-button--secondary:where(:hover:not(:disabled))',
+  '.zdp-button--danger:where(:hover:not(:disabled))',
   'background: var(--zdp-color-surface-raised)',
-  '.zdp-button--primary:active:not(:disabled)',
-  '.zdp-icon-button--solid:hover:not(:disabled)',
-  '.zdp-icon-button--ghost:hover:not(:disabled)',
-  '.zdp-icon-button--solid:active:not(:disabled)',
+  '.zdp-button--primary:where(:active:not(:disabled))',
+  '.zdp-icon-button--solid:where(:hover:not(:disabled))',
+  '.zdp-icon-button--ghost:where(:hover:not(:disabled))',
+  '.zdp-icon-button--solid:where(:active:not(:disabled))',
   '.zdp-badge',
   '.zdp-badge--primary',
   'color: var(--zdp-color-ink-strong)',
@@ -142,7 +142,7 @@ for (const requiredText of [
   '.zdp-theme-toggle',
   '.zdp-theme-toggle--sm',
   '.zdp-theme-toggle--md',
-  '.zdp-theme-toggle:hover:not(:disabled)',
+  '.zdp-theme-toggle:where(:hover:not(:disabled))',
   '.zdp-theme-toggle:focus-visible',
   '.zdp-theme-toggle__icon',
   '.zdp-theme-toggle__icon--moon svg',
@@ -172,7 +172,7 @@ for (const requiredText of [
   '.zdp-disclosure',
   '.zdp-disclosure__heading',
   '.zdp-disclosure__trigger',
-  '.zdp-disclosure__trigger:hover:not(:disabled)',
+  '.zdp-disclosure__trigger:where(:hover:not(:disabled))',
   '.zdp-disclosure__trigger:focus-visible',
   '.zdp-disclosure__trigger:disabled',
   '.zdp-disclosure__title',
@@ -184,7 +184,7 @@ for (const requiredText of [
   '.zdp-segmented-control__item',
   '.zdp-segmented-control--sm .zdp-segmented-control__item',
   '.zdp-segmented-control--md .zdp-segmented-control__item',
-  '.zdp-segmented-control__item:hover:not(:disabled):not([aria-checked="true"])',
+  '.zdp-segmented-control__item:where(:hover:not(:disabled):not([aria-checked="true"]))',
   '.zdp-segmented-control__item:focus-visible',
   '.zdp-segmented-control__item--selected',
   '.zdp-segmented-control__item[aria-checked="true"]',
@@ -308,7 +308,7 @@ for (const requiredText of [
   '.zdp-share-dock--inline',
   '.zdp-share-dock__list',
   '.zdp-share-action',
-  '.zdp-share-action:hover:not(:disabled)',
+  '.zdp-share-action:where(:hover:not(:disabled):not([aria-disabled="true"]))',
   '.zdp-share-action:focus-visible',
   '.zdp-share-action__mark',
   '.zdp-share-icon',
@@ -357,7 +357,7 @@ for (const requiredText of [
   'flex-wrap: nowrap',
   'width: max-content',
   'white-space: nowrap',
-  '.zdp-pagination__link:hover:not(:disabled):not([aria-current="page"])',
+  '.zdp-pagination__link:where(:hover:not(:disabled):not([aria-current="page"]))',
   '.zdp-pagination__link:focus-visible',
   '.zdp-pagination__link[aria-current="page"]',
   '.zdp-pagination__link:disabled',
@@ -370,7 +370,7 @@ for (const requiredText of [
   '.zdp-tabs__panel',
   '.zdp-tabs__panel:focus-visible',
   '.zdp-term-trigger',
-  '.zdp-term-trigger:hover:not(:disabled)',
+  '.zdp-term-trigger:where(:hover:not(:disabled))',
   '.zdp-term-trigger:focus-visible',
   '.zdp-term-sheet__backdrop',
   '.zdp-term-sheet',
@@ -419,9 +419,9 @@ for (const requiredText of [
   '.zdp-select',
   '.zdp-help-text',
   '.zdp-error-text',
-  '.zdp-input:hover:not(:disabled)',
-  '.zdp-textarea:hover:not(:disabled)',
-  '.zdp-select:hover:not(:disabled)',
+  '.zdp-input:where(:hover:not(:disabled))',
+  '.zdp-textarea:where(:hover:not(:disabled))',
+  '.zdp-select:where(:hover:not(:disabled))',
   '.zdp-input:focus-visible',
   '.zdp-textarea:focus-visible',
   '.zdp-select:focus-visible',
@@ -438,8 +438,8 @@ for (const requiredText of [
   '.zdp-switch__track',
   'border-bottom: 2px solid currentcolor',
   'border-left: 2px solid currentcolor',
-  '.zdp-choice:hover .zdp-choice__input:not(:checked):not(:disabled) + .zdp-choice__mark',
-  '.zdp-switch:hover .zdp-switch__input:not(:checked):not(:disabled) + .zdp-switch__track',
+  ':where(.zdp-choice:hover) .zdp-choice__input:where(:not(:checked):not(:disabled)) + .zdp-choice__mark',
+  ':where(.zdp-switch:hover) .zdp-switch__input:where(:not(:checked):not(:disabled)) + .zdp-switch__track',
   'grid-template-columns: var(--zdp-control-choice-size) minmax(0, 1fr)',
   'grid-template-columns: var(--zdp-control-switch-width) minmax(0, 1fr)',
   'height: var(--zdp-control-choice-size)',
@@ -486,7 +486,7 @@ const staticTermTriggerBlock = componentStyle.slice(
 
 for (const requiredText of [
   'background: var(--zdp-color-accent-primary-soft)',
-  '.zdp-term-trigger:hover:not(:disabled)',
+  '.zdp-term-trigger:where(:hover:not(:disabled))',
   'color: var(--zdp-color-ink-strong)'
 ]) {
   if (!staticTermTriggerBlock.includes(requiredText)) {
@@ -539,8 +539,8 @@ const staticDangerButtonBlock = componentStyle.slice(
 );
 
 const staticDangerButtonHoverBlock = componentStyle.slice(
-  componentStyle.indexOf('.zdp-button--danger:hover:not(:disabled)'),
-  componentStyle.indexOf('.zdp-button--danger:active:not(:disabled)')
+  componentStyle.indexOf('.zdp-button--danger:where(:hover:not(:disabled))'),
+  componentStyle.indexOf('.zdp-button--danger:where(:active:not(:disabled))')
 );
 
 if (!staticSecondaryButtonBlock.includes('background: var(--zdp-color-surface-panel)') ||
@@ -569,7 +569,7 @@ for (const [label, selector] of [
     componentStyle.indexOf(`${selector}__item {`)
   );
   const interactionBlock = componentStyle.slice(
-    componentStyle.indexOf(`${selector}__item:hover`),
+    componentStyle.indexOf(`${selector}__item:where(:hover`),
     componentStyle.indexOf(`${selector}__item:disabled`)
   );
 

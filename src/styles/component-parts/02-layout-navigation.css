@@ -596,13 +596,13 @@
   padding: 0 var(--zdp-space-3);
 }
 
-.zdp-segmented-control__item:hover:not(:disabled):not([aria-checked="true"]) {
+.zdp-segmented-control__item:where(:hover:not(:disabled):not([aria-checked="true"])) {
   background: var(--zdp-color-interaction-hover);
   border-color: transparent;
   color: var(--zdp-color-ink-strong);
 }
 
-.zdp-segmented-control__item:active:not(:disabled):not([aria-checked="true"]) {
+.zdp-segmented-control__item:where(:active:not(:disabled):not([aria-checked="true"])) {
   background: var(--zdp-color-interaction-pressed);
   border-color: transparent;
   color: var(--zdp-color-ink-strong);
@@ -798,13 +798,13 @@
     color: var(--zdp-color-ink-inverse);
   }
 
-  .zdp-button--primary:hover:not(:disabled) {
+  .zdp-button--primary:where(:hover:not(:disabled)) {
     background: color-mix(in oklch, var(--zdp-color-surface-inverse) 94%, var(--zdp-color-ink-inverse));
     border-color: transparent;
     color: var(--zdp-color-ink-inverse);
   }
 
-  .zdp-button--primary:active:not(:disabled) {
+  .zdp-button--primary:where(:active:not(:disabled)) {
     background: color-mix(in oklch, var(--zdp-color-surface-inverse) 88%, var(--zdp-color-ink-inverse));
     border-color: transparent;
     color: var(--zdp-color-ink-inverse);
@@ -816,13 +816,13 @@
     color: var(--zdp-color-ink-strong);
   }
 
-  .zdp-button--secondary:hover:not(:disabled) {
+  .zdp-button--secondary:where(:hover:not(:disabled)) {
     background: var(--zdp-color-interaction-hover);
     border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);
   }
 
-  .zdp-button--secondary:active:not(:disabled) {
+  .zdp-button--secondary:where(:active:not(:disabled)) {
     background: var(--zdp-color-interaction-pressed);
     border-color: var(--zdp-color-line-strong);
   }
@@ -833,14 +833,14 @@
     color: var(--zdp-color-ink-inverse);
   }
 
-  .zdp-button--danger:hover:not(:disabled) {
+  .zdp-button--danger:where(:hover:not(:disabled)) {
     background: var(--zdp-color-accent-danger);
     background: color-mix(in oklch, var(--zdp-color-accent-danger) 90%, var(--zdp-color-surface-inverse));
     border-color: transparent;
     color: var(--zdp-color-ink-inverse);
   }
 
-  .zdp-button--danger:active:not(:disabled) {
+  .zdp-button--danger:where(:active:not(:disabled)) {
     background: var(--zdp-color-accent-danger);
     background: color-mix(in oklch, var(--zdp-color-accent-danger) 82%, var(--zdp-color-surface-inverse));
     border-color: transparent;
@@ -870,15 +870,15 @@
       transform var(--zdp-motion-fast) ease;
   }
 
-  .zdp-button--text:hover:not(:disabled),
-  .zdp-button--text:active:not(:disabled) {
+  .zdp-button--text:where(:hover:not(:disabled)),
+  .zdp-button--text:where(:active:not(:disabled)) {
     background: transparent;
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
-  .zdp-button--text:hover:not(:disabled)::after,
-  .zdp-button--text:active:not(:disabled)::after {
+  .zdp-button--text:where(:hover:not(:disabled))::after,
+  .zdp-button--text:where(:active:not(:disabled))::after {
     background: var(--zdp-color-accent-primary-strong);
     min-block-size: var(--zdp-control-focus-underline-width);
     transform: scaleX(1.08);
@@ -951,13 +951,13 @@
     color: var(--zdp-color-ink-normal);
   }
 
-  .zdp-icon-button--ghost:hover:not(:disabled) {
+  .zdp-icon-button--ghost:where(:hover:not(:disabled)) {
     background: var(--zdp-color-interaction-hover);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
-  .zdp-icon-button--ghost:active:not(:disabled) {
+  .zdp-icon-button--ghost:where(:active:not(:disabled)) {
     background: var(--zdp-color-interaction-pressed);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
@@ -969,13 +969,13 @@
     color: var(--zdp-color-ink-inverse);
   }
 
-  .zdp-icon-button--solid:hover:not(:disabled) {
+  .zdp-icon-button--solid:where(:hover:not(:disabled)) {
     background: color-mix(in oklch, var(--zdp-color-surface-inverse) 94%, var(--zdp-color-ink-inverse));
     border-color: transparent;
     color: var(--zdp-color-ink-inverse);
   }
 
-  .zdp-icon-button--solid:active:not(:disabled) {
+  .zdp-icon-button--solid:where(:active:not(:disabled)) {
     background: color-mix(in oklch, var(--zdp-color-surface-inverse) 88%, var(--zdp-color-ink-inverse));
     border-color: transparent;
     color: var(--zdp-color-ink-inverse);
@@ -1075,12 +1075,12 @@
     width: 100%;
   }
 
-  .zdp-disclosure__trigger:hover:not(:disabled) {
+  .zdp-disclosure__trigger:where(:hover:not(:disabled)) {
     background: var(--zdp-color-interaction-hover);
     color: var(--zdp-color-ink-strong);
   }
 
-  .zdp-disclosure__trigger:active:not(:disabled) {
+  .zdp-disclosure__trigger:where(:active:not(:disabled)) {
     background: var(--zdp-color-interaction-pressed);
     color: var(--zdp-color-ink-strong);
   }

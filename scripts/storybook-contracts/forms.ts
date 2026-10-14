@@ -54,15 +54,15 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
     'border-color: transparent',
     'background: var(--zdp-color-surface-inverse)',
     'color: var(--zdp-color-ink-inverse)',
-    '.zdp-button--primary:hover:not(:disabled)',
-    '.zdp-button--secondary:hover:not(:disabled)',
-    '.zdp-button--danger:hover:not(:disabled)',
-    '.zdp-button--text:hover:not(:disabled)',
+    '.zdp-button--primary:where(:hover:not(:disabled))',
+    '.zdp-button--secondary:where(:hover:not(:disabled))',
+    '.zdp-button--danger:where(:hover:not(:disabled))',
+    '.zdp-button--text:where(:hover:not(:disabled))',
     '.zdp-button--text:focus-visible::after',
     'padding-inline: var(--zdp-space-2)',
     'min-block-size: var(--zdp-control-focus-underline-width)',
     'background: var(--zdp-color-interaction-hover)',
-    '.zdp-button--primary:active:not(:disabled)',
+    '.zdp-button--primary:where(:active:not(:disabled))',
     'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
     'border-color: var(--zdp-color-focus-line)',
     '.zdp-button:not(.zdp-button--text)',
@@ -74,7 +74,7 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
   }
 
   const textButtonHoverBlock = button.slice(
-    button.indexOf('.zdp-button--text:hover:not(:disabled)::after'),
+    button.indexOf('.zdp-button--text:where(:hover:not(:disabled))::after'),
     button.indexOf('.zdp-button:focus-visible')
   );
 
@@ -165,7 +165,7 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
       'aria-describedby={ariaDescribedBy ?? undefined}',
       'aria-errormessage={resolvedErrorMessageId ?? undefined}',
       "aria-invalid={invalid ? 'true' : undefined}",
-      ':hover:not(:disabled)',
+      ':where(:hover:not(:disabled))',
       ':focus-visible',
       'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
       '[aria-invalid="true"]',
@@ -229,7 +229,7 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
       'height: var(--zdp-control-choice-size)',
       'width: var(--zdp-control-choice-size)',
       'aria-describedby={describedBy ?? undefined}',
-      '.zdp-choice:hover .zdp-choice__input:not(:checked):not(:disabled) + .zdp-choice__mark',
+      ':where(.zdp-choice:hover) .zdp-choice__input:where(:not(:checked):not(:disabled)) + .zdp-choice__mark',
       '.zdp-choice__input:checked + .zdp-choice__mark',
       '.zdp-choice__input:focus-visible + .zdp-choice__mark',
       'outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface)',
@@ -294,7 +294,7 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
     'aria-describedby={ariaDescribedBy ?? undefined}',
     'aria-errormessage={resolvedErrorMessageId ?? undefined}',
     "aria-invalid={invalid ? 'true' : undefined}",
-    '.zdp-switch:hover .zdp-switch__input:not(:checked):not(:disabled) + .zdp-switch__track',
+    ':where(.zdp-switch:hover) .zdp-switch__input:where(:not(:checked):not(:disabled)) + .zdp-switch__track',
     '.zdp-switch__input:checked + .zdp-switch__track',
     '.zdp-switch__input:focus-visible + .zdp-switch__track',
     '.zdp-switch__input[aria-invalid="true"] + .zdp-switch__track',

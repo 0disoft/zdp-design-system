@@ -318,13 +318,13 @@
     width: var(--zdp-control-icon-sm);
   }
 
-  .zdp-sheet__close:hover:not(:disabled) {
+  .zdp-sheet__close:where(:hover:not(:disabled)) {
     background: var(--zdp-color-interaction-hover);
     border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);
   }
 
-  .zdp-sheet__close:active:not(:disabled) {
+  .zdp-sheet__close:where(:active:not(:disabled)) {
     background: var(--zdp-color-interaction-pressed);
     border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);

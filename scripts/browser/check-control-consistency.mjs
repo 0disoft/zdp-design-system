@@ -40,7 +40,7 @@ export async function verifyControlConsistency(page) {
         };
         const expectedPrimary = colorsFor('surface-inverse', 'ink-inverse', 'line-strong');
         const expectedSecondary = colorsFor('surface-panel', 'ink-strong', 'line-strong');
-        const expectedSelected = colorsFor('accent-primary-soft', 'ink-strong', null);
+        const expectedSelected = colorsFor('interaction-selected', 'ink-strong', null);
         reference.remove();
         const colors = selector => {
           const style = getComputedStyle(root.querySelector(selector));
@@ -114,5 +114,86 @@ export async function verifyControlConsistency(page) {
       }, `control-consistency-${theme}-${direction}`);
       await disclosureTrigger.click();
     }
+  }
+  await verifyControlStatePriority(page);
+}
+
+async function verifyControlStatePriority(page) {
+  const initialViewport = page.viewportSize();
+  try {
+    for (const width of [1280, 390]) {
+      await page.setViewportSize({ width, height: 844 });
+      for (const theme of ['light', 'dark']) {
+        const fixture = page.getByTestId(`control-consistency-${theme}-ltr`);
+        const expected = await fixture.evaluate(root => {
+          const reference = document.createElement('span');
+          root.append(reference);
+          reference.style.borderColor = 'var(--zdp-color-accent-danger)';
+          const danger = getComputedStyle(reference).borderTopColor;
+          reference.style.borderColor = 'var(--zdp-color-focus-line)';
+          const focus = getComputedStyle(reference).borderTopColor;
+          reference.remove();
+          return { danger, focus };
+        });
+        const invalid = fixture.getByTestId('validation-controls');
+        for (const selector of ['.zdp-input', '.zdp-textarea', '.zdp-select', '.zdp-combobox__input',
+          '.zdp-choice--checkbox .zdp-choice__input', '.zdp-choice--radio .zdp-choice__input', '.zdp-switch__input']) {
+          const input = invalid.locator(selector);
+          const frame = selector.includes('combobox') ? input.locator('..') :
+            selector.includes('choice') || selector.includes('switch') ? input.locator('+ span') : input;
+          const hoverTarget = selector.includes('choice') || selector.includes('switch') ? input.locator('..') : input;
+          await hoverTarget.hover();
+          await page.keyboard.press('Tab');
+          await input.focus();
+          await frame.evaluate(async element => {
+            await Promise.all(element.getAnimations().filter(animation =>
+              Number.isFinite(animation.effect?.getComputedTiming().endTime)).map(animation => animation.finished));
+          });
+          assert.equal(await frame.evaluate(element => getComputedStyle(element).borderTopColor), expected.danger,
+            `${width}/${theme}/${selector}: hover and keyboard focus must preserve the error border`);
+          assert.equal(await frame.evaluate(element => getComputedStyle(element).outlineWidth), '3px',
+            `${width}/${theme}/${selector}: invalid controls must also show the keyboard outline`);
+        }
+        for (const selector of ['.zdp-button--primary', '.zdp-button--secondary', '.zdp-icon-button--solid',
+          '.zdp-icon-button--ghost', '.zdp-segmented-control__item', '.zdp-text-scale-control__item', '.zdp-locale-switcher__item', '.zdp-confirm-action']) {
+          const control = fixture.locator(selector).first();
+          await control.hover();
+          await page.keyboard.press('Tab');
+          await control.focus();
+          await page.keyboard.down('Space');
+          try {
+            await control.evaluate(async element => {
+              await Promise.all(element.getAnimations().filter(animation =>
+                Number.isFinite(animation.effect?.getComputedTiming().endTime)).map(animation => animation.finished));
+            });
+            assert.equal(await control.evaluate(element => getComputedStyle(element).borderTopColor), expected.focus,
+              `${width}/${theme}/${selector}: pressing a hovered control must preserve its keyboard focus border`);
+          } finally {
+            await page.keyboard.up('Space');
+          }
+        }
+        const disabled = fixture.getByTestId('disabled-controls');
+        for (const selector of ['.zdp-input', '.zdp-textarea', '.zdp-select', '.zdp-combobox__control',
+          '.zdp-button', '.zdp-choice--checkbox', '.zdp-choice--radio', '.zdp-switch', '.zdp-resizable-split-pane__separator']) {
+          const control = disabled.locator(selector);
+          const measure = element => {
+            const frame = element.querySelector('.zdp-choice__mark, .zdp-switch__track') ?? element;
+            const style = getComputedStyle(frame, frame.matches('[role="separator"]') ? '::before' : null);
+            return [style.backgroundColor, style.borderTopColor, style.color, getComputedStyle(element).opacity];
+          };
+          await page.mouse.move(0, 0);
+          const resting = await control.evaluate(measure);
+          await control.hover();
+          await control.evaluate(async element => {
+            await Promise.all(element.getAnimations({ subtree: true }).filter(animation =>
+              Number.isFinite(animation.effect?.getComputedTiming().endTime)).map(animation => animation.finished));
+          });
+          assert.deepEqual(await control.evaluate(measure), resting,
+            `${width}/${theme}/${selector}: disabled controls must not acquire hover colors`);
+        }
+      }
+    }
+  } finally {
+    await page.setViewportSize(initialViewport);
   }
 }

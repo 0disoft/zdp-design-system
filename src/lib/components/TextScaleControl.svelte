@@ -179,13 +179,13 @@
     width: var(--zdp-control-icon-md);
   }
 
-  .zdp-text-scale-control__item:hover:not(:disabled):not([aria-checked='true']) {
+  .zdp-text-scale-control__item:where(:hover:not(:disabled):not([aria-checked='true'])) {
     background: var(--zdp-color-interaction-hover);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
-  .zdp-text-scale-control__item:active:not(:disabled):not([aria-checked='true']) {
+  .zdp-text-scale-control__item:where(:active:not(:disabled):not([aria-checked='true'])) {
     background: var(--zdp-color-interaction-pressed);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);

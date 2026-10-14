@@ -103,7 +103,7 @@
     color: var(--zdp-color-ink-muted);
   }
 
-  .zdp-textarea:hover:not(:disabled) {
+  .zdp-textarea:where(:hover:not(:disabled)) {
     background: var(--zdp-control-field-surface-hover);
     border-color: var(--zdp-control-field-border-hover);
   }

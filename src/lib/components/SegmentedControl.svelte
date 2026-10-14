@@ -165,13 +165,13 @@
     padding: 0 var(--zdp-space-3);
   }
 
-  .zdp-segmented-control__item:hover:not(:disabled):not([aria-checked='true']) {
+  .zdp-segmented-control__item:where(:hover:not(:disabled):not([aria-checked='true'])) {
     background: var(--zdp-color-interaction-hover);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
-  .zdp-segmented-control__item:active:not(:disabled):not([aria-checked='true']) {
+  .zdp-segmented-control__item:where(:active:not(:disabled):not([aria-checked='true'])) {
     background: var(--zdp-color-interaction-pressed);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);

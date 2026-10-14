@@ -51,7 +51,7 @@
     transition: color var(--zdp-motion-fast) ease;
   }
 
-  .zdp-term-trigger:hover:not(:disabled) {
+  .zdp-term-trigger:where(:hover:not(:disabled)) {
     color: var(--zdp-color-ink-strong);
   }
 

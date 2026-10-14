@@ -294,13 +294,13 @@
     width: var(--zdp-control-icon-sm);
   }
 
-  .zdp-dialog__close:hover:not(:disabled) {
+  .zdp-dialog__close:where(:hover:not(:disabled)) {
     background: var(--zdp-color-interaction-hover);
     border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);
   }
 
-  .zdp-dialog__close:active:not(:disabled) {
+  .zdp-dialog__close:where(:active:not(:disabled)) {
     background: var(--zdp-color-interaction-pressed);
     border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);

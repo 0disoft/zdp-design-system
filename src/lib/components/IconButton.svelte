@@ -76,13 +76,13 @@
     color: var(--zdp-color-ink-normal);
   }
 
-  .zdp-icon-button--ghost:hover:not(:disabled) {
+  .zdp-icon-button--ghost:where(:hover:not(:disabled)) {
     background: var(--zdp-color-interaction-hover);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
-  .zdp-icon-button--ghost:active:not(:disabled) {
+  .zdp-icon-button--ghost:where(:active:not(:disabled)) {
     background: var(--zdp-color-interaction-pressed);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
@@ -94,13 +94,13 @@
     color: var(--zdp-color-ink-inverse);
   }
 
-  .zdp-icon-button--solid:hover:not(:disabled) {
+  .zdp-icon-button--solid:where(:hover:not(:disabled)) {
     background: color-mix(in oklch, var(--zdp-color-surface-inverse) 94%, var(--zdp-color-ink-inverse));
     border-color: transparent;
     color: var(--zdp-color-ink-inverse);
   }
 
-  .zdp-icon-button--solid:active:not(:disabled) {
+  .zdp-icon-button--solid:where(:active:not(:disabled)) {
     background: color-mix(in oklch, var(--zdp-color-surface-inverse) 88%, var(--zdp-color-ink-inverse));
     border-color: transparent;
     color: var(--zdp-color-ink-inverse);

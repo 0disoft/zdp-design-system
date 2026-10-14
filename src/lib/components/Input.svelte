@@ -132,7 +132,7 @@
     transition: background-color 9999s ease-out;
   }
 
-  .zdp-input:hover:not(:disabled) {
+  .zdp-input:where(:hover:not(:disabled)) {
     background: var(--zdp-control-field-surface-hover);
     border-color: var(--zdp-control-field-border-hover);
   }
