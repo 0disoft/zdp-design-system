@@ -67,7 +67,6 @@ async function checkCardContract(): Promise<void> {
     'class={`zdp-card zdp-card--${tone} zdp-card--padding-${padding} ${hover ? \'zdp-card--hover\' : \'\'}`}',
     'border: 1px solid transparent',
     'border-color: var(--zdp-color-line-subtle)',
-    'background: var(--zdp-color-accent-primary-soft)',
     '.zdp-card--hover:hover'
   ]) {
     if (!card.includes(requiredText)) {
@@ -81,8 +80,7 @@ async function checkCardContract(): Promise<void> {
 
   for (const requiredText of [
     'border: 1px solid transparent',
-    'border-color: var(--zdp-color-line-subtle)',
-    'background: var(--zdp-color-accent-primary-soft)'
+    'border-color: var(--zdp-color-line-subtle)'
   ]) {
     if (!cardCss.includes(requiredText)) {
       failures.push(`${componentCssPath} is missing surface-first Card contract text ${requiredText}.`);
@@ -93,6 +91,9 @@ async function checkCardContract(): Promise<void> {
     [cardPath, card],
     [componentCssPath, cardCss]
   ] as const) {
+    if (!/\.zdp-card--hover:hover\s*\{\s*background:\s*var\(--zdp-color-interaction-hover\);\s*\}/.test(source)) {
+      failures.push(`${targetPath} must use the shared interaction-hover token for Card hover feedback.`);
+    }
     for (const forbiddenText of ['cursor: pointer', '.zdp-card--hover:focus-visible', 'tabindex=', 'onclick=', 'onkeydown=']) {
       if (source.includes(forbiddenText)) {
         failures.push(`${targetPath} must not make Card itself interactive through ${forbiddenText}.`);
