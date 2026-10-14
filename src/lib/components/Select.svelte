@@ -160,15 +160,24 @@
       margin-inline-start: var(--zdp-space-1);
     }
 
-    .zdp-select :global(option:hover),
-    .zdp-select :global(option:focus-visible) {
-      background-color: var(--zdp-color-surface-panel);
+    .zdp-select :global(option:where(:hover:not(:disabled):not(:checked))),
+    .zdp-select :global(option:where(:focus-visible:not(:disabled):not(:checked))) {
+      background-color: var(--zdp-color-interaction-hover);
       color: var(--zdp-color-ink-strong);
     }
 
+    .zdp-select :global(option:where(:active:not(:disabled):not(:checked))) {
+      background-color: var(--zdp-color-interaction-pressed);
+    }
+
     .zdp-select :global(option:checked) {
-      background-color: var(--zdp-color-accent-primary-soft);
+      background-color: var(--zdp-color-interaction-selected);
       color: var(--zdp-color-ink-strong);
+    }
+
+    .zdp-select :global(option:disabled) {
+      cursor: not-allowed;
+      opacity: var(--zdp-control-disabled-opacity);
     }
   }
 

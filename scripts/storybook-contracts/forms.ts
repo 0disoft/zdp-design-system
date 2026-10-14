@@ -186,12 +186,15 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
     'border: var(--zdp-control-border-width) solid transparent',
     'background: var(--zdp-color-surface-raised)',
     '.zdp-select::picker(select)',
-    'background-color: var(--zdp-color-surface-panel)',
-    'background-color: var(--zdp-color-accent-primary-soft)',
+    'background-color: var(--zdp-color-interaction-hover)',
+    'background-color: var(--zdp-color-interaction-pressed)',
+    'background-color: var(--zdp-color-interaction-selected)',
     'color: var(--zdp-color-ink-strong)',
-    '.zdp-select :global(option:hover)',
-    '.zdp-select :global(option:focus-visible)',
+    '.zdp-select :global(option:where(:hover:not(:disabled):not(:checked)))',
+    '.zdp-select :global(option:where(:focus-visible:not(:disabled):not(:checked)))',
+    '.zdp-select :global(option:where(:active:not(:disabled):not(:checked)))',
     '.zdp-select :global(option:checked)',
+    '.zdp-select :global(option:disabled)',
     'border-color: ButtonText'
   ]) {
     if (!select.includes(requiredText)) {

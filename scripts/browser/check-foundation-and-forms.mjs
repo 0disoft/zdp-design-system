@@ -146,7 +146,7 @@ export async function verifyFoundationAndFormContracts(page) {
         document.documentElement.setAttribute('data-zdp-theme', selectedTheme);
         const selectedOption = element.selectedOptions[0];
         const probe = document.createElement('span');
-        probe.style.backgroundColor = 'var(--zdp-color-accent-primary-soft)';
+        probe.style.backgroundColor = 'var(--zdp-color-interaction-selected)';
         probe.style.color = 'var(--zdp-color-ink-strong)';
         document.body.append(probe);
         const visuals = {

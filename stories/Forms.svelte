@@ -60,6 +60,10 @@
             >
               <option value="ready">준비됨</option>
               <option value="blocked">확인 필요</option>
+              <option value="archived" disabled>보관됨</option>
+              <optgroup label="종료된 작업" disabled>
+                <option value="closed">종료됨</option>
+              </optgroup>
             </Select>
             <HelpText id="forms-light-status-help">현재 작업 상태를 선택하세요.</HelpText>
             <ErrorText id="forms-light-status-error">다음 단계 전에 기준을 확인하세요.</ErrorText>
@@ -148,6 +152,10 @@
             >
               <option value="ready">준비됨</option>
               <option value="blocked">확인 필요</option>
+              <option value="archived" disabled>보관됨</option>
+              <optgroup label="종료된 작업" disabled>
+                <option value="closed">종료됨</option>
+              </optgroup>
             </Select>
             <HelpText id="forms-dark-status-help">현재 작업 상태를 선택하세요.</HelpText>
             <ErrorText id="forms-dark-status-error">다음 단계 전에 기준을 확인하세요.</ErrorText>

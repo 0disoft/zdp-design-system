@@ -3038,15 +3038,24 @@
       margin-inline-start: var(--zdp-space-1);
     }
 
-    .zdp-select option:hover,
-    .zdp-select option:focus-visible {
-      background-color: var(--zdp-color-surface-panel);
+    .zdp-select option:where(:hover:not(:disabled):not(:checked)),
+    .zdp-select option:where(:focus-visible:not(:disabled):not(:checked)) {
+      background-color: var(--zdp-color-interaction-hover);
       color: var(--zdp-color-ink-strong);
     }
 
+    .zdp-select option:where(:active:not(:disabled):not(:checked)) {
+      background-color: var(--zdp-color-interaction-pressed);
+    }
+
     .zdp-select option:checked {
-      background-color: var(--zdp-color-accent-primary-soft);
+      background-color: var(--zdp-color-interaction-selected);
       color: var(--zdp-color-ink-strong);
+    }
+
+    .zdp-select option:disabled {
+      cursor: not-allowed;
+      opacity: var(--zdp-control-disabled-opacity);
     }
   }
 
