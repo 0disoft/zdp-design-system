@@ -2,6 +2,64 @@
 
 ## Unreleased
 
+## 0.65.0
+
+- Adopt Bits UI as the internal headless implementation for Menu behind ZDP-owned props, classes, tokens, and named slots, keeping the existing `ZdpMenuItem` public type, Root public props and callbacks, and panel placement CSS unchanged.
+- Close Menu on outside pointerdown, and close it with an `onfocusout` plus `flushSync` scope cleanup when focus moves outside programmatically. It previously stayed open until the outside click completed.
+- Document the internal adoption and the Astro Svelte-island requirement for interactive menus, and record the Bits UI 2.19.5 MIT notice.
+- Adopt Bits UI `Popover` (`Root`, `Content`) as the internal headless implementation for Popover, keeping the consumer-defined trigger, default legacy slot, public props, `.zdp-popover*` classes, tokens, and `role` (`null`/`group`/`dialog`) unchanged with no product-facing markup change. Automatic floating placement is now supported, and there is still no automatic DOM portal.
+- Keep the existing shared dismissal stack, `closeOnEscape`/`closeOnOutside` opt-out, trigger focus behavior, and static Astro placement CSS. Bits' own dismissal and focus loop are turned off, so Popover still closes on the outside click rather than on Menu's pointerdown.
+- Reuse the existing `bits-ui` 2 runtime dependency instead of adding a new one, extend the packed Astro consumer fixture to `static`, `menu`, and `popover` pages, and record the `browser:popover:check` verification command.
+- Remove the reserved spinner space from idle Button controls. Keep labels centered and add spinner space only while loading, including framework-neutral CSS consumers.
+- Add Button loading state with readable labels and native disabled behavior to block repeated actions. Omitting loading or passing `false` keeps the normal button width with no reserved spinner slot. The spinner takes space only while `loading={true}`, without changing the label or height. Support static Astro CSS and reduced motion.
+- Remove the empty icon space from idle CodeBlock copy buttons. Show pending feedback only for slower clipboard writes and keep recognizable success or failure icons and labels visible for 2.2 seconds.
+- Show a localized copying label and spinner while CodeBlock waits for the clipboard. Prevent repeated writes, retain success/failure and retry feedback, and keep stale-result protection, reduced motion and static CSS aligned.
+- Position Combobox lists with Floating UI while retaining the existing selection, filtering, keyboard, IME, form and public API contracts. Flip above the field when necessary and limit long lists to available space.
+- Keep the list in the existing DOM without automatic portalling. Track scrolling, resizing and anchor movement, and scroll the active option inside the list without scrolling the page.
+- Add viewport, RTL, long-list, active-option, resize, scroll and packed Astro island regression coverage while preserving static CSS consumption.
+- Add controlled ConfirmAction pending state with separate processing labels and a spinner. Cancel confirmation timers, prevent repeated actions until the consumer clears pending, and support reduced motion and static CSS.
+- Share the Select/Combobox chevron with Menu, Disclosure, and Accordion, including the same size, color, logical end inset, and forced-colors visibility. Disclosure rotates the chevron to indicate expansion.
+- Use shared size-specific Button padding and explicit action box sizing/typography. Prevent disabled compound fields from changing their resting surface on hover.
+- Extend rendered consistency checks to action/navigation controls and verify the SVG asset and static fields through a packed Astro consumer.
+- Unify Input, Textarea, Select, Combobox, and CommandField around shared field surface, border, typography, radius, height, and padding tokens. Keep invalid, readonly, disabled, and focus states distinct.
+- Use one packaged SVG indicator for Select and Combobox in both native-select browser paths and framework-neutral CSS, with the same size and logical edge inset.
+- Verify rendered control geometry in nested light/dark themes and LTR/RTL alongside native input and Combobox interaction regressions.
+- Separate hover, pressed and selected surfaces from ordinary panel/raised backgrounds in both Quiet Ivory themes. Keep filled actions stable, preserve focus and disabled states, and strengthen loading indicators without adding borders. Apply the same interaction styles to Svelte and shared CSS consumers.
+- Detect clipping ancestors that contain fixed Menu and Popover panels, including transform and paint containment. Pass their bounds to the existing Bits UI positioning engine so long panels resize and scroll inside their parent boundaries.
+- Preserve ordinary fixed positioning outside untransformed overflow containers, public props, original DOM placement, dismissal, focus return, and Astro paths.
+- Add browser regressions for hidden and scrollable transformed parents and paint containment, checking both geometry and actual pointer visibility.
+- Align publication checks with the adopted Floating UI major 1 dependency and keep its imports confined to the Combobox positioning adapter.
+- Allow packed-consumer verification to fetch runtime dependencies when a fresh npm cache has no local copy, while preferring cached packages when available.
+- Add IconButton loading state with an inherited-color spinner, stable dimensions and accessible names, native action blocking, reduced-motion support and matching static CSS.
+- Add theme-aware interaction hover, pressed and selected color tokens, with foreground contrast checks for both themes. Keep surface colors separate from temporary interaction states.
+- Use Bits UI DropdownMenu Content behind the existing Menu API to flip and shift panels inside the viewport. Preserve logical alignment when there is room, use ZDP spacing, and cap long menus to the available space.
+- Keep the panel inside its original Menu DOM tree with no automatic portal, preserving dismissal, focus return, native Tab exit, named trigger slots, and Astro's Svelte island/static CSS boundary.
+- Add corner, RTL/alignment, long-menu, resize, anchor movement, scroll-container, SSR, and packed Astro regression coverage.
+- Refine compact Quiet Ivory surfaces: reduce nested large padding in narrow containers, wrap pagination actions, and simplify redundant navigation and empty-state borders. Contain hidden sort-direction text inside its button so wide tables do not expand the page. Preserve keyboard focus and equivalent Svelte and Astro/shared CSS styles; check every mobile Storybook story for page overflow and clipped pagination actions.
+- Split package and preview checks into focused modules while preserving validation order and the public package surface.
+- Split the consumer contract into purpose-based documents under `docs/consumer-contract/`, keeping the overview, section anchors, semver guidance, and prohibition boundaries in `docs/CONSUMER_CONTRACT.md`.
+- Keep the same Overview examples and interactions in separate light/dark panels with shared preview styles.
+- Use Noto Sans KR for Korean text and the default sans/display stacks, with its variable webfont loaded by `styles.css` and `locale-fonts.css`.
+- Use Bits UI Popover Content behind the existing API to flip and shift panels within the viewport. Retain logical alignment when space permits, resolve gaps from ZDP tokens, and scroll long content within available dimensions.
+- Preserve custom triggers, named slots, roles, native Tab order, dismissal opt-outs, focus return, and Astro's static CSS and Svelte island paths without introducing an automatic portal.
+- Cover viewport corners, RTL, alignment, long content, resize, anchor movement, scrolling, SSR hydration, and the packed Astro consumer.
+- Keep keyboard focus and invalid borders visible during hover and press, including native fields, choice controls and confirmation holds. Prevent disabled split-pane handles from acquiring hover colors and synchronize Svelte and shared CSS styling. Add a light/dark form validation gallery.
+- Distinguish indeterminate Progress from completion with a short moving segment, mirrored for RTL. Reduced-motion users receive a centered static segment. Keep Svelte and framework-neutral CSS behavior aligned.
+- Unify Svelte components and shared Astro CSS around Quiet Ivory: inverse primary actions, outlined secondary actions, soft selected rows and tabs, brass choice indicators, and framed floating panels. Resolve colors within each theme, including light sections nested in dark pages, while retaining Noto Sans KR, control geometry, focus indicators, and existing APIs.
+- Apply the Quiet Ivory palette throughout shared tokens: ivory surfaces, warm cocoa text, restrained brass accents, and matching warm charcoal dark surfaces. Keep sRGB fallbacks and OKLCH colors equivalent, and preserve readable field borders, text, status, selection, and focus contrast in both themes.
+- Simplify feedback and document surfaces: use a soft callout surface and semantic status marks, keep neutral notification boundaries, and remove redundant frames from table toolbars, inline code, copy actions, and hover states for sorting and dismissal. Preserve keyboard focus, hit targets, warning semantics, and equivalent Svelte/shared CSS styles.
+- Allow npm's registry processing to finish before verifying the already published package, source commit and integrity.
+- Use shared hover, pressed and selected colors for customizable native Select options in both themes. Keep selected options stable during interaction and exclude disabled options, including disabled option groups, from hover and press highlighting. Preserve native selection and the static CSS entry.
+- Give native Select options comfortable block and inline padding and a shared control-height minimum. Inset the picker contents and separate option group labels from preceding items and their first option. Keep Svelte and static CSS consumers consistent.
+- Align native Select popup surfaces, borders, and option corners with Combobox in both themes while preserving option spacing, native keyboard behavior, and static CSS support.
+- Make Skeleton's animated option gently pulse its opacity. Disabling animation or enabling reduced motion retains a clear static placeholder without dimming or changing its layout. Keep Svelte and static CSS behavior aligned.
+- Use background and text colors to distinguish selected text sizes, languages, segments, tabs, and page links without an extra selected border. Preserve control geometry, keyboard focus indicators, forced-color states, and matching framework-neutral CSS.
+- Rotate Spinner at a steady speed while preserving its 2px border and dimensions. Disable rotation with reduced motion, with the same behavior for Svelte and static CSS consumers.
+- Increase Spinner borders from 1px to 2px for clearer visibility at every size in both themes. Keep the outer dimensions and Svelte/static CSS appearance consistent.
+- Keep danger buttons filled during hover and press in both themes, with subtle tone changes and a stable contrasting label. Apply the same styles to Svelte and shared CSS consumers.
+- Increase the resting underline of text buttons and matching navigation links to 2px in both themes, keeping the 3px hover, pressed, and keyboard-focus emphasis. Apply the same styling to Svelte and static CSS consumers.
+- Distinguish primary confirmation progress from its track in light and dark themes using the accent fill, and keep hint text readable over the filled area. Preserve hold, slide, cancel and completion behavior in Svelte and shared CSS.
+
 ## 0.64.1
 
 - Combobox에 빈 ID나 공백 ID를 전달해도 기본 입력 ID를 생성해 라벨 연결과 SSR·hydration 식별자를 유지한다.
