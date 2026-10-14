@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ConfirmPendingFixture from './ConfirmPendingFixture.svelte';
   import ButtonLoadingFixture from './ButtonLoadingFixture.svelte';
   import IconButtonLoadingFixture from './IconButtonLoadingFixture.svelte';
   import NumericProgressFixture from './NumericProgressFixture.svelte';
@@ -912,6 +913,7 @@
   <FilteredComboboxFixture />
   <ButtonLoadingFixture />
   <IconButtonLoadingFixture />
+  <ConfirmPendingFixture />
 </main>
 
 <style>

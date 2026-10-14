@@ -2,6 +2,7 @@
 import 'zdp-design-system/foundation.css';
 import 'zdp-design-system/components/Button.css';
 import 'zdp-design-system/components/IconButton.css';
+import 'zdp-design-system/components/ConfirmAction.css';
 import 'zdp-design-system/components/Input.css';
 import 'zdp-design-system/components/Select.css';
 import 'zdp-design-system/components/Disclosure.css';
@@ -33,6 +34,21 @@ import 'zdp-design-system/components/Skeleton.css';
           </button>
         )))}
       </div>
+    </section>
+    <section data-testid="static-confirm-pending" data-zdp-theme="light" style="display:flex;flex-wrap:wrap;gap:12px;padding:12px">
+      {['primary', 'danger'].map(tone => (
+        <button class={`zdp-confirm-action zdp-confirm-action--${tone}`} type="button" style="--zdp-confirm-action-progress:0">
+          <span class="zdp-confirm-action__fill" aria-hidden="true"></span>
+          <span class="zdp-confirm-action__thumb" aria-hidden="true">
+            <span class="zdp-confirm-action__spinner" aria-hidden="true"></span>
+            <svg class="zdp-confirm-action__glyph" viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+          </span>
+          <span class="zdp-confirm-action__body">
+            <span class="zdp-confirm-action__label">Confirm {tone}</span>
+            <span class="zdp-confirm-action__hint">Hold or slide to confirm</span>
+          </span>
+        </button>
+      ))}
     </section>
     <section style="display:grid;gap:12px;max-width:400px;padding:16px">
       <input class="zdp-input" aria-label="Static input" placeholder="Name" />

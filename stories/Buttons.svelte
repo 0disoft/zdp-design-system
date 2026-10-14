@@ -2,6 +2,7 @@
   import Button from '../src/lib/components/Button.svelte';
   import ButtonLoadingStates from './ButtonLoadingStates.svelte';
   import ConfirmAction from '../src/lib/components/ConfirmAction.svelte';
+  import ConfirmActionPendingStates from './ConfirmActionPendingStates.svelte';
   import Icon from '../src/lib/components/Icon.svelte';
   import IconButton from '../src/lib/components/IconButton.svelte';
   import Inline from '../src/lib/components/Inline.svelte';
@@ -28,6 +29,7 @@
       <h2 id="buttons-light-title">Light</h2>
       <Stack gap="lg">
         <Surface padding="lg"><ButtonLoadingStates /></Surface>
+        <Surface padding="lg"><ConfirmActionPendingStates /></Surface>
         <div class="text-action-demo-shell">
           <Stack gap="md">
             <h3>기본 작업</h3>
@@ -108,6 +110,7 @@
       <h2 id="buttons-dark-title">Dark</h2>
       <Stack gap="lg">
         <Surface padding="lg"><ButtonLoadingStates /></Surface>
+        <Surface padding="lg"><ConfirmActionPendingStates /></Surface>
         <div class="text-action-demo-shell">
           <Stack gap="md">
             <h3>기본 작업</h3>

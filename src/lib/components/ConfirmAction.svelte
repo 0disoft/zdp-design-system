@@ -7,6 +7,9 @@
   export let hint = 'Slide or hold for 2 seconds';
   export let completeLabel = 'Confirmed';
   export let disabled = false;
+  export let pending = false;
+  export let pendingLabel = 'Processing';
+  export let pendingHint = 'Please wait';
   export let durationMs = 2000;
   export let onconfirm: (() => void) | null = null;
 
@@ -24,6 +27,9 @@
 
   $: safeDurationMs = Math.min(2_147_483_647, Math.max(600, Number.isFinite(durationMs) ? durationMs : 2000));
   $: progressStyle = `--zdp-confirm-action-progress: ${progress};`;
+  $: if (pending) {
+    reset();
+  }
   $: if (disabled && active) {
     cancelInteraction();
   }
@@ -33,7 +39,7 @@
   }
 
   function beginInteraction(clientX: number | null, element: HTMLButtonElement): void {
-    if (disabled || confirmed) {
+    if (disabled || pending || confirmed) {
       return;
     }
 
@@ -50,8 +56,8 @@
   }
 
   function updateHoldProgress(now: number): void {
-    if (!active || disabled) {
-      if (disabled) {
+    if (!active || disabled || pending) {
+      if (disabled || pending) {
         cancelInteraction();
       }
       return;
@@ -62,7 +68,7 @@
   }
 
   function updateSlideProgress(clientX: number): void {
-    if (!active || disabled || confirmed) {
+    if (!active || disabled || pending || confirmed) {
       return;
     }
 
@@ -75,7 +81,7 @@
   }
 
   function confirmAction(): void {
-    if (disabled) {
+    if (disabled || pending) {
       cancelInteraction();
       return;
     }
@@ -152,7 +158,7 @@
   }
 
   function handlePointerDown(event: PointerEvent): void {
-    if (event.button !== 0 || !event.isPrimary || disabled || confirmed || active) {
+    if (event.button !== 0 || !event.isPrimary || disabled || pending || confirmed || active) {
       return;
     }
 
@@ -224,9 +230,12 @@
   class={`zdp-confirm-action zdp-confirm-action--${tone}`}
   {id}
   type="button"
-  {disabled}
-  aria-disabled={disabled}
+  disabled={disabled || pending}
+  aria-disabled={disabled || pending}
+  aria-busy={pending ? 'true' : undefined}
   aria-live="polite"
+  data-pending={pending ? 'true' : undefined}
+  data-disabled={disabled ? 'true' : undefined}
   data-active={active ? 'true' : undefined}
   data-confirmed={confirmed ? 'true' : undefined}
   style={progressStyle}
@@ -241,13 +250,14 @@
 >
   <span class="zdp-confirm-action__fill" aria-hidden="true"></span>
   <span class="zdp-confirm-action__thumb" aria-hidden="true">
+    <span class="zdp-confirm-action__spinner" aria-hidden="true"></span>
     <svg class="zdp-confirm-action__glyph" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
       <path d="M5 12h14m-6-6 6 6-6 6" />
     </svg>
   </span>
   <span class="zdp-confirm-action__body">
-    <span class="zdp-confirm-action__label">{confirmed ? completeLabel : label}</span>
-    <span class="zdp-confirm-action__hint">{hint}</span>
+    <span class="zdp-confirm-action__label">{pending ? pendingLabel : confirmed ? completeLabel : label}</span>
+    <span class="zdp-confirm-action__hint">{pending ? pendingHint : hint}</span>
   </span>
 </button>
 
@@ -375,6 +385,47 @@
   .zdp-confirm-action:disabled {
     cursor: not-allowed;
     opacity: var(--zdp-control-disabled-opacity);
+  }
+
+  .zdp-confirm-action[data-pending="true"]:not([data-disabled="true"]) {
+    cursor: progress;
+    opacity: 1;
+  }
+
+  .zdp-confirm-action__spinner {
+    border: 2px solid color-mix(in oklch, currentColor 35%, transparent);
+    border-block-start-color: currentColor;
+    border-inline-end-color: currentColor;
+    border-radius: 50%;
+    box-sizing: border-box;
+    display: none;
+    height: var(--zdp-control-glyph-sm);
+    width: var(--zdp-control-glyph-sm);
+  }
+
+  .zdp-confirm-action[data-pending="true"] .zdp-confirm-action__spinner {
+    animation: zdp-confirm-action-pending-rotate 1s linear infinite;
+    display: block;
+  }
+
+  .zdp-confirm-action[data-pending="true"] .zdp-confirm-action__glyph {
+    display: none;
+  }
+
+  .zdp-confirm-action[data-pending="true"] .zdp-confirm-action__fill {
+    width: 0;
+  }
+
+  @keyframes zdp-confirm-action-pending-rotate {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .zdp-confirm-action[data-pending="true"] .zdp-confirm-action__spinner {
+      animation: none;
+    }
   }
 
   @media (forced-colors: active) {

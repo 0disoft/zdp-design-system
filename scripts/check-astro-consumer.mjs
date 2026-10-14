@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { verifyConfirmPendingAppearance } from './browser/check-confirm-pending.mjs';
 import { verifyButtonLoadingAppearance } from './browser/check-button-loading.mjs';
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { join, resolve, sep } from 'node:path';
@@ -62,6 +63,25 @@ try {
   page.on('pageerror', error => errors.push(error.message));
   await page.route('https://**', route => route.abort());
   await page.goto(`http://127.0.0.1:${server.port}/static/`);
+  const confirmPendingRoot = page.getByTestId('static-confirm-pending');
+  await verifyConfirmPendingAppearance(page, confirmPendingRoot, confirmPendingRoot.locator('button'), async pending => {
+    await confirmPendingRoot.locator('button').evaluateAll((buttons, pending) => {
+      for (const button of buttons) {
+        const tone = button.classList.contains('zdp-confirm-action--danger') ? 'danger' : 'primary';
+        button.disabled = pending;
+        button.setAttribute('aria-disabled', String(pending));
+        if (pending) {
+          button.setAttribute('data-pending', 'true');
+          button.setAttribute('aria-busy', 'true');
+        } else {
+          button.removeAttribute('data-pending');
+          button.removeAttribute('aria-busy');
+        }
+        button.querySelector('.zdp-confirm-action__label').textContent = pending ? `Processing ${tone}` : `Confirm ${tone}`;
+        button.querySelector('.zdp-confirm-action__hint').textContent = pending ? 'Wait for the result' : 'Hold or slide to confirm';
+      }
+    }, pending);
+  });
   const loadingRoot = page.getByTestId('static-button-loading');
   const loadingButtons = loadingRoot.getByTestId('static-button-loading-variants').locator('button');
   await verifyButtonLoadingAppearance(page, loadingRoot, loadingButtons, async loading => {

@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { verifyConfirmPendingContracts } from './browser/check-confirm-pending.mjs';
 import { verifyButtonLoadingContracts } from './browser/check-button-loading.mjs';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -128,7 +129,15 @@ try {
     };
   });
 
-  if (process.argv.includes('--button')) {
+  if (process.argv.includes('--confirm')) {
+    await verifyConfirmPendingContracts(page);
+    await verifyConfirmCompositionContracts(page);
+    await verifyConfirmRepeatContracts(page);
+    await verifyConfirmSlideThresholdContracts(page);
+    await verifyTouchConfirmContracts(page);
+    await verifyConfirmDurationContracts(page);
+    await verifyChangingConfirmDurationContracts(page);
+  } else if (process.argv.includes('--button')) {
     await verifyButtonLoadingContracts(page);
     await verifyButtonLoadingContracts(page, { icon: true });
   } else if (process.argv.includes('--menu')) {
@@ -180,6 +189,7 @@ try {
   await verifyComboboxEditingContracts(page);
   await verifyComboboxGeometryContracts(page);
   await verifyConfirmCompositionContracts(page);
+  await verifyConfirmPendingContracts(page);
   await verifyConfirmRepeatContracts(page);
   await verifyConfirmSlideThresholdContracts(page);
   await verifyTouchConfirmContracts(page);

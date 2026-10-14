@@ -73,6 +73,8 @@
   position: relative;
   text-align: start;
   touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
   vertical-align: middle;
 }
 
@@ -172,6 +174,54 @@
 .zdp-confirm-action:disabled {
   cursor: not-allowed;
   opacity: var(--zdp-control-disabled-opacity);
+}
+
+.zdp-confirm-action[data-pending="true"]:not([data-disabled="true"]) {
+  cursor: progress;
+  opacity: 1;
+}
+
+.zdp-confirm-action__spinner {
+  border: 2px solid color-mix(in oklch, currentColor 35%, transparent);
+  border-block-start-color: currentColor;
+  border-inline-end-color: currentColor;
+  border-radius: 50%;
+  box-sizing: border-box;
+  display: none;
+  height: var(--zdp-control-glyph-sm);
+  width: var(--zdp-control-glyph-sm);
+}
+
+.zdp-confirm-action[data-pending="true"] .zdp-confirm-action__spinner {
+  animation: zdp-confirm-action-pending-rotate 1s linear infinite;
+  display: block;
+}
+
+.zdp-confirm-action[data-pending="true"] .zdp-confirm-action__glyph {
+  display: none;
+}
+
+.zdp-confirm-action[data-pending="true"] .zdp-confirm-action__fill {
+  width: 0;
+}
+
+@keyframes zdp-confirm-action-pending-rotate {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zdp-confirm-action[data-pending="true"] .zdp-confirm-action__spinner {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .zdp-confirm-action,
+  .zdp-confirm-action__thumb {
+    border-color: ButtonText;
+  }
 }
 
 .zdp-badge {

@@ -65,7 +65,12 @@ export function withoutLoadingMotion(source: string): string {
       (rule) => rule
         .replace('animation: zdp-icon-button-loading-rotate 1s linear infinite;', '')
         .replace('animation: none;', ''))
-    .replace(/@keyframes zdp-icon-button-loading-rotate\s*\{\s*to\s*\{\s*transform: rotate\(1turn\);\s*\}\s*\}/g, '');
+    .replace(/@keyframes zdp-icon-button-loading-rotate\s*\{\s*to\s*\{\s*transform: rotate\(1turn\);\s*\}\s*\}/g, '')
+    .replace(/\.zdp-confirm-action\[data-pending="true"\] \.zdp-confirm-action__spinner\s*\{[^{}]*\}/g,
+      (rule) => rule
+        .replace('animation: zdp-confirm-action-pending-rotate 1s linear infinite;', '')
+        .replace('animation: none;', ''))
+    .replace(/@keyframes zdp-confirm-action-pending-rotate\s*\{\s*to\s*\{\s*transform: rotate\(1turn\);\s*\}\s*\}/g, '');
 }
 
 export function assertNoOverRoundedUsage(
