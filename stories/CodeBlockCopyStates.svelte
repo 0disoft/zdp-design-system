@@ -29,7 +29,7 @@
             label={`스타일 불러오기 · ${theme === 'light' ? '밝은 테마' : '어두운 테마'}`}
             language="ts"
             code={exampleCode}
-            caption="복사하는 동안에는 '복사 중', 끝나면 '복사됨', 실패하면 '복사 실패'로 바뀝니다."
+            caption="복사 결과는 아이콘과 문구로 2.2초간 표시하고, 실패하면 다시 시도할 수 있어요."
             {copyLabel}
             {copyingLabel}
             {copiedLabel}
