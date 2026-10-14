@@ -332,7 +332,7 @@
 }
 
 .zdp-spinner__mark {
-  border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+  border: 2px solid var(--zdp-color-line-subtle);
   border-block-start-color: currentColor;
   border-inline-end-color: currentColor;
   border-radius: 50%;
