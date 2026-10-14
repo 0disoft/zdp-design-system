@@ -440,7 +440,7 @@ async function installPackedPackage(packedRoot: string, tarball: string): Promis
 
   const npm = npmCommand([
     'install',
-    '--offline',
+    '--prefer-offline',
     '--ignore-scripts',
     '--no-audit',
     '--no-fund',
@@ -452,7 +452,7 @@ async function installPackedPackage(packedRoot: string, tarball: string): Promis
     npm.executable,
     npm.args,
     packedRoot,
-    'offline packed-package install'
+    'packed-package install'
   );
 }
 
