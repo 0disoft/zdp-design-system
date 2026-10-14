@@ -9,6 +9,25 @@ export async function verifyTooltipHoverContracts(page) {
     active?.blur();
   });
   try {
+    const narrowTrigger = page.getByTestId('edge-tooltip-trigger-right');
+    const narrowTip = page.locator('#edge-tooltip-right');
+    await page.setViewportSize({ width: 390, height: 844 });
+    await narrowTrigger.evaluate(element => Object.assign(element.closest('.zdp-tooltip').style,
+      { position:'fixed', left:'240px', top:'300px', right:'auto', zIndex:'1000' }));
+    try {
+      await page.mouse.move(0,0);
+      await page.waitForFunction(() => document.querySelector('#edge-tooltip-right').closest('.zdp-tooltip').dataset.visible === 'false');
+      assert.equal(await narrowTip.boundingBox(),null,'hidden explanations must not contribute offscreen boxes');
+      await narrowTrigger.focus();
+      await page.waitForFunction(() => document.querySelector('#edge-tooltip-right').closest('.zdp-tooltip').dataset.visible === 'true');
+      await page.waitForFunction(() => { const rect=document.querySelector('#edge-tooltip-right').getBoundingClientRect(); return rect.width>0 && rect.left>=0 && rect.right<=innerWidth; });
+      await page.keyboard.press('Escape');
+      assert.equal(await narrowTip.boundingBox(),null,'Escape must also remove the tooltip from layout');
+      await narrowTrigger.evaluate(element => element.blur());
+    } finally {
+      await narrowTrigger.evaluate(element => element.closest('.zdp-tooltip').removeAttribute('style'));
+      await page.setViewportSize({width:1280,height:800});
+    }
     for (const placement of ['top', 'right', 'bottom', 'left']) {
       const trigger = page.getByTestId(`edge-tooltip-trigger-${placement}`);
       const tip = page.locator(`#edge-tooltip-${placement}`);

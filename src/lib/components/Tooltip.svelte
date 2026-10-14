@@ -200,6 +200,7 @@
   }
 
   .zdp-tooltip__content {
+    display: none;
     background: var(--zdp-color-ink-strong);
     border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
     border-radius: var(--zdp-control-radius);
@@ -281,11 +282,13 @@
   .zdp-tooltip:hover .zdp-tooltip__content,
   .zdp-tooltip:focus-within .zdp-tooltip__content,
   .zdp-tooltip[data-visible="true"] .zdp-tooltip__content {
+    display: block;
     opacity: 1;
     pointer-events: auto;
   }
 
   .zdp-tooltip[data-dismissed="true"] .zdp-tooltip__content {
+    display: none;
     opacity: 0;
     pointer-events: none;
   }

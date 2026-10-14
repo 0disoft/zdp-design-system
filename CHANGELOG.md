@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Remove hidden Tooltip content from layout so long labels do not create horizontal scrolling on narrow screens. Keep hover, keyboard focus, Escape dismissal, and framework-neutral CSS behavior aligned.
+
 ## 0.65.0
 
 - Adopt Bits UI as the internal headless implementation for Menu behind ZDP-owned props, classes, tokens, and named slots, keeping the existing `ZdpMenuItem` public type, Root public props and callbacks, and panel placement CSS unchanged.

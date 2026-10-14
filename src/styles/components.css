@@ -1190,6 +1190,7 @@
 
 .zdp-tooltip__content {
   box-sizing: border-box;
+  display: none;
   width: max-content;
   max-inline-size: min(22rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-4)));
   overflow-wrap: anywhere;
@@ -1251,11 +1252,13 @@
 .zdp-tooltip:hover .zdp-tooltip__content,
 .zdp-tooltip:focus-within .zdp-tooltip__content,
 .zdp-tooltip[data-visible="true"] .zdp-tooltip__content {
+  display: block;
   opacity: 1;
   pointer-events: auto;
 }
 
 .zdp-tooltip[data-dismissed="true"] .zdp-tooltip__content {
+  display: none;
   opacity: 0;
   pointer-events: none;
 }

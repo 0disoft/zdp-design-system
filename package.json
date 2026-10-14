@@ -128,6 +128,7 @@
     "browser:check": "node scripts/check-browser-accessibility.mjs",
     "browser:menu:check": "node scripts/check-browser-accessibility.mjs --menu",
     "browser:popover:check": "node scripts/check-browser-accessibility.mjs --popover",
+    "browser:tooltip:check": "node scripts/check-browser-accessibility.mjs --tooltip",
     "browser:controls:check": "node scripts/check-browser-accessibility.mjs --controls",
     "browser:button:check": "node scripts/check-browser-accessibility.mjs --button",
     "browser:confirm:check": "node scripts/check-browser-accessibility.mjs --confirm",

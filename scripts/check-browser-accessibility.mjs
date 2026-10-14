@@ -159,6 +159,10 @@ try {
     await verifyComboboxEditingContracts(page);
     await verifyCommandFieldContracts(page);
     await verifyComboboxGeometryContracts(page);
+  } else if (process.argv.includes('--tooltip')) {
+    await verifyEmptyTooltipContracts(page);
+    await verifyTooltipLifecycleContracts(page);
+    await verifyTooltipHoverContracts(page);
   } else if (process.argv.includes('--popover')) {
     await verifyOverlayContracts(page);
     await verifyPopoverGeometryContracts(page);
