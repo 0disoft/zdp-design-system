@@ -2,4 +2,4 @@
 bump: minor
 ---
 
-- Add Button loading state with a stable reserved spinner slot, readable labels and native disabled behavior to block repeated actions. Preserve existing buttons when loading is omitted, and support static Astro CSS and reduced motion.
+- Add Button loading state with readable labels and native disabled behavior to block repeated actions. Omitting loading or passing `false` keeps the normal button width with no reserved spinner slot. The spinner takes space only while `loading={true}`, without changing the label or height. Support static Astro CSS and reduced motion.
