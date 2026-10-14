@@ -145,10 +145,7 @@ async function verifyControlStatePriority(page) {
           await hoverTarget.hover();
           await page.keyboard.press('Tab');
           await input.focus();
-          await frame.evaluate(async element => {
-            await Promise.all(element.getAnimations().filter(animation =>
-              Number.isFinite(animation.effect?.getComputedTiming().endTime)).map(animation => animation.finished));
-          });
+          await frame.evaluate(waitForFiniteMotion);
           assert.equal(await frame.evaluate(element => getComputedStyle(element).borderTopColor), expected.danger,
             `${width}/${theme}/${selector}: hover and keyboard focus must preserve the error border`);
           assert.equal(await frame.evaluate(element => getComputedStyle(element).outlineWidth), '3px',
@@ -162,10 +159,7 @@ async function verifyControlStatePriority(page) {
           await control.focus();
           await page.keyboard.down('Space');
           try {
-            await control.evaluate(async element => {
-              await Promise.all(element.getAnimations().filter(animation =>
-                Number.isFinite(animation.effect?.getComputedTiming().endTime)).map(animation => animation.finished));
-            });
+            await control.evaluate(waitForFiniteMotion);
             assert.equal(await control.evaluate(element => getComputedStyle(element).borderTopColor), expected.focus,
               `${width}/${theme}/${selector}: pressing a hovered control must preserve its keyboard focus border`);
           } finally {
@@ -184,10 +178,7 @@ async function verifyControlStatePriority(page) {
           await page.mouse.move(0, 0);
           const resting = await control.evaluate(measure);
           await control.hover();
-          await control.evaluate(async element => {
-            await Promise.all(element.getAnimations({ subtree: true }).filter(animation =>
-              Number.isFinite(animation.effect?.getComputedTiming().endTime)).map(animation => animation.finished));
-          });
+          await control.evaluate(waitForFiniteMotion);
           assert.deepEqual(await control.evaluate(measure), resting,
             `${width}/${theme}/${selector}: disabled controls must not acquire hover colors`);
         }
@@ -195,5 +186,19 @@ async function verifyControlStatePriority(page) {
     }
   } finally {
     await page.setViewportSize(initialViewport);
+  }
+}
+
+async function waitForFiniteMotion(element) {
+  // A focus/hover change can replace a transition and reject its finished promise.
+  // Wait for the replacement too before asserting the final computed styles.
+  while (true) {
+    const animations = element.getAnimations({ subtree: true }).filter(animation =>
+      (animation.playState === 'running' || animation.pending) &&
+      Number.isFinite(animation.effect?.getComputedTiming().endTime));
+    if (animations.length === 0) return;
+    await Promise.all(animations.map(animation => animation.finished.catch(error => {
+      if (error.name !== 'AbortError') throw error;
+    })));
   }
 }
