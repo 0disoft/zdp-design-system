@@ -961,6 +961,7 @@
     font-size: var(--zdp-type-control-size);
     font-weight: var(--zdp-font-weight-regular);
     justify-content: center;
+    position: relative;
     line-height: var(--zdp-type-control-line-height);
     transition:
       background-color var(--zdp-motion-fast) ease,
@@ -1025,6 +1026,45 @@
   .zdp-icon-button:disabled {
     cursor: not-allowed;
     opacity: var(--zdp-control-disabled-opacity);
+  }
+
+  .zdp-icon-button[data-loading="true"] .zdp-icon-button__glyph {
+    visibility: hidden;
+  }
+
+  .zdp-icon-button[data-loading="true"]:not([data-disabled="true"]) {
+    cursor: progress;
+    opacity: 1;
+  }
+
+  .zdp-icon-button__spinner {
+    border: 2px solid var(--zdp-color-line-subtle);
+    border-block-start-color: currentColor;
+    border-inline-end-color: currentColor;
+    border-radius: 50%;
+    box-sizing: border-box;
+    inset: 0;
+    margin: auto;
+    pointer-events: none;
+    position: absolute;
+    visibility: hidden;
+  }
+
+  .zdp-icon-button[data-loading="true"] .zdp-icon-button__spinner {
+    animation: zdp-icon-button-loading-rotate 1s linear infinite;
+    visibility: visible;
+  }
+
+  @keyframes zdp-icon-button-loading-rotate {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .zdp-icon-button[data-loading="true"] .zdp-icon-button__spinner {
+      animation: none;
+    }
   }
 
   @media (forced-colors: active) {

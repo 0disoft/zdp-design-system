@@ -130,6 +130,7 @@ try {
 
   if (process.argv.includes('--button')) {
     await verifyButtonLoadingContracts(page);
+    await verifyButtonLoadingContracts(page, { icon: true });
   } else if (process.argv.includes('--menu')) {
     await verifyOverlayContracts(page);
     await verifyDynamicMenuContracts(page);
@@ -140,6 +141,7 @@ try {
     await verifyProgressRangeContracts(page);
     await verifyFoundationAndFormContracts(page);
     await verifyButtonLoadingContracts(page);
+    await verifyButtonLoadingContracts(page, { icon: true });
     await verifyControlConsistency(page);
     await verifyNativeInputContracts(page);
     await verifyComboboxSelectionContracts(page);
@@ -155,6 +157,7 @@ try {
   } else {
   await verifyFoundationAndFormContracts(page);
   await verifyButtonLoadingContracts(page);
+  await verifyButtonLoadingContracts(page, { icon: true });
   await verifyControlConsistency(page);
   await verifyProgressRangeContracts(page);
   await verifySplitPointerOwnership(page);

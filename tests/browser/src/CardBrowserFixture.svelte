@@ -1,5 +1,6 @@
 <script lang="ts">
   import ButtonLoadingFixture from './ButtonLoadingFixture.svelte';
+  import IconButtonLoadingFixture from './IconButtonLoadingFixture.svelte';
   import NumericProgressFixture from './NumericProgressFixture.svelte';
   import ControlConsistencyFixture from './ControlConsistencyFixture.svelte';
   import MenuGeometryFixture from './MenuGeometryFixture.svelte';
@@ -910,6 +911,7 @@
   <ReassociatedFormFixture />
   <FilteredComboboxFixture />
   <ButtonLoadingFixture />
+  <IconButtonLoadingFixture />
 </main>
 
 <style>

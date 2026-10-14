@@ -5,6 +5,7 @@
   export let size: 'sm' | 'md' = 'md';
   export let type: 'button' | 'submit' | 'reset' = 'button';
   export let disabled = false;
+  export let loading: boolean | undefined = undefined;
   export let id: string | null = null;
   export let name: string | null = null;
   export let value: string | null = null;
@@ -15,6 +16,20 @@
   export let ariaPressed: boolean | null = null;
   export let ariaKeyShortcuts: string | null = null;
   export let onclick: ((event: MouseEvent) => void) | null = null;
+
+  let clickLatch = false;
+
+  function handleClick(event: MouseEvent) {
+    if (disabled || loading || clickLatch) {
+      event.preventDefault();
+      return;
+    }
+    if (loading !== undefined) {
+      clickLatch = true;
+      queueMicrotask(() => { clickLatch = false; });
+    }
+    onclick?.(event);
+  }
 </script>
 
 <button
@@ -26,17 +41,24 @@
   aria-label={ariaLabel}
   title={title ?? ariaLabel}
   {type}
-  {disabled}
+  disabled={disabled || loading === true}
+  aria-disabled={disabled || loading === true}
+  aria-busy={loading ? 'true' : undefined}
+  data-loading={loading ? 'true' : undefined}
+  data-disabled={disabled ? 'true' : undefined}
   aria-controls={ariaControls ?? undefined}
   aria-describedby={ariaDescribedBy ?? undefined}
   aria-expanded={ariaExpanded ?? undefined}
   aria-pressed={ariaPressed ?? undefined}
   aria-keyshortcuts={ariaKeyShortcuts ?? undefined}
-  onclick={onclick ?? undefined}
+  onclick={handleClick}
 >
   <span class={`zdp-icon zdp-icon--${size} zdp-icon-button__glyph`} aria-hidden="true">
     <slot />
   </span>
+  {#if loading !== undefined}
+    <span class={`zdp-icon zdp-icon--${size} zdp-icon-button__spinner`} aria-hidden="true"></span>
+  {/if}
 </button>
 
 <style>
@@ -51,6 +73,7 @@
     font-size: var(--zdp-type-control-size);
     font-weight: var(--zdp-font-weight-regular);
     justify-content: center;
+    position: relative;
     line-height: var(--zdp-type-control-line-height);
     transition:
       background-color var(--zdp-motion-fast) ease,
@@ -115,6 +138,45 @@
   .zdp-icon-button:disabled {
     cursor: not-allowed;
     opacity: var(--zdp-control-disabled-opacity);
+  }
+
+  .zdp-icon-button[data-loading="true"] .zdp-icon-button__glyph {
+    visibility: hidden;
+  }
+
+  .zdp-icon-button[data-loading="true"]:not([data-disabled="true"]) {
+    cursor: progress;
+    opacity: 1;
+  }
+
+  .zdp-icon-button__spinner {
+    border: 2px solid var(--zdp-color-line-subtle);
+    border-block-start-color: currentColor;
+    border-inline-end-color: currentColor;
+    border-radius: 50%;
+    box-sizing: border-box;
+    inset: 0;
+    margin: auto;
+    pointer-events: none;
+    position: absolute;
+    visibility: hidden;
+  }
+
+  .zdp-icon-button[data-loading="true"] .zdp-icon-button__spinner {
+    animation: zdp-icon-button-loading-rotate 1s linear infinite;
+    visibility: visible;
+  }
+
+  @keyframes zdp-icon-button-loading-rotate {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .zdp-icon-button[data-loading="true"] .zdp-icon-button__spinner {
+      animation: none;
+    }
   }
 
   @media (forced-colors: active) {

@@ -1,6 +1,7 @@
 ---
 import 'zdp-design-system/foundation.css';
 import 'zdp-design-system/components/Button.css';
+import 'zdp-design-system/components/IconButton.css';
 import 'zdp-design-system/components/Input.css';
 import 'zdp-design-system/components/Select.css';
 import 'zdp-design-system/components/Disclosure.css';
@@ -19,6 +20,16 @@ import 'zdp-design-system/components/Skeleton.css';
           <button class={`zdp-button zdp-button--${variant} zdp-button--${size}`} type="button" data-loading="false">
             <span class="zdp-button__spinner" aria-hidden="true"></span>
             Save {variant} {size}
+          </button>
+        )))}
+      </div>
+    </section>
+    <section data-testid="static-icon-button-loading" data-zdp-theme="light">
+      <div data-testid="static-icon-button-loading-variants" style="display:flex;flex-wrap:wrap;gap:12px;padding:12px">
+        {['ghost', 'solid'].map(variant => ['sm', 'md'].map(size => (
+          <button class={`zdp-icon-button zdp-icon-button--${variant} zdp-icon-button--${size}`} type="button" aria-label={`Save ${variant} ${size}`} title={`Action ${variant} ${size}`} aria-pressed="true">
+            <span class={`zdp-icon zdp-icon--${size} zdp-icon-button__glyph`} aria-hidden="true">+</span>
+            <span class={`zdp-icon zdp-icon--${size} zdp-icon-button__spinner`} aria-hidden="true"></span>
           </button>
         )))}
       </div>

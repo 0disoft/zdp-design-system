@@ -208,7 +208,8 @@ export function checkOverlaysContracts(context: StorybookCheckContext): void {
     'aria-expanded={ariaExpanded ?? undefined}',
     'aria-pressed={ariaPressed ?? undefined}',
     'aria-keyshortcuts={ariaKeyShortcuts ?? undefined}',
-    'onclick={onclick ?? undefined}',
+    'onclick={handleClick}',
+    "aria-busy={loading ? 'true' : undefined}",
     '.zdp-icon-button--solid:where(:active:not(:disabled))',
     '.zdp-icon-button--solid:where(:hover:not(:disabled))',
     '.zdp-icon-button--ghost:where(:hover:not(:disabled))',
@@ -302,7 +303,7 @@ export function checkOverlaysContracts(context: StorybookCheckContext): void {
 
   assertNoDecorativeEffects(failures, 'Icon component', icon);
 
-  assertNoDecorativeEffects(failures, 'IconButton component', iconButton);
+  assertNoDecorativeEffects(failures, 'IconButton component', withoutLoadingMotion(iconButton));
 
   assertNoDecorativeEffects(failures, 'LocaleSwitcher component', localeSwitcher);
 

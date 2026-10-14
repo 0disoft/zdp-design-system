@@ -73,6 +73,23 @@ try {
       }
     }, loading);
   });
+  const iconLoadingRoot = page.getByTestId('static-icon-button-loading');
+  const iconLoadingButtons = iconLoadingRoot.getByTestId('static-icon-button-loading-variants').locator('button');
+  await verifyButtonLoadingAppearance(page, iconLoadingRoot, iconLoadingButtons, async loading => {
+    await iconLoadingButtons.evaluateAll((buttons, loading) => {
+      for (const button of buttons) {
+        button.disabled = loading;
+        button.setAttribute('aria-disabled', String(loading));
+        if (loading) {
+          button.setAttribute('data-loading', 'true');
+          button.setAttribute('aria-busy', 'true');
+        } else {
+          button.removeAttribute('data-loading');
+          button.removeAttribute('aria-busy');
+        }
+      }
+    }, loading);
+  }, { icon: true });
   await verifyWaitingProgress(page, page.getByRole('progressbar', { name: 'Static waiting progress', exact: true }));
   await verifySpinnerMotion(page, page.getByTestId('static-spinners').locator('.zdp-spinner'));
   await verifySkeletonMotion(page, page.getByTestId('static-skeletons-animated').locator('.zdp-skeleton'), page.getByTestId('static-skeletons-static').locator('.zdp-skeleton'));

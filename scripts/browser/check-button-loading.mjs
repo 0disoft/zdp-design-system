@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 
-export async function verifyButtonLoadingAppearance(page, root, buttons, setLoading) {
+export async function verifyButtonLoadingAppearance(page, root, buttons, setLoading, { icon = false } = {}) {
   const viewport = page.viewportSize();
+  const spinnerSelector = icon ? '.zdp-icon-button__spinner' : '.zdp-button__spinner';
   try {
     for (const width of [1280, 390]) {
       await page.setViewportSize({ width, height: 900 });
@@ -12,11 +13,11 @@ export async function verifyButtonLoadingAppearance(page, root, buttons, setLoad
         const before = await geometry(buttons);
         await setLoading(true);
         assert.deepEqual(await geometry(buttons), before, 'Busy buttons must preserve size and label.');
-        assert.equal(await buttons.count(), 8, 'Exercise both sizes of all four button variants.');
+        assert.equal(await buttons.count(), icon ? 4 : 8, 'Exercise both sizes of all action variants.');
         for (const button of await buttons.all()) {
           assert.equal(await button.isDisabled(), true);
           assert.equal(await button.getAttribute('aria-busy'), 'true');
-          const spinner = button.locator('.zdp-button__spinner');
+          const spinner = button.locator(spinnerSelector);
           assert.equal(await spinner.getAttribute('aria-hidden'), 'true');
           const style = await spinner.evaluate(element => {
             const spinner = getComputedStyle(element);
@@ -39,13 +40,19 @@ export async function verifyButtonLoadingAppearance(page, root, buttons, setLoad
           assert.equal(style.opacity, '1', 'Loading must not dim a readable action as if unavailable.');
           assert.equal(style.cursor, 'progress');
           assert.equal(style.inside, true);
+          if (icon) {
+            assert.equal(await button.locator('.zdp-icon-button__glyph').evaluate(element => getComputedStyle(element).visibility), 'hidden');
+            assert.ok(await button.getAttribute('aria-label'), 'Loading icons retain their accessible name.');
+          }
         }
         await page.emulateMedia({ reducedMotion: 'reduce' });
-        assert.ok((await buttons.locator('.zdp-button__spinner').evaluateAll(elements =>
+        assert.ok((await buttons.locator(spinnerSelector).evaluateAll(elements =>
           elements.map(element => getComputedStyle(element).animationName))).every(name => name === 'none'));
         await setLoading(false);
-        assert.ok((await buttons.locator('.zdp-button__spinner').evaluateAll(elements =>
+        assert.ok((await buttons.locator(spinnerSelector).evaluateAll(elements =>
           elements.map(element => getComputedStyle(element).visibility))).every(visibility => visibility === 'hidden'));
+        if (icon) assert.ok((await buttons.locator('.zdp-icon-button__glyph').evaluateAll(elements =>
+          elements.map(element => getComputedStyle(element).visibility))).every(visibility => visibility === 'visible'));
       }
     }
   } finally {
@@ -58,18 +65,19 @@ export async function verifyButtonLoadingAppearance(page, root, buttons, setLoad
 async function geometry(buttons) {
   return buttons.evaluateAll(elements => elements.map(element => {
     const { width, height } = element.getBoundingClientRect();
-    return { width, height, label: element.textContent.trim() };
+    return { width, height, label: element.textContent.trim(), name: element.getAttribute('aria-label'), title: element.getAttribute('title'), pressed: element.getAttribute('aria-pressed') };
   }));
 }
 
-export async function verifyButtonLoadingContracts(page) {
-  const root = page.getByTestId('button-loading-fixture');
-  const buttons = root.getByTestId('button-loading-variants').locator('button');
-  const toggle = root.getByTestId('button-loading-toggle');
+export async function verifyButtonLoadingContracts(page, { icon = false } = {}) {
+  const prefix = icon ? 'icon-button-loading' : 'button-loading';
+  const root = page.getByTestId(`${prefix}-fixture`);
+  const buttons = root.getByTestId(`${prefix}-variants`).locator('button');
+  const toggle = root.getByTestId(`${prefix}-toggle`);
   const setLoading = async loading => {
-    if ((await buttons.first().getAttribute('data-loading')) !== String(loading)) await toggle.click();
+    if ((await buttons.first().getAttribute('data-loading') === 'true') !== loading) await toggle.click();
   };
-  await verifyButtonLoadingAppearance(page, root, buttons, setLoading);
+  await verifyButtonLoadingAppearance(page, root, buttons, setLoading, { icon });
   assert.equal(await root.getByRole('button', { name: 'Unchanged action', exact: true }).getAttribute('data-loading'), null);
   const submit = root.getByRole('button', { name: 'Save form', exact: true });
   const input = root.getByRole('textbox', { name: 'Loading form value' });
@@ -77,8 +85,8 @@ export async function verifyButtonLoadingContracts(page) {
   await submit.focus();
   // Two activations in one task also exercise the pre-DOM-update guard.
   await submit.evaluate(element => { element.click(); element.click(); });
-  assert.equal(await root.getByTestId('button-loading-submissions').textContent(), '1');
-  assert.equal(await root.getByTestId('button-loading-clicks').textContent(), '1');
+  assert.equal(await root.getByTestId(`${prefix}-submissions`).textContent(), '1');
+  assert.equal(await root.getByTestId(`${prefix}-clicks`).textContent(), '1');
   await submit.evaluate(element => element.click());
   assert.equal(await submit.evaluate(element => element === document.activeElement), false, 'Busy native buttons leave keyboard focus.');
   const busyBox = await submit.boundingBox();
@@ -89,18 +97,18 @@ export async function verifyButtonLoadingContracts(page) {
   await page.keyboard.press('Enter');
   await root.getByRole('button', { name: 'Reset form', exact: true }).evaluate(element => element.click());
   assert.equal(await input.inputValue(), 'changed');
-  assert.equal(await root.getByTestId('button-loading-resets').textContent(), '0');
-  assert.equal(await root.getByTestId('button-loading-submissions').textContent(), '1');
-  assert.equal(await root.getByTestId('button-loading-clicks').textContent(), '1');
+  assert.equal(await root.getByTestId(`${prefix}-resets`).textContent(), '0');
+  assert.equal(await root.getByTestId(`${prefix}-submissions`).textContent(), '1');
+  assert.equal(await root.getByTestId(`${prefix}-clicks`).textContent(), '1');
   const unavailable = root.getByRole('button', { name: 'Unavailable action', exact: true });
   assert.notEqual(await unavailable.evaluate(element => getComputedStyle(element).opacity), '1');
   await setLoading(false);
   assert.equal(await unavailable.isDisabled(), true);
   await submit.focus();
   await page.keyboard.press('Enter');
-  assert.equal(await root.getByTestId('button-loading-submissions').textContent(), '2', 'A completed action must become usable again.');
+  assert.equal(await root.getByTestId(`${prefix}-submissions`).textContent(), '2', 'A completed action must become usable again.');
   await setLoading(false);
   await root.getByRole('button', { name: 'Reset form', exact: true }).click();
-  assert.equal(await root.getByTestId('button-loading-resets').textContent(), '1');
+  assert.equal(await root.getByTestId(`${prefix}-resets`).textContent(), '1');
   assert.equal(await input.inputValue(), 'initial');
 }
