@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 
 export async function verifyFramePopoverContracts(page) {
+  // Previous fixtures can leave only the iframe trigger visible at the page edge.
+  // Keep the embedded viewport visible before exercising real pointer clicks.
+  await page.locator('[title="Embedded popover document"]').scrollIntoViewIfNeeded();
   const frame = page.frameLocator('[title="Embedded popover document"]');
   const trigger = frame.getByTestId('frame-popover-trigger');
   const action = frame.getByTestId('frame-popover-action');
