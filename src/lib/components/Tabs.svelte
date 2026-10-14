@@ -194,13 +194,13 @@
     user-select: none;
   }
 
-  .zdp-tabs__tab:hover:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
+  .zdp-tabs__tab:hover:not(:disabled):not([aria-selected="true"]) {
+    background: var(--zdp-color-interaction-hover);
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-tabs__tab--active {
-    background: var(--zdp-color-accent-primary-soft);
+    background: var(--zdp-color-interaction-selected);
     border-bottom-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
@@ -235,5 +235,8 @@
     border-color: var(--zdp-color-focus-line);
     outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
     outline-offset: var(--zdp-control-focus-outline-offset);
+  }
+  .zdp-tabs__tab:active:not(:disabled):not([aria-selected="true"]) {
+    background: var(--zdp-color-interaction-pressed);
   }
 </style>

@@ -166,14 +166,20 @@
   }
 
   .zdp-segmented-control__item:hover:not(:disabled):not([aria-checked='true']) {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-interaction-hover);
+    border-color: transparent;
+    color: var(--zdp-color-ink-strong);
+  }
+
+  .zdp-segmented-control__item:active:not(:disabled):not([aria-checked='true']) {
+    background: var(--zdp-color-interaction-pressed);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-segmented-control__item--selected,
   .zdp-segmented-control__item[aria-checked='true'] {
-    background: var(--zdp-color-accent-primary-soft);
+    background: var(--zdp-color-interaction-selected);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }

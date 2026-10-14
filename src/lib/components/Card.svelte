@@ -92,7 +92,7 @@
   }
 
   .zdp-card--hover:hover {
-    background: var(--zdp-color-accent-primary-soft);
+    background: var(--zdp-color-interaction-hover);
   }
 
   .zdp-card--outline.zdp-card--hover:hover {

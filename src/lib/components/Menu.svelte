@@ -462,7 +462,13 @@ stability=contract
   }
 
   .zdp-menu__trigger:hover {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-interaction-hover);
+    border-color: var(--zdp-color-line-strong);
+    color: var(--zdp-color-ink-strong);
+  }
+
+  .zdp-menu__trigger:active {
+    background: var(--zdp-color-interaction-pressed);
     border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);
   }
@@ -558,7 +564,14 @@ stability=contract
 
   .zdp-menu__item:hover:not(:disabled):not([aria-disabled="true"]),
   .zdp-menu__item:focus-visible {
-    background: var(--zdp-color-accent-primary-soft);
+    background: var(--zdp-color-interaction-hover);
+    border-color: transparent;
+    color: var(--zdp-color-ink-strong);
+    outline: 0;
+  }
+
+  .zdp-menu__item:active:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--zdp-color-interaction-pressed);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
     outline: 0;

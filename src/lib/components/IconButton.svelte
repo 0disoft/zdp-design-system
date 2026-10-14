@@ -77,13 +77,13 @@
   }
 
   .zdp-icon-button--ghost:hover:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-interaction-hover);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-icon-button--ghost:active:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-interaction-pressed);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
@@ -95,13 +95,13 @@
   }
 
   .zdp-icon-button--solid:hover:not(:disabled) {
-    background: var(--zdp-color-ink-normal);
+    background: color-mix(in oklch, var(--zdp-color-surface-inverse) 94%, var(--zdp-color-ink-inverse));
     border-color: transparent;
     color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-icon-button--solid:active:not(:disabled) {
-    background: var(--zdp-color-ink-normal);
+    background: color-mix(in oklch, var(--zdp-color-surface-inverse) 88%, var(--zdp-color-ink-inverse));
     border-color: transparent;
     color: var(--zdp-color-ink-inverse);
   }

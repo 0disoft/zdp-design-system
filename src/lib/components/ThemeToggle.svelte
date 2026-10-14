@@ -84,7 +84,13 @@
   }
 
   .zdp-theme-toggle:hover:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-interaction-hover);
+    border-color: var(--zdp-color-line-strong);
+    color: var(--zdp-color-ink-strong);
+  }
+
+  .zdp-theme-toggle:active:not(:disabled) {
+    background: var(--zdp-color-interaction-pressed);
     border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);
   }

@@ -583,8 +583,8 @@ for (const [label, selector] of [
   }
 
   for (const requiredText of [
-    'background: var(--zdp-color-surface-raised)',
-    'background: var(--zdp-color-accent-primary-soft)',
+    'background: var(--zdp-color-interaction-hover)',
+    'background: var(--zdp-color-interaction-selected)',
     'border-color: transparent'
   ]) {
     if (!interactionBlock.includes(requiredText)) {
@@ -613,7 +613,7 @@ for (const [label, startSelector, endSelector] of [
 
   for (const requiredText of [
     'border: var(--zdp-control-border-width) solid transparent',
-    'background: var(--zdp-color-surface-raised)'
+    label === 'Menu' ? 'background: var(--zdp-color-interaction-hover)' : 'background: var(--zdp-color-surface-raised)'
   ]) {
     if (!block.includes(requiredText)) {
       failures.push(`Static ${label} must keep the borderless surface contract text ${requiredText}.`);

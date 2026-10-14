@@ -24,6 +24,7 @@
     align-items: center;
     box-sizing: border-box;
     color: var(--zdp-spinner-accent);
+    color: color-mix(in oklch, var(--zdp-spinner-accent) 94%, var(--zdp-color-ink-strong));
     display: inline-flex;
     flex: 0 0 auto;
     justify-content: center;

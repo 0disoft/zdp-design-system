@@ -119,7 +119,7 @@
   }
 
   .zdp-toast__body :global(.zdp-toast__action:hover) {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-interaction-hover);
     border-color: transparent;
   }
 
@@ -149,7 +149,7 @@
   }
 
   .zdp-toast__close:hover {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-interaction-hover);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
@@ -174,5 +174,9 @@
 
   .zdp-toast--danger .zdp-toast__mark {
     background: var(--zdp-color-accent-danger);
+  }
+  .zdp-toast__close:active,
+  .zdp-toast__body :global(.zdp-toast__action:active) {
+    background: var(--zdp-color-interaction-pressed);
   }
 </style>

@@ -19,9 +19,9 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
     'background: var(--zdp-color-surface-panel)',
     'border: var(--zdp-control-border-width) solid transparent',
     '.zdp-locale-switcher__item:hover:not(:disabled):not([aria-checked=',
-    'background: var(--zdp-color-surface-raised)',
+    'background: var(--zdp-color-interaction-hover)',
     'border-color: transparent',
-    'background: var(--zdp-color-accent-primary-soft)',
+    'background: var(--zdp-color-interaction-selected)',
     'color: var(--zdp-color-ink-strong)',
     '@media (forced-colors: active)',
     'border-color: ButtonText',
@@ -850,9 +850,9 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
     'background: var(--zdp-color-surface-panel)',
     'border: var(--zdp-control-border-width) solid transparent',
     '.zdp-segmented-control__item:hover:not(:disabled):not([aria-checked=',
-    'background: var(--zdp-color-surface-raised)',
+    'background: var(--zdp-color-interaction-hover)',
     'border-color: transparent',
-    'background: var(--zdp-color-accent-primary-soft)',
+    'background: var(--zdp-color-interaction-selected)',
     'color: var(--zdp-color-ink-strong)',
     '@media (forced-colors: active)',
     'border-color: ButtonText',
@@ -877,7 +877,7 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
     ['SegmentedControl', segmentedControl]
   ] satisfies Array<readonly [string, string]>) {
     for (const requiredText of [
-      'background: var(--zdp-color-accent-primary-soft)',
+      'background: var(--zdp-color-interaction-selected)',
       'color: var(--zdp-color-ink-strong)'
     ]) {
       if (!source.includes(requiredText)) {
@@ -953,8 +953,8 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
     '.zdp-menu__separator',
     'border: var(--zdp-control-border-width) solid transparent',
     'background: var(--zdp-color-surface-panel)',
-    'background: var(--zdp-color-surface-raised)',
-    'background: var(--zdp-color-accent-primary-soft)',
+    'background: var(--zdp-color-interaction-hover)',
+    'background: var(--zdp-color-interaction-pressed)',
     'border-color: ButtonText',
     '.zdp-menu--bottom .zdp-menu__panel',
     '.zdp-menu--align-end .zdp-menu__panel',

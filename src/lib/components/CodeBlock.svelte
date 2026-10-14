@@ -209,7 +209,12 @@
   }
 
   .zdp-code-block__copy:hover {
-    background: var(--zdp-color-accent-primary-soft);
+    background: var(--zdp-color-interaction-hover);
+    border-color: transparent;
+  }
+
+  .zdp-code-block__copy:active {
+    background: var(--zdp-color-interaction-pressed);
     border-color: transparent;
   }
 

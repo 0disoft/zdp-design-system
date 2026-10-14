@@ -665,7 +665,20 @@
     user-select: none;
   }
 
-  .zdp-combobox__toggle:hover:not(:disabled),
+  .zdp-combobox__toggle:hover:not(:disabled) {
+    background: var(--zdp-color-interaction-hover);
+    border-color: transparent;
+    color: var(--zdp-color-ink-strong);
+    outline: 0;
+  }
+
+  .zdp-combobox__toggle:active:not(:disabled) {
+    background: var(--zdp-color-interaction-pressed);
+    border-color: transparent;
+    color: var(--zdp-color-ink-strong);
+    outline: 0;
+  }
+
   .zdp-combobox__toggle:focus-visible {
     background: var(--zdp-color-surface-raised);
     border-color: transparent;
@@ -764,17 +777,21 @@
     user-select: none;
   }
 
-  .zdp-combobox__option:hover:not(:disabled),
+  .zdp-combobox__option:hover:not(:disabled):not([data-selected="true"]),
   .zdp-combobox__option[data-active="true"] {
-    background: var(--zdp-color-surface-panel);
+    background: var(--zdp-color-interaction-hover);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-combobox__option[data-selected="true"] {
-    background: var(--zdp-color-accent-primary-soft);
+    background: var(--zdp-color-interaction-selected);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
+  }
+
+  .zdp-combobox__option:active:not(:disabled):not([data-selected="true"]) {
+    background: var(--zdp-color-interaction-pressed);
   }
 
   .zdp-combobox__option:disabled,
@@ -805,5 +822,12 @@
       color: ButtonText;
       forced-color-adjust: none;
     }
+  }
+
+  .zdp-combobox__option:hover:not(:disabled) .zdp-combobox__option-description,
+  .zdp-combobox__option:active:not(:disabled) .zdp-combobox__option-description,
+  .zdp-combobox__option[data-selected="true"] .zdp-combobox__option-description,
+  .zdp-combobox__option[data-active="true"] .zdp-combobox__option-description {
+    color: var(--zdp-color-ink-normal);
   }
 </style>

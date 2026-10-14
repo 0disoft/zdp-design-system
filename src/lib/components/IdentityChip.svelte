@@ -85,7 +85,7 @@
   }
 
   .zdp-identity-chip--link:hover {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-interaction-hover);
     color: var(--zdp-color-ink-strong);
   }
 
@@ -97,7 +97,7 @@
 
   .zdp-identity-chip[data-selected='true'],
   .zdp-identity-chip[aria-current] {
-    background: var(--zdp-color-accent-primary-soft);
+    background: var(--zdp-color-interaction-selected);
     color: var(--zdp-color-ink-strong);
   }
 
@@ -125,5 +125,15 @@
     color: var(--zdp-color-ink-muted);
     font-size: var(--zdp-type-caption-size);
     line-height: var(--zdp-type-caption-line-height);
+  }
+  .zdp-identity-chip--link:active:not([data-selected="true"]):not([aria-current]) {
+    background: var(--zdp-color-interaction-pressed);
+  }
+
+  .zdp-identity-chip--link:hover .zdp-identity-chip__description,
+  .zdp-identity-chip--link:active .zdp-identity-chip__description,
+  .zdp-identity-chip[data-selected="true"] .zdp-identity-chip__description,
+  .zdp-identity-chip[aria-current] .zdp-identity-chip__description {
+    color: var(--zdp-color-ink-normal);
   }
 </style>

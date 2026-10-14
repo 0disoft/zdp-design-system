@@ -76,6 +76,7 @@
 
   .zdp-progress__bar {
     background: var(--zdp-progress-accent);
+    background: color-mix(in oklch, var(--zdp-progress-accent) 94%, var(--zdp-color-ink-strong));
     block-size: 100%;
     display: block;
     inline-size: var(--zdp-progress-value);
@@ -86,6 +87,7 @@
   }
 
   .zdp-progress[data-indeterminate="true"] .zdp-progress__bar {
+    background: color-mix(in oklch, var(--zdp-progress-accent) 35%, var(--zdp-color-ink-strong));
     inline-size: 100%;
     opacity: 0.64;
   }

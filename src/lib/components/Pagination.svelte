@@ -273,13 +273,13 @@
   }
 
   .zdp-pagination__link:hover:not(:disabled):not([aria-current='page']) {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-interaction-hover);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-pagination__link[aria-current='page'] {
-    background: var(--zdp-color-accent-primary-soft);
+    background: var(--zdp-color-interaction-selected);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
     cursor: default;
@@ -302,5 +302,8 @@
 
   .zdp-pagination__ellipsis {
     color: var(--zdp-color-ink-muted);
+  }
+  .zdp-pagination__link:active:not(:disabled):not([aria-current="page"]) {
+    background: var(--zdp-color-interaction-pressed);
   }
 </style>

@@ -53,6 +53,8 @@ It still loads `tokens.css` and the complete `components.css`. Existing consumer
 
 ## Runtime boundary
 
+Neutral controls use `--zdp-color-interaction-hover`, `--zdp-color-interaction-pressed` and `--zdp-color-interaction-selected` for temporary and selected states. These theme-aware colors stay distinct from panel and raised surfaces; selected states remain visible without extra borders. Preserve the provided foreground and focus styles when customizing them.
+
 CSS entries provide presentation only. Dialog, Sheet, TermSheet, Menu, Popover, Combobox, Tabs, Accordion, ResizableSplitPane and other interactive primitives still require their Svelte component or the documented framework-neutral controller. Copying their classes does not reproduce focus management, dismissal, keyboard navigation, hydration or persistence behavior.
 
 An open shadow root must install `foundation.css` and the selected component CSS files inside that shadow root. Document-level styles do not cross the shadow boundary. Closed shadow roots remain unsupported.

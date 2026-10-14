@@ -57,7 +57,13 @@
 }
 
 .zdp-theme-toggle:hover:not(:disabled) {
-  background: var(--zdp-color-surface-raised);
+  background: var(--zdp-color-interaction-hover);
+  border-color: var(--zdp-color-line-strong);
+  color: var(--zdp-color-ink-strong);
+}
+
+.zdp-theme-toggle:active:not(:disabled) {
+  background: var(--zdp-color-interaction-pressed);
   border-color: var(--zdp-color-line-strong);
   color: var(--zdp-color-ink-strong);
 }
@@ -175,14 +181,20 @@
 }
 
 .zdp-locale-switcher__item:hover:not(:disabled):not([aria-checked="true"]) {
-  background: var(--zdp-color-surface-raised);
+  background: var(--zdp-color-interaction-hover);
+  border-color: transparent;
+  color: var(--zdp-color-ink-strong);
+}
+
+.zdp-locale-switcher__item:active:not(:disabled):not([aria-checked="true"]) {
+  background: var(--zdp-color-interaction-pressed);
   border-color: transparent;
   color: var(--zdp-color-ink-strong);
 }
 
 .zdp-locale-switcher__item--selected,
 .zdp-locale-switcher__item[aria-checked="true"] {
-  background: var(--zdp-color-accent-primary-soft);
+  background: var(--zdp-color-interaction-selected);
   border-color: transparent;
   color: var(--zdp-color-ink-strong);
 }
@@ -254,14 +266,20 @@
 }
 
 .zdp-text-scale-control__item:hover:not(:disabled):not([aria-checked="true"]) {
-  background: var(--zdp-color-surface-raised);
+  background: var(--zdp-color-interaction-hover);
+  border-color: transparent;
+  color: var(--zdp-color-ink-strong);
+}
+
+.zdp-text-scale-control__item:active:not(:disabled):not([aria-checked="true"]) {
+  background: var(--zdp-color-interaction-pressed);
   border-color: transparent;
   color: var(--zdp-color-ink-strong);
 }
 
 .zdp-text-scale-control__item--selected,
 .zdp-text-scale-control__item[aria-checked="true"] {
-  background: var(--zdp-color-accent-primary-soft);
+  background: var(--zdp-color-interaction-selected);
   border-color: transparent;
   color: var(--zdp-color-ink-strong);
 }
@@ -924,7 +942,20 @@
     user-select: none;
   }
 
-  .zdp-combobox__toggle:hover:not(:disabled),
+  .zdp-combobox__toggle:hover:not(:disabled) {
+    background: var(--zdp-color-interaction-hover);
+    border-color: transparent;
+    color: var(--zdp-color-ink-strong);
+    outline: 0;
+  }
+
+  .zdp-combobox__toggle:active:not(:disabled) {
+    background: var(--zdp-color-interaction-pressed);
+    border-color: transparent;
+    color: var(--zdp-color-ink-strong);
+    outline: 0;
+  }
+
   .zdp-combobox__toggle:focus-visible {
     background: var(--zdp-color-surface-raised);
     border-color: transparent;
@@ -1023,17 +1054,21 @@
     user-select: none;
   }
 
-  .zdp-combobox__option:hover:not(:disabled),
+  .zdp-combobox__option:hover:not(:disabled):not([data-selected="true"]),
   .zdp-combobox__option[data-active="true"] {
-    background: var(--zdp-color-surface-panel);
+    background: var(--zdp-color-interaction-hover);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-combobox__option[data-selected="true"] {
-    background: var(--zdp-color-accent-primary-soft);
+    background: var(--zdp-color-interaction-selected);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
+  }
+
+  .zdp-combobox__option:active:not(:disabled):not([data-selected="true"]) {
+    background: var(--zdp-color-interaction-pressed);
   }
 
   .zdp-combobox__option:disabled,
@@ -1207,7 +1242,12 @@
   }
 
   .zdp-command-field__clear:hover {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-interaction-hover);
+    color: var(--zdp-color-ink-strong);
+  }
+
+  .zdp-command-field__clear:active {
+    background: var(--zdp-color-interaction-pressed);
     color: var(--zdp-color-ink-strong);
   }
 
@@ -1229,3 +1269,10 @@
     -webkit-user-select: none;
     user-select: none;
   }
+
+.zdp-combobox__option:hover:not(:disabled) .zdp-combobox__option-description,
+.zdp-combobox__option:active:not(:disabled) .zdp-combobox__option-description,
+.zdp-combobox__option[data-selected="true"] .zdp-combobox__option-description,
+.zdp-combobox__option[data-active="true"] .zdp-combobox__option-description {
+  color: var(--zdp-color-ink-normal);
+}

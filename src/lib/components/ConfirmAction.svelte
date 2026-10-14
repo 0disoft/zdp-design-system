@@ -338,7 +338,7 @@
   }
 
   .zdp-confirm-action:hover:not(:disabled) {
-    background: var(--zdp-color-accent-primary-soft);
+    background: var(--zdp-color-interaction-hover);
     border-color: transparent;
   }
 

@@ -332,7 +332,12 @@
   }
 
   .zdp-command-field__clear:hover {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-interaction-hover);
+    color: var(--zdp-color-ink-strong);
+  }
+
+  .zdp-command-field__clear:active {
+    background: var(--zdp-color-interaction-pressed);
     color: var(--zdp-color-ink-strong);
   }
 

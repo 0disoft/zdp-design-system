@@ -157,7 +157,12 @@
   }
 
   .zdp-disclosure__trigger:hover:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-interaction-hover);
+    color: var(--zdp-color-ink-strong);
+  }
+
+  .zdp-disclosure__trigger:active:not(:disabled) {
+    background: var(--zdp-color-interaction-pressed);
     color: var(--zdp-color-ink-strong);
   }
 

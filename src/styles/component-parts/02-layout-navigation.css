@@ -325,7 +325,12 @@
 }
 
 .zdp-code-block__copy:hover {
-  background: var(--zdp-color-accent-primary-soft);
+  background: var(--zdp-color-interaction-hover);
+  border-color: transparent;
+}
+
+.zdp-code-block__copy:active {
+  background: var(--zdp-color-interaction-pressed);
   border-color: transparent;
 }
 
@@ -592,14 +597,20 @@
 }
 
 .zdp-segmented-control__item:hover:not(:disabled):not([aria-checked="true"]) {
-  background: var(--zdp-color-surface-raised);
+  background: var(--zdp-color-interaction-hover);
+  border-color: transparent;
+  color: var(--zdp-color-ink-strong);
+}
+
+.zdp-segmented-control__item:active:not(:disabled):not([aria-checked="true"]) {
+  background: var(--zdp-color-interaction-pressed);
   border-color: transparent;
   color: var(--zdp-color-ink-strong);
 }
 
 .zdp-segmented-control__item--selected,
 .zdp-segmented-control__item[aria-checked="true"] {
-  background: var(--zdp-color-accent-primary-soft);
+  background: var(--zdp-color-interaction-selected);
   border-color: transparent;
   color: var(--zdp-color-ink-strong);
 }
@@ -788,13 +799,13 @@
   }
 
   .zdp-button--primary:hover:not(:disabled) {
-    background: var(--zdp-color-ink-normal);
+    background: color-mix(in oklch, var(--zdp-color-surface-inverse) 94%, var(--zdp-color-ink-inverse));
     border-color: transparent;
     color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-button--primary:active:not(:disabled) {
-    background: var(--zdp-color-ink-normal);
+    background: color-mix(in oklch, var(--zdp-color-surface-inverse) 88%, var(--zdp-color-ink-inverse));
     border-color: transparent;
     color: var(--zdp-color-ink-inverse);
   }
@@ -806,13 +817,13 @@
   }
 
   .zdp-button--secondary:hover:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-interaction-hover);
     border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-button--secondary:active:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-interaction-pressed);
     border-color: var(--zdp-color-line-strong);
   }
 
@@ -941,13 +952,13 @@
   }
 
   .zdp-icon-button--ghost:hover:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-interaction-hover);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-icon-button--ghost:active:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-interaction-pressed);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
@@ -959,13 +970,13 @@
   }
 
   .zdp-icon-button--solid:hover:not(:disabled) {
-    background: var(--zdp-color-ink-normal);
+    background: color-mix(in oklch, var(--zdp-color-surface-inverse) 94%, var(--zdp-color-ink-inverse));
     border-color: transparent;
     color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-icon-button--solid:active:not(:disabled) {
-    background: var(--zdp-color-ink-normal);
+    background: color-mix(in oklch, var(--zdp-color-surface-inverse) 88%, var(--zdp-color-ink-inverse));
     border-color: transparent;
     color: var(--zdp-color-ink-inverse);
   }
@@ -1065,7 +1076,12 @@
   }
 
   .zdp-disclosure__trigger:hover:not(:disabled) {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-interaction-hover);
+    color: var(--zdp-color-ink-strong);
+  }
+
+  .zdp-disclosure__trigger:active:not(:disabled) {
+    background: var(--zdp-color-interaction-pressed);
     color: var(--zdp-color-ink-strong);
   }
 
@@ -1199,7 +1215,13 @@
   }
 
   .zdp-menu__trigger:hover {
-    background: var(--zdp-color-surface-raised);
+    background: var(--zdp-color-interaction-hover);
+    border-color: var(--zdp-color-line-strong);
+    color: var(--zdp-color-ink-strong);
+  }
+
+  .zdp-menu__trigger:active {
+    background: var(--zdp-color-interaction-pressed);
     border-color: var(--zdp-color-line-strong);
     color: var(--zdp-color-ink-strong);
   }
@@ -1295,7 +1317,14 @@
 
   .zdp-menu__item:hover:not(:disabled):not([aria-disabled="true"]),
   .zdp-menu__item:focus-visible {
-    background: var(--zdp-color-accent-primary-soft);
+    background: var(--zdp-color-interaction-hover);
+    border-color: transparent;
+    color: var(--zdp-color-ink-strong);
+    outline: 0;
+  }
+
+  .zdp-menu__item:active:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--zdp-color-interaction-pressed);
     border-color: transparent;
     color: var(--zdp-color-ink-strong);
     outline: 0;
