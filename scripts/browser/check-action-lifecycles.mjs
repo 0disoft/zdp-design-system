@@ -189,6 +189,7 @@ export async function verifyCopyLifecycleContracts(page) {
     await button.focus();
     await page.keyboard.press('Enter');
     assert.equal(await button.isDisabled(), true);
+    await button.locator('.zdp-code-block__copy-spinner').waitFor({ state: 'visible' });
     assert.equal((await button.textContent()).trim(), 'Copying');
     await button.evaluate(element => {
       element.click();
@@ -205,6 +206,7 @@ export async function verifyCopyLifecycleContracts(page) {
     await page.evaluate(() => window.__zdpCopyRequests[1].reject(new Error('Copy rejected')));
     await page.waitForFunction(() => document.querySelector('[data-testid="copy-lifecycle"] .zdp-code-block__copy').textContent.trim() === 'Copy failed');
     assert.equal(await button.isDisabled(), false, 'Failure must allow retry.');
+    assert.equal(await button.locator('.zdp-code-block__copy-result path').getAttribute('d'), 'm6 6 12 12M18 6 6 18');
 
     await button.click();
     await page.evaluate(() => window.__zdpCopyRequests[2].resolve());
@@ -218,7 +220,7 @@ export async function verifyCopyLifecycleContracts(page) {
       const originalTimeout = window.setTimeout;
       window.__zdpLateCopyTimers = 0;
       window.setTimeout = function (callback, delay, ...args) {
-        if (delay === 1800) window.__zdpLateCopyTimers += 1;
+        if (delay === 2200 || delay === 150) window.__zdpLateCopyTimers += 1;
         return originalTimeout.call(this, callback, delay, ...args);
       };
       try {
@@ -237,6 +239,24 @@ export async function verifyCopyLifecycleContracts(page) {
     await button.click();
     await page.waitForFunction(() => document.querySelector('[data-testid="copy-lifecycle"] .zdp-code-block__copy').textContent.trim() === 'Copy failed');
     assert.equal(await button.isDisabled(), false, 'Missing Clipboard API must settle as failure instead of leaving the button busy.');
+    await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', {
+      configurable: true, value: { writeText: () => Promise.resolve() }
+    }));
+    const immediate = await button.evaluate(async element => {
+      element.click();
+      const before = { label: element.textContent.trim(), spinner: getComputedStyle(element.querySelector('.zdp-code-block__copy-spinner')).display };
+      await Promise.resolve();
+      await Promise.resolve();
+      return before;
+    });
+    assert.equal(immediate.spinner, 'none', 'A fast copy must not flash a spinner.');
+    await page.waitForFunction(() => document.querySelector('[data-testid="copy-lifecycle"] .zdp-code-block__copy').dataset.copyState === 'copied');
+    assert.equal(await button.locator('.zdp-code-block__copy-result path').getAttribute('d'), 'm5 12 4 4L19 6');
+    await page.waitForTimeout(1900);
+    assert.equal(await button.getAttribute('data-copy-state'), 'copied', 'Readable result feedback must remain visible for over two seconds.');
+    assert.equal(await button.getAttribute('data-copy-progress'), null, 'Fast completion must cancel delayed spinner feedback.');
+    await page.waitForFunction(() => document.querySelector('[data-testid="copy-lifecycle"] .zdp-code-block__copy').dataset.copyState === 'idle');
+    assert.equal(await button.locator('.zdp-code-block__copy-result').count(), 0, 'Idle state must release the result icon space.');
   } finally {
     await page.evaluate(() => {
       if (window.__zdpCopyDescriptor) {

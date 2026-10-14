@@ -9,10 +9,19 @@ export async function verifyCodeCopyAppearance(page, root, button, setCopying) {
       for (const theme of ['light', 'dark']) {
         await root.evaluate((element, value) => element.setAttribute('data-zdp-theme', value), theme);
         await page.emulateMedia({ reducedMotion: 'no-preference' });
+        if (await button.getAttribute('data-copy-state') === 'idle') {
+          const spacing = await button.evaluate(element => {
+            const box = element.getBoundingClientRect();
+            const label = element.querySelector('.zdp-code-block__copy-label').getBoundingClientRect();
+            return Math.abs((box.left + box.right) / 2 - (label.left + label.right) / 2);
+          });
+          assert.ok(spacing <= 1, 'Idle copy text must be centered without an invisible icon slot.');
+        }
         await setCopying(true);
         assert.equal(await button.isDisabled(), true);
         assert.equal(await button.getAttribute('aria-busy'), 'true');
         assert.equal(await button.getAttribute('data-copy-state'), 'copying');
+        await button.locator('.zdp-code-block__copy-spinner').waitFor({ state: 'visible' });
         const state = await button.evaluate(element => {
           const spinner = element.querySelector('.zdp-code-block__copy-spinner');
           const style = getComputedStyle(spinner);
@@ -35,7 +44,7 @@ export async function verifyCodeCopyAppearance(page, root, button, setCopying) {
         await setCopying(false);
         assert.equal(await button.isDisabled(), false);
         assert.equal(await button.getAttribute('aria-busy'), null);
-        assert.equal(await button.locator('.zdp-code-block__copy-spinner').evaluate(element => getComputedStyle(element).visibility), 'hidden');
+        assert.equal(await button.locator('.zdp-code-block__copy-spinner').evaluate(element => getComputedStyle(element).display), 'none');
       }
     }
   } finally {

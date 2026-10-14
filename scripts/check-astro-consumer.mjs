@@ -70,6 +70,7 @@ try {
     await codeCopyButton.evaluate((button, copying) => {
       button.disabled = copying;
       button.setAttribute('data-copy-state', copying ? 'copying' : 'idle');
+      if (copying) button.setAttribute('data-copy-progress', 'true'); else button.removeAttribute('data-copy-progress');
       button.setAttribute('aria-disabled', String(copying));
       if (copying) button.setAttribute('aria-busy', 'true'); else button.removeAttribute('aria-busy');
       button.querySelector('.zdp-code-block__copy-label').textContent = copying ? 'Copying' : 'Copy';

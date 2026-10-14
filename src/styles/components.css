@@ -4782,15 +4782,24 @@
   border-inline-end-color: currentColor;
   border-radius: 50%;
   box-sizing: border-box;
+  display: none;
   flex: 0 0 auto;
   height: var(--zdp-control-glyph-sm);
-  visibility: hidden;
   width: var(--zdp-control-glyph-sm);
 }
 
 .zdp-code-block__copy[data-copy-state="copying"] .zdp-code-block__copy-spinner {
   animation: zdp-code-copy-rotate 1s linear infinite;
-  visibility: visible;
+}
+
+.zdp-code-block__copy[data-copy-progress="true"] .zdp-code-block__copy-spinner {
+  display: block;
+}
+
+.zdp-code-block__copy-result {
+  flex: 0 0 auto;
+  height: var(--zdp-control-glyph-sm);
+  width: var(--zdp-control-glyph-sm);
 }
 
 @keyframes zdp-code-copy-rotate {

@@ -22,6 +22,8 @@
 
   let copyState: CopyState = 'idle';
   let resetCopyStateTimer: ReturnType<typeof setTimeout> | null = null;
+  let copyProgressTimer: ReturnType<typeof setTimeout> | null = null;
+  let showCopyProgress = false;
   let copyRequestVersion = 0;
   let destroyed = false;
   let knownCode = code;
@@ -36,7 +38,7 @@
   $: resolvedAriaLabel = ariaLabel ?? (!labelledBy && label ? label : null);
   $: codeRegionLabel = [label ?? ariaLabel, language ? `${language} code` : 'Code'].filter(Boolean).join(' ');
   $: resolvedCopyLabel =
-    copyState === 'copying' ? copyingLabel : copyState === 'copied' ? copiedLabel : copyState === 'failed' ? copyFailedLabel : copyLabel;
+    copyState === 'copying' && showCopyProgress ? copyingLabel : copyState === 'copied' ? copiedLabel : copyState === 'failed' ? copyFailedLabel : copyLabel;
 
   onDestroy(() => {
     destroyed = true;
@@ -46,7 +48,16 @@
   function invalidateCopyState(): void {
     copyRequestVersion += 1;
     clearResetCopyStateTimer();
+    clearCopyProgressTimer();
+    showCopyProgress = false;
     copyState = 'idle';
+  }
+
+  function clearCopyProgressTimer(): void {
+    if (copyProgressTimer !== null) {
+      clearTimeout(copyProgressTimer);
+      copyProgressTimer = null;
+    }
   }
 
   function clearResetCopyStateTimer(): void {
@@ -62,7 +73,7 @@
     resetCopyStateTimer = setTimeout(() => {
       copyState = 'idle';
       resetCopyStateTimer = null;
-    }, 1800);
+    }, 2200);
   }
 
   async function handleCopy(): Promise<void> {
@@ -74,7 +85,13 @@
     const copiedCode = code;
     let nextState: CopyState;
     clearResetCopyStateTimer();
+    clearCopyProgressTimer();
+    showCopyProgress = false;
     copyState = 'copying';
+    copyProgressTimer = setTimeout(() => {
+      showCopyProgress = true;
+      copyProgressTimer = null;
+    }, 150);
 
     try {
       if (typeof navigator === 'undefined' || !navigator.clipboard?.writeText) {
@@ -91,6 +108,8 @@
       return;
     }
 
+    clearCopyProgressTimer();
+    showCopyProgress = false;
     copyState = nextState;
     scheduleResetCopyState();
   }
@@ -121,12 +140,22 @@
           class="zdp-code-block__copy"
           type="button"
           data-copy-state={copyState}
+          data-copy-progress={showCopyProgress ? 'true' : undefined}
           disabled={copyState === 'copying'}
           aria-disabled={copyState === 'copying'}
           aria-busy={copyState === 'copying' ? 'true' : undefined}
           onclick={handleCopy}
         >
           <span class="zdp-code-block__copy-spinner" aria-hidden="true"></span>
+          {#if copyState === 'copied' || copyState === 'failed'}
+            <svg class="zdp-code-block__copy-result" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              {#if copyState === 'copied'}
+                <path d="m5 12 4 4L19 6" />
+              {:else}
+                <path d="m6 6 12 12M18 6 6 18" />
+              {/if}
+            </svg>
+          {/if}
           <span class="zdp-code-block__copy-label" aria-live="polite">{resolvedCopyLabel}</span>
         </button>
       {/if}
@@ -247,15 +276,24 @@
     border-inline-end-color: currentColor;
     border-radius: 50%;
     box-sizing: border-box;
+    display: none;
     flex: 0 0 auto;
     height: var(--zdp-control-glyph-sm);
-    visibility: hidden;
     width: var(--zdp-control-glyph-sm);
   }
 
   .zdp-code-block__copy[data-copy-state="copying"] .zdp-code-block__copy-spinner {
     animation: zdp-code-copy-rotate 1s linear infinite;
-    visibility: visible;
+  }
+
+  .zdp-code-block__copy[data-copy-progress="true"] .zdp-code-block__copy-spinner {
+    display: block;
+  }
+
+  .zdp-code-block__copy-result {
+    flex: 0 0 auto;
+    height: var(--zdp-control-glyph-sm);
+    width: var(--zdp-control-glyph-sm);
   }
 
   @keyframes zdp-code-copy-rotate {
