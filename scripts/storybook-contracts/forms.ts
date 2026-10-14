@@ -183,9 +183,10 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
   }
 
   for (const requiredText of [
-    'border: var(--zdp-control-border-width) solid transparent',
-    'background: var(--zdp-color-surface-raised)',
+    'background: var(--zdp-color-surface-panel)',
     '.zdp-select::picker(select)',
+    'border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong)',
+    'border-radius: var(--zdp-control-radius)',
     'background-color: var(--zdp-color-interaction-hover)',
     'background-color: var(--zdp-color-interaction-pressed)',
     'background-color: var(--zdp-color-interaction-selected)',

@@ -3019,15 +3019,17 @@
     }
 
     .zdp-select::picker(select) {
-      background: var(--zdp-color-surface-raised);
-      border: var(--zdp-control-border-width) solid transparent;
+      background: var(--zdp-color-surface-panel);
+      border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
+      border-radius: var(--zdp-control-radius);
       box-sizing: border-box;
       color: var(--zdp-color-ink-strong);
       padding: var(--zdp-space-1);
     }
 
     .zdp-select option {
-      background-color: var(--zdp-color-surface-raised);
+      background-color: var(--zdp-color-surface-panel);
+      border-radius: var(--zdp-control-radius);
       box-sizing: border-box;
       color: var(--zdp-color-ink-strong);
       min-block-size: var(--zdp-control-height-md);
