@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
 import { verifyWaitingProgress } from './check-progress-waiting.mjs';
+import { verifySpinnerMotion } from './check-spinner-motion.mjs';
 
 export async function verifyProgressRangeContracts(page) {
+  await verifySpinnerMotion(page, page.getByTestId('spinner-motion-fixture').locator('.zdp-spinner'));
   await verifyWaitingProgress(page, page.getByRole('progressbar', { name: 'Waiting progress', exact: true }));
   for (const [index, percent] of [0, 50, 100].entries()) {
     const progress = page.getByTestId(`numeric-progress-${index}`).getByRole('progressbar');

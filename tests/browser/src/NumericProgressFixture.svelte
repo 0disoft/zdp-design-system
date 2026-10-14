@@ -1,5 +1,6 @@
 <script lang="ts">
   import Progress from '../../../src/lib/components/Progress.svelte';
+  import Spinner from '../../../src/lib/components/Spinner.svelte';
 </script>
 
 <section data-testid="numeric-progress-fixture">
@@ -9,4 +10,9 @@
     </div>
   {/each}
   <Progress ariaLabel="Waiting progress" />
+  <div data-testid="spinner-motion-fixture">
+    {#each ['sm', 'md', 'lg'] as size}
+      <Spinner size={size as 'sm' | 'md' | 'lg'} label={`Spinner ${size}`} />
+    {/each}
+  </div>
 </section>

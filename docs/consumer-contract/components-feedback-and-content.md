@@ -9,6 +9,8 @@ Progress, Spinner, Skeleton은 작업 진행, 응답 대기, 콘텐츠 자리 �
 
 Progress의 미정 상태는 트랙 일부를 이동시켜 완료 상태와 구분한다. RTL에서는 이동 방향을 반대로 하고, `prefers-reduced-motion: reduce`에서는 가운데의 짧은 정적 막대로 표시한다. 미정 상태에는 `aria-valuenow`를 제공하지 않는다. Svelte와 Astro용 정적 CSS가 같은 표시 규칙을 따른다.
 
+Spinner는 크기와 테마에 관계없이 일정한 속도로 회전한다. `prefers-reduced-motion: reduce`에서는 회전을 멈추며 2px 테두리, 외곽 크기와 접근성 라벨을 유지한다. Svelte와 Astro용 정적 CSS가 같은 동작을 제공한다.
+
 AdSlot은 광고나 후원 자리의 reserved layout, accessible label, placement/state data attribute만 제공한다. `placement`는 `inline`, `banner`, `rail`, `between-sections` 같은 layout hint이고, `state`는 `pending`, `filled`, `empty`, `blocked` 같은 표시 상태다. provider markup은 slot으로 소비 앱이 넣고, provider script, consent, slot id, ads.txt, personalized ads 판단은 소비 앱이 계속 소유한다.
 InlineCode와 CodeBlock은 문서, 보안, 아키텍처 페이지의 코드 표시, language label, horizontal overflow, 선택적 복사 버튼만 제공하며 syntax highlighting, 코드 실행, 비밀값 탐지, 보안 분류, command palette는 소비 앱이나 문서 파이프라인이 계속 소유한다. CodeBlock은 `code` prop이 있을 때만 복사 버튼을 노출하므로 slot으로 표시한 코드의 복사 문자열은 소비 앱이 명시적으로 넘긴다. 긴 코드는 기본적으로 horizontal overflow 표면에서 스크롤되고, code body는 선택 가능해야 한다.
 

@@ -35,6 +35,7 @@
   }
 
   .zdp-spinner__mark {
+    animation: zdp-spinner-rotate 1s linear infinite;
     border: 2px solid var(--zdp-color-line-subtle);
     border-block-start-color: currentColor;
     border-inline-end-color: currentColor;
@@ -78,6 +79,18 @@
 
   .zdp-spinner--danger {
     --zdp-spinner-accent: var(--zdp-color-accent-danger);
+  }
+
+  @keyframes zdp-spinner-rotate {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .zdp-spinner__mark {
+      animation: none;
+    }
   }
 
 </style>

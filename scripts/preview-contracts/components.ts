@@ -1,4 +1,4 @@
-import { assertNoDecorativeEffects, assertNoOverRoundedUsage, withoutProgressWaitingMotion } from '../style-contract';
+import { assertNoDecorativeEffects, assertNoOverRoundedUsage, withoutLoadingMotion } from '../style-contract';
 import type { PreviewCheckContext } from './context';
 
 export function checkPreviewComponents(context: PreviewCheckContext): void {
@@ -653,7 +653,7 @@ assertNoDecorativeEffects(failures, 'Token style contract', tokenStyle);
 
 assertNoDecorativeEffects(failures, 'Locale font style contract', localeFontStyle);
 
-assertNoDecorativeEffects(failures, 'Component style contract', withoutProgressWaitingMotion(componentStyle));
+assertNoDecorativeEffects(failures, 'Component style contract', withoutLoadingMotion(componentStyle));
 
 assertNoDecorativeEffects(failures, 'Preview', preview);
 

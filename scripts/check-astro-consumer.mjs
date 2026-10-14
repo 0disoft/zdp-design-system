@@ -4,6 +4,7 @@ import { join, resolve, sep } from 'node:path';
 import { chromium } from 'playwright-core';
 import { npmCommand } from './npm-command.ts';
 import { verifyWaitingProgress } from './browser/check-progress-waiting.mjs';
+import { verifySpinnerMotion } from './browser/check-spinner-motion.mjs';
 
 const root = process.cwd();
 await mkdir(join(root, 'tmp'), { recursive: true });
@@ -60,6 +61,7 @@ try {
   await page.route('https://**', route => route.abort());
   await page.goto(`http://127.0.0.1:${server.port}/static/`);
   await verifyWaitingProgress(page, page.getByRole('progressbar', { name: 'Static waiting progress', exact: true }));
+  await verifySpinnerMotion(page, page.getByTestId('static-spinners').locator('.zdp-spinner'));
   const staticGeometry = await page.evaluate(async () => {
     const input = document.querySelector('.zdp-input');
     const select = document.querySelector('.zdp-select');

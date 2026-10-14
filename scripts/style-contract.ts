@@ -38,14 +38,19 @@ export function assertNoDecorativeEffects(
   }
 }
 
-// Only the indeterminate Progress bar may use this functional waiting motion.
-export function withoutProgressWaitingMotion(source: string): string {
+// Allow only the scoped Progress waiting motion and Spinner rotation.
+export function withoutLoadingMotion(source: string): string {
   return source
     .replace(/\.zdp-progress\[data-indeterminate="true"\] \.zdp-progress__bar\s*\{[^{}]*\}/g,
       (rule) => rule
         .replace('animation: zdp-progress-waiting 1.4s ease-in-out infinite alternate;', '')
         .replace('animation: none;', ''))
-    .replace(/@keyframes zdp-progress-waiting\s*\{\s*from\s*\{\s*transform: translateX\(0\);\s*\}\s*to\s*\{\s*transform: translateX\(var\(--zdp-progress-waiting-travel\)\);\s*\}\s*\}/g, '');
+    .replace(/@keyframes zdp-progress-waiting\s*\{\s*from\s*\{\s*transform: translateX\(0\);\s*\}\s*to\s*\{\s*transform: translateX\(var\(--zdp-progress-waiting-travel\)\);\s*\}\s*\}/g, '')
+    .replace(/\.zdp-spinner__mark\s*\{[^{}]*\}/g,
+      (rule) => rule
+        .replace('animation: zdp-spinner-rotate 1s linear infinite;', '')
+        .replace('animation: none;', ''))
+    .replace(/@keyframes zdp-spinner-rotate\s*\{\s*to\s*\{\s*transform: rotate\(1turn\);\s*\}\s*\}/g, '');
 }
 
 export function assertNoOverRoundedUsage(
