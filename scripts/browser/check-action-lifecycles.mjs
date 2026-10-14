@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { verifyCodeCopyAppearance } from './check-code-copy.mjs';
 
 export async function verifyConfirmSlideThresholdContracts(page) {
   const button = page.locator('#repeat-confirm-action');
@@ -175,21 +176,38 @@ export async function verifyCopyLifecycleContracts(page) {
     });
   });
   try {
-    await button.click();
+    await verifyCodeCopyAppearance(page, fixture, button, async copying => {
+      if (copying) await button.click();
+      else if (await button.isDisabled()) {
+        await page.evaluate(() => window.__zdpCopyRequests.at(-1).resolve());
+        await page.waitForFunction(() => !document.querySelector('[data-testid="copy-lifecycle"] .zdp-code-block__copy').disabled);
+      }
+    });
+    await page.getByTestId('replace-copy-code').click();
+    await page.getByTestId('replace-copy-code').click();
+    await page.evaluate(() => { window.__zdpCopyRequests = []; });
+    await button.focus();
+    await page.keyboard.press('Enter');
+    assert.equal(await button.isDisabled(), true);
+    assert.equal((await button.textContent()).trim(), 'Copying');
+    await button.evaluate(element => {
+      element.click();
+      element.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+    await page.keyboard.press('Space');
+    assert.equal(await page.evaluate(() => window.__zdpCopyRequests.length), 1, 'Repeated activation must not write while copying.');
     await page.getByTestId('replace-copy-code').click();
     assert.equal(await fixture.locator('code').textContent(), 'beta');
     await page.evaluate(() => window.__zdpCopyRequests[0].resolve());
     assert.equal((await button.textContent()).trim(), 'Copy', 'Completion for replaced code must be ignored.');
 
     await button.click();
-    await button.click();
-    await page.evaluate(() => window.__zdpCopyRequests[2].reject(new Error('Copy rejected')));
+    await page.evaluate(() => window.__zdpCopyRequests[1].reject(new Error('Copy rejected')));
     await page.waitForFunction(() => document.querySelector('[data-testid="copy-lifecycle"] .zdp-code-block__copy').textContent.trim() === 'Copy failed');
-    await page.evaluate(() => window.__zdpCopyRequests[1].resolve());
-    assert.equal((await button.textContent()).trim(), 'Copy failed', 'Older success must not replace the latest result.');
+    assert.equal(await button.isDisabled(), false, 'Failure must allow retry.');
 
     await button.click();
-    await page.evaluate(() => window.__zdpCopyRequests[3].resolve());
+    await page.evaluate(() => window.__zdpCopyRequests[2].resolve());
     await page.waitForFunction(() => document.querySelector('[data-testid="copy-lifecycle"] .zdp-code-block__copy').textContent.trim() === 'Copied');
     await page.getByTestId('replace-copy-code').click();
     assert.equal((await button.textContent()).trim(), 'Copy', 'Changing code must clear an existing copied status.');
@@ -204,7 +222,7 @@ export async function verifyCopyLifecycleContracts(page) {
         return originalTimeout.call(this, callback, delay, ...args);
       };
       try {
-        window.__zdpCopyRequests[4].resolve();
+        window.__zdpCopyRequests[3].resolve();
         await Promise.resolve();
         await Promise.resolve();
       } finally {
@@ -214,7 +232,11 @@ export async function verifyCopyLifecycleContracts(page) {
     assert.equal(await page.evaluate(() => window.__zdpLateCopyTimers), 0, 'Unmounted code blocks must not schedule feedback timers.');
     await page.getByTestId('toggle-copy-mount').click();
     assert.equal((await button.textContent()).trim(), 'Copy');
-    assert.deepEqual(await page.evaluate(() => window.__zdpCopyRequests.map((request) => request.text)), ['alpha', 'beta', 'beta', 'beta', 'alpha']);
+    assert.deepEqual(await page.evaluate(() => window.__zdpCopyRequests.map((request) => request.text)), ['alpha', 'beta', 'beta', 'alpha']);
+    await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined }));
+    await button.click();
+    await page.waitForFunction(() => document.querySelector('[data-testid="copy-lifecycle"] .zdp-code-block__copy').textContent.trim() === 'Copy failed');
+    assert.equal(await button.isDisabled(), false, 'Missing Clipboard API must settle as failure instead of leaving the button busy.');
   } finally {
     await page.evaluate(() => {
       if (window.__zdpCopyDescriptor) {

@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { verifyCodeCopyAppearance } from './browser/check-code-copy.mjs';
 import { verifyConfirmPendingAppearance } from './browser/check-confirm-pending.mjs';
 import { verifyButtonLoadingAppearance } from './browser/check-button-loading.mjs';
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
@@ -63,6 +64,17 @@ try {
   page.on('pageerror', error => errors.push(error.message));
   await page.route('https://**', route => route.abort());
   await page.goto(`http://127.0.0.1:${server.port}/static/`);
+  const codeCopyRoot = page.getByTestId('static-code-copy');
+  const codeCopyButton = codeCopyRoot.locator('button');
+  await verifyCodeCopyAppearance(page, codeCopyRoot, codeCopyButton, async copying => {
+    await codeCopyButton.evaluate((button, copying) => {
+      button.disabled = copying;
+      button.setAttribute('data-copy-state', copying ? 'copying' : 'idle');
+      button.setAttribute('aria-disabled', String(copying));
+      if (copying) button.setAttribute('aria-busy', 'true'); else button.removeAttribute('aria-busy');
+      button.querySelector('.zdp-code-block__copy-label').textContent = copying ? 'Copying' : 'Copy';
+    }, copying);
+  });
   const confirmPendingRoot = page.getByTestId('static-confirm-pending');
   await verifyConfirmPendingAppearance(page, confirmPendingRoot, confirmPendingRoot.locator('button'), async pending => {
     await confirmPendingRoot.locator('button').evaluateAll((buttons, pending) => {

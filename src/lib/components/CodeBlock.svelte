@@ -11,13 +11,14 @@
   export let wrap = false;
   export let showCopy = true;
   export let copyLabel = 'Copy';
+  export let copyingLabel = 'Copying';
   export let copiedLabel = 'Copied';
   export let copyFailedLabel = 'Copy failed';
   export let ariaLabel: string | null = null;
   export let labelledBy: string | null = null;
   export let describedBy: string | null = null;
 
-  type CopyState = 'idle' | 'copied' | 'failed';
+  type CopyState = 'idle' | 'copying' | 'copied' | 'failed';
 
   let copyState: CopyState = 'idle';
   let resetCopyStateTimer: ReturnType<typeof setTimeout> | null = null;
@@ -35,7 +36,7 @@
   $: resolvedAriaLabel = ariaLabel ?? (!labelledBy && label ? label : null);
   $: codeRegionLabel = [label ?? ariaLabel, language ? `${language} code` : 'Code'].filter(Boolean).join(' ');
   $: resolvedCopyLabel =
-    copyState === 'copied' ? copiedLabel : copyState === 'failed' ? copyFailedLabel : copyLabel;
+    copyState === 'copying' ? copyingLabel : copyState === 'copied' ? copiedLabel : copyState === 'failed' ? copyFailedLabel : copyLabel;
 
   onDestroy(() => {
     destroyed = true;
@@ -65,7 +66,7 @@
   }
 
   async function handleCopy(): Promise<void> {
-    if (!canCopy) {
+    if (!canCopy || copyState === 'copying') {
       return;
     }
 
@@ -73,7 +74,7 @@
     const copiedCode = code;
     let nextState: CopyState;
     clearResetCopyStateTimer();
-    copyState = 'idle';
+    copyState = 'copying';
 
     try {
       if (typeof navigator === 'undefined' || !navigator.clipboard?.writeText) {
@@ -116,8 +117,17 @@
         </div>
       {/if}
       {#if canCopy}
-        <button class="zdp-code-block__copy" type="button" onclick={handleCopy}>
-          {resolvedCopyLabel}
+        <button
+          class="zdp-code-block__copy"
+          type="button"
+          data-copy-state={copyState}
+          disabled={copyState === 'copying'}
+          aria-disabled={copyState === 'copying'}
+          aria-busy={copyState === 'copying' ? 'true' : undefined}
+          onclick={handleCopy}
+        >
+          <span class="zdp-code-block__copy-spinner" aria-hidden="true"></span>
+          <span class="zdp-code-block__copy-label" aria-live="polite">{resolvedCopyLabel}</span>
         </button>
       {/if}
     </div>
@@ -193,14 +203,17 @@
   }
 
   .zdp-code-block__copy {
+    align-items: center;
     background: transparent;
     border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     color: var(--zdp-color-ink-strong);
     cursor: pointer;
+    display: inline-flex;
     font: inherit;
     font-size: var(--zdp-type-caption-size);
     font-weight: var(--zdp-font-weight-medium);
+    gap: var(--zdp-space-2);
     line-height: var(--zdp-type-caption-line-height);
     min-height: var(--zdp-control-height-sm);
     padding: 0 var(--zdp-space-3);
@@ -208,12 +221,12 @@
     user-select: none;
   }
 
-  .zdp-code-block__copy:hover {
+  .zdp-code-block__copy:where(:hover:not(:disabled)) {
     background: var(--zdp-color-interaction-hover);
     border-color: transparent;
   }
 
-  .zdp-code-block__copy:active {
+  .zdp-code-block__copy:where(:active:not(:disabled)) {
     background: var(--zdp-color-interaction-pressed);
     border-color: transparent;
   }
@@ -222,6 +235,39 @@
     border-color: var(--zdp-color-focus-line);
     outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
     outline-offset: var(--zdp-control-focus-outline-offset);
+  }
+
+  .zdp-code-block__copy[data-copy-state="copying"] {
+    cursor: progress;
+  }
+
+  .zdp-code-block__copy-spinner {
+    border: 2px solid var(--zdp-color-line-subtle);
+    border-block-start-color: currentColor;
+    border-inline-end-color: currentColor;
+    border-radius: 50%;
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    height: var(--zdp-control-glyph-sm);
+    visibility: hidden;
+    width: var(--zdp-control-glyph-sm);
+  }
+
+  .zdp-code-block__copy[data-copy-state="copying"] .zdp-code-block__copy-spinner {
+    animation: zdp-code-copy-rotate 1s linear infinite;
+    visibility: visible;
+  }
+
+  @keyframes zdp-code-copy-rotate {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .zdp-code-block__copy[data-copy-state="copying"] .zdp-code-block__copy-spinner {
+      animation: none;
+    }
   }
 
   .zdp-code-block__scroller {

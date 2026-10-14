@@ -70,7 +70,12 @@ export function withoutLoadingMotion(source: string): string {
       (rule) => rule
         .replace('animation: zdp-confirm-action-pending-rotate 1s linear infinite;', '')
         .replace('animation: none;', ''))
-    .replace(/@keyframes zdp-confirm-action-pending-rotate\s*\{\s*to\s*\{\s*transform: rotate\(1turn\);\s*\}\s*\}/g, '');
+    .replace(/@keyframes zdp-confirm-action-pending-rotate\s*\{\s*to\s*\{\s*transform: rotate\(1turn\);\s*\}\s*\}/g, '')
+    .replace(/\.zdp-code-block__copy\[data-copy-state="copying"\] \.zdp-code-block__copy-spinner\s*\{[^{}]*\}/g,
+      (rule) => rule
+        .replace('animation: zdp-code-copy-rotate 1s linear infinite;', '')
+        .replace('animation: none;', ''))
+    .replace(/@keyframes zdp-code-copy-rotate\s*\{\s*to\s*\{\s*transform: rotate\(1turn\);\s*\}\s*\}/g, '');
 }
 
 export function assertNoOverRoundedUsage(

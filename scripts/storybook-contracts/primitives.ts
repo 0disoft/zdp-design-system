@@ -514,6 +514,7 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
     'wrap = false',
     'showCopy = true',
     "copyLabel = 'Copy'",
+    "copyingLabel = 'Copying'",
     "copiedLabel = 'Copied'",
     "copyFailedLabel = 'Copy failed'",
     'class={`zdp-code-block zdp-code-block--${size} zdp-code-block--${tone}`}',
@@ -550,7 +551,7 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
     }
   }
 
-  assertNoDecorativeEffects(failures, 'CodeBlock component', codeBlock);
+  assertNoDecorativeEffects(failures, 'CodeBlock component', withoutLoadingMotion(codeBlock));
 
   assertNoOverRoundedUsage(failures, 'CodeBlock component', codeBlock);
 

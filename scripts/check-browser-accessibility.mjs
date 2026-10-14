@@ -129,7 +129,9 @@ try {
     };
   });
 
-  if (process.argv.includes('--confirm')) {
+  if (process.argv.includes('--copy')) {
+    await verifyCopyLifecycleContracts(page);
+  } else if (process.argv.includes('--confirm')) {
     await verifyConfirmPendingContracts(page);
     await verifyConfirmCompositionContracts(page);
     await verifyConfirmRepeatContracts(page);

@@ -16,6 +16,10 @@ Skeleton의 `animated=true`는 불투명도가 천천히 변하는 로딩 표시
 AdSlot은 광고나 후원 자리의 reserved layout, accessible label, placement/state data attribute만 제공한다. `placement`는 `inline`, `banner`, `rail`, `between-sections` 같은 layout hint이고, `state`는 `pending`, `filled`, `empty`, `blocked` 같은 표시 상태다. provider markup은 slot으로 소비 앱이 넣고, provider script, consent, slot id, ads.txt, personalized ads 판단은 소비 앱이 계속 소유한다.
 InlineCode와 CodeBlock은 문서, 보안, 아키텍처 페이지의 코드 표시, language label, horizontal overflow, 선택적 복사 버튼만 제공하며 syntax highlighting, 코드 실행, 비밀값 탐지, 보안 분류, command palette는 소비 앱이나 문서 파이프라인이 계속 소유한다. CodeBlock은 `code` prop이 있을 때만 복사 버튼을 노출하므로 slot으로 표시한 코드의 복사 문자열은 소비 앱이 명시적으로 넘긴다. 긴 코드는 기본적으로 horizontal overflow 표면에서 스크롤되고, code body는 선택 가능해야 한다.
 
+CodeBlock의 복사 버튼은 클립보드 쓰기가 끝날 때까지 `copyingLabel`(기본 `Copying`)과 스피너를 보여주며, 그동안 native `disabled`, `aria-disabled`, `aria-busy="true"`, `data-copy-state="copying"`으로 잠겨 중복 실행을 막는다. 성공하면 `copiedLabel`을 잠시 보여주고, 실패하면 `copyFailedLabel`과 함께 다시 누를 수 있는 상태로 돌아가 재시도 여부는 소비 앱과 사용자가 판단한다. `copyLabel`, `copyingLabel`, `copiedLabel`, `copyFailedLabel`은 소비 앱이 지역화하며, 라벨을 바꾸는 소비처는 대기 문구도 함께 번역한다. 코드가 바뀌거나 `showCopy`가 꺼지거나 컴포넌트가 사라지면 진행 중이던 요청과 늦게 도착한 이전 요청의 성공·실패는 최신 결과를 덮어쓰지 않는다. 정적 CSS는 `.zdp-code-block__copy`, `.zdp-code-block__copy-spinner`, `.zdp-code-block__copy-label`과 `data-copy-state` 값으로 같은 표시를 제공하므로, Svelte 런타임이 없는 소비처는 소비 앱이 state attribute와 라벨 텍스트를 직접 갱신한다.
+
+`prefers-reduced-motion: reduce`에서는 CodeBlock 복사 스피너의 회전만 멈추고 대기 라벨과 스피너 표시는 유지한다. Astro 등 정적 CSS 소비처는 복사 동작과 함께 `disabled`, 접근성 속성, `data-copy-state`, 라벨을 직접 갱신한다.
+
 EmptyState는 비어 있는 상태의 surface, 제목 연결, 액션 배치만 제공하며 비어 있는 조건, 다음 액션 가능 여부, 데이터 재시도 판단은 소비 앱이 계속 소유한다.
 
 상위 개요와 금지 경계는 [docs/CONSUMER_CONTRACT.md](../CONSUMER_CONTRACT.md)를 따른다.

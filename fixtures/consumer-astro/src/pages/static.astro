@@ -3,6 +3,7 @@ import 'zdp-design-system/foundation.css';
 import 'zdp-design-system/components/Button.css';
 import 'zdp-design-system/components/IconButton.css';
 import 'zdp-design-system/components/ConfirmAction.css';
+import 'zdp-design-system/components/CodeBlock.css';
 import 'zdp-design-system/components/Input.css';
 import 'zdp-design-system/components/Select.css';
 import 'zdp-design-system/components/Disclosure.css';
@@ -14,6 +15,16 @@ import 'zdp-design-system/components/Skeleton.css';
 <html lang="en">
   <head><meta charset="UTF-8" /><title>Static design system consumer</title></head>
   <body>
+    <div class="zdp-code-block zdp-code-block--md zdp-code-block--default" data-testid="static-code-copy" role="group" aria-label="Static code example">
+      <div class="zdp-code-block__header">
+        <div class="zdp-code-block__meta"><span class="zdp-code-block__title">Example</span></div>
+        <button class="zdp-code-block__copy" type="button" data-copy-state="idle">
+          <span class="zdp-code-block__copy-spinner" aria-hidden="true"></span>
+          <span class="zdp-code-block__copy-label" aria-live="polite">Copy</span>
+        </button>
+      </div>
+      <div class="zdp-code-block__scroller" role="region" aria-label="Static code" tabindex="0"><pre class="zdp-code-block__pre"><code class="zdp-code-block__code">console.log('Astro');</code></pre></div>
+    </div>
     <button class="zdp-button zdp-button--primary zdp-button--md" type="button">Static action</button>
     <section data-testid="static-button-loading" data-zdp-theme="light">
       <div data-testid="static-button-loading-variants" style="display:flex;flex-wrap:wrap;gap:12px;padding:12px">
