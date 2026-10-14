@@ -554,9 +554,9 @@ for (const requiredText of ['background: var(--zdp-color-accent-danger)', 'color
   }
 }
 
-for (const requiredText of ['background: var(--zdp-color-surface-panel)', 'color: var(--zdp-color-accent-danger)']) {
+for (const requiredText of ['background: var(--zdp-color-accent-danger)', 'color: var(--zdp-color-ink-inverse)']) {
   if (!staticDangerButtonHoverBlock.includes(requiredText)) {
-    failures.push(`Static Button danger hover must keep its label visible: ${requiredText}.`);
+    failures.push(`Static Button danger hover must preserve its filled surface and label contrast: ${requiredText}.`);
   }
 }
 

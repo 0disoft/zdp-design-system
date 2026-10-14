@@ -1,3 +1,4 @@
+// Mixing flat colors for interaction states does not introduce a decorative effect.
 export const decorativeEffectNeedles = [
   'linear-gradient',
   'radial-gradient',
@@ -14,7 +15,6 @@ export const decorativeEffectNeedles = [
   '.zdp-button::after',
   '.zdp-icon-button::before',
   '.zdp-icon-button::after',
-  'color-mix(',
   'translate3d(',
   'translateY('
 ] as const;

@@ -115,15 +115,17 @@
   }
 
   .zdp-button--danger:hover:not(:disabled) {
-    background: var(--zdp-color-surface-panel);
+    background: var(--zdp-color-accent-danger);
+    background: color-mix(in oklch, var(--zdp-color-accent-danger) 90%, var(--zdp-color-surface-inverse));
     border-color: transparent;
-    color: var(--zdp-color-accent-danger);
+    color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-button--danger:active:not(:disabled) {
-    background: var(--zdp-color-surface-panel);
+    background: var(--zdp-color-accent-danger);
+    background: color-mix(in oklch, var(--zdp-color-accent-danger) 82%, var(--zdp-color-surface-inverse));
     border-color: transparent;
-    color: var(--zdp-color-accent-danger);
+    color: var(--zdp-color-ink-inverse);
   }
 
   .zdp-button--text {

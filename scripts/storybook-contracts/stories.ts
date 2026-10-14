@@ -79,9 +79,9 @@ export function checkStoriesContracts(context: StorybookCheckContext): void {
     }
   }
 
-  for (const requiredText of ['background: var(--zdp-color-surface-panel)', 'color: var(--zdp-color-accent-danger)']) {
+  for (const requiredText of ['background: var(--zdp-color-accent-danger)', 'color: var(--zdp-color-ink-inverse)']) {
     if (!dangerButtonHoverBlock.includes(requiredText)) {
-      failures.push(`Button danger hover must keep its label visible: ${requiredText}.`);
+      failures.push(`Button danger hover must preserve its filled surface and label contrast: ${requiredText}.`);
     }
   }
 
