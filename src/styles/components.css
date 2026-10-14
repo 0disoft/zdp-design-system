@@ -1689,7 +1689,7 @@
     content: '';
     inset-block-end: var(--zdp-space-1);
     inset-inline: var(--zdp-space-2);
-    min-block-size: var(--zdp-control-border-width);
+    min-block-size: 2px;
     pointer-events: none;
     position: absolute;
     transition:
