@@ -284,19 +284,6 @@
     margin: 0;
   }
 
-  .storybook-preview .loading-preview {
-    display: grid;
-    gap: var(--zdp-space-3);
-    min-width: 0;
-  }
-
-  .storybook-preview .loading-title {
-    color: var(--zdp-color-ink-strong);
-    font-size: var(--zdp-type-body-small-size);
-    font-weight: var(--zdp-font-weight-medium);
-    line-height: var(--zdp-type-body-small-line-height);
-  }
-
   .storybook-preview .dialog-demo {
     align-items: start;
     display: grid;

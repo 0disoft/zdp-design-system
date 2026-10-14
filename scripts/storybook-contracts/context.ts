@@ -298,7 +298,10 @@ export async function loadStorybookContext() {
       readFile(dataDisplayStoryPath, 'utf8'),
       readFile(dataDisplayComponentPath, 'utf8'),
       readFile(feedbackStoryPath, 'utf8'),
-      readFile(feedbackComponentPath, 'utf8'),
+      Promise.all([
+        readFile(feedbackComponentPath, 'utf8'),
+        readFile(join(root, 'stories/LoadingExamples.svelte'), 'utf8')
+      ]).then(sources => sources.join('\n')),
       readFile(formsStoryPath, 'utf8'),
       readFile(formsComponentPath, 'utf8'),
       readFile(interactionStoryPath, 'utf8'),
@@ -455,7 +458,8 @@ export async function loadStorybookContext() {
     const paths = [componentPath,
       join(root, 'stories/overview/LightOverview.svelte'),
       join(root, 'stories/overview/DarkOverview.svelte'),
-      join(root, 'stories/overview/overview.css')];
+      join(root, 'stories/overview/overview.css'),
+      join(root, 'stories/LoadingExamples.svelte')];
     return (await Promise.all(paths.map(path => readFile(path, 'utf8')))).join('\n');
   }
 }

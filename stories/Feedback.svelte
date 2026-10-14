@@ -1,14 +1,12 @@
 <script lang="ts">
+  import LoadingExamples from './LoadingExamples.svelte';
   import AdSlot from '../src/lib/components/AdSlot.svelte';
   import Badge from '../src/lib/components/Badge.svelte';
   import Callout from '../src/lib/components/Callout.svelte';
   import Divider from '../src/lib/components/Divider.svelte';
   import Inline from '../src/lib/components/Inline.svelte';
-  import Progress from '../src/lib/components/Progress.svelte';
-  import Skeleton from '../src/lib/components/Skeleton.svelte';
   import Stack from '../src/lib/components/Stack.svelte';
   import StatusToast from '../src/lib/components/StatusToast.svelte';
-  import Spinner from '../src/lib/components/Spinner.svelte';
   import Surface from '../src/lib/components/Surface.svelte';
   import Toast from '../src/lib/components/Toast.svelte';
   import type { ZdpStatusToastItem } from '../src/lib/toast.ts';
@@ -16,43 +14,31 @@
   let lightToastStatus = '대기 중';
   let darkToastStatus = '대기 중';
 
-  const lightToastItems: readonly ZdpStatusToastItem[] = [
-    {
-      id: 'saved',
-      tone: 'success',
-      title: '저장됐습니다.',
-      message: '변경 내역이 목록에 반영됐습니다.',
-      actionLabel: '기록 보기',
-      onclick: () => {
-        lightToastStatus = '기록 보기';
+  function makeToastItems(onAction: (status: string) => void): readonly ZdpStatusToastItem[] {
+    return [
+      {
+        id: 'saved', tone: 'success', title: '저장됐습니다.',
+        message: '변경 내역이 목록에 반영됐습니다.',
+        actionLabel: '기록 보기', onclick: () => onAction('기록 보기')
+      },
+      {
+        id: 'synced', tone: 'info', title: '동기화가 끝났습니다.',
+        message: '열려 있는 화면에서 최신 상태를 볼 수 있습니다.'
+      },
+      {
+        id: 'warning', tone: 'warning', title: '확인이 필요합니다.',
+        message: '다음 단계 전에 비어 있는 값을 확인하세요.'
+      },
+      {
+        id: 'danger', tone: 'danger', title: '연결이 끊겼습니다.',
+        message: '다시 연결한 뒤 작업을 이어가세요.',
+        actionLabel: '다시 연결', onclick: () => onAction('다시 연결')
       }
-    },
-    {
-      id: 'warning',
-      tone: 'warning',
-      title: '확인이 필요합니다.',
-      message: '다음 단계 전에 비어 있는 값을 확인하세요.'
-    }
-  ];
+    ];
+  }
 
-  const darkToastItems: readonly ZdpStatusToastItem[] = [
-    {
-      id: 'synced',
-      tone: 'info',
-      title: '동기화가 끝났습니다.',
-      message: '열려 있는 화면에서 최신 상태를 볼 수 있습니다.'
-    },
-    {
-      id: 'danger',
-      tone: 'danger',
-      title: '연결이 끊겼습니다.',
-      message: '다시 연결한 뒤 작업을 이어가세요.',
-      actionLabel: '다시 연결',
-      onclick: () => {
-        darkToastStatus = '다시 연결';
-      }
-    }
-  ];
+  const lightToastItems = makeToastItems((status) => (lightToastStatus = status));
+  const darkToastItems = makeToastItems((status) => (darkToastStatus = status));
 </script>
 
 <main class="component-story zdp-surface-reset" lang="ko">
@@ -114,21 +100,7 @@
         </Surface>
 
         <Surface padding="lg">
-          <Stack gap="md">
-            <h3 id="feedback-light-progress-title">진행</h3>
-            <Progress
-              value={64}
-              labelledBy="feedback-light-progress-title"
-              describedBy="feedback-light-progress-desc"
-            />
-            <p class="story-status" id="feedback-light-progress-desc">자료를 불러오는 중입니다.</p>
-            <Inline gap="sm" align="center">
-              <Spinner size="sm" label="목록 확인 중" />
-              <span class="story-status">목록 확인 중</span>
-            </Inline>
-            <Skeleton variant="text" lines={3} />
-            <Skeleton variant="block" />
-          </Stack>
+          <LoadingExamples idPrefix="feedback-light-progress" />
         </Surface>
 
         <Surface padding="lg">
@@ -143,6 +115,12 @@
             <p class="story-status" id="feedback-light-ad-desc">
               제공자, 동의, slot id는 소비 앱이 정하고 이 컴포넌트는 자리만 예약합니다.
             </p>
+            <AdSlot placement="rail" state="filled" label="Light theme rail advertisement" minHeight="10rem">
+              <div class="story-ad-creative" aria-hidden="true">
+                <span>Reserved creative</span>
+              </div>
+            </AdSlot>
+            <AdSlot placement="inline" state="blocked" label="Light theme unavailable advertisement" fallbackText="Ad unavailable" />
           </Stack>
         </Surface>
 
@@ -179,13 +157,13 @@
         <Surface padding="lg">
           <Stack gap="md">
             <Callout tone="info" labelledBy="feedback-dark-info" semanticRole="note">
-              <strong id="feedback-dark-info">작업 흐름이 준비됐습니다.</strong>
+              <strong id="feedback-dark-info">다음 단계가 준비됐습니다.</strong>
               <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
             </Callout>
             <Divider />
             <Callout tone="danger" labelledBy="feedback-dark-danger" semanticRole="alert">
-              <strong id="feedback-dark-danger">위험 작업 전에 다시 확인하세요.</strong>
-              <p>어두운 표면에서도 위험 상태는 같은 의미를 유지합니다.</p>
+              <strong id="feedback-dark-danger">삭제 전에 다시 확인하세요.</strong>
+              <p>되돌릴 수 없는 작업은 별도 확인 흐름과 함께 사용합니다.</p>
             </Callout>
           </Stack>
         </Surface>
@@ -194,13 +172,13 @@
           <Stack gap="md">
             <h3>알림</h3>
             <Toast
-              tone="success"
+              tone="info"
               labelledBy="feedback-dark-toast-title"
               describedBy="feedback-dark-toast-message"
               onClose={() => (darkToastStatus = '닫힘')}
             >
-              <strong id="feedback-dark-toast-title">작업이 저장됐습니다.</strong>
-              <p id="feedback-dark-toast-message">다음 화면에서도 같은 상태를 볼 수 있습니다.</p>
+              <strong id="feedback-dark-toast-title">초안이 준비됐습니다.</strong>
+              <p id="feedback-dark-toast-message">검토할 수 있는 상태로 바뀌었습니다.</p>
             </Toast>
             <StatusToast
               placement="inline"
@@ -213,50 +191,40 @@
         </Surface>
 
         <Surface padding="lg">
-          <Stack gap="md">
-            <h3 id="feedback-dark-progress-title">진행</h3>
-            <Progress
-              tone="warning"
-              labelledBy="feedback-dark-progress-title"
-              describedBy="feedback-dark-progress-desc"
-            />
-            <p class="story-status" id="feedback-dark-progress-desc">응답을 기다리고 있습니다.</p>
-            <Inline gap="sm" align="center">
-              <Spinner size="md" tone="warning" label="응답 대기 중" />
-              <span class="story-status">응답 대기 중</span>
-            </Inline>
-            <Skeleton variant="text" lines={2} />
-            <Skeleton variant="avatar" />
-          </Stack>
+          <LoadingExamples idPrefix="feedback-dark-progress" />
         </Surface>
 
         <Surface padding="lg">
           <Stack gap="md">
             <h3 id="feedback-dark-ad-title">광고 자리</h3>
+            <AdSlot
+              placement="between-sections"
+              state="pending"
+              label="Dark theme advertisement"
+              describedBy="feedback-dark-ad-desc"
+            />
+            <p class="story-status" id="feedback-dark-ad-desc">
+              제공자, 동의, slot id는 소비 앱이 정하고 이 컴포넌트는 자리만 예약합니다.
+            </p>
             <AdSlot placement="rail" state="filled" label="Dark theme rail advertisement" minHeight="10rem">
               <div class="story-ad-creative" aria-hidden="true">
                 <span>Reserved creative</span>
               </div>
             </AdSlot>
-            <AdSlot
-              placement="inline"
-              state="blocked"
-              label="Dark theme unavailable advertisement"
-              fallbackText="Ad unavailable"
-            />
+            <AdSlot placement="inline" state="blocked" label="Dark theme unavailable advertisement" fallbackText="Ad unavailable" />
           </Stack>
         </Surface>
 
         <div class="surface-pair">
           <Surface padding="lg">
             <span class="surface-kicker">Parchment</span>
-            <strong>어두운 배경의 작업지</strong>
-            <p>톤은 낮추되 경계와 초점은 또렷하게 남깁니다.</p>
+            <strong>작업을 펼치는 자리</strong>
+            <p>내용과 다음 액션이 차분하게 올라옵니다.</p>
           </Surface>
           <Surface tone="raised" padding="lg">
             <span class="surface-kicker">Banner</span>
             <strong>중요한 조각만 앞으로</strong>
-            <p>짙은 잉크 위에서도 작은 정보가 묻히지 않습니다.</p>
+            <p>목록과 작은 알림을 과하게 튀지 않게 구분합니다.</p>
           </Surface>
         </div>
       </Stack>

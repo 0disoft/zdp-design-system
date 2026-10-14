@@ -1,4 +1,5 @@
 <script lang="ts">
+  import LoadingExamples from '../LoadingExamples.svelte';
   import Accordion from '../../src/lib/components/Accordion.svelte';
   import Avatar from '../../src/lib/components/Avatar.svelte';
   import Badge from '../../src/lib/components/Badge.svelte';
@@ -25,16 +26,13 @@
   import Label from '../../src/lib/components/Label.svelte';
   import Link from '../../src/lib/components/Link.svelte';
   import Pagination from '../../src/lib/components/Pagination.svelte';
-  import Progress from '../../src/lib/components/Progress.svelte';
   import Radio from '../../src/lib/components/Radio.svelte';
   import Select from '../../src/lib/components/Select.svelte';
   import SegmentedControl from '../../src/lib/components/SegmentedControl.svelte';
   import ShareDock from '../../src/lib/components/ShareDock.svelte';
-  import Skeleton from '../../src/lib/components/Skeleton.svelte';
   import SortHeader from '../../src/lib/components/SortHeader.svelte';
   import Stack from '../../src/lib/components/Stack.svelte';
   import StatusToast from '../../src/lib/components/StatusToast.svelte';
-  import Spinner from '../../src/lib/components/Spinner.svelte';
   import Surface from '../../src/lib/components/Surface.svelte';
   import Switch from '../../src/lib/components/Switch.svelte';
   import Tabs from '../../src/lib/components/Tabs.svelte';
@@ -180,21 +178,7 @@
               idPrefix="storybook-light-status-toast"
               items={lightToastItems}
             />
-            <strong class="loading-title" id="storybook-light-progress-title">진행</strong>
-            <Progress
-              value={72}
-              labelledBy="storybook-light-progress-title"
-              describedBy="storybook-light-progress-desc"
-            />
-            <p class="status-note" id="storybook-light-progress-desc">자료를 불러오는 중입니다.</p>
-            <Inline gap="sm" align="center">
-              <Spinner size="sm" label="목록 확인 중" />
-              <span class="status-note">목록 확인 중</span>
-            </Inline>
-            <div class="loading-preview" role="group" aria-labelledby="storybook-light-progress-title">
-              <Skeleton variant="text" lines={3} />
-              <Skeleton variant="block" />
-            </div>
+            <LoadingExamples idPrefix="storybook-light-progress" headingTag="strong" />
           </Stack>
         </div>
       </section>
