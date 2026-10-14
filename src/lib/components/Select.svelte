@@ -143,13 +143,17 @@
     .zdp-select::picker(select) {
       background: var(--zdp-color-surface-raised);
       border: var(--zdp-control-border-width) solid transparent;
+      box-sizing: border-box;
       color: var(--zdp-color-ink-strong);
+      padding: var(--zdp-space-1);
     }
 
     .zdp-select :global(option) {
       background-color: var(--zdp-color-surface-raised);
+      box-sizing: border-box;
       color: var(--zdp-color-ink-strong);
-      padding: calc(var(--zdp-space-1) / 2);
+      min-block-size: var(--zdp-control-height-md);
+      padding: var(--zdp-space-2) var(--zdp-space-3);
     }
 
     .zdp-select :global(option + option) {
@@ -158,6 +162,19 @@
 
     .zdp-select :global(option::checkmark) {
       margin-inline-start: var(--zdp-space-1);
+    }
+
+    .zdp-select :global(optgroup) {
+      font-weight: var(--zdp-font-weight-medium);
+      padding-inline: var(--zdp-space-2);
+    }
+
+    .zdp-select :global(optgroup:not(:first-child)) {
+      margin-block-start: var(--zdp-space-3);
+    }
+
+    .zdp-select :global(optgroup > option:first-of-type) {
+      margin-block-start: var(--zdp-space-1);
     }
 
     .zdp-select :global(option:where(:hover:not(:disabled):not(:checked))),

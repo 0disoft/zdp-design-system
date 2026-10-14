@@ -122,23 +122,23 @@ export async function verifyFoundationAndFormContracts(page) {
     );
     assert.equal(
       selectPickerStyle.optionPaddingBlockStart,
-      2,
-      'Customizable Select options must add 2 CSS pixels of visible block-start breathing room.'
+      8,
+      'Customizable Select options must add 8 CSS pixels of visible block-start breathing room.'
     );
     assert.equal(
       selectPickerStyle.optionPaddingBlockEnd,
-      2,
-      'Customizable Select options must add 2 CSS pixels of visible block-end breathing room.'
+      8,
+      'Customizable Select options must add 8 CSS pixels of visible block-end breathing room.'
     );
     assert.equal(
       selectPickerStyle.optionPaddingInlineStart,
-      2,
-      'Customizable Select options must add 2 CSS pixels of inline-start breathing room.'
+      12,
+      'Customizable Select options must add 12 CSS pixels of inline-start breathing room.'
     );
     assert.equal(
       selectPickerStyle.optionPaddingInlineEnd,
-      2,
-      'Customizable Select options must add 2 CSS pixels of inline-end breathing room.'
+      12,
+      'Customizable Select options must add 12 CSS pixels of inline-end breathing room.'
     );
     const originalTheme = await page.locator('html').getAttribute('data-zdp-theme');
     for (const theme of ['light', 'dark']) {
