@@ -194,6 +194,7 @@
     --zdp-pagination-focus-bleed: calc(var(--zdp-control-focus-outline-width) + var(--zdp-control-focus-outline-offset));
 
     color: var(--zdp-color-ink-normal);
+    container-type: inline-size;
     font-family: var(--zdp-font-family-sans);
     font-size: var(--zdp-type-control-size);
     line-height: var(--zdp-type-control-line-height);
@@ -219,6 +220,13 @@
     min-width: 0;
     padding: 0;
     width: max-content;
+  }
+
+  @container (max-width: 30rem) {
+    .zdp-pagination__list {
+      flex-wrap: wrap;
+      width: auto;
+    }
   }
 
   .zdp-pagination__item {
@@ -250,7 +258,7 @@
 
   .zdp-pagination__link {
     background: var(--zdp-color-surface-panel);
-    border-color: var(--zdp-color-line-subtle);
+    border-color: transparent;
     color: var(--zdp-color-ink-normal);
     cursor: pointer;
     text-decoration-line: none;
@@ -266,7 +274,7 @@
 
   .zdp-pagination__link:hover:not(:disabled):not([aria-current='page']) {
     background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
+    border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 

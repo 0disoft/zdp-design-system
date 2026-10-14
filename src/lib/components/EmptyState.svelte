@@ -19,7 +19,7 @@
 <style>
   .zdp-empty-state {
     background: var(--zdp-color-surface-panel);
-    border: 1px solid var(--zdp-color-line-subtle);
+    border: 1px solid transparent;
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-normal);
@@ -27,7 +27,7 @@
     font-family: var(--zdp-font-family-sans);
     gap: var(--zdp-space-4);
     min-width: 0;
-    padding: var(--zdp-space-6);
+    padding: clamp(var(--zdp-space-4), 4%, var(--zdp-space-6));
   }
 
   .zdp-empty-state--raised {

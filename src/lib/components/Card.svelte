@@ -82,7 +82,7 @@
   }
 
   .zdp-card--padding-lg {
-    padding: var(--zdp-space-6);
+    padding: clamp(var(--zdp-space-4), 4%, var(--zdp-space-6));
   }
 
   .zdp-card--hover {

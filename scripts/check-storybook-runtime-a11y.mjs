@@ -88,6 +88,29 @@ try {
         );
         assert.deepEqual(overflowingLabels, [], `${scenario.name}: long form labels must fit their containers.`);
       }
+      if (scenario.name.startsWith('mobile-')) {
+        const width = await page.evaluate(() => ({
+          viewport: document.documentElement.clientWidth,
+          content: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth)
+        }));
+        if (width.content > width.viewport + 1) {
+          failures.push(`${scenario.name}/${story.id}: page overflows horizontally (${width.content}px content, ${width.viewport}px viewport).`);
+        }
+        const hiddenPageLinks = await page.locator('.zdp-pagination').evaluateAll((navigations) =>
+          navigations.flatMap((navigation) => {
+            const bounds = navigation.getBoundingClientRect();
+            return [...navigation.querySelectorAll('.zdp-pagination__link')]
+              .filter((link) => {
+                const rect = link.getBoundingClientRect();
+                return rect.width > 0 && (rect.left < bounds.left - 1 || rect.right > bounds.right + 1);
+              })
+              .map((link) => link.textContent.trim());
+          })
+        );
+        if (hiddenPageLinks.length > 0) {
+          failures.push(`${scenario.name}/${story.id}: pagination actions are clipped (${hiddenPageLinks.join(', ')}).`);
+        }
+      }
       await page.addScriptTag({ content: axeSource });
       const result = await page.evaluate(async () => {
         if (!globalThis.axe) {

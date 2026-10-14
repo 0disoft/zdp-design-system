@@ -78,6 +78,7 @@
     min-block-size: var(--zdp-control-height-sm);
     min-width: 0;
     padding: var(--zdp-space-1) var(--zdp-space-2);
+    position: relative;
     text-align: start;
     transition:
       background-color var(--zdp-motion-fast) ease,

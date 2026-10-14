@@ -218,7 +218,7 @@
 
   .zdp-tabs__panel {
     background: var(--zdp-color-surface-panel);
-    border: 1px solid var(--zdp-color-line-subtle);
+    border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     color: var(--zdp-color-ink-normal);
     display: grid;

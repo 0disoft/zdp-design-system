@@ -15,7 +15,9 @@
   .zdp-surface {
     border: 1px solid transparent;
     border-radius: var(--zdp-radius-lg);
+    box-sizing: border-box;
     color: var(--zdp-color-ink-normal);
+    min-width: 0;
   }
 
   .zdp-surface--panel {
@@ -48,6 +50,6 @@
   }
 
   .zdp-surface--padding-lg {
-    padding: var(--zdp-space-6);
+    padding: clamp(var(--zdp-space-4), 4%, var(--zdp-space-6));
   }
 </style>

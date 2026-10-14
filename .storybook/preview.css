@@ -43,3 +43,24 @@ body::-webkit-scrollbar-corner,
 #storybook-root::-webkit-scrollbar-corner {
   background: var(--zdp-color-scrollbar-track);
 }
+
+/* Keep the shared demo shell from squeezing the components on phones. */
+@media (max-width: 30rem) {
+  #storybook-root .component-story {
+    gap: var(--zdp-space-6);
+    padding: var(--zdp-space-4);
+  }
+
+  #storybook-root .component-story__panel {
+    min-width: 0;
+    padding: var(--zdp-space-4);
+  }
+
+  #storybook-root .component-story__header h1 {
+    font-size: var(--zdp-type-page-title-compact-size);
+  }
+
+  #storybook-root .text-action-demo-shell {
+    padding: var(--zdp-space-4);
+  }
+}
