@@ -36,7 +36,7 @@ export function checkConfigurationContracts(context: StorybookCheckContext): voi
     build: 'storybook build',
     storybook: 'bun run dev',
     'storybook:build': 'bun run build',
-    'storybook:check': 'bun scripts/check-storybook.ts'
+    'storybook:check': 'bun test scripts/loading-motion-contract.test.ts && bun scripts/check-storybook.ts'
   })) {
     if (packageJson.scripts?.[scriptName] !== expectedCommand) {
       failures.push(`Missing package script ${scriptName}.`);

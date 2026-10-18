@@ -1,5 +1,5 @@
 import type { StorybookCheckContext } from './context';
-import { assertNoDecorativeEffects, assertNoOverRoundedUsage, withoutLoadingMotion } from '../style-contract';
+import { assertNoDecorativeEffects, assertNoOverRoundedUsage } from '../style-contract';
 
 export function checkOverlaysContracts(context: StorybookCheckContext): void {
   const { failures, component, buttonsComponent, buttonPlayground, dataDisplayComponent, feedbackComponent, formsComponent, interactionComponent, interactionProbe, navigationComponent, themeLocaleStressComponent, avatar, breadcrumb, button, callout, checkbox, codeBlock, combobox, commandField, confirmAction, dialog, disclosure, field, input, kbd, keyValue, label, localeSwitcher, menu, pagination, popover, progress, radio, select, segmentedControl, shareDock, sheet, shortcutHint, skeleton, tooltip, sortHeader, spinner, switchComponent, tabs, table, termSheet, termTrigger, textarea, textScaleControl, themeToggle, toast, icon, iconButton, identityChip, surface, previewStyle, assertScopedSelectionBlocking, assertNoReadableSelectionBlocking } = context;
@@ -299,11 +299,11 @@ export function checkOverlaysContracts(context: StorybookCheckContext): void {
     assertNoReadableSelectionBlocking(surfaceLabel, source);
   }
 
-  assertNoDecorativeEffects(failures, 'Button component', withoutLoadingMotion(button));
+  assertNoDecorativeEffects(failures, 'Button component', button, 'component');
 
   assertNoDecorativeEffects(failures, 'Icon component', icon);
 
-  assertNoDecorativeEffects(failures, 'IconButton component', withoutLoadingMotion(iconButton));
+  assertNoDecorativeEffects(failures, 'IconButton component', iconButton, 'component');
 
   assertNoDecorativeEffects(failures, 'LocaleSwitcher component', localeSwitcher);
 

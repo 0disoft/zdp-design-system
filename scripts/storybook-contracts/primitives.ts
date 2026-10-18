@@ -1,5 +1,5 @@
 import type { StorybookCheckContext } from './context';
-import { assertNoDecorativeEffects, assertNoOverRoundedUsage, withoutLoadingMotion } from '../style-contract';
+import { assertNoDecorativeEffects, assertNoOverRoundedUsage } from '../style-contract';
 
 export function checkPrimitivesContracts(context: StorybookCheckContext): void {
   const { failures, navigationComponent, accordion, avatar, badge, callout, codeBlock, combobox, commandField, disclosure, kbd, label, link, localeSwitcher, menu, popover, progress, segmentedControl, shortcutHint, shortcuts, skeleton, tooltip, statusToast, spinner, textScaleControl, themeToggle, toast, inlineCode, identityChip } = context;
@@ -379,7 +379,7 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
   }
 
   for (const source of [badge, callout, toast, statusToast, progress, spinner, skeleton]) {
-    assertNoDecorativeEffects(failures, 'Feedback component', [progress, spinner, skeleton].includes(source) ? withoutLoadingMotion(source) : source);
+    assertNoDecorativeEffects(failures, 'Feedback component', source, [progress, spinner, skeleton].includes(source) ? 'component' : undefined);
     assertNoOverRoundedUsage(failures, 'Feedback component', source);
   }
 
@@ -551,7 +551,7 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
     }
   }
 
-  assertNoDecorativeEffects(failures, 'CodeBlock component', withoutLoadingMotion(codeBlock));
+  assertNoDecorativeEffects(failures, 'CodeBlock component', codeBlock, 'component');
 
   assertNoOverRoundedUsage(failures, 'CodeBlock component', codeBlock);
 
