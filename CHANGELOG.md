@@ -2,7 +2,15 @@
 
 ## Unreleased
 
+## 0.66.0
+
 - Remove hidden Tooltip content from layout so long labels do not create horizontal scrolling on narrow screens. Keep hover, keyboard focus, Escape dismissal, and framework-neutral CSS behavior aligned.
+- `src/styles/components.css` is now generated from the Svelte component `<style>` blocks in the order declared by `scripts/component-style-order.ts`; shared utility classes that do not overlap a component stay in `src/styles/component-utilities.css`, shared forced-colors overrides live only in `foundation.css`, and the duplicate `component-parts/*.css` fragments plus the component-parity parser check are removed.
+- Compile the library with `@sveltejs/package` to publish `.js`/`.d.ts` modules and `.svelte`/`.svelte.d.ts` components. Add declaration-backed component subpaths and replace raw TypeScript helper type targets while preserving runtime, CSS and asset import paths.
+- Adjust the package file-count budget from 260 to 360 for the declaration files (345 files measured versus 252 before). Keep every byte-size budget unchanged; the new tarball is smaller despite the additional type entries.
+- Migrate the remaining components to Svelte 5 Runes with snippet and callback props. Consumers should use Svelte 5 snippet props for named content and callback props such as `oninput` instead of legacy component event directives. Share Dialog, Sheet and TermSheet focus trapping, restoration and transition cancellation so closing before the next tick cannot move focus into a closed modal.
+- Share Floating UI positioning and clipping boundaries across Combobox, Tooltip, Popover and Menu. Remove the Bits UI runtime dependency and its focus/dismissal workarounds while retaining ZDP keyboard, dismissal and existing-DOM placement behavior.
+- Make the default `styles.css` entry compose `foundation.css` and `components.css` without CDN requests. Webfonts, including Noto Sans KR, now require the optional `locale-fonts.css` or consumer-hosted font faces. Pin the optional Noto Sans KR CDN import to 5.3.0 and keep shared forced-colors rules in foundation only.
 
 ## 0.65.0
 
