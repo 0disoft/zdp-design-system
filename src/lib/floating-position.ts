@@ -24,6 +24,7 @@ export function positionZdpFloatingPanel(panel: HTMLElement, initial: FloatingOp
     const original = new Map<string, string>();
     const applied = new Map<string, string>();
     const previousSide = panel.getAttribute('data-side');
+    const previousAlign = panel.getAttribute('data-align');
     const previousPositioned = panel.getAttribute('data-zdp-positioned');
     function style(name: string, value: string): void {
       if (!original.has(name)) original.set(name, panel.style.getPropertyValue(name));
@@ -65,6 +66,7 @@ export function positionZdpFloatingPanel(panel: HTMLElement, initial: FloatingOp
       style('left', `${result.x}px`);
       style('top', `${result.y}px`);
       panel.dataset.side = result.placement.split('-')[0];
+      panel.dataset.align = result.placement.split('-')[1] ?? 'center';
       options.onPosition?.();
     };
     const stop = autoUpdate(anchor, panel, () => { void update(); });
@@ -76,6 +78,7 @@ export function positionZdpFloatingPanel(panel: HTMLElement, initial: FloatingOp
         if (value) panel.style.setProperty(name, value); else panel.style.removeProperty(name);
       }
       if (previousSide === null) panel.removeAttribute('data-side'); else panel.setAttribute('data-side', previousSide);
+      if (previousAlign === null) panel.removeAttribute('data-align'); else panel.setAttribute('data-align', previousAlign);
       if (previousPositioned === null) panel.removeAttribute('data-zdp-positioned');
       else panel.setAttribute('data-zdp-positioned', previousPositioned);
     };

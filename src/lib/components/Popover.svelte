@@ -1,10 +1,9 @@
 <script lang="ts">
   import { onDestroy, tick } from 'svelte';
-  import { Popover as BitsPopover } from 'bits-ui';
   import { createZdpDismissLayer } from '../dismiss-layer.js';
   import { toZdpDomId } from '../dom-id.js';
   import { getZdpActiveElement, hasZdpFocusMoved } from '../focusable.js';
-  import { getZdpFloatingBoundaries } from '../floating-boundary.js';
+  import { positionZdpFloatingPanel } from '../floating-position.js';
 
   type Placement = 'top' | 'right' | 'bottom' | 'left';
   type Alignment = 'start' | 'center' | 'end';
@@ -40,9 +39,6 @@
 
   let rootElement = $state<HTMLElement | null>(null);
   let triggerElement = $state<HTMLElement | null>(null);
-  let floatingGap = $state(0);
-  let floatingDirection = $state<'ltr' | 'rtl'>('ltr');
-  let floatingBoundaries = $state<HTMLElement[]>([]);
   let previousFocusElement = $state<HTMLElement | null>(null);
   let knownOpenState = $state(false);
   let restoreFocusAfterClose = $state<boolean | null>(null);
@@ -51,31 +47,6 @@
   const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
   const triggerId = $derived(`${resolvedIdPrefix}-trigger`);
   const panelId = $derived(`${resolvedIdPrefix}-panel`);
-
-  $effect(() => {
-    if (!open || !triggerElement) return;
-    const style = triggerElement.ownerDocument.defaultView?.getComputedStyle(triggerElement);
-    if (!style) return;
-    // Resolve rem-based spacing through CSS, as in Menu.
-    floatingGap = Number.parseFloat(style.columnGap) || 0;
-    floatingDirection = style.direction === 'rtl' ? 'rtl' : 'ltr';
-    floatingBoundaries = getZdpFloatingBoundaries(triggerElement);
-  });
-
-  $effect.pre(() => {
-    const document = open ? rootElement?.ownerDocument : null;
-    if (!document) return;
-    // Bits 2 consumes Escape even with behavior="ignore". Subscribe before
-    // its content mounts so IME and opt-out events reach the editor unchanged.
-    const preserveEscape = (event: KeyboardEvent): void => {
-      if (open && event.key === 'Escape' &&
-        (event.isComposing || event.keyCode === 229 || !closeOnEscape)) {
-        event.stopImmediatePropagation();
-      }
-    };
-    document.addEventListener('keydown', preserveEscape);
-    return () => document.removeEventListener('keydown', preserveEscape);
-  });
 
   $effect(() => {
     if (open === knownOpenState) {
@@ -171,7 +142,6 @@
   }
 </script>
 
-<BitsPopover.Root bind:open onOpenChange={(nextOpen) => onOpenChange?.(nextOpen)}>
 <span
   class={`zdp-popover zdp-popover--${placement} zdp-popover--align-${align}`}
   data-open={open ? 'true' : 'false'}
@@ -182,50 +152,26 @@
     <slot name="trigger" open={open} toggle={toggle} close={close} panelId={panelId} triggerId={triggerId} />
   </span>
   {#if open}
-    <!-- ZDP owns shared dismissal ordering and custom slotted triggers. -->
-    <BitsPopover.Content
-      id={panelId}
-      customAnchor={triggerElement}
-      side={placement}
-      {align}
-      sideOffset={floatingGap}
-      collisionPadding={floatingGap}
-      collisionBoundary={floatingBoundaries}
-      avoidCollisions={true}
-      sticky="always"
-      strategy="fixed"
-      dir={floatingDirection}
-      style="--zdp-popover-available-width:var(--bits-popover-content-available-width);--zdp-popover-available-height:var(--bits-popover-content-available-height);"
-      trapFocus={false}
-      preventScroll={false}
-      escapeKeydownBehavior="ignore"
-      interactOutsideBehavior="ignore"
-      onOpenAutoFocus={(event) => event.preventDefault()}
-      onCloseAutoFocus={(event) => event.preventDefault()}
-      onFocusOutside={(event) => event.preventDefault()}
-    >
-    {#snippet child({ props, wrapperProps })}
-    <div {...wrapperProps} class="zdp-popover__positioner">
-    <div
-      {...props}
-      class="zdp-popover__panel"
-      data-zdp-positioned
-      id={panelId}
-      role={role ?? undefined}
-      aria-labelledby={labelledBy ?? triggerId}
-      aria-describedby={describedBy ?? undefined}
-      tabindex="-1"
-      onkeydown={() => { /* Keep native Tab order instead of Bits' panel loop. */ }}
-    >
-      <!-- svelte-ignore slot_element_deprecated legacy default slot contract remains public -->
-      <slot open={open} close={close} panelId={panelId} triggerId={triggerId} />
+    <div class="zdp-popover__positioner">
+      <div
+        class="zdp-popover__panel"
+        data-zdp-positioned
+        id={panelId}
+        role={role ?? undefined}
+        aria-labelledby={labelledBy ?? triggerId}
+        aria-describedby={describedBy ?? undefined}
+        tabindex="-1"
+        use:positionZdpFloatingPanel={{
+          anchor: triggerElement, gapSource: triggerElement, prefix: 'popover',
+          placement: align === 'center' ? placement : `${placement}-${align}`
+        }}
+      >
+        <!-- svelte-ignore slot_element_deprecated legacy default slot contract remains public -->
+        <slot open={open} close={close} panelId={panelId} triggerId={triggerId} />
+      </div>
     </div>
-    </div>
-    {/snippet}
-    </BitsPopover.Content>
   {/if}
 </span>
-</BitsPopover.Root>
 
 <style>
   .zdp-popover {
