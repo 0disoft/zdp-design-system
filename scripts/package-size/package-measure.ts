@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { readFile, stat } from 'node:fs/promises';
 import { basename, relative, resolve } from 'node:path';
+import { npmCommand } from '../npm-command.ts';
 import {
   brotliCompressSync,
   constants as zlibConstants,
@@ -24,12 +25,12 @@ const imagePattern = /\.(?:avif|gif|jpe?g|png|svg|webp)$/i;
 const javascriptPattern = /\.(?:c|m)?js$/i;
 
 export async function packPackage(cwd: string, destination: string, spec: string | null): Promise<string> {
-  const npmExecutable = process.platform === 'win32' ? 'npm.cmd' : 'npm';
   const args = ['pack'];
   if (spec !== null) args.push(spec);
   args.push('--json', '--ignore-scripts', '--pack-destination', destination);
 
-  const result = spawnSync(npmExecutable, args, {
+  const npm = npmCommand(args);
+  const result = spawnSync(npm.executable, npm.args, {
     cwd,
     encoding: 'utf8',
     env: {
