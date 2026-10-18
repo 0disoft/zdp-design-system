@@ -149,11 +149,11 @@ export function checkOverlaysContracts(context: StorybookCheckContext): void {
   }
 
   for (const requiredText of [
-    'export let termId: string',
-    'export let controls: string | null = null',
-    'export let expanded = false',
-    'export let disabled = false',
-    'onopen: ((termId: string) => void) | null = null',
+    'termId = $bindable()',
+    "controls = $bindable(null)",
+    "expanded = $bindable(false)",
+    "disabled = $bindable(false)",
+    "onopen = $bindable(null)",
     'data-term-id={termId}',
     'aria-controls={resolvedControls ?? undefined}',
     'aria-expanded={controls === null ? undefined : expanded}',
@@ -197,12 +197,12 @@ export function checkOverlaysContracts(context: StorybookCheckContext): void {
   }
 
   for (const requiredText of [
-    'onclick: ((event: MouseEvent) => void) | null = null',
-    'ariaControls: string | null = null',
-    'ariaDescribedBy: string | null = null',
-    'ariaExpanded: boolean | null = null',
-    'ariaPressed: boolean | null = null',
-    'ariaKeyShortcuts: string | null = null',
+    "onclick = $bindable(null)",
+    "ariaControls = $bindable(null)",
+    "ariaDescribedBy = $bindable(null)",
+    "ariaExpanded = $bindable(null)",
+    "ariaPressed = $bindable(null)",
+    "ariaKeyShortcuts = $bindable(null)",
     'aria-controls={ariaControls ?? undefined}',
     'aria-describedby={ariaDescribedBy ?? undefined}',
     'aria-expanded={ariaExpanded ?? undefined}',

@@ -1,21 +1,43 @@
 <script lang="ts">
-  export let ariaLabel: string;
-  export let title: string | null = null;
-  export let variant: 'ghost' | 'solid' = 'ghost';
-  export let size: 'sm' | 'md' = 'md';
-  export let type: 'button' | 'submit' | 'reset' = 'button';
-  export let disabled = false;
-  export let loading: boolean | undefined = undefined;
-  export let id: string | null = null;
-  export let name: string | null = null;
-  export let value: string | null = null;
-  export let form: string | null = null;
-  export let ariaControls: string | null = null;
-  export let ariaDescribedBy: string | null = null;
-  export let ariaExpanded: boolean | null = null;
-  export let ariaPressed: boolean | null = null;
-  export let ariaKeyShortcuts: string | null = null;
-  export let onclick: ((event: MouseEvent) => void) | null = null;
+  interface Props {
+    ariaLabel: string;
+    title?: string | null;
+    variant?: 'ghost' | 'solid';
+    size?: 'sm' | 'md';
+    type?: 'button' | 'submit' | 'reset';
+    disabled?: boolean;
+    loading?: boolean | undefined;
+    id?: string | null;
+    name?: string | null;
+    value?: string | null;
+    form?: string | null;
+    ariaControls?: string | null;
+    ariaDescribedBy?: string | null;
+    ariaExpanded?: boolean | null;
+    ariaPressed?: boolean | null;
+    ariaKeyShortcuts?: string | null;
+    onclick?: ((event: MouseEvent) => void) | null;
+  }
+
+  let {
+    ariaLabel = $bindable(),
+    title = $bindable(null),
+    variant = $bindable('ghost'),
+    size = $bindable('md'),
+    type = $bindable('button'),
+    disabled = $bindable(false),
+    loading = $bindable(undefined),
+    id = $bindable(null),
+    name = $bindable(null),
+    value = $bindable(null),
+    form = $bindable(null),
+    ariaControls = $bindable(null),
+    ariaDescribedBy = $bindable(null),
+    ariaExpanded = $bindable(null),
+    ariaPressed = $bindable(null),
+    ariaKeyShortcuts = $bindable(null),
+    onclick = $bindable(null)
+  }: Props = $props();
 
   let clickLatch = false;
 
@@ -54,7 +76,7 @@
   onclick={handleClick}
 >
   <span class={`zdp-icon zdp-icon--${size} zdp-icon-button__glyph`} aria-hidden="true">
-    <slot />
+    <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
   </span>
   {#if loading !== undefined}
     <span class={`zdp-icon zdp-icon--${size} zdp-icon-button__spinner`} aria-hidden="true"></span>

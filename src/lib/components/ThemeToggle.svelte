@@ -1,22 +1,40 @@
 <script lang="ts">
   import type { ZdpThemeMode, ZdpThemeToggleSize } from '../theme.js';
 
-  export let theme: ZdpThemeMode = 'light';
-  export let size: ZdpThemeToggleSize = 'md';
-  export let id: string | null = null;
-  export let name: string | null = null;
-  export let value: string | null = null;
-  export let form: string | null = null;
-  export let disabled = false;
-  export let type: 'button' | 'submit' | 'reset' = 'button';
-  export let lightLabel = 'Switch to light mode';
-  export let darkLabel = 'Switch to dark mode';
-  export let ariaControls: string | null = null;
-  export let ariaDescribedBy: string | null = null;
-  export let onclick: ((event: MouseEvent) => void) | null = null;
+  interface Props {
+    theme?: ZdpThemeMode;
+    size?: ZdpThemeToggleSize;
+    id?: string | null;
+    name?: string | null;
+    value?: string | null;
+    form?: string | null;
+    disabled?: boolean;
+    type?: 'button' | 'submit' | 'reset';
+    lightLabel?: string;
+    darkLabel?: string;
+    ariaControls?: string | null;
+    ariaDescribedBy?: string | null;
+    onclick?: ((event: MouseEvent) => void) | null;
+  }
 
-  $: isDark = theme === 'dark';
-  $: ariaLabel = isDark ? lightLabel : darkLabel;
+  let {
+    theme = $bindable('light'),
+    size = $bindable('md'),
+    id = $bindable(null),
+    name = $bindable(null),
+    value = $bindable(null),
+    form = $bindable(null),
+    disabled = $bindable(false),
+    type = $bindable('button'),
+    lightLabel = $bindable('Switch to light mode'),
+    darkLabel = $bindable('Switch to dark mode'),
+    ariaControls = $bindable(null),
+    ariaDescribedBy = $bindable(null),
+    onclick = $bindable(null)
+  }: Props = $props();
+
+  let isDark = $derived(theme === 'dark');
+  let ariaLabel = $derived(isDark ? lightLabel : darkLabel);
 </script>
 
 <button

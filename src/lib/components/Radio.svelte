@@ -1,16 +1,30 @@
 <script lang="ts">
   import { syncZdpFormReset } from '../form-reset.js';
-  export let id: string | null = null;
-  export let name: string | null = null;
-  export let value: string;
-  export let selectedValue: string | null = null;
-  export let describedBy: string | null = null;
-  export let invalid = false;
-  export let disabled = false;
-  export let required = false;
-  export let onValueChange: ((value: string) => void) | null = null;
+  interface Props {
+    id?: string | null;
+    name?: string | null;
+    value: string;
+    selectedValue?: string | null;
+    describedBy?: string | null;
+    invalid?: boolean;
+    disabled?: boolean;
+    required?: boolean;
+    onValueChange?: ((value: string) => void) | null;
+  }
 
-  $: resolvedChecked = selectedValue === value;
+  let {
+    id = $bindable(null),
+    name = $bindable(null),
+    value = $bindable(),
+    selectedValue = $bindable(null),
+    describedBy = $bindable(null),
+    invalid = $bindable(false),
+    disabled = $bindable(false),
+    required = $bindable(false),
+    onValueChange = $bindable(null)
+  }: Props = $props();
+
+  let resolvedChecked = $derived(selectedValue === value);
 
   function handleChange(event: Event): void {
     const nextChecked = (event.currentTarget as HTMLInputElement).checked;
@@ -44,8 +58,8 @@
   />
   <span class="zdp-choice__mark" aria-hidden="true"></span>
   <span class="zdp-choice__body">
-    <span class="zdp-choice__label"><slot /></span>
-    <slot name="help" />
+    <span class="zdp-choice__label"><!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot /></span>
+    <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot name="help" />
   </span>
 </label>
 

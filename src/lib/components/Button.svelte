@@ -1,20 +1,41 @@
 <script lang="ts">
-  export let variant: 'primary' | 'secondary' | 'danger' | 'text' = 'primary';
-  export let size: 'sm' | 'md' = 'md';
-  export let type: 'button' | 'submit' | 'reset' = 'button';
-  export let disabled = false;
-  export let loading: boolean | undefined = undefined;
-  export let id: string | null = null;
-  export let name: string | null = null;
-  export let value: string | null = null;
-  export let form: string | null = null;
-  export let ariaLabel: string | null = null;
-  export let ariaControls: string | null = null;
-  export let ariaDescribedBy: string | null = null;
-  export let ariaExpanded: boolean | null = null;
-  export let ariaPressed: boolean | null = null;
-  export let ariaKeyShortcuts: string | null = null;
-  export let onclick: ((event: MouseEvent) => void) | null = null;
+  interface Props {
+    variant?: 'primary' | 'secondary' | 'danger' | 'text';
+    size?: 'sm' | 'md';
+    type?: 'button' | 'submit' | 'reset';
+    disabled?: boolean;
+    loading?: boolean | undefined;
+    id?: string | null;
+    name?: string | null;
+    value?: string | null;
+    form?: string | null;
+    ariaLabel?: string | null;
+    ariaControls?: string | null;
+    ariaDescribedBy?: string | null;
+    ariaExpanded?: boolean | null;
+    ariaPressed?: boolean | null;
+    ariaKeyShortcuts?: string | null;
+    onclick?: ((event: MouseEvent) => void) | null;
+  }
+
+  let {
+    variant = $bindable('primary'),
+    size = $bindable('md'),
+    type = $bindable('button'),
+    disabled = $bindable(false),
+    loading = $bindable(undefined),
+    id = $bindable(null),
+    name = $bindable(null),
+    value = $bindable(null),
+    form = $bindable(null),
+    ariaLabel = $bindable(null),
+    ariaControls = $bindable(null),
+    ariaDescribedBy = $bindable(null),
+    ariaExpanded = $bindable(null),
+    ariaPressed = $bindable(null),
+    ariaKeyShortcuts = $bindable(null),
+    onclick = $bindable(null)
+  }: Props = $props();
 
   let clickLatch = false;
 
@@ -60,7 +81,7 @@
   {#if loading !== undefined}
     <span class="zdp-button__spinner" aria-hidden="true"></span>
   {/if}
-  <slot />
+  <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
 </button>
 
 <style>

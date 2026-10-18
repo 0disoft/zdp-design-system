@@ -103,11 +103,11 @@ async function checkUserFacingLabelOverrideContract(): Promise<void> {
     {
       path: 'src/lib/components/Pagination.svelte',
       requiredTexts: [
-        "export let ariaLabel = 'Pagination'",
-        "export let previousLabel = 'Previous'",
-        "export let nextLabel = 'Next'",
-        'export let pageLabel: (page: number) => string',
-        'export let currentLabel: (page: number) => string',
+        "ariaLabel = $bindable('Pagination')",
+        "previousLabel = $bindable('Previous')",
+        "nextLabel = $bindable('Next')",
+        "pageLabel = $bindable((page) => `${page} page`)",
+        "currentLabel = $bindable((page) => `Current page, page ${page}`)",
         'aria-label={ariaLabel}',
         'aria-label={previousLabel}',
         'aria-label={nextLabel}',
@@ -147,8 +147,8 @@ async function checkUserFacingLabelOverrideContract(): Promise<void> {
     {
       path: 'src/lib/components/ThemeToggle.svelte',
       requiredTexts: [
-        "export let lightLabel = 'Switch to light mode'",
-        "export let darkLabel = 'Switch to dark mode'",
+        "lightLabel = $bindable('Switch to light mode')",
+        "darkLabel = $bindable('Switch to dark mode')",
         'aria-label={ariaLabel}'
       ]
     },

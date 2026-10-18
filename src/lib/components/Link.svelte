@@ -1,9 +1,10 @@
 <script lang="ts">
-  export let href: string;
-  export let tone: 'primary' | 'muted' = 'primary';
-  export let target: '_self' | '_blank' | '_parent' | '_top' | undefined = undefined;
-  export let rel: string | undefined = undefined;
-  export let ariaCurrent:
+  interface Props {
+    href: string;
+    tone?: 'primary' | 'muted';
+    target?: '_self' | '_blank' | '_parent' | '_top' | undefined;
+    rel?: string | undefined;
+    ariaCurrent?:
     | 'page'
     | 'step'
     | 'location'
@@ -12,12 +13,22 @@
     | 'true'
     | true
     | false
-    | undefined = undefined;
-  export let ariaKeyShortcuts: string | null = null;
+    | undefined;
+    ariaKeyShortcuts?: string | null;
+  }
 
-  $: resolvedRel = target === '_blank' ? rel ?? 'noopener noreferrer' : rel;
-  $: resolvedAriaCurrent =
-    ariaCurrent === true ? 'true' : ariaCurrent === false ? undefined : ariaCurrent;
+  let {
+    href = $bindable(),
+    tone = $bindable('primary'),
+    target = $bindable(undefined),
+    rel = $bindable(undefined),
+    ariaCurrent = $bindable(undefined),
+    ariaKeyShortcuts = $bindable(null)
+  }: Props = $props();
+
+  let resolvedRel = $derived(target === '_blank' ? rel ?? 'noopener noreferrer' : rel);
+  let resolvedAriaCurrent =
+    $derived(ariaCurrent === true ? 'true' : ariaCurrent === false ? undefined : ariaCurrent);
 </script>
 
 <a
@@ -28,7 +39,7 @@
   aria-current={resolvedAriaCurrent}
   aria-keyshortcuts={ariaKeyShortcuts ?? undefined}
 >
-  <slot />
+  <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
 </a>
 
 <style>

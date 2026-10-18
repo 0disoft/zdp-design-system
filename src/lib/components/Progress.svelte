@@ -1,21 +1,29 @@
 <script lang="ts">
   import type { ZdpProgressSize, ZdpProgressTone } from '../progress.js';
 
-  export let value: number | null = null;
-  export let min = 0;
-  export let max = 100;
-  export let tone: ZdpProgressTone = 'primary';
-  export let size: ZdpProgressSize = 'md';
-  export let ariaLabel = 'Progress';
-  export let labelledBy: string | null = null;
-  export let describedBy: string | null = null;
-  export let valueText: string | null = null;
+  interface Props {
+    value?: number | null;
+    min?: number;
+    max?: number;
+    tone?: ZdpProgressTone;
+    size?: ZdpProgressSize;
+    ariaLabel?: string;
+    labelledBy?: string | null;
+    describedBy?: string | null;
+    valueText?: string | null;
+  }
 
-  $: hasRange = Number.isFinite(min) && Number.isFinite(max) && max > min;
-  $: hasValue = value !== null && Number.isFinite(value) && hasRange;
-  $: clampedValue = hasValue ? Math.min(max, Math.max(min, value ?? min)) : min;
-  $: progressPercent = hasRange ? rangePercent(clampedValue, min, max) : 0;
-  $: progressStyle = `--zdp-progress-value: ${progressPercent}%;`;
+  let {
+    value = $bindable(null),
+    min = $bindable(0),
+    max = $bindable(100),
+    tone = $bindable('primary'),
+    size = $bindable('md'),
+    ariaLabel = $bindable('Progress'),
+    labelledBy = $bindable(null),
+    describedBy = $bindable(null),
+    valueText = $bindable(null)
+  }: Props = $props();
 
   function rangePercent(current: number, lower: number, upper: number): number {
     const range = upper - lower;
@@ -23,6 +31,11 @@
       ? ((current - lower) / range) * 100
       : ((current / 2 - lower / 2) / (upper / 2 - lower / 2)) * 100;
   }
+  let hasRange = $derived(Number.isFinite(min) && Number.isFinite(max) && max > min);
+  let hasValue = $derived(value !== null && Number.isFinite(value) && hasRange);
+  let clampedValue = $derived(hasValue ? Math.min(max, Math.max(min, value ?? min)) : min);
+  let progressPercent = $derived(hasRange ? rangePercent(clampedValue, min, max) : 0);
+  let progressStyle = $derived(`--zdp-progress-value: ${progressPercent}%;`);
 </script>
 
 <div

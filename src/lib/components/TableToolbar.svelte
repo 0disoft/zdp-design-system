@@ -8,30 +8,33 @@
     { id: 'compact', label: 'Compact' }
   ];
 
-  export let title: string | null = null;
-  export let summary: string | null = null;
-  export let selectedCount: number | null = null;
-  export let selectedLabel: string | null = null;
-  export let density: ZdpTableDensity = 'default';
-  export let densityLabel = 'Table density';
-  export let densityItems: readonly ZdpTableToolbarDensityItem[] = defaultDensityItems;
-  export let labelledBy: string | null = null;
-  export let ariaLabel = 'Table tools';
-  export let onDensityChange:
+  interface Props {
+    title?: string | null;
+    summary?: string | null;
+    selectedCount?: number | null;
+    selectedLabel?: string | null;
+    density?: ZdpTableDensity;
+    densityLabel?: string;
+    densityItems?: readonly ZdpTableToolbarDensityItem[];
+    labelledBy?: string | null;
+    ariaLabel?: string;
+    onDensityChange?:
     | ((event: MouseEvent | KeyboardEvent, density: ZdpTableDensity, item: ZdpTableToolbarDensityItem) => void)
-    | null = null;
+    | null;
+  }
 
-  $: normalizedSelectedCount = normalizeCount(selectedCount);
-  $: resolvedSelectedLabel =
-    selectedLabel ?? (normalizedSelectedCount > 0 ? `${normalizedSelectedCount} selected` : null);
-  $: segmentedDensityItems = densityItems.map((item) => ({
-    id: item.id,
-    label: item.label,
-    ...(item.ariaLabel === undefined ? {} : { ariaLabel: item.ariaLabel }),
-    ...(item.disabled === undefined ? {} : { disabled: item.disabled })
-  }));
-  $: density = normalizeDensity(density, densityItems);
-  $: activeDensity = density;
+  let {
+    title = $bindable(null),
+    summary = $bindable(null),
+    selectedCount = $bindable(null),
+    selectedLabel = $bindable(null),
+    density = $bindable('default'),
+    densityLabel = $bindable('Table density'),
+    densityItems = $bindable(defaultDensityItems),
+    labelledBy = $bindable(null),
+    ariaLabel = $bindable('Table tools'),
+    onDensityChange = $bindable(null)
+  }: Props = $props();
 
   function handleDensityChange(
     event: MouseEvent | KeyboardEvent,
@@ -63,6 +66,19 @@
 
     return items.find((item) => !item.disabled)?.id ?? value;
   }
+  let normalizedSelectedCount = $derived(normalizeCount(selectedCount));
+  let resolvedSelectedLabel =
+    $derived(selectedLabel ?? (normalizedSelectedCount > 0 ? `${normalizedSelectedCount} selected` : null));
+  let segmentedDensityItems = $derived(densityItems.map((item) => ({
+    id: item.id,
+    label: item.label,
+    ...(item.ariaLabel === undefined ? {} : { ariaLabel: item.ariaLabel }),
+    ...(item.disabled === undefined ? {} : { disabled: item.disabled })
+  })));
+  let activeDensity = $derived(normalizeDensity(density, densityItems));
+  $effect.pre(() => {
+    density = activeDensity;
+  });
 </script>
 
 <div
@@ -81,11 +97,11 @@
     {#if resolvedSelectedLabel}
       <p class="zdp-table-toolbar__selection">{resolvedSelectedLabel}</p>
     {/if}
-    <slot />
+    <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
   </div>
 
   <div class="zdp-table-toolbar__controls">
-    <slot name="controls" />
+    <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot name="controls" />
     {#if densityItems.length > 0}
       <div class="zdp-table-toolbar__density">
         <span class="zdp-table-toolbar__density-label">{densityLabel}</span>
@@ -102,9 +118,9 @@
 
   <div class="zdp-table-toolbar__actions">
     {#if normalizedSelectedCount > 0}
-      <slot name="selection-actions" />
+      <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot name="selection-actions" />
     {/if}
-    <slot name="actions" />
+    <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot name="actions" />
   </div>
 </div>
 

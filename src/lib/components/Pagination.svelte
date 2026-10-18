@@ -7,30 +7,31 @@
       })
     | Extract<ZdpPaginationItem, { readonly type: 'ellipsis' }>;
 
-  export let currentPage = 1;
-  export let totalPages = 1;
-  export let siblingCount = 1;
-  export let ariaLabel = 'Pagination';
-  export let previousLabel = 'Previous';
-  export let nextLabel = 'Next';
-  export let pageLabel: (page: number) => string = (page) => `${page} page`;
-  export let currentLabel: (page: number) => string = (page) => `Current page, page ${page}`;
-  export let hrefForPage: ((page: number) => string | null) | null = null;
-  export let onPageChange: ((event: MouseEvent, page: number) => void) | null = null;
+  interface Props {
+    currentPage?: number;
+    totalPages?: number;
+    siblingCount?: number;
+    ariaLabel?: string;
+    previousLabel?: string;
+    nextLabel?: string;
+    pageLabel?: (page: number) => string;
+    currentLabel?: (page: number) => string;
+    hrefForPage?: ((page: number) => string | null) | null;
+    onPageChange?: ((event: MouseEvent, page: number) => void) | null;
+  }
 
-  $: normalizedTotalPages = normalizePositiveInteger(totalPages);
-  $: activePage = clampPage(currentPage, normalizedTotalPages);
-  $: safeSiblingCount = clampSiblingCount(siblingCount);
-  $: paginationItems = toRenderItems(
-    buildPaginationItems(activePage, normalizedTotalPages, safeSiblingCount),
-    hrefForPage
-  );
-  $: previousPage = Math.max(1, activePage - 1);
-  $: nextPage = Math.min(normalizedTotalPages, activePage + 1);
-  $: previousHref = activePage > 1 ? hrefForPage?.(previousPage) ?? null : null;
-  $: nextHref = activePage < normalizedTotalPages ? hrefForPage?.(nextPage) ?? null : null;
-  $: hasPrevious = activePage > 1;
-  $: hasNext = activePage < normalizedTotalPages;
+  let {
+    currentPage = $bindable(1),
+    totalPages = $bindable(1),
+    siblingCount = $bindable(1),
+    ariaLabel = $bindable('Pagination'),
+    previousLabel = $bindable('Previous'),
+    nextLabel = $bindable('Next'),
+    pageLabel = $bindable((page) => `${page} page`),
+    currentLabel = $bindable((page) => `Current page, page ${page}`),
+    hrefForPage = $bindable(null),
+    onPageChange = $bindable(null)
+  }: Props = $props();
 
   function normalizeInteger(value: number, fallback: number): number {
     return Number.isFinite(value)
@@ -108,6 +109,19 @@
     onPageChange?.(event, page);
   }
 
+  let normalizedTotalPages = $derived(normalizePositiveInteger(totalPages));
+  let activePage = $derived(clampPage(currentPage, normalizedTotalPages));
+  let safeSiblingCount = $derived(clampSiblingCount(siblingCount));
+  let paginationItems = $derived(toRenderItems(
+    buildPaginationItems(activePage, normalizedTotalPages, safeSiblingCount),
+    hrefForPage
+  ));
+  let previousPage = $derived(Math.max(1, activePage - 1));
+  let nextPage = $derived(Math.min(normalizedTotalPages, activePage + 1));
+  let previousHref = $derived(activePage > 1 ? hrefForPage?.(previousPage) ?? null : null);
+  let nextHref = $derived(activePage < normalizedTotalPages ? hrefForPage?.(nextPage) ?? null : null);
+  let hasPrevious = $derived(activePage > 1);
+  let hasNext = $derived(activePage < normalizedTotalPages);
 </script>
 
 <nav class="zdp-pagination" aria-label={ariaLabel}>

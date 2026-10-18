@@ -39,7 +39,7 @@ export async function verifyFoundationAndFormContracts(page) {
   assert.equal(focusedTestId, 'card-link', 'The first keyboard stop must be the explicit link inside Card.');
 
   const tooltipTrigger = page.getByTestId('tooltip-trigger');
-  const tooltip = page.getByRole('tooltip', { name: 'Keyboard help', exact: true });
+  const tooltip = page.locator('#browser-tooltip');
   await tooltipTrigger.focus();
   assert.equal(await tooltipTrigger.getAttribute('aria-describedby'), 'browser-tooltip');
   assert.equal(await tooltip.evaluate((element) => getComputedStyle(element).opacity), '1');

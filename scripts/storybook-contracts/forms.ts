@@ -36,13 +36,13 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
   }
 
   for (const requiredText of [
-    'onclick: ((event: MouseEvent) => void) | null = null',
-    'ariaLabel: string | null = null',
-    'ariaControls: string | null = null',
-    'ariaDescribedBy: string | null = null',
-    'ariaExpanded: boolean | null = null',
-    'ariaPressed: boolean | null = null',
-    'ariaKeyShortcuts: string | null = null',
+    "onclick = $bindable(null)",
+    "ariaLabel = $bindable(null)",
+    "ariaControls = $bindable(null)",
+    "ariaDescribedBy = $bindable(null)",
+    "ariaExpanded = $bindable(null)",
+    "ariaPressed = $bindable(null)",
+    "ariaKeyShortcuts = $bindable(null)",
     'aria-label={ariaLabel ?? undefined}',
     'aria-controls={ariaControls ?? undefined}',
     'aria-describedby={ariaDescribedBy ?? undefined}',
@@ -212,7 +212,7 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
     Textarea: textarea
   })) {
     for (const requiredText of [
-      'readonly = false',
+      'readonly = $bindable(false)',
       'readonly={readonly}',
       '[readonly]',
       'background: var(--zdp-color-surface-raised)',
@@ -272,9 +272,9 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
   }
 
   for (const requiredText of [
-    'export let value: string',
-    'export let selectedValue: string | null = null',
-    'resolvedChecked = selectedValue === value',
+    'value = $bindable()',
+    "selectedValue = $bindable(null)",
+    "resolvedChecked = $derived(selectedValue === value",
     'selectedValue = value'
   ]) {
     if (!radio.includes(requiredText)) {
@@ -289,8 +289,8 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
   for (const requiredText of [
     'role="switch"',
     'type DescribedBy = string | readonly string[] | null',
-    'errorMessageId: string | null = null',
-    'invalid = false',
+    "errorMessageId = $bindable(null)",
+    "invalid = $bindable(false)",
     'normalizeIdRefs',
     'class="zdp-switch__input"',
     'class="zdp-switch__track"',

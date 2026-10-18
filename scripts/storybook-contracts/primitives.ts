@@ -58,10 +58,10 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
 
   for (const requiredText of [
     "import type { ZdpThemeMode, ZdpThemeToggleSize }",
-    'theme: ZdpThemeMode',
-    'size: ZdpThemeToggleSize',
-    "lightLabel = 'Switch to light mode'",
-    "darkLabel = 'Switch to dark mode'",
+    "theme?: ZdpThemeMode",
+    "size?: ZdpThemeToggleSize",
+    "lightLabel = $bindable('Switch to light mode')",
+    "darkLabel = $bindable('Switch to dark mode')",
     'aria-label={ariaLabel}',
     'data-zdp-theme-toggle',
     'data-zdp-theme-state={theme}',
@@ -298,11 +298,11 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
 
   for (const requiredText of [
     'import type { ZdpProgressSize, ZdpProgressTone }',
-    'value: number | null = null',
-    'min = 0',
-    'max = 100',
-    'ariaLabel =',
-    'valueText:',
+    "value = $bindable(null)",
+    "min = $bindable(0)",
+    "max = $bindable(100)",
+    "ariaLabel = $bindable('Progress')",
+    "valueText?:",
     'Number.isFinite',
     'role="progressbar"',
     'aria-valuemin={hasRange ? min : undefined}',
@@ -388,7 +388,7 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
     '.zdp-link--primary',
     '.zdp-link--muted',
     'href: string',
-    'ariaKeyShortcuts: string | null = null',
+    "ariaKeyShortcuts = $bindable(null)",
     'aria-current={resolvedAriaCurrent}',
     'aria-keyshortcuts={ariaKeyShortcuts ?? undefined}',
     "rel ?? 'noopener noreferrer'",
@@ -430,9 +430,9 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
 
   for (const requiredText of [
     "import Kbd from './Kbd.svelte'",
-    'keys: readonly string[] = []',
-    "size: 'sm' | 'md' = 'md'",
-    'ariaLabel: string | null = null',
+    "keys = $bindable([])",
+    "size = $bindable('md')",
+    "ariaLabel = $bindable(null)",
     "keys.join(' ')",
     'labelledGroupRole',
     'class={`zdp-shortcut-hint zdp-shortcut-hint--${size}`}',

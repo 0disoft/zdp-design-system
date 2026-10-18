@@ -5,36 +5,65 @@
 
   type DescribedBy = string | readonly string[] | null;
 
-  export let id: string | null = null;
-  export let name: string | null = null;
-  export let type: ZdpInputType = 'text';
-  export let value = '';
-  export let placeholder: string | null = null;
-  export let autocomplete: HTMLInputAttributes['autocomplete'] | null = null;
-  export let form: string | null = null;
-  export let min: HTMLInputAttributes['min'] | null = null;
-  export let max: HTMLInputAttributes['max'] | null = null;
-  export let step: HTMLInputAttributes['step'] | null = null;
-  export let minlength: number | null = null;
-  export let maxlength: number | null = null;
-  export let pattern: string | null = null;
-  export let inputmode: HTMLInputAttributes['inputmode'] | null = null;
-  export let enterkeyhint: HTMLInputAttributes['enterkeyhint'] | null = null;
-  export let ariaLabel: string | null = null;
-  export let oninput: ((event: Event) => void) | null = null;
-  export let onchange: ((event: Event) => void) | null = null;
-  export let onfocus: ((event: FocusEvent) => void) | null = null;
-  export let onblur: ((event: FocusEvent) => void) | null = null;
-  export let onkeydown: ((event: KeyboardEvent) => void) | null = null;
-  export let describedBy: DescribedBy = null;
-  export let errorMessageId: string | null = null;
-  export let invalid = false;
-  export let disabled = false;
-  export let readonly = false;
-  export let required = false;
+  interface Props {
+    id?: string | null;
+    name?: string | null;
+    type?: ZdpInputType;
+    value?: string;
+    placeholder?: string | null;
+    autocomplete?: HTMLInputAttributes['autocomplete'] | null;
+    form?: string | null;
+    min?: HTMLInputAttributes['min'] | null;
+    max?: HTMLInputAttributes['max'] | null;
+    step?: HTMLInputAttributes['step'] | null;
+    minlength?: number | null;
+    maxlength?: number | null;
+    pattern?: string | null;
+    inputmode?: HTMLInputAttributes['inputmode'] | null;
+    enterkeyhint?: HTMLInputAttributes['enterkeyhint'] | null;
+    ariaLabel?: string | null;
+    oninput?: ((event: Event) => void) | null;
+    onchange?: ((event: Event) => void) | null;
+    onfocus?: ((event: FocusEvent) => void) | null;
+    onblur?: ((event: FocusEvent) => void) | null;
+    onkeydown?: ((event: KeyboardEvent) => void) | null;
+    describedBy?: DescribedBy;
+    errorMessageId?: string | null;
+    invalid?: boolean;
+    disabled?: boolean;
+    readonly?: boolean;
+    required?: boolean;
+  }
 
-  $: ariaDescribedBy = normalizeIdRefs(describedBy);
-  $: resolvedErrorMessageId = invalid && errorMessageId ? errorMessageId : null;
+  let {
+    id = $bindable(null),
+    name = $bindable(null),
+    type = $bindable('text'),
+    value = $bindable(''),
+    placeholder = $bindable(null),
+    autocomplete = $bindable(null),
+    form = $bindable(null),
+    min = $bindable(null),
+    max = $bindable(null),
+    step = $bindable(null),
+    minlength = $bindable(null),
+    maxlength = $bindable(null),
+    pattern = $bindable(null),
+    inputmode = $bindable(null),
+    enterkeyhint = $bindable(null),
+    ariaLabel = $bindable(null),
+    oninput = $bindable(null),
+    onchange = $bindable(null),
+    onfocus = $bindable(null),
+    onblur = $bindable(null),
+    onkeydown = $bindable(null),
+    describedBy = $bindable(null),
+    errorMessageId = $bindable(null),
+    invalid = $bindable(false),
+    disabled = $bindable(false),
+    readonly = $bindable(false),
+    required = $bindable(false)
+  }: Props = $props();
 
   function handleInput(event: Event): void {
     value = (event.currentTarget as HTMLInputElement).value;
@@ -54,6 +83,8 @@
     const normalized = value.map((entry) => entry.trim()).filter(Boolean);
     return normalized.length > 0 ? normalized.join(' ') : null;
   }
+  let ariaDescribedBy = $derived(normalizeIdRefs(describedBy));
+  let resolvedErrorMessageId = $derived(invalid && errorMessageId ? errorMessageId : null);
 </script>
 
 <input

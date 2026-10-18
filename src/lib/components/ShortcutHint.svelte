@@ -1,12 +1,20 @@
 <script lang="ts">
   import Kbd from './Kbd.svelte';
 
-  export let keys: readonly string[] = [];
-  export let size: 'sm' | 'md' = 'md';
-  export let ariaLabel: string | null = null;
+  interface Props {
+    keys?: readonly string[];
+    size?: 'sm' | 'md';
+    ariaLabel?: string | null;
+  }
 
-  $: resolvedAriaLabel = ariaLabel ?? keys.join(' ');
-  $: labelledGroupRole = resolvedAriaLabel ? 'group' : undefined;
+  let {
+    keys = $bindable([]),
+    size = $bindable('md'),
+    ariaLabel = $bindable(null)
+  }: Props = $props();
+
+  let resolvedAriaLabel = $derived(ariaLabel ?? keys.join(' '));
+  let labelledGroupRole = $derived(resolvedAriaLabel ? 'group' : undefined);
 </script>
 
 <span

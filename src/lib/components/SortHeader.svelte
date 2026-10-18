@@ -1,26 +1,29 @@
 <script lang="ts">
   import type { ZdpSortDirection } from '../table-tools.js';
 
-  export let label = 'Sort';
-  export let direction: ZdpSortDirection = 'none';
-  export let disabled = false;
-  export let ariaLabel: string | null = null;
-  export let ascendingLabel = 'Ascending';
-  export let descendingLabel = 'Descending';
-  export let unsortedLabel = 'Not sorted';
-  export let onSort:
+  interface Props {
+    label?: string;
+    direction?: ZdpSortDirection;
+    disabled?: boolean;
+    ariaLabel?: string | null;
+    ascendingLabel?: string;
+    descendingLabel?: string;
+    unsortedLabel?: string;
+    onSort?:
     | ((event: MouseEvent, nextDirection: Exclude<ZdpSortDirection, 'none'>) => void)
-    | null = null;
+    | null;
+  }
 
-  $: normalizedDirection = normalizeDirection(direction);
-  $: nextDirection = getNextDirection(normalizedDirection);
-  $: directionLabel =
-    normalizedDirection === 'ascending'
-      ? ascendingLabel
-      : normalizedDirection === 'descending'
-        ? descendingLabel
-        : unsortedLabel;
-  $: resolvedAriaLabel = ariaLabel ?? undefined;
+  let {
+    label = $bindable('Sort'),
+    direction = $bindable('none'),
+    disabled = $bindable(false),
+    ariaLabel = $bindable(null),
+    ascendingLabel = $bindable('Ascending'),
+    descendingLabel = $bindable('Descending'),
+    unsortedLabel = $bindable('Not sorted'),
+    onSort = $bindable(null)
+  }: Props = $props();
 
   function handleClick(event: MouseEvent): void {
     if (disabled) {
@@ -41,6 +44,15 @@
   function getNextDirection(value: ZdpSortDirection): Exclude<ZdpSortDirection, 'none'> {
     return value === 'ascending' ? 'descending' : 'ascending';
   }
+  let normalizedDirection = $derived(normalizeDirection(direction));
+  let nextDirection = $derived(getNextDirection(normalizedDirection));
+  let directionLabel =
+    $derived(normalizedDirection === 'ascending'
+      ? ascendingLabel
+      : normalizedDirection === 'descending'
+        ? descendingLabel
+        : unsortedLabel);
+  let resolvedAriaLabel = $derived(ariaLabel ?? undefined);
 </script>
 
 <button
@@ -52,7 +64,7 @@
   disabled={disabled}
   onclick={handleClick}
 >
-  <span class="zdp-sort-header__label"><slot>{label}</slot></span>
+  <span class="zdp-sort-header__label"><!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot>{label}</slot></span>
   <span class="zdp-sort-header__direction">{directionLabel}</span>
   <span class="zdp-sort-header__mark" aria-hidden="true"></span>
 </button>

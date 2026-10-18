@@ -1,12 +1,23 @@
 <script lang="ts">
-  export let termId: string;
-  export let controls: string | null = null;
-  export let expanded = false;
-  export let disabled = false;
-  export let ariaLabel: string | null = null;
-  export let onopen: ((termId: string) => void) | null = null;
+  interface Props {
+    termId: string;
+    controls?: string | null;
+    expanded?: boolean;
+    disabled?: boolean;
+    ariaLabel?: string | null;
+    onopen?: ((termId: string) => void) | null;
+  }
 
-  $: resolvedControls = controls !== null && expanded ? controls : null;
+  let {
+    termId = $bindable(),
+    controls = $bindable(null),
+    expanded = $bindable(false),
+    disabled = $bindable(false),
+    ariaLabel = $bindable(null),
+    onopen = $bindable(null)
+  }: Props = $props();
+
+  let resolvedControls = $derived(controls !== null && expanded ? controls : null);
 
   function handleClick(): void {
     if (disabled) {
@@ -28,7 +39,7 @@
   disabled={disabled}
   onclick={handleClick}
 >
-  <slot />
+  <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
 </button>
 
 <style>

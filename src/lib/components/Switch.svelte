@@ -2,17 +2,27 @@
   import { syncZdpFormReset } from '../form-reset.js';
   type DescribedBy = string | readonly string[] | null;
 
-  export let id: string | null = null;
-  export let name: string | null = null;
-  export let checked = false;
-  export let describedBy: DescribedBy = null;
-  export let errorMessageId: string | null = null;
-  export let invalid = false;
-  export let disabled = false;
-  export let required = false;
+  interface Props {
+    id?: string | null;
+    name?: string | null;
+    checked?: boolean;
+    describedBy?: DescribedBy;
+    errorMessageId?: string | null;
+    invalid?: boolean;
+    disabled?: boolean;
+    required?: boolean;
+  }
 
-  $: ariaDescribedBy = normalizeIdRefs(describedBy);
-  $: resolvedErrorMessageId = invalid && errorMessageId ? errorMessageId : null;
+  let {
+    id = $bindable(null),
+    name = $bindable(null),
+    checked = $bindable(false),
+    describedBy = $bindable(null),
+    errorMessageId = $bindable(null),
+    invalid = $bindable(false),
+    disabled = $bindable(false),
+    required = $bindable(false)
+  }: Props = $props();
 
   function handleChange(event: Event): void {
     checked = (event.currentTarget as HTMLInputElement).checked;
@@ -31,6 +41,8 @@
     const normalized = value.map((entry) => entry.trim()).filter(Boolean);
     return normalized.length > 0 ? normalized.join(' ') : null;
   }
+  let ariaDescribedBy = $derived(normalizeIdRefs(describedBy));
+  let resolvedErrorMessageId = $derived(invalid && errorMessageId ? errorMessageId : null);
 </script>
 
 <label class="zdp-switch" data-invalid={invalid ? 'true' : undefined}>
@@ -51,8 +63,8 @@
   />
   <span class="zdp-switch__track" aria-hidden="true"></span>
   <span class="zdp-switch__body">
-    <span class="zdp-switch__label"><slot /></span>
-    <slot name="help" />
+    <span class="zdp-switch__label"><!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot /></span>
+    <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot name="help" />
   </span>
 </label>
 
