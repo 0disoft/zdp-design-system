@@ -144,6 +144,8 @@
 
 <style>
   .zdp-locale-switcher {
+    -webkit-user-select: none;
+    user-select: none;
     --zdp-locale-focus-bleed: calc(var(--zdp-control-focus-outline-width) + var(--zdp-control-focus-outline-offset));
 
     align-items: center;

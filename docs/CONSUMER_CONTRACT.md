@@ -1,10 +1,14 @@
 # Consumer Contract
 
-Shared CSS is authored in the five ordered `src/styles/component-parts/*.css`
-fragments. Run the configured `zdp_design_system_generate_component_styles`
-intent after editing them. `src/styles/components.css` is generated; preview and
-package builds reject stale output. Public CSS import paths and cascade order
-remain unchanged, and the authoring fragments are not shipped in `dist`.
+Shared CSS is generated from the Svelte component `<style>` blocks in the
+explicit order declared by `scripts/component-style-order.ts`; `src/styles/components.css`
+is the generated output, written by `bun run styles:generate`. Shared
+utility classes that do not overlap a component and the forced-colors overrides
+stay in `src/styles/component-utilities.css`; the former hand-maintained
+`src/styles/component-parts/*.css` fragments and the parity parser are gone, and
+`bun run styles:check` rejects stale output in preview and package builds.
+Public CSS import paths and cascade order remain unchanged. The utilities are
+embedded in `components.css`; their authoring file is not shipped in `dist`.
 
 Svelte Tooltip wraps long text, flips when the opposite side fits, and shifts
 within the visible viewport on open, resize and scrolling. It remains inside its

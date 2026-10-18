@@ -129,6 +129,8 @@
 
 <style>
   .zdp-text-scale-control {
+    -webkit-user-select: none;
+    user-select: none;
     align-items: center;
     background: var(--zdp-color-surface-panel);
     border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);

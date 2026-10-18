@@ -350,6 +350,20 @@
     width: var(--zdp-control-icon-sm);
   }
 
+  .zdp-term-sheet__close:where(:hover:not(:disabled)),
+  .zdp-term-sheet__related-button:where(:hover:not(:disabled)) {
+    background: var(--zdp-color-interaction-hover);
+    border-color: var(--zdp-color-line-strong);
+    color: var(--zdp-color-ink-strong);
+  }
+
+  .zdp-term-sheet__close:where(:active:not(:disabled)),
+  .zdp-term-sheet__related-button:where(:active:not(:disabled)) {
+    background: var(--zdp-color-interaction-pressed);
+    border-color: var(--zdp-color-line-strong);
+    color: var(--zdp-color-ink-strong);
+  }
+
   .zdp-term-sheet__close:focus-visible,
   .zdp-term-sheet__related-button:focus-visible {
     border-color: var(--zdp-color-focus-line);

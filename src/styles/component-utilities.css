@@ -1,0 +1,84 @@
+/* Framework-neutral utilities without a Svelte component owner. */
+
+.zdp-user-select-control,
+.zdp-user-select-decorative,
+.zdp-user-select-dragging,
+.zdp-brand-lockup__mark {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.zdp-brand-lockup {
+  align-items: center;
+  color: var(--zdp-color-ink-strong);
+  display: inline-flex;
+  gap: var(--zdp-space-4);
+  min-width: 0;
+}
+
+.zdp-brand-lockup__mark {
+  align-items: center;
+  color: currentColor;
+  display: inline-flex;
+  flex: 0 0 auto;
+  justify-content: center;
+  line-height: 1;
+}
+
+.zdp-brand-lockup__mark svg {
+  block-size: calc(var(--zdp-control-icon-md) + var(--zdp-space-2));
+  display: block;
+  inline-size: calc(var(--zdp-control-icon-md) + var(--zdp-space-2));
+}
+
+.zdp-brand-wordmark {
+  color: currentColor;
+  font-family: var(--zdp-font-family-brand);
+  font-size: calc(var(--zdp-type-page-title-size) - 0.8rem);
+  font-weight: var(--zdp-font-weight-semibold);
+  letter-spacing: 0;
+  line-height: var(--zdp-type-page-title-line-height);
+  margin: 0;
+  min-width: 0;
+}
+
+.zdp-surface-reset .zdp-brand-wordmark {
+  font-family: var(--zdp-font-family-brand);
+  font-weight: var(--zdp-font-weight-semibold);
+  letter-spacing: 0;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.zdp-brand-wordmark--compact {
+  font-size: calc(var(--zdp-type-page-title-compact-size) - 0.5rem);
+}
+
+@media (forced-colors: active) {
+  :is([class^='zdp-'], [class*=' zdp-']):focus-visible {
+    border-color: Highlight !important;
+    outline: 2px solid Highlight !important;
+    outline-offset: 2px !important;
+  }
+
+  :is([class^='zdp-'], [class*=' zdp-']):is(:disabled, [aria-disabled='true']) {
+    border-color: GrayText !important;
+    color: GrayText !important;
+    opacity: 1 !important;
+  }
+
+  :is([class^='zdp-'], [class*=' zdp-']):is(
+      [aria-checked='true'],
+      [aria-selected='true'],
+      [aria-current],
+      [data-active='true'],
+      [data-selected='true']
+    ),
+  .zdp-choice__input:checked + .zdp-choice__mark,
+  .zdp-switch__input:checked + .zdp-switch__track {
+    background: Highlight !important;
+    border-color: Highlight !important;
+    color: HighlightText !important;
+    forced-color-adjust: none !important;
+  }
+}

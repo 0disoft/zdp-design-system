@@ -649,7 +649,7 @@ bun run tokens:check
 `tokens:generate`는 `tokens/zdp.tokens.json`에서 `zdpTokenNames`를 다시 만든다.
 `share-icons:generate`는 `src/lib/share.ts`에서 소비자용 `share.js`와 `share.d.ts`를 다시 만든다.
 색상 토큰은 JSON의 `hex`와 `oklch` 값이 CSS fallback 및 OKLCH override에 모두 존재해야 통과한다.
-`preview:check`는 정적 미리보기 페이지가 공통 스타일 entry와 핵심 토큰/컴포넌트 표면을 참조하는지 확인하고 `styles:parity:check`를 호출한다. parity gate는 Svelte component의 hover, focus, disabled, ARIA, data 상태 selector와 declaration이 배포용 `components.css`에 빠지지 않았는지 검사한다.
+공통 스타일의 원천은 Svelte 컴포넌트의 `<style>`이다. `scripts/component-style-order.ts`가 정한 명시적 순서로 `src/styles/components.css`를 생성하고, 컴포넌트와 겹치지 않는 공통 유틸리티 클래스와 forced-colors override만 `src/styles/component-utilities.css`에 남긴다. `styles:generate`는 생성물을 갱신하고 `styles:check`는 stale 생성물을 막는다. `preview:check`는 `styles:check`와 정적 미리보기 페이지의 공통 스타일 entry/토큰/컴포넌트 표면 참조를 확인하는 `check-preview`만 실행한다. 예전 수동 `component-parts/01~05` CSS와 660줄 parity 파서, `styles:parity:check`는 제거됐고 public CSS import 경로와 cascade 순서는 그대로다.
 `storybook:check`는 Storybook 설정, scripts, devDependencies, overview story가 함께 유지되는지 확인한다.
 `a11y:check`는 Storybook Accessibility addon이 `error` 게이트로 유지되는지 확인한다.
 `package:build`는 `dist/` package surface를 생성한다.

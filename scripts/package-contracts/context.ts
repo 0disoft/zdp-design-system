@@ -14,8 +14,8 @@ export interface PackageJson {
 export async function loadPackageContext() {
 const root = process.cwd();
 
-if (existsSync(join(root, 'dist/styles/component-parts'))) {
-  throw new Error('CSS authoring fragments must not be shipped in the package.');
+if (existsSync(join(root, 'dist/styles/component-utilities.css'))) {
+  throw new Error('CSS utilities must be embedded in components.css instead of shipping their authoring file.');
 }
 
 const packagePath = join(root, 'package.json');
@@ -95,8 +95,7 @@ const expectedScripts = {
   'tokens:check': 'bun scripts/generate-tokens.ts --check && bun scripts/check-tokens.ts',
   'styles:generate': 'bun scripts/generate-component-styles.ts',
   'styles:check': 'bun scripts/generate-component-styles.ts --check',
-  'preview:check': 'bun run styles:check && bun scripts/check-preview.ts && bun run styles:parity:check',
-  'styles:parity:check': 'bun scripts/check-component-style-parity.ts',
+  'preview:check': 'bun run styles:check && bun scripts/check-preview.ts',
   'granular-css:check': 'bun scripts/check-granular-css.ts',
   'a11y:check': 'bun scripts/check-storybook-a11y.ts',
   'a11y:runtime:check': 'node scripts/check-storybook-runtime-a11y.mjs',

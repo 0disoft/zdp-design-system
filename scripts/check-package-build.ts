@@ -11,6 +11,7 @@ import {
   unwrapSvelteGlobalSelectors
 } from './component-style-entries';
 import { createPublicRuntimeEntry, createPublicTypeEntry } from './package-entry';
+import { orderComponentStyles } from './component-style-order';
 
 const fixtureRoot = await mkdtemp(join(tmpdir(), 'zdp-package-build-'));
 const targetRoot = join(fixtureRoot, 'dist');
@@ -109,6 +110,18 @@ const internalValue = 2;
   assert.match(componentCss, /\.zdp-button svg/);
   assert.match(componentCss, /\.zdp-button :where\(span:not\(\.muted\), strong\)/);
   assert.doesNotMatch(componentCss, /:global/);
+  assert.equal(
+    createComponentStyleEntry(publicComponents[0]!, '<style>\r\n  .x { color: red; }\r\n</style>'),
+    createComponentStyleEntry(publicComponents[0]!, '<style>\n  .x { color: red; }\n</style>'),
+    'Windows checkout line endings must not change generated CSS.'
+  );
+  const allComponents = readPublicComponentExports(await readFile(join(process.cwd(), 'src/lib/index.ts'), 'utf8'));
+  const ordered = orderComponentStyles(allComponents);
+  assert.deepEqual(orderComponentStyles([...allComponents].reverse()), ordered,
+    'Public export order must not change the shared CSS cascade.');
+  assert.throws(() => orderComponentStyles(allComponents.slice(1)), /Register every public component/);
+  assert.throws(() => orderComponentStyles([...allComponents, { name: 'Unregistered', fileName: 'Unregistered.svelte' }]),
+    /Register every public component/);
   assert.throws(
     () => unwrapSvelteGlobalSelectors('.zdp-button :global(svg'),
     /Unbalanced :global/

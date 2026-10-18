@@ -63,6 +63,16 @@ try {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.route('https://**', route => route.abort());
+  await page.goto(`http://127.0.0.1:${server.port}/shared/`);
+  const choiceShapes = await page.evaluate(() => {
+    return [...document.querySelectorAll('.zdp-choice__mark')].map(mark => ({
+      radius: getComputedStyle(mark).borderTopLeftRadius,
+      width: mark.getBoundingClientRect().width
+    }));
+  });
+  assert.ok(choiceShapes.every(shape => shape.width > 0), 'Static choice marks must have visible geometry');
+  assert.notEqual(choiceShapes[0].radius, '50%', 'Radio CSS must not round the static Checkbox mark');
+  assert.equal(choiceShapes[1].radius, '50%', 'Static Radio must retain its round mark');
   await page.goto(`http://127.0.0.1:${server.port}/static/`);
   const codeCopyRoot = page.getByTestId('static-code-copy');
   const codeCopyButton = codeCopyRoot.locator('button');

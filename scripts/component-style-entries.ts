@@ -73,7 +73,9 @@ export function createComponentStyleEntry(
       );
     }
 
-    return unwrapSvelteGlobalSelectors(content).trim();
+    const lines = content.replace(/\r\n/g, '\n').split('\n');
+    const indentation = Math.min(...lines.filter(line => line.trim()).map(line => line.match(/^\s*/)![0].length));
+    return unwrapSvelteGlobalSelectors(lines.map(line => line.slice(indentation)).join('\n')).trim();
   });
 
   const generatedHeader =

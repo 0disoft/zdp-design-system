@@ -463,7 +463,7 @@ for (const requiredText of [
   'text-align: center',
   'line-height: 1'
 ]) {
-  if (!componentStyle.includes(requiredText)) {
+  if (!componentStyle.replaceAll('"', "'").includes(requiredText.replaceAll('"', "'"))) {
     failures.push(`Component style contract is missing ${requiredText}.`);
   }
 }

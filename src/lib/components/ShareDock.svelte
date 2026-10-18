@@ -322,4 +322,74 @@
     }
 
   }
+
+  /* CSS-only ShareDock tooltip hooks. */
+  :global(.zdp-share-action__tooltip) {
+    background: var(--zdp-color-ink-strong);
+    border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
+    border-radius: var(--zdp-control-radius);
+    bottom: var(--zdp-tooltip-bottom, auto);
+    color: var(--zdp-color-surface-panel);
+    font-family: var(--zdp-font-family-sans);
+    font-size: var(--zdp-type-caption-size);
+    left: var(--zdp-tooltip-left, auto);
+    line-height: var(--zdp-type-caption-line-height);
+    opacity: 0;
+    padding: var(--zdp-space-1) var(--zdp-space-2);
+    pointer-events: none;
+    position: absolute;
+    right: var(--zdp-tooltip-right, auto);
+    top: var(--zdp-tooltip-top, auto);
+    transform: var(--zdp-tooltip-transform, none);
+    white-space: nowrap;
+    z-index: var(--zdp-layer-floating);
+  }
+
+  :global(.zdp-share-action .zdp-share-action__tooltip) {
+    bottom: calc(100% + var(--zdp-space-2));
+    left: 0;
+    right: auto;
+    top: auto;
+    transform: none;
+  }
+
+  :global(.zdp-share-dock--side .zdp-share-action__tooltip),
+    :global(.zdp-share-dock--rail .zdp-share-action__tooltip) {
+    bottom: auto;
+    left: auto;
+    right: calc(100% + var(--zdp-space-2));
+    top: 0;
+    transform: none;
+  }
+
+  :global(.zdp-share-action:hover .zdp-share-action__tooltip),
+    :global(.zdp-share-action:focus-visible .zdp-share-action__tooltip) {
+    opacity: 1;
+  }
+
+  @media (max-width: 57.5rem) {
+
+    :global(.zdp-share-dock--side .zdp-share-action__tooltip),
+    :global(.zdp-share-dock--rail .zdp-share-action__tooltip) {
+      bottom: calc(100% + var(--zdp-space-2));
+      left: 50%;
+      right: auto;
+      top: auto;
+      transform: translateX(-50%);
+    }
+
+    :global(.zdp-share-dock--side .zdp-share-action:first-child .zdp-share-action__tooltip),
+    :global(.zdp-share-dock--rail .zdp-share-action:first-child .zdp-share-action__tooltip) {
+      left: 0;
+      transform: none;
+    }
+
+    :global(.zdp-share-dock--side .zdp-share-action:last-child .zdp-share-action__tooltip),
+    :global(.zdp-share-dock--rail .zdp-share-action:last-child .zdp-share-action__tooltip) {
+      left: auto;
+      right: 0;
+      transform: none;
+    }
+
+  }
 </style>

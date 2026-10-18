@@ -72,7 +72,7 @@
     width: 1px;
   }
 
-  .zdp-choice__mark {
+  .zdp-choice--radio .zdp-choice__mark {
     align-items: center;
     background: var(--zdp-color-surface-panel);
     border: var(--zdp-control-border-width) solid var(--zdp-color-line-strong);
