@@ -1,9 +1,19 @@
 <script lang="ts">
-  export let as: 'section' | 'div' | 'article' = 'section';
-  export let spacing: 'sm' | 'md' | 'lg' | 'xl' = 'lg';
-  export let tone: 'plain' | 'panel' | 'raised' = 'plain';
-  export let id: string | null = null;
-  export let labelledBy: string | null = null;
+  interface Props {
+    as?: 'section' | 'div' | 'article';
+    spacing?: 'sm' | 'md' | 'lg' | 'xl';
+    tone?: 'plain' | 'panel' | 'raised';
+    id?: string | null;
+    labelledBy?: string | null;
+  }
+
+  let {
+    as = $bindable('section'),
+    spacing = $bindable('lg'),
+    tone = $bindable('plain'),
+    id = $bindable(null),
+    labelledBy = $bindable(null)
+  }: Props = $props();
 </script>
 
 <svelte:element
@@ -12,7 +22,7 @@
   {id}
   aria-labelledby={labelledBy ?? undefined}
 >
-  <slot />
+  <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
 </svelte:element>
 
 <style>

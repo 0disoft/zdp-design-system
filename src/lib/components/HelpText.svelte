@@ -1,9 +1,15 @@
 <script lang="ts">
-  export let id: string | null = null;
+  interface Props {
+    id?: string | null;
+  }
+
+  let {
+    id = $bindable(null)
+  }: Props = $props();
 </script>
 
 <p class="zdp-help-text" id={id ?? undefined}>
-  <slot />
+  <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
 </p>
 
 <style>

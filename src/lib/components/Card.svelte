@@ -1,13 +1,25 @@
 <script lang="ts">
-  export let as: 'article' | 'div' | 'section' = 'article';
-  export let tone: 'panel' | 'raised' | 'outline' = 'panel';
-  export let padding: 'none' | 'sm' | 'md' | 'lg' = 'md';
-  export let hover = false;
-  export let id: string | null = null;
-  export let ariaLabel: string | null = null;
-  export let ariaLabelledBy: string | null = null;
+  interface Props {
+    as?: 'article' | 'div' | 'section';
+    tone?: 'panel' | 'raised' | 'outline';
+    padding?: 'none' | 'sm' | 'md' | 'lg';
+    hover?: boolean;
+    id?: string | null;
+    ariaLabel?: string | null;
+    ariaLabelledBy?: string | null;
+  }
 
-  $: role = as === 'div' && Boolean(ariaLabel?.trim() || ariaLabelledBy?.trim()) ? 'region' : undefined;
+  let {
+    as = $bindable('article'),
+    tone = $bindable('panel'),
+    padding = $bindable('md'),
+    hover = $bindable(false),
+    id = $bindable(null),
+    ariaLabel = $bindable(null),
+    ariaLabelledBy = $bindable(null)
+  }: Props = $props();
+
+  let role = $derived(as === 'div' && Boolean(ariaLabel?.trim() || ariaLabelledBy?.trim()) ? 'region' : undefined);
 </script>
 
 <svelte:element
@@ -20,26 +32,26 @@
 >
   {#if $$slots.header}
     <div class="zdp-card__header">
-      <slot name="header" />
+      <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot name="header" />
     </div>
   {/if}
 
   {#if $$slots.body || $$slots.default}
     <div class="zdp-card__body">
-      <slot name="body" />
-      <slot />
+      <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot name="body" />
+      <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
     </div>
   {/if}
 
   {#if $$slots.footer}
     <div class="zdp-card__footer">
-      <slot name="footer" />
+      <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot name="footer" />
     </div>
   {/if}
 
   {#if $$slots.actions}
     <div class="zdp-card__actions">
-      <slot name="actions" />
+      <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot name="actions" />
     </div>
   {/if}
 </svelte:element>

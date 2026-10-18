@@ -11,7 +11,7 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
   for (const requiredText of [
     '.zdp-skip-link',
     '.zdp-skip-link:focus-visible',
-    'href =',
+    "href = $bindable('#content')",
     'position: fixed',
     'pointer-events: none',
     'pointer-events: auto',
@@ -49,8 +49,8 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
 
   for (const requiredText of [
     '.zdp-page',
-    'as:',
-    'tone:',
+    "as?:",
+    "tone?:",
     'aria-labelledby={labelledBy ?? undefined}',
     'zdp-surface-reset',
     'display: grid',
@@ -69,10 +69,10 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
 
   for (const requiredText of [
     '.zdp-container',
-    'as:',
-    'size:',
-    'padding:',
-    'gutter:',
+    "as?:",
+    "size?:",
+    "padding?:",
+    "gutter?:",
     "gutter === 'page'",
     'aria-labelledby={labelledBy ?? undefined}',
     'inline-size: 100%',
@@ -96,9 +96,9 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
 
   for (const requiredText of [
     '.zdp-section',
-    'as:',
-    'spacing:',
-    'tone:',
+    "as?:",
+    "spacing?:",
+    "tone?:",
     'aria-labelledby={labelledBy ?? undefined}',
     '.zdp-section--spacing-lg',
     '.zdp-section--spacing-xl',
@@ -118,8 +118,8 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
 
   for (const requiredText of [
     '.zdp-page-header',
-    'as:',
-    'align:',
+    "as?:",
+    "align?:",
     'labelledHeaderRole',
     'role={labelledHeaderRole}',
     'aria-labelledby={labelledBy ?? undefined}',
@@ -142,9 +142,9 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
 
   for (const requiredText of [
     '.zdp-stack',
-    'as:',
-    'gap:',
-    'align:',
+    "as?:",
+    "gap?:",
+    "align?:",
     'aria-labelledby={labelledBy ?? undefined}',
     'display: grid',
     'gap: var(--zdp-space-4)',
@@ -163,10 +163,10 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
 
   for (const requiredText of [
     '.zdp-inline',
-    'as:',
-    'gap:',
-    'align:',
-    'justify:',
+    "as?:",
+    "gap?:",
+    "align?:",
+    "justify?:",
     "as === 'div' && labelledBy ? 'group' : undefined",
     'role={labelledGroupRole}',
     'aria-labelledby={labelledBy ?? undefined}',
@@ -189,9 +189,9 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
 
   for (const requiredText of [
     '.zdp-grid',
-    'as:',
-    'columns:',
-    'gap:',
+    "as?:",
+    "columns?:",
+    "gap?:",
     'aria-labelledby={labelledBy ?? undefined}',
     'display: grid',
     'grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr))',
@@ -213,9 +213,9 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
 
   for (const requiredText of [
     '.zdp-toolbar',
-    'as:',
-    'gap:',
-    'align:',
+    "as?:",
+    "gap?:",
+    "align?:",
     'aria-labelledby={labelledBy ?? undefined}',
     'class="zdp-toolbar__main"',
     'slot name="actions"',
@@ -240,9 +240,9 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
 
   for (const requiredText of [
     '.zdp-divider',
-    'orientation:',
-    'tone:',
-    'decorative = true',
+    "orientation?:",
+    "tone?:",
+    "decorative = $bindable(true)",
     "role={decorative ? 'presentation' : 'separator'}",
     'aria-orientation={decorative ? undefined : orientation}',
     '.zdp-divider--horizontal',
@@ -263,9 +263,9 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
 
   for (const requiredText of [
     '.zdp-table-wrap',
-    'caption:',
-    'captionMode:',
-    'density:',
+    "caption?:",
+    "captionMode?:",
+    "density?:",
     'aria-labelledby={labelledBy ?? undefined}',
     '<caption class={`zdp-table__caption zdp-table__caption--${captionMode}`}>',
     '.zdp-table :global(th)',
@@ -356,8 +356,8 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
 
   for (const requiredText of [
     '.zdp-key-value',
-    'columns:',
-    'density:',
+    "columns?:",
+    "density?:",
     'aria-labelledby={labelledBy ?? undefined}',
     '.zdp-key-value :global(dt)',
     '.zdp-key-value :global(dd)',
@@ -376,8 +376,8 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
 
   for (const requiredText of [
     '.zdp-empty-state',
-    'align:',
-    'tone:',
+    "align?:",
+    "tone?:",
     'aria-labelledby={labelledBy ?? undefined}',
     'class="zdp-empty-state__body"',
     'slot name="actions"',
@@ -398,8 +398,8 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
     'interface BreadcrumbItem',
     'readonly href?: string',
     'readonly current?: boolean',
-    'explicitCurrentIndex = items.findIndex',
-    'resolvedCurrentIndex = explicitCurrentIndex >= 0 ? explicitCurrentIndex : items.length - 1',
+    "explicitCurrentIndex = $derived(items.findIndex",
+    "resolvedCurrentIndex = $derived(explicitCurrentIndex >= 0 ? explicitCurrentIndex : items.length - 1",
     'current: index === resolvedCurrentIndex',
     '<nav class="zdp-breadcrumb" aria-label={ariaLabel}>',
     '<ol class="zdp-breadcrumb__list">',
@@ -480,8 +480,8 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
   assertNoOverRoundedUsage(failures, 'Pagination component', pagination);
 
   for (const requiredText of [
-    'export let size: \'sm\' | \'md\' = \'md\'',
-    'export let label: string | null = null',
+    "size = $bindable('md')",
+    "label = $bindable(null)",
     'role={label ? \'img\' : undefined}',
     'aria-hidden={label ? undefined : \'true\'}',
     '.zdp-icon--sm',

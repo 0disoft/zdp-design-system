@@ -1,9 +1,19 @@
 <script lang="ts">
-  export let gap: 'sm' | 'md' = 'md';
-  export let invalid = false;
-  export let disabled = false;
-  export let readonly = false;
-  export let required = false;
+  interface Props {
+    gap?: 'sm' | 'md';
+    invalid?: boolean;
+    disabled?: boolean;
+    readonly?: boolean;
+    required?: boolean;
+  }
+
+  let {
+    gap = $bindable('md'),
+    invalid = $bindable(false),
+    disabled = $bindable(false),
+    readonly = $bindable(false),
+    required = $bindable(false)
+  }: Props = $props();
 </script>
 
 <div
@@ -13,7 +23,7 @@
   data-readonly={readonly ? 'true' : undefined}
   data-required={required ? 'true' : undefined}
 >
-  <slot />
+  <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
 </div>
 
 <style>

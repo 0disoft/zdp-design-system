@@ -1,10 +1,17 @@
 <script lang="ts">
-  export let tone: 'neutral' | 'primary' | 'success' | 'warning' | 'danger' = 'neutral';
-  export let size: 'sm' | 'md' = 'md';
+  interface Props {
+    tone?: 'neutral' | 'primary' | 'success' | 'warning' | 'danger';
+    size?: 'sm' | 'md';
+  }
+
+  let {
+    tone = $bindable('neutral'),
+    size = $bindable('md')
+  }: Props = $props();
 </script>
 
 <span class={`zdp-badge zdp-badge--${tone} zdp-badge--${size}`}>
-  <slot />
+  <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
 </span>
 
 <style>

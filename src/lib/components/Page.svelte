@@ -1,10 +1,19 @@
 <script lang="ts">
-  export let as: 'main' | 'div' = 'main';
-  export let tone: 'canvas' | 'panel' = 'canvas';
-  export let id: string | null = null;
-  export let labelledBy: string | null = null;
+  interface Props {
+    as?: 'main' | 'div';
+    tone?: 'canvas' | 'panel';
+    id?: string | null;
+    labelledBy?: string | null;
+  }
 
-  $: labelledRegionRole = as === 'div' && labelledBy ? 'region' : undefined;
+  let {
+    as = $bindable('main'),
+    tone = $bindable('canvas'),
+    id = $bindable(null),
+    labelledBy = $bindable(null)
+  }: Props = $props();
+
+  let labelledRegionRole = $derived(as === 'div' && labelledBy ? 'region' : undefined);
 </script>
 
 <svelte:element
@@ -14,7 +23,7 @@
   role={labelledRegionRole}
   aria-labelledby={labelledBy ?? undefined}
 >
-  <slot />
+  <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
 </svelte:element>
 
 <style>

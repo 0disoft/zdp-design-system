@@ -1,14 +1,22 @@
 <script lang="ts">
-  export let columns: 'one' | 'two' = 'one';
-  export let density: 'default' | 'compact' = 'default';
-  export let labelledBy: string | null = null;
+  interface Props {
+    columns?: 'one' | 'two';
+    density?: 'default' | 'compact';
+    labelledBy?: string | null;
+  }
+
+  let {
+    columns = $bindable('one'),
+    density = $bindable('default'),
+    labelledBy = $bindable(null)
+  }: Props = $props();
 </script>
 
 <dl
   class={`zdp-key-value zdp-key-value--columns-${columns} zdp-key-value--density-${density}`}
   aria-labelledby={labelledBy ?? undefined}
 >
-  <slot />
+  <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
 </dl>
 
 <style>

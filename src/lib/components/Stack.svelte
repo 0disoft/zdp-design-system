@@ -1,10 +1,19 @@
 <script lang="ts">
-  export let as: 'div' | 'section' | 'article' | 'nav' | 'header' | 'footer' = 'div';
-  export let gap: 'xs' | 'sm' | 'md' | 'lg' | 'xl' = 'md';
-  export let align: 'stretch' | 'start' | 'center' | 'end' = 'stretch';
-  export let labelledBy: string | null = null;
+  interface Props {
+    as?: 'div' | 'section' | 'article' | 'nav' | 'header' | 'footer';
+    gap?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+    align?: 'stretch' | 'start' | 'center' | 'end';
+    labelledBy?: string | null;
+  }
 
-  $: labelledGroupRole = as === 'div' && labelledBy ? 'group' : undefined;
+  let {
+    as = $bindable('div'),
+    gap = $bindable('md'),
+    align = $bindable('stretch'),
+    labelledBy = $bindable(null)
+  }: Props = $props();
+
+  let labelledGroupRole = $derived(as === 'div' && labelledBy ? 'group' : undefined);
 </script>
 
 <svelte:element
@@ -13,7 +22,7 @@
   role={labelledGroupRole}
   aria-labelledby={labelledBy ?? undefined}
 >
-  <slot />
+  <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
 </svelte:element>
 
 <style>

@@ -1,6 +1,13 @@
 <script lang="ts">
-  export let size: 'sm' | 'md' = 'md';
-  export let label: string | null = null;
+  interface Props {
+    size?: 'sm' | 'md';
+    label?: string | null;
+  }
+
+  let {
+    size = $bindable('md'),
+    label = $bindable(null)
+  }: Props = $props();
 </script>
 
 <span
@@ -9,7 +16,7 @@
   aria-label={label ?? undefined}
   aria-hidden={label ? undefined : 'true'}
 >
-  <slot />
+  <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
 </span>
 
 <style>

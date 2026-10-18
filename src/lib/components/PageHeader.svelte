@@ -1,10 +1,19 @@
 <script lang="ts">
-  export let as: 'header' | 'div' = 'header';
-  export let align: 'start' | 'center' = 'start';
-  export let id: string | null = null;
-  export let labelledBy: string | null = null;
+  interface Props {
+    as?: 'header' | 'div';
+    align?: 'start' | 'center';
+    id?: string | null;
+    labelledBy?: string | null;
+  }
 
-  $: labelledHeaderRole = labelledBy ? 'group' : undefined;
+  let {
+    as = $bindable('header'),
+    align = $bindable('start'),
+    id = $bindable(null),
+    labelledBy = $bindable(null)
+  }: Props = $props();
+
+  let labelledHeaderRole = $derived(labelledBy ? 'group' : undefined);
 </script>
 
 <svelte:element
@@ -15,16 +24,16 @@
   aria-labelledby={labelledBy ?? undefined}
 >
   <div class="zdp-page-header__body">
-    <slot name="eyebrow" />
+    <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot name="eyebrow" />
     <div class="zdp-page-header__title">
-      <slot />
+      <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
     </div>
     <div class="zdp-page-header__summary">
-      <slot name="summary" />
+      <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot name="summary" />
     </div>
   </div>
   <div class="zdp-page-header__actions">
-    <slot name="actions" />
+    <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot name="actions" />
   </div>
 </svelte:element>
 

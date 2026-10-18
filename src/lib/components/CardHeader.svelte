@@ -1,20 +1,27 @@
 <script lang="ts">
-  export let as: 'h2' | 'h3' | 'h4' | 'h5' | 'div' = 'h3';
-  export let id: string | null = null;
+  interface Props {
+    as?: 'h2' | 'h3' | 'h4' | 'h5' | 'div';
+    id?: string | null;
+  }
+
+  let {
+    as = $bindable('h3'),
+    id = $bindable(null)
+  }: Props = $props();
 </script>
 
 <div class="zdp-card-header">
   <svelte:element this={as} class="zdp-card-header__title" {id}>
-    <slot />
+    <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
   </svelte:element>
   {#if $$slots.subtitle}
     <p class="zdp-card-header__subtitle">
-      <slot name="subtitle" />
+      <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot name="subtitle" />
     </p>
   {/if}
   {#if $$slots.badge}
     <span class="zdp-card-header__badge">
-      <slot name="badge" />
+      <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot name="badge" />
     </span>
   {/if}
 </div>

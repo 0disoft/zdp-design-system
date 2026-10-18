@@ -1,11 +1,19 @@
 <script lang="ts">
-  export let forId: string | null = null;
-  export let required = false;
-  export let requiredLabel = 'Required';
+  interface Props {
+    forId?: string | null;
+    required?: boolean;
+    requiredLabel?: string;
+  }
+
+  let {
+    forId = $bindable(null),
+    required = $bindable(false),
+    requiredLabel = $bindable('Required')
+  }: Props = $props();
 </script>
 
 <label class="zdp-label" for={forId ?? undefined}>
-  <slot />
+  <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
   {#if required}
     <span class="zdp-label__required" aria-hidden="true">*</span>
     <span class="zdp-label__required-text">({requiredLabel})</span>

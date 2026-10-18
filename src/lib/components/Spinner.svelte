@@ -1,11 +1,21 @@
 <script lang="ts">
   import type { ZdpProgressTone, ZdpSpinnerSize } from '../progress.js';
 
-  export let size: ZdpSpinnerSize = 'md';
-  export let tone: ZdpProgressTone = 'primary';
-  export let label = 'Loading';
-  export let decorative = false;
-  export let semanticRole: 'status' | 'img' | null = 'status';
+  interface Props {
+    size?: ZdpSpinnerSize;
+    tone?: ZdpProgressTone;
+    label?: string;
+    decorative?: boolean;
+    semanticRole?: 'status' | 'img' | null;
+  }
+
+  let {
+    size = $bindable('md'),
+    tone = $bindable('primary'),
+    label = $bindable('Loading'),
+    decorative = $bindable(false),
+    semanticRole = $bindable('status')
+  }: Props = $props();
 </script>
 
 <span

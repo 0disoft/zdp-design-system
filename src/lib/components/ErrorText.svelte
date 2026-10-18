@@ -1,10 +1,17 @@
 <script lang="ts">
-  export let id: string | null = null;
-  export let live: 'off' | 'polite' | 'assertive' = 'polite';
+  interface Props {
+    id?: string | null;
+    live?: 'off' | 'polite' | 'assertive';
+  }
+
+  let {
+    id = $bindable(null),
+    live = $bindable('polite')
+  }: Props = $props();
 </script>
 
 <p class="zdp-error-text" id={id ?? undefined} aria-live={live === 'off' ? undefined : live}>
-  <slot />
+  <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
 </p>
 
 <style>

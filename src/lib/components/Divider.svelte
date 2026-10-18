@@ -1,8 +1,17 @@
 <script lang="ts">
-  export let orientation: 'horizontal' | 'vertical' = 'horizontal';
-  export let tone: 'subtle' | 'strong' = 'subtle';
-  export let decorative = true;
-  export let label: string | null = null;
+  interface Props {
+    orientation?: 'horizontal' | 'vertical';
+    tone?: 'subtle' | 'strong';
+    decorative?: boolean;
+    label?: string | null;
+  }
+
+  let {
+    orientation = $bindable('horizontal'),
+    tone = $bindable('subtle'),
+    decorative = $bindable(true),
+    label = $bindable(null)
+  }: Props = $props();
 </script>
 
 <div

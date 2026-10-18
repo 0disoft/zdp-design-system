@@ -1,8 +1,17 @@
 <script lang="ts">
-  export let caption: string | null = null;
-  export let captionMode: 'visible' | 'hidden' = 'visible';
-  export let density: 'default' | 'compact' = 'default';
-  export let labelledBy: string | null = null;
+  interface Props {
+    caption?: string | null;
+    captionMode?: 'visible' | 'hidden';
+    density?: 'default' | 'compact';
+    labelledBy?: string | null;
+  }
+
+  let {
+    caption = $bindable(null),
+    captionMode = $bindable('visible'),
+    density = $bindable('default'),
+    labelledBy = $bindable(null)
+  }: Props = $props();
 </script>
 
 <div class="zdp-table-wrap">
@@ -15,7 +24,7 @@
         {caption}
       </caption>
     {/if}
-    <slot />
+    <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
   </table>
 </div>
 

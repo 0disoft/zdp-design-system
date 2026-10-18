@@ -5,15 +5,22 @@
     readonly current?: boolean;
   }
 
-  export let items: readonly BreadcrumbItem[] = [];
-  export let ariaLabel = 'Breadcrumb';
+  interface Props {
+    items?: readonly BreadcrumbItem[];
+    ariaLabel?: string;
+  }
 
-  $: explicitCurrentIndex = items.findIndex((item) => item.current === true);
-  $: resolvedCurrentIndex = explicitCurrentIndex >= 0 ? explicitCurrentIndex : items.length - 1;
-  $: normalizedItems = items.map((item, index) => ({
+  let {
+    items = $bindable([]),
+    ariaLabel = $bindable('Breadcrumb')
+  }: Props = $props();
+
+  let explicitCurrentIndex = $derived(items.findIndex((item) => item.current === true));
+  let resolvedCurrentIndex = $derived(explicitCurrentIndex >= 0 ? explicitCurrentIndex : items.length - 1);
+  let normalizedItems = $derived(items.map((item, index) => ({
     ...item,
     current: index === resolvedCurrentIndex
-  }));
+  })));
 </script>
 
 <nav class="zdp-breadcrumb" aria-label={ariaLabel}>

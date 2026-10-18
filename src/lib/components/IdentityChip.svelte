@@ -2,17 +2,31 @@
   import Avatar from './Avatar.svelte';
   import type { ZdpIdentityChipAriaCurrent, ZdpIdentityChipSize } from '../identity.js';
 
-  export let label = 'User';
-  export let description: string | null = null;
-  export let initials: string | null = null;
-  export let imageSrc: string | null = null;
-  export let href: string | null = null;
-  export let size: ZdpIdentityChipSize = 'md';
-  export let selected = false;
-  export let ariaLabel: string | null = null;
-  export let ariaCurrent: ZdpIdentityChipAriaCurrent | null = null;
+  interface Props {
+    label?: string;
+    description?: string | null;
+    initials?: string | null;
+    imageSrc?: string | null;
+    href?: string | null;
+    size?: ZdpIdentityChipSize;
+    selected?: boolean;
+    ariaLabel?: string | null;
+    ariaCurrent?: ZdpIdentityChipAriaCurrent | null;
+  }
 
-  $: chipClass = `zdp-identity-chip zdp-identity-chip--${size} ${href ? 'zdp-identity-chip--link' : ''}`;
+  let {
+    label = $bindable('User'),
+    description = $bindable(null),
+    initials = $bindable(null),
+    imageSrc = $bindable(null),
+    href = $bindable(null),
+    size = $bindable('md'),
+    selected = $bindable(false),
+    ariaLabel = $bindable(null),
+    ariaCurrent = $bindable(null)
+  }: Props = $props();
+
+  let chipClass = $derived(`zdp-identity-chip zdp-identity-chip--${size} ${href ? 'zdp-identity-chip--link' : ''}`);
 </script>
 
 {#if href}

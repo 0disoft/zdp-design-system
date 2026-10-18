@@ -1,7 +1,15 @@
 <script lang="ts">
-  export let align: 'start' | 'center' = 'start';
-  export let tone: 'panel' | 'raised' = 'panel';
-  export let labelledBy: string | null = null;
+  interface Props {
+    align?: 'start' | 'center';
+    tone?: 'panel' | 'raised';
+    labelledBy?: string | null;
+  }
+
+  let {
+    align = $bindable('start'),
+    tone = $bindable('panel'),
+    labelledBy = $bindable(null)
+  }: Props = $props();
 </script>
 
 <section
@@ -9,10 +17,10 @@
   aria-labelledby={labelledBy ?? undefined}
 >
   <div class="zdp-empty-state__body">
-    <slot />
+    <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
   </div>
   <div class="zdp-empty-state__actions">
-    <slot name="actions" />
+    <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot name="actions" />
   </div>
 </section>
 

@@ -1,10 +1,19 @@
 <script lang="ts">
-  export let as: 'div' | 'section' | 'nav' | 'header' | 'footer' = 'div';
-  export let gap: 'sm' | 'md' | 'lg' = 'md';
-  export let align: 'start' | 'center' | 'end' = 'center';
-  export let labelledBy: string | null = null;
+  interface Props {
+    as?: 'div' | 'section' | 'nav' | 'header' | 'footer';
+    gap?: 'sm' | 'md' | 'lg';
+    align?: 'start' | 'center' | 'end';
+    labelledBy?: string | null;
+  }
 
-  $: labelledGroupRole = as === 'div' && labelledBy ? 'group' : undefined;
+  let {
+    as = $bindable('div'),
+    gap = $bindable('md'),
+    align = $bindable('center'),
+    labelledBy = $bindable(null)
+  }: Props = $props();
+
+  let labelledGroupRole = $derived(as === 'div' && labelledBy ? 'group' : undefined);
 </script>
 
 <svelte:element
@@ -14,10 +23,10 @@
   aria-labelledby={labelledBy ?? undefined}
 >
   <div class="zdp-toolbar__main">
-    <slot />
+    <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
   </div>
   <div class="zdp-toolbar__actions">
-    <slot name="actions" />
+    <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot name="actions" />
   </div>
 </svelte:element>
 

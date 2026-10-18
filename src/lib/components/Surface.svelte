@@ -1,14 +1,22 @@
 <script lang="ts">
-  export let tone: 'panel' | 'raised' | 'inverse' = 'panel';
-  export let padding: 'none' | 'sm' | 'md' | 'lg' = 'md';
-  export let labelledBy: string | null = null;
+  interface Props {
+    tone?: 'panel' | 'raised' | 'inverse';
+    padding?: 'none' | 'sm' | 'md' | 'lg';
+    labelledBy?: string | null;
+  }
+
+  let {
+    tone = $bindable('panel'),
+    padding = $bindable('md'),
+    labelledBy = $bindable(null)
+  }: Props = $props();
 </script>
 
 <section
   class={`zdp-surface zdp-surface--${tone} zdp-surface--padding-${padding}`}
   aria-labelledby={labelledBy ?? undefined}
 >
-  <slot />
+  <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
 </section>
 
 <style>

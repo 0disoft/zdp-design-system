@@ -1,15 +1,26 @@
 <script lang="ts">
   import type { ZdpSkeletonVariant } from '../progress.js';
 
-  export let variant: ZdpSkeletonVariant = 'block';
-  export let lines = 1;
-  export let animated = true;
-  export let decorative = true;
-  export let ariaLabel = 'Loading content';
-  export let labelledBy: string | null = null;
+  interface Props {
+    variant?: ZdpSkeletonVariant;
+    lines?: number;
+    animated?: boolean;
+    decorative?: boolean;
+    ariaLabel?: string;
+    labelledBy?: string | null;
+  }
 
-  $: lineCount = Math.max(1, Math.min(8, Math.floor(Number.isFinite(lines) ? lines : 1)));
-  $: placeholders = Array.from({ length: variant === 'text' ? lineCount : 1 });
+  let {
+    variant = $bindable('block'),
+    lines = $bindable(1),
+    animated = $bindable(true),
+    decorative = $bindable(true),
+    ariaLabel = $bindable('Loading content'),
+    labelledBy = $bindable(null)
+  }: Props = $props();
+
+  let lineCount = $derived(Math.max(1, Math.min(8, Math.floor(Number.isFinite(lines) ? lines : 1))));
+  let placeholders = $derived(Array.from({ length: variant === 'text' ? lineCount : 1 }));
 </script>
 
 <div

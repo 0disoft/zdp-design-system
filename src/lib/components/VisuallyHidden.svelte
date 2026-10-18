@@ -1,9 +1,11 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
   // Emit TypeScript declarations even though this component has no props.
 </script>
 
 <span class="zdp-visually-hidden">
-  <slot />
+  <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
 </span>
 
 <style>

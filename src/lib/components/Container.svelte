@@ -1,13 +1,24 @@
 <script lang="ts">
-  export let as: 'div' | 'section' | 'article' | 'header' | 'footer' = 'div';
-  export let size: 'sm' | 'md' | 'lg' | 'xl' | 'full' = 'lg';
-  export let padding: 'none' | 'sm' | 'md' | 'lg' = 'md';
-  export let gutter: 'page' | null = null;
-  export let id: string | null = null;
-  export let labelledBy: string | null = null;
+  interface Props {
+    as?: 'div' | 'section' | 'article' | 'header' | 'footer';
+    size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+    padding?: 'none' | 'sm' | 'md' | 'lg';
+    gutter?: 'page' | null;
+    id?: string | null;
+    labelledBy?: string | null;
+  }
 
-  $: labelledGroupRole = as === 'div' && labelledBy ? 'group' : undefined;
-  $: paddingClass = gutter === 'page' ? 'zdp-container--padding-page' : `zdp-container--padding-${padding}`;
+  let {
+    as = $bindable('div'),
+    size = $bindable('lg'),
+    padding = $bindable('md'),
+    gutter = $bindable(null),
+    id = $bindable(null),
+    labelledBy = $bindable(null)
+  }: Props = $props();
+
+  let labelledGroupRole = $derived(as === 'div' && labelledBy ? 'group' : undefined);
+  let paddingClass = $derived(gutter === 'page' ? 'zdp-container--padding-page' : `zdp-container--padding-${padding}`);
 </script>
 
 <svelte:element
@@ -17,7 +28,7 @@
   role={labelledGroupRole}
   aria-labelledby={labelledBy ?? undefined}
 >
-  <slot />
+  <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
 </svelte:element>
 
 <style>

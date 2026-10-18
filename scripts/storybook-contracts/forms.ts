@@ -137,7 +137,7 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
 
   for (const requiredText of [
     '.zdp-label',
-    "requiredLabel = 'Required'",
+    "requiredLabel = $bindable('Required')",
     'font-weight: var(--zdp-font-weight-medium)',
     '.zdp-label__required',
     '.zdp-label__required-text',
@@ -149,7 +149,7 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
   }
 
   for (const requiredText of [
-    'live:',
+    "live?:",
     "aria-live={live === 'off' ? undefined : live}"
   ]) {
     if (!errorText.includes(requiredText)) {

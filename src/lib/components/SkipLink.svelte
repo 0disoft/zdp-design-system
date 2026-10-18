@@ -1,9 +1,15 @@
 <script lang="ts">
-  export let href = '#content';
+  interface Props {
+    href?: string;
+  }
+
+  let {
+    href = $bindable('#content')
+  }: Props = $props();
 </script>
 
 <a class="zdp-skip-link" {href}>
-  <slot />
+  <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
 </a>
 
 <style>

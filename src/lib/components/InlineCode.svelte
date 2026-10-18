@@ -1,13 +1,20 @@
 <script lang="ts">
-  export let text: string | null = null;
-  export let ariaLabel: string | null = null;
+  interface Props {
+    text?: string | null;
+    ariaLabel?: string | null;
+  }
+
+  let {
+    text = $bindable(null),
+    ariaLabel = $bindable(null)
+  }: Props = $props();
 </script>
 
 <code class="zdp-inline-code" aria-label={ariaLabel ?? undefined}>
   {#if text !== null}
     {text}
   {:else}
-    <slot />
+    <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
   {/if}
 </code>
 

@@ -1,7 +1,15 @@
 <script lang="ts">
-  export let tone: 'neutral' | 'info' | 'success' | 'warning' | 'danger' = 'neutral';
-  export let labelledBy: string | null = null;
-  export let semanticRole: 'note' | 'status' | 'alert' | null = null;
+  interface Props {
+    tone?: 'neutral' | 'info' | 'success' | 'warning' | 'danger';
+    labelledBy?: string | null;
+    semanticRole?: 'note' | 'status' | 'alert' | null;
+  }
+
+  let {
+    tone = $bindable('neutral'),
+    labelledBy = $bindable(null),
+    semanticRole = $bindable(null)
+  }: Props = $props();
 </script>
 
 <section
@@ -11,7 +19,7 @@
 >
   <span class="zdp-callout__mark" aria-hidden="true"></span>
   <div class="zdp-callout__body">
-    <slot />
+    <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
   </div>
 </section>
 

@@ -1,8 +1,17 @@
 <script lang="ts">
-  export let label: string | null = null;
-  export let size: 'sm' | 'md' = 'md';
-  export let ariaLabel: string | null = null;
-  export let title: string | null = null;
+  interface Props {
+    label?: string | null;
+    size?: 'sm' | 'md';
+    ariaLabel?: string | null;
+    title?: string | null;
+  }
+
+  let {
+    label = $bindable(null),
+    size = $bindable('md'),
+    ariaLabel = $bindable(null),
+    title = $bindable(null)
+  }: Props = $props();
 </script>
 
 {#if ariaLabel}
@@ -16,7 +25,7 @@
   {#if label !== null}
     {label}
   {:else}
-    <slot />
+    <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
   {/if}
 </kbd>
 
