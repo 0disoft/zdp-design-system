@@ -1,24 +1,39 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
+
   import type { ZdpAvatarSize, ZdpAvatarTone } from '../identity.js';
 
-  export let label: string | null = null;
-  export let initials: string | null = null;
-  export let imageSrc: string | null = null;
-  export let size: ZdpAvatarSize = 'md';
-  export let tone: ZdpAvatarTone = 'neutral';
-  export let decorative = false;
-
-  let imageFailed = false;
-  let knownImageSrc = imageSrc;
-
-  $: if (imageSrc !== knownImageSrc) {
-    knownImageSrc = imageSrc;
-    imageFailed = false;
+  interface Props {
+    label?: string | null;
+    initials?: string | null;
+    imageSrc?: string | null;
+    size?: ZdpAvatarSize;
+    tone?: ZdpAvatarTone;
+    decorative?: boolean;
   }
 
-  $: resolvedLabel = label?.trim() || 'User';
-  $: resolvedInitials = initials?.trim() ?? '';
-  $: accessibilityLabel = decorative ? undefined : resolvedLabel;
+  let {
+    label = $bindable(null),
+    initials = $bindable(null),
+    imageSrc = $bindable(null),
+    size = $bindable('md'),
+    tone = $bindable('neutral'),
+    decorative = $bindable(false)
+  }: Props = $props();
+
+  let imageFailed = $state(false);
+  let knownImageSrc = untrack(() => imageSrc);
+
+  $effect.pre(() => {
+    if (imageSrc !== knownImageSrc) {
+      knownImageSrc = imageSrc;
+      imageFailed = false;
+    }
+  });
+
+  let resolvedLabel = $derived(label?.trim() || 'User');
+  let resolvedInitials = $derived(initials?.trim() ?? '');
+  let accessibilityLabel = $derived(decorative ? undefined : resolvedLabel);
 </script>
 
 <span

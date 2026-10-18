@@ -2,10 +2,19 @@
   import { zdpShareIcons, type ZdpShareDockItem } from '../share.js';
   import Tooltip from './Tooltip.svelte';
 
-  export let items: readonly ZdpShareDockItem[] = [];
-  export let ariaLabel = 'Share';
-  export let labelledBy: string | null = null;
-  export let placement: 'side' | 'rail' | 'bottom' | 'inline' = 'side';
+  interface Props {
+    items?: readonly ZdpShareDockItem[];
+    ariaLabel?: string;
+    labelledBy?: string | null;
+    placement?: 'side' | 'rail' | 'bottom' | 'inline';
+  }
+
+  let {
+    items = $bindable([]),
+    ariaLabel = $bindable('Share'),
+    labelledBy = $bindable(null),
+    placement = $bindable('side')
+  }: Props = $props();
 
   function handleClick(event: MouseEvent, item: ZdpShareDockItem): void {
     if (item.disabled) {
@@ -25,7 +34,7 @@
     return item.target === '_blank' ? 'noopener noreferrer' : undefined;
   }
 
-  $: tooltipPlacement = (placement === 'side' || placement === 'rail' ? 'left' : 'top') as 'left' | 'top';
+  let tooltipPlacement = $derived((placement === 'side' || placement === 'rail' ? 'left' : 'top') as 'left' | 'top');
 </script>
 
 <aside

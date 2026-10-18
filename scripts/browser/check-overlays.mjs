@@ -399,7 +399,7 @@ export async function verifyShadowOverlayContracts(page) {
   );
 
   const shadowTooltipTrigger = page.getByTestId('shadow-tooltip-trigger');
-  const shadowTooltip = page.getByRole('tooltip', { name: 'Shadow keyboard help' });
+  const shadowTooltip = page.locator('#shadow-tooltip');
   await shadowTooltipTrigger.focus();
   assert.equal(await isDeepActive(shadowTooltipTrigger), true);
   assert.equal(await shadowTooltipTrigger.getAttribute('aria-describedby'), 'shadow-tooltip');

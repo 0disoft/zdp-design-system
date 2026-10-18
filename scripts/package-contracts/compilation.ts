@@ -12,7 +12,7 @@ async function checkSvelteCompilation(): Promise<void> {
     const source = await readFile(fullPath, 'utf8');
     const warnings: Warning[] = [];
 
-    compile(source, {
+    const result = compile(source, {
       css: 'external',
       dev: true,
       filename: relativePath,
@@ -22,6 +22,11 @@ async function checkSvelteCompilation(): Promise<void> {
         return false;
       }
     });
+
+    if (relativePath.startsWith('src/lib/components/') &&
+        (!result.metadata.runes || /from\s+['"]svelte\/legacy['"]/.test(source))) {
+      failures.push(`${relativePath} must use Svelte 5 runes without legacy reactivity helpers.`);
+    }
 
     if (warnings.length > 0) {
       for (const warning of warnings) {
@@ -51,19 +56,19 @@ async function checkUserFacingLabelOverrideContract(): Promise<void> {
     {
       path: 'src/lib/components/AdSlot.svelte',
       requiredTexts: [
-        "export let label = 'Advertisement'",
-        'export let fallbackText: string | null = null',
+        "label = $bindable('Advertisement')",
+        "fallbackText = $bindable(null)",
         'aria-label={label}',
-        'resolvedFallbackText = fallbackText ?? label',
+        "resolvedFallbackText = $derived(fallbackText ?? label",
         '{resolvedFallbackText}'
       ]
     },
     {
       path: 'src/lib/components/CodeBlock.svelte',
       requiredTexts: [
-        "export let copyLabel = 'Copy'",
-        "export let copiedLabel = 'Copied'",
-        "export let copyFailedLabel = 'Copy failed'",
+        "copyLabel = $bindable('Copy')",
+        "copiedLabel = $bindable('Copied')",
+        "copyFailedLabel = $bindable('Copy failed')",
         'copyState ===',
         '{resolvedCopyLabel}'
       ]
@@ -155,7 +160,7 @@ async function checkUserFacingLabelOverrideContract(): Promise<void> {
     {
       path: 'src/lib/components/Toast.svelte',
       requiredTexts: [
-        "export let dismissLabel = 'Dismiss notification'",
+        "dismissLabel = $bindable('Dismiss notification')",
         'aria-label={dismissLabel}'
       ]
     }

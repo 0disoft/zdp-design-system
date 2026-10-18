@@ -1,42 +1,45 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
 
-  export let id: string | null = null;
-  export let tone: 'primary' | 'danger' = 'primary';
-  export let label = 'Slide to confirm';
-  export let hint = 'Slide or hold for 2 seconds';
-  export let completeLabel = 'Confirmed';
-  export let disabled = false;
-  export let pending = false;
-  export let pendingLabel = 'Processing';
-  export let pendingHint = 'Please wait';
-  export let durationMs = 2000;
-  export let onconfirm: (() => void) | null = null;
+  interface Props {
+    id?: string | null;
+    tone?: 'primary' | 'danger';
+    label?: string;
+    hint?: string;
+    completeLabel?: string;
+    disabled?: boolean;
+    pending?: boolean;
+    pendingLabel?: string;
+    pendingHint?: string;
+    durationMs?: number;
+    onconfirm?: (() => void) | null;
+  }
 
-  let progress = 0;
-  let active = false;
+  let {
+    id = $bindable(null),
+    tone = $bindable('primary'),
+    label = $bindable('Slide to confirm'),
+    hint = $bindable('Slide or hold for 2 seconds'),
+    completeLabel = $bindable('Confirmed'),
+    disabled = $bindable(false),
+    pending = $bindable(false),
+    pendingLabel = $bindable('Processing'),
+    pendingHint = $bindable('Please wait'),
+    durationMs = $bindable(2000),
+    onconfirm = $bindable(null)
+  }: Props = $props();
+
+  let progress = $state(0);
+  let active = $state(false);
   let activePointerId: number | null = null;
-  let confirmed = false;
+  let confirmed = $state(false);
   let startX = 0;
   let trackWidth = 1;
   let startedAt = 0;
-  let interactionDurationMs = 2000;
+  let interactionDurationMs = $state(2000);
   let progressFrame: number | null = null;
   let confirmTimer: number | null = null;
   let resetTimer: number | null = null;
-
-  $: safeDurationMs = Math.min(2_147_483_647, Math.max(600, Number.isFinite(durationMs) ? durationMs : 2000));
-  $: progressStyle = `--zdp-confirm-action-progress: ${progress};`;
-  $: if (pending) {
-    reset();
-  }
-  $: if (disabled && active) {
-    cancelInteraction();
-  }
-
-  $: if (active && safeDurationMs !== interactionDurationMs) {
-    cancelInteraction();
-  }
 
   function beginInteraction(clientX: number | null, element: HTMLButtonElement): void {
     if (disabled || pending || confirmed) {
@@ -224,6 +227,23 @@
   }
 
   onDestroy(clearTimers);
+  let safeDurationMs = $derived(Math.min(2_147_483_647, Math.max(600, Number.isFinite(durationMs) ? durationMs : 2000)));
+  let progressStyle = $derived(`--zdp-confirm-action-progress: ${progress};`);
+  $effect.pre(() => {
+    if (pending) {
+      reset();
+    }
+  });
+  $effect.pre(() => {
+    if (disabled && active) {
+      cancelInteraction();
+    }
+  });
+  $effect.pre(() => {
+    if (active && safeDurationMs !== interactionDurationMs) {
+      cancelInteraction();
+    }
+  });
 </script>
 
 <button

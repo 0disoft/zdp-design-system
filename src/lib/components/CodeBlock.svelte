@@ -1,44 +1,53 @@
 <script lang="ts">
-  import { onDestroy } from 'svelte';
+  import { onDestroy, untrack } from 'svelte';
   import type { ZdpCodeBlockSize, ZdpCodeBlockTone } from '../code.js';
 
-  export let code = '';
-  export let language: string | null = null;
-  export let label: string | null = null;
-  export let caption: string | null = null;
-  export let size: ZdpCodeBlockSize = 'md';
-  export let tone: ZdpCodeBlockTone = 'default';
-  export let wrap = false;
-  export let showCopy = true;
-  export let copyLabel = 'Copy';
-  export let copyingLabel = 'Copying';
-  export let copiedLabel = 'Copied';
-  export let copyFailedLabel = 'Copy failed';
-  export let ariaLabel: string | null = null;
-  export let labelledBy: string | null = null;
-  export let describedBy: string | null = null;
+  interface Props {
+    code?: string;
+    language?: string | null;
+    label?: string | null;
+    caption?: string | null;
+    size?: ZdpCodeBlockSize;
+    tone?: ZdpCodeBlockTone;
+    wrap?: boolean;
+    showCopy?: boolean;
+    copyLabel?: string;
+    copyingLabel?: string;
+    copiedLabel?: string;
+    copyFailedLabel?: string;
+    ariaLabel?: string | null;
+    labelledBy?: string | null;
+    describedBy?: string | null;
+  }
+
+  let {
+    code = $bindable(''),
+    language = $bindable(null),
+    label = $bindable(null),
+    caption = $bindable(null),
+    size = $bindable('md'),
+    tone = $bindable('default'),
+    wrap = $bindable(false),
+    showCopy = $bindable(true),
+    copyLabel = $bindable('Copy'),
+    copyingLabel = $bindable('Copying'),
+    copiedLabel = $bindable('Copied'),
+    copyFailedLabel = $bindable('Copy failed'),
+    ariaLabel = $bindable(null),
+    labelledBy = $bindable(null),
+    describedBy = $bindable(null)
+  }: Props = $props();
 
   type CopyState = 'idle' | 'copying' | 'copied' | 'failed';
 
-  let copyState: CopyState = 'idle';
+  let copyState: CopyState = $state('idle');
   let resetCopyStateTimer: ReturnType<typeof setTimeout> | null = null;
   let copyProgressTimer: ReturnType<typeof setTimeout> | null = null;
-  let showCopyProgress = false;
+  let showCopyProgress = $state(false);
   let copyRequestVersion = 0;
   let destroyed = false;
-  let knownCode = code;
-  let knownShowCopy = showCopy;
-
-  $: canCopy = showCopy && code.length > 0;
-  $: if (code !== knownCode || showCopy !== knownShowCopy) {
-    knownCode = code;
-    knownShowCopy = showCopy;
-    invalidateCopyState();
-  }
-  $: resolvedAriaLabel = ariaLabel ?? (!labelledBy && label ? label : null);
-  $: codeRegionLabel = [label ?? ariaLabel, language ? `${language} code` : 'Code'].filter(Boolean).join(' ');
-  $: resolvedCopyLabel =
-    copyState === 'copying' && showCopyProgress ? copyingLabel : copyState === 'copied' ? copiedLabel : copyState === 'failed' ? copyFailedLabel : copyLabel;
+  let knownCode = untrack(() => code);
+  let knownShowCopy = untrack(() => showCopy);
 
   onDestroy(() => {
     destroyed = true;
@@ -113,6 +122,19 @@
     copyState = nextState;
     scheduleResetCopyState();
   }
+  let canCopy = $derived(showCopy && code.length > 0);
+  $effect.pre(() => {
+    if (code !== knownCode || showCopy !== knownShowCopy) {
+      knownCode = code;
+      knownShowCopy = showCopy;
+      invalidateCopyState();
+    }
+  });
+  let resolvedAriaLabel = $derived(ariaLabel ?? (!labelledBy && label ? label : null));
+  let codeRegionLabel = $derived([label ?? ariaLabel, language ? `${language} code` : 'Code'].filter(Boolean).join(' '));
+  const resolvedCopyLabel = $derived.by(() =>
+    copyState === 'copying' && showCopyProgress ? copyingLabel : copyState === 'copied' ? copiedLabel : copyState === 'failed' ? copyFailedLabel : copyLabel
+  );
 </script>
 
 <div
@@ -164,7 +186,7 @@
 
   <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
   <div class="zdp-code-block__scroller" role="region" aria-label={codeRegionLabel} tabindex="0">
-    <pre class="zdp-code-block__pre"><code class="zdp-code-block__code" data-language={language ?? undefined}>{#if code.length > 0}{code}{:else}<slot />{/if}</code></pre>
+    <pre class="zdp-code-block__pre"><code class="zdp-code-block__code" data-language={language ?? undefined}>{#if code.length > 0}{code}{:else}<!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />{/if}</code></pre>
   </div>
 
   {#if caption}

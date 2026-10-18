@@ -5,14 +5,14 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
   const { failures, buttonsStory, buttonsComponent, buttonPlayground, button, checkbox, confirmAction, errorText, field, input, label, radio, select, switchComponent, textarea } = context;
 
   for (const requiredText of [
-    'export let tone: \'primary\' | \'danger\' = \'primary\'',
-    'export let label = \'Slide to confirm\'',
-    'export let hint = \'Slide or hold for 2 seconds\'',
-    'export let completeLabel = \'Confirmed\'',
-    'export let onconfirm: (() => void) | null = null',
+    "tone = $bindable('primary')",
+    "label = $bindable('Slide to confirm')",
+    "hint = $bindable('Slide or hold for 2 seconds')",
+    "completeLabel = $bindable('Confirmed')",
+    "onconfirm = $bindable(null)",
     'if (disabled && active)',
     'if (disabled || pending) {\n      cancelInteraction();',
-    'export let pending = false',
+    "pending = $bindable(false)",
     'data-pending={pending ? \'true\' : undefined}',
     'resetTimer = window.setTimeout(reset, 1000);\n\n    try {\n      onconfirm?.();',
     'catch (error) {\n      reset();\n      throw error;',

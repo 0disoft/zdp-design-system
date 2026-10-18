@@ -1,18 +1,31 @@
 <script lang="ts">
   import type { ZdpToastTone } from '../toast.js';
 
-  export let tone: ZdpToastTone = 'neutral';
-  export let labelledBy: string | null = null;
-  export let describedBy: string | null = null;
-  export let semanticRole: 'status' | 'alert' | 'note' | null = null;
-  export let live: 'off' | 'polite' | 'assertive' | null = null;
-  export let atomic = true;
-  export let dismissLabel = 'Dismiss notification';
-  export let onClose: ((event: MouseEvent) => void) | null = null;
+  interface Props {
+    tone?: ZdpToastTone;
+    labelledBy?: string | null;
+    describedBy?: string | null;
+    semanticRole?: 'status' | 'alert' | 'note' | null;
+    live?: 'off' | 'polite' | 'assertive' | null;
+    atomic?: boolean;
+    dismissLabel?: string;
+    onClose?: ((event: MouseEvent) => void) | null;
+  }
 
-  $: resolvedRole = semanticRole ?? (tone === 'danger' ? 'alert' : 'status');
-  $: resolvedLive = live ?? (tone === 'danger' ? 'assertive' : 'polite');
-  $: resolvedAtomic = live === 'off' ? undefined : atomic;
+  let {
+    tone = $bindable('neutral'),
+    labelledBy = $bindable(null),
+    describedBy = $bindable(null),
+    semanticRole = $bindable(null),
+    live = $bindable(null),
+    atomic = $bindable(true),
+    dismissLabel = $bindable('Dismiss notification'),
+    onClose = $bindable(null)
+  }: Props = $props();
+
+  let resolvedRole = $derived(semanticRole ?? (tone === 'danger' ? 'alert' : 'status'));
+  let resolvedLive = $derived(live ?? (tone === 'danger' ? 'assertive' : 'polite'));
+  let resolvedAtomic = $derived(live === 'off' ? undefined : atomic);
 </script>
 
 <div
@@ -25,7 +38,7 @@
 >
   <span class="zdp-toast__mark" aria-hidden="true"></span>
   <div class="zdp-toast__body">
-    <slot />
+    <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
   </div>
   {#if onClose}
     <button class="zdp-toast__close" type="button" aria-label={dismissLabel} onclick={onClose}>

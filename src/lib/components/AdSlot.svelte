@@ -3,20 +3,27 @@
 
   type DescribedBy = string | readonly string[] | null;
 
-  export let placement: ZdpAdSlotPlacement = 'inline';
-  export let state: ZdpAdSlotState = 'pending';
-  export let label = 'Advertisement';
-  export let fallbackText: string | null = null;
-  export let minHeight: string | null = null;
-  export let reserved = true;
-  export let id: string | null = null;
-  export let describedBy: DescribedBy = null;
+  interface Props {
+    placement?: ZdpAdSlotPlacement;
+    state?: ZdpAdSlotState;
+    label?: string;
+    fallbackText?: string | null;
+    minHeight?: string | null;
+    reserved?: boolean;
+    id?: string | null;
+    describedBy?: DescribedBy;
+  }
 
-  // Only blocked/empty states render a neutral fallback; provider markup stays consumer-owned.
-  $: showFallback = state === 'blocked' || state === 'empty';
-  $: resolvedFallbackText = fallbackText ?? label;
-  $: reservedHeight = reserved ? minHeight ?? defaultMinHeight(placement) : null;
-  $: ariaDescribedBy = normalizeIdRefs(describedBy);
+  let {
+    placement = $bindable('inline'),
+    state = $bindable('pending'),
+    label = $bindable('Advertisement'),
+    fallbackText = $bindable(null),
+    minHeight = $bindable(null),
+    reserved = $bindable(true),
+    id = $bindable(null),
+    describedBy = $bindable(null)
+  }: Props = $props();
 
   function defaultMinHeight(currentPlacement: ZdpAdSlotPlacement): string {
     switch (currentPlacement) {
@@ -44,6 +51,11 @@
     const normalized = value.map((entry) => entry.trim()).filter(Boolean);
     return normalized.length > 0 ? normalized.join(' ') : null;
   }
+  // Only blocked/empty states render a neutral fallback; provider markup stays consumer-owned.
+  let showFallback = $derived(state === 'blocked' || state === 'empty');
+  let resolvedFallbackText = $derived(fallbackText ?? label);
+  let reservedHeight = $derived(reserved ? minHeight ?? defaultMinHeight(placement) : null);
+  let ariaDescribedBy = $derived(normalizeIdRefs(describedBy));
 </script>
 
 <aside
@@ -60,7 +72,7 @@
   {#if showFallback}
     <p class="zdp-ad-slot__fallback">{resolvedFallbackText}</p>
   {/if}
-  <slot />
+  <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
 </aside>
 
 <style>

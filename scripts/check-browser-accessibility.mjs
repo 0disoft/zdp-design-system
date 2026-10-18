@@ -135,6 +135,11 @@ try {
     await verifyNestedModalContracts(page);
     await verifyShadowFocusContracts(page);
     await verifyFrameModalContracts(page);
+    await verifyShadowOverlayContracts(page);
+  } else if (process.argv.includes('--layout')) {
+    await verifyPageHeaderTypeContracts(page);
+    await verifyResponsiveAndForcedColorContracts(page);
+    await verifyPageGutterContracts(page, baseUrl);
   } else if (process.argv.includes('--copy')) {
     await verifyCopyLifecycleContracts(page);
   } else if (process.argv.includes('--confirm')) {

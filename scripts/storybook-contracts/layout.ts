@@ -501,7 +501,7 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
     'zdpShareIcons',
     'ZdpShareDockItem',
     "import Tooltip from './Tooltip.svelte'",
-    "placement: 'side' | 'rail' | 'bottom' | 'inline' = 'side'",
+    "placement = $bindable('side')",
     'tooltipPlacement',
     'class={`zdp-share-dock zdp-share-dock--${placement}`}',
     'class="zdp-share-dock__list"',

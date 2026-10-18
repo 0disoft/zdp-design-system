@@ -136,12 +136,12 @@ async function checkAdSlotContract(): Promise<void> {
 
   for (const requiredText of [
     "import type { ZdpAdSlotPlacement, ZdpAdSlotState }",
-    "export let placement: ZdpAdSlotPlacement = 'inline'",
-    "export let state: ZdpAdSlotState = 'pending'",
-    "export let label = 'Advertisement'",
-    'export let fallbackText: string | null = null',
-    'export let minHeight: string | null = null',
-    'export let reserved = true',
+    "placement = $bindable('inline')",
+    "state = $bindable('pending')",
+    "label = $bindable('Advertisement')",
+    'fallbackText = $bindable(null)',
+    'minHeight = $bindable(null)',
+    'reserved = $bindable(true)',
     'data-zdp-ad-slot',
     'data-zdp-ad-placement={placement}',
     'data-zdp-ad-state={state}',
