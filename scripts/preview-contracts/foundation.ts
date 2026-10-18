@@ -93,15 +93,16 @@ for (const requiredText of [
 
 export function checkPreviewImports(context: PreviewCheckContext): void {
 const { styleEntry, localeFontStyle, failures } = context;
-for (const importPath of ['./tokens.css', './components.css']) {
+for (const importPath of ['./foundation.css', './components.css']) {
   if (!styleEntry.includes(`@import "${importPath}";`)) {
     failures.push(`Missing style entry import ${importPath}.`);
   }
 }
 
-for (const [entryName, entry] of [['styles.css', styleEntry], ['locale-fonts.css', localeFontStyle]] as const) {
-  if (!entry.includes('@fontsource-variable/noto-sans-kr@5/index.css')) {
-    failures.push(`${entryName} must load the Noto Sans KR variable webfont.`);
-  }
+if (/(?:https?:)?\/\//i.test(styleEntry)) {
+  failures.push('styles.css must not load external webfonts.');
+}
+if (!localeFontStyle.includes('@fontsource-variable/noto-sans-kr@5.3.0/index.css')) {
+  failures.push('locale-fonts.css must load the pinned Noto Sans KR variable webfont.');
 }
 }

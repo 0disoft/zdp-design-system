@@ -81,13 +81,13 @@ import Button from 'zdp-design-system/components/Button';
 import Dialog from 'zdp-design-system/components/Dialog';
 ```
 
-기존 root named export는 호환용으로 유지한다. Astro 정적 HTML, framework-neutral controller, 전역 utility class를 쓰는 표면은 tokens와 전체 `components.css`를 합친 기존 entry를 사용한다.
+기존 root named export는 호환용으로 유지한다. Astro 정적 HTML, framework-neutral controller, 전역 utility class를 쓰는 표면은 `foundation.css`와 전체 `components.css`를 합친 entry를 사용한다. `foundation.css`는 tokens와 공통 forced-colors 규칙을 제공한다.
 
 ```ts
 import 'zdp-design-system/styles.css';
 ```
 
-12개국어 웹 표면에서 라틴/중국어/힌디어/일본어/태국어 웹폰트까지 명시 로드해야 하면 선택형 폰트 CSS를 추가로 불러온다. 한국어 Noto Sans KR는 기본 `styles.css`에서 이미 로드한다.
+기본 `styles.css`는 외부 네트워크 요청 없이 동작한다. 한국어 Noto Sans KR를 포함한 다국어 웹폰트가 필요하면 선택형 `locale-fonts.css`를 추가한다. 이 파일의 CDN URL은 정확한 패치 버전을 지정한다. 오프라인·폐쇄망 또는 자체 출처 CSP 소비처는 필요한 폰트를 직접 호스팅한다. 기존 한국어 CDN 폰트에 의존했다면 아래 import를 추가하거나 자체 폰트를 제공한다.
 
 ```ts
 import 'zdp-design-system/styles.css';
@@ -589,10 +589,10 @@ preview/index.html
 - 색상 토큰은 `hex` fallback과 `oklch` 의도값을 함께 가진다.
 - `src/styles/tokens.css`는 웹과 Tauri WebView가 쓰는 CSS 변수 표면이다.
 - CSS는 hex를 먼저 선언하고 OKLCH 지원 브라우저에서만 `@supports`로 덮어쓴다.
-- `styles.css`는 Noto Sans KR Variable의 Unicode 범위별 웹폰트를 로드하고, sans/display stack은 `"Noto Sans KR Variable", "Noto Sans KR"`를 최우선으로 둔다.
+- `styles.css`는 외부 웹폰트를 로드하지 않는다. sans/display stack은 `"Noto Sans KR Variable", "Noto Sans KR"`를 최우선으로 둔다.
 - `brand-fonts.css`는 선택형 public export이며 `font.family.brand`와 `.zdp-brand-wordmark`가 쓰는 Playwrite AU VIC Guides를 로드한다. 일반 문서 제목, 제품 UI heading, 표, 본문에는 `brand` stack을 쓰지 않는다.
 - `expressive-fonts.css`는 선택형 public export이며 `font.family.expressionScript`, `font.family.expressionInscription`, `font.family.expressionSketch`, `font.family.expressionEditorial`, `font.family.expressionSans`, `font.family.expressionKeyboard`가 쓰는 표현용 폰트를 Fontsource의 jsDelivr 배포 파일에서 로드한다. 기본 앱 UI, 표, 긴 본문, 일반 Tooltip에는 자동 적용하지 않는다.
-- `locale-fonts.css`는 선택형 public export이며 Noto Sans KR, Manrope, Noto Sans SC, Noto Sans Devanagari, Noto Sans JP, Noto Sans Thai 웹폰트를 로드한다. `tokens.css` 또는 `foundation.css`만 쓰는 소비처는 이 파일을 가져오거나 같은 폰트를 직접 호스팅한다.
+- `locale-fonts.css`는 선택형 public export이며 Noto Sans KR, Manrope, Noto Sans SC, Noto Sans Devanagari, Noto Sans JP, Noto Sans Thai 웹폰트를 로드한다. 웹폰트가 필요한 소비처는 이 파일을 가져오거나 같은 폰트를 직접 호스팅한다.
 - `:lang(en|es|fr|vi|ru|id|ms)`는 Manrope/Inter 라틴 스택, `:lang(ko)`는 Noto Sans KR 한국어 스택, `:lang(zh)`는 Noto Sans SC/시스템 중국어 스택, `:lang(hi)`는 Noto Sans Devanagari/시스템 데바나가리 스택, `:lang(ja)`는 Noto Sans JP/시스템 일본어 스택, `:lang(th)`는 Noto Sans Thai/시스템 태국어 스택으로 덮어쓴다.
 - Flutter, native shell, 문서 생성기는 JSON 토큰의 hex 값을 기본 입력으로 쓰고 필요할 때 OKLCH를 별도 변환한다.
 
@@ -649,7 +649,7 @@ bun run tokens:check
 `tokens:generate`는 `tokens/zdp.tokens.json`에서 `zdpTokenNames`를 다시 만든다.
 `share-icons:generate`는 `src/lib/share.ts`에서 저장소 root의 `share.js`와 `share.d.ts`를 다시 만든다. 소비자용 `dist/share.js`와 `dist/share.d.ts`는 `package:build`가 같은 원본을 컴파일해 만들고, root 파일은 기존 tooling 호환용으로만 남는다.
 색상 토큰은 JSON의 `hex`와 `oklch` 값이 CSS fallback 및 OKLCH override에 모두 존재해야 통과한다.
-공통 스타일의 원천은 Svelte 컴포넌트의 `<style>`이다. `scripts/component-style-order.ts`가 정한 명시적 순서로 `src/styles/components.css`를 생성하고, 컴포넌트와 겹치지 않는 공통 유틸리티 클래스와 forced-colors override만 `src/styles/component-utilities.css`에 남긴다. `styles:generate`는 생성물을 갱신하고 `styles:check`는 stale 생성물을 막는다. `preview:check`는 `styles:check`와 정적 미리보기 페이지의 공통 스타일 entry/토큰/컴포넌트 표면 참조를 확인하는 `check-preview`만 실행한다. 예전 수동 `component-parts/01~05` CSS와 660줄 parity 파서, `styles:parity:check`는 제거됐고 public CSS import 경로와 cascade 순서는 그대로다.
+공통 스타일의 원천은 Svelte 컴포넌트의 `<style>`이다. `scripts/component-style-order.ts`가 정한 명시적 순서로 `src/styles/components.css`를 생성하고, 컴포넌트와 겹치지 않는 공통 유틸리티 클래스만 `src/styles/component-utilities.css`에 남긴다. 공통 forced-colors override는 `src/styles/foundation.css`에서만 관리한다. `styles:generate`는 생성물을 갱신하고 `styles:check`는 stale 생성물을 막는다. `preview:check`는 `styles:check`와 정적 미리보기 페이지의 공통 스타일 entry/토큰/컴포넌트 표면 참조를 확인하는 `check-preview`만 실행한다. 예전 수동 `component-parts/01~05` CSS와 660줄 parity 파서, `styles:parity:check`는 제거됐고 public CSS import 경로와 cascade 순서는 그대로다.
 `storybook:check`는 Storybook 설정, scripts, devDependencies, overview story가 함께 유지되는지 확인한다.
 `a11y:check`는 Storybook Accessibility addon이 `error` 게이트로 유지되는지 확인한다.
 `package:build`는 `dist/` package surface를 생성한다.

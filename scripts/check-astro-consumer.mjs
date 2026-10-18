@@ -62,8 +62,20 @@ try {
   const originalViewport = page.viewportSize();
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.route('https://**', route => route.abort());
+  const externalRequests = [];
+  await page.route('https://**', route => {
+    externalRequests.push(route.request().url());
+    return route.abort();
+  });
   await page.goto(`http://127.0.0.1:${server.port}/shared/`);
+  assert.deepEqual(externalRequests, [], 'Default styles.css must not request external resources.');
+  assert.deepEqual(
+    await page.evaluate(() => performance.getEntriesByType('resource')
+      .filter(entry => entry.name.startsWith('http') && new URL(entry.name).origin !== location.origin)
+      .map(entry => entry.name)),
+    [],
+    'Default styles.css must not attempt external loading under self-only CSP.'
+  );
   const choiceShapes = await page.evaluate(() => {
     return [...document.querySelectorAll('.zdp-choice__mark')].map(mark => ({
       radius: getComputedStyle(mark).borderTopLeftRadius,

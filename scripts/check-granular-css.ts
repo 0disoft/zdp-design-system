@@ -67,6 +67,40 @@ assert.match(foundationDist, /aria-disabled=['"]true['"]/);
 assert.match(foundationDist, /aria-selected=['"]true['"]/);
 assert.doesNotMatch(foundationDist, /\.zdp-button\b/);
 
+const sharedStyles = { index: '', foundation: '', tokens: '', components: '', 'locale-fonts': '' };
+for (const entry of ['index', 'foundation', 'tokens', 'components', 'locale-fonts'] as const) {
+  const source = await readFile(resolve(root, `src/styles/${entry}.css`), 'utf8');
+  const published = await readFile(resolve(root, `dist/styles/${entry}.css`), 'utf8');
+  assert.equal(published, source, `Published ${entry}.css must match its source.`);
+  sharedStyles[entry] = published;
+  if (entry !== 'locale-fonts') {
+    assert.doesNotMatch(
+      published,
+      /(?:@import\s+|url\(\s*)["']?(?:https?:)?\/\//i,
+      `Default CSS (${entry}.css) must not request external styles or assets.`
+    );
+  }
+}
+assert.deepEqual(
+  [...sharedStyles.index.matchAll(/@import\s+([^;]+);/g)].map((match) => match[1]),
+  ['"./foundation.css"', '"./components.css"'],
+  'styles.css must compose foundation.css followed by components.css.'
+);
+assert.doesNotMatch(
+  sharedStyles.components,
+  /\[class\^=['"]zdp-['"]\]/,
+  'Shared forced-colors overrides belong only to foundation.css.'
+);
+const fontImports = [...sharedStyles['locale-fonts'].matchAll(/@import\s+url\(["']([^"']+)["']\);/g)];
+assert.ok(fontImports.length > 0, 'locale-fonts.css must retain opt-in webfonts.');
+for (const fontImport of fontImports) {
+  assert.match(
+    fontImport[1]!,
+    /^https:\/\/cdn\.jsdelivr\.net\/npm\/@fontsource-variable\/[a-z-]+@\d+\.\d+\.\d+\/index\.css$/,
+    'Opt-in locale webfonts must use exact patch versions.'
+  );
+}
+
 const buttonCss = await readFile(resolve(componentStyleRoot, 'Button.css'), 'utf8');
 assert.match(buttonCss, /\.zdp-button\b/);
 for (const unrelatedSelector of ['.zdp-dialog', '.zdp-tooltip', '.zdp-table']) {

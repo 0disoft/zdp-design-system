@@ -3,12 +3,17 @@
 Shared CSS is generated from the Svelte component `<style>` blocks in the
 explicit order declared by `scripts/component-style-order.ts`; `src/styles/components.css`
 is the generated output, written by `bun run styles:generate`. Shared
-utility classes that do not overlap a component and the forced-colors overrides
-stay in `src/styles/component-utilities.css`; the former hand-maintained
+utility classes that do not overlap a component stay in
+`src/styles/component-utilities.css`; the former hand-maintained
 `src/styles/component-parts/*.css` fragments and the parity parser are gone, and
 `bun run styles:check` rejects stale output in preview and package builds.
-Public CSS import paths and cascade order remain unchanged. The utilities are
+Public CSS import paths and component cascade order remain unchanged. The utilities are
 embedded in `components.css`; their authoring file is not shipped in `dist`.
+
+`styles.css` composes `foundation.css` (tokens and shared forced-colors overrides)
+and `components.css` without external network requests. Webfonts, including
+Noto Sans KR, require the optional `locale-fonts.css` with exact CDN patch versions,
+or consumer-hosted font faces for offline and self-only CSP environments.
 
 Svelte Tooltip wraps long text, flips when the opposite side fits, and shifts
 within the visible viewport on open, resize and scrolling. It remains inside its

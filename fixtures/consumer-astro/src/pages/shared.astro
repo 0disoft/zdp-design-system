@@ -2,7 +2,11 @@
 import 'zdp-design-system/styles.css';
 ---
 <html lang="en">
-  <head><meta charset="UTF-8" /><title>Shared CSS consumer</title></head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; font-src 'self'" />
+    <title>Shared CSS consumer</title>
+  </head>
   <body>
     <label class="zdp-choice zdp-choice--checkbox">
       <input type="checkbox" class="zdp-choice__input" aria-label="Checkbox" />

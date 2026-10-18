@@ -43,13 +43,15 @@ Do not combine `components/Button.css` with the Svelte `Button` component unless
 
 ## Compatibility entry
 
-The existing entry remains unchanged.
+The public import path remains unchanged.
 
 ```ts
 import 'zdp-design-system/styles.css';
 ```
 
-It still loads `tokens.css` and the complete `components.css`. Existing consumers do not need to migrate. Granular entries are an opt-in payload reduction for static or framework-neutral surfaces.
+It loads `foundation.css` (tokens and shared forced-colors rules) followed by the complete `components.css`, without external network requests. Granular entries are an opt-in payload reduction for static or framework-neutral surfaces.
+
+Webfonts are opt-in for both stylesheets. Consumers that relied on the former automatic Korean font import must add `zdp-design-system/locale-fonts.css` or host the fonts themselves. The optional entry loads Noto Sans KR and the other locale fonts from CDN URLs with exact patch versions. Offline and self-only CSP consumers should provide local font faces instead.
 
 ## Runtime boundary
 

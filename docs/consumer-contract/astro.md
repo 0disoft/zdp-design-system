@@ -6,7 +6,7 @@ Astro 정적 사이트는 전역 스타일로 기본 CSS를 먼저 불러온다.
 import 'zdp-design-system/styles.css';
 ```
 
-다국어 페이지가 라틴, 중국어, 데바나가리, 일본어, 태국어 웹폰트를 명시적으로 써야 하면 선택형 locale font entry를 추가한다.
+한국어를 포함한 웹폰트가 필요하면 선택형 locale font entry를 추가한다. 기본 CSS는 외부 요청을 하지 않는다. 오프라인·자체 출처 CSP 환경에서는 폰트를 직접 호스팅한다.
 
 ```ts
 import 'zdp-design-system/styles.css';

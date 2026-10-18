@@ -1,7 +1,7 @@
 # 소비처 적용 체크리스트
 
 - Svelte component는 `tokens.css`와 `components/ComponentName` direct subpath를 기본으로 사용한다.
-- 다국어 웹폰트가 필요한 경우에만 `locale-fonts.css`를 추가한다.
+- 한국어를 포함한 웹폰트가 필요한 경우에만 `locale-fonts.css`를 추가한다. 기본 `styles.css`는 폰트를 다운로드하지 않는다. 오프라인·자체 출처 CSP 환경은 폰트를 직접 호스팅한다.
 - 브랜드 워드마크가 필요한 경우에만 `brand-fonts.css`를 추가한다.
 - 표현용 섹션이나 캠페인 문구가 필요한 경우에만 `expressive-fonts.css`를 추가한다.
 - package root와 `styles.css`는 기존 호환 또는 framework-neutral/static utility가 필요한 표면에서만 사용한다.

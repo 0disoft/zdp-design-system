@@ -320,6 +320,7 @@ for (const requiredText of [
 }
 
 for (const requiredText of [
+  '@fontsource-variable/noto-sans-kr@5.3.0/index.css',
   '@fontsource-variable/manrope@5.2.8/index.css',
   '@fontsource-variable/noto-sans-sc@5.2.10/index.css',
   '@fontsource-variable/noto-sans-devanagari@5.2.8/index.css',
