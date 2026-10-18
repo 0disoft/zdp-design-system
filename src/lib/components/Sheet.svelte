@@ -1,77 +1,56 @@
 <script lang="ts">
-  import { onDestroy, tick } from 'svelte';
-  import { createZdpFocusableCache, getZdpActiveElement } from '../focusable.js';
+  import { onDestroy } from 'svelte';
+  import { createZdpModalFocus } from '../modal-focus.js';
   import { createZdpDismissLayer } from '../dismiss-layer.js';
   import { createZdpModalLayer } from '../modal-layer.js';
   import type { ZdpSheetPlacement, ZdpSheetSize } from '../sheet.js';
 
-  export let open = false;
-  export let id: string | null = null;
-  export let labelledBy: string;
-  export let describedBy: string | null = null;
-  export let placement: ZdpSheetPlacement = 'right';
-  export let size: ZdpSheetSize = 'md';
-  export let closeLabel = 'Close';
-  export let closeOnEscape = true;
-  export let closeOnBackdrop = true;
-  export let onClose: (() => void) | null = null;
-
-  let layerElement: HTMLDivElement | null = null;
-  let panelElement: HTMLDivElement | null = null;
-  let previousFocusElement: HTMLElement | null = null;
-  let wasOpen = false;
-  const modalLayer = createZdpModalLayer();
-  const dismissLayer = createZdpDismissLayer();
-  const focusableCache = createZdpFocusableCache(() => panelElement);
-
-  $: {
-    modalLayer.setActive(open, layerElement);
-    dismissLayer.setActive(open, layerElement, {
-      closeOnEscape,
-      closeOnOutside: false,
-      onEscape: requestClose
-    });
-
-    if (open && !wasOpen) {
-      wasOpen = true;
-      void handleSheetOpened();
-    } else if (!open && wasOpen) {
-      wasOpen = false;
-      restorePreviousFocus();
-    }
+  interface Props {
+    open?: boolean;
+    id?: string | null;
+    labelledBy: string;
+    describedBy?: string | null;
+    placement?: ZdpSheetPlacement;
+    size?: ZdpSheetSize;
+    closeLabel?: string;
+    closeOnEscape?: boolean;
+    closeOnBackdrop?: boolean;
+    onClose?: (() => void) | null;
   }
 
+  let {
+    open = $bindable(false),
+    id = $bindable(null),
+    labelledBy = $bindable(),
+    describedBy = $bindable(null),
+    placement = $bindable('right'),
+    size = $bindable('md'),
+    closeLabel = $bindable('Close'),
+    closeOnEscape = $bindable(true),
+    closeOnBackdrop = $bindable(true),
+    onClose = $bindable(null)
+  }: Props = $props();
+
+  let layerElement: HTMLDivElement | null = $state(null);
+  let panelElement: HTMLDivElement | null = $state(null);
+  const modalLayer = createZdpModalLayer();
+  const dismissLayer = createZdpDismissLayer();
+  const modalFocus = createZdpModalFocus({
+    getOpen: () => open,
+    getPanel: () => panelElement,
+    getLayer: () => layerElement,
+    modalLayer
+  });
+
   onDestroy(() => {
-    focusableCache.destroy();
+    modalFocus.destroy();
     modalLayer.destroy();
     dismissLayer.destroy();
   });
 
-  async function handleSheetOpened(): Promise<void> {
-    if (typeof document !== 'undefined') {
-      previousFocusElement = getZdpActiveElement(layerElement?.ownerDocument ?? document);
-      modalLayer.setFocusReturnTarget(previousFocusElement);
-    }
-
-    await tick();
-
-    const firstFocusableElement = focusableCache.get()[0];
-    (firstFocusableElement ?? panelElement)?.focus();
-  }
-
   function requestClose(): void {
     open = false;
     onClose?.();
-  }
-
-  function restorePreviousFocus(): void {
-    const focusReturnTarget = modalLayer.takeFocusReturnTarget();
-
-    if (focusReturnTarget?.isConnected) {
-      focusReturnTarget.focus();
-    }
-
-    previousFocusElement = null;
   }
 
   function handleBackdropClick(): void {
@@ -84,37 +63,15 @@
     event.preventDefault();
   }
 
-  function handleKeydown(event: KeyboardEvent): void {
-    if (event.key !== 'Tab') {
-      return;
-    }
-
-    const focusableElements = focusableCache.get();
-
-    if (focusableElements.length === 0) {
-      event.preventDefault();
-      panelElement?.focus();
-      return;
-    }
-
-    const firstElement = focusableElements.at(0);
-    const lastElement = focusableElements.at(-1);
-    if (firstElement === undefined || lastElement === undefined) {
-      event.preventDefault();
-      panelElement?.focus();
-      return;
-    }
-    const activeElement = getZdpActiveElement(panelElement?.ownerDocument ?? document);
-
-    if (event.shiftKey && activeElement === firstElement) {
-      event.preventDefault();
-      lastElement.focus();
-    } else if (!event.shiftKey && activeElement === lastElement) {
-      event.preventDefault();
-      firstElement.focus();
-    }
-  }
-
+  $effect.pre(() => {
+    modalLayer.setActive(open, layerElement);
+    dismissLayer.setActive(open, layerElement, {
+      closeOnEscape,
+      closeOnOutside: false,
+      onEscape: requestClose
+    });
+  });
+  $effect(() => modalFocus.sync());
 </script>
 
 {#if open}
@@ -147,10 +104,11 @@
       data-zdp-sheet-size={size}
       data-zdp-sheet-surface="sheet"
       tabindex="-1"
-      onkeydown={handleKeydown}
+      onkeydown={modalFocus.handleKeydown}
     >
       <header class="zdp-sheet__header">
         <div class="zdp-sheet__title">
+          <!-- svelte-ignore slot_element_deprecated public slot compatibility -->
           <slot name="title" />
         </div>
         <button class="zdp-sheet__close" type="button" aria-label={closeLabel} onclick={requestClose}>
@@ -158,9 +116,11 @@
         </button>
       </header>
       <div class="zdp-sheet__body">
+        <!-- svelte-ignore slot_element_deprecated public slot compatibility -->
         <slot />
       </div>
       <div class="zdp-sheet__footer">
+        <!-- svelte-ignore slot_element_deprecated public slot compatibility -->
         <slot name="footer" />
       </div>
     </div>

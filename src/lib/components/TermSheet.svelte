@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { onDestroy, tick } from 'svelte';
-  import { createZdpFocusableCache, getZdpActiveElement } from '../focusable.js';
+  import { onDestroy } from 'svelte';
+  import { createZdpModalFocus } from '../modal-focus.js';
   import { createZdpDismissLayer } from '../dismiss-layer.js';
   import { createZdpModalLayer } from '../modal-layer.js';
   import type { ZdpTermSheetPlacement, ZdpTermSheetTerm } from '../term.js';
@@ -39,12 +39,14 @@
 
   let panelElement = $state<HTMLElement | null>(null);
   let layerElement = $state<HTMLElement | null>(null);
-  let previousFocusElement = $state<HTMLElement | null>(null);
-  let knownOpenState = $state(false);
-  let focusTransition = 0;
   const modalLayer = createZdpModalLayer();
   const dismissLayer = createZdpDismissLayer();
-  const focusableCache = createZdpFocusableCache(() => panelElement);
+  const modalFocus = createZdpModalFocus({
+    getOpen: () => effectiveOpen,
+    getPanel: () => panelElement,
+    getLayer: () => layerElement,
+    modalLayer
+  });
   const effectiveOpen = $derived(open && term !== null);
 
   $effect.pre(() => {
@@ -57,8 +59,7 @@
   });
 
   onDestroy(() => {
-    focusTransition += 1;
-    focusableCache.destroy();
+    modalFocus.destroy();
     modalLayer.destroy();
     dismissLayer.destroy();
   });
@@ -66,52 +67,6 @@
   const titleId = $derived(`${id}-title`);
   const descriptionId = $derived(`${id}-description`);
   const resolvedPlacement = $derived(placement);
-
-  $effect(() => {
-    if (effectiveOpen === knownOpenState) {
-      return;
-    }
-
-    knownOpenState = effectiveOpen;
-    const transition = ++focusTransition;
-    if (effectiveOpen) {
-      void handleSheetOpened(transition);
-    } else {
-      restorePreviousFocus();
-    }
-  });
-
-  async function handleSheetOpened(transition: number): Promise<void> {
-    if (typeof document === 'undefined') {
-      return;
-    }
-
-    previousFocusElement = getZdpActiveElement(layerElement?.ownerDocument ?? document);
-    modalLayer.setFocusReturnTarget(previousFocusElement);
-
-    await tick();
-
-    if (transition !== focusTransition || !effectiveOpen) {
-      return;
-    }
-
-    const firstElement = focusableCache.get()[0] ?? panelElement;
-    firstElement?.focus();
-  }
-
-  function restorePreviousFocus(): void {
-    if (typeof document === 'undefined') {
-      return;
-    }
-
-    const focusReturnTarget = modalLayer.takeFocusReturnTarget();
-
-    if (focusReturnTarget?.isConnected) {
-      focusReturnTarget.focus();
-    }
-
-    previousFocusElement = null;
-  }
 
   function requestClose(): void {
     open = false;
@@ -128,42 +83,7 @@
     event.preventDefault();
   }
 
-  function handleKeydown(event: KeyboardEvent): void {
-    if (event.key !== 'Tab') {
-      return;
-    }
-
-    const focusableElements = focusableCache.get();
-
-    if (focusableElements.length === 0) {
-      event.preventDefault();
-      panelElement?.focus();
-      return;
-    }
-
-    const firstElement = focusableElements.at(0);
-    const lastElement = focusableElements.at(-1);
-
-    if (firstElement === undefined || lastElement === undefined) {
-      event.preventDefault();
-      panelElement?.focus();
-      return;
-    }
-
-    const activeElement = getZdpActiveElement(panelElement?.ownerDocument ?? document);
-
-    if (event.shiftKey && activeElement === firstElement) {
-      event.preventDefault();
-      lastElement.focus();
-      return;
-    }
-
-    if (!event.shiftKey && activeElement === lastElement) {
-      event.preventDefault();
-      firstElement.focus();
-    }
-  }
-
+  $effect(() => modalFocus.sync());
 </script>
 
 {#if effectiveOpen && term !== null}
@@ -198,7 +118,7 @@
       data-zdp-term-id={term.id}
       data-zdp-term-placement={resolvedPlacement}
       data-zdp-term-surface="sheet"
-      onkeydown={handleKeydown}
+      onkeydown={modalFocus.handleKeydown}
     >
       <header class="zdp-term-sheet__header">
         <div class="zdp-term-sheet__heading">

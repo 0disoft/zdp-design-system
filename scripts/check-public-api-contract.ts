@@ -88,6 +88,9 @@ function runComparatorSelfTest(): void {
   const legacyContract = createFixtureContract('0.63.0', [createFixtureComponent('Field', legacy.props)]);
   assertEqual(legacy.props[0]?.bindable, true, 'legacy props support bindings');
   assertEqual(runes.props[0]?.defaultValue, "''", 'bindable fallback extraction');
+  const requiredLegacy = parseComponentProps('export let label: string;', 'required legacy fixture');
+  const requiredRune = parseComponentProps('let { label = $bindable() }: { label: string } = $props();', 'required rune fixture');
+  assertEqual(JSON.stringify(requiredLegacy.props), JSON.stringify(requiredRune.props), 'required bindable without fallback preserves the legacy contract');
   assertEqual(comparePublicApiContracts(legacyContract, createFixtureContract('0.63.0', [createFixtureComponent('Field', runes.props)])).level, 'none', 'equivalent legacy and rune contracts');
   assertEqual(comparePublicApiContracts(legacyContract, createFixtureContract('0.63.0', [createFixtureComponent('Field', readonly.props)])).level, 'breaking', 'removed legacy binding');
   const base = createFixtureContract('0.61.0', [

@@ -96,7 +96,7 @@ async function checkUserFacingLabelOverrideContract(): Promise<void> {
     {
       path: 'src/lib/components/Dialog.svelte',
       requiredTexts: [
-        "export let closeLabel = 'Close'",
+        "closeLabel = $bindable('Close')",
         'aria-label={closeLabel}'
       ]
     },
@@ -117,7 +117,7 @@ async function checkUserFacingLabelOverrideContract(): Promise<void> {
     {
       path: 'src/lib/components/Sheet.svelte',
       requiredTexts: [
-        "export let closeLabel = 'Close'",
+        "closeLabel = $bindable('Close')",
         'aria-label={closeLabel}'
       ]
     },

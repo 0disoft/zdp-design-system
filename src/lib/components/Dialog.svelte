@@ -1,79 +1,49 @@
 <script lang="ts">
-  import { onDestroy, tick } from 'svelte';
-  import { createZdpFocusableCache, getZdpActiveElement } from '../focusable.js';
+  import { onDestroy } from 'svelte';
+  import { createZdpModalFocus } from '../modal-focus.js';
   import { createZdpDismissLayer } from '../dismiss-layer.js';
   import { createZdpModalLayer } from '../modal-layer.js';
 
-  export let open = false;
-  export let id: string | null = null;
-  export let labelledBy: string;
-  export let describedBy: string | null = null;
-  export let size: 'sm' | 'md' | 'lg' = 'md';
-  export let closeLabel = 'Close';
-  export let closeOnEscape = true;
-  export let closeOnBackdrop = true;
-  export let onClose: (() => void) | null = null;
-
-  let panelElement: HTMLElement | null = null;
-  let layerElement: HTMLElement | null = null;
-  let previousFocusElement: HTMLElement | null = null;
-  let knownOpenState = false;
-  const modalLayer = createZdpModalLayer();
-  const dismissLayer = createZdpDismissLayer();
-  const focusableCache = createZdpFocusableCache(() => panelElement);
-
-  $: {
-    modalLayer.setActive(open, layerElement);
-    dismissLayer.setActive(open, layerElement, {
-      closeOnEscape,
-      closeOnOutside: false,
-      onEscape: requestClose
-    });
+  interface Props {
+    open?: boolean;
+    id?: string | null;
+    labelledBy: string;
+    describedBy?: string | null;
+    size?: 'sm' | 'md' | 'lg';
+    closeLabel?: string;
+    closeOnEscape?: boolean;
+    closeOnBackdrop?: boolean;
+    onClose?: (() => void) | null;
   }
 
+  let {
+    open = $bindable(false),
+    id = $bindable(null),
+    labelledBy = $bindable(),
+    describedBy = $bindable(null),
+    size = $bindable('md'),
+    closeLabel = $bindable('Close'),
+    closeOnEscape = $bindable(true),
+    closeOnBackdrop = $bindable(true),
+    onClose = $bindable(null)
+  }: Props = $props();
+
+  let panelElement: HTMLElement | null = $state(null);
+  let layerElement: HTMLElement | null = $state(null);
+  const modalLayer = createZdpModalLayer();
+  const dismissLayer = createZdpDismissLayer();
+  const modalFocus = createZdpModalFocus({
+    getOpen: () => open,
+    getPanel: () => panelElement,
+    getLayer: () => layerElement,
+    modalLayer
+  });
+
   onDestroy(() => {
-    focusableCache.destroy();
+    modalFocus.destroy();
     modalLayer.destroy();
     dismissLayer.destroy();
   });
-
-  $: if (open !== knownOpenState) {
-    knownOpenState = open;
-
-    if (open) {
-      void handleDialogOpened();
-    } else {
-      restorePreviousFocus();
-    }
-  }
-
-  async function handleDialogOpened(): Promise<void> {
-    if (typeof document === 'undefined') {
-      return;
-    }
-
-    previousFocusElement = getZdpActiveElement(layerElement?.ownerDocument ?? document);
-    modalLayer.setFocusReturnTarget(previousFocusElement);
-
-    await tick();
-
-    const firstElement = focusableCache.get()[0] ?? panelElement;
-    firstElement?.focus();
-  }
-
-  function restorePreviousFocus(): void {
-    if (typeof document === 'undefined') {
-      return;
-    }
-
-    const focusReturnTarget = modalLayer.takeFocusReturnTarget();
-
-    if (focusReturnTarget?.isConnected) {
-      focusReturnTarget.focus();
-    }
-
-    previousFocusElement = null;
-  }
 
   function requestClose(): void {
     open = false;
@@ -90,42 +60,16 @@
     event.preventDefault();
   }
 
-  function handleKeydown(event: KeyboardEvent): void {
-    if (event.key !== 'Tab') {
-      return;
-    }
+  $effect.pre(() => {
+    modalLayer.setActive(open, layerElement);
+    dismissLayer.setActive(open, layerElement, {
+      closeOnEscape,
+      closeOnOutside: false,
+      onEscape: requestClose
+    });
+  });
 
-    const focusableElements = focusableCache.get();
-
-    if (focusableElements.length === 0) {
-      event.preventDefault();
-      panelElement?.focus();
-      return;
-    }
-
-    const firstElement = focusableElements.at(0);
-    const lastElement = focusableElements.at(-1);
-
-    if (firstElement === undefined || lastElement === undefined) {
-      event.preventDefault();
-      panelElement?.focus();
-      return;
-    }
-
-    const activeElement = getZdpActiveElement(panelElement?.ownerDocument ?? document);
-
-    if (event.shiftKey && activeElement === firstElement) {
-      event.preventDefault();
-      lastElement.focus();
-      return;
-    }
-
-    if (!event.shiftKey && activeElement === lastElement) {
-      event.preventDefault();
-      firstElement.focus();
-    }
-  }
-
+  $effect(() => modalFocus.sync());
 </script>
 
 {#if open}
@@ -155,10 +99,11 @@
       aria-labelledby={labelledBy}
       aria-describedby={describedBy ?? undefined}
       tabindex="-1"
-      onkeydown={handleKeydown}
+      onkeydown={modalFocus.handleKeydown}
     >
       <header class="zdp-dialog__header">
         <div class="zdp-dialog__title">
+          <!-- svelte-ignore slot_element_deprecated public slot compatibility -->
           <slot name="title" />
         </div>
         <button class="zdp-dialog__close" type="button" aria-label={closeLabel} onclick={requestClose}>
@@ -166,9 +111,11 @@
         </button>
       </header>
       <div class="zdp-dialog__body">
+        <!-- svelte-ignore slot_element_deprecated public slot compatibility -->
         <slot />
       </div>
       <div class="zdp-dialog__footer">
+        <!-- svelte-ignore slot_element_deprecated public slot compatibility -->
         <slot name="footer" />
       </div>
     </div>

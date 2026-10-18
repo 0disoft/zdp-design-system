@@ -129,7 +129,13 @@ try {
     };
   });
 
-  if (process.argv.includes('--copy')) {
+  if (process.argv.includes('--modal')) {
+    await verifyModalContracts(page);
+    await verifyModalMutationContracts(page);
+    await verifyNestedModalContracts(page);
+    await verifyShadowFocusContracts(page);
+    await verifyFrameModalContracts(page);
+  } else if (process.argv.includes('--copy')) {
     await verifyCopyLifecycleContracts(page);
   } else if (process.argv.includes('--confirm')) {
     await verifyConfirmPendingContracts(page);

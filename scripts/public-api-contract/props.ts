@@ -78,7 +78,7 @@ export function parseComponentProps(script: string, label: string): {
         addProp(props, {
           ...prop,
           bindable: value?.bindable ?? false,
-          ...(value ? { defaultValue: value.value } : {})
+          ...(value?.value !== undefined ? { defaultValue: value.value } : {})
         }, label);
       }
       for (const name of defaults.keys()) {
@@ -173,8 +173,8 @@ function bindingDefaults(
   elements: readonly BindingElement[],
   file: SourceFile,
   label: string
-): ReadonlyMap<string, { readonly value: string; readonly bindable: boolean }> {
-  const result = new Map<string, { readonly value: string; readonly bindable: boolean }>();
+): ReadonlyMap<string, { readonly value: string | undefined; readonly bindable: boolean }> {
+  const result = new Map<string, { readonly value: string | undefined; readonly bindable: boolean }>();
   for (const element of elements) {
     if (!isBindingElement(element) || element.dotDotDotToken || !isIdentifier(element.name)) {
       throw new Error(`${label} $props() destructuring must use identifier bindings without rest.`);
@@ -185,7 +185,7 @@ function bindingDefaults(
       const bindable = isCallExpression(expression) && isIdentifier(expression.expression) && expression.expression.text === '$bindable';
       result.set(name, {
         value: bindable
-          ? expression.arguments[0] ? printExpression(expression.arguments[0], file) : 'undefined'
+          ? expression.arguments[0] ? printExpression(expression.arguments[0], file) : undefined
           : printExpression(element.initializer, file),
         bindable
       });
