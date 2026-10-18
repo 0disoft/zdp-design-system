@@ -1102,6 +1102,7 @@
 
 /* Generated from src/lib/components/Tooltip.svelte; do not edit directly. */
 .zdp-tooltip {
+  column-gap: var(--zdp-space-2);
   display: inline-flex;
   min-width: 0;
   position: relative;
@@ -1135,7 +1136,9 @@
   user-select: none;
   box-sizing: border-box;
   width: max-content;
-  max-inline-size: min(22rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-4)));
+  max-inline-size: min(22rem, var(--zdp-tooltip-available-width, calc(var(--zdp-viewport-inline) - var(--zdp-space-4))));
+  max-block-size: var(--zdp-tooltip-available-height, none);
+  overflow: auto;
   overflow-wrap: anywhere;
   white-space: normal;
   z-index: var(--zdp-layer-floating);

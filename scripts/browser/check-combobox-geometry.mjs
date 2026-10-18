@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { verifyFloatingClippingContracts } from './check-floating-clipping.mjs';
 
 export async function verifyComboboxGeometryContracts(page) {
   const viewport = page.viewportSize();
@@ -80,6 +81,12 @@ export async function verifyComboboxGeometryContracts(page) {
     await input.press('Escape');
     await page.setViewportSize({ width: 600, height: 600 });
     await configure({ corner: 'top-left', count: 4 });
+    await configure({ count: 40 });
+    await verifyFloatingClippingContracts(page, {
+      kind: 'combobox', panel, focusTarget: input,
+      trigger: page.getByTestId('edge-combobox-anchor').getByRole('button', { name: 'Open selection', exact: true })
+    });
+    await configure({ count: 4 });
     await page.getByTestId('edge-combobox-anchor').evaluate(anchor => {
       const scroller = document.createElement('div');
       scroller.dataset.testid = 'combobox-scroll-container';

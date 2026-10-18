@@ -77,6 +77,45 @@ export async function verifyTooltipHoverContracts(page) {
         await trigger.evaluate((element) => element.closest('.zdp-tooltip').removeAttribute('style'));
       }
     }
+    const clippedTrigger = page.getByTestId('edge-tooltip-trigger-bottom');
+    const clippedTip = page.locator('#edge-tooltip-bottom');
+    const previousStyle = await clippedTrigger.evaluate(element => {
+      const root = element.closest('.zdp-tooltip');
+      const previous = root.getAttribute('style');
+      const frame = document.createElement('div');
+      frame.dataset.testid = 'tooltip-clipping-frame';
+      Object.assign(frame.style, { position: 'fixed', left: '24px', top: '100px', width: '300px', height: '200px', overflow: 'hidden', zIndex: '2000' });
+      root.before(frame); frame.append(root);
+      Object.assign(root.style, { position: 'absolute', right: '12px', bottom: '12px' });
+      return previous;
+    });
+    try {
+      for (const mode of [
+        { transform: 'scale(.9)', contain: 'none' },
+        { transform: 'none', contain: 'paint' }
+      ]) {
+        await page.getByTestId('tooltip-clipping-frame').evaluate((element, style) => Object.assign(element.style, style), mode);
+        await clippedTrigger.focus();
+        await page.waitForFunction(() => {
+          const tip = document.querySelector('#edge-tooltip-bottom');
+          const frame = document.querySelector('[data-testid="tooltip-clipping-frame"]');
+          const rect = tip.getBoundingClientRect();
+          const bounds = frame.getBoundingClientRect();
+          return rect.width > 0 && rect.height > 0 && rect.left >= bounds.left + 7 &&
+            rect.right <= bounds.right - 7 && rect.top >= bounds.top + 7 && rect.bottom <= bounds.bottom - 7;
+        });
+        assert.equal(await clippedTip.getAttribute('data-side'), 'top', 'A constrained Tooltip must flip inside its containing block.');
+        await page.keyboard.press('Escape');
+        await clippedTrigger.evaluate(element => element.blur());
+      }
+    } finally {
+      await clippedTrigger.evaluate((element, previous) => {
+        const root = element.closest('.zdp-tooltip');
+        const frame = root.parentElement;
+        frame.before(root); frame.remove();
+        if (previous === null) root.removeAttribute('style'); else root.setAttribute('style', previous);
+      }, previousStyle);
+    }
   } finally {
     await page.setViewportSize(originalViewport);
   }

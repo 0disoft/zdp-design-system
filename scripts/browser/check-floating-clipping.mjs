@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 
-export async function verifyFloatingClippingContracts(page, { kind, trigger, panel }) {
+export async function verifyFloatingClippingContracts(page, { kind, trigger, panel, focusTarget = trigger }) {
   const anchor = page.getByTestId(`edge-${kind}-anchor`);
   const previous = await anchor.evaluate(anchor => {
     const previous = { style: anchor.getAttribute('style'), className: anchor.className };
@@ -8,7 +8,7 @@ export async function verifyFloatingClippingContracts(page, { kind, trigger, pan
     frame.dataset.testid = 'floating-clipping-frame';
     Object.assign(frame.style, { position: 'fixed', left: '24px', top: '100px', width: '300px', height: '280px', overflow: 'hidden', zIndex: '2000' });
     anchor.before(frame); frame.append(anchor);
-    anchor.className = `edge-${anchor.dataset.testid.includes('menu') ? 'menu' : 'popover'}-anchor`;
+    anchor.className = anchor.dataset.testid;
     Object.assign(anchor.style, { position: 'absolute', right: '12px', bottom: '12px' });
     return previous;
   });
@@ -42,7 +42,7 @@ export async function verifyFloatingClippingContracts(page, { kind, trigger, pan
       });
       assert.equal(await panel.evaluate(element => element.scrollHeight > element.clientHeight), true, 'Long panels scroll instead of clipping');
       await page.keyboard.press('Escape');
-      assert.equal(await trigger.evaluate(element => element === document.activeElement), true);
+      assert.equal(await focusTarget.evaluate(element => element === document.activeElement), true);
     }
   } finally {
     await anchor.evaluate((anchor, previous) => {

@@ -5,7 +5,7 @@
   import { toZdpDomId, toZdpDomKey } from '../dom-id.js';
   import { createZdpDismissLayer } from '../dismiss-layer.js';
   import { syncZdpFormReset } from '../form-reset.js';
-  import { positionZdpComboboxPanel } from '../combobox-floating.js';
+  import { positionZdpFloatingPanel } from '../floating-position.js';
 
   type DescribedBy = string | readonly string[] | null;
 
@@ -497,7 +497,7 @@
 
   {#if open}
     <span class="zdp-combobox__panel" data-zdp-floating
-      use:positionZdpComboboxPanel={{ anchor: controlElement, gapSource: rootElement, onPosition: handlePanelPosition }}>
+      use:positionZdpFloatingPanel={{ anchor: controlElement, gapSource: rootElement, prefix: 'combobox', matchAnchorWidth: true, onPosition: handlePanelPosition }}>
       {#if hasOptions}
         <span class="zdp-combobox__listbox" id={listboxId} role="listbox" aria-label={resolvedListboxLabel}>
           {#each options as option (option.id)}

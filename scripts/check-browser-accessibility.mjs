@@ -129,7 +129,12 @@ try {
     };
   });
 
-  if (process.argv.includes('--modal')) {
+  if (process.argv.includes('--floating')) {
+    await verifyMenuGeometryContracts(page);
+    await verifyPopoverGeometryContracts(page);
+    await verifyComboboxGeometryContracts(page);
+    await verifyTooltipHoverContracts(page);
+  } else if (process.argv.includes('--modal')) {
     await verifyModalContracts(page);
     await verifyModalMutationContracts(page);
     await verifyNestedModalContracts(page);

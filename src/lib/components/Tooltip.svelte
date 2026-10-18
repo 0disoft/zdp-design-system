@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte';
+  import { positionZdpFloatingPanel } from '../floating-position.js';
   import { createZdpDismissLayer } from '../dismiss-layer.js';
   import { getZdpActiveElement } from '../focusable.js';
 
@@ -31,56 +32,11 @@
   const visible = $derived(!disabled && hasContent && !dismissed && (pointerInside || focusInside));
 
   $effect(() => {
-    const root = rootElement;
-    const content = contentElement;
-    const preferredPlacement = placement;
-    const currentText = text;
-    const view = root?.ownerDocument.defaultView;
-    if (!visible || !root || !content || !view || !currentText) return;
-    let frame = 0;
-    const update = () => {
-      content.style.translate = 'none';
-      const trigger = root.getBoundingClientRect();
-      const box = content.getBoundingClientRect();
-      const gap = Number.parseFloat(view.getComputedStyle(content).paddingRight) || 0;
-      const viewport = view.visualViewport;
-      const minX = (viewport?.offsetLeft ?? 0) + gap;
-      const minY = (viewport?.offsetTop ?? 0) + gap;
-      const maxX = minX + (viewport?.width ?? view.innerWidth) - 2 * gap;
-      const maxY = minY + (viewport?.height ?? view.innerHeight) - 2 * gap;
-      let left = box.left;
-      let top = box.top;
-      if (preferredPlacement === 'top' && top < minY && trigger.bottom + gap + box.height <= maxY) top = trigger.bottom + gap;
-      if (preferredPlacement === 'bottom' && box.bottom > maxY && trigger.top - gap - box.height >= minY) top = trigger.top - gap - box.height;
-      if (preferredPlacement === 'left' && left < minX && trigger.right + gap + box.width <= maxX) left = trigger.right + gap;
-      if (preferredPlacement === 'right' && box.right > maxX && trigger.left - gap - box.width >= minX) left = trigger.left - gap - box.width;
-      left = Math.max(minX, Math.min(left, maxX - box.width));
-      top = Math.max(minY, Math.min(top, maxY - box.height));
-      const scaleX = root.offsetWidth ? trigger.width / root.offsetWidth : 1;
-      const scaleY = root.offsetHeight ? trigger.height / root.offsetHeight : 1;
-      content.style.translate = `${(left - box.left) / (scaleX || 1)}px ${(top - box.top) / (scaleY || 1)}px`;
-    };
-    const schedule = () => {
-      view.cancelAnimationFrame(frame);
-      frame = view.requestAnimationFrame(update);
-    };
-    update();
-    const observer = new view.ResizeObserver(schedule);
-    observer.observe(root);
-    observer.observe(content);
-    view.addEventListener('resize', schedule);
-    root.ownerDocument.addEventListener('scroll', schedule, true);
-    view.visualViewport?.addEventListener('resize', schedule);
-    view.visualViewport?.addEventListener('scroll', schedule);
-    return () => {
-      observer.disconnect();
-      view.cancelAnimationFrame(frame);
-      view.removeEventListener('resize', schedule);
-      root.ownerDocument.removeEventListener('scroll', schedule, true);
-      view.visualViewport?.removeEventListener('resize', schedule);
-      view.visualViewport?.removeEventListener('scroll', schedule);
-      content.style.removeProperty('translate');
-    };
+    if (!visible || !rootElement || !contentElement) return;
+    const positioning = positionZdpFloatingPanel(contentElement, {
+      anchor: rootElement, gapSource: rootElement, prefix: 'tooltip', placement: `${placement}-start`
+    });
+    return () => positioning.destroy();
   });
 
   $effect.pre(() => {
@@ -188,6 +144,7 @@
 
 <style>
   .zdp-tooltip {
+    column-gap: var(--zdp-space-2);
     display: inline-flex;
     min-width: 0;
     position: relative;
@@ -221,7 +178,9 @@
     user-select: none;
     box-sizing: border-box;
     width: max-content;
-    max-inline-size: min(22rem, calc(var(--zdp-viewport-inline) - var(--zdp-space-4)));
+    max-inline-size: min(22rem, var(--zdp-tooltip-available-width, calc(var(--zdp-viewport-inline) - var(--zdp-space-4))));
+    max-block-size: var(--zdp-tooltip-available-height, none);
+    overflow: auto;
     overflow-wrap: anywhere;
     white-space: normal;
     z-index: var(--zdp-layer-floating);
