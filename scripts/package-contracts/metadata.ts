@@ -112,6 +112,14 @@ function checkPackageExports(packageJson: PackageJson): void {
 }
 
 function checkPackageExportsValidatorSelfTest(): void {
+  const invalidTypes = validatePackageExports({
+    ...expectedPackageExports,
+    './brand-assets': { import: './dist/brand-assets.js', types: './dist/brand-assets.ts' }
+  });
+  if (!invalidTypes.some(message => message.includes('types must point to a generated .d.ts')) ||
+      !invalidTypes.some(message => message.includes('types condition before runtime conditions'))) {
+    failures.push('Package exports validation must reject raw TypeScript types and incorrect condition order.');
+  }
   const invalidExports = {
     ...expectedPackageExports,
     './internal': './src/private.ts'

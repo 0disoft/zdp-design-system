@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { syncZdpFormReset } from '../form-reset';
+  import { syncZdpFormReset } from '../form-reset.js';
   type DescribedBy = string | readonly string[] | null;
 
   export let id: string | null = null;

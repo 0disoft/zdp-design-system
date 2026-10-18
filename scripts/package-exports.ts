@@ -71,6 +71,15 @@ function validateExportLeaves(value: unknown, location: string, failures: string
     return;
   }
 
+  if (Object.hasOwn(value, 'types')) {
+    if (typeof value.types !== 'string' || !value.types.endsWith('.d.ts')) {
+      failures.push(`${location} types must point to a generated .d.ts declaration.`);
+    }
+    if (Object.keys(value)[0] !== 'types') {
+      failures.push(`${location} must place the types condition before runtime conditions.`);
+    }
+  }
+
   for (const key of Object.keys(value).sort()) {
     validateExportLeaves(value[key], formatExportLocation(location, key), failures);
   }

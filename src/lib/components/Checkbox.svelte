@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { syncZdpFormReset } from '../form-reset';
+  import { syncZdpFormReset } from '../form-reset.js';
   export let id: string | null = null;
   export let name: string | null = null;
   export let value: string | null = null;

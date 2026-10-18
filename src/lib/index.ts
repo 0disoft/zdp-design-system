@@ -73,34 +73,34 @@ export { default as Tooltip } from './components/Tooltip.svelte';
 export { default as Toast } from './components/Toast.svelte';
 export { default as Toolbar } from './components/Toolbar.svelte';
 export { default as VisuallyHidden } from './components/VisuallyHidden.svelte';
-export type { ZdpComboboxOption, ZdpComboboxSize } from './combobox';
-export type { ZdpCommandFieldSize, ZdpCommandFieldType } from './command';
-export type { ZdpInputType } from './input';
-export type { ZdpCodeBlockSize, ZdpCodeBlockTone } from './code';
-export type { ZdpAccordionItem, ZdpAccordionMode, ZdpDisclosureHeadingLevel } from './disclosure';
-export type { ZdpAdSlotPlacement, ZdpAdSlotState } from './ad-slot';
+export type { ZdpComboboxOption, ZdpComboboxSize } from './combobox.js';
+export type { ZdpCommandFieldSize, ZdpCommandFieldType } from './command.js';
+export type { ZdpInputType } from './input.js';
+export type { ZdpCodeBlockSize, ZdpCodeBlockTone } from './code.js';
+export type { ZdpAccordionItem, ZdpAccordionMode, ZdpDisclosureHeadingLevel } from './disclosure.js';
+export type { ZdpAdSlotPlacement, ZdpAdSlotState } from './ad-slot.js';
 export type {
   ZdpAvatarSize,
   ZdpAvatarTone,
   ZdpIdentityChipAriaCurrent,
   ZdpIdentityChipSize
-} from './identity';
-export type { ZdpMenuItem } from './menu';
-export type { ZdpPaginationItem } from './pagination';
-export { isZdpTextScale, zdpLocaleSwitcherOptions, zdpTextScaleControlOptions } from './preferences';
+} from './identity.js';
+export type { ZdpMenuItem } from './menu.js';
+export type { ZdpPaginationItem } from './pagination.js';
+export { isZdpTextScale, zdpLocaleSwitcherOptions, zdpTextScaleControlOptions } from './preferences.js';
 export type {
   ZdpLocaleSwitcherOption,
   ZdpLocaleSwitcherSize,
   ZdpTextScale,
   ZdpTextScaleControlOption,
   ZdpTextScaleControlSize
-} from './preferences';
-export type { ZdpProgressSize, ZdpProgressTone, ZdpSkeletonVariant, ZdpSpinnerSize } from './progress';
+} from './preferences.js';
+export type { ZdpProgressSize, ZdpProgressTone, ZdpSkeletonVariant, ZdpSpinnerSize } from './progress.js';
 export {
   clampZdpSplitPaneSize,
   createZdpSplitPaneController,
   createZdpSplitPaneSizePersistence
-} from './split-pane';
+} from './split-pane.js';
 export type {
   ZdpSplitPaneController,
   ZdpSplitPaneControllerElements,
@@ -110,43 +110,43 @@ export type {
   ZdpSplitPaneSizeBounds,
   ZdpSplitPaneSizePersistence,
   ZdpSplitPaneSizePersistenceOptions
-} from './split-pane';
-export type { ZdpSegmentedControlItem, ZdpSegmentedControlSize } from './segmented';
-export type { ZdpSheetPlacement, ZdpSheetSize } from './sheet';
+} from './split-pane.js';
+export type { ZdpSegmentedControlItem, ZdpSegmentedControlSize } from './segmented.js';
+export type { ZdpSheetPlacement, ZdpSheetSize } from './sheet.js';
 export {
   isZdpBrowserReservedShortcut,
   isZdpTextEntryTarget,
   shouldZdpIgnoreShortcutEvent,
   zdpShortcutRecommendations,
   zdpShortcutReservedExamples
-} from './shortcuts';
+} from './shortcuts.js';
 export type {
   ZdpShortcutGuardOptions,
   ZdpShortcutIntent,
   ZdpShortcutRecommendation,
   ZdpShortcutRisk
-} from './shortcuts';
-export type { ZdpStatusToastItem } from './toast';
-export type { ZdpToastTone } from './toast';
-export type { ZdpThemeMode, ZdpThemeToggleSize } from './theme';
-export type { ZdpSortDirection, ZdpTableDensity, ZdpTableToolbarDensityItem } from './table-tools';
-export type { ZdpTermRelatedTerm, ZdpTermSheetPlacement, ZdpTermSheetTerm } from './term';
-export { zdpShareIcons } from './share';
-export type { ZdpShareDockItem, ZdpShareIconName, ZdpShareIconShape } from './share';
-export { zdpBrandAssets } from './brand-assets';
+} from './shortcuts.js';
+export type { ZdpStatusToastItem } from './toast.js';
+export type { ZdpToastTone } from './toast.js';
+export type { ZdpThemeMode, ZdpThemeToggleSize } from './theme.js';
+export type { ZdpSortDirection, ZdpTableDensity, ZdpTableToolbarDensityItem } from './table-tools.js';
+export type { ZdpTermRelatedTerm, ZdpTermSheetPlacement, ZdpTermSheetTerm } from './term.js';
+export { zdpShareIcons } from './share.js';
+export type { ZdpShareDockItem, ZdpShareIconName, ZdpShareIconShape } from './share.js';
+export { zdpBrandAssets } from './brand-assets.js';
 export type {
   ZdpBrandAsset,
   ZdpBrandAssetCropPolicy,
   ZdpBrandAssetFormat,
   ZdpBrandAssetTheme
-} from './brand-assets';
-export { zdpCreditAssets } from './credit-assets';
+} from './brand-assets.js';
+export { zdpCreditAssets } from './credit-assets.js';
 export type {
   ZdpCreditAsset,
   ZdpCreditAssetFormat,
   ZdpCreditAssetKind,
   ZdpCreditAssetTheme,
   ZdpCreditPackId
-} from './credit-assets';
-export { zdpTokenNames } from './tokens';
-export type { ZdpTokenName } from './tokens';
+} from './credit-assets.js';
+export { zdpTokenNames } from './tokens.js';
+export type { ZdpTokenName } from './tokens.js';

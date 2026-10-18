@@ -36,8 +36,11 @@ checks. Automated axe results do not replace manual assistive-technology review.
 - Token source: `tokens/zdp.tokens.json`
 - Web token CSS: `src/styles/tokens.css`
 - Package build/check scripts: `scripts/build-package.ts`, `scripts/check-package.ts`, `scripts/check-publish-readiness.ts`
+- Package type build: `svelte.config.js` (`vitePreprocess({ script: true })`), `tsconfig.package.json`, `@sveltejs/package` 3; `scripts/build-package.ts` compiles `src/lib` inside the atomic staging tree and rejects raw `.ts` output, requiring `index.js`/`index.d.ts`, per-component `.svelte.d.ts`, and `.js` plus `.d.ts` for every public helper module.
+- Package declaration export contract: `scripts/package-exports.ts` requires every export leaf to declare `types` first and point at a generated `.d.ts`.
 - Package-size budget and reporting: `.github/package-size-budget.json`, `scripts/check-package-size.ts`, `scripts/package-size/**`, `.github/workflows/design-system.yml`
-- Atomic package-build regression: `scripts/check-package-build.ts` verifies rollback after promotion failure, interrupted-swap recovery, cleanup, and direct exported declaration preservation.
+- Atomic package-build regression: `scripts/check-package-build.ts` verifies rollback after promotion failure, interrupted-swap recovery, cleanup, and shared component style ordering.
+- Tarball consumer type gate: `types:consumer:check` (planned, not yet wired into `check`) installs the packed tarball and type-checks a consumer under bundler and NodeNext resolution with `skipLibCheck: false` and `exactOptionalPropertyTypes: true`.
 - Release preparation: `.changes/**`, `.github/workflows/release-pr.yml`, `scripts/release-changes.ts`
 - Release publishing: `.github/workflows/publish-npm.yml`, `scripts/check-release-workflow.ts`
 - Token/share generators: `scripts/generate-tokens.ts`, `scripts/generate-share.ts`
@@ -66,6 +69,7 @@ For local diagnosis, build Storybook and capture temporary expected images with 
 - Public component names, root-barrel exports, package subpaths, and generated public-surface documentation must agree with `scripts/public-surface.ts`.
 - Brand and credit asset package subpaths must derive from the `packagePath` values in `src/lib/brand-assets.ts` and `src/lib/credit-assets.ts`.
 - Public package exports must not point at `src/**`.
+- Generated `dist/**` must not contain raw TypeScript: helper modules ship `.js` with `.d.ts`, Svelte components ship `.svelte` with `.svelte.d.ts`, and every export leaf keeps `types` first.
 - Component CSS must not introduce raw product-specific colors, raw spacing, unreviewed z-index numbers, or unmanaged viewport units.
 - `preview:check` runs `styles:check` before `check-preview`. `src/styles/components.css` is generated from the Svelte component `<style>` blocks in the order declared by `scripts/component-style-order.ts`, so a hand-edited or stale generated file fails instead of drifting from the components. Shared utility-only selectors that do not overlap a component live in `src/styles/component-utilities.css`, together with the forced-colors overrides; the former component-parity parser and its script are removed.
 - UI primitives must not own authorization, billing, identity, consent, admin, routing, data fetching, search execution, ads policy, or locale fallback truth.

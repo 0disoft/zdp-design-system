@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { recoverZdpRadioGroupFocus } from '../radio-group-focus';
-  import { toZdpDomId, toZdpDomKey } from '../dom-id';
-  import { moveZdpRovingFocus } from '../roving-focus';
+  import { recoverZdpRadioGroupFocus } from '../radio-group-focus.js';
+  import { toZdpDomId, toZdpDomKey } from '../dom-id.js';
+  import { moveZdpRovingFocus } from '../roving-focus.js';
   import {
     zdpLocaleSwitcherOptions,
     type ZdpLocaleSwitcherOption,
     type ZdpLocaleSwitcherSize
-  } from '../preferences';
+  } from '../preferences.js';
 
   interface Props {
     value?: string;

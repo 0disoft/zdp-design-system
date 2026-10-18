@@ -10,7 +10,6 @@ import {
   readPublicComponentExports,
   unwrapSvelteGlobalSelectors
 } from './component-style-entries';
-import { createPublicRuntimeEntry, createPublicTypeEntry } from './package-entry';
 import { orderComponentStyles } from './component-style-order';
 
 const fixtureRoot = await mkdtemp(join(tmpdir(), 'zdp-package-build-'));
@@ -78,20 +77,7 @@ try {
   const entrySource = `
 export { default as Field } from './components/Field.svelte';
 export { default as Button } from './components/Button.svelte';
-export interface DirectInterface { readonly id: string; }
-export type DirectAlias = 'ready';
-export const directValue = 1;
-const internalValue = 2;
 `;
-  const typeEntry = createPublicTypeEntry(entrySource);
-  const runtimeEntry = createPublicRuntimeEntry(entrySource);
-  assert.match(typeEntry, /export interface DirectInterface/);
-  assert.match(typeEntry, /export type DirectAlias/);
-  assert.match(typeEntry, /export const directValue/);
-  assert.doesNotMatch(typeEntry, /internalValue/);
-  assert.match(runtimeEntry, /export const directValue = 1/);
-  assert.doesNotMatch(runtimeEntry, /DirectInterface|DirectAlias|internalValue/);
-
   const publicComponents = readPublicComponentExports(entrySource);
   assert.deepEqual(publicComponents, [
     { name: 'Button', fileName: 'Button.svelte' },

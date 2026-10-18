@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ZdpSortDirection } from '../table-tools';
+  import type { ZdpSortDirection } from '../table-tools.js';
 
   export let label = 'Sort';
   export let direction: ZdpSortDirection = 'none';

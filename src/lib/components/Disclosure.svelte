@@ -1,8 +1,8 @@
 <script lang="ts">
   import { tick } from 'svelte';
-  import { getZdpActiveElement, hasZdpFocusMoved } from '../focusable';
-  import { toZdpDomId } from '../dom-id';
-  import type { ZdpDisclosureHeadingLevel } from '../disclosure';
+  import { getZdpActiveElement, hasZdpFocusMoved } from '../focusable.js';
+  import { toZdpDomId } from '../dom-id.js';
+  import type { ZdpDisclosureHeadingLevel } from '../disclosure.js';
 
   interface Props {
     open?: boolean;

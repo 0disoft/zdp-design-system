@@ -13,11 +13,11 @@ stability=contract
 <script lang="ts">
   import { flushSync, onDestroy, tick } from 'svelte';
   import { DropdownMenu } from 'bits-ui';
-  import { createZdpDismissLayer } from '../dismiss-layer';
-  import { toZdpDomId } from '../dom-id';
-  import { getZdpActiveElement } from '../focusable';
-  import { getZdpFloatingBoundaries } from '../floating-boundary';
-  import type { ZdpMenuItem } from '../menu';
+  import { createZdpDismissLayer } from '../dismiss-layer.js';
+  import { toZdpDomId } from '../dom-id.js';
+  import { getZdpActiveElement } from '../focusable.js';
+  import { getZdpFloatingBoundaries } from '../floating-boundary.js';
+  import type { ZdpMenuItem } from '../menu.js';
 
   type Placement = 'top' | 'right' | 'bottom' | 'left';
   type Alignment = 'start' | 'center' | 'end';

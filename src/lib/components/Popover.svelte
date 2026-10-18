@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onDestroy, tick } from 'svelte';
   import { Popover as BitsPopover } from 'bits-ui';
-  import { createZdpDismissLayer } from '../dismiss-layer';
-  import { toZdpDomId } from '../dom-id';
-  import { getZdpActiveElement, hasZdpFocusMoved } from '../focusable';
-  import { getZdpFloatingBoundaries } from '../floating-boundary';
+  import { createZdpDismissLayer } from '../dismiss-layer.js';
+  import { toZdpDomId } from '../dom-id.js';
+  import { getZdpActiveElement, hasZdpFocusMoved } from '../focusable.js';
+  import { getZdpFloatingBoundaries } from '../floating-boundary.js';
 
   type Placement = 'top' | 'right' | 'bottom' | 'left';
   type Alignment = 'start' | 'center' | 'end';

@@ -1,11 +1,11 @@
 <script lang="ts">
   import { onDestroy, tick, untrack } from 'svelte';
   import type { HTMLInputAttributes } from 'svelte/elements';
-  import type { ZdpComboboxOption, ZdpComboboxSize } from '../combobox';
-  import { toZdpDomId, toZdpDomKey } from '../dom-id';
-  import { createZdpDismissLayer } from '../dismiss-layer';
-  import { syncZdpFormReset } from '../form-reset';
-  import { positionZdpComboboxPanel } from '../combobox-floating';
+  import type { ZdpComboboxOption, ZdpComboboxSize } from '../combobox.js';
+  import { toZdpDomId, toZdpDomKey } from '../dom-id.js';
+  import { createZdpDismissLayer } from '../dismiss-layer.js';
+  import { syncZdpFormReset } from '../form-reset.js';
+  import { positionZdpComboboxPanel } from '../combobox-floating.js';
 
   type DescribedBy = string | readonly string[] | null;
 

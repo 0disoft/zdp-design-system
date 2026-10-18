@@ -8,8 +8,9 @@ invariant=The staging tree must contain all required public files before replaci
 stability=architecture
 */
 
-import { existsSync } from 'node:fs';
-import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { existsSync, readdirSync } from 'node:fs';
+import { spawn } from 'node:child_process';
+import { cp, mkdir, readFile, rm } from 'node:fs/promises';
 import { basename, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { withAtomicDirectory } from './atomic-directory';
@@ -17,11 +18,6 @@ import {
   type PublicComponentExport,
   writePublicComponentStyleEntries
 } from './component-style-entries';
-import {
-  createPublicRuntimeEntry,
-  createPublicTypeEntry,
-  createRuntimeModule
-} from './package-entry';
 import { publicRuntimeModuleNames } from './public-surface';
 
 const repoRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
@@ -49,15 +45,28 @@ await withAtomicDirectory(atomicPaths, async (transaction) => {
 });
 
 async function buildPackage(outputRoot: string): Promise<readonly PublicComponentExport[]> {
-  await cp(resolve(repoRoot, 'src/lib'), outputRoot, { recursive: true });
+  /**
+   * mf:anchor zdp.design-system.package-entry-generation
+   * purpose: Compile runtime modules, Svelte components and declarations before atomic promotion.
+   * search: package build, dist index, public entry, component CSS entry, type entry
+   * invariant: Compiler output and generated component CSS must be complete before replacing dist.
+   * risk: config
+   */
+  const compiler = spawn(process.execPath, [
+    'run', '--bun', 'svelte-package',
+    '--input', 'src/lib', '--output', outputRoot, '--tsconfig', 'tsconfig.package.json'
+  ], { cwd: repoRoot, stdio: 'inherit' });
+  const status = await new Promise<number | null>((resolveStatus, reject) => {
+    compiler.once('error', reject);
+    compiler.once('close', resolveStatus);
+  });
+  if (status !== 0) throw new Error('Svelte package compilation failed; previous dist was preserved.');
   await cp(resolve(repoRoot, 'src/styles'), resolve(outputRoot, 'styles'), {
     recursive: true,
     filter: (source) => source !== resolve(repoRoot, 'src/styles/component-utilities.css')
   });
   await cp(resolve(repoRoot, 'tokens'), resolve(outputRoot, 'tokens'), { recursive: true });
   await cp(resolve(repoRoot, 'schemas'), resolve(outputRoot, 'schemas'), { recursive: true });
-  await cp(resolve(repoRoot, 'share.js'), resolve(outputRoot, 'share.js'));
-  await cp(resolve(repoRoot, 'share.d.ts'), resolve(outputRoot, 'share.d.ts'));
 
   const publicEntrySource = await readFile(resolve(repoRoot, 'src/lib/index.ts'), 'utf8');
   const publicComponents = await writePublicComponentStyleEntries({
@@ -66,24 +75,6 @@ async function buildPackage(outputRoot: string): Promise<readonly PublicComponen
     publicEntrySource
   });
 
-  /**
-   * mf:anchor zdp.design-system.package-entry-generation
-   * purpose: Locate generation of package runtime, type, and granular CSS entrypoints from the public barrel.
-   * search: package build, dist index, public entry, runtime module, component CSS entry, type entry
-   * invariant: A complete staging tree preserves every exported declaration and generated component style before it replaces dist.
-   * risk: config
-   */
-  await writeFile(resolve(outputRoot, 'index.js'), createPublicRuntimeEntry(publicEntrySource));
-  await writeFile(resolve(outputRoot, 'index.d.ts'), createPublicTypeEntry(publicEntrySource));
-
-  for (const moduleName of publicRuntimeModuleNames) {
-    const source = await readFile(resolve(repoRoot, `src/lib/${moduleName}.ts`), 'utf8');
-    await writeFile(
-      resolve(outputRoot, `${moduleName}.js`),
-      createRuntimeModule(source, `src/lib/${moduleName}.ts`)
-    );
-  }
-
   return publicComponents;
 }
 
@@ -91,6 +82,11 @@ function assertCompletedPackage(
   outputRoot: string,
   publicComponents: readonly PublicComponentExport[]
 ): void {
+  for (const file of readdirSync(outputRoot, { recursive: true })) {
+    if (typeof file === 'string' && /\.(?:ts|mts|cts)$/.test(file) && !/\.d\.(?:ts|mts|cts)$/.test(file)) {
+      throw new Error(`Package output must not contain raw TypeScript: ${file}`);
+    }
+  }
   const requiredPaths = [
     'index.js',
     'index.d.ts',
@@ -99,9 +95,10 @@ function assertCompletedPackage(
     'styles/components.css',
     'styles/tokens.css',
     ...publicComponents.map((component) => `styles/components/${component.name}.css`),
+    ...publicComponents.map((component) => `components/${component.name}.svelte.d.ts`),
     'tokens/zdp.tokens.json',
     'schemas/design-tokens.schema.json',
-    ...publicRuntimeModuleNames.map((moduleName) => `${moduleName}.js`)
+    ...publicRuntimeModuleNames.flatMap((moduleName) => [`${moduleName}.js`, `${moduleName}.d.ts`])
   ];
 
   for (const relativePath of requiredPaths) {

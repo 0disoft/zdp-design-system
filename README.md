@@ -108,7 +108,7 @@ import 'zdp-design-system/styles.css';
 import 'zdp-design-system/expressive-fonts.css';
 ```
 
-패키지 export는 `dist/` 산출물을 가리킨다. root runtime entry는 `dist/index.js`, type entry는 `dist/index.d.ts`이며 호환용이다. 새 Svelte 코드는 `zdp-design-system/components/ComponentName`과 `zdp-design-system/tokens.css`를 기본으로 쓴다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `bun run package:build`가 소비자용 `dist/` 표면을 다시 만든다. 소비 저장소와 문서 예시는 `zdp-design-system` public export만 쓰고 내부 `src/` 경로를 직접 import하지 않는다.
+패키지 export는 `dist/` 산출물을 가리킨다. `bun run package:build`가 `@sveltejs/package`와 `tsconfig.package.json`으로 `src/lib`를 컴파일해 atomic staging tree에 담고, 검증을 통과한 뒤에만 `dist/`를 교체한다. 산출물에 원본 `.ts`는 남지 않고, helper 모듈은 `.js`와 `.d.ts`를, Svelte 컴포넌트는 TypeScript를 제거한 `.svelte`와 `.svelte.d.ts`를 함께 내보낸다. 모든 export는 `types` 조건을 첫 번째에 두고 root는 `dist/index.d.ts`, 컴포넌트 subpath는 `dist/components/*.svelte.d.ts`, helper subpath는 각 `dist/<module>.d.ts`로 연결하므로 bundler와 NodeNext 소비처가 같은 선언을 본다. root runtime entry는 `dist/index.js`이고 root barrel은 호환용이다. `dist/share.js`와 `dist/share.d.ts`도 같은 compile이 `src/lib/share.ts`에서 만들고, 저장소 root의 `share.js`와 `share.d.ts`는 기존 tooling 호환용으로만 남는다. CSS와 asset export 경로는 그대로다. 새 Svelte 코드는 `zdp-design-system/components/ComponentName`과 `zdp-design-system/tokens.css`를 기본으로 쓴다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`다. 소비 저장소와 문서 예시는 `zdp-design-system` public export만 쓰고 내부 `src/` 경로를 직접 import하지 않는다.
 
 ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.65.0`를 기본으로 쓴다.
 
@@ -647,7 +647,7 @@ bun run tokens:check
 
 `tokens:check`는 토큰 JSON, CSS 변수, public component export가 함께 맞는지 확인한다.
 `tokens:generate`는 `tokens/zdp.tokens.json`에서 `zdpTokenNames`를 다시 만든다.
-`share-icons:generate`는 `src/lib/share.ts`에서 소비자용 `share.js`와 `share.d.ts`를 다시 만든다.
+`share-icons:generate`는 `src/lib/share.ts`에서 저장소 root의 `share.js`와 `share.d.ts`를 다시 만든다. 소비자용 `dist/share.js`와 `dist/share.d.ts`는 `package:build`가 같은 원본을 컴파일해 만들고, root 파일은 기존 tooling 호환용으로만 남는다.
 색상 토큰은 JSON의 `hex`와 `oklch` 값이 CSS fallback 및 OKLCH override에 모두 존재해야 통과한다.
 공통 스타일의 원천은 Svelte 컴포넌트의 `<style>`이다. `scripts/component-style-order.ts`가 정한 명시적 순서로 `src/styles/components.css`를 생성하고, 컴포넌트와 겹치지 않는 공통 유틸리티 클래스와 forced-colors override만 `src/styles/component-utilities.css`에 남긴다. `styles:generate`는 생성물을 갱신하고 `styles:check`는 stale 생성물을 막는다. `preview:check`는 `styles:check`와 정적 미리보기 페이지의 공통 스타일 entry/토큰/컴포넌트 표면 참조를 확인하는 `check-preview`만 실행한다. 예전 수동 `component-parts/01~05` CSS와 660줄 parity 파서, `styles:parity:check`는 제거됐고 public CSS import 경로와 cascade 순서는 그대로다.
 `storybook:check`는 Storybook 설정, scripts, devDependencies, overview story가 함께 유지되는지 확인한다.

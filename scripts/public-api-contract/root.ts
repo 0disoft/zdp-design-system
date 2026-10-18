@@ -35,7 +35,7 @@ export function parseRootExports(source: string, label: string): readonly RootEx
         name: item.name.text,
         importedName: item.propertyName?.text ?? item.name.text,
         kind: statement.isTypeOnly || item.isTypeOnly ? 'type' : 'value',
-        source: statement.moduleSpecifier.text,
+        source: statement.moduleSpecifier.text.replace(/\.js$/, ''),
         signature: null
       });
     }
@@ -67,7 +67,7 @@ function modulePath(source: string): string {
   if (!source.startsWith('./') || source.includes('\\') || source.split('/').some((part) => part === '..')) {
     throw new Error(`Public source ${source} must be repository-local.`);
   }
-  const relative = source.slice(2);
+  const relative = source.slice(2).replace(/\.js$/, '.ts');
   if (!/^[A-Za-z0-9_./-]+$/.test(relative)) throw new Error(`Unsupported public source: ${source}.`);
   return `src/lib/${relative.endsWith('.ts') ? relative : `${relative}.ts`}`;
 }

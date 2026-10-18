@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onDestroy, tick } from 'svelte';
-  import { createZdpFocusableCache, getZdpActiveElement } from '../focusable';
-  import { createZdpDismissLayer } from '../dismiss-layer';
-  import { createZdpModalLayer } from '../modal-layer';
-  import type { ZdpTermSheetPlacement, ZdpTermSheetTerm } from '../term';
+  import { createZdpFocusableCache, getZdpActiveElement } from '../focusable.js';
+  import { createZdpDismissLayer } from '../dismiss-layer.js';
+  import { createZdpModalLayer } from '../modal-layer.js';
+  import type { ZdpTermSheetPlacement, ZdpTermSheetTerm } from '../term.js';
 
   interface Props {
     open?: boolean;

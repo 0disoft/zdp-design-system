@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ZdpPaginationItem } from '../pagination';
+  import type { ZdpPaginationItem } from '../pagination.js';
 
   type ZdpPaginationRenderItem =
     | (Extract<ZdpPaginationItem, { readonly type: 'page' }> & {

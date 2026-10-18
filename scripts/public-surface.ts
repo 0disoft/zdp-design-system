@@ -229,8 +229,8 @@ export const publicPackageEntries: readonly PublicPackageEntry[] = Object.freeze
     category: 'runtime',
     description: 'Compatibility root barrel for Svelte components and helpers.',
     target: {
-      svelte: './dist/index.js',
       types: './dist/index.d.ts',
+      svelte: './dist/index.js',
       import: './dist/index.js',
       default: './dist/index.js'
     }
@@ -282,6 +282,7 @@ export const publicPackageEntries: readonly PublicPackageEntry[] = Object.freeze
     category: 'component',
     description: 'Tree-shakeable direct Svelte component imports.',
     target: {
+      types: './dist/components/*.svelte.d.ts',
       svelte: './dist/components/*.svelte',
       default: './dist/components/*.svelte'
     }
@@ -301,7 +302,7 @@ export const publicPackageEntries: readonly PublicPackageEntry[] = Object.freeze
     category: 'runtime',
     description: 'Brand asset metadata and integrity manifest.',
     target: {
-      types: './dist/brand-assets.ts',
+      types: './dist/brand-assets.d.ts',
       import: './dist/brand-assets.js',
       default: './dist/brand-assets.js'
     }
@@ -311,7 +312,7 @@ export const publicPackageEntries: readonly PublicPackageEntry[] = Object.freeze
     category: 'runtime',
     description: 'Credit asset metadata and integrity manifest.',
     target: {
-      types: './dist/credit-assets.ts',
+      types: './dist/credit-assets.d.ts',
       import: './dist/credit-assets.js',
       default: './dist/credit-assets.js'
     }
@@ -321,7 +322,7 @@ export const publicPackageEntries: readonly PublicPackageEntry[] = Object.freeze
     category: 'runtime',
     description: 'Framework-neutral split-pane controller helpers.',
     target: {
-      types: './dist/split-pane.ts',
+      types: './dist/split-pane.d.ts',
       import: './dist/split-pane.js',
       default: './dist/split-pane.js'
     }
@@ -396,11 +397,11 @@ export function renderPublicBarrel(): string {
     const statements: string[] = [];
 
     if (values !== undefined) {
-      statements.push(renderNamedExport('value', values, source));
+      statements.push(renderNamedExport('value', values, `${source}.js`));
     }
 
     if (types !== undefined) {
-      statements.push(renderNamedExport('type', types, source));
+      statements.push(renderNamedExport('type', types, `${source}.js`));
     }
 
     return statements;
@@ -418,7 +419,7 @@ export function renderPublicSurfaceDocumentation(): string {
     );
   const componentRows = publicComponents.map(
     ({ name, fileName }) =>
-      `| \`zdp-design-system/components/${name}\` | \`./dist/components/${fileName}\` | \`src/lib/components/${fileName}\` |`
+      `| \`zdp-design-system/components/${name}\` | \`./dist/components/${fileName}\` | \`./dist/components/${fileName}.d.ts\` | \`src/lib/components/${fileName}\` |`
   );
   const assetRows = publicAssetEntries.map(
     ({ subpath, target }) =>
@@ -437,8 +438,8 @@ ${packageRows.join('\n')}
 
 ## Svelte component subpaths
 
-| Consumer import | Package target | Repository source |
-| --- | --- | --- |
+| Consumer import | Package target | Type declaration | Repository source |
+| --- | --- | --- | --- |
 ${componentRows.join('\n')}
 
 ## Asset subpaths

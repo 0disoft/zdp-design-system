@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onDestroy, tick } from 'svelte';
-  import { createZdpFocusableCache, getZdpActiveElement } from '../focusable';
-  import { createZdpDismissLayer } from '../dismiss-layer';
-  import { createZdpModalLayer } from '../modal-layer';
+  import { createZdpFocusableCache, getZdpActiveElement } from '../focusable.js';
+  import { createZdpDismissLayer } from '../dismiss-layer.js';
+  import { createZdpModalLayer } from '../modal-layer.js';
 
   export let open = false;
   export let id: string | null = null;

@@ -12,8 +12,8 @@
   },
   "exports": {
     ".": {
-      "svelte": "./dist/index.js",
       "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
@@ -25,6 +25,7 @@
     "./locale-fonts.css": "./dist/styles/locale-fonts.css",
     "./components/*.css": "./dist/styles/components/*.css",
     "./components/*": {
+      "types": "./dist/components/*.svelte.d.ts",
       "svelte": "./dist/components/*.svelte",
       "default": "./dist/components/*.svelte"
     },
@@ -34,17 +35,17 @@
       "default": "./dist/share.js"
     },
     "./brand-assets": {
-      "types": "./dist/brand-assets.ts",
+      "types": "./dist/brand-assets.d.ts",
       "import": "./dist/brand-assets.js",
       "default": "./dist/brand-assets.js"
     },
     "./credit-assets": {
-      "types": "./dist/credit-assets.ts",
+      "types": "./dist/credit-assets.d.ts",
       "import": "./dist/credit-assets.js",
       "default": "./dist/credit-assets.js"
     },
     "./split-pane": {
-      "types": "./dist/split-pane.ts",
+      "types": "./dist/split-pane.d.ts",
       "import": "./dist/split-pane.js",
       "default": "./dist/split-pane.js"
     },
@@ -152,6 +153,7 @@
   "devDependencies": {
     "@storybook/addon-a11y": "^10.6.1",
     "@storybook/svelte-vite": "^10.6.1",
+    "@sveltejs/package": "3",
     "@sveltejs/vite-plugin-svelte": "^7.3.1",
     "@tsconfig/svelte": "^5.0.8",
     "@types/node": "^26.6.5",

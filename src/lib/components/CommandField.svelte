@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from 'svelte/elements';
-  import type { ZdpCommandFieldSize, ZdpCommandFieldType } from '../command';
+  import type { ZdpCommandFieldSize, ZdpCommandFieldType } from '../command.js';
   import ShortcutHint from './ShortcutHint.svelte';
-  import { syncZdpFormReset } from '../form-reset';
+  import { syncZdpFormReset } from '../form-reset.js';
 
   type DescribedBy = string | readonly string[] | null;
   type AriaAutocomplete = 'none' | 'inline' | 'list' | 'both';

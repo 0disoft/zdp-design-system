@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ZdpAdSlotPlacement, ZdpAdSlotState } from '../ad-slot';
+  import type { ZdpAdSlotPlacement, ZdpAdSlotState } from '../ad-slot.js';
 
   type DescribedBy = string | readonly string[] | null;
 

@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { HTMLTextareaAttributes } from 'svelte/elements';
-  import { syncZdpFormReset } from '../form-reset';
+  import { syncZdpFormReset } from '../form-reset.js';
 
   type DescribedBy = string | readonly string[] | null;
 

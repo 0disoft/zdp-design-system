@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { zdpShareIcons, type ZdpShareDockItem } from '../share';
+  import { zdpShareIcons, type ZdpShareDockItem } from '../share.js';
   import Tooltip from './Tooltip.svelte';
 
   export let items: readonly ZdpShareDockItem[] = [];

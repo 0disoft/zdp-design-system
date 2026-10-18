@@ -1,5 +1,5 @@
 import { tick } from 'svelte';
-import { getZdpActiveElement } from './focusable';
+import { getZdpActiveElement } from './focusable.js';
 
 /** Capture before a render can remove or disable the focused radio. */
 export function recoverZdpRadioGroupFocus(group: HTMLElement | null): void {

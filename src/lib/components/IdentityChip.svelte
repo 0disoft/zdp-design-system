@@ -1,6 +1,6 @@
 <script lang="ts">
   import Avatar from './Avatar.svelte';
-  import type { ZdpIdentityChipAriaCurrent, ZdpIdentityChipSize } from '../identity';
+  import type { ZdpIdentityChipAriaCurrent, ZdpIdentityChipSize } from '../identity.js';
 
   export let label = 'User';
   export let description: string | null = null;

@@ -1,8 +1,8 @@
 <script lang="ts">
   import { tick } from 'svelte';
-  import { getZdpActiveElement, hasZdpFocusMoved } from '../focusable';
-  import { toZdpDomId, toZdpDomKey } from '../dom-id';
-  import { moveZdpRovingFocus } from '../roving-focus';
+  import { getZdpActiveElement, hasZdpFocusMoved } from '../focusable.js';
+  import { toZdpDomId, toZdpDomKey } from '../dom-id.js';
+  import { moveZdpRovingFocus } from '../roving-focus.js';
 
   interface TabItem {
     readonly id: string;

@@ -1,13 +1,13 @@
 <script lang="ts">
   import { onMount, type Snippet } from 'svelte';
-  import { toZdpDomId } from '../dom-id';
+  import { toZdpDomId } from '../dom-id.js';
   import {
     clampZdpSplitPaneSize,
     createZdpSplitPaneController,
     type ZdpSplitPaneController,
     type ZdpSplitPaneOrientation,
     type ZdpSplitPaneResizeEvent
-  } from '../split-pane';
+  } from '../split-pane.js';
 
   interface Props {
     id?: string | null;

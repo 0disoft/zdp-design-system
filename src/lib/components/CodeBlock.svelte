@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
-  import type { ZdpCodeBlockSize, ZdpCodeBlockTone } from '../code';
+  import type { ZdpCodeBlockSize, ZdpCodeBlockTone } from '../code.js';
 
   export let code = '';
   export let language: string | null = null;

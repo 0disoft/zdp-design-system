@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte';
-  import { createZdpDismissLayer } from '../dismiss-layer';
-  import { getZdpActiveElement } from '../focusable';
+  import { createZdpDismissLayer } from '../dismiss-layer.js';
+  import { getZdpActiveElement } from '../focusable.js';
 
   type Placement = 'top' | 'right' | 'bottom' | 'left';
 

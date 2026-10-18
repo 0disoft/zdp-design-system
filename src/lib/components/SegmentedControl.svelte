@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { recoverZdpRadioGroupFocus } from '../radio-group-focus';
-  import { toZdpDomId, toZdpDomKey } from '../dom-id';
-  import { moveZdpRovingFocus } from '../roving-focus';
-  import type { ZdpSegmentedControlItem, ZdpSegmentedControlSize } from '../segmented';
+  import { recoverZdpRadioGroupFocus } from '../radio-group-focus.js';
+  import { toZdpDomId, toZdpDomKey } from '../dom-id.js';
+  import { moveZdpRovingFocus } from '../roving-focus.js';
+  import type { ZdpSegmentedControlItem, ZdpSegmentedControlSize } from '../segmented.js';
 
   interface Props {
     items?: readonly ZdpSegmentedControlItem[];

@@ -5,7 +5,7 @@
     ZdpAccordionItem,
     ZdpAccordionMode,
     ZdpDisclosureHeadingLevel
-  } from '../disclosure';
+  } from '../disclosure.js';
 
   interface Props {
     items?: readonly ZdpAccordionItem[];

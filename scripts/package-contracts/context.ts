@@ -59,9 +59,9 @@ const expectedPackageFiles = [
 
 const expectedDistArtifactFiles = [
   './dist/brand-assets.js',
-  './dist/brand-assets.ts',
+  './dist/brand-assets.d.ts',
   './dist/credit-assets.js',
-  './dist/credit-assets.ts',
+  './dist/credit-assets.d.ts',
   './dist/schemas/design-tokens.schema.json'
 ] as const;
 

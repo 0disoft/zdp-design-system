@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { recoverZdpRadioGroupFocus } from '../radio-group-focus';
-  import { toZdpDomId, toZdpDomKey } from '../dom-id';
-  import { moveZdpRovingFocus } from '../roving-focus';
+  import { recoverZdpRadioGroupFocus } from '../radio-group-focus.js';
+  import { toZdpDomId, toZdpDomKey } from '../dom-id.js';
+  import { moveZdpRovingFocus } from '../roving-focus.js';
   import {
     zdpTextScaleControlOptions,
     type ZdpTextScale,
     type ZdpTextScaleControlOption,
     type ZdpTextScaleControlSize
-  } from '../preferences';
+  } from '../preferences.js';
 
   interface Props {
     value?: ZdpTextScale;

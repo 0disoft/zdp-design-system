@@ -1,9 +1,9 @@
 <script lang="ts">
   import { tick } from 'svelte';
-  import { toZdpDomId, toZdpDomKey } from '../dom-id';
-  import { getZdpActiveElement, hasZdpFocusMoved, isZdpFocusableElement } from '../focusable';
+  import { toZdpDomId, toZdpDomKey } from '../dom-id.js';
+  import { getZdpActiveElement, hasZdpFocusMoved, isZdpFocusableElement } from '../focusable.js';
   import Toast from './Toast.svelte';
-  import type { ZdpStatusToastItem } from '../toast';
+  import type { ZdpStatusToastItem } from '../toast.js';
 
   type Placement =
     | 'inline'

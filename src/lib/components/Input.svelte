@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from 'svelte/elements';
-  import type { ZdpInputType } from '../input';
-  import { syncZdpFormReset } from '../form-reset';
+  import type { ZdpInputType } from '../input.js';
+  import { syncZdpFormReset } from '../form-reset.js';
 
   type DescribedBy = string | readonly string[] | null;
 
