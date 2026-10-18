@@ -83,7 +83,7 @@ function assertCompletedPackage(
   publicComponents: readonly PublicComponentExport[]
 ): void {
   for (const file of readdirSync(outputRoot, { recursive: true })) {
-    if (typeof file === 'string' && /\.(?:ts|mts|cts)$/.test(file) && !/\.d\.(?:ts|mts|cts)$/.test(file)) {
+    if (typeof file === 'string' && /\.(?:[cm]?ts|tsx)$/.test(file) && !/\.d\.[cm]?ts$/.test(file)) {
       throw new Error(`Package output must not contain raw TypeScript: ${file}`);
     }
   }

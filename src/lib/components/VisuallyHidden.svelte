@@ -1,3 +1,7 @@
+<script lang="ts">
+  // Emit TypeScript declarations even though this component has no props.
+</script>
+
 <span class="zdp-visually-hidden">
   <slot />
 </span>

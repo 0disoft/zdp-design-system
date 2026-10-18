@@ -12,6 +12,7 @@
 | Menu browser keyboard, dismissal, focus, viewport flip/shift, transformed/paint clipping ancestors, logical alignment, long menus, resize, and scroll anchoring | `bun run browser:menu:check` |
 | Popover browser dismissal/opt-out, focus, viewport flip/shift, transformed/paint clipping ancestors, LTR/RTL placement×align, long content, resize, scroll anchoring, open shadow root, iframe, Tab/Shift+Tab, IME Escape (panel-outside 포함), and nested Menu+Popover top-only dismiss regression | `bun run browser:popover:check` |
 | Astro consumer tarball install, build, static CSS and split-pane controller, and Menu/Popover/Combobox hydration with viewport positioning | `bun run consumer:astro:check` |
+| packed tarball declaration resolution for every component subpath and the root and helper subpaths under TypeScript 5 and 6 with `bundler` and `NodeNext` | `bun run types:consumer:check` (the same pass already runs inside `bun run fixtures:check`) |
 | high-risk component geometry and theme rendering | GitHub Actions advisory gate backed by `scripts/check-visual-regressions.mjs` |
 | Storybook static build or bundle evidence | `bun run storybook:build` |
 | npm package contents or release readiness | `npm.cmd pack --dry-run --json` |
@@ -37,10 +38,11 @@ checks. Automated axe results do not replace manual assistive-technology review.
 - Web token CSS: `src/styles/tokens.css`
 - Package build/check scripts: `scripts/build-package.ts`, `scripts/check-package.ts`, `scripts/check-publish-readiness.ts`
 - Package type build: `svelte.config.js` (`vitePreprocess({ script: true })`), `tsconfig.package.json`, `@sveltejs/package` 3; `scripts/build-package.ts` compiles `src/lib` inside the atomic staging tree and rejects raw `.ts` output, requiring `index.js`/`index.d.ts`, per-component `.svelte.d.ts`, and `.js` plus `.d.ts` for every public helper module.
-- Package declaration export contract: `scripts/package-exports.ts` requires every export leaf to declare `types` first and point at a generated `.d.ts`.
+- Package declaration export contract: `scripts/package-exports.ts` requires typed export maps to place `types` first and point at a generated `.d.ts`.
 - Package-size budget and reporting: `.github/package-size-budget.json`, `scripts/check-package-size.ts`, `scripts/package-size/**`, `.github/workflows/design-system.yml`
 - Atomic package-build regression: `scripts/check-package-build.ts` verifies rollback after promotion failure, interrupted-swap recovery, cleanup, and shared component style ordering.
-- Tarball consumer type gate: `types:consumer:check` (planned, not yet wired into `check`) installs the packed tarball and type-checks a consumer under bundler and NodeNext resolution with `skipLibCheck: false` and `exactOptionalPropertyTypes: true`.
+- Packed declaration consumers: `scripts/consumer-type-contract.ts` compiles a generated `type-contract.ts` against the installed tarball for every public component subpath plus the root barrel, `brand-assets`, `credit-assets`, `split-pane`, and `share`, using the aliased `typescript-previous@npm:typescript@5` install and the repository TypeScript 6 under both `bundler` and `NodeNext` resolution, with `strict`, `skipLibCheck: false`, `exactOptionalPropertyTypes: true`, `noUncheckedIndexedAccess: true`, `isolatedModules: true`, and `verbatimModuleSyntax: true`.
+- Type gate wiring: `bun run fixtures:check` packs the package and installs the tarball once, then runs the declaration consumers and a strict `svelte-check` pass over the packed Svelte fixture. `bun run types:consumer:check` repeats that install with `--types-only` for declaration resolution alone and is not a separate step in `bun run check`.
 - Release preparation: `.changes/**`, `.github/workflows/release-pr.yml`, `scripts/release-changes.ts`
 - Release publishing: `.github/workflows/publish-npm.yml`, `scripts/check-release-workflow.ts`
 - Token/share generators: `scripts/generate-tokens.ts`, `scripts/generate-share.ts`

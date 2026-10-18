@@ -145,6 +145,7 @@
     "release:artifact:check": "bun scripts/build-release-artifact.ts --check",
     "release:check": "bun scripts/check-release-workflow.ts && bun run release:artifact:check",
     "fixtures:check": "bun scripts/check-consumer-fixtures.ts",
+    "types:consumer:check": "bun scripts/check-consumer-fixtures.ts --types-only",
     "storybook": "bun run dev",
     "storybook:build": "bun run build",
     "storybook:check": "bun test scripts/loading-motion-contract.test.ts && bun scripts/check-storybook.ts",

@@ -21,7 +21,9 @@
   const firstToken: ZdpTokenName = zdpTokenNames[0];
   const iconCount = Object.keys(zdpShareIcons).length;
   const tokenVersion = tokens.version;
-  const landscapeAsset = zdpBrandAssets.landscape[2];
+  const landscapeAsset = zdpBrandAssets.landscape.find(asset =>
+    asset.packagePath === 'zdp-design-system/assets/brand/landscape-640x360.webp');
+  if (!landscapeAsset) throw new Error('The consumer fixture requires the landscape fallback asset.');
   const splitPanePersistence = createZdpSplitPaneSizePersistence({ key: 'consumer-fixture-navigation' });
   let splitPaneSize = 280;
   let staticSplitPaneRoot: HTMLElement | null = null;

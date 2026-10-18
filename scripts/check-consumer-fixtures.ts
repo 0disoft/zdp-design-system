@@ -6,6 +6,7 @@ import { basename, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { npmCommand } from './npm-command';
+import { checkPackedTypeConsumers } from './consumer-type-contract';
 
 const repoRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const fixtureRoot = resolve(repoRoot, 'fixtures/consumer-svelte-vite');
@@ -17,6 +18,7 @@ const packedFrameworkNeutralBrowserCheckPath = resolve(
   'scripts/browser/check-packed-framework-neutral-dev.mjs'
 );
 const sourceExtensions = new Set(['.svelte', '.ts', '.js', '.css']);
+const typesOnly = process.argv.includes('--types-only');
 const packedModalKinds = ['dialog', 'sheet', 'term-sheet'] as const;
 type PackedModalKind = (typeof packedModalKinds)[number];
 
@@ -54,12 +56,13 @@ async function checkPackedConsumerFixture(): Promise<void> {
     const tarball = await packCurrentPackage(packedRoot);
     await installPackedPackage(packedRoot, tarball);
     await assertInstalledPackageSurface(packedRoot);
-    await checkPackedFrameworkNeutralViteDev(packedRoot);
-    await checkPackedConsumerSsrHydration(packedRoot);
-
     const fullFixtureRoot = resolve(packedRoot, 'full');
     await copyFullConsumerFixture(fullFixtureRoot);
+    await checkPackedTypeConsumers(packedRoot, repoRoot);
     await checkPackedConsumerTypes(fullFixtureRoot);
+    if (typesOnly) return;
+    await checkPackedFrameworkNeutralViteDev(packedRoot);
+    await checkPackedConsumerSsrHydration(packedRoot);
     await checkFullConsumerBuild(fullFixtureRoot);
     await checkSingleComponentTreeShaking(packedRoot);
   } finally {
@@ -446,7 +449,8 @@ async function installPackedPackage(packedRoot: string, tarball: string): Promis
     '--no-fund',
     '--no-package-lock',
     '--legacy-peer-deps',
-    tarball
+    tarball,
+    'typescript-previous@npm:typescript@5'
   ]);
   runCommand(
     npm.executable,
@@ -465,6 +469,10 @@ async function assertInstalledPackageSurface(packedRoot: string): Promise<void> 
   assert.equal(installedManifest.version, sourceManifest.version, 'Installed package version changed after npm pack.');
 
   await assertPathMissing(resolve(installedRoot, 'src'), 'Packed consumer install must not expose package src/.');
+  for (const file of await readdir(resolve(installedRoot, 'dist'), { recursive: true })) {
+    assert.ok(!/\.(?:[cm]?ts|tsx)$/.test(file) || /\.d\.[cm]?ts$/.test(file),
+      `Packed package must not expose raw TypeScript: ${file}`);
+  }
 }
 
 async function copyFullConsumerFixture(fullFixtureRoot: string): Promise<void> {
@@ -487,6 +495,9 @@ async function copyFullConsumerFixture(fullFixtureRoot: string): Promise<void> {
         noEmit: true,
         resolveJsonModule: true,
         strict: true,
+        skipLibCheck: false,
+        exactOptionalPropertyTypes: true,
+        noUncheckedIndexedAccess: true,
         types: ['svelte', 'vite/client']
       },
       include: ['src/**/*.svelte', 'src/**/*.ts']
