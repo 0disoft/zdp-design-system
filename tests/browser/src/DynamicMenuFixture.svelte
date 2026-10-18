@@ -8,6 +8,7 @@
     { id: 'second', label: 'Dynamic second' },
     { id: 'third', label: 'Dynamic third' }
   ];
+  let selections = 0;
   onMount(() => {
     const update = (event: Event) => { items = (event as CustomEvent<readonly ZdpMenuItem[]>).detail; };
     window.addEventListener('zdp-test-menu-items', update);
@@ -16,6 +17,8 @@
 </script>
 
 <section data-testid="dynamic-menu-fixture">
-  <Menu {items} triggerLabel="Dynamic actions" />
+  <button type="button" data-testid="dynamic-menu-before">Before dynamic menu</button>
+  <Menu {items} triggerLabel="Dynamic actions" onSelect={() => selections += 1} />
   <button type="button" data-testid="dynamic-menu-outside">Outside dynamic menu</button>
+  <output data-testid="dynamic-menu-selections">{selections}</output>
 </section>

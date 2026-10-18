@@ -14,6 +14,7 @@ export interface ZdpDismissLayerOptions {
   ignoreOutside?: boolean;
   onEscape?: (event: KeyboardEvent) => void;
   onOutsideClick?: (event: MouseEvent) => void;
+  onOutsidePointerDown?: (event: PointerEvent) => void;
 }
 
 export interface ZdpDismissLayerHandle {
@@ -30,6 +31,7 @@ interface ZdpDismissDocumentState {
   document: Document;
   layers: ZdpDismissLayerEntry[];
   handleClick: (event: MouseEvent) => void;
+  handlePointerDown: (event: PointerEvent) => void;
   handleKeydown: (event: KeyboardEvent) => void;
 }
 
@@ -91,6 +93,12 @@ function getDocumentState(document: Document): ZdpDismissDocumentState {
     document,
     layers: [],
     handleClick: (event) => dismissOutside(state, event),
+    handlePointerDown: (event) => {
+      const layer = findTopOutsideLayer(state.layers);
+      if (layer && layer.options.closeOnOutside !== false && !event.composedPath().includes(layer.root)) {
+        layer.options.onOutsidePointerDown?.(event);
+      }
+    },
     handleKeydown: (event) => dismissEscape(state, event)
   };
   documentStates.set(document, state);
@@ -100,10 +108,14 @@ function getDocumentState(document: Document): ZdpDismissDocumentState {
 function syncDocumentListeners(state: ZdpDismissDocumentState): void {
   const active = state.layers.length > 0;
   state.document.removeEventListener('click', state.handleClick, true);
+  state.document.removeEventListener('pointerdown', state.handlePointerDown, true);
   state.document.removeEventListener('keydown', state.handleKeydown, true);
 
   if (active) {
     state.document.addEventListener('click', state.handleClick, true);
+    if (state.layers.some(layer => layer.options.onOutsidePointerDown)) {
+      state.document.addEventListener('pointerdown', state.handlePointerDown, true);
+    }
     state.document.addEventListener('keydown', state.handleKeydown, true);
   }
 }

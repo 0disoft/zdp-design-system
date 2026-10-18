@@ -28,4 +28,28 @@ export async function verifyDynamicMenuContracts(page) {
   assert.equal(await outside.evaluate((element) => document.activeElement === element), true, 'Updates must not take focus from an outside control.');
   await page.keyboard.press('Escape');
   assert.equal(await menu.count(), 0);
+  await setItems([
+    { id: 'alpha', label: 'Alpha' },
+    { id: 'alpine', label: 'Alpine' },
+    { id: 'alps', label: 'Alps', disabled: true },
+    { id: 'beta', label: 'Beta' }
+  ]);
+  await trigger.click();
+  await page.keyboard.press('a');
+  await assertFocused('Alpine');
+  await page.keyboard.press('a');
+  await assertFocused('Alpha');
+  await page.keyboard.press('Home');
+  await page.keyboard.type('alpi');
+  await assertFocused('Alpine');
+  assert.equal(await page.getByTestId('dynamic-menu-selections').textContent(), '0', 'Typeahead must only move focus.');
+  await page.keyboard.press('Home');
+  await page.keyboard.press('Space');
+  assert.equal(await menu.count(), 0);
+  assert.equal(await page.getByTestId('dynamic-menu-selections').textContent(), '1', 'Space must select exactly once.');
+  await trigger.click();
+  await page.keyboard.press('Shift+Tab');
+  assert.equal(await page.getByTestId('dynamic-menu-before').evaluate(element => document.activeElement === element), true,
+    'Shift+Tab must continue to the previous native control.');
+  assert.equal(await menu.count(), 0);
 }

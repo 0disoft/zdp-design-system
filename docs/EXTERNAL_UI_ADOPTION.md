@@ -5,7 +5,7 @@
 
 ## 원칙
 
-- 외부 UI 라이브러리는 ZDP의 dependency source가 아니라 검증 source다. 명시적으로 채택한 `Menu`와 `Popover`의 Bits UI, `Combobox` 위치 계산의 Floating UI DOM API는 runtime dependency 예외다.
+- 외부 UI 라이브러리는 ZDP의 dependency source가 아니라 검증 source다. 네 플로팅 컴포넌트의 공통 위치 계산에 쓰는 Floating UI DOM API는 runtime dependency 예외다.
 - 고난도 headless primitive는 public API와 styling contract가 ZDP 안에 갇혀 있다는 조건에서 내부 구현 의존성으로 허용할 수 있다.
 - Tailwind, UnoCSS, registry, `cn()` helper, class merge helper, 외부 theme preset은 ZDP core public contract로 새지 않는다.
 - ZDP public component props, DOM exposure policy, CSS class, token mapping, Storybook coverage, consumer fixture는 ZDP가 소유한다.
@@ -41,9 +41,9 @@ MIT 같은 허용 라이선스라도 원 저작권 고지와 license notice를 �
 ### Runtime Dependency
 
 외부 패키지를 dependency로 설치해 내부 구현에 쓰는 상태다.
-Bits UI 같은 headless primitive에 한해 후보가 될 수 있고, public export에 외부 타입, prop 이름, class, theme token이 새면 실패다.
+공통 위치 계산이나 Bits UI 같은 headless primitive가 후보가 될 수 있고, public export에 외부 타입, prop 이름, class, theme token이 새면 실패다.
 consumer fixture가 외부 패키지 설정 없이 `zdp-design-system` public export만으로 빌드되어야 한다.
-현재 `Menu`와 `Popover`가 이 등급으로 Bits UI `DropdownMenu`/`Popover`를 ZDP adapter 뒤에서 내부 구현으로 채택했다. public API, CSS class, token, Storybook, consumer fixture는 그대로 ZDP가 소유한다.
+현재 `Menu`, `Popover`, `Combobox`, `Tooltip`의 위치 계산은 Floating UI DOM API를 공통 액션 뒤에서 쓴다. 공개 API와 상호작용은 ZDP가 소유한다.
 
 ### Prohibited
 
@@ -58,34 +58,15 @@ Select, Combobox, Dialog, Command, Drawer, Sheet처럼 focus, keyboard, aria, ne
 내부 구현 의존성은 허용할 수 있지만, public API와 CSS token, class naming, DOM exposure policy는 ZDP가 소유한다.
 `bits-ui` 타입, prop 이름, store shape, Tailwind class, shadcn registry 파일 구조가 ZDP public export로 새면 실패다.
 
-### Bits UI Menu·Popover 채택 범위
+### 공통 플로팅 위치 계산
 
-`Menu.svelte`는 Bits UI `DropdownMenu`의 `Root`, `Trigger`, `Content`, `Item`을 ZDP adapter 뒤에서만 내부 구현으로 쓴다.
+Menu는 ZDP 키보드·포커스 처리와 공통 `floating-position.ts` 액션을 쓴다. `ZdpMenuItem` 타입, 공개 props·콜백, named `trigger` slot, `.zdp-menu*` class와 토큰 계약을 유지한다. `placement`와 `align`은 선호 배치이며 Floating UI가 화면과 클리핑 부모 경계에서 flip/shift하고 가용 폭·높이를 계산한다. 긴 패널은 내부에서 스크롤하며 스크롤·리사이즈에 따라 위치를 갱신한다. 자동 portal 없이 기존 DOM 안에 배치하고 정적 CSS의 배치 클래스도 유지한다. 바깥 pointerdown은 공용 dismiss stack에서 처리하고, 외부 focus 이동에서는 포커스 트랩 없이 닫는다. Tab/Shift+Tab은 메뉴 항목을 tab 순서에서 제외한 뒤 문서의 다음/이전 컨트롤로 이동한다. typeahead, disabled skip, Home/End, IME 보호와 선택 콜백을 유지한다.
 
-- `ZdpMenuItem` public 타입과 `items`, `open`, `triggerLabel`, `idPrefix`, `placement`, `align`, `onOpenChange`, `onSelect` props 이름, Root 공개 props·콜백·type, named `trigger` slot, `.zdp-menu*` class, token mapping, Storybook story, consumer fixture는 그대로 ZDP가 소유한다.
-- `placement`와 `align`은 선호 배치다. Bits UI `Content`의 collision detection, flip, shift로 화면 경계를 보정하고 가용 폭·높이에 맞춰 긴 패널을 스크롤한다. 간격은 ZDP 토큰에서 읽는다. automatic portal을 켜지 않고 기존 Menu 안에 내부 positioner만 추가한다.
-- 기존 ZDP custom Escape dismiss 공유 순서와 framework-neutral DOM controller·CSS 표면은 유지한다.
-- 바깥 pointerdown에서 닫고, 프로그램이 focus를 바깥으로 옮기면 `onfocusout`에서 `flushSync`로 scope를 정리하며 닫는다. 예전에는 바깥 클릭이 완료될 때까지 열려 있었다.
-- 도구 계약 노트(사용자 UI 문구 아님): Bits UI 적용 범위는 `Menu`와 `Popover`다. 설치된 2.19.5에서 `Menu`가 쓰는 `DropdownMenu`의 `Content`와 `ContentStatic`은 `trapFocus={false}`가 실제 `FocusScope`에 전달되지 않는 결함이 있어 `Menu.svelte` adapter가 외부 focusout `flushSync` close와 Tab capture 정리로 기존 focus 탈출 보장을 유지한다. 반면 `Popover`가 쓰는 `Content`은 `trapFocus={false}`가 실제로 전달되어, adapter가 `onOpenAutoFocus`/`onCloseAutoFocus`/`onFocusOutside`를 preventDefault하고 child `onkeydown`으로 native Tab 순서를 유지한다. 소프트웨어 결함이라 설치본에 로컬 패치를 넣지 않고 버전도 고정하지 않는다. 외부 라이브러리 기본 동작만 신뢰하지 않고 이 focus 계약을 회귀 검사로 계속 확인한다. Popover adapter에는 별도 compat 처리가 하나 더 있다: Bits 2 `EscapeLayer`가 `escapeKeydownBehavior=ignore`여도 document bubble 단계에서 Escape `preventDefault`를 하므로, `open ? rootElement?.ownerDocument : null`에 묶인 pre effect가 open일 때만 Bits `Content`보다 먼저 document bubble guard를 등록하고 closed에서 제거한다. guard는 `open && Escape && (IME || !closeOnEscape)`일 때만 `stopImmediatePropagation`으로 후속 document bubble 리스너로의 전달을 막아 Bits의 `preventDefault`를 방지하고(`preventDefault` 없음) unmount와 document 변경 시 정리한다.
-- 정적 소비 표면은 `bits-ui`나 Svelte를 import할 수 없다. Astro plain HTML/CSS와 `zdp-design-system/split-pane` 같은 framework-neutral DOM controller entry는 인터랙티브 `Menu`를 제공하지 않는다. 인터랙티브 `Menu`는 Svelte island(`@astrojs/svelte`) 안에서만 쓴다.
-- `onclick` 같은 콜백을 담은 `items`는 Astro frontmatter에서 직렬화할 수 없으므로 소비처가 local Svelte wrapper 안에서 만든다.
-- Storybook interaction과 `addon-a11y` gate, consumer fixture build가 같은 변경 단위에 있어야 한다.
+Popover는 공통 `floating-position.ts` 액션으로 위치를 계산하는 non-modal 패널이다. 공개 props, trigger/default 슬롯, `.zdp-popover*` class, 토큰과 `role`(`null`/`group`/`dialog`)을 유지한다. 소비처 trigger에 포커스를 두고 native Tab 순서를 따르며 scroll lock이나 focus trap을 걸지 않는다. Escape·outside click은 ZDP 공용 dismiss stack에서 처리하고 `closeOnEscape`·`closeOnOutside` opt-out과 IME 입력을 보존한다. `placement`·`align`은 선호 배치이며 가용 폭·높이 안에서 flip/shift하고 긴 내용은 스크롤한다. 자동 portal 없이 기존 DOM 안에서 배치한다. Menu는 pointerdown, Popover는 포인터 완료 후 click에서 바깥 입력으로 닫힌다.
 
-Popover는 같은 등급으로 Bits UI `Popover`의 `Root`와 `Content`를 ZDP adapter 뒤에서 쓴다. 기존 소비처 정의 trigger와 default legacy slot을 그대로 유지하므로 Bits `Trigger`는 쓰지 않는다.
+네 컴포넌트는 `floating-position.ts`에서 `@floating-ui/dom` 메이저 1의 `offset`, `flip`, `shift`, `size`, `autoUpdate`를 함께 사용한다. `floating-boundary.ts`가 transform·paint containment의 클리핑 부모를 찾고 같은 경계를 모든 middleware에 전달한다. 일반 overflow 부모에서는 fixed 패널이 빠져나오는 동작을 유지한다. 간격은 CSS 토큰의 계산된 값에서 읽고, unmount/옵션 변경 시 observer·listener와 지연된 좌표 적용을 정리한다. Combobox는 입력창 폭에 맞추고, Tooltip도 같은 가용 공간 제한을 쓴다.
 
-- 공개 props, `trigger` slot과 default legacy slot, `.zdp-popover*` class, token mapping, `role`(`null`/`group`/`dialog`)은 그대로 ZDP가 소유한다.
-- `Content`에서 `trapFocus={false}`, `preventScroll={false}`를 쓴다. `Popover`의 `Content`은 `trapFocus={false}`가 실제로 전달되므로, `onOpenAutoFocus`/`onCloseAutoFocus`/`onFocusOutside`를 preventDefault하고 child `onkeydown`으로 native Tab 순서를 유지한다.
-- Bits 중복 dismissal은 끄고(`escapeKeydownBehavior`/`interactOutsideBehavior`=`ignore`) 기존 ZDP shared dismissal stack·Escape 순서와 `closeOnEscape`/`closeOnOutside` opt-out을 그대로 쓴다. focus가 밖으로 이동하는 것만으로는 닫지 않고 scroll lock도 걸지 않는다.
-- `placement`와 `align`은 선호 배치다. 공간이 부족하면 flip/shift하고 긴 내용은 가용 폭·높이에 맞춰 스크롤한다. ZDP 토큰 간격을 쓰며 automatic portal 없이 기존 DOM 안에 내부 positioner만 추가한다.
-- 바깥 닫힘 시점은 Menu가 pointerdown, Popover는 포인터 완료 후 click으로 서로 다르고, Popover는 기존 시점을 유지한다.
-
-### Menu·Popover 부모 경계
-
-Menu와 Popover의 fixed panel이 transform·paint containment 부모 안에 있으면 내부 `floating-boundary.ts`가 clipping ancestor를 감지해 Bits UI의 `collisionBoundary`에 전달한다. 일반 overflow 부모에서 fixed panel이 빠져나오는 기존 동작은 유지하며, transform+overflow hidden/auto 및 paint containment를 실제 browser hit-test로 검증했다(2026-10-13). 공개 boundary prop이나 자동 portal은 추가하지 않는다.
-
-### Combobox 위치 계산
-
-Combobox 위치 계산은 별도 내부 모듈 `combobox-floating.ts`에서 Floating UI DOM API를 쓴다(2026-10-13, 설치본 1.8.0, 의존성 범위 `1`). 검색·선택·ARIA·IME·폼 상태와 공개 API는 기존 ZDP 구현이 소유한다. `offset`, `flip`, `shift`, `size`, `autoUpdate`로 입력창 폭, 가용 높이, 스크롤·리사이즈를 처리하고 unmount에서 observer/listener를 정리한다. 자동 portal 없이 기존 DOM과 정적 CSS 경로를 유지한다.
+Bits UI runtime 의존성과 focus/Escape 호환용 가드는 제거했다. Bits UI는 동작·접근성 검토 후보로 남는다. 소비 앱은 새 설정 없이 기존 공개 API를 쓰며 consumer fixture build로 확인한다. Astro plain HTML/CSS와 framework-neutral controller 경로는 그대로 유지하고, 인터랙티브 컴포넌트만 Svelte island로 hydrate한다.
 
 ### Skeleton / Flowbite Svelte / daisyUI
 

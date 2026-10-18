@@ -23,6 +23,7 @@ export interface ZdpRovingFocusOptions {
   fallbackElement?: HTMLElement | null;
   orientation: ZdpRovingFocusOrientation;
   selector: string;
+  preventScroll?: boolean;
 }
 
 export interface ZdpRovingFocusResult {
@@ -65,7 +66,7 @@ export function moveZdpRovingFocus(options: ZdpRovingFocusOptions): ZdpRovingFoc
   }
 
   event.preventDefault();
-  element.focus();
+  element.focus({ preventScroll: options.preventScroll ?? false });
   return { element, index: nextIndex };
 }
 

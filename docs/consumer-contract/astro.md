@@ -58,7 +58,7 @@ AdSlot은 광고나 후원 자리의 reserved layout, accessible label, placemen
 Svelte island 없이 Astro에서 공유 아이콘 shape만 필요하면 `zdp-design-system/share`에서 `zdpShareIcons`와 `ZdpShareIconName`을 가져온다.
 플랫폼 브랜드 공유 아이콘은 Simple Icons path 기준을 유지하고 임의 outline glyph로 대체하지 않는다.
 Astro 페이지는 Svelte island가 필요한 부분에서만 Svelte 컴포넌트를 가져온다.
-인터랙티브 Menu가 필요한 페이지는 `@astrojs/svelte`로 Svelte island을 만들고 그 안에서 `zdp-design-system`의 `Menu` 컴포넌트를 쓴다. 기본 CSS와 framework-neutral DOM controller 표면(Astro plain HTML/CSS, `zdp-design-system/split-pane`)은 `bits-ui`나 Svelte를 import할 수 없으므로 그 경로로는 Menu의 keyboard·focus 상호작용을 붙이지 않는다. 정적 마크업에는 `.zdp-menu`, `.zdp-menu__trigger`, `.zdp-menu__panel`, `.zdp-menu__item` utility만 쓴다.
+인터랙티브 Menu가 필요한 페이지는 `@astrojs/svelte`로 Svelte island을 만들고 그 안에서 `zdp-design-system`의 `Menu` 컴포넌트를 쓴다. 기본 CSS와 framework-neutral DOM controller 표면(Astro plain HTML/CSS, `zdp-design-system/split-pane`)은 Svelte나 Floating UI를 import할 수 없으므로 그 경로로는 Menu의 keyboard·focus 상호작용을 붙이지 않는다. 정적 마크업에는 `.zdp-menu`, `.zdp-menu__trigger`, `.zdp-menu__panel`, `.zdp-menu__item` utility만 쓴다.
 Menu `items`의 `onclick` 같은 함수는 Astro frontmatter prop으로 직렬화할 수 없어서, 페이지가 아니라 그 island의 local Svelte wrapper 안에서 만든다. 항목 노출, 권한, 라우팅 판단은 소비처가 계속 소유한다.
 packed Astro consumer fixture는 `static`, `menu`, `popover`, `combobox` 4페이지를 포함하고 기존 정적 경로를 유지한다. `menu`와 `popover` 페이지는 Svelte island 안에서 `zdp-design-system`의 `Menu`와 `Popover`를 mount하고, 공개 props, `trigger` slot과 default legacy slot, `.zdp-menu*`/`.zdp-popover*` class, token은 그대로 쓴다. 정적 HTML/CSS 경로는 기존대로 유지하고, Popover의 변경 콜백이 변경당 한 번만 호출되는지도 이 fixture에서 확인한다.
 

@@ -126,6 +126,7 @@
     "a11y:runtime:check": "node scripts/check-storybook-runtime-a11y.mjs",
     "ssr:hydration:check": "node scripts/check-ssr-hydration.mjs",
     "browser:check": "node scripts/check-browser-accessibility.mjs",
+    "browser:floating:check": "node scripts/check-browser-accessibility.mjs --floating",
     "browser:modal:check": "node scripts/check-browser-accessibility.mjs --modal",
     "browser:menu:check": "node scripts/check-browser-accessibility.mjs --menu",
     "browser:popover:check": "node scripts/check-browser-accessibility.mjs --popover",
@@ -172,7 +173,6 @@
     "svelte": "^5.56.0"
   },
   "dependencies": {
-    "@floating-ui/dom": "1",
-    "bits-ui": "2"
+    "@floating-ui/dom": "1"
   }
 }

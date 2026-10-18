@@ -11,12 +11,12 @@ stability=contract
 -->
 
 <script lang="ts">
-  import { flushSync, onDestroy, tick } from 'svelte';
-  import { DropdownMenu } from 'bits-ui';
+  import { onDestroy, tick } from 'svelte';
   import { createZdpDismissLayer } from '../dismiss-layer.js';
   import { toZdpDomId } from '../dom-id.js';
   import { getZdpActiveElement } from '../focusable.js';
-  import { getZdpFloatingBoundaries } from '../floating-boundary.js';
+  import { positionZdpFloatingPanel } from '../floating-position.js';
+  import { moveZdpRovingFocus } from '../roving-focus.js';
   import type { ZdpMenuItem } from '../menu.js';
 
   type Placement = 'top' | 'right' | 'bottom' | 'left';
@@ -54,25 +54,12 @@ stability=contract
   let restoreFocusAfterClose = $state(false);
   let focusIntent = $state<'first' | 'last' | 'current'>('first');
   let activeItemId = $state('');
-  let floatingGap = $state(0);
-  let floatingDirection = $state<'ltr' | 'rtl'>('ltr');
-  let floatingBoundaries = $state<HTMLElement[]>([]);
   const dismissLayer = createZdpDismissLayer();
 
   const enabledItems = $derived(items.filter((item) => !item.disabled));
   const resolvedIdPrefix = $derived(toDomId(idPrefix ?? fallbackIdPrefix));
   const triggerId = $derived(`${resolvedIdPrefix}-trigger`);
   const panelId = $derived(`${resolvedIdPrefix}-panel`);
-
-  $effect(() => {
-    if (!open || !triggerElement) return;
-    const style = triggerElement.ownerDocument.defaultView?.getComputedStyle(triggerElement);
-    if (!style) return;
-    // Read resolved pixels, so rem-based ZDP spacing remains the source of truth.
-    floatingGap = Number.parseFloat(style.columnGap) || 0;
-    floatingDirection = style.direction === 'rtl' ? 'rtl' : 'ltr';
-    floatingBoundaries = getZdpFloatingBoundaries(triggerElement);
-  });
 
   $effect(() => {
     const panel = panelElement;
@@ -103,11 +90,15 @@ stability=contract
   $effect.pre(() => {
     dismissLayer.setActive(open, rootElement, {
       onEscape: () => closeMenu(),
-      onOutsideClick: () => closeMenu(false)
+      onOutsideClick: () => closeMenu(false),
+      onOutsidePointerDown: () => closeMenu(false)
     });
   });
 
-  onDestroy(() => dismissLayer.destroy());
+  onDestroy(() => {
+    clearTypeahead();
+    dismissLayer.destroy();
+  });
 
   $effect(() => {
     if (open === knownOpenState) {
@@ -138,6 +129,7 @@ stability=contract
   }
 
   function closeMenu(restoreFocus = true): void {
+    clearTypeahead();
     restoreFocusAfterClose = restoreFocus;
     setOpen(false);
   }
@@ -145,18 +137,8 @@ stability=contract
   function handleFocusOut(event: FocusEvent): void {
     const target = event.relatedTarget;
     if (target && panelElement && !panelElement.contains(target as Node)) {
-      // Dispose the Bits focus scope before the next focusin event so an
-      // external consumer focus move is preserved instead of trapped.
-      flushSync(() => closeMenu(false));
+      closeMenu(false);
     }
-  }
-
-  function handleOutsidePointer(event: PointerEvent): void {
-    if (event.composedPath().includes(triggerElement as EventTarget)) {
-      event.preventDefault();
-      return;
-    }
-    restoreFocusAfterClose = false;
   }
 
   function handleTriggerClick(): void {
@@ -189,7 +171,7 @@ stability=contract
     }
 
     const activeElement = getZdpActiveElement(rootElement?.ownerDocument ?? document);
-    previousFocusElement = activeElement instanceof HTMLElement ? activeElement : triggerElement;
+    previousFocusElement = activeElement ?? triggerElement;
 
     if (focusIntent === 'first') {
       activeItemId = enabledItems[0]?.id ?? '';
@@ -197,8 +179,9 @@ stability=contract
       activeItemId = enabledItems[enabledItems.length - 1]?.id ?? '';
     }
 
+    const panel = panelElement;
     await tick();
-
+    if (!open || panelElement !== panel || !panel?.isConnected) return;
     focusActiveItem();
   }
 
@@ -216,27 +199,61 @@ stability=contract
     previousFocusElement = null;
   }
 
-  function handlePanelKeydown(event: KeyboardEvent, handleBitsKeydown: unknown): void {
-    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+  let typeahead = '';
+  let typeaheadTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function clearTypeahead(): void {
+    if (typeaheadTimer !== null) clearTimeout(typeaheadTimer);
+    typeaheadTimer = null;
+    typeahead = '';
+  }
+
+  function handlePanelKeydown(event: KeyboardEvent): void {
+    if (event.defaultPrevented || event.isComposing || event.keyCode === 229 ||
+        event.altKey || event.ctrlKey || event.metaKey || !panelElement) return;
     if (event.key === 'Tab') {
+      // Remove menu items from native Tab traversal before closing the panel.
+      for (const item of panelElement.querySelectorAll<HTMLElement>('[role="menuitem"]')) item.tabIndex = -1;
+      triggerElement?.focus({ preventScroll: true });
       closeMenu(false);
       return;
     }
-
-    if (event.isComposing || event.keyCode === 229) return;
-    if (typeof handleBitsKeydown === 'function') handleBitsKeydown(event);
-  }
-
-  function handleTabExit(event: KeyboardEvent): void {
-    if (event.isComposing || event.keyCode === 229) {
-      event.stopImmediatePropagation();
+    const moved = moveZdpRovingFocus({
+      container: panelElement, event, orientation: 'vertical', preventScroll: true,
+      selector: '[role="menuitem"]:not(:disabled):not([aria-disabled="true"])'
+    });
+    if (moved) {
+      activeItemId = moved.element.dataset.menuItemId ?? '';
+      scrollItemIntoPanel(moved.element, panelElement);
+      clearTypeahead();
       return;
     }
-    if (event.key !== 'Tab' || event.altKey || event.ctrlKey || event.metaKey) return;
-    // Preserve native document tab order instead of Bits' modal Tab loop.
-    event.stopImmediatePropagation();
-    flushSync(() => closeMenu(false));
-    triggerElement?.focus();
+    const focused = getZdpActiveElement(panelElement.ownerDocument);
+    if (event.key === ' ' && typeahead === '' && focused?.tagName === 'A') {
+      event.preventDefault();
+      focused.click();
+      return;
+    }
+    if (event.key.length !== 1 || (event.key === ' ' && typeahead === '')) return;
+    event.preventDefault();
+    typeahead += event.key.toLocaleLowerCase();
+    if (typeaheadTimer !== null) clearTimeout(typeaheadTimer);
+    typeaheadTimer = setTimeout(clearTypeahead, 700);
+    const search = [...typeahead].every(letter => letter === typeahead[0]) ? typeahead[0]! : typeahead;
+    const index = enabledItems.findIndex(item => item.id === activeItemId);
+    const start = index + (search.length === 1 ? 1 : 0);
+    const ordered = enabledItems.map((_, offset) => enabledItems[(Math.max(0, start) + offset) % enabledItems.length]!);
+    const match = ordered.find(item => item.label.toLocaleLowerCase().startsWith(search));
+    if (match) {
+      activeItemId = match.id;
+      focusActiveItem();
+    }
+  }
+
+  function handleItemPointerMove(event: PointerEvent, item: ZdpMenuItem): void {
+    if (event.pointerType !== 'mouse' || item.disabled) return;
+    activeItemId = item.id;
+    (event.currentTarget as HTMLElement).focus({ preventScroll: true });
   }
 
   function handleItemClick(event: MouseEvent, item: ZdpMenuItem): void {
@@ -298,16 +315,12 @@ stability=contract
   }
 </script>
 
-<DropdownMenu.Root bind:open dir={floatingDirection} onOpenChange={(nextOpen) => onOpenChange?.(nextOpen)}>
 <span
   class={`zdp-menu zdp-menu--${placement} zdp-menu--align-${align}`}
   data-open={open ? 'true' : 'false'}
   bind:this={rootElement}
 >
-  <DropdownMenu.Trigger id={triggerId} bind:ref={triggerElement}>
-  {#snippet child({ props })}
   <button
-    {...props}
     class="zdp-menu__trigger"
     id={triggerId}
     type="button"
@@ -317,8 +330,6 @@ stability=contract
     aria-controls={open ? panelId : undefined}
     bind:this={triggerElement}
     onclick={handleTriggerClick}
-    onpointerdown={() => {}}
-    onpointerup={() => {}}
     onkeydown={handleTriggerKeydown}
   >
     <span class="zdp-menu__trigger-label">
@@ -327,37 +338,10 @@ stability=contract
     </span>
     <span class="zdp-menu__trigger-mark" aria-hidden="true"></span>
   </button>
-  {/snippet}
-  </DropdownMenu.Trigger>
 
   {#if open}
-    <DropdownMenu.Content
-      id={panelId}
-      side={placement}
-      {align}
-      sideOffset={floatingGap}
-      collisionPadding={floatingGap}
-      collisionBoundary={floatingBoundaries}
-      avoidCollisions={true}
-      sticky="always"
-      strategy="fixed"
-      dir={floatingDirection}
-      style="--zdp-menu-available-width:var(--bits-dropdown-menu-content-available-width);--zdp-menu-available-height:var(--bits-dropdown-menu-content-available-height);--zdp-menu-anchor-width:var(--bits-dropdown-menu-anchor-width);"
-      bind:ref={panelElement}
-      loop={true}
-      trapFocus={false}
-      preventScroll={false}
-      escapeKeydownBehavior="ignore"
-      interactOutsideBehavior="close"
-      onInteractOutside={handleOutsidePointer}
-      onOpenAutoFocus={(event) => event.preventDefault()}
-      onCloseAutoFocus={(event) => event.preventDefault()}
-      onFocusOutside={(event) => event.preventDefault()}
-    >
-    {#snippet child({ props, wrapperProps })}
-    <div {...wrapperProps} class="zdp-menu__positioner">
+    <div class="zdp-menu__positioner">
     <div
-      {...props}
       class="zdp-menu__panel"
       data-zdp-positioned
       id={panelId}
@@ -365,20 +349,20 @@ stability=contract
       aria-labelledby={triggerId}
       tabindex="-1"
       bind:this={panelElement}
-      onkeydown={(event) => handlePanelKeydown(event, props.onkeydown)}
-      onkeydowncapture={handleTabExit}
+      onkeydown={handlePanelKeydown}
       onfocusout={handleFocusOut}
+      use:positionZdpFloatingPanel={{
+        anchor: triggerElement, gapSource: triggerElement, prefix: 'menu',
+        placement: align === 'center' ? placement : `${placement}-${align}`
+      }}
     >
       {#each items as item (item.id)}
         {#if item.separatorBefore}
           <span class="zdp-menu__separator" role="separator" aria-hidden="true"></span>
         {/if}
 
-        <DropdownMenu.Item disabled={item.disabled ?? false} textValue={item.label} closeOnSelect={false}>
-        {#snippet child({ props: itemProps })}
         {#if item.href}
           <a
-            {...itemProps}
             class={`zdp-menu__item ${item.tone === 'danger' ? 'zdp-menu__item--danger' : ''}`}
             href={item.disabled ? undefined : item.href}
             target={item.target ?? undefined}
@@ -389,6 +373,7 @@ stability=contract
             tabindex={item.id === activeItemId && !item.disabled ? 0 : -1}
             data-menu-item-id={item.id}
             onclick={(event) => handleItemClick(event, item)}
+            onpointermove={(event) => handleItemPointerMove(event, item)}
             onfocus={() => {
               if (!item.disabled) activeItemId = item.id;
             }}
@@ -397,15 +382,16 @@ stability=contract
           </a>
         {:else}
           <button
-            {...itemProps}
             class={`zdp-menu__item ${item.tone === 'danger' ? 'zdp-menu__item--danger' : ''}`}
             type="button"
             role="menuitem"
             aria-label={item.ariaLabel ?? undefined}
             disabled={item.disabled}
+            aria-disabled={item.disabled ? 'true' : undefined}
             tabindex={item.id === activeItemId && !item.disabled ? 0 : -1}
             data-menu-item-id={item.id}
             onclick={(event) => handleItemClick(event, item)}
+            onpointermove={(event) => handleItemPointerMove(event, item)}
             onfocus={() => {
               if (!item.disabled) activeItemId = item.id;
             }}
@@ -413,16 +399,11 @@ stability=contract
             {item.label}
           </button>
         {/if}
-        {/snippet}
-        </DropdownMenu.Item>
       {/each}
     </div>
     </div>
-    {/snippet}
-    </DropdownMenu.Content>
   {/if}
 </span>
-</DropdownMenu.Root>
 
 <style>
   .zdp-menu {
