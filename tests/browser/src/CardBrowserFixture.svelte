@@ -1,5 +1,6 @@
 <script lang="ts">
   import ConfirmPendingFixture from './ConfirmPendingFixture.svelte';
+  import SplitDefaultsFixture from './SplitDefaultsFixture.svelte';
   import ButtonLoadingFixture from './ButtonLoadingFixture.svelte';
   import IconButtonLoadingFixture from './IconButtonLoadingFixture.svelte';
   import NumericProgressFixture from './NumericProgressFixture.svelte';
@@ -914,6 +915,7 @@
   <ButtonLoadingFixture />
   <IconButtonLoadingFixture />
   <ConfirmPendingFixture />
+  <SplitDefaultsFixture />
 </main>
 
 <style>

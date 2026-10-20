@@ -9,6 +9,7 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { chromium } from 'playwright-core';
 import { createServer } from 'vite';
 import { verifySplitPointerOwnership, verifySplitReentrantCallbacks } from './browser/check-split-pointer.mjs';
+import { verifySplitDefaultSizeContracts } from './browser/check-split-defaults.mjs';
 import { verifyFoundationAndFormContracts, verifyProgressRangeContracts } from './browser/check-foundation-and-forms.mjs';
 import { verifyAsyncSelectResetContracts, verifyFormResetContracts, verifyNativeInputContracts } from './browser/check-native-inputs.mjs';
 import { verifyComboboxEditingContracts, verifyComboboxSelectionContracts } from './browser/check-combobox-selection.mjs';
@@ -148,6 +149,10 @@ try {
     await verifyPageGutterContracts(page, baseUrl);
   } else if (process.argv.includes('--copy')) {
     await verifyCopyLifecycleContracts(page);
+  } else if (process.argv.includes('--split')) {
+    await verifySplitDefaultSizeContracts(page);
+    await verifySplitPointerOwnership(page);
+    await verifySplitReentrantCallbacks(page);
   } else if (process.argv.includes('--confirm-click')) {
     await verifyConfirmClickContracts(page);
   } else if (process.argv.includes('--confirm')) {
@@ -196,6 +201,7 @@ try {
   await verifyControlConsistency(page);
   await verifyProgressRangeContracts(page);
   await verifySplitPointerOwnership(page);
+  await verifySplitDefaultSizeContracts(page);
   await verifySplitReentrantCallbacks(page);
   await verifyNativeInputContracts(page);
   await verifyFormResetContracts(page);

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, type Snippet } from 'svelte';
+  import { onMount, untrack, type Snippet } from 'svelte';
   import { toZdpDomId } from '../dom-id.js';
   import {
     clampZdpSplitPaneSize,
@@ -37,8 +37,8 @@
     id = null,
     primaryId = null,
     secondaryId = null,
-    size = $bindable(280),
     defaultSize = 280,
+    size = $bindable(),
     minSize = 220,
     maxSize = 480,
     secondaryMinSize = 0,
@@ -55,6 +55,11 @@
     onResizeCommit = null
   }: Props = $props();
 
+  // Only initialize an omitted size; later defaults must not replace a chosen size.
+  untrack(() => {
+    if (size === undefined) size = defaultSize;
+  });
+
   let rootElement: HTMLDivElement | null = $state(null);
   let primaryElement: HTMLDivElement | null = $state(null);
   let separatorElement: HTMLDivElement | null = $state(null);
@@ -70,7 +75,7 @@
   const normalizedMaxSize = $derived(Math.max(normalizedMinSize, normalizeSize(maxSize, 480)));
   const normalizedHandleSize = $derived(Math.max(1, normalizeSize(handleSize, 24)));
   const renderedSize = $derived(
-    clampZdpSplitPaneSize(size, {
+    clampZdpSplitPaneSize(size ?? defaultSize, {
       defaultSize,
       minSize: normalizedMinSize,
       maxSize: normalizedMaxSize
@@ -108,7 +113,7 @@
 
   function createControllerOptions() {
     return {
-      size,
+      size: size ?? defaultSize,
       defaultSize,
       minSize,
       maxSize,
