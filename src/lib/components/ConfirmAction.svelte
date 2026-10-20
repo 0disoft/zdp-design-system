@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { onDestroy } from 'svelte';
+  import { onDestroy, tick } from 'svelte';
+  import Button from './Button.svelte';
 
   interface Props {
     id?: string | null;
@@ -7,6 +8,8 @@
     label?: string;
     hint?: string;
     completeLabel?: string;
+    confirmLabel?: string;
+    cancelLabel?: string;
     disabled?: boolean;
     pending?: boolean;
     pendingLabel?: string;
@@ -21,6 +24,8 @@
     label = $bindable('Slide to confirm'),
     hint = $bindable('Slide or hold for 2 seconds'),
     completeLabel = $bindable('Confirmed'),
+    confirmLabel = $bindable('Confirm'),
+    cancelLabel = $bindable('Cancel'),
     disabled = $bindable(false),
     pending = $bindable(false),
     pendingLabel = $bindable('Processing'),
@@ -33,6 +38,13 @@
   let active = $state(false);
   let activePointerId: number | null = null;
   let confirmed = $state(false);
+  const componentId = $props.id();
+  const confirmationId = `${componentId}-confirmation`;
+  let confirmationOpen = $state(false);
+  let trigger: HTMLButtonElement | undefined = $state();
+  let confirmationGroup: HTMLDivElement | undefined = $state();
+  // Survives success/pending resets until the completing pointer's click arrives.
+  let suppressPointerClick = false;
   let startX = 0;
   let trackWidth = 1;
   let startedAt = 0;
@@ -42,7 +54,7 @@
   let resetTimer: number | null = null;
 
   function beginInteraction(clientX: number | null, element: HTMLButtonElement): void {
-    if (disabled || pending || confirmed) {
+    if (disabled || pending || confirmed || confirmationOpen) {
       return;
     }
 
@@ -94,6 +106,9 @@
     }
 
     clearTimers();
+    if (activePointerId !== null) suppressPointerClick = true;
+    if (confirmationOpen) trigger?.focus();
+    confirmationOpen = false;
     active = false;
     activePointerId = null;
     confirmed = true;
@@ -124,6 +139,7 @@
     active = false;
     activePointerId = null;
     confirmed = false;
+    confirmationOpen = false;
     progress = 0;
   }
 
@@ -161,11 +177,12 @@
   }
 
   function handlePointerDown(event: PointerEvent): void {
-    if (event.button !== 0 || !event.isPrimary || disabled || pending || confirmed || active) {
+    if (event.button !== 0 || !event.isPrimary || disabled || pending || confirmed || active || confirmationOpen) {
       return;
     }
 
     const button = event.currentTarget as HTMLButtonElement;
+    suppressPointerClick = false;
     try {
       button.setPointerCapture(event.pointerId);
     } catch {
@@ -226,6 +243,35 @@
     }
   }
 
+  async function handleClick(event: MouseEvent): Promise<void> {
+    if (suppressPointerClick && event.detail > 0) {
+      suppressPointerClick = false;
+      return;
+    }
+    if (disabled || pending || confirmed || confirmationOpen) return;
+    cancelInteraction();
+    confirmationOpen = true;
+    await tick();
+    if (confirmationOpen && !disabled && !pending) confirmationGroup?.querySelector('button')?.focus();
+  }
+
+  function cancelConfirmation(): void {
+    confirmationOpen = false;
+    trigger?.focus();
+  }
+
+  function confirmClick(): void {
+    if (confirmationOpen) confirmAction();
+  }
+
+  function handleConfirmationKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape' && !event.isComposing) {
+      event.preventDefault();
+      event.stopPropagation();
+      cancelConfirmation();
+    }
+  }
+
   onDestroy(clearTimers);
   let safeDurationMs = $derived(Math.min(2_147_483_647, Math.max(600, Number.isFinite(durationMs) ? durationMs : 2000)));
   let progressStyle = $derived(`--zdp-confirm-action-progress: ${progress};`);
@@ -235,6 +281,7 @@
     }
   });
   $effect.pre(() => {
+    if (disabled) confirmationOpen = false;
     if (disabled && active) {
       cancelInteraction();
     }
@@ -247,12 +294,15 @@
 </script>
 
 <button
+  bind:this={trigger}
   class={`zdp-confirm-action zdp-confirm-action--${tone}`}
   {id}
   type="button"
   disabled={disabled || pending}
   aria-disabled={disabled || pending}
   aria-busy={pending ? 'true' : undefined}
+  aria-expanded={confirmationOpen}
+  aria-controls={confirmationOpen ? confirmationId : undefined}
   aria-live="polite"
   data-pending={pending ? 'true' : undefined}
   data-disabled={disabled ? 'true' : undefined}
@@ -267,6 +317,7 @@
   onblur={cancelInteraction}
   onkeydown={handleKeydown}
   onkeyup={handleKeyup}
+  onclick={handleClick}
 >
   <span class="zdp-confirm-action__fill" aria-hidden="true"></span>
   <span class="zdp-confirm-action__thumb" aria-hidden="true">
@@ -281,7 +332,23 @@
   </span>
 </button>
 
+{#if confirmationOpen}
+  <!-- svelte-ignore a11y_no_noninteractive_element_interactions (Escape cancels the group from its native buttons.) -->
+  <div class="zdp-confirm-action__confirmation" id={confirmationId} bind:this={confirmationGroup}
+    role="group" aria-label={label} tabindex="-1" onkeydown={handleConfirmationKeydown}>
+    <Button variant="secondary" disabled={disabled || pending} onclick={cancelConfirmation}>{cancelLabel}</Button>
+    <Button variant={tone === 'danger' ? 'danger' : 'primary'} disabled={disabled || pending} onclick={confirmClick}>{confirmLabel}</Button>
+  </div>
+{/if}
+
 <style>
+  .zdp-confirm-action__confirmation {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--zdp-space-2);
+    margin-block-start: var(--zdp-space-2);
+  }
+
   .zdp-confirm-action {
     --zdp-confirm-action-progress: 0;
     --zdp-confirm-action-fill: var(--zdp-color-accent-primary-strong);

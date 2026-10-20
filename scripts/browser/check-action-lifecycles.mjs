@@ -305,6 +305,12 @@ export async function verifyTouchConfirmContracts(page) {
     await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [first] });
     await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
     assert.equal(await button.getAttribute('data-active'), null, 'Lifting the initiating finger must cancel its hold.');
+    // A short tap now opens the explicit confirmation alternative instead of confirming.
+    const group = page.getByRole('group', { name: 'Confirm repeated hold', exact: true });
+    await group.waitFor();
+    assert.equal(await count.textContent(), String(previousCount + 1));
+    await group.getByRole('button', { name: 'Cancel', exact: true }).evaluate(element => element.click());
+    assert.equal(await group.count(), 0);
   } finally {
     await session.send('Input.dispatchTouchEvent', { type: 'touchCancel', touchPoints: [] }).catch(() => {});
     await session.send('Emulation.setTouchEmulationEnabled', { enabled: false });

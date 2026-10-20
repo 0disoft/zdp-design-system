@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { verifyConfirmPendingContracts } from './browser/check-confirm-pending.mjs';
+import { verifyConfirmClickContracts } from './browser/check-confirm-click.mjs';
 import { verifyButtonLoadingContracts } from './browser/check-button-loading.mjs';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -147,6 +148,8 @@ try {
     await verifyPageGutterContracts(page, baseUrl);
   } else if (process.argv.includes('--copy')) {
     await verifyCopyLifecycleContracts(page);
+  } else if (process.argv.includes('--confirm-click')) {
+    await verifyConfirmClickContracts(page);
   } else if (process.argv.includes('--confirm')) {
     await verifyConfirmPendingContracts(page);
     await verifyConfirmCompositionContracts(page);
@@ -155,6 +158,7 @@ try {
     await verifyTouchConfirmContracts(page);
     await verifyConfirmDurationContracts(page);
     await verifyChangingConfirmDurationContracts(page);
+    await verifyConfirmClickContracts(page);
   } else if (process.argv.includes('--button')) {
     await verifyButtonLoadingContracts(page);
     await verifyButtonLoadingContracts(page, { icon: true });
@@ -217,6 +221,7 @@ try {
   await verifyTouchConfirmContracts(page);
   await verifyConfirmDurationContracts(page);
   await verifyChangingConfirmDurationContracts(page);
+  await verifyConfirmClickContracts(page);
   await verifyCopyLifecycleContracts(page);
   await verifyShortcutEditingContracts(page);
   await verifyOverlayContracts(page);
