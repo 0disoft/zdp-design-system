@@ -30,6 +30,7 @@ interface ZdpDismissLayerEntry {
 interface ZdpDismissDocumentState {
   document: Document;
   layers: ZdpDismissLayerEntry[];
+  pendingPointerClick: { pointerId: number; target: EventTarget | null } | null;
   handleClick: (event: MouseEvent) => void;
   handlePointerDown: (event: PointerEvent) => void;
   handleKeydown: (event: KeyboardEvent) => void;
@@ -92,11 +93,26 @@ function getDocumentState(document: Document): ZdpDismissDocumentState {
   const state: ZdpDismissDocumentState = {
     document,
     layers: [],
-    handleClick: (event) => dismissOutside(state, event),
+    pendingPointerClick: null,
+    handleClick: (event) => {
+      const pending = state.pendingPointerClick;
+      state.pendingPointerClick = null;
+      // Keep the click available to its target, but do not dismiss a second layer.
+      if (pending && event.detail > 0 && (
+        'pointerId' in event
+          ? event.pointerId === pending.pointerId
+          : event.composedPath()[0] === pending.target
+      )) {
+        return;
+      }
+      dismissOutside(state, event);
+    },
     handlePointerDown: (event) => {
+      state.pendingPointerClick = null;
       const layer = findTopOutsideLayer(state.layers);
-      if (layer && layer.options.closeOnOutside !== false && !event.composedPath().includes(layer.root)) {
-        layer.options.onOutsidePointerDown?.(event);
+      if (layer?.options.onOutsidePointerDown && layer.options.closeOnOutside !== false && !event.composedPath().includes(layer.root)) {
+        state.pendingPointerClick = { pointerId: event.pointerId, target: event.composedPath()[0] ?? null };
+        layer.options.onOutsidePointerDown(event);
       }
     },
     handleKeydown: (event) => dismissEscape(state, event)
@@ -113,10 +129,10 @@ function syncDocumentListeners(state: ZdpDismissDocumentState): void {
 
   if (active) {
     state.document.addEventListener('click', state.handleClick, true);
-    if (state.layers.some(layer => layer.options.onOutsidePointerDown)) {
-      state.document.addEventListener('pointerdown', state.handlePointerDown, true);
-    }
+    state.document.addEventListener('pointerdown', state.handlePointerDown, true);
     state.document.addEventListener('keydown', state.handleKeydown, true);
+  } else {
+    state.pendingPointerClick = null;
   }
 }
 

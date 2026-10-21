@@ -63,6 +63,31 @@ export async function verifyPopoverFocusContracts(page) {
     assert.equal(await editor.count(), 1, 'Nested Menu dismissal must keep the Popover open.');
     assert.equal(await menuTrigger.evaluate(isActive), true, 'Nested Menu dismissal must return focus inside the Popover.');
 
+    const outside = fixture.getByTestId('outside');
+    await outside.evaluate((element) => {
+      element.dataset.clicks = '0';
+      element.addEventListener('click', () => {
+        element.dataset.clicks = String(Number(element.dataset.clicks) + 1);
+      });
+    });
+    await menuTrigger.click();
+    await outside.click();
+    assert.equal(await fixture.getByRole('menu').count(), 0, 'One real outside click must dismiss the nested Menu.');
+    assert.equal(await editor.count(), 1, 'The click following Menu pointerdown dismissal must preserve the outer Popover.');
+    assert.equal(await outside.evaluate(isActive), true, 'Outside dismissal must preserve native button focus.');
+    assert.equal(await outside.getAttribute('data-clicks'), '1', 'Outside dismissal must still deliver the button click.');
+    await outside.click();
+    assert.equal(await editor.count(), 0, 'A second real outside click must dismiss the remaining Popover.');
+
+    await trigger.click();
+    await menuTrigger.click();
+    await outside.evaluate((element) => element.click());
+    assert.equal(await fixture.getByRole('menu').count(), 0, 'Click-only input must dismiss the top Menu.');
+    assert.equal(await editor.count(), 1, 'Click-only input must preserve the outer Popover.');
+    await outside.evaluate((element) => element.click());
+    assert.equal(await editor.count(), 0, 'A second click-only input must dismiss the remaining Popover.');
+    await trigger.click();
+
     await nestedTrigger.click();
     await fixture.getByTestId('nested-action').focus();
     await page.keyboard.press('Escape');
