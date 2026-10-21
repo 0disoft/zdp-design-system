@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 0.67.0
+
+- Added an explicit confirm/cancel step for click-only ConfirmAction activation, with customizable labels, focus recovery, and protection against clicks following completed hold or slide gestures.
+- Fixed one outside pointer gesture dismissing both a nested Menu and its parent Popover while preserving the outside target's click and focus.
+- Restored Menu trigger focus after a parent closes the bound open state, without overriding deliberate outside focus or a quickly reopened menu in light DOM and open shadow roots.
+- Fixed ResizableSplitPane to initialize an omitted size from defaultSize while preserving explicit sizes and user resizing.
+
 ## 0.66.0
 
 - Remove hidden Tooltip content from layout so long labels do not create horizontal scrolling on narrow screens. Keep hover, keyboard focus, Escape dismissal, and framework-neutral CSS behavior aligned.

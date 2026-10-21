@@ -110,7 +110,7 @@ import 'zdp-design-system/expressive-fonts.css';
 
 패키지 export는 `dist/` 산출물을 가리킨다. `bun run package:build`가 `@sveltejs/package`와 `tsconfig.package.json`으로 `src/lib`를 컴파일해 atomic staging tree에 담고, 검증을 통과한 뒤에만 `dist/`를 교체한다. 산출물에 원본 `.ts`는 남지 않고, helper 모듈은 `.js`와 `.d.ts`를, Svelte 컴포넌트는 TypeScript를 제거한 `.svelte`와 `.svelte.d.ts`를 함께 내보낸다. 모든 export는 `types` 조건을 첫 번째에 두고 root는 `dist/index.d.ts`, 컴포넌트 subpath는 `dist/components/*.svelte.d.ts`, helper subpath는 각 `dist/<module>.d.ts`로 연결하므로 bundler와 NodeNext 소비처가 같은 선언을 본다. root runtime entry는 `dist/index.js`이고 root barrel은 호환용이다. `dist/share.js`와 `dist/share.d.ts`도 같은 compile이 `src/lib/share.ts`에서 만들고, 저장소 root의 `share.js`와 `share.d.ts`는 기존 tooling 호환용으로만 남는다. CSS와 asset export 경로는 그대로다. 새 Svelte 코드는 `zdp-design-system/components/ComponentName`과 `zdp-design-system/tokens.css`를 기본으로 쓴다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`다. 소비 저장소와 문서 예시는 `zdp-design-system` public export만 쓰고 내부 `src/` 경로를 직접 import하지 않는다.
 
-ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.66.0`를 기본으로 쓴다.
+ZDP monorepo 안의 active sibling 소비처는 `file:../zdp-design-system` 의존성을 유지할 수 있다. 이 방식은 release 전 변경을 같이 검증하기 위한 local workspace 계약이므로 CI에서 sibling checkout과 `bun run package:build`를 먼저 수행해야 한다. sibling checkout을 전제로 하지 않는 standalone consumer, public template, external example은 npm registry의 `zdp-design-system: ^0.67.0`를 기본으로 쓴다.
 
 ### Brand fallback assets
 
