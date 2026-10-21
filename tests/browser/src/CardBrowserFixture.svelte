@@ -45,6 +45,7 @@
   import LocalizedSortFixture from './LocalizedSortFixture.svelte';
   import DynamicPaginationFixture from './DynamicPaginationFixture.svelte';
   import DynamicMenuFixture from './DynamicMenuFixture.svelte';
+  import MenuFocusFixture from './MenuFocusFixture.svelte';
   import AccordionInstancesFixture from './AccordionInstancesFixture.svelte';
   import AvatarFallbackFixture from './AvatarFallbackFixture.svelte';
   import FrameRovingFixture from './FrameRovingFixture.svelte';
@@ -475,6 +476,7 @@
   <output data-testid="confirm-action-count">{confirmActionCount}</output>
   <ActionLifecycleFixture />
   <DynamicMenuFixture />
+  <MenuFocusFixture />
   <DynamicPaginationFixture />
   <EmptyTooltipFixture />
   <PopoverGeometryFixture />

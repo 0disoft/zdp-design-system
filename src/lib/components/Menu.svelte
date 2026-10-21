@@ -14,7 +14,7 @@ stability=contract
   import { onDestroy, tick } from 'svelte';
   import { createZdpDismissLayer } from '../dismiss-layer.js';
   import { toZdpDomId } from '../dom-id.js';
-  import { getZdpActiveElement } from '../focusable.js';
+  import { getZdpActiveElement, hasZdpFocusMoved } from '../focusable.js';
   import { positionZdpFloatingPanel } from '../floating-position.js';
   import { moveZdpRovingFocus } from '../roving-focus.js';
   import type { ZdpMenuItem } from '../menu.js';
@@ -51,7 +51,8 @@ stability=contract
   let panelElement = $state<HTMLElement | null>(null);
   let previousFocusElement = $state<HTMLElement | null>(null);
   let knownOpenState = $state(false);
-  let restoreFocusAfterClose = $state(false);
+  let restoreFocusAfterClose = $state<boolean | null>(null);
+  let focusRestoreGeneration = 0;
   let focusIntent = $state<'first' | 'last' | 'current'>('first');
   let activeItemId = $state('');
   const dismissLayer = createZdpDismissLayer();
@@ -95,6 +96,19 @@ stability=contract
     });
   });
 
+  $effect.pre(() => {
+    const generation = ++focusRestoreGeneration;
+    const root = rootElement;
+    if (open || restoreFocusAfterClose !== null || !root) return;
+    // Capture focus before the parent-driven update removes the panel.
+    const focused = getZdpActiveElement(root.ownerDocument);
+    const panel = root.querySelector('.zdp-menu__panel');
+    if (focused && panel?.contains(focused)) {
+      clearTypeahead();
+      void restoreExternallyClosedFocus(root, focused, triggerElement, generation);
+    }
+  });
+
   onDestroy(() => {
     clearTypeahead();
     dismissLayer.destroy();
@@ -107,12 +121,22 @@ stability=contract
 
     knownOpenState = open;
     if (open) {
+      restoreFocusAfterClose = null;
       void handleMenuOpened();
-    } else if (restoreFocusAfterClose) {
-      restorePreviousFocus();
-      restoreFocusAfterClose = false;
+    } else {
+      if (restoreFocusAfterClose === true) restorePreviousFocus();
+      restoreFocusAfterClose = null;
     }
   });
+
+  async function restoreExternallyClosedFocus(
+    root: HTMLElement, previous: HTMLElement, returnTarget: HTMLElement | null, generation: number
+  ): Promise<void> {
+    await tick();
+    if (generation !== focusRestoreGeneration || open || rootElement !== root || !root.isConnected) return;
+    if (hasZdpFocusMoved(root, previous)) return;
+    if (returnTarget?.isConnected) returnTarget.focus();
+  }
 
   function setOpen(nextOpen: boolean): void {
     if (open === nextOpen) {
