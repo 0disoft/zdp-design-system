@@ -39,7 +39,7 @@ export async function verifyControlConsistency(page) {
           return {background: style.backgroundColor, color: style.color, border: style.borderTopColor};
         };
         const expectedPrimary = colorsFor('surface-inverse', 'ink-inverse', 'line-strong');
-        const expectedSecondary = colorsFor('surface-panel', 'ink-strong', 'line-strong');
+        const expectedSecondary = colorsFor('interaction-hover', 'ink-strong', null);
         const expectedSelected = colorsFor('interaction-selected', 'ink-strong', null);
         reference.remove();
         const colors = selector => {
@@ -60,8 +60,6 @@ export async function verifyControlConsistency(page) {
             endInset(disclosure.getBoundingClientRect(), disclosureMark.getBoundingClientRect())],
           glyph: [getComputedStyle(arrow).maskImage, glyph.maskImage, getComputedStyle(menuMark, '::before').maskImage, getComputedStyle(disclosureMark, '::before').maskImage],
           glyphSize: [arrowRect.width, Number.parseFloat(glyph.width), menuMark.getBoundingClientRect().width, disclosureMark.getBoundingClientRect().width],
-          menuSurface: getComputedStyle(menu).backgroundColor,
-          buttonSurface: getComputedStyle(root.querySelector('.zdp-button')).backgroundColor,
           nativePickerDisplay: getComputedStyle(root.querySelector('.zdp-select'), '::picker-icon').display };
       });
       const baseline = styles.fields[0];
@@ -69,7 +67,7 @@ export async function verifyControlConsistency(page) {
         assert.equal(action.background, styles.expectedPrimary.background, `${theme}/${direction}: primary surface must resolve in its own theme`);
         assert.equal(action.color, styles.expectedPrimary.color, `${theme}/${direction}: primary text must resolve in its own theme`);
       }
-      assert.deepEqual(styles.secondary, styles.expectedSecondary, `${theme}/${direction}: secondary action must use the outlined panel surface`);
+      assert.deepEqual(styles.secondary, styles.expectedSecondary, `${theme}/${direction}: secondary action must use a filled surface without an outline`);
       assert.deepEqual(styles.selected, styles.expectedSelected, `${theme}/${direction}: selected control must use its own theme's soft surface`);
       assert.deepEqual(styles.textScale, styles.expectedSelected, `${theme}/${direction}: selected text scale must use a background without an outline`);
       assert.deepEqual(styles.locale, styles.expectedSelected, `${theme}/${direction}: selected language must use a background without an outline`);
@@ -88,7 +86,6 @@ export async function verifyControlConsistency(page) {
         assert.equal(navigation.font, baseline.font);
         assert.equal(navigation.lineHeight, baseline.lineHeight);
       }
-      assert.equal(styles.menuSurface, styles.buttonSurface, 'Secondary actions share the same resting surface');
       for (const control of styles.smallControls) assert.equal(control.height, styles.smallControls[0].height, 'All sm controls must share height');
       for (const inset of styles.inset) assert.ok(Math.abs(inset - 12) < 0.6, `${theme}/${direction}: all indicators share the 12px inline-end inset (${styles.inset})`);
       assert.deepEqual(styles.glyphSize, [20, 20, 20, 20]);

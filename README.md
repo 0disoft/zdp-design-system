@@ -606,7 +606,7 @@ preview/index.html
 
 **Hover / Active**
 - 버튼 hover/active는 배경색, 테두리색, 글자색만 바꾼다. 위치 이동·빛 반사 없음.
-- 주 액션(primary Button, solid IconButton)은 `surface-inverse` 배경 + `ink-inverse` 글자를 쓰고 hover/active는 `ink-normal` 배경으로 이동한다. Secondary Button은 panel surface와 `line-strong` outline을 기본으로 쓰고 hover/active는 raised surface로 구분한다. ghost IconButton은 투명 surface + `ink-normal` 글자를 기본으로 쓴다. resting border가 없는 나머지 컨트롤은 레이아웃 보존용 투명 border slot을 유지한다.
+- 주 액션(primary Button, solid IconButton)은 `surface-inverse` 배경 + `ink-inverse` 글자를 쓴다. Secondary Button은 테두리 없이 `interaction-hover` 배경을 기본으로 쓰고, hover/active에서는 검정 18%/28%를 섞어 더 어둡게 한다. ghost IconButton은 투명 surface + `ink-normal` 글자를 기본으로 쓴다. 레이아웃 보존용 투명 border slot과 키보드 focus outline은 유지한다.
 - Focus는 `focus.surface` outline + `focus.line` border로 표시한다.
 - Select·검색 입력·Menu 트리거와 펼친 패널은 같은 panel 표면과 1px `line-strong` 테두리를 쓴다. ConfirmAction은 raised 표면과 투명 border slot을 유지한다. keyboard focus와 forced-colors에서는 outline 또는 system border로 현재 위치를 표시한다.
 - 복사·정렬·알림 닫기 버튼은 마우스를 올려도 테두리 없이 배경색으로 반응하고, 키보드 포커스에서 `focus.line` 테두리와 outline으로 위치를 표시한다. TableToolbar는 외곽 테두리를 투명하게 두고 표 자체의 외곽선과 셀 구분선은 유지한다.

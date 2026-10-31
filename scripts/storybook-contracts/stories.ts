@@ -55,7 +55,7 @@ export function checkStoriesContracts(context: StorybookCheckContext): void {
 
   const secondaryButtonBlock = button.slice(
     button.indexOf('.zdp-button--secondary {'),
-    button.indexOf('.zdp-button--secondary:hover')
+    button.indexOf('.zdp-button--danger {')
   );
 
   const dangerButtonBlock = button.slice(
@@ -68,9 +68,10 @@ export function checkStoriesContracts(context: StorybookCheckContext): void {
     button.indexOf('.zdp-button--danger:where(:active:not(:disabled))')
   );
 
-  if (!secondaryButtonBlock.includes('background: var(--zdp-color-surface-panel)') ||
-      !secondaryButtonBlock.includes('border-color: var(--zdp-color-line-strong)')) {
-    failures.push('Button secondary variant must use the Quiet Ivory panel surface and a visible outline.');
+  if (!secondaryButtonBlock.includes('background: var(--zdp-color-interaction-hover)') ||
+      !secondaryButtonBlock.includes('border-color: transparent') ||
+      secondaryButtonBlock.includes('border-color: var(--zdp-color-line-strong)')) {
+    failures.push('Button secondary variant must use a filled surface without a visible outline.');
   }
 
   for (const requiredText of ['background: var(--zdp-color-accent-danger)', 'color: var(--zdp-color-ink-inverse)']) {

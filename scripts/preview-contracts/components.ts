@@ -528,7 +528,7 @@ for (const [label, block] of staticBorderlessControlBlocks) {
 
 const staticSecondaryButtonBlock = componentStyle.slice(
   componentStyle.indexOf('.zdp-button--secondary {'),
-  componentStyle.indexOf('.zdp-button--secondary:hover')
+  componentStyle.indexOf('.zdp-button--danger {')
 );
 
 const staticDangerButtonBlock = componentStyle.slice(
@@ -541,9 +541,10 @@ const staticDangerButtonHoverBlock = componentStyle.slice(
   componentStyle.indexOf('.zdp-button--danger:where(:active:not(:disabled))')
 );
 
-if (!staticSecondaryButtonBlock.includes('background: var(--zdp-color-surface-panel)') ||
-    !staticSecondaryButtonBlock.includes('border-color: var(--zdp-color-line-strong)')) {
-  failures.push('Static Button secondary variant must use the Quiet Ivory panel surface and a visible outline.');
+if (!staticSecondaryButtonBlock.includes('background: var(--zdp-color-interaction-hover)') ||
+    !staticSecondaryButtonBlock.includes('border-color: transparent') ||
+    staticSecondaryButtonBlock.includes('border-color: var(--zdp-color-line-strong)')) {
+  failures.push('Static Button secondary variant must use a filled surface without a visible outline.');
 }
 
 for (const requiredText of ['background: var(--zdp-color-accent-danger)', 'color: var(--zdp-color-ink-inverse)']) {

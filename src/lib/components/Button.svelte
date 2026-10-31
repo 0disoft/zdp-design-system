@@ -140,20 +140,20 @@
   }
 
   .zdp-button--secondary {
-    background: var(--zdp-color-surface-panel);
-    border-color: var(--zdp-color-line-strong);
+    background: var(--zdp-color-interaction-hover);
+    border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-button--secondary:where(:hover:not(:disabled)) {
-    background: var(--zdp-color-interaction-hover);
-    border-color: var(--zdp-color-line-strong);
+    background: color-mix(in oklch, var(--zdp-color-interaction-hover), black 18%);
+    border-color: transparent;
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-button--secondary:where(:active:not(:disabled)) {
-    background: var(--zdp-color-interaction-pressed);
-    border-color: var(--zdp-color-line-strong);
+    background: color-mix(in oklch, var(--zdp-color-interaction-hover), black 28%);
+    border-color: transparent;
   }
 
   .zdp-button--danger {
