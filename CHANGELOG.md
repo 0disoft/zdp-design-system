@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.67.1
+
+- Align Radio and Checkbox indicators with the first label line across font sizes and wrapped labels, and center the Checkbox check glyph.
+- Use a filled, borderless secondary Button in Svelte and shared CSS, with darker hover and pressed backgrounds in light and dark themes.
+
 ## 0.67.0
 
 - Added an explicit confirm/cancel step for click-only ConfirmAction activation, with customizable labels, focus recovery, and protection against clicks following completed hold or slide gestures.
