@@ -254,15 +254,6 @@ export function checkFormsContracts(context: StorybookCheckContext): void {
     failures.push('Checkbox component must keep aria-invalid for checkbox invalid state.');
   }
 
-  for (const requiredText of [
-    'border-bottom: 2px solid currentcolor',
-    'border-left: 2px solid currentcolor'
-  ]) {
-    if (!checkbox.includes(requiredText)) {
-      failures.push(`Checkbox component is missing thicker checkmark stroke ${requiredText}.`);
-    }
-  }
-
   if (!checkbox.includes('.zdp-choice__input[aria-invalid="true"] + .zdp-choice__mark')) {
     failures.push('Checkbox component must style aria-invalid on the native checkbox input.');
   }

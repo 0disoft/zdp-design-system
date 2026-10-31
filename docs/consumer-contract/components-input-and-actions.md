@@ -27,6 +27,8 @@ Combobox는 검색 가능한 단일 선택의 label, input frame, listbox, activ
 
 Radio group은 부모의 단일 `string | null` 값을 각 Radio의 `selectedValue`에 bind한다. DOM checked 상태는 `selectedValue === value`로 계산되고 선택 변경이 같은 부모 값으로 전파된다. 개별 `checked` prop은 두 상태 정본을 만들기 때문에 제공하지 않는다.
 
+Radio와 Checkbox의 기본 정렬은 여러 줄 라벨의 첫 줄을 따른다. 배지나 아이콘이 포함된 짧은 선택지는 상위 요소에 `--zdp-choice-align-items: center`와 `--zdp-choice-mark-offset: 0px`를 함께 지정해 원·체크 표시와 라벨을 세로 중앙에 맞춘다. 높이가 다른 배지를 붙여도 픽셀 단위 위치 보정이 필요하지 않다.
+
 Radio의 `invalid`는 개별 선택지의 오류 스타일을 표시한다. 오류 상태는 소비 앱의 `radiogroup`에 `aria-invalid`로 전달하고, 오류 문구는 그룹과 각 Radio의 `describedBy`에 연결한다. 개별 `radio`의 `aria-invalid`와 `aria-errormessage`는 WAI-ARIA 1.2에서 deprecated되었으므로 사용하지 않는다. [WAI-ARIA radio와 radiogroup](https://www.w3.org/TR/wai-aria-1.2/#radio)
 
 ```svelte

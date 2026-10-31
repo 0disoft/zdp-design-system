@@ -51,7 +51,7 @@
 
 <style>
   .zdp-choice {
-    align-items: start;
+    align-items: var(--zdp-choice-align-items, start);
     color: var(--zdp-color-ink-normal);
     cursor: pointer;
     display: grid;
@@ -83,8 +83,8 @@
     display: inline-flex;
     height: var(--zdp-control-choice-size);
     justify-content: center;
-    /* Follow the first label line, including when the label wraps. */
-    margin-top: max(0px, calc((1lh - var(--zdp-control-choice-size)) / 2 + 0.0625em));
+    /* Rich single-row labels can center the mark without a first-line offset. */
+    margin-top: var(--zdp-choice-mark-offset, max(0px, calc((1lh - var(--zdp-control-choice-size)) / 2 + 0.0625em)));
     -webkit-user-select: none;
     user-select: none;
     transition:

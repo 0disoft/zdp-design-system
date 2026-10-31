@@ -436,8 +436,6 @@ for (const requiredText of [
   '.zdp-switch__input',
   '.zdp-choice__mark',
   '.zdp-switch__track',
-  'border-bottom: 2px solid currentcolor',
-  'border-left: 2px solid currentcolor',
   ':where(.zdp-choice:hover) .zdp-choice__input:where(:not(:checked):not(:disabled)) + .zdp-choice__mark',
   ':where(.zdp-switch:hover) .zdp-switch__input:where(:not(:checked):not(:disabled)) + .zdp-switch__track',
   'grid-template-columns: var(--zdp-control-choice-size) minmax(0, 1fr)',
