@@ -70,6 +70,7 @@
     cursor: pointer;
     display: grid;
     font-family: var(--zdp-font-family-sans);
+    font-size: var(--zdp-type-body-small-size);
     gap: var(--zdp-space-3);
     grid-template-columns: var(--zdp-control-choice-size) minmax(0, 1fr);
     line-height: var(--zdp-type-body-small-line-height);
@@ -96,7 +97,8 @@
     display: inline-flex;
     height: var(--zdp-control-choice-size);
     justify-content: center;
-    margin-top: var(--zdp-control-switch-thumb-offset);
+    /* Follow the first label line, including when the label wraps. */
+    margin-top: max(0px, calc((1lh - var(--zdp-control-choice-size)) / 2 + 0.0625em));
     -webkit-user-select: none;
     user-select: none;
     transition:

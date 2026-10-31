@@ -2743,6 +2743,7 @@
   cursor: pointer;
   display: grid;
   font-family: var(--zdp-font-family-sans);
+  font-size: var(--zdp-type-body-small-size);
   gap: var(--zdp-space-3);
   grid-template-columns: var(--zdp-control-choice-size) minmax(0, 1fr);
   line-height: var(--zdp-type-body-small-line-height);
@@ -2769,7 +2770,8 @@
   display: inline-flex;
   height: var(--zdp-control-choice-size);
   justify-content: center;
-  margin-top: var(--zdp-control-switch-thumb-offset);
+  /* Follow the first label line, including when the label wraps. */
+  margin-top: max(0px, calc((1lh - var(--zdp-control-choice-size)) / 2 + 0.0625em));
   -webkit-user-select: none;
   user-select: none;
   transition:
@@ -2780,14 +2782,13 @@
 }
 
 .zdp-choice--checkbox .zdp-choice__mark::after {
-  border-bottom: 2px solid currentcolor;
-  border-left: 2px solid currentcolor;
+  background: currentcolor;
   content: "";
   display: none;
-  height: 0.3rem;
-  margin-bottom: 0.0625rem;
-  rotate: -45deg;
-  width: 0.6rem;
+  height: var(--zdp-control-glyph-sm);
+  /* Keep the glyph self-contained for consumers with a strict image CSP. */
+  clip-path: polygon(20% 36%, 42% 58%, 78% 22%, 87% 31%, 42% 76%, 11% 45%);
+  width: var(--zdp-control-glyph-sm);
 }
 
 :where(.zdp-choice:hover) .zdp-choice__input:where(:not(:checked):not(:disabled)) + .zdp-choice__mark {
@@ -2839,6 +2840,7 @@
   cursor: pointer;
   display: grid;
   font-family: var(--zdp-font-family-sans);
+  font-size: var(--zdp-type-body-small-size);
   gap: var(--zdp-space-3);
   grid-template-columns: var(--zdp-control-choice-size) minmax(0, 1fr);
   line-height: var(--zdp-type-body-small-line-height);
@@ -2865,7 +2867,8 @@
   display: inline-flex;
   height: var(--zdp-control-choice-size);
   justify-content: center;
-  margin-top: var(--zdp-control-switch-thumb-offset);
+  /* Follow the first label line, including when the label wraps. */
+  margin-top: max(0px, calc((1lh - var(--zdp-control-choice-size)) / 2 + 0.0625em));
   -webkit-user-select: none;
   user-select: none;
   transition:
