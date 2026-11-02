@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onDestroy, untrack } from 'svelte';
   import type { ZdpCodeBlockSize, ZdpCodeBlockTone } from '../code.js';
+  import { createZdpCodeCopyController, type ZdpCodeCopyState } from '../code-copy.js';
 
   interface Props {
     code?: string;
@@ -38,96 +39,29 @@
     describedBy = $bindable(null)
   }: Props = $props();
 
-  type CopyState = 'idle' | 'copying' | 'copied' | 'failed';
-
-  let copyState: CopyState = $state('idle');
-  let resetCopyStateTimer: ReturnType<typeof setTimeout> | null = null;
-  let copyProgressTimer: ReturnType<typeof setTimeout> | null = null;
+  let copyState: ZdpCodeCopyState = $state('idle');
   let showCopyProgress = $state(false);
-  let copyRequestVersion = 0;
-  let destroyed = false;
   let knownCode = untrack(() => code);
   let knownShowCopy = untrack(() => showCopy);
-
-  onDestroy(() => {
-    destroyed = true;
-    invalidateCopyState();
+  const copyController = createZdpCodeCopyController((state, showProgress) => {
+    copyState = state;
+    showCopyProgress = showProgress;
   });
-
-  function invalidateCopyState(): void {
-    copyRequestVersion += 1;
-    clearResetCopyStateTimer();
-    clearCopyProgressTimer();
-    showCopyProgress = false;
-    copyState = 'idle';
-  }
-
-  function clearCopyProgressTimer(): void {
-    if (copyProgressTimer !== null) {
-      clearTimeout(copyProgressTimer);
-      copyProgressTimer = null;
-    }
-  }
-
-  function clearResetCopyStateTimer(): void {
-    if (resetCopyStateTimer !== null) {
-      clearTimeout(resetCopyStateTimer);
-      resetCopyStateTimer = null;
-    }
-  }
-
-  function scheduleResetCopyState(): void {
-    clearResetCopyStateTimer();
-
-    resetCopyStateTimer = setTimeout(() => {
-      copyState = 'idle';
-      resetCopyStateTimer = null;
-    }, 2200);
-  }
+  onDestroy(() => copyController.destroy());
 
   async function handleCopy(): Promise<void> {
     if (!canCopy || copyState === 'copying') {
       return;
     }
 
-    const requestVersion = ++copyRequestVersion;
-    const copiedCode = code;
-    let nextState: CopyState;
-    clearResetCopyStateTimer();
-    clearCopyProgressTimer();
-    showCopyProgress = false;
-    copyState = 'copying';
-    copyProgressTimer = setTimeout(() => {
-      showCopyProgress = true;
-      copyProgressTimer = null;
-    }, 150);
-
-    try {
-      if (typeof navigator === 'undefined' || !navigator.clipboard?.writeText) {
-        throw new Error('Clipboard API unavailable');
-      }
-
-      await navigator.clipboard.writeText(copiedCode);
-      nextState = 'copied';
-    } catch {
-      nextState = 'failed';
-    }
-
-    if (destroyed || requestVersion !== copyRequestVersion || copiedCode !== code || !canCopy) {
-      return;
-    }
-
-    clearCopyProgressTimer();
-    showCopyProgress = false;
-    copyState = nextState;
-    scheduleResetCopyState();
+    await copyController.copy(code);
   }
   let canCopy = $derived(showCopy && code.length > 0);
   $effect.pre(() => {
     if (code !== knownCode || showCopy !== knownShowCopy) {
       knownCode = code;
       knownShowCopy = showCopy;
-      invalidateCopyState();
+      copyController.reset();
     }
   });
   let resolvedAriaLabel = $derived(ariaLabel ?? (!labelledBy && label ? label : null));
