@@ -25,6 +25,7 @@ import { verifyComboboxGeometryContracts } from './browser/check-combobox-geomet
 import { verifyLocalizedSortContracts, verifySortNameContracts, verifyTableDensityContracts } from './browser/check-table-interaction.mjs';
 import { verifyCommandFieldContracts } from './browser/check-command-field.mjs';
 import { verifyMovedFormResetContracts, verifyReassociatedFormResetContracts, verifyShadowFormResetContracts } from './browser/check-shadow-form-reset.mjs';
+import { verifyFormResetBatching } from './browser/check-form-reset-batching.mjs';
 import { verifyShortcutEditingContracts } from './browser/check-shortcuts.mjs';
 import { verifyModalContracts, verifyNestedModalContracts } from './browser/check-modals.mjs';
 import { verifyRadioFocusIndex } from './browser/check-radio-focus-index.mjs';
@@ -176,6 +177,13 @@ try {
     await verifyReservedNavigationContracts(page);
     await verifyShadowOverlayContracts(page);
     await verifyMenuGeometryContracts(page);
+  } else if (process.argv.includes('--form-reset')) {
+    await verifyFormResetBatching(page);
+    await verifyFormResetContracts(page);
+    await verifyAsyncSelectResetContracts(page);
+    await verifyShadowFormResetContracts(page);
+    await verifyMovedFormResetContracts(page);
+    await verifyReassociatedFormResetContracts(page);
   } else if (process.argv.includes('--controls')) {
     await verifyProgressRangeContracts(page);
     await verifyFoundationAndFormContracts(page);
@@ -210,6 +218,7 @@ try {
   await verifySplitCallbackFailures(page);
   await verifyNativeInputContracts(page);
   await verifyFormResetContracts(page);
+  await verifyFormResetBatching(page);
   await verifyShadowFormResetContracts(page);
   await verifyMovedFormResetContracts(page);
   await verifyReassociatedFormResetContracts(page);

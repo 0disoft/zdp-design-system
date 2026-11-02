@@ -13,6 +13,45 @@ interface FormOwnershipObserver {
 
 const ownershipObservers = new WeakMap<Node, FormOwnershipObserver>();
 
+interface FormResetBatch {
+  timer: ReturnType<typeof setTimeout>;
+  callbacks: Set<() => void>;
+}
+
+const resetBatches = new WeakMap<Event, FormResetBatch>();
+
+/** Wait for native reset once per event, while keeping each control cancellable. */
+function afterFormReset(event: Event, callback: () => void): () => void {
+  let batch = resetBatches.get(event);
+  if (!batch) {
+    const callbacks = new Set<() => void>();
+    const timer = setTimeout(() => {
+      resetBatches.delete(event);
+      for (const run of callbacks) {
+        try {
+          run();
+        } catch (error) {
+          // Separate timers previously isolated callback failures. Preserve that
+          // isolation and report the original error without skipping other inputs.
+          queueMicrotask(() => { throw error; });
+        }
+      }
+      callbacks.clear();
+    }, 0);
+    batch = { timer, callbacks };
+    resetBatches.set(event, batch);
+  }
+  const pending = batch;
+  pending.callbacks.add(callback);
+  return () => {
+    pending.callbacks.delete(callback);
+    if (pending.callbacks.size === 0 && resetBatches.get(event) === pending) {
+      clearTimeout(pending.timer);
+      resetBatches.delete(event);
+    }
+  };
+}
+
 /** Share one observer per tree instead of observing the page once per input. */
 function observeFormOwnership(root: Node, callback: () => void): () => void {
   const view = root.nodeType === 9 ? (root as Document).defaultView : root.ownerDocument?.defaultView;
@@ -71,7 +110,7 @@ export function syncZdpFormReset<Control extends FormControl>(
   restoreDefaults();
   // Hydration may remove SSR value/checked attributes later in this turn.
   queueMicrotask(() => { if (active) restoreDefaults(); });
-  const timers = new Set<ReturnType<typeof setTimeout>>();
+  const pendingResets = new Set<() => void>();
   // A listener on the form travels with it across shadow roots and documents.
   const roots = new Set<EventTarget>();
   let observedTree: Node | null = null;
@@ -86,13 +125,13 @@ export function syncZdpFormReset<Control extends FormControl>(
     // the native reset algorithm runs, while preserving a cancelled reset's value.
     if ('options' in control) restoreDefaults();
     // A task waits for native restoration and later listeners that cancel reset.
-    const timer = setTimeout(() => {
-      timers.delete(timer);
+    const cancel = afterFormReset(event, () => {
+      pendingResets.delete(cancel);
       if (active && control.isConnected && !event.defaultPrevented && control.form === form) {
         options.onReset(control);
       }
-    }, 0);
-    timers.add(timer);
+    });
+    pendingResets.add(cancel);
   };
   function refreshOwnership(): void {
     if (!active) return;
@@ -124,8 +163,8 @@ export function syncZdpFormReset<Control extends FormControl>(
     destroy() {
       active = false;
       stopObserving();
-      for (const timer of timers) clearTimeout(timer);
-      timers.clear();
+      for (const cancel of pendingResets) cancel();
+      pendingResets.clear();
       for (const root of roots) root.removeEventListener('reset', handleReset, true);
     }
   };
