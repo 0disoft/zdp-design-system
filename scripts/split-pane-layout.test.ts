@@ -3,7 +3,8 @@ import { test } from 'node:test';
 import {
   ZDP_SPLIT_PANE_DEFAULTS,
   normalizeZdpSplitPaneBounds,
-  resolveZdpSplitPaneLayout
+  resolveZdpSplitPaneLayout,
+  resolveZdpSplitPaneKeyboardSize
 } from '../src/lib/split-pane-layout.js';
 import { clampZdpSplitPaneSize, type ZdpSplitPaneControllerOptions } from '../src/lib/split-pane.js';
 
@@ -75,4 +76,44 @@ test('frozen caller input is reusable and changing a result cannot alter another
   assert.equal(second.renderedSize, 200);
   assert.deepEqual(options, before);
   assert.equal(ZDP_SPLIT_PANE_DEFAULTS.minSize, 220);
+});
+
+for (const orientation of ['vertical', 'horizontal'] as const) {
+  for (const rtl of [false, true]) {
+    for (const shift of [false, true]) {
+      test(`keyboard requests preserve ${orientation}, rtl=${rtl}, shift=${shift} semantics and frozen input`, () => {
+        const layout = Object.freeze(resolveZdpSplitPaneLayout(280, Object.freeze({})));
+        const step = shift ? 32 : 8;
+        const horizontalDirection = rtl ? -1 : 1;
+        const cases: readonly (readonly [string, number | null])[] = [
+          ['Home', 220], ['End', 480], ['PageUp', 248], ['PageDown', 312],
+          ['ArrowLeft', orientation === 'vertical' ? 280 - step * horizontalDirection : null],
+          ['ArrowRight', orientation === 'vertical' ? 280 + step * horizontalDirection : null],
+          ['ArrowUp', orientation === 'horizontal' ? 280 - step : null],
+          ['ArrowDown', orientation === 'horizontal' ? 280 + step : null],
+          ['Enter', null], ['Tab', null], ['', null]
+        ];
+        const before = { ...layout };
+        for (const [key, expected] of cases) {
+          assert.equal(resolveZdpSplitPaneKeyboardSize(key, shift, orientation, layout, rtl), expected, key);
+        }
+        assert.deepEqual(layout, before);
+      });
+    }
+  }
+}
+
+test('keyboard requests retain constrained endpoints and defer rounding/clamping to the existing size update', () => {
+  const options = Object.freeze({ secondaryMinSize: 100, keyboardStep: 5, largeKeyboardStep: 20 });
+  for (const [size, key, expected] of [[220, 'ArrowLeft', 220], [220, 'ArrowRight', 225],
+    [300, 'ArrowRight', 300], [300, 'ArrowLeft', 295]] as const) {
+    const layout = Object.freeze(resolveZdpSplitPaneLayout(size, options, 400));
+    const request = resolveZdpSplitPaneKeyboardSize(key, false, 'vertical', layout);
+    assert.notEqual(request, null);
+    assert.equal(resolveZdpSplitPaneLayout(request!, options, 400).renderedSize, expected);
+    assert.equal(resolveZdpSplitPaneKeyboardSize('End', true, 'vertical', layout), 300);
+  }
+  const collapsed = Object.freeze(resolveZdpSplitPaneLayout(300, options, 250));
+  assert.equal(resolveZdpSplitPaneKeyboardSize('Home', false, 'vertical', collapsed), 220);
+  assert.equal(resolveZdpSplitPaneKeyboardSize('End', false, 'vertical', collapsed), 220);
 });

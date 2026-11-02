@@ -1,4 +1,4 @@
-import type { ZdpSplitPaneControllerOptions, ZdpSplitPaneSizeBounds } from './split-pane.js';
+import type { ZdpSplitPaneControllerOptions, ZdpSplitPaneOrientation, ZdpSplitPaneSizeBounds } from './split-pane.js';
 
 /** Shared geometry policy for server rendering, persistence, and interaction. */
 export const ZDP_SPLIT_PANE_DEFAULTS = Object.freeze({
@@ -45,4 +45,30 @@ export function resolveZdpSplitPaneLayout(
     constrained: Number.isFinite(containerSize) && containerSize < bounds.minSize + secondaryMinSize,
     renderedSize: Math.min(effectiveMaxSize, Math.max(bounds.minSize, candidate))
   };
+}
+
+/** Calculate a keyboard request without changing the caller's layout or event. */
+export function resolveZdpSplitPaneKeyboardSize(
+  key: string,
+  shiftKey: boolean,
+  orientation: ZdpSplitPaneOrientation,
+  layout: Readonly<Pick<ReturnType<typeof resolveZdpSplitPaneLayout>,
+    'minSize' | 'effectiveMaxSize' | 'renderedSize' | 'keyboardStep' | 'largeKeyboardStep'>>,
+  rtl = false
+): number | null {
+  const { minSize, effectiveMaxSize, renderedSize, keyboardStep, largeKeyboardStep } = layout;
+  if (key === 'Home') return minSize;
+  if (key === 'End') return effectiveMaxSize;
+  if (key === 'PageUp') return renderedSize - largeKeyboardStep;
+  if (key === 'PageDown') return renderedSize + largeKeyboardStep;
+
+  const step = shiftKey ? largeKeyboardStep : keyboardStep;
+  if (orientation === 'horizontal') {
+    if (key === 'ArrowUp') return renderedSize - step;
+    if (key === 'ArrowDown') return renderedSize + step;
+    return null;
+  }
+  if (key !== 'ArrowLeft' && key !== 'ArrowRight') return null;
+  const increase = rtl ? key === 'ArrowLeft' : key === 'ArrowRight';
+  return renderedSize + (increase ? step : -step);
 }

@@ -2,7 +2,8 @@ import {
   ZDP_SPLIT_PANE_DEFAULTS,
   normalizeZdpSplitPaneBounds as normalizeBounds,
   normalizeZdpSplitPaneSize as normalizeSize,
-  resolveZdpSplitPaneLayout
+  resolveZdpSplitPaneLayout,
+  resolveZdpSplitPaneKeyboardSize
 } from './split-pane-layout.js';
 
 export type ZdpSplitPaneOrientation = 'vertical' | 'horizontal';
@@ -566,30 +567,11 @@ export function createZdpSplitPaneController(
       return;
     }
 
-    const { minSize, effectiveMaxSize, keyboardStep, largeKeyboardStep } = getNormalizedValues();
-    const step = event.shiftKey ? largeKeyboardStep : keyboardStep;
-    let nextSize: number | null = null;
-
-    if (event.key === 'Home') {
-      nextSize = minSize;
-    } else if (event.key === 'End') {
-      nextSize = effectiveMaxSize;
-    } else if (event.key === 'PageUp') {
-      nextSize = getRenderedSize() - largeKeyboardStep;
-    } else if (event.key === 'PageDown') {
-      nextSize = getRenderedSize() + largeKeyboardStep;
-    } else if (getOrientation() === 'horizontal' && event.key === 'ArrowUp') {
-      nextSize = getRenderedSize() - step;
-    } else if (getOrientation() === 'horizontal' && event.key === 'ArrowDown') {
-      nextSize = getRenderedSize() + step;
-    } else if (getOrientation() === 'vertical' && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
-      const increase = isRtl() ? event.key === 'ArrowLeft' : event.key === 'ArrowRight';
-      nextSize = getRenderedSize() + (increase ? step : -step);
-    }
-
-    if (nextSize === null) {
-      return;
-    }
+    const layout = getNormalizedValues();
+    const orientation = getOrientation();
+    const rtl = orientation === 'vertical' && (event.key === 'ArrowLeft' || event.key === 'ArrowRight') && isRtl();
+    const nextSize = resolveZdpSplitPaneKeyboardSize(event.key, event.shiftKey, orientation, layout, rtl);
+    if (nextSize === null) return;
 
     event.preventDefault();
     setSize(nextSize, event, true);
