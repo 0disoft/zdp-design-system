@@ -10,17 +10,38 @@ interface FloatingOptions {
   onPosition?: () => void;
 }
 
+interface FloatingEnvironment {
+  computePosition: typeof computePosition;
+  autoUpdate: typeof autoUpdate;
+  getGap: (source: HTMLElement) => number;
+  getBoundaries: typeof getZdpFloatingBoundaries;
+  signal?: AbortSignal;
+}
+
 /** Positions inline overlays; interaction and focus remain owned by each component. */
-export function positionZdpFloatingPanel(panel: HTMLElement, initial: FloatingOptions) {
+export function positionZdpFloatingPanel(
+  panel: HTMLElement,
+  initial: FloatingOptions,
+  environment: Partial<FloatingEnvironment> = {}
+) {
+  const {
+    computePosition: compute = computePosition,
+    autoUpdate: observe = autoUpdate,
+    getGap = source => Number.parseFloat(source.ownerDocument.defaultView?.getComputedStyle(source).columnGap ?? ''),
+    getBoundaries = getZdpFloatingBoundaries,
+    signal
+  } = environment;
   let cleanup = () => {};
+  let destroyed = false;
+  const nonnegative = (value: number) => Number.isFinite(value) ? Math.max(0, value) : 0;
 
   function start(options: FloatingOptions): void {
     cleanup();
     const { anchor, gapSource, prefix } = options;
-    if (!anchor || !gapSource) return;
+    if (destroyed || signal?.aborted || !anchor || !gapSource) return;
     let disposed = false;
     let revision = 0;
-    const view = anchor.ownerDocument.defaultView;
+    let stop = () => {};
     const original = new Map<string, string>();
     const applied = new Map<string, string>();
     const previousSide = panel.getAttribute('data-side');
@@ -39,39 +60,11 @@ export function positionZdpFloatingPanel(panel: HTMLElement, initial: FloatingOp
     style('transform', 'none');
     panel.setAttribute('data-zdp-positioned', '');
 
-    const update = async () => {
-      const current = ++revision;
-      const gap = Number.parseFloat(view?.getComputedStyle(gapSource).columnGap ?? '') || 0;
-      const overflow = { boundary: getZdpFloatingBoundaries(anchor), padding: gap };
-      const valid = () => !disposed && current === revision && panel.isConnected;
-      const result = await computePosition(anchor, panel, {
-        placement: options.placement ?? 'bottom-start',
-        strategy: 'fixed',
-        middleware: [
-          offset(gap),
-          flip(overflow),
-          shift(overflow),
-          size({ ...overflow, apply({ availableWidth, availableHeight, rects }) {
-            if (!valid()) return;
-            style(`--zdp-${prefix}-available-width`, `${Math.max(0, availableWidth)}px`);
-            style(`--zdp-${prefix}-available-height`, `${Math.max(0, availableHeight)}px`);
-            style(`--zdp-${prefix}-anchor-width`, `${rects.reference.width}px`);
-            if (options.matchAnchorWidth) {
-              style(`--zdp-${prefix}-panel-width`, `${Math.max(0, Math.min(rects.reference.width, availableWidth))}px`);
-            }
-          } })
-        ]
-      });
-      if (!valid()) return;
-      style('left', `${result.x}px`);
-      style('top', `${result.y}px`);
-      panel.dataset.side = result.placement.split('-')[0];
-      panel.dataset.align = result.placement.split('-')[1] ?? 'center';
-      options.onPosition?.();
-    };
-    const stop = autoUpdate(anchor, panel, () => { void update(); });
-    cleanup = () => {
+    // Install teardown before observation: it may start a calculation immediately.
+    const dispose = () => {
+      if (disposed) return;
       disposed = true;
+      signal?.removeEventListener('abort', dispose);
       stop();
       for (const [name, value] of original) {
         if (panel.style.getPropertyValue(name) !== applied.get(name)) continue;
@@ -82,8 +75,62 @@ export function positionZdpFloatingPanel(panel: HTMLElement, initial: FloatingOp
       if (previousPositioned === null) panel.removeAttribute('data-zdp-positioned');
       else panel.setAttribute('data-zdp-positioned', previousPositioned);
     };
+    cleanup = dispose;
+    signal?.addEventListener('abort', dispose, { once: true });
+
+    const update = async () => {
+      if (disposed || !panel.isConnected) return;
+      const current = ++revision;
+      const valid = () => !disposed && current === revision && panel.isConnected;
+      let result: Awaited<ReturnType<typeof computePosition>>;
+      try {
+        const gap = nonnegative(getGap(gapSource));
+        const overflow = { boundary: getBoundaries(anchor), padding: gap };
+        result = await compute(anchor, panel, {
+          placement: options.placement ?? 'bottom-start',
+          strategy: 'fixed',
+          middleware: [
+            offset(gap),
+            flip(overflow),
+            shift(overflow),
+            size({ ...overflow, apply({ availableWidth, availableHeight, rects }) {
+              if (!valid()) return;
+              style(`--zdp-${prefix}-available-width`, `${nonnegative(availableWidth)}px`);
+              style(`--zdp-${prefix}-available-height`, `${nonnegative(availableHeight)}px`);
+              style(`--zdp-${prefix}-anchor-width`, `${nonnegative(rects.reference.width)}px`);
+              if (options.matchAnchorWidth) {
+                style(`--zdp-${prefix}-panel-width`, `${Math.min(nonnegative(rects.reference.width), nonnegative(availableWidth))}px`);
+              }
+            } })
+          ]
+        });
+      } catch {
+        // Restore the CSS fallback instead of leaving a failed panel at (0, 0).
+        // An obsolete rejection must never dispose a newer calculation.
+        if (valid()) dispose();
+        return;
+      }
+      if (!valid()) return;
+      if (!Number.isFinite(result.x) || !Number.isFinite(result.y)) {
+        dispose();
+        return;
+      }
+      style('left', `${result.x}px`);
+      style('top', `${result.y}px`);
+      panel.dataset.side = result.placement.split('-')[0];
+      panel.dataset.align = result.placement.split('-')[1] ?? 'center';
+      options.onPosition?.();
+    };
+    try {
+      const stopObserving = observe(anchor, panel, () => { void update(); });
+      // Cancellation can happen synchronously while observation starts.
+      if (disposed) stopObserving(); else stop = stopObserving;
+    } catch (error) {
+      dispose();
+      throw error;
+    }
   }
 
   start(initial);
-  return { update: start, destroy: () => cleanup() };
+  return { update: start, destroy: () => { destroyed = true; cleanup(); } };
 }
