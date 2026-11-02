@@ -1,3 +1,5 @@
+import { resolveZdpModalIsolation, type ZdpModalIsolationBranch } from './modal-isolation.js';
+
 export const zdpModalLayerRootAttribute = 'data-zdp-modal-layer-root';
 export const zdpModalLayerActiveAttribute = 'data-zdp-modal-layer-active';
 export const zdpModalLayerLevelAttribute = 'data-zdp-modal-layer-level';
@@ -266,60 +268,50 @@ function syncDocumentIsolation(state: ZdpModalLayerDocumentState): void {
   const { document } = state;
   const topLayerId = state.activeLayerIds.at(-1);
   const topLayer = Array.from(state.layers).find((layer) => layer.id === topLayerId);
-  let activeBranch = topLayer?.root ?? null;
-  const nextInertElements = new Set<HTMLElement>();
-  const observedParents = new Set<HTMLElement | ShadowRoot>();
-
   state.isolationObserver?.disconnect();
-  if (topLayer !== undefined) {
-    observedParents.add(document.body);
-  }
+  const snapshot = readIsolationBranches(topLayer?.root ?? null, document.body);
+  const plan = resolveZdpModalIsolation(snapshot.branches, document.body, {
+    hasTopLayer: topLayer !== undefined, reachedBody: snapshot.reachedBody
+  });
+  observeIsolationParents(state, plan.observedParents);
+  applyIsolationTargets(state, plan.inertElements);
+}
 
-  while (activeBranch !== null && activeBranch !== document.body) {
+function readIsolationBranches(activeBranch: HTMLElement | null, body: HTMLElement) {
+  const branches: ZdpModalIsolationBranch<HTMLElement, HTMLElement | ShadowRoot>[] = [];
+  while (activeBranch !== null && activeBranch !== body) {
     const parentNode = activeBranch.parentNode;
     const parent = isDocumentHTMLElement(parentNode) || isDocumentShadowRoot(parentNode)
       ? parentNode
       : null;
-
-    if (parent === null) {
-      break;
-    }
-
-    observedParents.add(parent);
-
-    for (const sibling of parent.children) {
-      if (sibling === activeBranch || !isDocumentHTMLElement(sibling)) {
-        continue;
-      }
-
-      nextInertElements.add(sibling);
-    }
-
-    activeBranch = isDocumentShadowRoot(parent)
-      ? isDocumentHTMLElement(parent.host)
-        ? parent.host
-        : null
-      : parent;
+    if (parent === null) return { branches, reachedBody: false };
+    branches.push({ parent, activeBranch, siblings: Array.from(parent.children).filter(isDocumentHTMLElement) });
+    activeBranch = isolationParentBranch(parent);
   }
+  return { branches, reachedBody: activeBranch === body };
+}
 
-  // A detached layer has no background branch to isolate until it is reinserted.
-  if (activeBranch !== document.body) {
-    nextInertElements.clear();
-  }
+function isolationParentBranch(parent: HTMLElement | ShadowRoot): HTMLElement | null {
+  if (!isDocumentShadowRoot(parent)) return parent;
+  return isDocumentHTMLElement(parent.host) ? parent.host : null;
+}
 
-  if (observedParents.size === 0) {
+function observeIsolationParents(state: ZdpModalLayerDocumentState, parents: ReadonlySet<HTMLElement | ShadowRoot>): void {
+  if (parents.size === 0) {
     state.isolationObserver = null;
-  } else {
-    const Observer = document.defaultView?.MutationObserver;
-    if (state.isolationObserver === null && Observer !== undefined) {
-      state.isolationObserver = new Observer(() => syncDocumentIsolation(state));
-    }
-    for (const parent of observedParents) {
-      // Only sibling-list changes matter; content and attribute updates do not.
-      state.isolationObserver?.observe(parent, { childList: true });
-    }
+    return;
   }
+  const Observer = state.document.defaultView?.MutationObserver;
+  if (state.isolationObserver === null && Observer !== undefined) {
+    state.isolationObserver = new Observer(() => syncDocumentIsolation(state));
+  }
+  for (const parent of parents) {
+    // Only sibling-list changes matter; content and attribute updates do not.
+    state.isolationObserver?.observe(parent, { childList: true });
+  }
+}
 
+function applyIsolationTargets(state: ZdpModalLayerDocumentState, nextInertElements: ReadonlySet<HTMLElement>): void {
   for (const element of state.managedInertElements) {
     if (nextInertElements.has(element)) {
       continue;
