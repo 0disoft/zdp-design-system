@@ -166,10 +166,7 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
     }
 
     // Radio selection and group ownership can change without DOM mutations or events.
-    const candidates = cachedElements;
-    return sortZdpTabbableElements(candidates.filter((element) => (
-      !isRadioInput(element) || isRadioGroupTabStop(element, candidates)
-    )));
+    return sortZdpTabbableElements(filterRadioGroupTabStops(cachedElements));
   }
 
   function destroy(): void {
@@ -253,20 +250,46 @@ function isRadioInput(element: HTMLElement): element is HTMLInputElement {
   return element.tagName === 'INPUT' && (element as HTMLInputElement).type === 'radio';
 }
 
-function isRadioGroupTabStop(radio: HTMLInputElement, candidates: readonly HTMLElement[]): boolean {
-  if (radio.name === '') {
-    return true;
+function filterRadioGroupTabStops(candidates: readonly HTMLElement[]): HTMLElement[] {
+  type Group = { tabStop: HTMLInputElement; checked: boolean };
+  const groups = new Map<Node, Map<HTMLFormElement | null, Map<string, Group>>>();
+  const tabStops = new Set<HTMLElement>();
+  // Rebuild on every lookup: checked and form ownership can change silently.
+  for (const element of candidates) {
+    if (!isRadioInput(element)) {
+      tabStops.add(element);
+      continue;
+    }
+    const name = element.name;
+    if (name === '') {
+      tabStops.add(element);
+      continue;
+    }
+    const tree = element.getRootNode();
+    let forms = groups.get(tree);
+    if (forms === undefined) {
+      forms = new Map();
+      groups.set(tree, forms);
+    }
+    const form = element.form;
+    let names = forms.get(form);
+    if (names === undefined) {
+      names = new Map();
+      forms.set(form, names);
+    }
+    const group = names.get(name);
+    if (group === undefined) {
+      names.set(name, { tabStop: element, checked: element.checked });
+      tabStops.add(element);
+    } else if (!group.checked && element.checked) {
+      tabStops.delete(group.tabStop);
+      tabStops.add(element);
+      group.tabStop = element;
+      group.checked = true;
+    }
   }
-
-  const group = candidates.filter((candidate): candidate is HTMLInputElement => (
-    isRadioInput(candidate) &&
-    candidate.name === radio.name &&
-    candidate.form === radio.form &&
-    candidate.getRootNode() === radio.getRootNode()
-  ));
-  const checkedRadio = group.find((candidate) => candidate.checked);
-
-  return checkedRadio === undefined ? group[0] === radio : checkedRadio === radio;
+  // Preserve candidate order, including ties in the later tabindex sort.
+  return candidates.filter((element) => tabStops.has(element));
 }
 
 function sortZdpTabbableElements(elements: readonly HTMLElement[]): HTMLElement[] {
