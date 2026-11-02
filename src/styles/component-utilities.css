@@ -1,5 +1,45 @@
 /* Framework-neutral utilities without a Svelte component owner. */
 
+/* Inline feedback keeps its read-only retry icon centered beside the message. */
+.zdp-action-message {
+  align-items: center;
+  display: flex;
+  gap: var(--zdp-space-2);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.zdp-action-message > .zdp-icon-button {
+  flex: 0 0 auto;
+}
+
+/* Labels align at the bottom; the action centers against the field, not its label. */
+.zdp-control-row {
+  align-items: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--zdp-space-4);
+  min-inline-size: 0;
+}
+
+.zdp-control-row__field {
+  display: grid;
+  flex: 1 1 12rem;
+  gap: var(--zdp-space-2);
+  min-inline-size: 0;
+}
+
+.zdp-control-row__field :where(.zdp-input, .zdp-select),
+.zdp-control-row__action {
+  min-block-size: var(--zdp-control-row-height, var(--zdp-control-height-md));
+}
+
+.zdp-control-row__action {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+}
+
 .zdp-user-select-control,
 .zdp-user-select-decorative,
 .zdp-user-select-dragging,

@@ -96,6 +96,7 @@
     font-weight: var(--zdp-font-weight-regular);
     justify-content: center;
     position: relative;
+    vertical-align: middle;
     line-height: var(--zdp-type-control-line-height);
     transition:
       background-color var(--zdp-motion-fast) ease,

@@ -158,6 +158,9 @@
       border-radius: var(--zdp-control-radius);
       box-sizing: border-box;
       color: var(--zdp-color-ink-strong);
+      max-block-size: min(20rem, calc(50dvb - 2rem));
+      overflow-y: auto;
+      overscroll-behavior-y: contain;
       padding: var(--zdp-space-1);
     }
 

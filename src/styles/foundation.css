@@ -1,5 +1,11 @@
 @import "./tokens.css";
 
+/* Selection also belongs to consumers that use foundation without the surface reset. */
+::selection {
+  background: var(--zdp-color-selection-surface);
+  color: var(--zdp-color-selection-text);
+}
+
 @media (forced-colors: active) {
   /* Accessibility override: forced colors must outrank component state rules. */
   :is([class^='zdp-'], [class*=' zdp-']):focus-visible {

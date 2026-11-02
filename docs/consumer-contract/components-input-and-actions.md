@@ -1,5 +1,36 @@
 # 입력과 액션 컴포넌트 계약
 
+## 재조회와 입력창 옆 액션
+
+오류 안내의 재조회는 기본 배경이 투명한 ghost IconButton과 새로고침 아이콘을 사용한다. hover·active에서만 배경을 표시하고, `ariaLabel`과 tooltip에 현재 언어의 동작 이름을 제공한다. 재조회 중에는 `disabled` 또는 `loading`으로 중복 실행을 막는다. 데이터를 다시 읽는 액션에 적용하며, 저장·구매를 다시 실행하는 버튼은 동작을 설명하는 텍스트를 유지한다.
+
+문구와 아이콘은 `zdp-action-message`로 묶어 수직 중앙을 맞춘다. 이 클래스는 Svelte 없이 native `<a>`와 `<button>`을 사용하는 화면에서도 동일하게 적용된다. 이동은 실제 `href`를 가진 링크, 현재 화면의 재조회는 `type="button"`으로 연결한다.
+
+```svelte
+<p class="zdp-action-message" role="alert">
+  <span>{unavailableMessage}</span>
+  <IconButton ariaLabel={retryLabel} title={retryLabel} disabled={pending} onclick={reload}>
+    <RefreshCw aria-hidden="true" />
+  </IconButton>
+</p>
+```
+
+입력·선택창과 조회 버튼을 나란히 놓을 때는 아래 구조를 쓴다. `zdp-control-row__action`은 라벨을 제외한 입력창 높이를 기준으로 버튼을 가운데 배치한다. 기본 높이는 공통 control 토큰을 사용한다. 소비 앱이 입력창을 48px로 키우는 경우 같은 row에 `--zdp-control-row-height:3rem`을 설정하면 된다. 작은 화면에서 한 줄씩 배치하려면 소비 앱의 breakpoint에서 field·action에 `flex-basis:100%`를 적용한다.
+
+```svelte
+<form class="zdp-control-row" onsubmit={apply}>
+  <div class="zdp-control-row__field">
+    <label for="period">{periodLabel}</label>
+    <Select id="period" bind:value={period}><!-- options --></Select>
+  </div>
+  <div class="zdp-control-row__action"><Button type="submit">{applyLabel}</Button></div>
+</form>
+```
+
+`foundation.css`만 불러오는 화면에도 텍스트 선택 배경·글자색 토큰이 적용된다. 별도의 surface reset 클래스를 추가할 필요는 없다. Select의 펼친 목록은 테마 색상과 내부 스크롤을 사용하며, 배경 화면을 스크롤해도 목록 높이를 줄이지 않는다.
+
+## 공통 control 규칙
+
 Button과 IconButton은 native button 위의 control 표면이며 `onclick`, `ariaLabel`, `ariaControls`, `ariaExpanded`, `ariaPressed`, `ariaDescribedBy`, `ariaKeyShortcuts` 같은 액션 연결 props를 전달한다. 저장, 삭제, 권한, 결제 판단은 소비 앱이 계속 소유한다.
 
 Button의 md·sm 높이와 모서리는 입력 컴포넌트와 같은 control 토큰을 따른다. 좌우 padding은 md 12 CSS px, sm 8 CSS px이며 text variant는 기존 텍스트 액션 간격을 유지한다. Menu, Select, Combobox, Disclosure·Accordion의 펼침 표시는 같은 20 CSS px SVG와 inline-end 12 CSS px 여백을 공유한다. Disclosure·Accordion은 열린 상태에서 화살표를 위로 돌린다.
