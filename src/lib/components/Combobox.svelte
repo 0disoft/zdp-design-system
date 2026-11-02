@@ -2,6 +2,7 @@
   import { onDestroy, tick, untrack } from 'svelte';
   import type { HTMLInputAttributes } from 'svelte/elements';
   import type { ZdpComboboxOption, ZdpComboboxSize } from '../combobox.js';
+  import { resolveComboboxNavigation } from '../combobox-navigation.js';
   import { toZdpDomId, toZdpDomKey } from '../dom-id.js';
   import { createZdpDismissLayer } from '../dismiss-layer.js';
   import { syncZdpFormReset } from '../form-reset.js';
@@ -231,53 +232,25 @@
       return;
     }
 
-    if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      const wasOpen = open;
-      setOpen(true);
-      if (wasOpen) {
-        moveActiveOption('ArrowDown');
-      } else {
-        activeOptionId = enabledOptions.find((option) => option.value === value)?.id ?? enabledOptions[0]?.id ?? null;
-      }
-      return;
-    }
+    if (navigateInput(event)) return;
+    if (event.key !== 'Enter' || !open) return;
+    const activeOption = enabledOptions.find((option) => option.id === activeOptionId) ?? null;
+    if (!activeOption) return;
+    event.preventDefault();
+    selectOption(activeOption);
+  }
 
-    if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      const wasOpen = open;
-      setOpen(true);
-      if (wasOpen) {
-        moveActiveOption('ArrowUp');
-      } else {
-        activeOptionId = enabledOptions.find((option) => option.value === value)?.id ?? enabledOptions[enabledOptions.length - 1]?.id ?? null;
-      }
-      return;
-    }
-
-    if (event.key === 'Home' && open) {
-      event.preventDefault();
-      activeOptionId = enabledOptions[0]?.id ?? null;
-      return;
-    }
-
-    if (event.key === 'End' && open) {
-      event.preventDefault();
-      activeOptionId = enabledOptions[enabledOptions.length - 1]?.id ?? null;
-      return;
-    }
-
-    if (event.key === 'Enter' && open) {
-      const activeOption = enabledOptions.find((option) => option.id === activeOptionId) ?? null;
-
-      if (activeOption) {
-        event.preventDefault();
-        selectOption(activeOption);
-      }
-
-      return;
-    }
-
+  function navigateInput(event: KeyboardEvent): boolean {
+    const key = event.key;
+    const arrow = key === 'ArrowDown' || key === 'ArrowUp';
+    if (!arrow && key !== 'Home' && key !== 'End') return false;
+    if (!arrow && !open) return false;
+    event.preventDefault();
+    const wasOpen = open;
+    if (arrow) setOpen(true);
+    // Opening can invoke consumer callbacks. Read candidates and value after it.
+    activeOptionId = resolveComboboxNavigation(key, wasOpen, value, enabledOptions, activeOptionId);
+    return true;
   }
 
   function handleToggleKeydown(event: KeyboardEvent): void {
@@ -383,25 +356,6 @@
 
   function syncInputValidity(element: HTMLInputElement | null, missing: boolean, message: string): void {
     element?.setCustomValidity(missing ? message : '');
-  }
-
-  function moveActiveOption(key: 'ArrowDown' | 'ArrowUp'): void {
-    if (enabledOptions.length === 0) {
-      activeOptionId = null;
-      return;
-    }
-
-    const currentIndex = Math.max(
-      0,
-      enabledOptions.findIndex((option) => option.id === activeOptionId)
-    );
-
-    const nextIndex =
-      key === 'ArrowUp'
-        ? (currentIndex - 1 + enabledOptions.length) % enabledOptions.length
-        : (currentIndex + 1) % enabledOptions.length;
-
-    activeOptionId = enabledOptions[nextIndex]?.id ?? activeOptionId;
   }
 
   function resolveActiveOptionId(currentId: string | null, availableOptions: readonly ZdpComboboxOption[]): string | null {
