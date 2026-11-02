@@ -1,6 +1,7 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import Disclosure from './Disclosure.svelte';
+  import { reconcileOpenIds } from '../accordion-state.js';
   import type {
     ZdpAccordionItem,
     ZdpAccordionMode,
@@ -28,6 +29,7 @@
   let knownItemIds = $state<readonly string[]>(untrack(() => items.map((item) => item.id)));
   let itemStateSignature = $state(untrack(() => stateSignature(items, mode)));
 
+  const openIdIndex = $derived(new Set(openIds));
   const nextItemStateSignature = $derived(stateSignature(items, mode));
   $effect.pre(() => {
     if (nextItemStateSignature === itemStateSignature) return;
@@ -49,24 +51,8 @@
     return currentMode === 'single' ? initialOpenIds.slice(0, 1) : initialOpenIds;
   }
 
-  function reconcileOpenIds(
-    sourceItems: readonly ZdpAccordionItem[],
-    currentMode: ZdpAccordionMode,
-    currentOpenIds: readonly string[],
-    previousItemIds: readonly string[]
-  ): readonly string[] {
-    const enabledIds = new Set(sourceItems.filter((item) => !item.disabled).map((item) => item.id));
-    const retainedOpenIds = currentOpenIds.filter((id) => enabledIds.has(id));
-    const newDefaultOpenIds = sourceItems
-      .filter((item) => item.open && !item.disabled && !previousItemIds.includes(item.id))
-      .map((item) => item.id);
-    const reconciledOpenIds = [...new Set([...retainedOpenIds, ...newDefaultOpenIds])];
-
-    return currentMode === 'single' ? reconciledOpenIds.slice(0, 1) : reconciledOpenIds;
-  }
-
   function isItemOpen(id: string): boolean {
-    return openIds.includes(id);
+    return openIdIndex.has(id);
   }
 
   function handleItemOpenChange(item: ZdpAccordionItem, nextOpen: boolean): void {
@@ -85,7 +71,7 @@
     }
 
     if (nextOpen) {
-      return openIds.includes(itemId) ? openIds : [...openIds, itemId];
+      return openIdIndex.has(itemId) ? openIds : [...openIds, itemId];
     }
 
     return openIds.filter((id) => id !== itemId);

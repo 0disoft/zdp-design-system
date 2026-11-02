@@ -805,8 +805,6 @@ export function checkPrimitivesContracts(context: StorybookCheckContext): void {
     'onOpenChange',
     'nextItemStateSignature',
     'reconcileOpenIds',
-    'retainedOpenIds',
-    'newDefaultOpenIds',
     'normalizeInitialOpenIds',
     'isItemOpen',
     'role="list"',

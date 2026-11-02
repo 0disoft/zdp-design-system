@@ -150,7 +150,8 @@
     "types:consumer:check": "bun scripts/check-consumer-fixtures.ts --types-only",
     "storybook": "bun run dev",
     "storybook:build": "bun run build",
-    "storybook:check": "bun test scripts/loading-motion-contract.test.ts scripts/modal-focus.test.ts scripts/floating-position.test.ts scripts/code-copy.test.ts scripts/split-pane-layout.test.ts scripts/modal-isolation.test.ts && bun scripts/check-storybook.ts",
+    "accordion:check": "bun test scripts/accordion-state.test.ts && node --test scripts/accordion-render.test.mjs",
+    "storybook:check": "bun run accordion:check && bun test scripts/loading-motion-contract.test.ts scripts/modal-focus.test.ts scripts/floating-position.test.ts scripts/code-copy.test.ts scripts/split-pane-layout.test.ts scripts/modal-isolation.test.ts && bun scripts/check-storybook.ts",
     "check": "bun run surface:check && bun run api:check && bun run release:changes:test && bun run release:changes:check && bun run tokens:check && bun run consumer:check && bun run share-icons:check && bun run brand-assets:check && bun run credit-assets:check && bun run preview:check && bun run storybook:check && bun run a11y:check && bun run a11y:runtime:check && bun run ssr:hydration:check && bun run type:check && bun run package:build && bun run package:check && bun run publish:check && bun run release:check && bun run fixtures:check"
   },
   "devDependencies": {
