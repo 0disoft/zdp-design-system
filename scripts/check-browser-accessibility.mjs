@@ -30,7 +30,7 @@ import { verifyShortcutEditingContracts } from './browser/check-shortcuts.mjs';
 import { verifyModalContracts, verifyNestedModalContracts } from './browser/check-modals.mjs';
 import { verifyRadioFocusIndex } from './browser/check-radio-focus-index.mjs';
 import { verifyShadowFocusContracts } from './browser/check-shadow-focus.mjs';
-import { verifyModalMutationContracts } from './browser/check-modal-mutations.mjs';
+import { verifyFocusableAttributeMutations, verifyModalMutationContracts } from './browser/check-modal-mutations.mjs';
 import { verifyImeOverlayContracts } from './browser/check-ime-overlays.mjs';
 import { verifySelectionFocusContracts } from './browser/check-selection-focus.mjs';
 import { verifyDynamicTabsContracts, verifyRemovedTabFocusContracts, verifyTabPanelFocusContracts } from './browser/check-dynamic-tabs.mjs';
@@ -139,6 +139,7 @@ try {
     await verifyComboboxGeometryContracts(page);
     await verifyTooltipHoverContracts(page);
   } else if (process.argv.includes('--modal')) {
+    await verifyFocusableAttributeMutations(page, `/@fs/${join(root, 'src/lib/focusable.ts').replaceAll('\\', '/')}`);
     await verifyRadioFocusIndex(page, `/@fs/${join(root, 'src/lib/focusable.ts').replaceAll('\\', '/')}`);
     await verifyModalContracts(page);
     await verifyModalMutationContracts(page);
@@ -247,6 +248,7 @@ try {
   await verifyOverlayContracts(page);
   await verifyModalContracts(page);
   await verifyModalMutationContracts(page);
+  await verifyFocusableAttributeMutations(page, `/@fs/${join(root, 'src/lib/focusable.ts').replaceAll('\\', '/')}`);
   await verifyShadowFocusContracts(page);
   await verifyImeOverlayContracts(page);
   await verifyDynamicMenuContracts(page);

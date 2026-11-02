@@ -104,21 +104,8 @@ export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpF
 
   function observeTree(root: HTMLElement | ShadowRoot): void {
     mutationObserver?.observe(root, {
-      attributeFilter: [
-        'aria-hidden',
-        'class',
-        'contenteditable',
-        'disabled',
-        'hidden',
-        'href',
-        'inert',
-        'open',
-        'style',
-        'slot',
-        'name',
-        'tabindex',
-        'type'
-      ],
+      // Consumer CSS can change focusability through any attribute selector,
+      // including id, data-* and aria-expanded, without resizing the panel.
       attributes: true,
       childList: true,
       subtree: true
