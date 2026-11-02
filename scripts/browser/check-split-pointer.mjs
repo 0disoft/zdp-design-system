@@ -1,5 +1,97 @@
 import assert from 'node:assert/strict';
 
+export async function verifySplitCallbackFailures(page) {
+  const results = await page.evaluate(async (rootPath) => {
+    const { createZdpSplitPaneController } = await import(`/@fs/${rootPath}/src/lib/split-pane.ts`);
+    const cases = [
+      { phase: 'start', callback: 'getValueText' },
+      ...['frame', 'release', 'capture-loss'].flatMap(phase =>
+        ['getValueText', 'onResize'].map(callback => ({ phase, callback }))),
+      { phase: 'release', callback: 'onResizeCommit' }
+    ];
+    const results = [];
+    for (const scenario of cases) {
+      const root = document.createElement('div');
+      root.style.cssText = 'width: 800px; height: 100px;';
+      const primary = document.createElement('div');
+      const separator = document.createElement('div');
+      root.append(primary, separator);
+      document.body.append(root);
+      let captured = null;
+      separator.setPointerCapture = id => { captured = id; };
+      separator.hasPointerCapture = id => captured === id;
+      separator.releasePointerCapture = () => { captured = null; };
+      const originalRequest = window.requestAnimationFrame;
+      const originalCancel = window.cancelAnimationFrame;
+      const frames = new Map();
+      let frameId = 0;
+      window.requestAnimationFrame = callback => { frames.set(++frameId, callback); return frameId; };
+      window.cancelAnimationFrame = id => { frames.delete(id); };
+      const failure = new Error(`split ${scenario.phase} ${scenario.callback}`);
+      const errors = [];
+      const handleError = event => { errors.push(event.error); event.preventDefault(); };
+      window.addEventListener('error', handleError);
+      let armed = false;
+      const commits = [];
+      const controller = createZdpSplitPaneController({ root, primary, separator }, {
+        size: 280, minSize: 100, maxSize: 600,
+        getValueText: size => {
+          if (armed && scenario.callback === 'getValueText') throw failure;
+          return `${size} pixels`;
+        },
+        onResize: () => { if (armed && scenario.callback === 'onResize') throw failure; },
+        onResizeCommit: size => {
+          if (armed && scenario.callback === 'onResizeCommit') throw failure;
+          commits.push(size);
+        }
+      });
+      const dispatch = (type, clientX) => separator.dispatchEvent(new PointerEvent(type,
+        { pointerId: 7, isPrimary: true, button: 0, clientX }));
+      try {
+        armed = scenario.phase === 'start';
+        dispatch('pointerdown', 10);
+        armed = true;
+        if (scenario.phase !== 'start') {
+          dispatch('pointermove', 60);
+          if (scenario.phase === 'frame') {
+            for (const [id, callback] of frames) {
+              frames.delete(id);
+              try { callback(performance.now()); } catch (error) { errors.push(error); }
+            }
+          } else {
+            dispatch(scenario.phase === 'release' ? 'pointerup' : 'lostpointercapture', 60);
+          }
+        }
+        const afterFailure = {
+          dragging: root.classList.contains('zdp-resizable-split-pane--dragging'),
+          selectionLocked: document.documentElement.classList.contains('zdp-user-select-dragging'),
+          captured, pendingFrames: frames.size, commits: [...commits],
+          originalError: errors.length === 1 && errors[0] === failure
+        };
+        armed = false;
+        dispatch('pointerdown', 10);
+        dispatch('pointerup', 60);
+        results.push({ ...scenario, ...afterFailure, recoveryCommits: commits.length });
+      } finally {
+        armed = false;
+        controller.destroy();
+        window.requestAnimationFrame = originalRequest;
+        window.cancelAnimationFrame = originalCancel;
+        window.removeEventListener('error', handleError);
+        root.remove();
+      }
+    }
+    return results;
+  }, process.cwd().replaceAll('\\', '/'));
+  for (const { phase, callback, ...result } of results) {
+    assert.deepEqual(result, {
+      dragging: false, selectionLocked: false, captured: null, pendingFrames: 0,
+      commits: [], originalError: true, recoveryCommits: 1
+    }, `A ${callback} failure during ${phase} must release the drag and allow another interaction.`);
+  }
+  console.log(`Split callback failure cleanup: ${results.length} scenarios passed.`);
+}
+
 export async function verifySplitReentrantCallbacks(page) {
   const results = await page.evaluate(async (rootPath) => {
     const { createZdpSplitPaneController } = await import(`/@fs/${rootPath}/src/lib/split-pane.ts`);

@@ -416,8 +416,13 @@ export function createZdpSplitPaneController(
     }
 
     dragging = true;
-    endDragSelection = beginZdpDragSelection(separator.ownerDocument);
-    render();
+    try {
+      endDragSelection = beginZdpDragSelection(separator.ownerDocument);
+      render();
+    } catch (error) {
+      finishPointerInteraction();
+      throw error;
+    }
   }
 
   function handlePointerMove(event: PointerEvent): void {
@@ -530,7 +535,14 @@ export function createZdpSplitPaneController(
     pendingPointerEvent = null;
 
     if (nextSize !== null && event !== null && dragging) {
-      setSize(nextSize, event, false);
+      try {
+        setSize(nextSize, event, false);
+      } catch (error) {
+        // Consumer callbacks can throw during a frame or the final flush.
+        // Release capture and the document selection lock before propagating.
+        finishPointerInteraction();
+        throw error;
+      }
     }
   }
 
