@@ -2,6 +2,29 @@
 
 ## Unreleased
 
+## 0.67.2
+
+- Index Accordion open and previous item IDs to avoid quadratic scans during server rendering and list updates, preserving item order, user choices, disabled defaults, and single/multiple mode behavior.
+- Keep the package build lock until outstanding directory operations and rollback finish, reject overlapping operations on one transaction, and attempt lock removal even if handle closure fails.
+- Allow retry when a CodeBlock clipboard request remains unresolved for 10 seconds, and ignore late results after retry, cancellation, content replacement, or unmount.
+- Separate Combobox keyboard navigation calculation from event handling and state updates. Preserve input guards, opening callback order, directional endpoints, wraparound, and first-match selection without mutating caller options.
+- Check the actual confirmation hold deadline before completing, including fractional durations. Isolate the clock and scheduler for deterministic tests and support cancellation without changing ConfirmAction props or slide/click behavior.
+- Restore floating panel CSS fallback after failed or invalid position calculations, and prevent cancelled layout work from mutating panels. Keep finite nonnegative sizing across Combobox, Tooltip, Popover, and Menu.
+- Invalidate modal focus caches for every attribute change inside observed trees, including consumer CSS selectors using id, data-* or aria-expanded. Hidden controls leave the Tab order immediately and rejoin when shown, including inside open shadow roots.
+- Batch native form reset synchronization into one deferred task per reset event instead of one timer per input. Preserve cancelled resets, control teardown, callback order, and error isolation across controls.
+- Stop Storybook preview URL resolution on GitHub API outages or invalid metadata instead of silently replacing custom domains with a guessed address. Reuse bounded GET retries with preserved causes and cancellation; retain the default URL fallback only for HTTP 404.
+- Stop GitHub release creation when its existence lookup fails instead of treating all failures as absence. Bound authenticated GET reads and retry only transient reads, preserve causes and cancellation, and keep release creation to one time-limited invocation.
+- Separate modal background isolation planning from DOM observation and mutation while preserving shadow-root handling, detached-layer recovery, and ownership of preexisting inert attributes.
+- Fail npm publication preflight on registry outages instead of treating errors as an unpublished version. Bound GET lookups with deadlines and exponential retries, preserve causes and cancellation, and keep publication to one attempt with a deadline and network retries disabled.
+- Verify published npm artifacts from one bounded metadata read instead of suppressing separate lookup errors. Preserve failure causes and cancellation, retry transient reads and visibility lag with capped exponential backoff, and fail immediately on mismatched artifacts.
+- Index radio groups during focus traversal to avoid quadratic candidate scans. Preserve DOM and tabindex ordering, independent form and shadow-root groups, and immediate updates after silent selection or form-owner changes.
+- Serialize release artifact writers per output directory with an exclusive filesystem lock, and clean temporary staging and lock resources on setup failure, cancellation, and generation errors.
+- Apply text selection tokens when importing foundation.css without the surface reset, and keep themed select popups at a stable scrollable height.
+- Center inline icon actions and provide shared feedback/control row layouts with transparent retry icon guidance and accessible action names.
+- Release split-pane pointer capture, pending frames, and document text-selection locks when drag rendering or resize callbacks throw. Preserve the original error and allow subsequent drags to start normally.
+- Separate split-pane keyboard size calculation from DOM events and controller mutations. Preserve direction, Shift steps, constrained endpoints, input guards, and resize callback order while calculating each keyboard request from one immutable layout snapshot.
+- Share split pane layout defaults and immutable calculations between server rendering and the controller, and reuse resize projections without changing size bounds or callback order.
+
 ## 0.67.1
 
 - Align Radio and Checkbox indicators with the first label line across font sizes and wrapped labels, and center the Checkbox check glyph.
