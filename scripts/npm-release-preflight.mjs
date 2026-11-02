@@ -40,7 +40,7 @@ async function readOnce(url, request, signal, timeoutMs) {
 }
 
 /** GET-only boundary: registry outages must never authorize a publication. */
-export async function readPublishedVersion(name, version, {
+export async function readPublishedMetadata(name, version, {
   request = fetch,
   sleep = (ms, signal) => delay(ms, undefined, { signal }),
   signal,
@@ -62,7 +62,7 @@ export async function readPublishedVersion(name, version, {
       if (metadata?.name !== name || metadata?.version !== version) {
         throw new Error('npm registry returned unexpected package metadata.');
       }
-      return metadata.version;
+      return metadata;
     } catch (error) {
       if (signal?.aborted) throw signal.reason;
       const retryable = error instanceof TypeError || error?.name === 'TimeoutError' ||
@@ -78,6 +78,11 @@ export async function readPublishedVersion(name, version, {
       }
     }
   }
+}
+
+export async function readPublishedVersion(name, version, options = {}) {
+  const metadata = await readPublishedMetadata(name, version, options);
+  return metadata?.version ?? null;
 }
 
 async function main() {
