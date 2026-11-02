@@ -1,3 +1,10 @@
+import {
+  ZDP_SPLIT_PANE_DEFAULTS,
+  normalizeZdpSplitPaneBounds as normalizeBounds,
+  normalizeZdpSplitPaneSize as normalizeSize,
+  resolveZdpSplitPaneLayout
+} from './split-pane-layout.js';
+
 export type ZdpSplitPaneOrientation = 'vertical' | 'horizontal';
 
 export type ZdpSplitPaneResizeEvent = PointerEvent | KeyboardEvent | MouseEvent;
@@ -195,7 +202,7 @@ export function createZdpSplitPaneController(
 
   const snapshot = captureControllerSnapshot(root, primary, separator, secondary);
   let options: ZdpSplitPaneControllerOptions = { ...initialOptions };
-  let requestedSize = normalizeSize(initialOptions.size, normalizeSize(initialOptions.defaultSize, 280));
+  let requestedSize = normalizeSize(initialOptions.size, normalizeSize(initialOptions.defaultSize, ZDP_SPLIT_PANE_DEFAULTS.defaultSize));
   let containerSize = Number.POSITIVE_INFINITY;
   let activePointerId: number | null = null;
   let pointerStartCoordinate = 0;
@@ -294,48 +301,12 @@ export function createZdpSplitPaneController(
     return options.disabled === true;
   }
 
-  function getNormalizedValues(): {
-    defaultSize: number;
-    minSize: number;
-    maxSize: number;
-    effectiveMaxSize: number;
-    secondaryMinSize: number;
-    handleSize: number;
-    keyboardStep: number;
-    largeKeyboardStep: number;
-    constrained: boolean;
-  } {
-    const { defaultSize, minSize, maxSize } = normalizeBounds(options);
-    const secondaryMinSize = normalizeSize(options.secondaryMinSize, 0);
-    const handleSize = Math.max(1, normalizeSize(options.handleSize, 24));
-    const keyboardStep = Math.max(1, normalizeSize(options.keyboardStep, 8));
-    const largeKeyboardStep = Math.max(1, normalizeSize(options.largeKeyboardStep, 32));
-    const containerMaximum = Number.isFinite(containerSize)
-      ? Math.max(minSize, Math.floor(containerSize - secondaryMinSize))
-      : maxSize;
-    const effectiveMaxSize = Math.min(maxSize, containerMaximum);
-    const constrained = Number.isFinite(containerSize) && containerSize < minSize + secondaryMinSize;
-
-    return {
-      defaultSize,
-      minSize,
-      maxSize,
-      effectiveMaxSize,
-      secondaryMinSize,
-      handleSize,
-      keyboardStep,
-      largeKeyboardStep,
-      constrained
-    };
+  function getNormalizedValues() {
+    return resolveZdpSplitPaneLayout(requestedSize, options, containerSize);
   }
 
   function getRenderedSize(): number {
-    const { defaultSize, minSize, effectiveMaxSize } = getNormalizedValues();
-    return clampZdpSplitPaneSize(requestedSize, {
-      defaultSize,
-      minSize,
-      maxSize: effectiveMaxSize
-    });
+    return getNormalizedValues().renderedSize;
   }
 
   function measureContainer(): void {
@@ -347,10 +318,9 @@ export function createZdpSplitPaneController(
     }
   }
 
-  function render(): void {
+  function render(values = getNormalizedValues()): void {
     const orientation = getOrientation();
-    const values = getNormalizedValues();
-    const renderedSize = getRenderedSize();
+    const renderedSize = values.renderedSize;
     const valueText = options.getValueText?.(renderedSize) ?? `${renderedSize} pixels`;
 
     root.classList.add('zdp-resizable-split-pane');
@@ -379,23 +349,18 @@ export function createZdpSplitPaneController(
     separator.setAttribute('tabindex', isDisabled() ? '-1' : '0');
     toggleAttributeValue(separator, 'aria-disabled', isDisabled() ? 'true' : null);
 
-    if (secondary) {
-      secondary.classList.add('zdp-resizable-split-pane__secondary');
-      secondary.setAttribute('data-zdp-split-pane-secondary', '');
-    }
+    if (!secondary) return;
+    secondary.classList.add('zdp-resizable-split-pane__secondary');
+    secondary.setAttribute('data-zdp-split-pane-secondary', '');
   }
 
   function setSize(nextSize: number, event: ZdpSplitPaneResizeEvent, commit: boolean): void {
     const previousSize = getRenderedSize();
-    const { defaultSize, minSize, effectiveMaxSize } = getNormalizedValues();
-    const nextRenderedSize = clampZdpSplitPaneSize(nextSize, {
-      defaultSize,
-      minSize,
-      maxSize: effectiveMaxSize
-    });
+    const values = resolveZdpSplitPaneLayout(nextSize, options, containerSize);
+    const nextRenderedSize = values.renderedSize;
 
     requestedSize = nextRenderedSize;
-    render();
+    render(values);
 
     if (nextRenderedSize === previousSize) {
       return;
@@ -403,9 +368,8 @@ export function createZdpSplitPaneController(
 
     options.onResize?.(nextRenderedSize, event);
 
-    if (commit && !destroyed && !isDisabled()) {
-      options.onResizeCommit?.(nextRenderedSize, event);
-    }
+    if (!commit || destroyed || isDisabled()) return;
+    options.onResizeCommit?.(nextRenderedSize, event);
   }
 
   function pointerCoordinate(event: PointerEvent): number {
@@ -678,18 +642,6 @@ function beginZdpDragSelection(document: Document): () => void {
       root.classList.remove('zdp-user-select-dragging');
     }
   };
-}
-
-function normalizeBounds(bounds: ZdpSplitPaneSizeBounds): Required<ZdpSplitPaneSizeBounds> {
-  const minSize = normalizeSize(bounds.minSize, 220);
-  const maxSize = Math.max(minSize, normalizeSize(bounds.maxSize, 480));
-  const defaultSize = Math.min(maxSize, Math.max(minSize, normalizeSize(bounds.defaultSize, 280)));
-
-  return { defaultSize, minSize, maxSize };
-}
-
-function normalizeSize(value: number | undefined, fallback: number): number {
-  return Number.isFinite(value) ? Math.max(0, Math.round(value as number)) : fallback;
 }
 
 function createStorageKey(key: string): string {

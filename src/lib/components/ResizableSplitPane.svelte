@@ -2,12 +2,12 @@
   import { onMount, untrack, type Snippet } from 'svelte';
   import { toZdpDomId } from '../dom-id.js';
   import {
-    clampZdpSplitPaneSize,
     createZdpSplitPaneController,
     type ZdpSplitPaneController,
     type ZdpSplitPaneOrientation,
     type ZdpSplitPaneResizeEvent
   } from '../split-pane.js';
+  import { resolveZdpSplitPaneLayout } from '../split-pane-layout.js';
 
   interface Props {
     id?: string | null;
@@ -71,16 +71,13 @@
   const resolvedSecondaryId = $derived(
     toZdpDomId(secondaryId ?? `${resolvedId}-secondary`, `${resolvedId}-secondary`)
   );
-  const normalizedMinSize = $derived(normalizeSize(minSize, 220));
-  const normalizedMaxSize = $derived(Math.max(normalizedMinSize, normalizeSize(maxSize, 480)));
-  const normalizedHandleSize = $derived(Math.max(1, normalizeSize(handleSize, 24)));
-  const renderedSize = $derived(
-    clampZdpSplitPaneSize(size ?? defaultSize, {
-      defaultSize,
-      minSize: normalizedMinSize,
-      maxSize: normalizedMaxSize
-    })
-  );
+  const layout = $derived(resolveZdpSplitPaneLayout(size ?? defaultSize, {
+    defaultSize, minSize, maxSize, secondaryMinSize, handleSize, keyboardStep, largeKeyboardStep
+  }));
+  const normalizedMinSize = $derived(layout.minSize);
+  const normalizedMaxSize = $derived(layout.maxSize);
+  const normalizedHandleSize = $derived(layout.handleSize);
+  const renderedSize = $derived(layout.renderedSize);
   const valueText = $derived(getValueText?.(renderedSize) ?? `${renderedSize} pixels`);
   const rootStyle = $derived(
     `--zdp-resizable-split-pane-size: ${renderedSize}px; --zdp-resizable-split-pane-handle-size: ${normalizedHandleSize}px;`
@@ -134,10 +131,6 @@
         onResizeCommit?.(nextSize, event);
       }
     };
-  }
-
-  function normalizeSize(value: number, fallback: number): number {
-    return Number.isFinite(value) ? Math.max(0, Math.round(value)) : fallback;
   }
 </script>
 
