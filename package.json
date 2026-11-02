@@ -145,7 +145,7 @@
     "release:changes:test": "bun scripts/release-changes.ts self-test",
     "release:prepare": "bun scripts/release-changes.ts prepare",
     "release:artifact:check": "bun test scripts/release-artifact-workspace.test.ts && bun scripts/build-release-artifact.ts --check",
-    "release:check": "bun scripts/check-release-workflow.ts && node --test scripts/npm-release-preflight.test.mjs scripts/npm-release-verification.test.mjs && bun run release:artifact:check",
+    "release:check": "bun scripts/check-release-workflow.ts && node --test scripts/npm-release-preflight.test.mjs scripts/npm-release-verification.test.mjs scripts/github-release-preflight.test.mjs && bun run release:artifact:check",
     "fixtures:check": "bun scripts/check-consumer-fixtures.ts",
     "types:consumer:check": "bun scripts/check-consumer-fixtures.ts --types-only",
     "storybook": "bun run dev",

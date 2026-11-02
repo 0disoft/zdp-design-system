@@ -178,10 +178,12 @@ jobs:
           RELEASE_MANIFEST: ${{ needs.publish.outputs.manifest }}
           RELEASE_TARBALL: ${{ needs.publish.outputs.tarball }}
         run: |
-          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+          set -euo pipefail
+          existing_release="$(node scripts/github-release-preflight.mjs "$GITHUB_REPOSITORY" "$GITHUB_REF_NAME")"
+          if [ "$existing_release" = "$GITHUB_REF_NAME" ]; then
             release_assets="$(mktemp -d)"
             trap 'rm -rf "$release_assets"' EXIT
-            gh release download "$GITHUB_REF_NAME" \
+            timeout --signal=TERM --kill-after=5s 60s gh release download "$GITHUB_REF_NAME" \
               --pattern "$RELEASE_TARBALL" \
               --pattern "$RELEASE_MANIFEST" \
               --dir "$release_assets"
@@ -190,7 +192,8 @@ jobs:
             echo "Release ${GITHUB_REF_NAME} and its package assets already exist and match."
             exit 0
           fi
-          gh release create "$GITHUB_REF_NAME" \
+          # A creation failure or timeout has an uncertain outcome: never retry it here.
+          timeout --signal=TERM --kill-after=5s 120s gh release create "$GITHUB_REF_NAME" \
             "$RELEASE_TARBALL#npm package tarball" \
             "$RELEASE_MANIFEST#npm release artifact manifest" \
             --verify-tag \

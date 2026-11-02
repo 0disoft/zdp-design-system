@@ -92,6 +92,15 @@ assert.ok(workflow.includes('            scripts/npm-release-verification.mjs'))
 assert.ok(workflow.includes('CHANGELOG.md does not contain'));
 assert.ok(workflow.includes('gh release create "$GITHUB_REF_NAME"'));
 assert.ok(workflow.includes('gh release download "$GITHUB_REF_NAME"'));
+const createReleaseStep = workflow.split('      - name: Create GitHub release')[1] ?? '';
+assert.ok(createReleaseStep.includes('set -euo pipefail'));
+assert.ok(createReleaseStep.includes('existing_release="$(node scripts/github-release-preflight.mjs "$GITHUB_REPOSITORY" "$GITHUB_REF_NAME")"'));
+assert.ok(!createReleaseStep.includes('gh release view'));
+assert.ok(!createReleaseStep.includes('2>&1'));
+assert.ok(!createReleaseStep.includes('|| true'));
+assert.equal(createReleaseStep.match(/gh release create/g)?.length, 1);
+assert.ok(createReleaseStep.includes('timeout --signal=TERM --kill-after=5s 120s gh release create'));
+assert.ok(createReleaseStep.includes('timeout --signal=TERM --kill-after=5s 60s gh release download'));
 assert.ok(workflow.includes('cmp "$RELEASE_TARBALL" "$release_assets/$RELEASE_TARBALL"'));
 assert.ok(workflow.includes('cmp "$RELEASE_MANIFEST" "$release_assets/$RELEASE_MANIFEST"'));
 assert.ok(workflow.includes('"$RELEASE_TARBALL#npm package tarball"'));
