@@ -26,38 +26,66 @@ export interface AtomicDirectoryTransaction {
   replace(beforePromote?: () => Promise<void>): Promise<void>;
 }
 
+interface AtomicDirectoryLockIO {
+  openLock(path: string): Promise<{
+    writeFile(content: string): Promise<void>;
+    close(): Promise<void>;
+  }>;
+  removeLock(path: string): Promise<void>;
+}
+
 /** Hold ownership from recovery through staging, promotion, and failure cleanup. */
 export async function withAtomicDirectory<T>(
   paths: AtomicDirectoryPaths,
-  operation: (transaction: AtomicDirectoryTransaction) => Promise<T>
+  operation: (transaction: AtomicDirectoryTransaction) => Promise<T>,
+  {
+    openLock = path => open(path, 'wx'),
+    removeLock = path => rm(path, { force: true })
+  }: Partial<AtomicDirectoryLockIO> = {}
 ): Promise<T> {
   const lockPath = `${paths.targetRoot}.__lock__`;
-  const lock = await open(lockPath, 'wx').catch((error: NodeJS.ErrnoException) => {
+  const lock = await openLock(lockPath).catch((error: NodeJS.ErrnoException) => {
     if (error.code === 'EEXIST') {
       throw new Error(`Package build already locked: ${lockPath}. Retry after the active build finishes. If a crashed build left this file, remove it only after confirming no build is running.`);
     }
     throw error;
   });
   let active = true;
-  function assertActive(): void {
-    if (!active) throw new Error('Atomic directory transaction is already closed.');
+  let pending: Promise<void> | null = null;
+  function run(action: () => Promise<void>): Promise<void> {
+    if (!active) return Promise.reject(new Error('Atomic directory transaction is already closed.'));
+    if (pending !== null) return Promise.reject(new Error('Atomic directory transaction already has an operation in progress.'));
+    const work = Promise.resolve().then(action);
+    pending = work;
+    const settled = () => { if (pending === work) pending = null; };
+    void work.then(settled, settled);
+    return work;
+  }
+  function waitForPending(): Promise<void> {
+    return pending ?? Promise.resolve();
   }
   try {
     await lock.writeFile(`${process.pid}\n`);
-    return await operation({
-      recover: async () => {
-        assertActive();
-        await recoverAtomicDirectory(paths);
-      },
-      replace: async (beforePromote) => {
-        assertActive();
-        await replaceDirectoryAtomically({ ...paths, beforePromote });
-      }
+    const result = await operation({
+      recover: () => run(() => recoverAtomicDirectory(paths)),
+      replace: beforePromote => run(() => replaceDirectoryAtomically({ ...paths, beforePromote }))
     });
+    active = false;
+    // A caller that forgot to await a method must not release its filesystem lock.
+    await waitForPending();
+    return result;
   } finally {
     active = false;
-    await lock.close();
-    await rm(lockPath, { force: true });
+    try {
+      // Rollback may still be running when the callback throws or is cancelled.
+      await waitForPending().catch(() => {});
+    } finally {
+      try {
+        await lock.close();
+      } finally {
+        await removeLock(lockPath);
+      }
+    }
   }
 }
 
