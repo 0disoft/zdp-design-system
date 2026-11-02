@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { appendFile, cp, mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { appendFile, cp, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { basename, isAbsolute, join, relative, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { gunzipSync } from 'node:zlib';
 import { fileURLToPath } from 'node:url';
 import { npmCommand } from './npm-command';
+import { withReleaseArtifactWorkspace } from './release-artifact-workspace';
 
 interface PackageManifest {
   readonly name?: unknown;
@@ -92,11 +93,7 @@ async function buildArtifact(gitHead: string, artifactDirectory: string): Promis
   assert.ok(Array.isArray(manifest.files), 'package.json must declare a files allowlist.');
   assert.ok(manifest.files.every((entry) => typeof entry === 'string'), 'Package file entries must be strings.');
 
-  const temporaryRoot = await mkdtemp(join(tmpdir(), 'zdp-release-artifact-'));
-  const stagingDirectory = join(temporaryRoot, 'package');
-  await mkdir(stagingDirectory);
-
-  try {
+  return withReleaseArtifactWorkspace(artifactDirectory, async stagingDirectory => {
     for (const entry of manifest.files as string[]) {
       assertRelativePackagePath(entry);
       await cp(join(root, entry), join(stagingDirectory, entry), { recursive: true });
@@ -107,8 +104,6 @@ async function buildArtifact(gitHead: string, artifactDirectory: string): Promis
       `${JSON.stringify({ ...manifest, gitHead }, null, 2)}\n`,
       'utf8'
     );
-    await mkdir(artifactDirectory, { recursive: true });
-
     const npm = npmCommand(['pack', '--json', '--pack-destination', artifactDirectory]);
     const packed = spawnSync(
       npm.executable,
@@ -152,9 +147,7 @@ async function buildArtifact(gitHead: string, artifactDirectory: string): Promis
     );
 
     return { tarball, integrity, manifest: releaseManifest };
-  } finally {
-    await rm(temporaryRoot, { recursive: true, force: true });
-  }
+  });
 }
 
 const args = process.argv.slice(2);

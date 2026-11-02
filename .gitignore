@@ -3,6 +3,7 @@
 /dist.__staging__/
 /dist.__previous__/
 /dist.__lock__
+/.zdp-release-artifact.lock
 /build/
 /coverage/
 /.svelte-kit/

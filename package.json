@@ -144,7 +144,7 @@
     "release:changes:check": "bun scripts/release-changes.ts check",
     "release:changes:test": "bun scripts/release-changes.ts self-test",
     "release:prepare": "bun scripts/release-changes.ts prepare",
-    "release:artifact:check": "bun scripts/build-release-artifact.ts --check",
+    "release:artifact:check": "bun test scripts/release-artifact-workspace.test.ts && bun scripts/build-release-artifact.ts --check",
     "release:check": "bun scripts/check-release-workflow.ts && bun run release:artifact:check",
     "fixtures:check": "bun scripts/check-consumer-fixtures.ts",
     "types:consumer:check": "bun scripts/check-consumer-fixtures.ts --types-only",
