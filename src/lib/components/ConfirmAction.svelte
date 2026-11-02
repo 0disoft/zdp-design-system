@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onDestroy, tick } from 'svelte';
   import Button from './Button.svelte';
+  import { normalizeConfirmHoldDuration, scheduleConfirmHold } from '../confirm-hold.js';
 
   interface Props {
     id?: string | null;
@@ -50,7 +51,7 @@
   let startedAt = 0;
   let interactionDurationMs = $state(2000);
   let progressFrame: number | null = null;
-  let confirmTimer: number | null = null;
+  let confirmTimer: (() => void) | null = null;
   let resetTimer: number | null = null;
 
   function beginInteraction(clientX: number | null, element: HTMLButtonElement): void {
@@ -67,7 +68,7 @@
     startedAt = performance.now();
     addCancellationListeners();
     progressFrame = window.requestAnimationFrame(updateHoldProgress);
-    confirmTimer = window.setTimeout(confirmAction, interactionDurationMs);
+    confirmTimer = scheduleConfirmHold(interactionDurationMs, confirmAction);
   }
 
   function updateHoldProgress(now: number): void {
@@ -154,7 +155,7 @@
     }
 
     if (confirmTimer !== null) {
-      window.clearTimeout(confirmTimer);
+      confirmTimer();
       confirmTimer = null;
     }
 
@@ -273,7 +274,7 @@
   }
 
   onDestroy(clearTimers);
-  let safeDurationMs = $derived(Math.min(2_147_483_647, Math.max(600, Number.isFinite(durationMs) ? durationMs : 2000)));
+  let safeDurationMs = $derived(normalizeConfirmHoldDuration(durationMs));
   let progressStyle = $derived(`--zdp-confirm-action-progress: ${progress};`);
   $effect.pre(() => {
     if (pending) {

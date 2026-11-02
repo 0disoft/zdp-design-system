@@ -37,7 +37,7 @@ export function checkConfigurationContracts(context: StorybookCheckContext): voi
     storybook: 'bun run dev',
     'storybook:build': 'bun run build',
     'accordion:check': 'bun test scripts/accordion-state.test.ts && node --test scripts/accordion-render.test.mjs',
-    'storybook:check': 'bun run accordion:check && bun test scripts/loading-motion-contract.test.ts scripts/modal-focus.test.ts scripts/floating-position.test.ts scripts/code-copy.test.ts scripts/split-pane-layout.test.ts scripts/modal-isolation.test.ts && bun scripts/check-storybook.ts'
+    'storybook:check': 'bun run accordion:check && bun test scripts/loading-motion-contract.test.ts scripts/modal-focus.test.ts scripts/floating-position.test.ts scripts/code-copy.test.ts scripts/split-pane-layout.test.ts scripts/modal-isolation.test.ts scripts/confirm-hold.test.ts && bun scripts/check-storybook.ts'
   })) {
     if (packageJson.scripts?.[scriptName] !== expectedCommand) {
       failures.push(`Missing package script ${scriptName}.`);
