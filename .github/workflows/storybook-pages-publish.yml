@@ -119,24 +119,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TARGET_PATH: ${{ steps.publish.outputs.target_path }}
         run: |
-          pages_url="$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq '.html_url // empty' 2>/dev/null || true)"
-          pages_enabled=true
-
-          if [ -z "$pages_url" ]; then
-            owner="${GITHUB_REPOSITORY%%/*}"
-            repository_name="${GITHUB_REPOSITORY#*/}"
-            pages_url="https://${owner}.github.io/${repository_name}"
-            pages_enabled=false
-          fi
-
-          pages_url="${pages_url%/}/"
-          if [ "$TARGET_PATH" = '.' ]; then
-            deployment_url="$pages_url"
-          else
-            deployment_url="${pages_url}${TARGET_PATH}/"
-          fi
-
-          printf 'pages_enabled=%s\ndeployment_url=%s\n' "$pages_enabled" "$deployment_url" >> "$GITHUB_OUTPUT"
+          node scripts/github-pages-url.mjs "$GITHUB_REPOSITORY" "$TARGET_PATH"
 
       - name: Update pull request preview comment
         if: >-
