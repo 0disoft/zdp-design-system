@@ -39,28 +39,39 @@ export async function verifyFieldFocusContracts(page) {
                   else { await page.keyboard.press('Tab'); await field.focus(); }
                   const style = await frame.evaluate(element => {
                     const css = getComputedStyle(element);
+                    const backgrounds = [];
+                    for (let ancestor = element; ancestor; ancestor = ancestor.parentElement) {
+                      backgrounds.unshift(getComputedStyle(ancestor).backgroundColor);
+                    }
                     return { style: css.outlineStyle, width: parseFloat(css.outlineWidth),
-                      offset: parseFloat(css.outlineOffset), color: css.outlineColor };
+                      offset: parseFloat(css.outlineOffset), color: css.outlineColor, backgrounds };
                   });
                   const label = `${width}/${forcedColors}/${theme}/${direction}/${selector}/${method}`;
                   assert.equal(style.style, 'solid', `${label}: visible focus ring`);
                   assert.ok(style.width >= 2 && style.width + style.offset <= 0, `${label}: ring fits inside clipping bounds`);
                   const png = (await frame.screenshot()).toString('base64');
-                  const edges = await page.evaluate(async ({ png, color, depth }) => {
+                  const edges = await page.evaluate(async ({ png, color, backgrounds, depth }) => {
                     const picture = new Image();
                     picture.src = `data:image/png;base64,${png}`;
                     await picture.decode();
                     const canvas = document.createElement('canvas');
                     canvas.width = picture.width; canvas.height = picture.height;
                     const context = canvas.getContext('2d');
+                    // System Highlight can be translucent on Linux. Compare the
+                    // painted composite, not the uncomposited CSS color and alpha.
+                    context.fillStyle = 'Canvas'; context.fillRect(0, 0, 1, 1);
+                    for (const background of backgrounds) {
+                      context.fillStyle = background; context.fillRect(0, 0, 1, 1);
+                    }
                     context.fillStyle = color; context.fillRect(0, 0, 1, 1);
                     const expected = [...context.getImageData(0, 0, 1, 1).data];
                     context.drawImage(picture, 0, 0);
                     return [[canvas.width / 2, depth], [canvas.width / 2, canvas.height - 1 - depth],
                       [depth, canvas.height / 2], [canvas.width - 1 - depth, canvas.height / 2]].map(([x, y]) =>
                       [...context.getImageData(Math.floor(x), Math.floor(y), 1, 1).data].every((value, index) => Math.abs(value - expected[index]) <= 3));
-                  }, { png, color: style.color, depth: Math.max(1, Math.floor(-style.offset - style.width / 2)) });
-                  assert.deepEqual(edges, [true, true, true, true], `${label}: all four edges remain painted`);
+                  }, { png, color: style.color, backgrounds: style.backgrounds,
+                    depth: Math.max(1, Math.floor(-style.offset - style.width / 2)) });
+                  assert.deepEqual(edges, [true, true, true, true], `${label}: all four edges remain painted (${style.color})`);
                   checks++;
                   if (selector === '.zdp-combobox__control') await field.press('Escape');
                 }
