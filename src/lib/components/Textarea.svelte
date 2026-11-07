@@ -138,7 +138,7 @@
   .zdp-textarea:focus-visible {
     border-color: var(--zdp-color-focus-line);
     outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
-    outline-offset: var(--zdp-control-focus-outline-offset);
+    outline-offset: calc(-1 * var(--zdp-control-focus-outline-width));
   }
 
   .zdp-textarea[aria-invalid="true"] {

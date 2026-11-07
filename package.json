@@ -132,6 +132,7 @@
     "browser:popover:check": "node scripts/check-browser-accessibility.mjs --popover",
     "browser:tooltip:check": "node scripts/check-browser-accessibility.mjs --tooltip",
     "browser:controls:check": "node scripts/check-browser-accessibility.mjs --controls",
+    "browser:field-focus:check": "node scripts/check-browser-accessibility.mjs --field-focus",
     "browser:button:check": "node scripts/check-browser-accessibility.mjs --button",
     "browser:confirm:check": "node scripts/check-browser-accessibility.mjs --confirm",
     "consumer:astro:check": "bun scripts/check-astro-consumer.mjs",

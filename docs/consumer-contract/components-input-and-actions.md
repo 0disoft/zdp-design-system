@@ -1,5 +1,9 @@
 # 입력과 액션 컴포넌트 계약
 
+## 입력창 포커스 테두리
+
+Input, Textarea, Select, Combobox, CommandField는 포커스 테두리를 입력창 안쪽에 표시한다. 스크롤 영역이나 `overflow: hidden`인 부모에 입력창이 붙어 있어도 네 변이 잘리지 않는다. `zdp-surface-reset`의 일반 입력 요소와 Windows 고대비 모드에도 같은 기준을 적용한다. 소비 앱에서 바깥쪽 `outline-offset`으로 덮어쓰지 않는다.
+
 ## 재조회와 입력창 옆 액션
 
 오류 안내의 재조회는 기본 배경이 투명한 ghost IconButton과 새로고침 아이콘을 사용한다. hover·active에서만 배경을 표시하고, `ariaLabel`과 tooltip에 현재 언어의 동작 이름을 제공한다. 재조회 중에는 `disabled` 또는 `loading`으로 중복 실행을 막는다. 데이터를 다시 읽는 액션에 적용하며, 저장·구매를 다시 실행하는 버튼은 동작을 설명하는 텍스트를 유지한다.

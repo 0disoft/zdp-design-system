@@ -492,6 +492,11 @@
   outline-offset: var(--zdp-control-focus-outline-offset);
 }
 
+/* Text-field rings stay visible at scroll and clipped-container boundaries. */
+.zdp-surface-reset :where(input:not([type="checkbox"], [type="radio"], [type="range"]), textarea, select):focus-visible {
+  outline-offset: calc(-1 * var(--zdp-control-focus-outline-width));
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root,
   [data-zdp-theme] {

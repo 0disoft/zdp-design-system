@@ -20,6 +20,7 @@ import { verifyToastDismissFocusContracts } from './browser/check-toast-focus.mj
 import { verifyDisclosureFocusContracts } from './browser/check-disclosure-focus.mjs';
 import { verifyPopoverFocusContracts } from './browser/check-popover-focus.mjs';
 import { verifyControlConsistency } from './browser/check-control-consistency.mjs';
+import { verifyFieldFocusContracts } from './browser/check-field-focus.mjs';
 import { verifyPopoverGeometryContracts } from './browser/check-popover-geometry.mjs';
 import { verifyComboboxGeometryContracts } from './browser/check-combobox-geometry.mjs';
 import { verifyLocalizedSortContracts, verifySortNameContracts, verifyTableDensityContracts } from './browser/check-table-interaction.mjs';
@@ -133,7 +134,9 @@ try {
     };
   });
 
-  if (process.argv.includes('--floating')) {
+  if (process.argv.includes('--field-focus')) {
+    await verifyFieldFocusContracts(page);
+  } else if (process.argv.includes('--floating')) {
     await verifyMenuGeometryContracts(page);
     await verifyPopoverGeometryContracts(page);
     await verifyComboboxGeometryContracts(page);
@@ -186,6 +189,7 @@ try {
     await verifyMovedFormResetContracts(page);
     await verifyReassociatedFormResetContracts(page);
   } else if (process.argv.includes('--controls')) {
+    await verifyFieldFocusContracts(page);
     await verifyProgressRangeContracts(page);
     await verifyFoundationAndFormContracts(page);
     await verifyButtonLoadingContracts(page);
@@ -279,6 +283,7 @@ try {
   await verifyNestedModalContracts(page);
   await verifyResponsiveAndForcedColorContracts(page);
   await verifyPageGutterContracts(page, baseUrl);
+  await verifyFieldFocusContracts(page);
 
   }
   console.log('Design system browser accessibility check passed.');
