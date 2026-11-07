@@ -282,8 +282,9 @@ try {
   await verifyShadowOverlayContracts(page);
   await verifyNestedModalContracts(page);
   await verifyResponsiveAndForcedColorContracts(page);
-  await verifyPageGutterContracts(page, baseUrl);
   await verifyFieldFocusContracts(page);
+  // Gutter checks navigate to a separate fixture without the shared controls.
+  await verifyPageGutterContracts(page, baseUrl);
 
   }
   console.log('Design system browser accessibility check passed.');
