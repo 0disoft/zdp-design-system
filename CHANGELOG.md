@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.67.3
+
+- Keep Input, Textarea, Select, Combobox, CommandField, and surface-reset text-field focus rings inside their borders so clipping and scroll containers preserve all four edges, including Windows forced-colors mode.
+
 ## 0.67.2
 
 - Index Accordion open and previous item IDs to avoid quadratic scans during server rendering and list updates, preserving item order, user choices, disabled defaults, and single/multiple mode behavior.
