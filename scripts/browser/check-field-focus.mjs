@@ -66,9 +66,19 @@ export async function verifyFieldFocusContracts(page) {
                     context.fillStyle = color; context.fillRect(0, 0, 1, 1);
                     const expected = [...context.getImageData(0, 0, 1, 1).data];
                     context.drawImage(picture, 0, 0);
-                    return [[canvas.width / 2, depth], [canvas.width / 2, canvas.height - 1 - depth],
-                      [depth, canvas.height / 2], [canvas.width - 1 - depth, canvas.height / 2]].map(([x, y]) =>
-                      [...context.getImageData(Math.floor(x), Math.floor(y), 1, 1).data].every((value, index) => Math.abs(value - expected[index]) <= 3));
+                    // Fractional layout coordinates can shift a cropped edge by
+                    // one pixel. Inspect the inset stroke band on every side.
+                    return ['top', 'bottom', 'left', 'right'].map(side => {
+                      for (let inset = 0; inset <= depth + 1; inset++) {
+                        const [x, y] = side === 'top' ? [canvas.width / 2, inset]
+                          : side === 'bottom' ? [canvas.width / 2, canvas.height - 1 - inset]
+                          : side === 'left' ? [inset, canvas.height / 2]
+                          : [canvas.width - 1 - inset, canvas.height / 2];
+                        const pixel = [...context.getImageData(Math.floor(x), Math.floor(y), 1, 1).data];
+                        if (pixel.every((value, index) => Math.abs(value - expected[index]) <= 3)) return true;
+                      }
+                      return false;
+                    });
                   }, { png, color: style.color, backgrounds: style.backgrounds,
                     depth: Math.max(1, Math.floor(-style.offset - style.width / 2)) });
                   assert.deepEqual(edges, [true, true, true, true], `${label}: all four edges remain painted (${style.color})`);
