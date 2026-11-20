@@ -333,9 +333,12 @@
       return;
     }
 
-    const optionElement = Array.from(
-      rootElement.querySelectorAll<HTMLElement>('.zdp-combobox__option')
-    ).find((element) => element.id === optionId);
+    const tree = rootElement.getRootNode() as Node & Partial<Pick<Document, 'getElementById'>>;
+    const candidate = tree.getElementById?.(optionId);
+    const optionElement = candidate?.matches('.zdp-combobox__option') && rootElement.contains(candidate)
+      ? candidate
+      // Detached trees or duplicate explicit IDs still need a local lookup.
+      : rootElement.querySelector<HTMLElement>(`.zdp-combobox__option#${CSS.escape(optionId)}`);
     const panel = optionElement?.closest<HTMLElement>('.zdp-combobox__panel');
     if (!optionElement || !panel) return;
     const optionRect = optionElement.getBoundingClientRect();

@@ -49,26 +49,46 @@ export async function verifyComboboxGeometryContracts(page) {
         assert.equal(await page.evaluate(() => scrollY), geometry.windowScroll, 'Navigation must not scroll the page');
       }
     }
-    await configure({ corner: 'bottom-right', count: 40, direction: 'ltr' });
+    await configure({ corner: 'bottom-right', count: 1000, direction: 'ltr' });
     await input.press('ArrowDown');
     await waitInside();
     assert.equal(await panel.evaluate(element => element.scrollHeight > element.clientHeight), true);
-    await input.press('ArrowUp');
     const waitActiveVisible = () => page.waitForFunction(() => {
       const root = document.querySelector('[data-testid="edge-combobox-anchor"]');
       const panel = root.querySelector('.zdp-combobox__panel').getBoundingClientRect();
       const option = root.querySelector('[data-active="true"]').getBoundingClientRect();
       return option.top >= panel.top && option.bottom <= panel.bottom;
     });
-    await waitActiveVisible();
+    await input.evaluate(element => {
+      const root = element.closest('.zdp-combobox');
+      const query = root.querySelectorAll;
+      root.optionNodesEnumerated = 0;
+      root.querySelectorAll = function (selector) {
+        const matches = query.call(this, selector);
+        if (selector === '.zdp-combobox__option') this.optionNodesEnumerated += matches.length;
+        return matches;
+      };
+    });
+    try {
+      await input.press('ArrowUp');
+      await waitActiveVisible();
+      assert.equal(await input.evaluate(element => element.closest('.zdp-combobox').optionNodesEnumerated), 0,
+        'Scrolling to the active option must not enumerate the entire list.');
+    } finally {
+      await input.evaluate(element => {
+        const root = element.closest('.zdp-combobox');
+        delete root.querySelectorAll;
+        delete root.optionNodesEnumerated;
+      });
+    }
     await page.setViewportSize({ width: 240, height: 320 });
     await waitInside();
     await waitActiveVisible();
     await configure({ corner: 'top-left' });
     await waitInside();
     await input.press('Enter');
-    assert.equal(await input.inputValue(), '담당 팀 40');
-    assert.equal(await input.evaluate(element => new FormData(element.form).get('team')), 'value-39');
+    assert.equal(await input.inputValue(), '담당 팀 1000');
+    assert.equal(await input.evaluate(element => new FormData(element.form).get('team')), 'value-999');
     await input.fill('없는 팀');
     await waitInside();
     assert.equal(await panel.getByRole('status').textContent(), 'No results');
