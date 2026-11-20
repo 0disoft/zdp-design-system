@@ -36,7 +36,7 @@ Svelte island 없이 정적 HTML만 쓰는 곳은 스크린리더 전용 보조 
 가까운 내용 사이의 얇은 구분선은 `.zdp-divider`와 `.zdp-divider--horizontal` utility로 맞추되, section spacing은 소비처가 소유한다.
 반복 카드나 요약 묶음은 `.zdp-grid`, 가까운 화면 도구와 액션 묶음은 `.zdp-toolbar` utility로 맞춘다.
 CommandField는 검색, 빠른 이동, 명령 팔레트 진입처럼 짧은 keyboard affordance가 필요한 입력에 `CommandField` 또는 `.zdp-command-field-shell`, `.zdp-command-field`, `.zdp-command-field__input`, `.zdp-command-field__shortcut`, `.zdp-kbd`, `.zdp-shortcut-hint` utility로 맞춘다.
-Combobox는 검색 가능한 단일 선택에 `Combobox` 또는 `.zdp-combobox`, `.zdp-combobox__control`, `.zdp-combobox__input`, `.zdp-combobox__listbox`, `.zdp-combobox__option` utility로 맞춘다. option source, filtering, async loading, command 실행, 권한 판단은 소비처가 소유한다.
+Combobox는 검색 가능한 단일 선택에 hydration된 Svelte island를 사용한다. `.zdp-combobox`, `.zdp-combobox__control`, `.zdp-combobox__input`, `.zdp-combobox__listbox`, `.zdp-combobox__option` class는 모양을 제공한다. 키보드 탐색, 포커스, 목록 열기·닫기, 옵션 선택과 폼 제출 연동은 Svelte 컴포넌트가 처리한다. JavaScript 없이 단일 선택을 제공하려면 label과 연결한 native `<select>`를 쓴다.
 AdSlot은 광고나 후원 자리의 reserved layout, accessible label, placement/state data attribute만 제공한다. `AdSlot` 또는 `.zdp-ad-slot`, `data-zdp-ad-slot`, `data-zdp-ad-placement`, `data-zdp-ad-state` utility로 자리를 예약하되 provider script, consent, slot id, ads.txt, personalized ads 판단은 소비 앱이 계속 소유한다.
 문서, 보안, 아키텍처 페이지의 코드 조각은 `InlineCode`, `CodeBlock`, `.zdp-inline-code`, `.zdp-code-block`, `.zdp-code-block__copy` utility로 맞춘다.
 사람, 팀, 조직의 짧은 표기는 `.zdp-avatar`, `.zdp-avatar__initials`, `.zdp-identity-chip`, `.zdp-identity-chip__label` utility로 맞추되 실제 계정 식별, 프로필 라우팅, 온라인 상태, 권한, 초대 가능 여부 판단은 소비처가 소유한다.
@@ -57,7 +57,7 @@ AdSlot은 광고나 후원 자리의 reserved layout, accessible label, placemen
 공유 도크는 `.zdp-share-dock`, `.zdp-share-dock--side|rail|bottom|inline`, `.zdp-share-action`, `.zdp-share-icon`, `.zdp-share-action__tooltip` utility로 배치하되 URL 생성, clipboard, navigator.share, 플랫폼별 공유 링크는 소비처가 소유한다.
 Svelte island 없이 Astro에서 공유 아이콘 shape만 필요하면 `zdp-design-system/share`에서 `zdpShareIcons`와 `ZdpShareIconName`을 가져온다.
 플랫폼 브랜드 공유 아이콘은 Simple Icons path 기준을 유지하고 임의 outline glyph로 대체하지 않는다.
-Astro 페이지는 Svelte island가 필요한 부분에서만 Svelte 컴포넌트를 가져온다.
+Astro 페이지에서 인터랙티브 ZDP 컴포넌트는 `@astrojs/svelte`로 만든 로컬 Svelte wrapper에 배치하고, 즉시 사용할 컨트롤은 Astro 페이지에서 `<Picker client:load />`로 hydration한다. `client:*` 없이 SSR하면 초기 마크업만 렌더된다. 데이터는 직렬화 가능한 prop으로 넘기고, 이벤트 핸들러와 상태는 wrapper에 둔다. 동작 가능한 조합은 [동작 예제](working-examples.md)를 참고한다.
 인터랙티브 Menu가 필요한 페이지는 `@astrojs/svelte`로 Svelte island을 만들고 그 안에서 `zdp-design-system`의 `Menu` 컴포넌트를 쓴다. 기본 CSS와 framework-neutral DOM controller 표면(Astro plain HTML/CSS, `zdp-design-system/split-pane`)은 Svelte나 Floating UI를 import할 수 없으므로 그 경로로는 Menu의 keyboard·focus 상호작용을 붙이지 않는다. 정적 마크업에는 `.zdp-menu`, `.zdp-menu__trigger`, `.zdp-menu__panel`, `.zdp-menu__item` utility만 쓴다.
 Menu `items`의 `onclick` 같은 함수는 Astro frontmatter prop으로 직렬화할 수 없어서, 페이지가 아니라 그 island의 local Svelte wrapper 안에서 만든다. 항목 노출, 권한, 라우팅 판단은 소비처가 계속 소유한다.
 packed Astro consumer fixture는 `static`, `menu`, `popover`, `combobox` 4페이지를 포함하고 기존 정적 경로를 유지한다. `menu`와 `popover` 페이지는 Svelte island 안에서 `zdp-design-system`의 `Menu`와 `Popover`를 mount하고, 공개 props, `trigger` slot과 default legacy slot, `.zdp-menu*`/`.zdp-popover*` class, token은 그대로 쓴다. 정적 HTML/CSS 경로는 기존대로 유지하고, Popover의 변경 콜백이 변경당 한 번만 호출되는지도 이 fixture에서 확인한다.

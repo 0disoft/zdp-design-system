@@ -8,6 +8,9 @@ Combobox `options` describes the current search candidates. A known selection re
 
 ```svelte
 <Combobox
+  name="owner"
+  label="담당 팀"
+  labelVisible
   options={searchResults}
   selectedOption={selectedRecord}
   bind:value={selectedValue}
@@ -27,5 +30,7 @@ import Dialog from 'zdp-design-system/components/Dialog';
 ```
 
 각 `.svelte` 파일이 자신의 scoped CSS를 포함하므로 같은 앱에서 `styles.css`까지 함께 import하지 않는다. 전역 utility class나 framework-neutral DOM controller를 함께 쓰는 화면만 `styles.css`를 선택하고, 그 경우 `tokens.css`를 별도로 중복 import하지 않는다. 기존 `import { Button } from 'zdp-design-system'` root named export는 호환용이지만 새 코드와 template의 기본 경로는 아니다.
+
+직접 실행할 수 있는 폼과 상호작용은 [동작 예제](working-examples.md)를 참고한다.
 
 상위 개요와 금지 경계는 [docs/CONSUMER_CONTRACT.md](../CONSUMER_CONTRACT.md)를 따른다.

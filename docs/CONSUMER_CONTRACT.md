@@ -42,6 +42,10 @@ Default component text is English. 소비 앱은 화면 locale에 맞춰 user-fa
 
 이 문서는 소비 계약의 개요이자 길잡이다. 절별 상세 계약은 `docs/consumer-contract/` 아래 목적별 문서로 나눠 두었고, 아래 절 제목에서 해당 문서로 이동한다.
 
+새 화면과 자동화 도구는 [구현 가이드](LLM_GUIDE.md)에서 시작한다.
+
+[동작 예제](consumer-contract/working-examples.md)에서 폼 검증, 검색·선택, 정렬, 페이지 이동, 알림 닫기를 확인할 수 있다.
+
 ## 공통 원칙
 
 - 소비 저장소는 제품 문구, 라우팅, SEO, 데이터 로딩, 인증, 결제, 권한 판단을 직접 소유한다.
@@ -56,8 +60,8 @@ Default component text is English. 소비 앱은 화면 locale에 맞춰 user-fa
 - `zdpTokenNames`는 `tokens:generate` 산출물로, 저장소 root의 `share.js`와 `share.d.ts`는 `share-icons:generate` 산출물로 유지하고 손으로 맞추지 않는다. 소비자용 `dist/share.js`와 `dist/share.d.ts`는 `package:build`가 `src/lib/share.ts`를 컴파일해 만든다.
 - 새 버전은 소비 저장소가 opt-in으로 채택한다. broad adoption 전에는 대표 소비처에서 시각과 build를 확인한다.
 - Svelte 소비처는 `zdp-design-system/tokens.css`와 `zdp-design-system/components/ComponentName` direct subpath를 기본으로 사용해 scoped component CSS와 전역 `components.css`를 중복하지 않고 root barrel의 전체 개발 그래프를 피한다. 기존 root named export와 `styles.css`는 호환 및 framework-neutral/static utility 표면으로 유지한다.
-- keyboard focus, flat UI, framed control, Noto Sans KR-first font stack은 소비처에서 임의로 낮추지 않는다.
-- 브랜드 워드마크는 `font.family.brand`와 `brand-fonts.css`를 쓰되, 본문과 제품 UI heading은 Noto Sans KR-first sans/display stack을 유지한다.
+- 키보드 포커스와 입력 상태의 가시성을 유지하고, 본문에는 화면 `lang`에 해당하는 산세리프 스택을 쓴다.
+- 브랜드 워드마크는 `font.family.brand`와 `brand-fonts.css`를 쓰되, 본문과 제품 UI 제목은 locale별 sans/display 스택을 유지한다. 영어는 Geist Sans, 한국어는 Noto Sans KR을 우선한다.
 - 소비 저장소는 `zdp-design-system`을 쓰기 위해 Tailwind, UnoCSS, shadcn registry, daisyUI theme, Skeleton preset, Flowbite theme, external `cn()` helper를 알 필요가 없어야 한다.
 - 외부 headless primitive가 내부 구현에 쓰이더라도 public API, CSS class, token, dist export는 ZDP 계약으로만 노출한다.
 - 공용 이미지 fallback은 `zdp-design-system/brand-assets` manifest와 `zdp-design-system/assets/brand/*` 파일만 사용한다. 원본 PNG 또는 내부 `src/` 경로를 import하지 않으며, 비율과 crop 규칙은 `docs/BRAND_ASSETS.md`를 따른다.

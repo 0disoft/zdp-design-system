@@ -31,7 +31,9 @@
 - Pagination을 쓰는 화면은 현재 페이지 항목에 `aria-current="page"`가 남고, URL 또는 버튼 콜백이 소비 앱의 실제 page state와 맞는지 확인한다.
 - KeyValue를 쓰는 화면은 용어와 값이 `dt`와 `dd`로 남고, 값의 생성/권한/결제 판단이 컴포넌트로 들어오지 않는지 확인한다.
 - EmptyState를 쓰는 화면은 제목 id가 연결되고 다음 액션 가능 여부를 소비 앱이 결정하는지 확인한다.
-- Input, Textarea, Select의 invalid 상태는 help id와 error id를 모두 `aria-describedby`로 연결하고, error id를 `aria-errormessage`로도 연결하는지 확인한다.
+- 필수 입력을 비운 채 제출해 브라우저가 막는지 확인한다. 실제 컨트롤의 `required`·`disabled`·`readonly`와 제출 결과를 함께 확인한다.
+- Input, Textarea, Select의 invalid 상태는 help id와 error id를 모두 `aria-describedby`로 연결하고, error id를 `aria-errormessage`로도 연결한다. 오류 수정 뒤에는 오류 연결과 표시를 제거하고 도움말 연결을 유지한다.
+- StatusToast의 닫기 동작은 해당 항목을 실제 알림 큐에서 제거하고, 키보드 포커스를 복구하는지 확인한다.
 - Input과 Textarea의 readonly 상태는 disabled처럼 흐려져 제출/복사/포커스 흐름을 끊지 않는지 확인한다.
 - Breadcrumb를 쓰는 화면은 현재 페이지 항목에 `aria-current="page"`가 남는지 확인한다.
 - Flutter/native adapter는 `tokens/zdp.tokens.json`의 token name을 유지한다.

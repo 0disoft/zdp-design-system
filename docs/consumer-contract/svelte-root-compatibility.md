@@ -4,6 +4,8 @@ package-root import 호환 예시와 Tauri Svelte WebView 소비 범위를 담�
 
 이 절의 package-root 예시는 기존 Svelte, SvelteKit, Tauri Svelte WebView 소비처의 호환 검증용이다. 새 표면은 앞 절의 direct component subpath를 사용한다.
 
+폼 검증, 검색 선택, 정렬·페이지 이동, 알림 닫기를 구현할 때는 [동작 예제](working-examples.md)를 사용한다.
+
 ```svelte
 <script lang="ts">
   import {
@@ -13,7 +15,6 @@ package-root import 호환 예시와 Tauri Svelte WebView 소비 범위를 담�
     Breadcrumb,
     Button,
     CodeBlock,
-    Combobox,
     CommandField,
     ConfirmAction,
     Container,
@@ -21,23 +22,19 @@ package-root import 호환 예시와 Tauri Svelte WebView 소비 범위를 담�
     Dialog,
     Disclosure,
     EmptyState,
-    Field,
     Grid,
     HelpText,
     Icon,
-    Input,
     IdentityChip,
     Inline,
     InlineCode,
     Kbd,
     KeyValue,
-    Label,
     Link,
     LocaleSwitcher,
     Menu,
     Page,
     PageHeader,
-    Pagination,
     Popover,
     Progress,
     ResizableSplitPane,
@@ -48,14 +45,10 @@ package-root import 호환 예시와 Tauri Svelte WebView 소비 범위를 담�
     ShortcutHint,
     Skeleton,
     SkipLink,
-    SortHeader,
     Stack,
-    StatusToast,
     Spinner,
     Surface,
     Tabs,
-    Table,
-    TableToolbar,
     TermSheet,
     TermTrigger,
     TextScaleControl,
@@ -69,6 +62,8 @@ package-root import 호환 예시와 Tauri Svelte WebView 소비 범위를 담�
     createZdpSplitPaneController,
     createZdpSplitPaneSizePersistence
   } from 'zdp-design-system/split-pane';
+
+  import 'zdp-design-system/styles.css';
 
   let dialogOpen = false;
 </script>
@@ -156,16 +151,6 @@ package-root import 호환 예시와 Tauri Svelte WebView 소비 범위를 담�
       describedBy="command-field-help"
     />
     <HelpText id="command-field-help">이 화면에서 찾을 항목을 입력하세요.</HelpText>
-    <Combobox
-      name="owner"
-      label="담당"
-      labelVisible
-      placeholder="담당 팀 찾기"
-      options={[
-        { id: 'platform', value: 'platform', label: '플랫폼 운영' },
-        { id: 'security', value: 'security', label: '보안 검토' }
-      ]}
-    />
     <p>배포 값은 <InlineCode text="readonly" /> 상태로 남깁니다.</p>
     <CodeBlock
       label="검토 규칙"
@@ -190,46 +175,6 @@ package-root import 호환 예시와 Tauri Svelte WebView 소비 범위를 담�
         <Button>검토 요청</Button>
       </svelte:fragment>
     </Toolbar>
-    <TableToolbar
-      title="점검 목록"
-      summary="권한과 감사 항목을 확인합니다."
-      selectedCount={2}
-      density="compact"
-      ariaLabel="점검 목록 도구"
-    >
-      <svelte:fragment slot="selection-actions">
-        <Button variant="secondary">선택 해제</Button>
-      </svelte:fragment>
-      <svelte:fragment slot="actions">
-        <Button>새로 고침</Button>
-      </svelte:fragment>
-    </TableToolbar>
-    <Table caption="보안 점검 목록" density="compact">
-      <thead>
-        <tr>
-          <th scope="col" aria-sort="ascending">
-            <SortHeader label="항목" direction="ascending" />
-          </th>
-          <th scope="col">
-            <SortHeader label="상태" direction="none" />
-          </th>
-          <th scope="col">다음 확인</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">권한 분리</th>
-          <td>통과</td>
-          <td>분기 리뷰</td>
-        </tr>
-      </tbody>
-    </Table>
-    <Pagination
-      currentPage={2}
-      totalPages={8}
-      ariaLabel="점검 목록 페이지"
-      hrefForPage={(page) => `?page=${page}`}
-    />
     <KeyValue columns="two">
       <dt>소유 저장소</dt>
       <dd>zdp-money-platform</dd>
@@ -240,28 +185,6 @@ package-root import 호환 예시와 Tauri Svelte WebView 소비 범위를 담�
       <h2 id="contract-empty-title">아직 공개할 변경이 없습니다.</h2>
       <p>검토가 끝난 항목만 공개 로드맵에 올라갑니다.</p>
     </EmptyState>
-    <Field required>
-      <Label forId="project-name">프로젝트</Label>
-      <Input id="project-name" name="project-name" describedBy="project-name-help" />
-      <HelpText id="project-name-help">공개 표기에 사용됩니다.</HelpText>
-    </Field>
-    <Field readonly>
-      <Label forId="project-id">고정 ID</Label>
-      <Input id="project-id" name="project-id" value="ZDP-2401" describedBy="project-id-help" readonly />
-      <HelpText id="project-id-help">이미 발급된 값은 그대로 둡니다.</HelpText>
-    </Field>
-    <Field invalid>
-      <Label forId="project-status">상태</Label>
-      <Input
-        id="project-status"
-        name="project-status"
-        describedBy={['project-status-help', 'project-status-error']}
-        errorMessageId="project-status-error"
-        invalid
-      />
-      <HelpText id="project-status-help">현재 작업 상태를 입력하세요.</HelpText>
-      <ErrorText id="project-status-error">다음 단계 전에 기준을 확인하세요.</ErrorText>
-    </Field>
     <Inline gap="sm">
       <Button>저장</Button>
     </Inline>

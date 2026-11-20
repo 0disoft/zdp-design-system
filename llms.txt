@@ -1,0 +1,9 @@
+# ZDP Design System
+
+> Public design tokens, CSS, assets, and Svelte 5 components for ZDP frontends.
+
+- [Implementation guide](docs/LLM_GUIDE.md): Start here for import paths, application state, control semantics, localization, and verification.
+- [Runnable Svelte examples](docs/consumer-contract/working-examples.md): Forms, search and selection, sorting, pagination, and dismissible notifications.
+- [Public package surface](docs/PUBLIC_SURFACE.md): Exported component, style, helper, token, and asset paths.
+- [Consumer contract](docs/CONSUMER_CONTRACT.md): Framework-specific setup and detailed component behavior.
+- [Astro integration](docs/consumer-contract/astro.md): Static CSS and interactive Svelte islands.

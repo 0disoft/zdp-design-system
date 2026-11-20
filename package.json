@@ -89,6 +89,7 @@
     "dist/",
     "docs/",
     "README.md",
+    "llms.txt",
     "LICENSE",
     "CHANGELOG.md",
     "SECURITY.md",

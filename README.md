@@ -54,7 +54,7 @@ Default component text is English. 제품별 화면은 필요한 모든 user-fac
 
 ## 외부 UI 흡수 기준
 
-외부 UI 라이브러리의 기본은 ZDP의 dependency source가 아니라 검증 source로 다룬다. 명시적으로 채택한 `Menu`와 `Popover`만 예외로 Bits UI를 runtime dependency로 쓴다.
+외부 UI 라이브러리의 기본은 ZDP의 dependency source가 아니라 검증 source로 다룬다. Menu와 Popover의 위치 보정에는 Floating UI DOM을 사용한다.
 Bits UI와 shadcn-svelte는 Select, Combobox, Dialog, Command 같은 나머지 고난도 interactive primitive의 동작 명세와 접근성 테스트 후보로 검토한다.
 내부 구현 의존성은 허용할 수 있지만 public API, CSS token, class, DOM 노출 정책은 ZDP가 소유하고 외부 타입이나 Tailwind/shadcn 구조가 package surface로 새면 실패다.
 Skeleton, Flowbite Svelte, daisyUI는 패턴 카탈로그로만 보고 core primitive에 직접 유입하지 않는다.
@@ -144,6 +144,8 @@ import flagshipKeyArt from 'zdp-design-system/assets/credits/credit-pack-keyart-
 
 ## 소비 컴포넌트 계약
 
+새 화면은 [구현 가이드](docs/LLM_GUIDE.md)에서 시작한다. 자동화 도구용 문서 색인은 [llms.txt](llms.txt)에 있다.
+
 - Breadcrumb는 현재 위치 탐색을 `nav`로 표현하고, 제품 라우팅 판단은 소비 앱이 한다.
 - Button과 IconButton은 `onclick` 실행 표면이며 권한, 저장, 네트워크 재시도 판단을 소유하지 않는다.
 - Card와 CardHeader는 비상호작용 콘텐츠 컨테이너다. panel/raised tone은 색상 단계로 깊이를 만들고, `outline`만 명시적 테두리를 사용한다. `hover`는 부드러운 표면색 변화만 제공하며 클릭 가능성, 손가락 커서, 키보드 focus를 암시하지 않는다. 전체 카드 이동이나 실행은 내부 Link 또는 Button으로 명시한다.
@@ -166,8 +168,8 @@ import flagshipKeyArt from 'zdp-design-system/assets/credits/credit-pack-keyart-
 - Accordion과 Disclosure는 접힌 안내와 점진적 정보 공개를 담당한다.
 - SegmentedControl은 보기 방식이나 단일 모드 전환을 표현한다.
 - SortHeader와 TableToolbar는 sortable column affordance, 선택 행 액션, 밀도 조절 같은 표 주변 도구를 맡는다.
-- Popover와 Menu는 설정, 더보기, 필터, 계정 메뉴 표면을 제공하지만 메뉴 항목 권한 판단은 소비 앱이 한다. Menu trigger/panel/item은 tonal surface로 계층을 구분하고 resting/hover border를 사용하지 않는다. Popover의 Escape/outside dismissal은 명시적으로 끌 수 있지만, ARIA Menu의 Escape/outside dismissal은 키보드 탈출 계약이라 끄지 않는다. 두 컴포넌트의 내부 클릭 판정과 focus return은 light DOM과 open shadow root에서 유지하며 closed shadow root는 지원하지 않는다. Menu는 내부 구현으로 Bits UI `DropdownMenu`를 ZDP adapter 뒤에서 쓰고, `ZdpMenuItem` 타입, Root 공개 props·콜백·type, named `trigger` slot, `.zdp-menu*` class는 그대로 유지한다. Menu는 바깥 pointerdown에서 닫고(예전에는 바깥 클릭이 완료될 때까지 열려 있었음), 프로그램이 focus를 바깥으로 옮기면 `onfocusout`에서 `flushSync`로 scope를 정리하며 닫는다.
-- Popover도 내부 구현으로 Bits UI `Popover`의 `Root`와 `ContentStatic`만 ZDP adapter 뒤에서 쓰고, 기존 소비처 정의 trigger와 default legacy slot을 그대로 유지하므로 Bits `Trigger`는 쓰지 않는다. 공개 props, `trigger` slot, `.zdp-popover*` class, token, `role`(`null`/`group`/`dialog`)은 그대로 유지한다. Bits 중복 dismissal은 끄고 기존 ZDP shared dismissal stack·Escape 순서와 `closeOnEscape`/`closeOnOutside` opt-out을 쓰며, focus가 밖으로 이동하는 것만으로는 닫지 않고 scroll lock도 걸지 않는다. automatic portal 없이 기존 static placement CSS를 쓴다. 바깥 닫힘 시점은 Menu가 pointerdown, Popover는 기존대로 바깥 상호작용 완료(포인터 완료 후 click) 시점으로 서로 다르다.
+- Popover와 Menu는 설정, 더보기, 필터, 계정 메뉴 표면을 제공하지만 메뉴 항목 권한 판단은 소비 앱이 한다. Menu trigger/panel/item은 tonal surface로 계층을 구분하고 resting/hover border를 사용하지 않는다. Popover의 Escape/outside dismissal은 명시적으로 끌 수 있지만, ARIA Menu의 Escape/outside dismissal은 키보드 탈출 계약이라 끄지 않는다. 두 컴포넌트의 내부 클릭 판정과 focus return은 light DOM과 open shadow root에서 유지하며 closed shadow root는 지원하지 않는다. Menu의 `ZdpMenuItem` 타입, 공개 props·콜백, named `trigger` slot은 [오버레이 계약](docs/consumer-contract/components-overlays-and-dialogs.md)을 따른다. Menu는 바깥 pointerdown에서 닫고(예전에는 바깥 클릭이 완료될 때까지 열려 있었음), 프로그램이 focus를 바깥으로 옮기면 `onfocusout`에서 `flushSync`로 scope를 정리하며 닫는다.
+- Popover는 소비처가 제공한 trigger를 기준으로 Floating UI가 패널 위치를 보정한다. `closeOnEscape`와 `closeOnOutside`로 닫힘을 제어할 수 있다. 포커스만 바깥으로 이동할 때는 닫히지 않으며 native Tab 순서를 유지한다.
 - Disclosure, LocaleSwitcher, SegmentedControl, TextScaleControl, Menu, Popover, Tooltip은 명시적 `id` 또는 `idPrefix`를 생략해도 반복 SSR과 hydration 사이에서 같은 fallback ID와 ARIA 참조를 유지한다. 소비 앱이 외부 요소와 참조를 공유해야 할 때만 명시적 값을 넘긴다.
 - Sheet는 설정, 필터, 보조 흐름을 right, left, bottom edge panel로 열고, 저장, 권한, 데이터 fetch, 라우팅 판단은 소비 앱이 한다.
 - Pagination은 목록 페이지 이동을 표현하고 데이터 범위 계산은 소비 앱이 한다.
@@ -179,12 +181,15 @@ import flagshipKeyArt from 'zdp-design-system/assets/credits/credit-pack-keyart-
 - VisuallyHidden은 스크린리더에 필요한 텍스트를 시각적으로 숨길 때만 쓴다.
 - Table, KeyValue, EmptyState는 업무 데이터, 용어-값, 비어 있는 상태를 표현한다.
 - TermTrigger와 TermSheet는 용어 설명을 click-open sheet로 연결하며, TermTrigger는 sheet가 열린 동안에만 `aria-controls`를 연결한다. TermSheet는 짧은 설명, 긴 설명, 예시, 관련 용어만 보여주며 detail page 링크나 라우팅 action을 제공하지 않는다. `open` 요청과 non-null `term`이 함께 있을 때만 modal lifecycle을 활성화하므로 비동기 term이 나중에 도착하거나 열린 상태에서 사라져도 scroll lock, inert, focus 복귀가 실제 DOM과 일치한다. 기본 dialog/title/description ID는 SSR과 hydration에서 안정적이며, 명시적인 `id`도 계속 지원한다. TermTrigger는 본문 안 의미 있는 단어이므로 hover에서 글자색을 바꾸지 않고 배경만 살짝 강조하며, 좌우 최소 padding과 focus token을 유지하고, 텍스트 선택을 막지 않는다. TermSheet root에는 stable `term_id`와 `data-zdp-ad-exclude`를 남긴다. TermSheet에는 광고 slot을 넣지 않는다.
-- Dialog는 모달 레이어이며 닫기, scroll lock, focus trap, `describedBy`에 id 배열, `errorMessageId`로 `aria-errormessage` 연결을 명확히 한다. Menu, Popover, Combobox, Tooltip, Dialog, Sheet, TermSheet 같은 dismissible surface는 활성 동안만 document-scoped dismiss stack에 등록되고, 문서당 공유 click/keydown listener가 활성 순서의 최상단 하나만 닫는다. Tooltip은 outside click 후보에서는 건너뛰되 Escape 순서에는 참여한다. Dialog, Sheet, TermSheet의 modal registry는 browser document lifecycle에만 등록되므로 반복되거나 실패한 SSR 렌더 사이에 layer 상태를 남기지 않고, 처음부터 열린 SSR 표면은 hydration 뒤 scroll lock과 background inert를 활성화한 다음 close 때 복구한다.
+- Input, Textarea, Select의 `describedBy`에 id 배열을 전달해 도움말과 오류를 연결한다. 유효하지 않을 때는 `errorMessageId`로 `aria-errormessage`도 연결한다.
+- Dialog는 모달 레이어다. `labelledBy`에 제목 ID, `describedBy`에 설명 ID를 연결한다. Menu, Popover, Combobox, Tooltip, Dialog, Sheet, TermSheet 같은 dismissible surface는 활성 동안만 document-scoped dismiss stack에 등록되고, 문서당 공유 click/keydown listener가 활성 순서의 최상단 하나만 닫는다. Tooltip은 outside click 후보에서는 건너뛰되 Escape 순서에는 참여한다. Dialog, Sheet, TermSheet의 modal registry는 browser document lifecycle에만 등록되므로 반복되거나 실패한 SSR 렌더 사이에 layer 상태를 남기지 않고, 처음부터 열린 SSR 표면은 hydration 뒤 scroll lock과 background inert를 활성화한 다음 close 때 복구한다.
 - Checkbox와 Switch는 native input에 invalid 상태를 노출하고, Radio는 native radio role 제약 때문에 wrapper invalid styling과 `describedBy` 연결을 유지한다. Radio group은 동일한 `selectedValue`를 모든 Radio에 bind해 부모와 DOM이 단일 선택값을 공유하며 개별 `checked` prop은 제공하지 않는다. Switch는 `describedBy` id 배열과 `errorMessageId`로 에러 설명을 연결한다.
 - Page, Container, Section, PageHeader는 페이지 폭, 섹션 rhythm, 제목 구조를 정리한다. 페이지 최외곽 shell은 `Container gutter="page"` 또는 `.zdp-container--padding-page`를 사용해 max-width의 auto margin이 사라지는 폭에서도 양쪽 최소 24 CSS px를 유지한다. `padding="sm"`, `padding="md"`, `padding="lg"`는 중첩 Container에 계속 쓸 수 있으며, 페이지 shell에서 더 작은 값을 쓰는 경우는 소비 저장소의 명시적 architecture 예외로 남긴다.
 - Flutter는 Svelte 컴포넌트를 직접 쓰지 않고 `tokens/zdp.tokens.json`과 필요한 platform adapter를 통해 시각 토큰만 소비한다.
 
-아래 package-root 예시는 기존 소비처 호환과 전체 컴포넌트 조합 검증용이다. 새 Svelte 또는 Tauri(Svelte) 코드는 위의 `components/ComponentName` direct subpath와 `tokens.css`를 사용한다.
+아래 package-root 예시는 기존 소비처의 import 경로와 마크업 조합을 보여준다. 새 Svelte 또는 Tauri(Svelte) 코드는 위의 `components/ComponentName` direct subpath와 `tokens.css`를 사용한다.
+
+폼 검증, 검색 선택, 정렬·페이지 이동, 알림 닫기를 구현할 때는 [동작 예제](docs/consumer-contract/working-examples.md)를 사용한다.
 
 ```svelte
 <script lang="ts">
@@ -198,7 +203,6 @@ import flagshipKeyArt from 'zdp-design-system/assets/credits/credit-pack-keyart-
     Callout,
     Checkbox,
     CodeBlock,
-    Combobox,
     CommandField,
     ConfirmAction,
     Container,
@@ -206,23 +210,19 @@ import flagshipKeyArt from 'zdp-design-system/assets/credits/credit-pack-keyart-
     Disclosure,
     Divider,
     EmptyState,
-    Field,
     Grid,
     HelpText,
     Icon,
-    Input,
     IdentityChip,
     Inline,
     InlineCode,
     Kbd,
     KeyValue,
-    Label,
     Link,
     LocaleSwitcher,
     Menu,
     Page,
     PageHeader,
-    Pagination,
     Popover,
     Progress,
     ResizableSplitPane,
@@ -230,8 +230,6 @@ import flagshipKeyArt from 'zdp-design-system/assets/credits/credit-pack-keyart-
     SegmentedControl,
     Skeleton,
     Stack,
-    SortHeader,
-    StatusToast,
     Spinner,
     Section,
     ShareDock,
@@ -240,8 +238,6 @@ import flagshipKeyArt from 'zdp-design-system/assets/credits/credit-pack-keyart-
     Surface,
     Switch,
     Tabs,
-    Table,
-    TableToolbar,
     TermSheet,
     TermTrigger,
     TextScaleControl,
@@ -255,6 +251,8 @@ import flagshipKeyArt from 'zdp-design-system/assets/credits/credit-pack-keyart-
     createZdpSplitPaneController,
     createZdpSplitPaneSizePersistence
   } from 'zdp-design-system/split-pane';
+
+  import 'zdp-design-system/styles.css';
 
   let dialogOpen = false;
 </script>
@@ -338,16 +336,6 @@ import flagshipKeyArt from 'zdp-design-system/assets/credits/credit-pack-keyart-
       describedBy="command-field-help"
     />
     <HelpText id="command-field-help">이 화면에서 찾을 항목을 입력하세요.</HelpText>
-    <Combobox
-      name="owner"
-      label="담당"
-      labelVisible
-      placeholder="담당 팀 찾기"
-      options={[
-        { id: 'platform', value: 'platform', label: '플랫폼 운영' },
-        { id: 'security', value: 'security', label: '보안 검토' }
-      ]}
-    />
     <p>배포 값은 <InlineCode text="readonly" /> 상태로 남깁니다.</p>
     <CodeBlock
       label="검토 규칙"
@@ -372,46 +360,6 @@ import flagshipKeyArt from 'zdp-design-system/assets/credits/credit-pack-keyart-
         <Button>검토 요청</Button>
       </svelte:fragment>
     </Toolbar>
-    <TableToolbar
-      title="점검 목록"
-      summary="권한과 감사 항목을 확인합니다."
-      selectedCount={2}
-      density="compact"
-      ariaLabel="점검 목록 도구"
-    >
-      <svelte:fragment slot="selection-actions">
-        <Button variant="secondary">선택 해제</Button>
-      </svelte:fragment>
-      <svelte:fragment slot="actions">
-        <Button>새로 고침</Button>
-      </svelte:fragment>
-    </TableToolbar>
-    <Table caption="보안 점검 목록" density="compact">
-      <thead>
-        <tr>
-          <th scope="col" aria-sort="ascending">
-            <SortHeader label="항목" direction="ascending" />
-          </th>
-          <th scope="col">
-            <SortHeader label="상태" direction="none" />
-          </th>
-          <th scope="col">다음 확인</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">권한 분리</th>
-          <td>통과</td>
-          <td>분기 리뷰</td>
-        </tr>
-      </tbody>
-    </Table>
-    <Pagination
-      currentPage={2}
-      totalPages={8}
-      ariaLabel="점검 목록 페이지"
-      hrefForPage={(page) => `?page=${page}`}
-    />
     <KeyValue columns="two">
       <dt>소유 저장소</dt>
       <dd>zdp-money-platform</dd>
@@ -437,28 +385,6 @@ import flagshipKeyArt from 'zdp-design-system/assets/credits/credit-pack-keyart-
     >
       <p>{selectedId === 'history' ? '변경 기록입니다.' : '프로젝트 개요입니다.'}</p>
     </Tabs>
-    <Field required>
-      <Label forId="project-name">프로젝트</Label>
-      <Input id="project-name" name="project-name" describedBy="project-name-help" />
-      <HelpText id="project-name-help">공개 표기에 사용됩니다.</HelpText>
-    </Field>
-    <Field readonly>
-      <Label forId="project-id">고정 ID</Label>
-      <Input id="project-id" name="project-id" value="ZDP-2401" describedBy="project-id-help" readonly />
-      <HelpText id="project-id-help">이미 발급된 값은 그대로 둡니다.</HelpText>
-    </Field>
-    <Field invalid>
-      <Label forId="project-status">상태</Label>
-      <Input
-        id="project-status"
-        name="project-status"
-        describedBy={['project-status-help', 'project-status-error']}
-        errorMessageId="project-status-error"
-        invalid
-      />
-      <HelpText id="project-status-help">현재 작업 상태를 입력하세요.</HelpText>
-      <ErrorText id="project-status-error">다음 단계 전에 기준을 확인하세요.</ErrorText>
-    </Field>
     <Checkbox name="release-updates" checked>업데이트 받기</Checkbox>
     <Switch name="autosave" checked>자동 저장</Switch>
     <Inline gap="sm">
