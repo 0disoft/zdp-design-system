@@ -31,7 +31,7 @@ export async function verifyModalContracts(page) {
   });
 
   await verifyModalDocumentOwnership(page);
-  await verifyFocusableCache(page);
+  await verifyLiveModalTabOrder(page);
 
   const asyncTermTrigger = page.getByTestId('async-term-sheet-trigger');
   const asyncTermLoad = page.getByTestId('async-term-load');
@@ -306,35 +306,33 @@ async function verifyModalDocumentOwnership(page) {
   }, initialBodyStyles);
 }
 
-async function verifyFocusableCache(page) {
-  await page.evaluate(() => {
-    const originalGetComputedStyle = window.getComputedStyle.bind(window);
-    window.__zdpOriginalGetComputedStyle = originalGetComputedStyle;
-    window.__zdpFocusableStyleReads = 0;
-    window.getComputedStyle = (...args) => {
-      if (args[0] instanceof HTMLElement && args[0].closest('[role="dialog"]')) {
-        window.__zdpFocusableStyleReads += 1;
-      }
-      return originalGetComputedStyle(...args);
-    };
-  });
-
+async function verifyLiveModalTabOrder(page) {
   const trigger = page.getByTestId('dialog-trigger');
   await trigger.click();
   const dialog = page.getByRole('dialog', { name: 'Review changes' });
   const closeButton = dialog.getByRole('button', { name: 'Close dialog' });
   const lastAction = dialog.getByTestId('dialog-last-action');
-  await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-  const readsAfterOpen = await page.evaluate(() => window.__zdpFocusableStyleReads);
 
   await page.keyboard.press('Shift+Tab');
+  assert.equal(await isDeepActive(lastAction), true, 'Shift+Tab must wrap to the last visible action.');
   await page.keyboard.press('Tab');
-  assert.equal(
-    await page.evaluate(() => window.__zdpFocusableStyleReads),
-    readsAfterOpen,
-    'Repeated focus wrapping must reuse the cached focusable set while modal DOM is unchanged.'
-  );
-  assert.equal(await closeButton.evaluate((element) => document.activeElement === element), true);
+  assert.equal(await isDeepActive(closeButton), true, 'Tab must wrap to the first visible action.');
+
+  await page.evaluate(() => {
+    const style = document.createElement('style');
+    style.id = 'external-dialog-visibility';
+    style.textContent = '[data-testid="dialog-last-action"] { visibility: hidden; }';
+    document.head.append(style);
+  });
+  try {
+    await page.keyboard.press('Shift+Tab');
+    assert.equal(await isDeepActive(closeButton), true,
+      'With only the close button visible, Shift+Tab must keep focus there.');
+  } finally {
+    await page.locator('#external-dialog-visibility').evaluate(element => element.remove());
+  }
+  await page.keyboard.press('Shift+Tab');
+  assert.equal(await isDeepActive(lastAction), true, 'The revealed action must rejoin the Tab order.');
 
   await dialog.evaluate((element) => {
     const button = document.createElement('button');
@@ -348,11 +346,7 @@ async function verifyFocusableCache(page) {
   assert.equal(
     await page.getByTestId('dynamic-dialog-action').evaluate((element) => document.activeElement === element),
     true,
-    'A modal DOM mutation must invalidate the cache before the next focus traversal.'
-  );
-  assert.ok(
-    await page.evaluate(() => window.__zdpFocusableStyleReads) > readsAfterOpen,
-    'Cache invalidation must re-evaluate focusability after a modal DOM mutation.'
+    'An inserted control must participate in the next focus traversal.'
   );
 
   await page.getByTestId('dynamic-dialog-action').evaluate((element) => element.remove());
@@ -401,12 +395,11 @@ async function verifyFocusableCache(page) {
   assert.equal(
     await isDeepActive(page.getByTestId('dialog-unchecked-radio')),
     true,
-    'Keyboard selection must replace the cached radio tab stop.'
+    'Keyboard selection must replace the radio tab stop.'
   );
   await page.keyboard.press('Tab');
   assert.equal(await isDeepActive(closeButton), true, 'The newly selected radio must wrap to the first modal control.');
 
-  const readsBeforeRadioUpdate = await page.evaluate(() => window.__zdpFocusableStyleReads);
   await page.getByTestId('dialog-checked-radio').evaluate((element) => { element.checked = true; });
   await closeButton.focus();
   await page.keyboard.press('Shift+Tab');
@@ -414,11 +407,6 @@ async function verifyFocusableCache(page) {
     await isDeepActive(page.getByTestId('dialog-checked-radio')),
     true,
     'Silent checked property changes must update the radio tab stop without input/change events.'
-  );
-  assert.equal(
-    await page.evaluate(() => window.__zdpFocusableStyleReads),
-    readsBeforeRadioUpdate,
-    'Radio selection changes must not discard cached visibility and layout checks.'
   );
   await dialog.locator('input[name="dialog-runtime-choice"]').evaluateAll((elements) => {
     for (const element of elements) element.remove();
@@ -450,11 +438,6 @@ async function verifyFocusableCache(page) {
   });
 
   await closeButton.click();
-  await page.evaluate(() => {
-    window.getComputedStyle = window.__zdpOriginalGetComputedStyle;
-    delete window.__zdpOriginalGetComputedStyle;
-    delete window.__zdpFocusableStyleReads;
-  });
 }
 export async function verifyNestedModalContracts(page) {
   const nestedDialogTrigger = page.getByTestId('nested-dialog-trigger');

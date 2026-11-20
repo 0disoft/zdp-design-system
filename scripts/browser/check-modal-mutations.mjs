@@ -2,12 +2,13 @@ import assert from 'node:assert/strict';
 
 export async function verifyFocusableAttributeMutations(page, moduleUrl) {
   const results = await page.evaluate(async (url) => {
-    const { createZdpFocusableCache, getZdpActiveElement } = await import(url);
+    const { collectZdpTabbableElements, getZdpActiveElement } = await import(url);
     const { createZdpModalFocus } = await import(url.replace('focusable.ts', 'modal-focus.ts'));
     const results = [];
     for (const shadow of [false, true]) {
-      for (const attribute of ['data-focus-state', 'id', 'aria-expanded']) {
+      for (const attribute of ['data-focus-state', 'id', 'aria-expanded', 'outside-visibility']) {
         for (const delivery of ['same-task', 'observer-callback']) {
+          const ancestor = document.createElement('div');
           const root = document.createElement('section');
           root.style.cssText = 'width:500px;height:200px;';
           root.tabIndex = -1;
@@ -23,34 +24,41 @@ export async function verifyFocusableAttributeMutations(page, moduleUrl) {
             tree = host.attachShadow({ mode: 'open' });
           }
           const style = document.createElement('style');
-          style.textContent = '[data-focus-state="hidden"] > button, #focus-closed > button, [aria-expanded="false"] > button { display:none; }';
+          style.textContent = '[data-focus-state="hidden"] > button, #focus-closed > button, [aria-expanded="false"] > button { display:none; } #attribute-tail { visibility: var(--test-tail-visibility, visible); }';
           const group = document.createElement('div');
           const tail = document.createElement('button');
           tail.id = 'attribute-tail';
           group.append(tail);
           tree.append(style, group);
-          document.body.append(root);
-          const cache = createZdpFocusableCache(() => root);
+          ancestor.append(root);
+          document.body.append(ancestor);
           const controller = createZdpModalFocus({
             getOpen: () => true, getPanel: () => root, getLayer: () => root,
             modalLayer: { setFocusReturnTarget() {}, takeFocusReturnTarget() { return null; } }
           });
-          const ids = () => cache.get().map(element => element.id);
+          const ids = () => collectZdpTabbableElements(root).map(element => element.id);
           const reverseTab = () => controller.handleKeydown(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, cancelable: true }));
           try {
-            // Deliver initial ResizeObserver records before warming both caches.
             await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
             const before = root.getBoundingClientRect();
             const initial = ids();
             first.focus();
             reverseTab();
             first.focus();
-            group.setAttribute(attribute, attribute === 'id' ? 'focus-closed' : attribute === 'aria-expanded' ? 'false' : 'hidden');
+            if (attribute === 'outside-visibility') {
+              ancestor.style.setProperty('--test-tail-visibility', 'hidden');
+            } else {
+              group.setAttribute(attribute, attribute === 'id' ? 'focus-closed' : attribute === 'aria-expanded' ? 'false' : 'hidden');
+            }
             if (delivery === 'observer-callback') await new Promise(resolve => queueMicrotask(resolve));
             const hidden = ids();
             reverseTab();
             const hiddenFocus = getZdpActiveElement(document)?.id;
-            group.removeAttribute(attribute);
+            if (attribute === 'outside-visibility') {
+              ancestor.style.removeProperty('--test-tail-visibility');
+            } else {
+              group.removeAttribute(attribute);
+            }
             if (delivery === 'observer-callback') await new Promise(resolve => queueMicrotask(resolve));
             const restored = ids();
             first.focus();
@@ -61,8 +69,7 @@ export async function verifyFocusableAttributeMutations(page, moduleUrl) {
               unchangedBounds: before.width === after.width && before.height === after.height });
           } finally {
             controller.destroy();
-            cache.destroy();
-            root.remove();
+            ancestor.remove();
           }
         }
       }
@@ -77,7 +84,7 @@ export async function verifyFocusableAttributeMutations(page, moduleUrl) {
       restoredFocus: 'attribute-tail', unchangedBounds: true
     }, `${attribute}, shadow=${shadow}, ${delivery}: exclude hidden controls and restore visible controls to the modal Tab order.`);
   }
-  console.log(`Focusable attribute invalidation: ${results.length} scenarios passed.`);
+  console.log(`Modal focus with visibility changes: ${results.length} scenarios passed.`);
 }
 
 export async function verifyModalMutationContracts(page) {

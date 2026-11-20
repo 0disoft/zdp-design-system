@@ -1,5 +1,5 @@
 import { tick } from 'svelte';
-import { createZdpFocusableCache, getZdpActiveElement } from './focusable.js';
+import { collectZdpTabbableElements, getZdpActiveElement } from './focusable.js';
 import type { ZdpModalLayerHandle } from './modal-layer.js';
 
 interface ModalFocusOptions {
@@ -11,7 +11,6 @@ interface ModalFocusOptions {
 
 /** Owns pending focus transitions and Tab containment for each modal instance. */
 export function createZdpModalFocus(options: ModalFocusOptions) {
-  const cache = createZdpFocusableCache(options.getPanel);
   let knownOpen = false;
   let transition = 0;
   let destroyed = false;
@@ -28,7 +27,7 @@ export function createZdpModalFocus(options: ModalFocusOptions) {
     // A close, reopen, or unmount invalidates the pending focus operation.
     if (destroyed || currentTransition !== transition || !options.getOpen()) return;
     const panel = options.getPanel();
-    if (panel?.isConnected) (cache.get()[0] ?? panel).focus();
+    if (panel?.isConnected) (collectZdpTabbableElements(panel)[0] ?? panel).focus();
   }
 
   function sync(): void {
@@ -48,7 +47,7 @@ export function createZdpModalFocus(options: ModalFocusOptions) {
     if (event.key !== 'Tab' || event.defaultPrevented || !options.getOpen()) return;
     const panel = options.getPanel();
     if (panel === null) return;
-    const elements = cache.get();
+    const elements = collectZdpTabbableElements(panel);
     const first = elements.at(0);
     const last = elements.at(-1);
     if (first === undefined || last === undefined) {
@@ -69,7 +68,6 @@ export function createZdpModalFocus(options: ModalFocusOptions) {
   function destroy(): void {
     destroyed = true;
     transition += 1;
-    cache.destroy();
   }
 
   return { sync, handleKeydown, destroy };

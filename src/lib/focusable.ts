@@ -44,133 +44,13 @@ export function isZdpFocusableElement(element: HTMLElement): boolean {
   return element.getClientRects().length > 0;
 }
 
-export interface ZdpFocusableCache {
-  destroy(): void;
-  get(): HTMLElement[];
-  invalidate(): void;
+/** Read the current tab order, including CSS changes outside the panel's DOM. */
+export function collectZdpTabbableElements(root: HTMLElement): HTMLElement[] {
+  const eligible = collectComposedCandidates(root).filter(isZdpFocusableElement);
+  return sortZdpTabbableElements(filterRadioGroupTabStops(eligible));
 }
 
-export function createZdpFocusableCache(getRoot: () => HTMLElement | null): ZdpFocusableCache {
-  let cachedElements: HTMLElement[] | null = null;
-  let observedShadowRoots = new Set<ShadowRoot>();
-  let observedHeight: number | null = null;
-  let observedRoot: HTMLElement | null = null;
-  let observedViewportSignature: string | null = null;
-  let observedWidth: number | null = null;
-  const mutationObserver = typeof MutationObserver === 'undefined'
-    ? null
-    : new MutationObserver(invalidate);
-  const resizeObserver = typeof ResizeObserver === 'undefined'
-    ? null
-    : new ResizeObserver((entries) => {
-        const entry = entries[0];
-        if (entry === undefined) {
-          return;
-        }
-
-        const { height, width } = entry.contentRect;
-        if (observedHeight !== null && observedWidth !== null && (height !== observedHeight || width !== observedWidth)) {
-          invalidate();
-        }
-        observedHeight = height;
-        observedWidth = width;
-      });
-
-  function invalidate(): void {
-    cachedElements = null;
-  }
-
-  function observe(root: HTMLElement | null): void {
-    if (root === observedRoot) {
-      return;
-    }
-
-    mutationObserver?.disconnect();
-    resizeObserver?.disconnect();
-    observedRoot = root;
-    observedShadowRoots.clear();
-    observedViewportSignature = null;
-    observedHeight = null;
-    observedWidth = null;
-    invalidate();
-
-    if (root === null) {
-      return;
-    }
-
-    observeTree(root);
-    resizeObserver?.observe(root);
-  }
-
-  function observeTree(root: HTMLElement | ShadowRoot): void {
-    mutationObserver?.observe(root, {
-      // Consumer CSS can change focusability through any attribute selector,
-      // including id, data-* and aria-expanded, without resizing the panel.
-      attributes: true,
-      childList: true,
-      subtree: true
-    });
-  }
-
-  function get(): HTMLElement[] {
-    const root = getRoot();
-    observe(root);
-
-    if (root === null) {
-      return [];
-    }
-
-    // A consumer can change controls and move focus in the same task, before
-    // the observer callback runs. Consume queued changes before using the cache.
-    if (mutationObserver !== null && mutationObserver.takeRecords().length > 0) {
-      invalidate();
-    }
-
-    // Media queries may change before a resize event is delivered, without
-    // changing the panel dimensions. Validate viewport state when using the cache.
-    const view = root.ownerDocument.defaultView;
-    const viewportSignature = view === null ? null : [
-      view.innerWidth, view.innerHeight, view.devicePixelRatio,
-      view.visualViewport?.width, view.visualViewport?.height
-    ].join(':');
-    if (viewportSignature !== observedViewportSignature) {
-      observedViewportSignature = viewportSignature;
-      invalidate();
-    }
-
-    // Discover roots on each lookup: attaching a shadow root emits no mutation.
-    const shadowRoots = new Set<ShadowRoot>();
-    const candidatesInTree = collectComposedCandidates(root, shadowRoots);
-    if (shadowRoots.size !== observedShadowRoots.size || [...shadowRoots].some((tree) => !observedShadowRoots.has(tree))) {
-      mutationObserver?.disconnect();
-      observeTree(root);
-      for (const tree of shadowRoots) observeTree(tree);
-      observedShadowRoots = shadowRoots;
-      invalidate();
-    }
-    if (cachedElements === null) {
-      cachedElements = candidatesInTree.filter(isZdpFocusableElement);
-    }
-
-    // Radio selection and group ownership can change without DOM mutations or events.
-    return sortZdpTabbableElements(filterRadioGroupTabStops(cachedElements));
-  }
-
-  function destroy(): void {
-    mutationObserver?.disconnect();
-    resizeObserver?.disconnect();
-    observedRoot = null;
-    observedShadowRoots.clear();
-    observedViewportSignature = null;
-    observedHeight = null;
-    observedWidth = null;
-    cachedElements = null;
-  }
-
-  return { destroy, get, invalidate };
-}
-
-function collectComposedCandidates(root: HTMLElement, shadowRoots: Set<ShadowRoot>): HTMLElement[] {
+function collectComposedCandidates(root: HTMLElement): HTMLElement[] {
   const candidates: HTMLElement[] = [];
   const visited = new Set<Element>();
   function visit(element: Element): void {
@@ -182,7 +62,6 @@ function collectComposedCandidates(root: HTMLElement, shadowRoots: Set<ShadowRoo
     if (element.shadowRoot !== null) {
       // An explicit negative host tabindex excludes its entire shadow focus scope.
       if (isZdpHtmlElement(element) && element.hasAttribute('tabindex') && element.tabIndex < 0) return;
-      shadowRoots.add(element.shadowRoot);
       for (const child of element.shadowRoot.children) visit(child);
     } else if (element.tagName === 'SLOT') {
       const slot = element as HTMLSlotElement;

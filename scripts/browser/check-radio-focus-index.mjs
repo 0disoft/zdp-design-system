@@ -2,11 +2,10 @@ import assert from 'node:assert/strict';
 
 export async function verifyRadioFocusIndex(page, moduleUrl) {
   const result = await page.evaluate(async (url) => {
-    const { createZdpFocusableCache, isZdpFocusableElement } = await import(url);
+    const { collectZdpTabbableElements, isZdpFocusableElement } = await import(url);
     const root = document.createElement('section');
     document.body.append(root);
     const previousFocus = document.activeElement;
-    const cache = createZdpFocusableCache(() => root);
     const candidates = [];
     let scenarios = 0;
     function add(tag, id, props = {}, parent = root) {
@@ -39,7 +38,7 @@ export async function verifyRadioFocusIndex(page, moduleUrl) {
       }).map(({ element }) => element);
     }
     function check(label) {
-      const actual = cache.get();
+      const actual = collectZdpTabbableElements(root);
       expectIds(ids(actual), ids(previousOrder()), label);
       scenarios++;
       return ids(actual);
@@ -76,7 +75,7 @@ export async function verifyRadioFocusIndex(page, moduleUrl) {
       if (!owners.includes('form-a-first') || !owners.includes('form-b-first')) throw new Error('Forms were merged.');
       selected.setAttribute('form', 'form-a');
       selected.checked = true;
-      check('form reassociation without discarding cached layout');
+      check('form reassociation with the same layout');
 
       for (const name of ['__proto__', 'constructor', 'a:b']) radio(`special-${name}`, name);
       for (let i = 0; i < 2; i++) {
@@ -100,15 +99,14 @@ export async function verifyRadioFocusIndex(page, moduleUrl) {
         const element = radio(`bulk-${i}`, `bulk-group-${i % 100}`);
         Object.defineProperty(element, 'name', { get() { reads++; return nameGetter.call(this); } });
       }
-      cache.get(); // Warm the visibility cache; group membership must still be refreshed.
+      collectZdpTabbableElements(root); // Warm the browser before measuring the next collection.
       reads = 0;
       const start = performance.now();
-      const bulk = cache.get();
+      const bulk = collectZdpTabbableElements(root);
       const elapsedMs = performance.now() - start;
       if (bulk.length !== 100) throw new Error('Large groups produced the wrong number of tab stops.');
       return { scenarios, size, reads, elapsedMs };
     } finally {
-      cache.destroy();
       root.remove();
       if (previousFocus instanceof HTMLElement && previousFocus.isConnected) previousFocus.focus();
     }

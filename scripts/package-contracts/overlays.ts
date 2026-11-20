@@ -124,7 +124,7 @@ async function checkSharedFocusContract(): Promise<void> {
   for (const requiredText of [
     'zdpFocusableSelector',
     'isZdpFocusableElement',
-    'createZdpFocusableCache',
+    'collectZdpTabbableElements',
     '[contenteditable]:not([contenteditable="false"])',
     'element.ownerDocument.defaultView',
     'isZdpHtmlElement'
