@@ -16,7 +16,7 @@
     {#each typefaces as face (face.id)}
       <section
         class="type-comparison__sample zdp-surface-reset"
-        class:type-comparison__sample--geist={face.id === 'geist'}
+        class:type-comparison__sample--manrope={face.id === 'manrope'}
         aria-labelledby={`typeface-${face.id}`}
         data-typeface={face.id}
       >
@@ -55,16 +55,7 @@
 </main>
 
 <style>
-  @font-face {
-    font-family: "Geist Variable";
-    src: url("https://cdn.jsdelivr.net/npm/@fontsource-variable/geist@5.3.0/files/geist-latin-wght-normal.woff2") format("woff2");
-    font-weight: 100 900;
-    font-style: normal;
-    font-display: swap;
-  }
-
   .type-comparison {
-    --type-comparison-default: var(--zdp-font-family-latin);
     display: grid;
     gap: var(--zdp-space-6);
     margin-inline: auto;
@@ -107,8 +98,8 @@
     padding: var(--zdp-space-4);
   }
 
-  .type-comparison__sample--geist {
-    --zdp-font-family-latin: "Geist Variable", var(--type-comparison-default);
+  .type-comparison__sample--manrope {
+    --zdp-font-family-english: var(--zdp-font-family-latin);
   }
 
   .type-comparison__content {

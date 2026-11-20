@@ -592,8 +592,9 @@ preview/index.html
 - `styles.css`는 외부 웹폰트를 로드하지 않는다. sans/display stack은 `"Noto Sans KR Variable", "Noto Sans KR"`를 최우선으로 둔다.
 - `brand-fonts.css`는 선택형 public export이며 `font.family.brand`와 `.zdp-brand-wordmark`가 쓰는 Playwrite AU VIC Guides를 로드한다. 일반 문서 제목, 제품 UI heading, 표, 본문에는 `brand` stack을 쓰지 않는다.
 - `expressive-fonts.css`는 선택형 public export이며 `font.family.expressionScript`, `font.family.expressionInscription`, `font.family.expressionSketch`, `font.family.expressionEditorial`, `font.family.expressionSans`, `font.family.expressionKeyboard`가 쓰는 표현용 폰트를 Fontsource의 jsDelivr 배포 파일에서 로드한다. 기본 앱 UI, 표, 긴 본문, 일반 Tooltip에는 자동 적용하지 않는다.
-- `locale-fonts.css`는 선택형 public export이며 Noto Sans KR, Manrope, Noto Sans SC, Noto Sans Devanagari, Noto Sans JP, Noto Sans Thai 웹폰트를 로드한다. 웹폰트가 필요한 소비처는 이 파일을 가져오거나 같은 폰트를 직접 호스팅한다.
-- `:lang(en|es|fr|vi|ru|id|ms)`는 Manrope/Inter 라틴 스택, `:lang(ko)`는 Noto Sans KR 한국어 스택, `:lang(zh)`는 Noto Sans SC/시스템 중국어 스택, `:lang(hi)`는 Noto Sans Devanagari/시스템 데바나가리 스택, `:lang(ja)`는 Noto Sans JP/시스템 일본어 스택, `:lang(th)`는 Noto Sans Thai/시스템 태국어 스택으로 덮어쓴다.
+- `locale-fonts.css`는 선택형 public export이며 Noto Sans KR, Geist Sans, Manrope, Noto Sans SC, Noto Sans Devanagari, Noto Sans JP, Noto Sans Thai 웹폰트를 로드한다. 웹폰트가 필요한 소비처는 이 파일을 가져오거나 같은 폰트를 직접 호스팅한다.
+- `lang="en"`과 `en-US` 같은 영어 하위 태그는 Geist Sans → Manrope → Inter → Noto Sans KR → 시스템 산세리프 순서를 쓴다. `es`, `fr`, `vi`, `ru`, `id`, `ms`는 Manrope/Inter 라틴 스택을 쓴다.
+- `ko`는 Noto Sans KR, `zh`는 Noto Sans SC, `hi`는 Noto Sans Devanagari, `ja`는 Noto Sans JP, `th`는 Noto Sans Thai 우선 스택을 쓴다.
 - Flutter, native shell, 문서 생성기는 JSON 토큰의 hex 값을 기본 입력으로 쓰고 필요할 때 OKLCH를 별도 변환한다.
 
 ## Flat UI 계약

@@ -43,6 +43,7 @@ export const zdpTokenNames = [
   'radius.lg',
   'radius.pill',
   'font.family.sans',
+  'font.family.english',
   'font.family.latin',
   'font.family.korean',
   'font.family.chinese',

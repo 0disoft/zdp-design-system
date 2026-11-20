@@ -229,6 +229,10 @@ if (displayFamily?.includes('Playwrite AU VIC Guides')) {
   failures.push('font.family.display must not use the brand wordmark font.');
 }
 
+if (tokenDocument.font.family.english !== `"Geist Variable", Geist, "Geist Sans", ${tokenDocument.font.family.latin}`) {
+  failures.push('font.family.english must prefer Geist Sans and preserve the Manrope-first Latin fallback stack.');
+}
+
 for (const [familyName, expectedText] of Object.entries({
   latin: '"Manrope Variable", Manrope, "Inter Variable", Inter',
   korean: '"Noto Sans KR Variable", "Noto Sans KR", "Apple SD Gothic Neo"',
@@ -288,6 +292,7 @@ for (const requiredText of [
 }
 
 for (const requiredText of [
+  '--zdp-font-family-english',
   '--zdp-font-family-latin',
   '--zdp-font-family-korean',
   '--zdp-font-family-chinese',
@@ -302,6 +307,7 @@ for (const requiredText of [
   '--zdp-font-family-expression-sans',
   '--zdp-font-family-expression-keyboard',
   '.zdp-surface-reset:lang(en)',
+  '.zdp-surface-reset :lang(en)',
   '.zdp-surface-reset:lang(ko)',
   '.zdp-surface-reset:lang(zh)',
   '.zdp-surface-reset:lang(hi)',
@@ -321,6 +327,7 @@ for (const requiredText of [
 
 for (const requiredText of [
   '@fontsource-variable/noto-sans-kr@5.3.0/index.css',
+  '@fontsource-variable/geist@5.3.0/index.css',
   '@fontsource-variable/manrope@5.2.8/index.css',
   '@fontsource-variable/noto-sans-sc@5.2.10/index.css',
   '@fontsource-variable/noto-sans-devanagari@5.2.8/index.css',

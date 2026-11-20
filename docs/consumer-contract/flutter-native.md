@@ -5,7 +5,7 @@ Flutter와 native shell은 Svelte 컴포넌트를 직접 소비하지 않는다.
 
 - `hex`는 기본 theme fallback이다.
 - `oklch`는 웹 또는 변환 가능한 렌더러에서 색 의도값으로 사용한다.
-- `font.family.korean`, `font.family.latin`, `font.family.chinese`, `font.family.devanagari`, `font.family.japanese`, `font.family.thai`, `font.family.multiscript`는 locale별 fallback 순서의 source of truth다.
+- `font.family.english`, `font.family.korean`, `font.family.latin`, `font.family.chinese`, `font.family.devanagari`, `font.family.japanese`, `font.family.thai`, `font.family.multiscript`는 locale별 fallback 순서의 source of truth다.
 - `font.family.brand`는 브랜드 워드마크 전용 source of truth다. 일반 heading의 `font.family.display`와 섞지 않는다.
 - `font.family.expressionScript`, `font.family.expressionInscription`, `font.family.expressionSketch`, `font.family.expressionEditorial`, `font.family.expressionSans`, `font.family.expressionKeyboard`는 opt-in 표현용 source of truth다. `expressive-fonts.css`를 import한 표면에서만 캠페인, 섹션 제목, 짧은 보조 안내, 키보드 표식에 제한해서 쓴다.
 - `control.heightMd`, `control.glyphMd`, `control.choiceSize`, `control.choiceIndicatorSize`, `control.switchWidth`, `control.switchHeight`, `control.scrollbarSize`, `control.radius`, `control.borderWidth`, `control.hitTarget`은 native control size, icon glyph size, choice mark, switch track, scrollbar 두께를 맞출 때의 기준이다.
