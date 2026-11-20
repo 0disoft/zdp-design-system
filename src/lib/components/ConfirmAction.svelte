@@ -329,7 +329,9 @@
   </span>
   <span class="zdp-confirm-action__body">
     <span class="zdp-confirm-action__label">{pending ? pendingLabel : confirmed ? completeLabel : label}</span>
-    <span class="zdp-confirm-action__hint">{pending ? pendingHint : hint}</span>
+    {#if pending || !confirmed}
+      <span class="zdp-confirm-action__hint">{pending ? pendingHint : hint}</span>
+    {/if}
   </span>
 </button>
 

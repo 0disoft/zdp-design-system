@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 export async function verifyComboboxEditingContracts(page) {
   const input = page.getByRole('combobox', { name: 'Cached filtered choice', exact: true });
   const cases = [
+    ['Home', [0, 0]],
+    ['End', [5, 5]],
     ['Shift+Home', [0, 3]],
     ['Shift+End', [3, 5]],
     ['Control+Home', [0, 0]],
@@ -71,6 +73,10 @@ export async function verifyComboboxSelectionContracts(page) {
   await cached.fill('B');
   assert.equal(await cached.evaluate(submittedValue), '', 'Editing a cached label must clear its submitted selection.');
   assert.equal(await cached.evaluate(valid), false);
+  await cached.press('Enter');
+  assert.equal(await cached.inputValue(), 'B', 'Enter must not commit a candidate automatically after typing.');
+  assert.equal(await cached.getAttribute('aria-activedescendant'), null);
+  assert.equal(await cached.evaluate(submittedValue), '');
   await cached.press('ArrowDown');
   await cached.press('Enter');
   assert.equal(await cached.inputValue(), 'Beta');

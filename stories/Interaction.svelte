@@ -55,6 +55,8 @@
   let darkTextScale: ZdpTextScale = 'large';
   let lightTheme: ZdpThemeMode = 'light';
   let darkTheme: ZdpThemeMode = 'dark';
+  const previewTextSize: Record<ZdpTextScale, string> = { base: '1rem', large: '1.25rem', larger: '1.5rem' };
+  const previewTextLabels: Record<ZdpTextScale, string> = { base: '기본', large: '크게', larger: '가장 크게' };
   const visibleShortcutIntents: readonly ZdpShortcutIntent[] = [
     'search',
     'help',
@@ -288,14 +290,18 @@
         <Surface padding="lg">
           <Stack gap="md">
             <h3>Theme Toggle</h3>
-            <p>현재 표면의 light/dark 상태만 보여주고, 저장과 초기값은 소비 화면이 정합니다.</p>
-            <Inline gap="sm" align="center">
+            <p>버튼을 눌러 미리보기의 테마를 바꿔 보세요.</p>
+            <div class="preference-preview" data-zdp-theme={lightTheme}>
+              <Inline gap="sm" align="center">
               <ThemeToggle
                 theme={lightTheme}
+                lightLabel="라이트 테마로 바꾸기"
+                darkLabel="다크 테마로 바꾸기"
                 onclick={() => (lightTheme = lightTheme === 'dark' ? 'light' : 'dark')}
               />
-              <span class="story-status">{lightTheme === 'dark' ? '다크' : '라이트'}</span>
-            </Inline>
+                <span>{lightTheme === 'dark' ? '다크 테마' : '라이트 테마'}</span>
+              </Inline>
+            </div>
           </Stack>
         </Surface>
 
@@ -304,15 +310,16 @@
         <Surface padding="lg">
           <Stack gap="md">
             <h3>Text Scale Control</h3>
-            <p>읽기 배율 선택 표면만 제공하고, 실제 문서 크기 반영은 소비 화면이 정합니다.</p>
+            <p>크기를 선택하면 아래 문장에 바로 반영돼요.</p>
             <Inline gap="sm" align="center">
               <TextScaleControl
                 value={lightTextScale}
                 ariaLabel="Light text scale"
                 onChange={(_, option) => (lightTextScale = option.value)}
               />
-              <span class="story-status">{lightTextScale}</span>
+              <span class="story-status">{previewTextLabels[lightTextScale]}</span>
             </Inline>
+            <p class="preference-preview" style:font-size={previewTextSize[lightTextScale]}>변경 내용은 검토가 끝난 뒤 공개됩니다.</p>
           </Stack>
         </Surface>
 
@@ -614,14 +621,18 @@
         <Surface padding="lg">
           <Stack gap="md">
             <h3>Theme Toggle</h3>
-            <p>어두운 표면에서도 같은 포커스 표시와 전환 안내를 유지합니다.</p>
-            <Inline gap="sm" align="center">
+            <p>버튼을 눌러 미리보기의 테마를 바꿔 보세요.</p>
+            <div class="preference-preview" data-zdp-theme={darkTheme}>
+              <Inline gap="sm" align="center">
               <ThemeToggle
                 theme={darkTheme}
+                lightLabel="라이트 테마로 바꾸기"
+                darkLabel="다크 테마로 바꾸기"
                 onclick={() => (darkTheme = darkTheme === 'dark' ? 'light' : 'dark')}
               />
-              <span class="story-status">{darkTheme === 'dark' ? '다크' : '라이트'}</span>
-            </Inline>
+                <span>{darkTheme === 'dark' ? '다크 테마' : '라이트 테마'}</span>
+              </Inline>
+            </div>
           </Stack>
         </Surface>
 
@@ -630,15 +641,16 @@
         <Surface padding="lg">
           <Stack gap="md">
             <h3>Text Scale Control</h3>
-            <p>배율 값과 키보드 이동만 공유하고, 저장과 루트 반영은 소비 화면이 처리합니다.</p>
+            <p>크기를 선택하면 아래 문장에 바로 반영돼요.</p>
             <Inline gap="sm" align="center">
               <TextScaleControl
                 value={darkTextScale}
                 ariaLabel="Dark text scale"
                 onChange={(_, option) => (darkTextScale = option.value)}
               />
-              <span class="story-status">{darkTextScale}</span>
+              <span class="story-status">{previewTextLabels[darkTextScale]}</span>
             </Inline>
+            <p class="preference-preview" style:font-size={previewTextSize[darkTextScale]}>변경 내용은 검토가 끝난 뒤 공개됩니다.</p>
           </Stack>
         </Surface>
 
@@ -847,6 +859,13 @@
 </main>
 
 <style>
+  .preference-preview {
+    background: var(--zdp-color-surface-raised);
+    border-radius: var(--zdp-control-radius);
+    color: var(--zdp-color-ink-strong);
+    padding: var(--zdp-space-3);
+  }
+
   .component-story {
     background: var(--zdp-color-surface-canvas);
     color: var(--zdp-color-ink-normal);

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import AuditTable from './AuditTable.svelte';
   import Avatar from '../src/lib/components/Avatar.svelte';
   import Badge from '../src/lib/components/Badge.svelte';
   import Button from '../src/lib/components/Button.svelte';
@@ -9,13 +10,7 @@
   import InlineCode from '../src/lib/components/InlineCode.svelte';
   import KeyValue from '../src/lib/components/KeyValue.svelte';
   import Stack from '../src/lib/components/Stack.svelte';
-  import SortHeader from '../src/lib/components/SortHeader.svelte';
   import Surface from '../src/lib/components/Surface.svelte';
-  import Table from '../src/lib/components/Table.svelte';
-  import TableToolbar from '../src/lib/components/TableToolbar.svelte';
-
-  let lightDensity: 'default' | 'compact' = 'compact';
-  let darkDensity: 'default' | 'compact' = 'default';
 
   const lightCodeExample =
     "const requiredEvidence = ['owner', 'budget', 'audit-log'];\nconst canPromote = requiredEvidence.every((item) => status[item] === 'ready');";
@@ -39,51 +34,7 @@
               <h3 id="data-light-table-title">보안 점검</h3>
               <Badge tone="success">정상</Badge>
             </div>
-            <TableToolbar
-              title="점검 목록"
-              summary="권한과 감사 항목을 확인합니다."
-              selectedCount={2}
-              bind:density={lightDensity}
-              densityLabel="표 밀도"
-              labelledBy="data-light-table-title"
-            >
-              <svelte:fragment slot="selection-actions">
-                <Button variant="secondary">선택 해제</Button>
-              </svelte:fragment>
-              <svelte:fragment slot="actions">
-                <Button>새로 고침</Button>
-              </svelte:fragment>
-            </TableToolbar>
-            <Table caption="보안 점검 목록" labelledBy="data-light-table-title" density={lightDensity}>
-              <thead>
-                <tr>
-                  <th scope="col" aria-sort="ascending">
-                    <SortHeader label="항목" direction="ascending" />
-                  </th>
-                  <th scope="col">
-                    <SortHeader label="상태" direction="none" />
-                  </th>
-                  <th scope="col">다음 확인</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">권한 분리</th>
-                  <td>통과</td>
-                  <td>분기 리뷰</td>
-                </tr>
-                <tr>
-                  <th scope="row">감사 로그</th>
-                  <td>통과</td>
-                  <td>릴리스 전</td>
-                </tr>
-                <tr>
-                  <th scope="row">비밀값 보관</th>
-                  <td>대기</td>
-                  <td>운영 전</td>
-                </tr>
-              </tbody>
-            </Table>
+            <AuditTable labelledBy="data-light-table-title" theme="light" />
           </Stack>
         </Surface>
 
@@ -152,51 +103,7 @@
               <h3 id="data-dark-table-title">보안 점검</h3>
               <Badge tone="warning">대기</Badge>
             </div>
-            <TableToolbar
-              title="점검 목록"
-              summary="대기 항목을 먼저 확인합니다."
-              selectedCount={1}
-              bind:density={darkDensity}
-              densityLabel="표 밀도"
-              labelledBy="data-dark-table-title"
-            >
-              <svelte:fragment slot="selection-actions">
-                <Button variant="secondary">보류</Button>
-              </svelte:fragment>
-              <svelte:fragment slot="actions">
-                <Button>검토</Button>
-              </svelte:fragment>
-            </TableToolbar>
-            <Table caption="보안 점검 목록" labelledBy="data-dark-table-title" density={darkDensity}>
-              <thead>
-                <tr>
-                  <th scope="col">
-                    <SortHeader label="항목" direction="none" />
-                  </th>
-                  <th scope="col" aria-sort="descending">
-                    <SortHeader label="상태" direction="descending" />
-                  </th>
-                  <th scope="col">다음 확인</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">권한 분리</th>
-                  <td>통과</td>
-                  <td>분기 리뷰</td>
-                </tr>
-                <tr>
-                  <th scope="row">감사 로그</th>
-                  <td>통과</td>
-                  <td>릴리스 전</td>
-                </tr>
-                <tr>
-                  <th scope="row">비밀값 보관</th>
-                  <td>대기</td>
-                  <td>운영 전</td>
-                </tr>
-              </tbody>
-            </Table>
+            <AuditTable labelledBy="data-dark-table-title" theme="dark" />
           </Stack>
         </Surface>
 

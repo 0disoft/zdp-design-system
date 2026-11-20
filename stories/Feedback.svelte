@@ -2,6 +2,7 @@
   import LoadingExamples from './LoadingExamples.svelte';
   import AdSlot from '../src/lib/components/AdSlot.svelte';
   import Badge from '../src/lib/components/Badge.svelte';
+  import Button from '../src/lib/components/Button.svelte';
   import Callout from '../src/lib/components/Callout.svelte';
   import Divider from '../src/lib/components/Divider.svelte';
   import Inline from '../src/lib/components/Inline.svelte';
@@ -13,13 +14,15 @@
 
   let lightToastStatus = '대기 중';
   let darkToastStatus = '대기 중';
+  let lightDraftVisible = true;
+  let darkDraftVisible = true;
 
   function makeToastItems(onAction: (status: string) => void): readonly ZdpStatusToastItem[] {
-    return [
+    const items: readonly ZdpStatusToastItem[] = [
       {
         id: 'saved', tone: 'success', title: '저장됐습니다.',
         message: '변경 내역이 목록에 반영됐습니다.',
-        actionLabel: '기록 보기', onclick: () => onAction('기록 보기')
+        actionLabel: '기록 보기', onclick: () => onAction('최근 기록 · 변경 내역을 저장했어요.')
       },
       {
         id: 'synced', tone: 'info', title: '동기화가 끝났습니다.',
@@ -32,13 +35,22 @@
       {
         id: 'danger', tone: 'danger', title: '연결이 끊겼습니다.',
         message: '다시 연결한 뒤 작업을 이어가세요.',
-        actionLabel: '다시 연결', onclick: () => onAction('다시 연결')
+        actionLabel: '다시 연결', onclick: () => onAction('다시 연결됐어요.')
       }
     ];
+    return items.map(item => ({ ...item, dismissLabel: `${item.title ?? item.message} 알림 닫기` }));
   }
 
-  const lightToastItems = makeToastItems((status) => (lightToastStatus = status));
-  const darkToastItems = makeToastItems((status) => (darkToastStatus = status));
+  const initialLightToasts = makeToastItems((status) => {
+    lightToastStatus = status;
+    if (status === '다시 연결됐어요.') lightToastItems = lightToastItems.filter(item => item.id !== 'danger');
+  });
+  const initialDarkToasts = makeToastItems((status) => {
+    darkToastStatus = status;
+    if (status === '다시 연결됐어요.') darkToastItems = darkToastItems.filter(item => item.id !== 'danger');
+  });
+  let lightToastItems = initialLightToasts;
+  let darkToastItems = initialDarkToasts;
 </script>
 
 <main class="component-story zdp-surface-reset" lang="ko">
@@ -80,22 +92,28 @@
         <Surface padding="lg">
           <Stack gap="md">
             <h3>알림</h3>
+            <Inline gap="sm">
+              <Button size="sm" variant="secondary" onclick={() => { lightDraftVisible = true; lightToastItems = initialLightToasts; lightToastStatus = '알림을 다시 표시했어요.'; }}>알림 다시 표시</Button>
+            </Inline>
+            {#if lightDraftVisible}
             <Toast
               tone="info"
               labelledBy="feedback-light-toast-title"
               describedBy="feedback-light-toast-message"
-              onClose={() => (lightToastStatus = '닫힘')}
+              dismissLabel="초안 알림 닫기"
+              onClose={() => { lightDraftVisible = false; lightToastStatus = '초안 알림을 닫았어요.'; }}
             >
               <strong id="feedback-light-toast-title">초안이 준비됐습니다.</strong>
               <p id="feedback-light-toast-message">검토할 수 있는 상태로 바뀌었습니다.</p>
             </Toast>
+            {/if}
             <StatusToast
               placement="inline"
               idPrefix="feedback-light-status-toast"
               items={lightToastItems}
-              onDismiss={(_, item) => (lightToastStatus = `${item.title ?? item.id} 닫힘`)}
+              onDismiss={(_, item) => { lightToastItems = lightToastItems.filter(entry => entry.id !== item.id); lightToastStatus = '알림을 닫았어요.'; }}
             />
-            <p class="story-status">{lightToastStatus}</p>
+            <p class="story-status" role="status">{lightToastStatus}</p>
           </Stack>
         </Surface>
 
@@ -171,22 +189,28 @@
         <Surface padding="lg">
           <Stack gap="md">
             <h3>알림</h3>
+            <Inline gap="sm">
+              <Button size="sm" variant="secondary" onclick={() => { darkDraftVisible = true; darkToastItems = initialDarkToasts; darkToastStatus = '알림을 다시 표시했어요.'; }}>알림 다시 표시</Button>
+            </Inline>
+            {#if darkDraftVisible}
             <Toast
               tone="info"
               labelledBy="feedback-dark-toast-title"
               describedBy="feedback-dark-toast-message"
-              onClose={() => (darkToastStatus = '닫힘')}
+              dismissLabel="초안 알림 닫기"
+              onClose={() => { darkDraftVisible = false; darkToastStatus = '초안 알림을 닫았어요.'; }}
             >
               <strong id="feedback-dark-toast-title">초안이 준비됐습니다.</strong>
               <p id="feedback-dark-toast-message">검토할 수 있는 상태로 바뀌었습니다.</p>
             </Toast>
+            {/if}
             <StatusToast
               placement="inline"
               idPrefix="feedback-dark-status-toast"
               items={darkToastItems}
-              onDismiss={(_, item) => (darkToastStatus = `${item.title ?? item.id} 닫힘`)}
+              onDismiss={(_, item) => { darkToastItems = darkToastItems.filter(entry => entry.id !== item.id); darkToastStatus = '알림을 닫았어요.'; }}
             />
-            <p class="story-status">{darkToastStatus}</p>
+            <p class="story-status" role="status">{darkToastStatus}</p>
           </Stack>
         </Surface>
 

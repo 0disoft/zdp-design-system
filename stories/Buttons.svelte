@@ -94,7 +94,9 @@
             <h3>중요한 작업</h3>
             <ConfirmAction
               label="밀어서 결제하기"
-              hint="또는 2초간 누르기"
+              hint="2초간 길게 누르거나, 짧게 눌러 확인하기"
+              confirmLabel="결제하기"
+              cancelLabel="취소"
               completeLabel="결제 확인됨"
               onconfirm={() => (lightConfirmCount += 1)}
             />
@@ -176,7 +178,9 @@
             <ConfirmAction
               tone="danger"
               label="밀어서 삭제하기"
-              hint="또는 2초간 누르기"
+              hint="2초간 길게 누르거나, 짧게 눌러 확인하기"
+              confirmLabel="삭제하기"
+              cancelLabel="취소"
               completeLabel="삭제 확인됨"
               onconfirm={() => (darkConfirmCount += 1)}
             />

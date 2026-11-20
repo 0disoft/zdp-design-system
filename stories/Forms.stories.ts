@@ -43,6 +43,8 @@ export const States: Story = {
 
       await userEvent.selectOptions(statusSelect, 'ready');
       await expect(statusSelect).toHaveValue('ready');
+      await expect(statusSelect).not.toHaveAttribute('aria-invalid');
+      await userEvent.selectOptions(statusSelect, 'blocked');
     });
 
     await step('combobox keeps hidden submitted value in form story', async () => {
@@ -58,6 +60,8 @@ export const States: Story = {
       await expect(ownerCombobox).toHaveValue('보안 검토');
       await expect(hiddenValue).not.toBeNull();
       await expect(hiddenValue).toHaveValue('security');
+      await userEvent.clear(ownerCombobox);
+      await userEvent.keyboard('{Escape}');
     });
   }
 };

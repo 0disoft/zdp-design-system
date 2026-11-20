@@ -7,6 +7,10 @@
   import Stack from '../src/lib/components/Stack.svelte';
   import Surface from '../src/lib/components/Surface.svelte';
   import Tabs from '../src/lib/components/Tabs.svelte';
+
+  let lightPage = 5;
+  let darkPage = 9;
+  const pageSize = 3;
 </script>
 
 <SkipLink href="#navigation-main">본문으로 건너뛰기</SkipLink>
@@ -49,13 +53,21 @@
         <Surface padding="lg">
           <Stack gap="md">
             <h3>목록 페이지</h3>
+            <p role="status">검토 기록 {pageSize * (lightPage - 1) + 1}–{pageSize * lightPage} / 36</p>
+            <ul>
+              {#each [1, 2, 3] as offset}
+                <li>검토 기록 {pageSize * (lightPage - 1) + offset}</li>
+              {/each}
+            </ul>
             <Pagination
-              currentPage={5}
+              currentPage={lightPage}
               totalPages={12}
               ariaLabel="밝은 화면 목록 페이지"
               previousLabel="이전"
               nextLabel="다음"
-              hrefForPage={(page) => `#light-page-${page}`}
+              pageLabel={(page) => `페이지 ${page}`}
+              currentLabel={(page) => `현재 페이지 ${page}`}
+              onPageChange={(_, page) => (lightPage = page)}
             />
           </Stack>
         </Surface>
@@ -113,13 +125,21 @@
         <Surface padding="lg">
           <Stack gap="md">
             <h3>목록 페이지</h3>
+            <p role="status">검토 기록 {pageSize * (darkPage - 1) + 1}–{pageSize * darkPage} / 54</p>
+            <ul>
+              {#each [1, 2, 3] as offset}
+                <li>검토 기록 {pageSize * (darkPage - 1) + offset}</li>
+              {/each}
+            </ul>
             <Pagination
-              currentPage={9}
+              currentPage={darkPage}
               totalPages={18}
               ariaLabel="어두운 화면 목록 페이지"
               previousLabel="이전"
               nextLabel="다음"
-              hrefForPage={(page) => `#dark-page-${page}`}
+              pageLabel={(page) => `페이지 ${page}`}
+              currentLabel={(page) => `현재 페이지 ${page}`}
+              onPageChange={(_, page) => (darkPage = page)}
             />
           </Stack>
         </Surface>

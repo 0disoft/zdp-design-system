@@ -114,7 +114,9 @@
   });
 
   $effect.pre(() => {
-    activeOptionId = resolveActiveOptionId(activeOptionId, enabledOptions);
+    if (activeOptionId !== null && !enabledOptions.some(option => option.id === activeOptionId)) {
+      activeOptionId = null;
+    }
   });
 
   $effect.pre(() => {
@@ -181,7 +183,7 @@
     onOpenChange?.(nextOpen);
 
     if (nextOpen) {
-      activeOptionId = enabledOptions.find((option) => option.value === value)?.id ?? enabledOptions[0]?.id ?? null;
+      activeOptionId = enabledOptions.find((option) => option.value === value)?.id ?? null;
     }
   }
 
@@ -193,7 +195,7 @@
     onQueryChange?.(query);
     clearSelectionForQuery(nextQuery);
     setOpen(true);
-    activeOptionId = enabledOptions[0]?.id ?? null;
+    activeOptionId = null;
   }
 
   function handleFormReset(input: HTMLInputElement): void {
@@ -242,12 +244,10 @@
 
   function navigateInput(event: KeyboardEvent): boolean {
     const key = event.key;
-    const arrow = key === 'ArrowDown' || key === 'ArrowUp';
-    if (!arrow && key !== 'Home' && key !== 'End') return false;
-    if (!arrow && !open) return false;
+    if (key !== 'ArrowDown' && key !== 'ArrowUp') return false;
     event.preventDefault();
     const wasOpen = open;
-    if (arrow) setOpen(true);
+    setOpen(true);
     // Opening can invoke consumer callbacks. Read candidates and value after it.
     activeOptionId = resolveComboboxNavigation(key, wasOpen, value, enabledOptions, activeOptionId);
     return true;
@@ -282,12 +282,6 @@
     const nextOpen = !open;
     inputElement?.focus();
     setOpen(nextOpen);
-  }
-
-  function handleOptionPointermove(option: ZdpComboboxOption): void {
-    if (!option.disabled) {
-      activeOptionId = option.id;
-    }
   }
 
   function selectOption(option: ZdpComboboxOption): void {
@@ -356,14 +350,6 @@
 
   function syncInputValidity(element: HTMLInputElement | null, missing: boolean, message: string): void {
     element?.setCustomValidity(missing ? message : '');
-  }
-
-  function resolveActiveOptionId(currentId: string | null, availableOptions: readonly ZdpComboboxOption[]): string | null {
-    if (availableOptions.some((option) => option.id === currentId)) {
-      return currentId;
-    }
-
-    return availableOptions[0]?.id ?? null;
   }
 
   function optionDomId(optionId: string): string {
@@ -467,7 +453,6 @@
               data-active={option.id === activeOptionId ? 'true' : undefined}
               data-selected={option.value === value ? 'true' : undefined}
               onmousedown={(event) => event.preventDefault()}
-              onpointermove={() => handleOptionPointermove(option)}
               onclick={() => selectOption(option)}
             >
               <span class="zdp-combobox__option-label">{option.label}</span>

@@ -208,6 +208,7 @@ export async function verifyFoundationAndFormContracts(page) {
   await combobox.focus();
   const ownerListbox = page.getByRole('listbox', { name: 'Owner list' });
   assert.equal(await ownerListbox.count(), 1);
+  await combobox.press('ArrowDown');
   const comboboxFrameState = await ownerListbox.evaluate((listbox) => {
     const panel = listbox.closest('.zdp-combobox__panel');
     const activeOption = listbox.querySelector('.zdp-combobox__option[data-active="true"]');
@@ -282,7 +283,8 @@ export async function verifyFoundationAndFormContracts(page) {
   await asyncCombobox.focus();
   const asyncListbox = page.getByRole('listbox', { name: 'Async owner list' });
   assert.equal(await asyncListbox.count(), 1);
-  await page.keyboard.press('End');
+  await asyncCombobox.press('ArrowDown');
+  await asyncCombobox.press('ArrowUp');
   const asyncActiveId = await asyncCombobox.getAttribute('aria-activedescendant');
   assert.match(asyncActiveId ?? '', /-option-async-owner-24$/);
   const asyncActiveOption = page.locator(`[id="${asyncActiveId}"]`);

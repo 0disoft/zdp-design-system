@@ -23,6 +23,20 @@
   ];
   let lightFrequency: string | null = 'weekly';
   let darkFrequency: string | null = 'weekly';
+  let lightOwnerQuery = '';
+  let darkOwnerQuery = '';
+  let lightOwner = '';
+  let darkOwner = '';
+  let lightStatus = 'blocked';
+  let darkStatus = 'blocked';
+  $: lightStatusInvalid = lightStatus !== 'ready';
+  $: darkStatusInvalid = darkStatus !== 'ready';
+
+  function filterOwners(query: string, selected: string) {
+    if (ownerOptions.some(option => option.value === selected && option.label === query)) return ownerOptions;
+    const term = query.trim().toLowerCase();
+    return ownerOptions.filter(option => option.label.toLowerCase().includes(term));
+  }
 </script>
 
 <main class="component-story zdp-surface-reset" lang="ko">
@@ -48,15 +62,15 @@
             <HelpText id="forms-light-id-help">이미 발급된 값은 그대로 둡니다.</HelpText>
           </Field>
 
-          <Field invalid>
+          <Field invalid={lightStatusInvalid}>
             <Label forId="forms-light-status">상태</Label>
             <Select
               id="forms-light-status"
               name="forms-light-status"
-              value="blocked"
-              describedBy={['forms-light-status-help', 'forms-light-status-error']}
-              errorMessageId="forms-light-status-error"
-              invalid
+              bind:value={lightStatus}
+              describedBy={lightStatusInvalid ? ['forms-light-status-help', 'forms-light-status-error'] : 'forms-light-status-help'}
+              errorMessageId={lightStatusInvalid ? 'forms-light-status-error' : null}
+              invalid={lightStatusInvalid}
             >
               <option value="ready">준비됨</option>
               <option value="blocked">확인 필요</option>
@@ -66,7 +80,7 @@
               </optgroup>
             </Select>
             <HelpText id="forms-light-status-help">현재 작업 상태를 선택하세요.</HelpText>
-            <ErrorText id="forms-light-status-error">다음 단계 전에 기준을 확인하세요.</ErrorText>
+            {#if lightStatusInvalid}<ErrorText id="forms-light-status-error">'준비됨'을 선택해야 다음 단계로 갈 수 있어요.</ErrorText>{/if}
           </Field>
 
           <Field>
@@ -80,7 +94,10 @@
               label={null}
               ariaLabel={longLabels ? '플랫폼 운영과 보안 및 다국어 품질 검토를 맡을 담당 부서' : '담당'}
               placeholder="담당 팀 찾기"
-              options={ownerOptions}
+              options={filterOwners(lightOwnerQuery, lightOwner)}
+              bind:value={lightOwner}
+              onQueryChange={(query) => (lightOwnerQuery = query)}
+              noResultsText="일치하는 담당 팀이 없어요."
               describedBy="forms-light-owner-help"
             />
             <HelpText id="forms-light-owner-help">가장 가까운 담당 팀을 선택하세요.</HelpText>
@@ -140,15 +157,15 @@
             <HelpText id="forms-dark-id-help">이미 발급된 값은 그대로 둡니다.</HelpText>
           </Field>
 
-          <Field invalid>
+          <Field invalid={darkStatusInvalid}>
             <Label forId="forms-dark-status">상태</Label>
             <Select
               id="forms-dark-status"
               name="forms-dark-status"
-              value="blocked"
-              describedBy={['forms-dark-status-help', 'forms-dark-status-error']}
-              errorMessageId="forms-dark-status-error"
-              invalid
+              bind:value={darkStatus}
+              describedBy={darkStatusInvalid ? ['forms-dark-status-help', 'forms-dark-status-error'] : 'forms-dark-status-help'}
+              errorMessageId={darkStatusInvalid ? 'forms-dark-status-error' : null}
+              invalid={darkStatusInvalid}
             >
               <option value="ready">준비됨</option>
               <option value="blocked">확인 필요</option>
@@ -158,7 +175,7 @@
               </optgroup>
             </Select>
             <HelpText id="forms-dark-status-help">현재 작업 상태를 선택하세요.</HelpText>
-            <ErrorText id="forms-dark-status-error">다음 단계 전에 기준을 확인하세요.</ErrorText>
+            {#if darkStatusInvalid}<ErrorText id="forms-dark-status-error">'준비됨'을 선택해야 다음 단계로 갈 수 있어요.</ErrorText>{/if}
           </Field>
 
           <Field>
@@ -172,7 +189,10 @@
               label={null}
               ariaLabel={longLabels ? '플랫폼 운영과 보안 및 다국어 품질 검토를 맡을 담당 부서' : '담당'}
               placeholder="담당 팀 찾기"
-              options={ownerOptions}
+              options={filterOwners(darkOwnerQuery, darkOwner)}
+              bind:value={darkOwner}
+              onQueryChange={(query) => (darkOwnerQuery = query)}
+              noResultsText="일치하는 담당 팀이 없어요."
               describedBy="forms-dark-owner-help"
             />
             <HelpText id="forms-dark-owner-help">가장 가까운 담당 팀을 선택하세요.</HelpText>

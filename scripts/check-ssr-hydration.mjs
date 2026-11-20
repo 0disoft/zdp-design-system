@@ -259,6 +259,7 @@ try {
 
   const unusualCombobox = page.getByRole('combobox', { name: 'Unusual option identity', exact: true });
   await unusualCombobox.click();
+  await unusualCombobox.press('ArrowDown');
   for (let index = 0; index < 8; index += 1) {
     const activeId = await unusualCombobox.getAttribute('aria-activedescendant');
     assert.ok(activeId, 'Every option identity, including an empty key, must expose an active descendant.');
@@ -266,7 +267,7 @@ try {
     assert.equal(await page.locator(`[id="${activeId}"]`).textContent().then(text => text.trim()), `Unusual key ${index}`);
     if (index < 7) await unusualCombobox.press('ArrowDown');
   }
-  await unusualCombobox.press('Home');
+  await unusualCombobox.press('ArrowDown');
   await unusualCombobox.press('Enter');
   assert.equal(await unusualCombobox.inputValue(), 'Unusual key 0');
   assert.equal(await unusualCombobox.getAttribute('aria-activedescendant'), null);

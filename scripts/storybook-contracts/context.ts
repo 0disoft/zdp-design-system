@@ -296,7 +296,10 @@ export async function loadStorybookContext() {
       readFile(buttonsComponentPath, 'utf8'),
       readFile(buttonPlaygroundPath, 'utf8'),
       readFile(dataDisplayStoryPath, 'utf8'),
-      readFile(dataDisplayComponentPath, 'utf8'),
+      Promise.all([
+        readFile(dataDisplayComponentPath, 'utf8'),
+        readFile(join(root, 'stories', 'AuditTable.svelte'), 'utf8')
+      ]).then(sources => sources.join('\n')),
       readFile(feedbackStoryPath, 'utf8'),
       Promise.all([
         readFile(feedbackComponentPath, 'utf8'),

@@ -53,7 +53,7 @@ export async function verifyComboboxGeometryContracts(page) {
     await input.press('ArrowDown');
     await waitInside();
     assert.equal(await panel.evaluate(element => element.scrollHeight > element.clientHeight), true);
-    await input.press('End');
+    await input.press('ArrowUp');
     const waitActiveVisible = () => page.waitForFunction(() => {
       const root = document.querySelector('[data-testid="edge-combobox-anchor"]');
       const panel = root.querySelector('.zdp-combobox__panel').getBoundingClientRect();
