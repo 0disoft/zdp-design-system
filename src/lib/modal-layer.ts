@@ -30,6 +30,8 @@ interface ZdpModalLayerDocumentState {
   managedInertElements: Set<HTMLElement>;
   isolationObserver: MutationObserver | null;
   isolationAwaitingRoot: HTMLElement | null;
+  isolationSlotRoots: ReadonlySet<ShadowRoot>;
+  handleIsolationSlotChange: () => void;
 }
 
 interface ManagedInlineStyle {
@@ -151,7 +153,9 @@ function getDocumentState(document: Document): ZdpModalLayerDocumentState {
     managedBodyPaddingInlineEnd: null,
     managedInertElements: new Set(),
     isolationObserver: null,
-    isolationAwaitingRoot: null
+    isolationAwaitingRoot: null,
+    isolationSlotRoots: new Set(),
+    handleIsolationSlotChange: () => syncDocumentIsolation(state)
   };
   documentStates.set(document, state);
   return state;
@@ -289,21 +293,43 @@ function syncDocumentIsolation(state: ZdpModalLayerDocumentState): void {
     hasTopLayer: topLayer !== undefined, reachedBody: snapshot.reachedBody
   });
   observeIsolationParents(state, plan.observedParents);
+  observeIsolationSlots(state, snapshot.slotRoots);
   applyIsolationTargets(state, plan.inertElements);
 }
 
 function readIsolationBranches(activeBranch: HTMLElement | null, body: HTMLElement) {
   const branches: ZdpModalIsolationBranch<HTMLElement, HTMLElement | ShadowRoot>[] = [];
+  const slotRoots = new Set<ShadowRoot>();
   while (activeBranch !== null && activeBranch !== body) {
-    const parentNode = activeBranch.parentNode;
-    const parent = isDocumentHTMLElement(parentNode) || isDocumentShadowRoot(parentNode)
-      ? parentNode
-      : null;
-    if (parent === null) return { branches, reachedBody: false };
-    branches.push({ parent, activeBranch, siblings: Array.from(parent.children).filter(isDocumentHTMLElement) });
+    const assignedSlot: HTMLSlotElement | null = activeBranch.assignedSlot;
+    const parent = assignedSlot ?? activeBranch.parentNode;
+    if (!isDocumentHTMLElement(parent) && !isDocumentShadowRoot(parent)) break;
+    const slot = parent.nodeName === 'SLOT' ? parent as HTMLSlotElement : null;
+    const slotRoot = slot?.getRootNode();
+    if (isDocumentShadowRoot(slotRoot)) slotRoots.add(slotRoot);
+    const siblings = assignedSlot?.assignedElements() ?? Array.from(parent.children);
+    branches.push({ parent, activeBranch, siblings: siblings.filter(isDocumentHTMLElement) });
+    if (assignedSlot === null && isDocumentHTMLElement(parent)) {
+      // Unassigned light DOM and displaced fallback are outside the rendered tree.
+      if (parent.shadowRoot !== null) {
+        slotRoots.add(parent.shadowRoot);
+        break;
+      }
+      if (slot && slot.assignedNodes().length > 0) break;
+    }
     activeBranch = isolationParentBranch(parent);
   }
-  return { branches, reachedBody: activeBranch === body };
+  return { branches, reachedBody: activeBranch === body, slotRoots };
+}
+
+function observeIsolationSlots(state: ZdpModalLayerDocumentState, roots: ReadonlySet<ShadowRoot>): void {
+  for (const root of state.isolationSlotRoots) {
+    if (!roots.has(root)) root.removeEventListener('slotchange', state.handleIsolationSlotChange);
+  }
+  for (const root of roots) {
+    if (!state.isolationSlotRoots.has(root)) root.addEventListener('slotchange', state.handleIsolationSlotChange);
+  }
+  state.isolationSlotRoots = roots;
 }
 
 function isolationParentBranch(parent: HTMLElement | ShadowRoot): HTMLElement | null {

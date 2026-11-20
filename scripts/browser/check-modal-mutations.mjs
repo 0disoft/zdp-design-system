@@ -90,6 +90,7 @@ export async function verifyFocusableAttributeMutations(page, moduleUrl) {
 export async function verifyModalMutationContracts(page) {
   await verifyModalFocusReturnAcrossShadowRoots(page);
   await verifyModalReattachment(page);
+  await verifySlottedModalIsolation(page);
   for (const [triggerId, name] of [
     ['dialog-trigger', 'Review changes'],
     ['sheet-trigger', 'Release details'],
@@ -272,4 +273,64 @@ async function verifyModalReattachment(page) {
     }, `Modal isolation must resume after reattaching inside an existing portal (shadow=${shadow}).`);
   }
   console.log(`Modal reattachment: ${results.length} portal scenarios passed.`);
+}
+
+async function verifySlottedModalIsolation(page) {
+  const result = await page.evaluate(async (rootPath) => {
+    const { createZdpModalLayer } = await import(`/@fs/${rootPath}/src/lib/modal-layer.ts`);
+    const settle = () => new Promise(resolve => queueMicrotask(resolve));
+    const host = document.createElement('section');
+    const shadow = host.attachShadow({ mode: 'open' });
+    shadow.innerHTML = `
+      <section><slot name="first"></slot><button>First background</button></section>
+      <section><slot name="second"></slot><button>Second background</button></section>
+    `;
+    host.innerHTML = `
+      <div slot="first"><section><button>Modal action</button></section></div>
+      <button slot="first">Slotted background</button>
+    `;
+    document.body.append(host);
+    const [firstRegion, secondRegion] = shadow.children;
+    const [assignedBranch, slottedBackground] = host.children;
+    const modal = assignedBranch.firstElementChild;
+    const action = modal.firstElementChild;
+    const backgrounds = [firstRegion.lastElementChild, secondRegion.lastElementChild, slottedBackground];
+    const layer = createZdpModalLayer();
+    function canFocus(target) {
+      target.blur();
+      target.focus();
+      return target.getRootNode().activeElement === target;
+    }
+    function readFocus() {
+      return { action: canFocus(action), reachableBackgrounds: backgrounds.filter(canFocus).length };
+    }
+
+    try {
+      layer.setActive(true, modal);
+      const opened = readFocus();
+      assignedBranch.slot = 'second';
+      await settle();
+      const reassigned = readFocus();
+      assignedBranch.slot = 'missing';
+      await settle();
+      const unassigned = readFocus();
+      assignedBranch.slot = 'first';
+      await settle();
+      const returned = readFocus();
+      layer.setActive(false);
+      return { opened, reassigned, unassigned, returned, closed: readFocus() };
+    } finally {
+      layer.destroy();
+      host.remove();
+    }
+  }, process.cwd().replaceAll('\\', '/'));
+
+  assert.deepEqual(result, {
+    opened: { action: true, reachableBackgrounds: 0 },
+    reassigned: { action: true, reachableBackgrounds: 0 },
+    unassigned: { action: false, reachableBackgrounds: 3 },
+    returned: { action: true, reachableBackgrounds: 0 },
+    closed: { action: true, reachableBackgrounds: 3 }
+  }, 'Modal isolation must follow the visible slot path and release it when the modal leaves that path.');
+  console.log('Slotted modal isolation: 5 lifecycle states passed.');
 }
