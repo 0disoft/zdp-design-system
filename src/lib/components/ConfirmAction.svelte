@@ -47,6 +47,7 @@
   // Survives success/pending resets until the completing pointer's click arrives.
   let suppressPointerClick = false;
   let startX = 0;
+  let slideDirection = 1;
   let trackWidth = 1;
   let startedAt = 0;
   let interactionDurationMs = $state(2000);
@@ -63,6 +64,10 @@
     active = true;
     progress = 0;
     startX = clientX ?? 0;
+    if (clientX !== null) {
+      const direction = element.ownerDocument.defaultView?.getComputedStyle(element).direction;
+      slideDirection = direction === 'rtl' ? -1 : 1;
+    }
     trackWidth = Math.max(1, element.getBoundingClientRect().width);
     interactionDurationMs = safeDurationMs;
     startedAt = performance.now();
@@ -88,7 +93,7 @@
       return;
     }
 
-    const slideProgress = Math.min(1, (clientX - startX) / trackWidth);
+    const slideProgress = Math.min(1, ((clientX - startX) * slideDirection) / trackWidth);
     progress = Math.max(progress, slideProgress);
 
     if (slideProgress >= 0.92) {
@@ -370,7 +375,8 @@
     min-height: calc(var(--zdp-control-height-md) + var(--zdp-space-3));
     min-width: min(100%, 18rem);
     overflow: hidden;
-    padding: var(--zdp-space-2) var(--zdp-space-4) var(--zdp-space-2) var(--zdp-space-2);
+    padding-block: var(--zdp-space-2);
+    padding-inline: var(--zdp-space-2) var(--zdp-space-4);
     position: relative;
     text-align: start;
     touch-action: none;
@@ -382,7 +388,7 @@
   .zdp-confirm-action__fill {
     background: var(--zdp-confirm-action-fill);
     bottom: 0;
-    left: 0;
+    inset-inline-start: 0;
     opacity: 0.24;
     position: absolute;
     top: 0;
@@ -417,11 +423,15 @@
   }
 
 
+  .zdp-confirm-action__glyph:dir(rtl) {
+    transform: scaleX(-1);
+  }
+
   .zdp-confirm-action__body {
     display: grid;
     gap: var(--zdp-space-1);
     min-width: 0;
-    padding-left: var(--zdp-space-3);
+    padding-inline-start: var(--zdp-space-3);
   }
 
   .zdp-confirm-action__label {

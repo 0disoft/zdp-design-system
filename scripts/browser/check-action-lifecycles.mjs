@@ -33,6 +33,27 @@ export async function verifyConfirmSlideThresholdContracts(page) {
     });
   }
   await page.waitForFunction(() => !document.querySelector('#repeat-confirm-action').hasAttribute('data-confirmed'));
+
+  const direction = await button.getAttribute('dir');
+  await button.evaluate(element => element.setAttribute('dir', 'rtl'));
+  try {
+    const rtlBox = await button.boundingBox();
+    const start = rtlBox.x + rtlBox.width - 5;
+    const row = rtlBox.y + rtlBox.height / 2;
+    const before = Number(await count.textContent());
+    await page.mouse.move(start, row);
+    await page.mouse.down();
+    await page.mouse.move(start - rtlBox.width * 0.94, row);
+    assert.equal(Number(await count.textContent()), before + 1,
+      'An RTL slide toward inline-end must confirm once.');
+  } finally {
+    await page.mouse.up();
+    await button.evaluate((element, dir) => {
+      if (dir === null) element.removeAttribute('dir');
+      else element.setAttribute('dir', dir);
+    }, direction);
+  }
+  await page.waitForFunction(() => !document.querySelector('#repeat-confirm-action').hasAttribute('data-confirmed'));
 }
 
 export async function verifyConfirmCompositionContracts(page) {
