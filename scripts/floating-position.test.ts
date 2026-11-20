@@ -202,3 +202,32 @@ test('destroy is terminal and preserves styles changed by the consumer', async (
   assert.deepEqual([...f.values], [['left', '99px']]);
   assert.deepEqual(f.counts(), { starts: 1, stops: 1, positioned: 1 });
 });
+
+test('a burst schedules only one trailing positioning calculation', async () => {
+  const first = deferred();
+  const last = deferred();
+  let calls = 0;
+  let gapReads = 0;
+  let boundaryReads = 0;
+  const f = fixture({
+    getGap: () => { gapReads++; return 8; },
+    getBoundaries: () => { boundaryReads++; return []; },
+    computePosition: () => ++calls === 1 ? first.promise : last.promise
+  });
+  const action = f.start();
+  for (let index = 0; index < 100; index++) f.refresh();
+  assert.deepEqual({ calls, gapReads, boundaryReads }, { calls: 1, gapReads: 1, boundaryReads: 1 });
+
+  first.resolve(result(10, 20));
+  await flush();
+  assert.equal(f.values.get('left'), '0px', 'A superseded result must not be committed.');
+  assert.equal(f.counts().positioned, 0);
+  assert.equal(calls, 2);
+
+  last.resolve(result(90, 110));
+  await flush();
+  assert.deepEqual({ calls, gapReads, boundaryReads }, { calls: 2, gapReads: 2, boundaryReads: 2 });
+  assert.equal(f.values.get('left'), '90px');
+  assert.equal(f.counts().positioned, 1);
+  action.destroy();
+});

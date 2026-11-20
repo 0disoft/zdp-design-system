@@ -40,7 +40,8 @@ export function positionZdpFloatingPanel(
     const { anchor, gapSource, prefix } = options;
     if (destroyed || signal?.aborted || !anchor || !gapSource) return;
     let disposed = false;
-    let revision = 0;
+    let measuring = false;
+    let pending = false;
     let stop = () => {};
     const original = new Map<string, string>();
     const applied = new Map<string, string>();
@@ -79,9 +80,7 @@ export function positionZdpFloatingPanel(
     signal?.addEventListener('abort', dispose, { once: true });
 
     const update = async () => {
-      if (disposed || !panel.isConnected) return;
-      const current = ++revision;
-      const valid = () => !disposed && current === revision && panel.isConnected;
+      const valid = () => !disposed && !pending && panel.isConnected;
       let result: Awaited<ReturnType<typeof computePosition>>;
       try {
         const gap = nonnegative(getGap(gapSource));
@@ -106,7 +105,7 @@ export function positionZdpFloatingPanel(
         });
       } catch {
         // Restore the CSS fallback instead of leaving a failed panel at (0, 0).
-        // An obsolete rejection must never dispose a newer calculation.
+        // A queued refresh can still recover after an obsolete calculation fails.
         if (valid()) dispose();
         return;
       }
@@ -121,8 +120,25 @@ export function positionZdpFloatingPanel(
       panel.dataset.align = result.placement.split('-')[1] ?? 'center';
       options.onPosition?.();
     };
+    function requestUpdate(): void {
+      if (disposed || !panel.isConnected) return;
+      if (measuring) {
+        pending = true;
+        return;
+      }
+
+      measuring = true;
+      void update().finally(() => {
+        measuring = false;
+        if (pending) {
+          pending = false;
+          requestUpdate();
+        }
+      });
+    }
+
     try {
-      const stopObserving = observe(anchor, panel, () => { void update(); });
+      const stopObserving = observe(anchor, panel, requestUpdate);
       // Cancellation can happen synchronously while observation starts.
       if (disposed) stopObserving(); else stop = stopObserving;
     } catch (error) {
