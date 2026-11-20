@@ -53,16 +53,18 @@
     <h2 id="credit-marks-title">Lemon marks</h2>
     <div class="credit-grid credit-grid--marks">
       {#each lemonAssets as asset}
-        <figure class:credit-frame--dark={asset.surface === 'dark'} class="credit-frame">
-          {#if asset.surface === 'current'}
-            <span
-              class="credit-icon credit-icon--current"
-              style={`--credit-asset-url: url("${asset.url}")`}
-              aria-hidden="true"
-            ></span>
-          {:else}
-            <img src={asset.url} alt="" width="48" height="48" />
-          {/if}
+        <figure class="credit-frame">
+          <div class="credit-mark-swatch" data-zdp-theme={asset.surface === 'dark' ? 'dark' : undefined}>
+            {#if asset.surface === 'current'}
+              <span
+                class="credit-icon"
+                style={`--credit-asset-url: url("${asset.url}")`}
+                aria-hidden="true"
+              ></span>
+            {:else}
+              <img src={asset.url} alt="" width="48" height="48" />
+            {/if}
+          </div>
           <figcaption>{asset.name}</figcaption>
         </figure>
       {/each}
@@ -163,26 +165,25 @@
     overflow: hidden;
   }
 
-  .credit-frame--dark {
-    background: var(--zdp-color-surface-canvas);
+  .credit-mark-swatch {
+    background: var(--zdp-color-surface-raised);
+    color: var(--zdp-color-ink-strong);
+    display: grid;
+    min-block-size: 11rem;
+    place-items: center;
   }
 
-  .credit-frame img,
-  .credit-icon--current {
-    block-size: 8rem;
-    box-sizing: border-box;
+  .credit-mark-swatch img,
+  .credit-mark-swatch .credit-icon {
+    block-size: 5.5rem;
     display: block;
-    inline-size: 8rem;
-    margin: var(--zdp-space-6) auto;
-    padding: var(--zdp-space-5);
-  }
-
-  .credit-frame--dark img {
-    background: var(--zdp-color-surface-canvas);
+    inline-size: 5.5rem;
   }
 
   .credit-frame--keyart img {
     block-size: auto;
+    box-sizing: border-box;
+    display: block;
     inline-size: 100%;
     margin: 0;
     padding: var(--zdp-space-4);
@@ -192,10 +193,6 @@
     background: currentcolor;
     display: block;
     mask: var(--credit-asset-url) center / contain no-repeat;
-  }
-
-  .credit-icon--current {
-    color: var(--zdp-color-accent-primary);
   }
 
   .credit-ship-sizes {

@@ -1,8 +1,8 @@
 <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
   <g fill="currentColor">
-    <path d="M5 33c10 1.5 28 1.5 38 0l-5 7H11Z" />
-    <path d="M23 6h2v27h-2Z" />
-    <path d="M21 10C15 15 10 22 7 30h14Z" />
-    <path d="M27 10v20h14c-3.5-8-8-15-14-20Z" />
+    <path d="M4 34c9 1 28 1 40-1l-6 8H11Z" />
+    <path d="M28 6h3v29h-3Z" />
+    <path d="M24 9C17 15 12 22 8 30h16Z" />
+    <path d="M35 17v13h8c-2-5-4-9-8-13Z" />
   </g>
 </svg>

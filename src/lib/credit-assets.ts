@@ -27,12 +27,12 @@ export const zdpCreditAssets = Object.freeze({
   ]),
   packs: Object.freeze([
     createCreditAsset('zdp-credit-pack-dinghy', 'credit-pack-dinghy.svg', 'credit-pack-glyph', 'dinghy', ['light', 'dark'], ['credit-pack', 'compact-glyph', 'inline-current-color'], 24, '79c0b42271849b9fc85911e1b427e222acbc31e3cea6e455ca34b8b6da5c2dde'),
-    createCreditAsset('zdp-credit-pack-skiff', 'credit-pack-skiff.svg', 'credit-pack-glyph', 'skiff', ['light', 'dark'], ['credit-pack', 'compact-glyph', 'inline-current-color'], 24, 'e0e2c6b60a7062785f7a7d4713a7e4578835868e5b57e7c47c4a2ae0b5547c74'),
-    createCreditAsset('zdp-credit-pack-sloop', 'credit-pack-sloop.svg', 'credit-pack-glyph', 'sloop', ['light', 'dark'], ['credit-pack', 'compact-glyph', 'inline-current-color'], 24, '9adf5a5b7772fac8d21f40379c0e8f7c7226c25422ff710892206f6bd71b9fd9'),
+    createCreditAsset('zdp-credit-pack-skiff', 'credit-pack-skiff.svg', 'credit-pack-glyph', 'skiff', ['light', 'dark'], ['credit-pack', 'compact-glyph', 'inline-current-color'], 24, '0750dc7e0059a52fb9c0ed1a0990e1d750fb2fc493e3e27cde340c9d368b7706'),
+    createCreditAsset('zdp-credit-pack-sloop', 'credit-pack-sloop.svg', 'credit-pack-glyph', 'sloop', ['light', 'dark'], ['credit-pack', 'compact-glyph', 'inline-current-color'], 24, 'e12f06ecfc304820c7e02cf44006ff15d4a6ea555363c264645107034b0ea6b3'),
     createCreditAsset('zdp-credit-pack-brig', 'credit-pack-brig.svg', 'credit-pack-glyph', 'brig', ['light', 'dark'], ['credit-pack', 'compact-glyph', 'inline-current-color'], 24, 'd70aaa569d37957bec62cbfd5ef9f69be8fa5be1ff1414923bdbfa5d6da67152'),
     createCreditAsset('zdp-credit-pack-frigate', 'credit-pack-frigate.svg', 'credit-pack-glyph', 'frigate', ['light', 'dark'], ['credit-pack', 'compact-glyph', 'inline-current-color'], 24, '38b988c85ad681ac6d42a9efc99feace692fec02f9da8bd33994bf3d55ae2e83'),
-    createCreditAsset('zdp-credit-pack-galleon', 'credit-pack-galleon.svg', 'credit-pack-glyph', 'galleon', ['light', 'dark'], ['credit-pack', 'compact-glyph', 'inline-current-color'], 24, '350f56e8bcebaa21f6bc9641d17e566b023573944a682db52d1bcd262b129591'),
-    createCreditAsset('zdp-credit-pack-flagship', 'credit-pack-flagship.svg', 'credit-pack-glyph', 'flagship', ['light', 'dark'], ['credit-pack', 'compact-glyph', 'inline-current-color', 'command-pennant'], 24, '7277f0023b0a57cc45a74c4d66d081ede298b951e39fac25757eedc18791285b')
+    createCreditAsset('zdp-credit-pack-galleon', 'credit-pack-galleon.svg', 'credit-pack-glyph', 'galleon', ['light', 'dark'], ['credit-pack', 'compact-glyph', 'inline-current-color'], 24, '9c6f4b98864be2f56ff36e6c33943b4cc4f9184eb776aaa5afa3e148c5d161af'),
+    createCreditAsset('zdp-credit-pack-flagship', 'credit-pack-flagship.svg', 'credit-pack-glyph', 'flagship', ['light', 'dark'], ['credit-pack', 'compact-glyph', 'inline-current-color', 'command-pennant'], 24, 'f4e6525b6b5a11123fd00f8db03bb4da6eae91fb189e7b8a1d5727ea690f1c16')
   ]),
   keyart: Object.freeze([
     createCreditAsset('zdp-credit-pack-keyart-dinghy', 'credit-pack-keyart-dinghy.webp', 'credit-pack-keyart', 'dinghy', ['light', 'dark'], ['credit-pack', 'pricing-card', 'selected-plan-detail', 'generated-keyart'], 160, '4baefcfea283c8778edd78ae08e4356d291e819b6982e8b0d8f62429806ef387', 1600, 900, '16:9'),
