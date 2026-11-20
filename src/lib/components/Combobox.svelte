@@ -193,8 +193,9 @@
     query = nextQuery;
     lastSyncedQuery = nextQuery;
     queryDirty = true;
+    const clearedSelection = clearSelectionForQuery(nextQuery);
     onQueryChange?.(query);
-    clearSelectionForQuery(nextQuery);
+    if (clearedSelection) onValueChange?.('', null);
     setOpen(true);
     activeOptionId = null;
   }
@@ -297,27 +298,32 @@
     lastSyncedValue = value;
     lastSyncedOptionLabel = option.label;
     cachedSelection = option;
-    // A consumer can submit the form before Svelte applies its DOM updates.
-    if (inputElement && inputElement.value !== query) inputElement.value = query;
-    if (submittedInputElement) submittedInputElement.value = submittedValue;
-    syncInputValidity(inputElement, selectionMissing, resolvedSelectionRequiredText);
+    syncFormSelection();
     onQueryChange?.(query);
     onValueChange?.(value, option);
     setOpen(false);
     inputElement?.focus();
   }
 
-  function clearSelectionForQuery(nextQuery: string): void {
+  function clearSelectionForQuery(nextQuery: string): boolean {
     const currentOption = selectedOption;
 
     if (value === '' || currentOption?.label === nextQuery) {
-      return;
+      return false;
     }
 
     value = '';
     cachedSelection = null;
     lastSyncedValue = value;
-    onValueChange?.('', null);
+    syncFormSelection();
+    return true;
+  }
+
+  function syncFormSelection(): void {
+    // A consumer can submit the form before Svelte applies its DOM updates.
+    if (inputElement && inputElement.value !== query) inputElement.value = query;
+    if (submittedInputElement) submittedInputElement.value = submittedValue;
+    syncInputValidity(inputElement, selectionMissing, resolvedSelectionRequiredText);
   }
 
   function resolveSelectedOption(

@@ -14,6 +14,8 @@
   let invalidatedClears = 0;
   let autoSubmitForm: HTMLFormElement;
   let autoSubmittedValues = '';
+  const editModes = ['required', 'optional'] as const;
+  let editSubmissions = { required: [] as string[], optional: [] as string[] };
 </script>
 
 <section aria-label="Filtered selection contracts">
@@ -44,4 +46,16 @@
       onValueChange={() => autoSubmitForm.requestSubmit()} />
   </form>
   <output data-testid="combobox-auto-submitted">{autoSubmittedValues}</output>
+
+  {#each editModes as mode}
+    <form id={`combobox-submit-on-edit-${mode}`} onsubmit={(event) => {
+      event.preventDefault();
+      const selected = String(new FormData(event.currentTarget).get('team'));
+      editSubmissions[mode] = [...editSubmissions[mode], selected];
+    }}>
+      <Combobox label={`Submit on edit (${mode})`} name="team" options={[alpha, beta]} value="alpha" required={mode === 'required'}
+        onQueryChange={() => document.forms.namedItem(`combobox-submit-on-edit-${mode}`)?.requestSubmit()} />
+    </form>
+    <output data-testid={`combobox-edit-submitted-${mode}`}>{JSON.stringify(editSubmissions[mode])}</output>
+  {/each}
 </section>

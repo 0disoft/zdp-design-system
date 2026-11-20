@@ -41,6 +41,7 @@ export async function verifyComboboxEditingContracts(page) {
 
 export async function verifyComboboxSelectionContracts(page) {
   await verifySubmitOnSelection(page);
+  await verifySubmitOnEdit(page);
   const cached = page.getByRole('combobox', { name: 'Cached filtered choice', exact: true });
   const authoritative = page.getByRole('combobox', { name: 'Authoritative filtered choice', exact: true });
   const unknown = page.getByRole('combobox', { name: 'Unknown filtered choice', exact: true });
@@ -113,4 +114,16 @@ async function verifySubmitOnSelection(page) {
   await page.getByRole('option', { name: 'Alpha', exact: true }).click();
   assert.deepEqual([afterKeyboard, await submitted.textContent()], ['beta,', 'beta,alpha,'],
     'Submitting synchronously in onValueChange must validate and use the newly selected option.');
+}
+
+async function verifySubmitOnEdit(page) {
+  const results = {};
+  for (const mode of ['required', 'optional']) {
+    const input = page.getByRole('combobox', { name: `Submit on edit (${mode})`, exact: true });
+    assert.equal(await input.inputValue(), 'Alpha');
+    await input.fill('Beta');
+    results[mode] = JSON.parse(await page.getByTestId(`combobox-edit-submitted-${mode}`).textContent());
+  }
+  assert.deepEqual(results, { required: [], optional: [''] },
+    'Submitting in onQueryChange must block an unselected required field and submit an empty optional field.');
 }
