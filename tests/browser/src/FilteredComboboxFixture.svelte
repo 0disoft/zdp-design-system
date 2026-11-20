@@ -16,6 +16,8 @@
   let autoSubmittedValues = '';
   const editModes = ['required', 'optional'] as const;
   let editSubmissions = { required: [] as string[], optional: [] as string[] };
+  let submissionOption: ZdpComboboxOption | null = alpha;
+  let invalidationSubmissions = { required: [] as string[], optional: [] as string[] };
 </script>
 
 <section aria-label="Filtered selection contracts">
@@ -57,5 +59,18 @@
         onQueryChange={() => document.forms.namedItem(`combobox-submit-on-edit-${mode}`)?.requestSubmit()} />
     </form>
     <output data-testid={`combobox-edit-submitted-${mode}`}>{JSON.stringify(editSubmissions[mode])}</output>
+  {/each}
+  <button type="button" onclick={() => (submissionOption = null)}>Invalidate submission choice</button>
+  {#each editModes as mode}
+    <form id={`combobox-submit-on-invalidation-${mode}`} onsubmit={(event) => {
+      event.preventDefault();
+      const selected = String(new FormData(event.currentTarget).get('team'));
+      invalidationSubmissions[mode] = [...invalidationSubmissions[mode], selected];
+    }}>
+      <Combobox label={`Submit on invalidation (${mode})`} name="team" options={[alpha, beta]} value="alpha"
+        selectedOption={submissionOption} required={mode === 'required'}
+        onValueChange={() => document.forms.namedItem(`combobox-submit-on-invalidation-${mode}`)?.requestSubmit()} />
+    </form>
+    <output data-testid={`combobox-invalidation-submitted-${mode}`}>{JSON.stringify(invalidationSubmissions[mode])}</output>
   {/each}
 </section>

@@ -42,6 +42,7 @@ export async function verifyComboboxEditingContracts(page) {
 export async function verifyComboboxSelectionContracts(page) {
   await verifySubmitOnSelection(page);
   await verifySubmitOnEdit(page);
+  await verifySubmitOnInvalidation(page);
   const cached = page.getByRole('combobox', { name: 'Cached filtered choice', exact: true });
   const authoritative = page.getByRole('combobox', { name: 'Authoritative filtered choice', exact: true });
   const unknown = page.getByRole('combobox', { name: 'Unknown filtered choice', exact: true });
@@ -126,4 +127,19 @@ async function verifySubmitOnEdit(page) {
   }
   assert.deepEqual(results, { required: [], optional: [''] },
     'Submitting in onQueryChange must block an unselected required field and submit an empty optional field.');
+}
+
+async function verifySubmitOnInvalidation(page) {
+  for (const mode of ['required', 'optional']) {
+    const input = page.getByRole('combobox', { name: `Submit on invalidation (${mode})`, exact: true });
+    assert.equal(await input.inputValue(), 'Alpha');
+    assert.equal(await input.evaluate(element => element.checkValidity()), true);
+  }
+  await page.getByRole('button', { name: 'Invalidate submission choice', exact: true }).click();
+  const results = {};
+  for (const mode of ['required', 'optional']) {
+    results[mode] = JSON.parse(await page.getByTestId(`combobox-invalidation-submitted-${mode}`).textContent());
+  }
+  assert.deepEqual(results, { required: [], optional: [''] },
+    'Invalidation must update native form state before invoking onValueChange.');
 }

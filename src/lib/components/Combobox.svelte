@@ -124,6 +124,7 @@
     if (value !== '' && suppliedSelectedOption !== undefined && selectedOption === null) {
       value = '';
       cachedSelection = null;
+      untrack(syncFormSelection);
       onValueChange?.('', null);
     }
   });
