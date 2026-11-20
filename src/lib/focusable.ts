@@ -51,33 +51,46 @@ export function isZdpFocusableElement(element: HTMLElement): boolean {
 
 /** Read the current tab order, including CSS changes outside the panel's DOM. */
 export function collectZdpTabbableElements(root: HTMLElement): HTMLElement[] {
-  const eligible = collectComposedCandidates(root).filter(isZdpFocusableElement);
-  return sortZdpTabbableElements(filterRadioGroupTabStops(eligible));
+  const { scope, eligible } = collectFocusScopes(root);
+  const tabStops = resolveRadioGroupTabStops(eligible);
+  const ordered: HTMLElement[] = [];
+  appendFocusScope(scope, tabStops, ordered);
+  return ordered;
 }
 
-function collectComposedCandidates(root: HTMLElement): HTMLElement[] {
-  const candidates: HTMLElement[] = [];
+interface FocusScopeEntry {
+  target: HTMLElement | null;
+  priority: number;
+  children: FocusScopeEntry[] | null;
+}
+
+function collectFocusScopes(root: HTMLElement) {
+  const scope: FocusScopeEntry[] = [];
+  const eligible: HTMLElement[] = [];
   const visited = new Set<Element>();
-  function visit(element: Element): void {
+  function visit(element: Element, currentScope: FocusScopeEntry[]): void {
     if (visited.has(element)) return;
     visited.add(element);
-    if (isZdpHtmlElement(element) && element.matches(zdpFocusableSelector)) {
-      candidates.push(element);
+
+    const html = isZdpHtmlElement(element) ? element : null;
+    const slot = html?.tagName === 'SLOT' ? html as HTMLSlotElement : null;
+    const scopedChildren = element.shadowRoot?.children ?? (
+      slot ? (slot.assignedNodes().length > 0 ? slot.assignedElements() : slot.children) : null
+    );
+    if (scopedChildren && html?.hasAttribute('tabindex') && html.tabIndex < 0) return;
+
+    const target = html?.matches(zdpFocusableSelector) && isZdpFocusableElement(html) ? html : null;
+    if (target) eligible.push(target);
+
+    const children: FocusScopeEntry[] | null = scopedChildren ? [] : null;
+    if (target || children) {
+      const tabIndex = html?.tabIndex ?? 0;
+      currentScope.push({ target, priority: tabIndex > 0 ? tabIndex : Infinity, children });
     }
-    if (element.shadowRoot !== null) {
-      // An explicit negative host tabindex excludes its entire shadow focus scope.
-      if (isZdpHtmlElement(element) && element.hasAttribute('tabindex') && element.tabIndex < 0) return;
-      for (const child of element.shadowRoot.children) visit(child);
-    } else if (element.tagName === 'SLOT') {
-      const slot = element as HTMLSlotElement;
-      const children = slot.assignedNodes().length > 0 ? slot.assignedElements({ flatten: true }) : slot.children;
-      for (const child of children) visit(child);
-    } else {
-      for (const child of element.children) visit(child);
-    }
+    for (const child of scopedChildren ?? element.children) visit(child, children ?? currentScope);
   }
-  for (const child of root.children) visit(child);
-  return candidates;
+  for (const child of root.children) visit(child, scope);
+  return { scope, eligible };
 }
 
 /** Whether rendering should preserve focus deliberately moved away from a control. */
@@ -121,7 +134,7 @@ function isRadioInput(element: HTMLElement): element is HTMLInputElement {
   return element.tagName === 'INPUT' && (element as HTMLInputElement).type === 'radio';
 }
 
-function filterRadioGroupTabStops(candidates: readonly HTMLElement[]): HTMLElement[] {
+function resolveRadioGroupTabStops(candidates: readonly HTMLElement[]): Set<HTMLElement> {
   type Group = { tabStop: HTMLInputElement; checked: boolean };
   const groups = new Map<Node, Map<HTMLFormElement | null, Map<string, Group>>>();
   const tabStops = new Set<HTMLElement>();
@@ -159,32 +172,21 @@ function filterRadioGroupTabStops(candidates: readonly HTMLElement[]): HTMLEleme
       group.checked = true;
     }
   }
-  // Preserve candidate order, including ties in the later tabindex sort.
-  return candidates.filter((element) => tabStops.has(element));
+  return tabStops;
 }
 
-function sortZdpTabbableElements(elements: readonly HTMLElement[]): HTMLElement[] {
-  return elements
-    .map((element, documentOrder) => ({
-      documentOrder,
-      element,
-      tabIndex: Math.max(0, element.tabIndex)
-    }))
-    .sort((left, right) => {
-      const leftPositive = left.tabIndex > 0;
-      const rightPositive = right.tabIndex > 0;
-
-      if (leftPositive !== rightPositive) {
-        return leftPositive ? -1 : 1;
-      }
-
-      if (leftPositive && left.tabIndex !== right.tabIndex) {
-        return left.tabIndex - right.tabIndex;
-      }
-
-      return left.documentOrder - right.documentOrder;
-    })
-    .map(({ element }) => element);
+function appendFocusScope(
+  scope: readonly FocusScopeEntry[],
+  tabStops: ReadonlySet<HTMLElement>,
+  ordered: HTMLElement[]
+): void {
+  // Positive tabindex sorts within its own scope. Equal priority keeps DOM order.
+  const entries = scope.filter(({ target, children }) => children || (target && tabStops.has(target)));
+  entries.sort((left, right) => left.priority === right.priority ? 0 : left.priority - right.priority);
+  for (const { target, children } of entries) {
+    if (target && tabStops.has(target)) ordered.push(target);
+    if (children) appendFocusScope(children, tabStops, ordered);
+  }
 }
 
 function isZdpHtmlElement(element: Element | null): element is HTMLElement {

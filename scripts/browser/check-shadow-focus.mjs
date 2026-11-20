@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { isDeepActive } from './browser-assertions.mjs';
 
 export async function verifyShadowFocusContracts(page) {
+  const scopeFailures = [];
   for (const [trigger, name, closeName, lastId] of [
     ['dialog-trigger', 'Review changes', 'Close dialog', 'dialog-last-action'],
     ['sheet-trigger', 'Release details', 'Close sheet', 'sheet-last-action']
@@ -58,8 +59,25 @@ export async function verifyShadowFocusContracts(page) {
     await close.focus();
     await page.keyboard.press('Shift+Tab');
     assert.equal(await isDeepActive(slotted), true, 'Restoring the shadow focus scope must refresh the cached controls.');
+    await first.evaluate((element) => { element.tabIndex = 2; });
+    await slotted.evaluate((element) => { element.tabIndex = 1; });
+    await last.evaluate((element) => { element.disabled = false; });
+    const outerLast = panel.getByTestId(lastId);
+    for (const [description, from, key, to] of [
+      ['enter shadow scope', outerLast, 'Tab', first],
+      ['enter slot scope', first, 'Tab', slotted],
+      ['leave shadow scope in reverse', first, 'Shift+Tab', outerLast],
+      ['wrap forward', last, 'Tab', close],
+      ['wrap backward', close, 'Shift+Tab', last]
+    ]) {
+      await from.focus();
+      await page.keyboard.press(key);
+      if (!await isDeepActive(to)) scopeFailures.push(`${name}: ${description}`);
+    }
+    await close.focus();
     await page.keyboard.press('Escape');
   }
+  assert.deepEqual(scopeFailures, [], 'Modal wrapping must follow browser order across shadow and slot scopes.');
 
   const style = await page.addStyleTag({ content: '.zdp-dialog__close { visibility: collapse !important; }' });
   try {
