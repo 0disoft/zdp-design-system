@@ -1,5 +1,48 @@
 import assert from 'node:assert/strict';
 
+export async function verifySplitInitializationRollback(page) {
+  const result = await page.evaluate(async (rootPath) => {
+    const { createZdpSplitPaneController } = await import(`/@fs/${rootPath}/src/lib/split-pane.ts`);
+    const root = document.createElement('div');
+    const primary = document.createElement('div');
+    const separator = document.createElement('div');
+    root.append(primary, separator);
+    document.body.append(root);
+    const elements = { root, primary, separator };
+    const failure = new Error('Split value text failed during initialization');
+    const staleCommits = [];
+    const retryCommits = [];
+    let originalError = false;
+    let fail = true;
+    try {
+      createZdpSplitPaneController(elements, {
+        getValueText(size) {
+          if (fail) throw failure;
+          return String(size);
+        },
+        onResizeCommit: size => staleCommits.push(size)
+      });
+    } catch (error) {
+      originalError = error === failure;
+    }
+    fail = false;
+    const idAfterFailure = primary.getAttribute('id');
+    const controller = createZdpSplitPaneController(elements, {
+      onResizeCommit: size => retryCommits.push(size)
+    });
+    try {
+      separator.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', cancelable: true }));
+    } finally {
+      controller.destroy();
+      root.remove();
+    }
+    return { originalError, idAfterFailure, staleCommits, retryCommits, idAfterDestroy: primary.getAttribute('id') };
+  }, process.cwd().replaceAll('\\', '/'));
+  assert.deepEqual(result, {
+    originalError: true, idAfterFailure: null, staleCommits: [], retryCommits: [288], idAfterDestroy: null
+  }, 'Initialization failure must restore the DOM and let the retried controller own the next keypress.');
+}
+
 export async function verifySplitCallbackFailures(page) {
   const results = await page.evaluate(async (rootPath) => {
     const { createZdpSplitPaneController } = await import(`/@fs/${rootPath}/src/lib/split-pane.ts`);

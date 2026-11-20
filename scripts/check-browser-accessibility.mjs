@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { chromium } from 'playwright-core';
 import { createServer } from 'vite';
-import { verifySplitCallbackFailures, verifySplitPointerOwnership, verifySplitReentrantCallbacks } from './browser/check-split-pointer.mjs';
+import { verifySplitCallbackFailures, verifySplitInitializationRollback, verifySplitPointerOwnership, verifySplitReentrantCallbacks } from './browser/check-split-pointer.mjs';
 import { verifySplitDefaultSizeContracts } from './browser/check-split-defaults.mjs';
 import { verifyFoundationAndFormContracts, verifyProgressRangeContracts } from './browser/check-foundation-and-forms.mjs';
 import { verifyAsyncSelectResetContracts, verifyFormResetContracts, verifyNativeInputContracts } from './browser/check-native-inputs.mjs';
@@ -157,6 +157,7 @@ try {
   } else if (process.argv.includes('--copy')) {
     await verifyCopyLifecycleContracts(page);
   } else if (process.argv.includes('--split')) {
+    await verifySplitInitializationRollback(page);
     await verifySplitCallbackFailures(page);
     await verifySplitDefaultSizeContracts(page);
     await verifySplitPointerOwnership(page);
@@ -220,6 +221,7 @@ try {
   await verifySplitPointerOwnership(page);
   await verifySplitDefaultSizeContracts(page);
   await verifySplitReentrantCallbacks(page);
+  await verifySplitInitializationRollback(page);
   await verifySplitCallbackFailures(page);
   await verifyNativeInputContracts(page);
   await verifyFormResetContracts(page);

@@ -218,19 +218,6 @@ export function createZdpSplitPaneController(
   let destroyed = false;
   let endDragSelection: (() => void) | null = null;
 
-  if (primary.id.trim().length === 0) {
-    splitPanePrimaryId += 1;
-    primary.id = `zdp-split-pane-primary-${splitPanePrimaryId}`;
-  }
-
-  separator.addEventListener('pointerdown', handlePointerDown);
-  separator.addEventListener('pointermove', handlePointerMove);
-  separator.addEventListener('pointerup', handlePointerUp);
-  separator.addEventListener('pointercancel', handlePointerCancel);
-  separator.addEventListener('lostpointercapture', handleLostPointerCapture);
-  separator.addEventListener('keydown', handleKeydown);
-  separator.addEventListener('dblclick', handleDoubleClick);
-
   const ResizeObserverConstructor = root.ownerDocument.defaultView?.ResizeObserver;
   const resizeObserver = ResizeObserverConstructor
     ? new ResizeObserverConstructor(() => {
@@ -239,9 +226,27 @@ export function createZdpSplitPaneController(
       })
     : null;
 
-  measureContainer();
-  render();
-  resizeObserver?.observe(root);
+  try {
+    if (primary.id.trim().length === 0) {
+      splitPanePrimaryId += 1;
+      primary.id = `zdp-split-pane-primary-${splitPanePrimaryId}`;
+    }
+
+    separator.addEventListener('pointerdown', handlePointerDown);
+    separator.addEventListener('pointermove', handlePointerMove);
+    separator.addEventListener('pointerup', handlePointerUp);
+    separator.addEventListener('pointercancel', handlePointerCancel);
+    separator.addEventListener('lostpointercapture', handleLostPointerCapture);
+    separator.addEventListener('keydown', handleKeydown);
+    separator.addEventListener('dblclick', handleDoubleClick);
+
+    measureContainer();
+    render();
+    resizeObserver?.observe(root);
+  } catch (error) {
+    destroy();
+    throw error;
+  }
 
   return {
     getSize(): number {
@@ -271,24 +276,26 @@ export function createZdpSplitPaneController(
       measureContainer();
       render();
     },
-    destroy(): void {
-      if (destroyed) {
-        return;
-      }
-
-      destroyed = true;
-      finishPointerInteraction();
-      resizeObserver?.disconnect();
-      separator.removeEventListener('pointerdown', handlePointerDown);
-      separator.removeEventListener('pointermove', handlePointerMove);
-      separator.removeEventListener('pointerup', handlePointerUp);
-      separator.removeEventListener('pointercancel', handlePointerCancel);
-      separator.removeEventListener('lostpointercapture', handleLostPointerCapture);
-      separator.removeEventListener('keydown', handleKeydown);
-      separator.removeEventListener('dblclick', handleDoubleClick);
-      restoreControllerSnapshot(root, primary, separator, secondary, snapshot);
-    }
+    destroy
   };
+
+  function destroy(): void {
+    if (destroyed) {
+      return;
+    }
+
+    destroyed = true;
+    finishPointerInteraction();
+    resizeObserver?.disconnect();
+    separator.removeEventListener('pointerdown', handlePointerDown);
+    separator.removeEventListener('pointermove', handlePointerMove);
+    separator.removeEventListener('pointerup', handlePointerUp);
+    separator.removeEventListener('pointercancel', handlePointerCancel);
+    separator.removeEventListener('lostpointercapture', handleLostPointerCapture);
+    separator.removeEventListener('keydown', handleKeydown);
+    separator.removeEventListener('dblclick', handleDoubleClick);
+    restoreControllerSnapshot(root, primary, separator, secondary, snapshot);
+  }
 
   function getDefaultSize(): number {
     return normalizeBounds(options).defaultSize;
