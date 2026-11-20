@@ -21,6 +21,8 @@
   let editSubmissions = { required: [] as string[], optional: [] as string[] };
   let submissionOption: ZdpComboboxOption | null = alpha;
   let invalidationSubmissions = { required: [] as string[], optional: [] as string[] };
+  let resetSubmissions = { required: [] as string[], optional: [] as string[] };
+  let resetting: typeof editModes[number] | null = null;
 </script>
 
 <section aria-label="Filtered selection contracts">
@@ -86,5 +88,21 @@
         onValueChange={() => document.forms.namedItem(`combobox-submit-on-invalidation-${mode}`)?.requestSubmit()} />
     </form>
     <output data-testid={`combobox-invalidation-submitted-${mode}`}>{JSON.stringify(invalidationSubmissions[mode])}</output>
+  {/each}
+  {#each editModes as mode}
+    <form id={`combobox-submit-on-reset-${mode}`} onreset={() => { resetting = mode; }} onsubmit={(event) => {
+      event.preventDefault();
+      const selected = String(new FormData(event.currentTarget).get('team'));
+      resetSubmissions[mode] = [...resetSubmissions[mode], selected];
+    }}>
+      <Combobox label={`Submit on reset (${mode})`} name="team" options={[alpha, beta]}
+        value={mode === 'required' ? 'alpha' : ''} required={mode === 'required'}
+        onOpenChange={(open) => {
+          if (open || resetting !== mode) return;
+          resetting = null;
+          document.forms.namedItem(`combobox-submit-on-reset-${mode}`)?.requestSubmit();
+        }} />
+    </form>
+    <output data-testid={`combobox-reset-submitted-${mode}`}>{JSON.stringify(resetSubmissions[mode])}</output>
   {/each}
 </section>

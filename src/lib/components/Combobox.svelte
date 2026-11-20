@@ -208,6 +208,7 @@
     lastSyncedQuery = query;
     lastSyncedOptionLabel = '';
     queryDirty = initialQueryWasEdited;
+    syncFormSelection();
     setOpen(false);
   }
 

@@ -43,6 +43,7 @@ export async function verifyComboboxSelectionContracts(page) {
   await verifySubmitOnSelection(page);
   await verifySubmitOnEdit(page);
   await verifySubmitOnInvalidation(page);
+  await verifySubmitOnReset(page);
   const cached = page.getByRole('combobox', { name: 'Cached filtered choice', exact: true });
   const authoritative = page.getByRole('combobox', { name: 'Authoritative filtered choice', exact: true });
   const unknown = page.getByRole('combobox', { name: 'Unknown filtered choice', exact: true });
@@ -153,4 +154,28 @@ async function verifySubmitOnInvalidation(page) {
   }
   assert.deepEqual(results, { required: [], optional: [''] },
     'Invalidation must update native form state before invoking onValueChange.');
+}
+
+async function verifySubmitOnReset(page) {
+  const required = page.getByRole('combobox', { name: 'Submit on reset (required)', exact: true });
+  const optional = page.getByRole('combobox', { name: 'Submit on reset (optional)', exact: true });
+  const reset = async (input) => {
+    assert.equal(await input.getAttribute('aria-expanded'), 'true');
+    await input.evaluate(element => element.form.reset());
+    await page.waitForFunction(id => document.getElementById(id)?.getAttribute('aria-expanded') === 'false',
+      await input.getAttribute('id'));
+  };
+  await required.fill('Beta');
+  await reset(required);
+  await optional.focus();
+  await optional.press('ArrowDown');
+  await optional.press('Enter');
+  await optional.press('ArrowDown');
+  await reset(optional);
+  const results = {};
+  for (const mode of ['required', 'optional']) {
+    results[mode] = JSON.parse(await page.getByTestId(`combobox-reset-submitted-${mode}`).textContent());
+  }
+  assert.deepEqual(results, { required: ['alpha'], optional: [''] },
+    'Reset must update native form data and validity before reporting that the list closed.');
 }
