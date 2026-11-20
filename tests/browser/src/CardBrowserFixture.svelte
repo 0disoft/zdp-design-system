@@ -115,16 +115,16 @@
     { id: 'sync failed', title: 'Sync failed', message: 'Try again.' }
   ];
   const browserShareItems: readonly ZdpShareDockItem[] = [
-    { id: 'copy', label: 'Copy browser link', icon: 'copy' },
-    { id: 'device', label: 'Share from browser', icon: 'device' },
     {
       id: 'disabled-link',
       label: 'Disabled browser share',
-      icon: 'copy',
+      icon: 'telegram',
       href: '#disabled-browser-share',
       disabled: true,
       onclick: () => (disabledShareCount += 1)
-    }
+    },
+    { id: 'copy', label: 'Copy browser link', icon: 'copy' },
+    { id: 'device', label: 'Share from browser', icon: 'device' }
   ];
   let ownerValue = '';
   let ownerQuery = '';

@@ -35,118 +35,113 @@
   }
 
   let tooltipPlacement = $derived((placement === 'side' || placement === 'rail' ? 'left' : 'top') as 'left' | 'top');
+  const isPrimaryAction = ({ icon }: ZdpShareDockItem): boolean => icon === 'copy' || icon === 'device';
+  let primaryItems = $derived(placement === 'inline' ? items.filter(isPrimaryAction) : []);
+  let remainingItems = $derived(primaryItems.length > 0 ? items.filter((item) => !isPrimaryAction(item)) : items);
 </script>
+
+{#snippet shareMark(item: ZdpShareDockItem, primary: boolean)}
+  {@const icon = zdpShareIcons[item.icon]}
+  <span class="zdp-share-action__mark" aria-hidden="true">
+    <svg class={`zdp-share-icon zdp-share-icon--${item.icon}`} viewBox={icon.viewBox} focusable="false">
+      {#each icon.lines ?? [] as line}
+        <line
+          x1={line.x1}
+          y1={line.y1}
+          x2={line.x2}
+          y2={line.y2}
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-width={line.strokeWidth ?? '2'}
+        />
+      {/each}
+      {#each icon.paths ?? [] as path}
+        <path
+          d={path.d}
+          fill={path.fill === false ? 'none' : 'currentColor'}
+          stroke={path.stroke ? 'currentColor' : undefined}
+          stroke-linecap={path.strokeLinecap}
+          stroke-linejoin={path.strokeLinejoin}
+          stroke-width={path.strokeWidth}
+        />
+      {/each}
+      {#each icon.circles ?? [] as circle}
+        <circle
+          cx={circle.cx}
+          cy={circle.cy}
+          r={circle.r}
+          fill={circle.fill === false || circle.stroke ? 'none' : 'currentColor'}
+          stroke={circle.stroke ? 'currentColor' : undefined}
+          stroke-width={circle.strokeWidth}
+        />
+      {/each}
+    </svg>
+  </span>
+  {#if primary}
+    <span class="zdp-share-action__label">{item.label}</span>
+  {/if}
+{/snippet}
+
+{#snippet shareAction(item: ZdpShareDockItem, primary: boolean)}
+  <Tooltip text={item.label} placement={tooltipPlacement} disabled={primary || (item.disabled ?? false)} let:describedBy>
+    {#if item.href}
+      <a
+        class="zdp-share-action"
+        class:zdp-share-action--primary={primary}
+        href={item.disabled ? undefined : item.href}
+        target={item.disabled ? undefined : (item.target ?? undefined)}
+        rel={item.disabled ? undefined : resolvedRel(item)}
+        role={item.disabled ? 'link' : undefined}
+        aria-disabled={item.disabled ? 'true' : undefined}
+        tabindex={item.disabled ? -1 : undefined}
+        aria-label={item.ariaLabel ?? item.label}
+        aria-describedby={describedBy ?? undefined}
+        data-share-id={item.id}
+        onclick={(event) => handleClick(event, item)}
+      >
+        {@render shareMark(item, primary)}
+      </a>
+    {:else}
+      <button
+        class="zdp-share-action"
+        class:zdp-share-action--primary={primary}
+        type="button"
+        disabled={item.disabled}
+        aria-label={item.ariaLabel ?? item.label}
+        aria-describedby={describedBy ?? undefined}
+        data-share-id={item.id}
+        onclick={(event) => handleClick(event, item)}
+      >
+        {@render shareMark(item, primary)}
+      </button>
+    {/if}
+  </Tooltip>
+{/snippet}
 
 <aside
   class={`zdp-share-dock zdp-share-dock--${placement}`}
   aria-label={labelledBy ? undefined : ariaLabel}
   aria-labelledby={labelledBy ?? undefined}
 >
-  <div class="zdp-share-dock__list">
-    {#each items as item (item.id)}
-      {@const icon = zdpShareIcons[item.icon]}
-      {#if item.href}
-        <Tooltip text={item.label} placement={tooltipPlacement} disabled={item.disabled ?? false} let:describedBy>
-          <a
-            class="zdp-share-action"
-            href={item.disabled ? undefined : item.href}
-            target={item.disabled ? undefined : (item.target ?? undefined)}
-            rel={item.disabled ? undefined : resolvedRel(item)}
-            role={item.disabled ? 'link' : undefined}
-            aria-disabled={item.disabled ? 'true' : undefined}
-            tabindex={item.disabled ? -1 : undefined}
-            aria-label={item.ariaLabel ?? item.label}
-            aria-describedby={describedBy ?? undefined}
-            data-share-id={item.id}
-            onclick={(event) => handleClick(event, item)}
-          >
-            <span class="zdp-share-action__mark" aria-hidden="true">
-              <svg class={`zdp-share-icon zdp-share-icon--${item.icon}`} viewBox={icon.viewBox} focusable="false">
-                {#each icon.lines ?? [] as line}
-                  <line
-                    x1={line.x1}
-                    y1={line.y1}
-                    x2={line.x2}
-                    y2={line.y2}
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-width={line.strokeWidth ?? '2'}
-                  />
-                {/each}
-                {#each icon.paths ?? [] as path}
-                  <path
-                    d={path.d}
-                    fill={path.fill === false ? 'none' : 'currentColor'}
-                    stroke={path.stroke ? 'currentColor' : undefined}
-                    stroke-linecap={path.strokeLinecap}
-                    stroke-linejoin={path.strokeLinejoin}
-                    stroke-width={path.strokeWidth}
-                  />
-                {/each}
-                {#each icon.circles ?? [] as circle}
-                  <circle
-                    cx={circle.cx}
-                    cy={circle.cy}
-                    r={circle.r}
-                    fill={circle.fill === false || circle.stroke ? 'none' : 'currentColor'}
-                    stroke={circle.stroke ? 'currentColor' : undefined}
-                    stroke-width={circle.strokeWidth}
-                  />
-                {/each}
-              </svg>
-            </span>
-          </a>
-        </Tooltip>
-      {:else}
-        <Tooltip text={item.label} placement={tooltipPlacement} disabled={item.disabled ?? false} let:describedBy>
-          <button
-            class="zdp-share-action"
-            type="button"
-            disabled={item.disabled}
-            aria-label={item.ariaLabel ?? item.label}
-            aria-describedby={describedBy ?? undefined}
-            data-share-id={item.id}
-            onclick={(event) => handleClick(event, item)}
-          >
-            <span class="zdp-share-action__mark" aria-hidden="true">
-              <svg class={`zdp-share-icon zdp-share-icon--${item.icon}`} viewBox={icon.viewBox} focusable="false">
-                {#each icon.lines ?? [] as line}
-                  <line
-                    x1={line.x1}
-                    y1={line.y1}
-                    x2={line.x2}
-                    y2={line.y2}
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-width={line.strokeWidth ?? '2'}
-                  />
-                {/each}
-                {#each icon.paths ?? [] as path}
-                  <path
-                    d={path.d}
-                    fill={path.fill === false ? 'none' : 'currentColor'}
-                    stroke={path.stroke ? 'currentColor' : undefined}
-                    stroke-linecap={path.strokeLinecap}
-                    stroke-linejoin={path.strokeLinejoin}
-                    stroke-width={path.strokeWidth}
-                  />
-                {/each}
-                {#each icon.circles ?? [] as circle}
-                  <circle
-                    cx={circle.cx}
-                    cy={circle.cy}
-                    r={circle.r}
-                    fill={circle.fill === false || circle.stroke ? 'none' : 'currentColor'}
-                    stroke={circle.stroke ? 'currentColor' : undefined}
-                    stroke-width={circle.strokeWidth}
-                  />
-                {/each}
-              </svg>
-            </span>
-          </button>
-        </Tooltip>
+  <div class="zdp-share-dock__list" class:zdp-share-dock__list--grouped={primaryItems.length > 0}>
+    {#if primaryItems.length > 0}
+      <div class="zdp-share-dock__group zdp-share-dock__group--primary">
+        {#each primaryItems as item (item.id)}
+          {@render shareAction(item, true)}
+        {/each}
+      </div>
+      {#if remainingItems.length > 0}
+        <div class="zdp-share-dock__group">
+          {#each remainingItems as item (item.id)}
+            {@render shareAction(item, false)}
+          {/each}
+        </div>
       {/if}
-    {/each}
+    {:else}
+      {#each items as item (item.id)}
+        {@render shareAction(item, false)}
+      {/each}
+    {/if}
   </div>
 </aside>
 
@@ -197,6 +192,25 @@
     justify-content: center;
   }
 
+  .zdp-share-dock--inline .zdp-share-dock__list--grouped {
+    align-items: center;
+    gap: var(--zdp-space-2) var(--zdp-space-3);
+    justify-content: flex-start;
+    padding: var(--zdp-space-2);
+  }
+
+  .zdp-share-dock__group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--zdp-space-1);
+    min-inline-size: 0;
+  }
+
+  .zdp-share-dock__group--primary :global(.zdp-tooltip),
+  .zdp-share-dock__group--primary :global(.zdp-tooltip__trigger) {
+    max-inline-size: 100%;
+  }
+
   .zdp-share-action {
     align-items: center;
     background: transparent;
@@ -217,6 +231,27 @@
     -webkit-user-select: none;
     user-select: none;
     width: var(--zdp-control-icon-sm);
+  }
+
+  .zdp-share-action--primary {
+    background: var(--zdp-color-surface-raised);
+    color: var(--zdp-color-ink-strong);
+    font-family: inherit;
+    font-size: var(--zdp-type-caption-size);
+    font-weight: var(--zdp-font-weight-semibold);
+    gap: var(--zdp-space-1);
+    height: auto;
+    line-height: var(--zdp-type-caption-line-height);
+    min-block-size: var(--zdp-control-icon-md);
+    min-inline-size: 0;
+    padding: var(--zdp-space-1) var(--zdp-space-2);
+    text-align: start;
+    width: auto;
+  }
+
+  .zdp-share-action__label {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
   }
 
   .zdp-share-action:where(:hover:not(:disabled):not([aria-disabled="true"])) {
@@ -263,6 +298,12 @@
     line-height: 1;
     -webkit-user-select: none;
     user-select: none;
+  }
+
+  .zdp-share-action--primary .zdp-share-action__mark,
+  .zdp-share-action--primary .zdp-share-icon {
+    height: var(--zdp-control-glyph-md);
+    width: var(--zdp-control-glyph-md);
   }
 
   .zdp-share-icon {

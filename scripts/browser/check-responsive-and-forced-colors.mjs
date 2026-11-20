@@ -34,6 +34,17 @@ async function verifyShareDockPlacements(page) {
     assert.equal(await dock.evaluate((element) => getComputedStyle(element).position), 'static');
     assert.equal(await list.evaluate((element) => getComputedStyle(element).display), 'flex');
     assert.equal(await dock.locator('.zdp-tooltip--top').count(), 3);
+    assert.deepEqual(await list.locator('[data-share-id]').evaluateAll((actions) =>
+      actions.map((action) => action.dataset.shareId)
+    ), ['copy', 'device', 'disabled-link']);
+    const primary = list.locator('.zdp-share-action__label');
+    assert.deepEqual(await primary.allTextContents(), ['Copy browser link', 'Share from browser']);
+    await dock.getByRole('button', { name: 'Copy browser link' }).focus();
+    await page.keyboard.press('Tab');
+    assert.equal(await page.evaluate(() => document.activeElement?.getAttribute('data-share-id')), 'device');
+    await page.setViewportSize({ width: 320, height: 900 });
+    assert.equal(await list.evaluate((element) => element.scrollWidth <= element.clientWidth), true);
+    await page.setViewportSize({ width: 1200, height: 900 });
 
     await placementControl.selectOption('rail');
     const railStyle = await dock.evaluate((element) => {
@@ -44,6 +55,7 @@ async function verifyShareDockPlacements(page) {
     assert.notEqual(railStyle.top, 'auto');
     assert.equal(await list.evaluate((element) => getComputedStyle(element).display), 'grid');
     assert.equal(await dock.locator('.zdp-tooltip--left').count(), 3);
+    assert.equal(await primary.count(), 0);
 
     await placementControl.selectOption('side');
     const sideGeometry = await measureShareDock(dock, list);
