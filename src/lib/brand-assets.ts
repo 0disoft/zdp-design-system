@@ -31,9 +31,9 @@ export const zdpBrandAssets = Object.freeze({
     sha256: '665659774f4c3134c8644a5c17fdc671235c3fc5d2d969858798d575a0ed157c'
   }),
   square: Object.freeze([
-    createAsset('zdp-brand-square-1024', 'brand-square-1024.webp', 'webp', 1024, 1024, '1:1', ['dark'], ['brand-fallback', 'avatar-fallback'], true, '2c74f5972510b86dfefb753ccac73a7915fe60a17ce7f7197df570fab13bcf0d'),
-    createAsset('zdp-brand-square-512', 'brand-square-512.webp', 'webp', 512, 512, '1:1', ['dark'], ['brand-fallback', 'avatar-fallback'], true, '7915866cc9e9564a5c3899b27e139f7100de218dc16c888392b00e4cf24ea326'),
-    createAsset('zdp-brand-square-256', 'brand-square-256.webp', 'webp', 256, 256, '1:1', ['dark'], ['brand-fallback', 'avatar-fallback'], true, 'f227a320be9e47f3d6964b7fcf3fc2fae13d5c8f59ff947de32076836c0177f4')
+    createAsset('zdp-brand-square-1024', 'brand-square-1024.webp', 'webp', 1024, 1024, '1:1', ['dark'], ['brand-fallback', 'avatar-fallback'], true, 'de3167f9bc4d92330726ea19f4fa4401b6fd9191892006b7c525ad7819c259d0'),
+    createAsset('zdp-brand-square-512', 'brand-square-512.webp', 'webp', 512, 512, '1:1', ['dark'], ['brand-fallback', 'avatar-fallback'], true, 'ad9fd0dd1dd0f2c9b41f384aa690d5f3da49213c4e87d1f7c8f76bef8c076b17'),
+    createAsset('zdp-brand-square-256', 'brand-square-256.webp', 'webp', 256, 256, '1:1', ['dark'], ['brand-fallback', 'avatar-fallback'], true, '7119f5ee8f68d828a40947305cba7f5031a88a79ae5e7f4aecb15e727018497b')
   ]),
   editorial: Object.freeze([
     createAsset('zdp-brand-editorial-1440', 'editorial-1440x1080.webp', 'webp', 1440, 1080, '4:3', ['light'], ['editorial-fallback'], true, '77def4e91776373c5eb7bf6b62c2b28a1a83ca82daa2b64e343b9fbefe14ce97'),

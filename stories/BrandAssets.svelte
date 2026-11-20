@@ -29,8 +29,10 @@
     <h2 id="asset-preview-dark-title">Dark surfaces</h2>
     <div class="asset-grid asset-grid--wide">
       <figure class="asset-frame asset-frame--og">
-        <img src={assets.og} alt="" width="1200" height="630" />
-        <span class="safe-area" aria-hidden="true"></span>
+        <div class="asset-og-preview">
+          <img src={assets.og} alt="" width="1200" height="630" />
+          <span class="safe-area" aria-hidden="true"></span>
+        </div>
         <figcaption>Open Graph · 1200 × 630</figcaption>
       </figure>
       <figure class="asset-frame asset-frame--square">
@@ -42,7 +44,17 @@
           width="1024"
           height="1024"
         />
-        <figcaption>Square · responsive 256 / 512 / 1024</figcaption>
+        <figcaption class="asset-square-caption">
+          <span>Square · responsive 256 / 512 / 1024</span>
+          <span class="asset-square-samples">
+            {#each [48, 96] as size}
+              <span class="asset-square-sample">
+                <img src={assets.square256} alt="" width={size} height={size} style:inline-size={`${size}px`} />
+                <span>{size} px</span>
+              </span>
+            {/each}
+          </span>
+        </figcaption>
       </figure>
       <figure class="asset-frame asset-frame--landscape">
         <img src={assets.landscape} alt="" width="960" height="540" />
@@ -187,6 +199,32 @@
   .asset-frame--missing img { aspect-ratio: 1; }
   .asset-frame--editorial img { aspect-ratio: 4 / 3; }
   .asset-frame--landscape img { aspect-ratio: 16 / 9; }
+
+  .asset-frame--og {
+    align-self: start;
+  }
+
+  .asset-og-preview {
+    position: relative;
+  }
+
+  .asset-square-caption {
+    display: grid;
+    gap: var(--zdp-space-3);
+  }
+
+  .asset-square-samples {
+    align-items: end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--zdp-space-3);
+  }
+
+  .asset-square-sample {
+    display: grid;
+    gap: var(--zdp-space-1);
+    justify-items: center;
+  }
 
   .asset-frame--mark img,
   .asset-frame--missing img,

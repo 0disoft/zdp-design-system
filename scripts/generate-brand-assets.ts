@@ -75,7 +75,8 @@ async function generateSquareAssets(): Promise<void> {
         resolve(repoRoot, 'scripts/browser/render-brand-mark.mjs'),
         outputPath('ship-mark.svg'),
         markPath,
-        String(markSize)
+        String(markSize),
+        'square'
       ]);
 
       runFfmpeg([

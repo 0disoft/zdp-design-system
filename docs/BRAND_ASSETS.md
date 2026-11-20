@@ -71,6 +71,7 @@ Raster derivatives are encoded without retained source metadata. WebP and JPEG f
 - `brand-square-256.webp`를 256 CSS px보다 크게 확대하지 않는다. 가변 폭 또는 high-DPR 표면은 256/512/1024 `srcset`과 정확한 `sizes`를 제공한다.
 - The OG background contains no text. The consumer owns title, logo lockup, locale, and social metadata composition inside the right safe area.
 - The square raster already contains the official ship mark. Do not overlay another mark.
+- Square fallbacks use a brass hull so the detailed ship stays legible on the dark artwork at 48 and 96 CSS px.
 - 새 배치에서는 `ship-mark-simple-mono.svg`를 기본 심볼로 쓴다. 기존 `ship-mark.svg`는 이미 배포된 상세형 표면과 호환할 때만 유지한다.
 - 제품 헤더와 계정·결제 같은 공용 앱 셸은 공간이 허용되더라도 심볼 단독 표시를 기본으로 한다. `8ailors` 워드마크 lockup은 회사 소개, 캠페인, 넓은 editorial 표면처럼 브랜드명을 반복해서 보여줄 이유가 있는 곳에서만 선택한다.
 - 어두운 고정 배경에는 `ship-mark-simple-inverse.svg`를 쓴다. 단색을 임의 필터나 opacity로 뒤집지 않는다.
@@ -85,7 +86,9 @@ Decorative backgrounds use `alt=""`. When an image itself conveys content, the c
 
 Generated fallback-background source PNGs are deliberately not stored in this repository or included in the npm package. Keep them in the maintainer-owned brand/media asset store. `src/lib/assets/brand/` contains only allowlisted publishable derivatives and approved marks. The approved `rodi-mark-1254.png` is a public compatibility asset paired with the authoritative `rodi-mark.svg`, not a generator source.
 
-When intentionally rebuilding derivatives, materialize the four files below in one external directory and run `bun run brand-assets:generate -- --source-dir <directory>`. Then visually review Storybook before accepting changed output hashes. The generator rejects any source whose SHA-256 differs, uses Lanczos resizing, renders the exact SVG with the repository's existing Chromium runtime, strips source metadata, and writes only the declared derivatives. `bun run brand-assets:check` validates output hashes, dimensions, formats, byte budgets, allowlists, SVG paths, repository/package source exclusion, and the forbidden distorted-logo hash.
+When intentionally rebuilding derivatives, materialize the four files below in one external directory and run `bun run brand-assets:generate -- --source-dir <directory>`. Then visually review Storybook before accepting changed output hashes. The generator rejects any source whose SHA-256 differs, uses Lanczos resizing, renders the ship geometry in Chromium with the square-specific hull color, strips source metadata, and writes only the declared derivatives. `bun run brand-assets:check` validates output hashes, dimensions, formats, byte budgets, allowlists, SVG paths, repository/package source exclusion, and the forbidden distorted-logo hash.
+
+The square contrast refresh used the three existing square composites from `373c287` as its source. It rendered the detailed SVG with the `square` palette at 40% of each canvas width, overlaid the result at the same centered position, and used the generator's WebP encoding settings. The original background PNG remains the input for future full regenerations.
 
 | Source file | Dimensions | SHA-256 |
 | --- | ---: | --- |
