@@ -7,6 +7,31 @@ export async function verifyTooltipLifecycleContracts(page) {
   const fixture = page.getByTestId('tooltip-lifecycle');
   const tooltip = fixture.locator('.zdp-tooltip');
   try {
+    await fixture.getByTestId('outside').focus();
+    await fixture.getByTestId('trigger').evaluate(button => {
+      const host = document.createElement('span');
+      host.dataset.testid = 'nested-trigger-host';
+      const shadow = host.attachShadow({ mode: 'open' });
+      const nestedTrigger = document.createElement('button');
+      nestedTrigger.textContent = 'Nested tooltip trigger';
+      shadow.append(nestedTrigger);
+      button.after(host);
+    });
+    try {
+      const nestedTrigger = fixture.getByRole('button', { name: 'Nested tooltip trigger' });
+      await nestedTrigger.focus();
+      assert.equal(await tooltip.getAttribute('data-visible'), 'true',
+        'Keyboard focus in a nested shadow trigger must show the tooltip.');
+      await nestedTrigger.press('Escape');
+      assert.equal(await tooltip.getAttribute('data-visible'), 'false');
+      assert.equal(await nestedTrigger.evaluate(element => element.getRootNode().activeElement === element), true);
+      await fixture.getByTestId('outside').focus();
+      await nestedTrigger.focus();
+      assert.equal(await tooltip.getAttribute('data-visible'), 'true', 'Refocusing the shadow trigger must reopen the tooltip.');
+    } finally {
+      await fixture.getByTestId('nested-trigger-host').evaluate(host => host.remove());
+    }
+
     await fixture.getByTestId('trigger').focus();
     await page.waitForFunction(() => document.querySelector('[data-testid="tooltip-lifecycle"] .zdp-tooltip').dataset.visible === 'true');
     await fixture.getByTestId('replace-text').evaluate((element) => element.click());

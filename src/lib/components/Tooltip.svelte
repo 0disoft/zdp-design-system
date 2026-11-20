@@ -2,7 +2,6 @@
   import { onDestroy, onMount } from 'svelte';
   import { positionZdpFloatingPanel } from '../floating-position.js';
   import { createZdpDismissLayer } from '../dismiss-layer.js';
-  import { getZdpActiveElement } from '../focusable.js';
 
   type Placement = 'top' | 'right' | 'bottom' | 'left';
 
@@ -112,8 +111,7 @@
     queueMicrotask(() => {
       focusSyncQueued = false;
       if (!root || rootElement !== root || !root.isConnected) return;
-      const focused = getZdpActiveElement(root.getRootNode() as Document | ShadowRoot);
-      focusInside = focused !== null && root.contains(focused);
+      focusInside = root.matches(':focus-within');
       if (!pointerInside) dismissed = false;
     });
   }
