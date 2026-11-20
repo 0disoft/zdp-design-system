@@ -35,10 +35,11 @@
     const root = rootElement;
     const panel = panelElement;
     if (open || !root || !panel) return;
-    const focused = getZdpActiveElement(root.getRootNode() as Document | ShadowRoot);
-    if (focused && panel.contains(focused)) {
-      void restoreCollapsedFocus(root, focused);
-    }
+    const tree = panel.getRootNode() as Document | ShadowRoot;
+    // The panel's tree reports the focused host of any nested shadow root.
+    if (!panel.contains(tree.activeElement)) return;
+    const focused = getZdpActiveElement(tree);
+    if (focused) void restoreCollapsedFocus(root, focused);
   });
 
   async function restoreCollapsedFocus(root: HTMLElement, previous: HTMLElement): Promise<void> {
