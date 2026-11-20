@@ -88,6 +88,7 @@ export async function verifyFocusableAttributeMutations(page, moduleUrl) {
 }
 
 export async function verifyModalMutationContracts(page) {
+  await verifyModalInertRemoval(page);
   await verifyModalFocusReturnAcrossShadowRoots(page);
   await verifyModalReattachment(page);
   await verifySlottedModalIsolation(page);
@@ -167,6 +168,36 @@ export async function verifyModalMutationContracts(page) {
   await page.waitForTimeout(0);
   assert.equal(await page.getByTestId('after-modal-close').evaluate((element) => element.inert), false);
   await page.getByTestId('after-modal-close').evaluate((element) => element.remove());
+}
+
+async function verifyModalInertRemoval(page) {
+  const result = await page.evaluate(async (rootPath) => {
+    const { createZdpModalLayer } = await import(`/@fs/${rootPath}/src/lib/modal-layer.ts`);
+    const panel = document.createElement('section');
+    const managed = document.createElement('button');
+    const preexisting = document.createElement('button');
+    const untouched = document.createElement('button');
+    preexisting.inert = untouched.inert = true;
+    document.body.append(panel, managed, preexisting, untouched);
+    const layer = createZdpModalLayer();
+    try {
+      layer.setActive(true, panel);
+      // An app unlocks background controls without adding or removing nodes.
+      managed.inert = preexisting.inert = false;
+      await Promise.resolve();
+      const reachable = [managed, preexisting].map((button) => {
+        button.focus();
+        return document.activeElement === button;
+      });
+      layer.setActive(false);
+      return { reachable, afterClose: [managed, preexisting, untouched].map(button => button.inert) };
+    } finally {
+      layer.destroy();
+      for (const node of [panel, managed, preexisting, untouched]) node.remove();
+    }
+  }, process.cwd().replaceAll('\\', '/'));
+  assert.deepEqual(result, { reachable: [false, false], afterClose: [false, false, true] },
+    'Background controls must stay isolated after inert is cleared, while close respects the updated app state.');
 }
 
 async function verifyModalFocusReturnAcrossShadowRoots(page) {

@@ -292,9 +292,9 @@ function syncDocumentIsolation(state: ZdpModalLayerDocumentState): void {
   const plan = resolveZdpModalIsolation(snapshot.branches, document.body, {
     hasTopLayer: topLayer !== undefined, reachedBody: snapshot.reachedBody
   });
-  observeIsolationParents(state, plan.observedParents);
-  observeIsolationSlots(state, snapshot.slotRoots);
   applyIsolationTargets(state, plan.inertElements);
+  observeIsolationChanges(state, plan.observedParents, plan.inertElements);
+  observeIsolationSlots(state, snapshot.slotRoots);
 }
 
 function readIsolationBranches(activeBranch: HTMLElement | null, body: HTMLElement) {
@@ -337,14 +337,22 @@ function isolationParentBranch(parent: HTMLElement | ShadowRoot): HTMLElement | 
   return isDocumentHTMLElement(parent.host) ? parent.host : null;
 }
 
-function observeIsolationParents(state: ZdpModalLayerDocumentState, parents: ReadonlySet<HTMLElement | ShadowRoot>): void {
+function observeIsolationChanges(
+  state: ZdpModalLayerDocumentState,
+  parents: ReadonlySet<HTMLElement | ShadowRoot>,
+  targets: ReadonlySet<HTMLElement>
+): void {
   if (parents.size === 0) {
     state.isolationObserver = null;
     return;
   }
   const Observer = state.document.defaultView?.MutationObserver;
   if (state.isolationObserver === null && Observer !== undefined) {
-    state.isolationObserver = new Observer(() => {
+    state.isolationObserver = new Observer((records) => {
+      const needsSync = records.some((record) =>
+        record.type === 'childList' || !(record.target as HTMLElement).hasAttribute('inert')
+      );
+      if (!needsSync) return;
       const awaiting = state.isolationAwaitingRoot;
       if (awaiting !== null && awaiting.getRootNode({ composed: true }) !== state.document) return;
       syncDocumentIsolation(state);
@@ -354,6 +362,9 @@ function observeIsolationParents(state: ZdpModalLayerDocumentState, parents: Rea
     // A detached layer can return below a different portal container.
     const subtree = parent === state.document.body && state.isolationAwaitingRoot !== null;
     state.isolationObserver?.observe(parent, { childList: true, subtree });
+  }
+  for (const target of targets) {
+    state.isolationObserver?.observe(target, { attributeFilter: ['inert'] });
   }
 }
 
@@ -370,7 +381,7 @@ function applyIsolationTargets(state: ZdpModalLayerDocumentState, nextInertEleme
   }
 
   for (const element of nextInertElements) {
-    if (element.hasAttribute('inert') || state.managedInertElements.has(element)) {
+    if (element.hasAttribute('inert')) {
       continue;
     }
 
