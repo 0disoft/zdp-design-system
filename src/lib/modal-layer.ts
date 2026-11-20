@@ -216,11 +216,22 @@ function preserveFocusReturnForHigherLayers(closingLayer: ZdpModalLayerState): v
     if (
       layerIndex > closingIndex &&
       layer.focusReturnTarget !== null &&
-      closingLayer.root.contains(layer.focusReturnTarget)
+      containsFocusReturnTarget(closingLayer.root, layer.focusReturnTarget)
     ) {
       layer.focusReturnTarget = closingLayer.focusReturnTarget;
     }
   }
+}
+
+/** A trigger in a nested shadow tree disappears with its host. */
+function containsFocusReturnTarget(root: HTMLElement, target: HTMLElement): boolean {
+  let current: Node = target;
+  while (!root.contains(current)) {
+    const tree = current.getRootNode();
+    if (!isDocumentShadowRoot(tree)) return false;
+    current = tree.host;
+  }
+  return true;
 }
 
 function syncAllRootAttributes(state: ZdpModalLayerDocumentState): void {

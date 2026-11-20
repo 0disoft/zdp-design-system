@@ -88,6 +88,7 @@ export async function verifyFocusableAttributeMutations(page, moduleUrl) {
 }
 
 export async function verifyModalMutationContracts(page) {
+  await verifyModalFocusReturnAcrossShadowRoots(page);
   for (const [triggerId, name] of [
     ['dialog-trigger', 'Review changes'],
     ['sheet-trigger', 'Release details'],
@@ -164,4 +165,59 @@ export async function verifyModalMutationContracts(page) {
   await page.waitForTimeout(0);
   assert.equal(await page.getByTestId('after-modal-close').evaluate((element) => element.inert), false);
   await page.getByTestId('after-modal-close').evaluate((element) => element.remove());
+}
+
+async function verifyModalFocusReturnAcrossShadowRoots(page) {
+  const results = await page.evaluate(async (rootPath) => {
+    const { createZdpModalLayer } = await import(`/@fs/${rootPath}/src/lib/modal-layer.ts`);
+    const results = [];
+    for (const shadowDepth of [0, 1, 2]) {
+      for (const method of ['close', 'destroy']) {
+        const launcher = document.createElement('button');
+        const lower = document.createElement('section');
+        const higher = document.createElement('section');
+        const higherAction = document.createElement('button');
+        higher.append(higherAction);
+        document.body.append(launcher, lower, higher);
+        let triggerTree = lower;
+        for (let depth = 0; depth < shadowDepth; depth++) {
+          const host = document.createElement('div');
+          triggerTree.append(host);
+          triggerTree = host.attachShadow({ mode: 'open' });
+        }
+        const trigger = document.createElement('button');
+        triggerTree.append(trigger);
+        const lowerLayer = createZdpModalLayer();
+        const higherLayer = createZdpModalLayer();
+        try {
+          launcher.focus();
+          lowerLayer.setFocusReturnTarget(launcher);
+          lowerLayer.setActive(true, lower);
+          trigger.focus();
+          higherLayer.setFocusReturnTarget(triggerTree.activeElement ?? document.activeElement);
+          higherLayer.setActive(true, higher);
+          higherAction.focus();
+
+          if (method === 'destroy') lowerLayer.destroy();
+          else lowerLayer.setActive(false);
+          lower.remove();
+          const keptTopFocus = document.activeElement === higherAction;
+          higherLayer.setActive(false);
+          higherLayer.takeFocusReturnTarget()?.focus();
+          results.push({ shadowDepth, method, keptTopFocus, restored: document.activeElement === launcher });
+        } finally {
+          higherLayer.destroy();
+          lowerLayer.destroy();
+          launcher.remove();
+          lower.remove();
+          higher.remove();
+        }
+      }
+    }
+    return results;
+  }, process.cwd().replaceAll('\\', '/'));
+
+  assert.deepEqual(results.filter(result => !result.keptTopFocus || !result.restored), [],
+    'Closing a lower layer must forward focus return across shadow roots.');
+  console.log(`Modal focus return across shadow roots: ${results.length} scenarios passed.`);
 }
