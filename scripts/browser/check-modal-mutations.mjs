@@ -89,6 +89,7 @@ export async function verifyFocusableAttributeMutations(page, moduleUrl) {
 
 export async function verifyModalMutationContracts(page) {
   await verifyModalFocusReturnAcrossShadowRoots(page);
+  await verifyModalReattachment(page);
   for (const [triggerId, name] of [
     ['dialog-trigger', 'Review changes'],
     ['sheet-trigger', 'Release details'],
@@ -220,4 +221,55 @@ async function verifyModalFocusReturnAcrossShadowRoots(page) {
   assert.deepEqual(results.filter(result => !result.keptTopFocus || !result.restored), [],
     'Closing a lower layer must forward focus return across shadow roots.');
   console.log(`Modal focus return across shadow roots: ${results.length} scenarios passed.`);
+}
+
+async function verifyModalReattachment(page) {
+  const results = await page.evaluate(async (rootPath) => {
+    const { createZdpModalLayer } = await import(`/@fs/${rootPath}/src/lib/modal-layer.ts`);
+    const checkpoint = () => new Promise(resolve => queueMicrotask(resolve));
+    const results = [];
+    for (const shadow of [false, true]) {
+      const formerParent = document.createElement('section');
+      const destination = document.createElement('section');
+      const portal = document.createElement('div');
+      const background = document.createElement('button');
+      const host = document.createElement('div');
+      const modal = document.createElement('div');
+      const modalAction = document.createElement('button');
+      modal.append(modalAction);
+      (shadow ? host.attachShadow({ mode: 'open' }) : host).append(modal);
+      formerParent.append(host);
+      destination.append(portal);
+      document.body.append(formerParent, destination, background);
+      const layer = createZdpModalLayer();
+      try {
+        layer.setActive(true, modal);
+        const initiallyIsolated = background.inert;
+        host.remove();
+        await checkpoint();
+        const detachedWasReleased = !background.inert;
+        portal.append(host);
+        await checkpoint();
+        background.focus();
+        const reattachedWasIsolated = background.inert && document.activeElement !== background;
+        layer.setActive(false);
+        background.focus();
+        const closedWasReleased = !background.inert && document.activeElement === background;
+        results.push({ shadow, initiallyIsolated, detachedWasReleased, reattachedWasIsolated, closedWasReleased });
+      } finally {
+        layer.destroy();
+        formerParent.remove();
+        destination.remove();
+        background.remove();
+      }
+    }
+    return results;
+  }, process.cwd().replaceAll('\\', '/'));
+
+  for (const { shadow, ...result } of results) {
+    assert.deepEqual(result, {
+      initiallyIsolated: true, detachedWasReleased: true, reattachedWasIsolated: true, closedWasReleased: true
+    }, `Modal isolation must resume after reattaching inside an existing portal (shadow=${shadow}).`);
+  }
+  console.log(`Modal reattachment: ${results.length} portal scenarios passed.`);
 }

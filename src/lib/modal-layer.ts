@@ -29,6 +29,7 @@ interface ZdpModalLayerDocumentState {
   managedBodyPaddingInlineEnd: ManagedInlineStyle | null;
   managedInertElements: Set<HTMLElement>;
   isolationObserver: MutationObserver | null;
+  isolationAwaitingRoot: HTMLElement | null;
 }
 
 interface ManagedInlineStyle {
@@ -149,7 +150,8 @@ function getDocumentState(document: Document): ZdpModalLayerDocumentState {
     managedBodyOverflow: null,
     managedBodyPaddingInlineEnd: null,
     managedInertElements: new Set(),
-    isolationObserver: null
+    isolationObserver: null,
+    isolationAwaitingRoot: null
   };
   documentStates.set(document, state);
   return state;
@@ -280,7 +282,9 @@ function syncDocumentIsolation(state: ZdpModalLayerDocumentState): void {
   const topLayerId = state.activeLayerIds.at(-1);
   const topLayer = Array.from(state.layers).find((layer) => layer.id === topLayerId);
   state.isolationObserver?.disconnect();
-  const snapshot = readIsolationBranches(topLayer?.root ?? null, document.body);
+  const root = topLayer?.root ?? null;
+  const snapshot = readIsolationBranches(root, document.body);
+  state.isolationAwaitingRoot = snapshot.reachedBody ? null : root;
   const plan = resolveZdpModalIsolation(snapshot.branches, document.body, {
     hasTopLayer: topLayer !== undefined, reachedBody: snapshot.reachedBody
   });
@@ -314,11 +318,16 @@ function observeIsolationParents(state: ZdpModalLayerDocumentState, parents: Rea
   }
   const Observer = state.document.defaultView?.MutationObserver;
   if (state.isolationObserver === null && Observer !== undefined) {
-    state.isolationObserver = new Observer(() => syncDocumentIsolation(state));
+    state.isolationObserver = new Observer(() => {
+      const awaiting = state.isolationAwaitingRoot;
+      if (awaiting !== null && awaiting.getRootNode({ composed: true }) !== state.document) return;
+      syncDocumentIsolation(state);
+    });
   }
   for (const parent of parents) {
-    // Only sibling-list changes matter; content and attribute updates do not.
-    state.isolationObserver?.observe(parent, { childList: true });
+    // A detached layer can return below a different portal container.
+    const subtree = parent === state.document.body && state.isolationAwaitingRoot !== null;
+    state.isolationObserver?.observe(parent, { childList: true, subtree });
   }
 }
 
