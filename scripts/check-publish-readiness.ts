@@ -2,6 +2,7 @@ import { existsSync, statSync, readdirSync, readFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { extname, join, relative } from 'node:path';
 import { expectedPackageExportTargets, validatePackageExports } from './package-exports';
+import { expectedPackageFiles, requiredPackageRootFiles } from './package-contracts/context';
 
 interface PackageJson {
   readonly name?: string;
@@ -23,21 +24,8 @@ const root = process.cwd();
 const packageJson = await readPackageJson(join(root, 'package.json'));
 const failures: string[] = [];
 
-const allowedPackageFiles = [
-  'dist/',
-  'docs/',
-  'README.md',
-  'LICENSE',
-  'CHANGELOG.md',
-  'SECURITY.md',
-  'THIRD_PARTY_NOTICES.md'
-] as const;
 const requiredPackagedFiles = [
-  'README.md',
-  'LICENSE',
-  'CHANGELOG.md',
-  'SECURITY.md',
-  'THIRD_PARTY_NOTICES.md',
+  ...requiredPackageRootFiles,
   'docs/BRAND_ASSETS.md',
   'docs/CONSUMER_CONTRACT.md',
   'docs/EXTERNAL_UI_ADOPTION.md',
@@ -116,14 +104,14 @@ function checkPackageFilesWhitelist(): void {
     return;
   }
 
-  for (const expectedEntry of allowedPackageFiles) {
+  for (const expectedEntry of expectedPackageFiles) {
     if (!packageJson.files.includes(expectedEntry)) {
       failures.push(`package.json files must include ${expectedEntry}.`);
     }
   }
 
   for (const entry of packageJson.files) {
-    if (!allowedPackageFiles.includes(entry as (typeof allowedPackageFiles)[number])) {
+    if (!expectedPackageFiles.includes(entry)) {
       failures.push(`package.json files must not include unreviewed entry ${entry}.`);
     }
   }

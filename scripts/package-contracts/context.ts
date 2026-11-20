@@ -2,6 +2,21 @@ import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
+export const requiredPackageRootFiles = [
+  'README.md',
+  'llms.txt',
+  'LICENSE',
+  'CHANGELOG.md',
+  'SECURITY.md',
+  'THIRD_PARTY_NOTICES.md'
+] as const;
+
+export const expectedPackageFiles: readonly string[] = [
+  'dist/',
+  'docs/',
+  ...requiredPackageRootFiles
+];
+
 export interface PackageJson {
   readonly version?: string;
   readonly license?: string;
@@ -46,16 +61,6 @@ const defaultLocaleSourcePaths = [
   'src/lib/preferences.ts',
   ...publicComponentPaths
 ];
-
-const expectedPackageFiles = [
-  'dist/',
-  'docs/',
-  'README.md',
-  'LICENSE',
-  'CHANGELOG.md',
-  'SECURITY.md',
-  'THIRD_PARTY_NOTICES.md'
-] as const;
 
 const expectedDistArtifactFiles = [
   './dist/brand-assets.js',
