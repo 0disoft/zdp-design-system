@@ -31,6 +31,15 @@ export async function verifyToastDismissFocusContracts(page) {
     await fixture.getByTestId('outside').focus();
     await close('First').evaluate((element) => element.click());
     assert.equal(await fixture.getByTestId('outside').evaluate(focused), true, 'Dismissal without close-button focus must not steal focus.');
+    await reset();
+    await behavior.selectOption('deferred');
+    const mismatches = [];
+    for (const [title, target] of [['Middle', close('Last')], ['Last', close('First')], ['First', group]]) {
+      await dismiss(title);
+      await close(title).waitFor({ state: 'detached' });
+      if (!await target.evaluate(focused)) mismatches.push(title);
+    }
+    assert.deepEqual(mismatches, [], 'Deferred removal must restore focus in the same order as synchronous removal.');
   } finally {
     await behavior.selectOption('remove');
     await reset();

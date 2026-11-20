@@ -43,16 +43,18 @@
     return `${resolvedIdPrefix}-${toDomId(item.id)}-message`;
   }
 
-  function handleDismiss(event: MouseEvent, item: ZdpStatusToastItem): void {
+  $effect.pre(() => {
+    // Track the keyed list before a synchronous or deferred removal updates it.
+    for (const item of items) void item.id;
     const root = rootElement;
-    const button = event.currentTarget as HTMLButtonElement;
-    const focused = root && getZdpActiveElement(root.getRootNode() as Document | ShadowRoot) === button;
-    const buttons = root ? Array.from(root.querySelectorAll<HTMLButtonElement>('.zdp-toast__close')) : [];
-    onDismiss?.(event, item);
-    if (root && focused) void restoreDismissedFocus(root, button, buttons);
-  }
+    if (!root) return;
+    const focused = getZdpActiveElement(root.getRootNode() as Document | ShadowRoot);
+    if (!focused?.matches('.zdp-toast__close') || !root.contains(focused)) return;
+    const buttons = Array.from(root.querySelectorAll<HTMLElement>('.zdp-toast__close'));
+    void restoreDismissedFocus(root, focused, buttons);
+  });
 
-  async function restoreDismissedFocus(root: HTMLElement, previous: HTMLButtonElement, buttons: HTMLButtonElement[]): Promise<void> {
+  async function restoreDismissedFocus(root: HTMLElement, previous: HTMLElement, buttons: HTMLElement[]): Promise<void> {
     await tick();
     if (root !== rootElement || !root.isConnected || previous.isConnected || hasZdpFocusMoved(root, previous)) return;
     const index = buttons.indexOf(previous);
@@ -88,7 +90,7 @@
       labelledBy={titleId(item)}
       describedBy={messageId(item)}
       dismissLabel={item.dismissLabel ?? 'Dismiss notification'}
-      onClose={onDismiss ? (event) => handleDismiss(event, item) : null}
+      onClose={onDismiss ? (event) => onDismiss?.(event, item) : null}
     >
       {#if item.title}
         <strong class="zdp-toast__title" id={titleId(item) ?? undefined}>{item.title}</strong>

@@ -7,8 +7,16 @@
   let items = $state(initialItems);
   let behavior = $state('remove');
   let outside: HTMLButtonElement;
+  function remove(item: ZdpStatusToastItem): void {
+    items = items.filter((candidate) => candidate.id !== item.id);
+  }
+
   function dismiss(_event: MouseEvent, item: ZdpStatusToastItem): void {
-    if (behavior !== 'keep') items = items.filter((candidate) => candidate.id !== item.id);
+    if (behavior === 'deferred') {
+      setTimeout(() => remove(item), 0);
+      return;
+    }
+    if (behavior !== 'keep') remove(item);
     if (behavior === 'outside') outside.focus();
   }
 </script>
@@ -16,6 +24,7 @@
 <section data-testid="toast-focus">
   <select aria-label="Toast dismissal behavior" bind:value={behavior}>
     <option value="remove">Remove</option><option value="keep">Keep</option><option value="outside">Move outside</option>
+    <option value="deferred">Remove asynchronously</option>
   </select>
   <button type="button" data-testid="reset" onclick={() => items = initialItems}>Restore toasts</button>
   <button type="button" data-testid="outside" bind:this={outside}>Outside notifications</button>
