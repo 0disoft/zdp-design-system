@@ -104,6 +104,26 @@ export async function verifyConfirmCompositionContracts(page) {
       assert.equal(keyupPrevented, false, 'Composition keyup must remain available to the IME.');
     }
   }
+  const releases = [];
+  for (const release of [{ key: 'Enter', isComposing: true }, { key: 'Process', keyCode: 229 }]) {
+    const before = Number(await count.textContent());
+    await button.evaluate(element => {
+      element.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+    });
+    assert.equal(await button.getAttribute('data-active'), 'true', 'The plain Enter key must start a hold.');
+    const prevented = await button.evaluate((element, release) => {
+      const event = new KeyboardEvent('keyup', { ...release, bubbles: true, cancelable: true });
+      element.dispatchEvent(event);
+      return event.defaultPrevented;
+    }, release);
+    await page.waitForTimeout(700);
+    releases.push({ prevented, confirmations: Number(await count.textContent()) - before });
+    await page.waitForFunction(() => !document.querySelector('#repeat-confirm-action').hasAttribute('data-confirmed'));
+  }
+  assert.deepEqual(releases, [
+    { prevented: false, confirmations: 0 },
+    { prevented: false, confirmations: 0 }
+  ], 'An IME keyup must cancel an existing keyboard hold without consuming the event.');
 }
 
 export async function verifyConfirmRepeatContracts(page) {

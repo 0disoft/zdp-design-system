@@ -240,6 +240,8 @@
 
   function handleKeyup(event: KeyboardEvent): void {
     if (event.isComposing || event.keyCode === 229) {
+      // IME can relabel the release after an ordinary key starts the hold.
+      if (active && activePointerId === null) cancelInteraction();
       return;
     }
 
