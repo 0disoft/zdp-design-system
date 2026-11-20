@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { withAtomicDirectory, type AtomicDirectoryPaths } from './atomic-directory';
@@ -45,6 +45,37 @@ async function fixture(run: (paths: AtomicDirectoryPaths) => Promise<void>) {
   } finally {
     await rm(root, { force: true, recursive: true });
   }
+}
+
+for (const { name, code, failures, expectedAttempts, expectedPackage } of [
+  { name: 'transient promotion denial', code: 'EPERM', failures: 2, expectedAttempts: 3, expectedPackage: 'candidate' },
+  { name: 'persistent promotion denial', code: 'EPERM', failures: Infinity, expectedAttempts: 4, expectedPackage: 'previous' },
+  { name: 'unrelated promotion error', code: 'ENOENT', failures: Infinity, expectedAttempts: 1, expectedPackage: 'previous' }
+]) {
+  test(name, async () => fixture(async paths => {
+    const lock = lockFixture();
+    const failure = Object.assign(new Error(name), { code });
+    let attempts = 0;
+    let preparations = 0;
+    const build = withAtomicDirectory(paths, transaction => transaction.replace(async () => {
+      preparations += 1;
+    }), {
+      ...lock.io,
+      async renameStaging(source, destination) {
+        assert.equal(lock.locked(), true);
+        assert.equal(await readFile(join(paths.backupRoot, 'marker'), 'utf8'), 'previous');
+        assert.equal(await readFile(join(source, 'marker'), 'utf8'), 'candidate');
+        if (++attempts <= failures) throw failure;
+        await rename(source, destination);
+      }
+    });
+    if (expectedPackage === 'candidate') await build;
+    else await assert.rejects(build, error => error === failure);
+    assert.equal(attempts, expectedAttempts);
+    assert.equal(preparations, 1);
+    assert.equal(await readFile(join(paths.targetRoot, 'marker'), 'utf8'), expectedPackage);
+    assert.deepEqual(lock.events, ['open', 'write', 'close', 'remove']);
+  }));
 }
 
 test('returning early keeps ownership until the outstanding promotion completes', async () => fixture(async paths => {

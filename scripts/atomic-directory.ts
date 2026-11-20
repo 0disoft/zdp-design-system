@@ -10,6 +10,9 @@ stability=architecture
 
 import { existsSync } from 'node:fs';
 import { open, rename, rm } from 'node:fs/promises';
+import { setTimeout as delay } from 'node:timers/promises';
+
+const promotionRetryDelays = [50, 100, 200] as const;
 
 export interface AtomicDirectoryPaths {
   backupRoot: string;
@@ -17,21 +20,18 @@ export interface AtomicDirectoryPaths {
   targetRoot: string;
 }
 
-interface AtomicDirectoryReplaceOptions extends AtomicDirectoryPaths {
-  beforePromote?: (() => Promise<void>) | undefined;
-}
-
 export interface AtomicDirectoryTransaction {
   recover(): Promise<void>;
   replace(beforePromote?: () => Promise<void>): Promise<void>;
 }
 
-interface AtomicDirectoryLockIO {
+interface AtomicDirectoryIO {
   openLock(path: string): Promise<{
     writeFile(content: string): Promise<void>;
     close(): Promise<void>;
   }>;
   removeLock(path: string): Promise<void>;
+  renameStaging(source: string, destination: string): Promise<void>;
 }
 
 /** Hold ownership from recovery through staging, promotion, and failure cleanup. */
@@ -40,8 +40,9 @@ export async function withAtomicDirectory<T>(
   operation: (transaction: AtomicDirectoryTransaction) => Promise<T>,
   {
     openLock = path => open(path, 'wx'),
-    removeLock = path => rm(path, { force: true })
-  }: Partial<AtomicDirectoryLockIO> = {}
+    removeLock = path => rm(path, { force: true }),
+    renameStaging = rename
+  }: Partial<AtomicDirectoryIO> = {}
 ): Promise<T> {
   const lockPath = `${paths.targetRoot}.__lock__`;
   const lock = await openLock(lockPath).catch((error: NodeJS.ErrnoException) => {
@@ -68,7 +69,7 @@ export async function withAtomicDirectory<T>(
     await lock.writeFile(`${process.pid}\n`);
     const result = await operation({
       recover: () => run(() => recoverAtomicDirectory(paths)),
-      replace: beforePromote => run(() => replaceDirectoryAtomically({ ...paths, beforePromote }))
+      replace: beforePromote => run(() => replaceDirectoryAtomically(paths, renameStaging, beforePromote))
     });
     active = false;
     // A caller that forgot to await a method must not release its filesystem lock.
@@ -101,8 +102,11 @@ async function recoverAtomicDirectory(paths: AtomicDirectoryPaths): Promise<void
   await rm(stagingRoot, { force: true, recursive: true });
 }
 
-async function replaceDirectoryAtomically(options: AtomicDirectoryReplaceOptions): Promise<void> {
-  const { backupRoot, beforePromote, stagingRoot, targetRoot } = options;
+async function replaceDirectoryAtomically(
+  { backupRoot, stagingRoot, targetRoot }: AtomicDirectoryPaths,
+  renameStaging: AtomicDirectoryIO['renameStaging'],
+  beforePromote?: () => Promise<void>
+): Promise<void> {
 
   if (!existsSync(stagingRoot)) {
     throw new Error(`Atomic directory replacement requires a completed staging directory: ${stagingRoot}`);
@@ -117,7 +121,7 @@ async function replaceDirectoryAtomically(options: AtomicDirectoryReplaceOptions
     }
 
     await beforePromote?.();
-    await rename(stagingRoot, targetRoot);
+    await promoteStaging(stagingRoot, targetRoot, renameStaging);
   } catch (error) {
     if (!existsSync(targetRoot) && hadTarget && existsSync(backupRoot)) {
       await rename(backupRoot, targetRoot);
@@ -126,4 +130,22 @@ async function replaceDirectoryAtomically(options: AtomicDirectoryReplaceOptions
   }
 
   await rm(backupRoot, { force: true, recursive: true });
+}
+
+async function promoteStaging(
+  stagingRoot: string,
+  targetRoot: string,
+  renameStaging: AtomicDirectoryIO['renameStaging']
+): Promise<void> {
+  for (let attempt = 0; ; attempt += 1) {
+    try {
+      await renameStaging(stagingRoot, targetRoot);
+      return;
+    } catch (error) {
+      const retryDelay = promotionRetryDelays[attempt];
+      // Windows can transiently deny the rename of the newly written tree.
+      if ((error as NodeJS.ErrnoException)?.code !== 'EPERM' || retryDelay === undefined) throw error;
+      await delay(retryDelay);
+    }
+  }
 }
