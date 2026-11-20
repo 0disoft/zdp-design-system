@@ -115,6 +115,17 @@ async function verifySubmitOnSelection(page) {
   await page.getByRole('option', { name: 'Alpha', exact: true }).click();
   assert.deepEqual([afterKeyboard, await submitted.textContent()], ['beta,', 'beta,alpha,'],
     'Submitting synchronously in onValueChange must validate and use the newly selected option.');
+
+  const controlled = page.getByRole('combobox', { name: 'Submit on controlled selection', exact: true });
+  await controlled.focus();
+  await controlled.press('ArrowDown');
+  await controlled.press('ArrowDown');
+  await controlled.press('Enter');
+  await controlled.press('ArrowDown');
+  await page.getByRole('option', { name: 'Alpha', exact: true }).click();
+  const controlledSubmissions = JSON.parse(await page.getByTestId('combobox-controlled-submitted').textContent());
+  assert.deepEqual(controlledSubmissions, ['beta', 'alpha'],
+    'Synchronous submit must work when onValueChange also updates controlled selection metadata.');
 }
 
 async function verifySubmitOnEdit(page) {

@@ -14,6 +14,9 @@
   let invalidatedClears = 0;
   let autoSubmitForm: HTMLFormElement;
   let autoSubmittedValues = '';
+  let controlledSubmitForm: HTMLFormElement;
+  let controlledSelection: ZdpComboboxOption | null = null;
+  let controlledSubmissions: string[] = [];
   const editModes = ['required', 'optional'] as const;
   let editSubmissions = { required: [] as string[], optional: [] as string[] };
   let submissionOption: ZdpComboboxOption | null = alpha;
@@ -48,6 +51,17 @@
       onValueChange={() => autoSubmitForm.requestSubmit()} />
   </form>
   <output data-testid="combobox-auto-submitted">{autoSubmittedValues}</output>
+  <form bind:this={controlledSubmitForm} onsubmit={(event) => {
+    event.preventDefault();
+    controlledSubmissions = [...controlledSubmissions, String(new FormData(event.currentTarget).get('team'))];
+  }}>
+    <Combobox label="Submit on controlled selection" name="team" options={[alpha, beta]} required
+      selectedOption={controlledSelection} onValueChange={(_, option) => {
+        controlledSelection = option;
+        controlledSubmitForm.requestSubmit();
+      }} />
+  </form>
+  <output data-testid="combobox-controlled-submitted">{JSON.stringify(controlledSubmissions)}</output>
 
   {#each editModes as mode}
     <form id={`combobox-submit-on-edit-${mode}`} onsubmit={(event) => {

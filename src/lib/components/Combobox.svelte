@@ -93,7 +93,7 @@
   const enabledOptions = $derived(options.filter((option) => !option.disabled));
   const selectedOption = $derived(resolveSelectedOption(value, options, suppliedSelectedOption, cachedSelection));
   const selectedOptionLabel = $derived(selectedOption?.label ?? '');
-  const submittedValue = $derived(suppliedSelectedOption !== undefined && selectedOption === null ? '' : value);
+  const submittedValue = $derived(resolveSubmittedValue(selectedOption));
   const resolvedIdPrefix = $derived(toZdpDomId(id ?? fallbackIdPrefix, fallbackIdPrefix));
   const inputId = $derived(id?.trim() ? id : `${resolvedIdPrefix}-input`);
   const listboxId = $derived(`${resolvedIdPrefix}-listbox`);
@@ -103,8 +103,7 @@
   const activeOptionDomId = $derived(open && activeOptionId !== null ? optionDomId(activeOptionId) : null);
   const inputAriaLabel = $derived(label ? undefined : ariaLabel ?? 'Search');
   const resolvedListboxLabel = $derived(listboxLabel ?? `${label ?? ariaLabel ?? 'Selection'} list`);
-  const selectionMissing = $derived(required && !disabled && !readonly &&
-    (value === '' || selectedOption === null || selectedOption.disabled === true));
+  const selectionMissing = $derived(isSelectionMissing(selectedOption));
   const resolvedSelectionRequiredText = $derived(selectionRequiredText.trim() || 'Select an option');
 
   $effect.pre(() => {
@@ -299,7 +298,8 @@
     lastSyncedValue = value;
     lastSyncedOptionLabel = option.label;
     cachedSelection = option;
-    syncFormSelection();
+    // The consumer can supply the new selection metadata in onValueChange.
+    syncFormSelection(selectedOption ?? option);
     onQueryChange?.(query);
     onValueChange?.(value, option);
     setOpen(false);
@@ -320,11 +320,20 @@
     return true;
   }
 
-  function syncFormSelection(): void {
+  function syncFormSelection(formOption = selectedOption): void {
     // A consumer can submit the form before Svelte applies its DOM updates.
     if (inputElement && inputElement.value !== query) inputElement.value = query;
-    if (submittedInputElement) submittedInputElement.value = submittedValue;
-    syncInputValidity(inputElement, selectionMissing, resolvedSelectionRequiredText);
+    if (submittedInputElement) submittedInputElement.value = resolveSubmittedValue(formOption);
+    syncInputValidity(inputElement, isSelectionMissing(formOption), resolvedSelectionRequiredText);
+  }
+
+  function resolveSubmittedValue(formOption: ZdpComboboxOption | null): string {
+    return suppliedSelectedOption !== undefined && formOption === null ? '' : value;
+  }
+
+  function isSelectionMissing(formOption: ZdpComboboxOption | null): boolean {
+    return required && !disabled && !readonly &&
+      (value === '' || formOption === null || formOption.disabled === true);
   }
 
   function resolveSelectedOption(
