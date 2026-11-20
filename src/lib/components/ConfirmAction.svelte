@@ -2,6 +2,7 @@
   import { onDestroy, tick } from 'svelte';
   import Button from './Button.svelte';
   import { normalizeConfirmHoldDuration, scheduleConfirmHold } from '../confirm-hold.js';
+  import { createZdpDismissLayer } from '../dismiss-layer.js';
 
   interface Props {
     id?: string | null;
@@ -44,6 +45,7 @@
   let confirmationOpen = $state(false);
   let trigger: HTMLButtonElement | undefined = $state();
   let confirmationGroup: HTMLDivElement | undefined = $state();
+  const dismissLayer = createZdpDismissLayer();
   // Survives success/pending resets until the completing pointer's click arrives.
   let suppressPointerClick = false;
   let startX = 0;
@@ -270,15 +272,10 @@
     if (confirmationOpen) confirmAction();
   }
 
-  function handleConfirmationKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Escape' && !event.isComposing) {
-      event.preventDefault();
-      event.stopPropagation();
-      cancelConfirmation();
-    }
-  }
-
-  onDestroy(clearTimers);
+  onDestroy(() => {
+    clearTimers();
+    dismissLayer.destroy();
+  });
   let safeDurationMs = $derived(normalizeConfirmHoldDuration(durationMs));
   let progressStyle = $derived(`--zdp-confirm-action-progress: ${progress};`);
   $effect.pre(() => {
@@ -296,6 +293,13 @@
     if (active && safeDurationMs !== interactionDurationMs) {
       cancelInteraction();
     }
+  });
+  $effect.pre(() => {
+    dismissLayer.setActive(confirmationOpen, confirmationGroup ?? null, {
+      escapeWithin: true,
+      ignoreOutside: true,
+      onEscape: cancelConfirmation
+    });
   });
 </script>
 
@@ -341,9 +345,8 @@
 </button>
 
 {#if confirmationOpen}
-  <!-- svelte-ignore a11y_no_noninteractive_element_interactions (Escape cancels the group from its native buttons.) -->
   <div class="zdp-confirm-action__confirmation" id={confirmationId} bind:this={confirmationGroup}
-    role="group" aria-label={label} tabindex="-1" onkeydown={handleConfirmationKeydown}>
+    role="group" aria-label={label} tabindex="-1">
     <Button variant="secondary" disabled={disabled || pending} onclick={cancelConfirmation}>{cancelLabel}</Button>
     <Button variant={tone === 'danger' ? 'danger' : 'primary'} disabled={disabled || pending} onclick={confirmClick}>{confirmLabel}</Button>
   </div>

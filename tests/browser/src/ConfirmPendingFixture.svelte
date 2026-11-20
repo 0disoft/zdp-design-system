@@ -1,9 +1,11 @@
 <script lang="ts">
   import ConfirmAction from '../../../src/lib/components/ConfirmAction.svelte';
+  import Dialog from '../../../src/lib/components/Dialog.svelte';
 
   let pending = false;
   let unavailable = false;
   let confirmations = 0;
+  let dialogOpen = false;
   const tones = ['primary', 'danger'] as const;
 </script>
 
@@ -27,4 +29,10 @@
     {/each}
   </div>
   <output data-testid="confirm-pending-count">{confirmations}</output>
+  <button type="button" onclick={() => dialogOpen = true}>Open confirmation dialog</button>
+  <Dialog bind:open={dialogOpen} labelledBy="nested-confirm-title">
+    <h2 slot="title" id="nested-confirm-title">Edit draft before confirming</h2>
+    <label>Draft text <input /></label>
+    <ConfirmAction id="nested-confirm-action" label="Confirm draft action" onconfirm={() => confirmations += 1} />
+  </Dialog>
 </section>

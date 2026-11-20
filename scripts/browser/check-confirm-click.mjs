@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 
 export async function verifyConfirmClickContracts(page) {
+  await verifyNestedConfirmEscape(page);
   const button = page.locator('#repeat-confirm-action');
   const count = page.getByTestId('repeat-confirm-count');
   const group = page.getByRole('group', { name: 'Confirm repeated hold', exact: true });
@@ -79,4 +80,36 @@ export async function verifyConfirmClickContracts(page) {
   assert.equal(await primary.getAttribute('data-pending'), 'true');
   assert.equal(await primaryGroup.count(), 0);
   await togglePending();
+}
+
+async function verifyNestedConfirmEscape(page) {
+  const opener = page.getByRole('button', { name: 'Open confirmation dialog', exact: true });
+  const dialog = page.getByRole('dialog', { name: 'Edit draft before confirming', exact: true });
+  const draft = dialog.getByRole('textbox', { name: 'Draft text' });
+  const trigger = dialog.locator('#nested-confirm-action');
+  const group = dialog.getByRole('group', { name: 'Confirm draft action', exact: true });
+  const count = page.getByTestId('confirm-pending-count');
+  const before = await count.textContent();
+  const openConfirmation = async () => {
+    await trigger.evaluate(element => element.click());
+    await group.getByRole('button', { name: 'Cancel', exact: true }).waitFor();
+  };
+
+  await opener.click();
+  await draft.fill('Unsaved changes');
+  await openConfirmation();
+  await page.keyboard.press('Escape');
+  assert.equal(await dialog.count(), 1, 'The first Escape must keep the parent dialog open.');
+  assert.equal(await group.count(), 0, 'The first Escape must cancel the inline confirmation.');
+  assert.equal(await trigger.evaluate(element => element === document.activeElement), true);
+  assert.equal(await draft.inputValue(), 'Unsaved changes');
+  await page.keyboard.press('Escape');
+  assert.equal(await dialog.count(), 0, 'The second Escape must reach the parent dialog.');
+
+  await opener.click();
+  await openConfirmation();
+  await draft.focus();
+  await page.keyboard.press('Escape');
+  assert.equal(await dialog.count(), 0, 'Escape outside the confirmation group must reach the dialog.');
+  assert.equal(await count.textContent(), before, 'Neither Escape path may execute the action.');
 }

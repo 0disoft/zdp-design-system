@@ -4,12 +4,13 @@ role=Coordinate Escape and outside-click dismissal across active overlay layers 
 owns=overlay dismissal ordering|document listener lifecycle
 excludes=focus restoration|overlay rendering
 search=overlay dismissal|Escape layer|outside click
-invariant=Escape targets only the top active layer while outside clicks respect outside-dismiss eligibility.
+invariant=Escape targets only the top eligible active layer while outside clicks respect outside-dismiss eligibility.
 stability=contract
 */
 
 export interface ZdpDismissLayerOptions {
   closeOnEscape?: boolean;
+  escapeWithin?: boolean;
   closeOnOutside?: boolean;
   ignoreOutside?: boolean;
   onEscape?: (event: KeyboardEvent) => void;
@@ -161,12 +162,16 @@ function dismissEscape(state: ZdpDismissDocumentState, event: KeyboardEvent): vo
     return;
   }
 
-  const topLayer = state.layers.at(-1);
-  if (!topLayer || topLayer.options.closeOnEscape === false) {
+  let path: EventTarget[] | undefined;
+  for (let index = state.layers.length - 1; index >= 0; index--) {
+    const layer = state.layers[index];
+    if (!layer) continue;
+    if (layer.options.escapeWithin && !(path ??= event.composedPath()).includes(layer.root)) continue;
+    if (layer.options.closeOnEscape === false) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    layer.options.onEscape?.(event);
     return;
   }
-
-  event.preventDefault();
-  event.stopPropagation();
-  topLayer.options.onEscape?.(event);
 }
