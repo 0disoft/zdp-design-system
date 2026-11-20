@@ -34,6 +34,11 @@ export function isZdpFocusableElement(element: HTMLElement): boolean {
     );
   }
 
+  if (typeof element.checkVisibility === 'function') {
+    // Skipped content can retain client rects, including inside closed details.
+    return element.checkVisibility({ visibilityProperty: true, checkVisibilityCSS: true });
+  }
+
   const view = element.ownerDocument.defaultView;
   const style = view?.getComputedStyle(element);
 

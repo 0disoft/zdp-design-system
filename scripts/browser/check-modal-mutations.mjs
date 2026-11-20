@@ -6,7 +6,7 @@ export async function verifyFocusableAttributeMutations(page, moduleUrl) {
     const { createZdpModalFocus } = await import(url.replace('focusable.ts', 'modal-focus.ts'));
     const results = [];
     for (const shadow of [false, true]) {
-      for (const attribute of ['data-focus-state', 'id', 'aria-expanded', 'outside-visibility']) {
+      for (const attribute of ['data-focus-state', 'id', 'aria-expanded', 'outside-visibility', 'closed-details', 'content-visibility']) {
         for (const delivery of ['same-task', 'observer-callback']) {
           const ancestor = document.createElement('div');
           const root = document.createElement('section');
@@ -25,7 +25,14 @@ export async function verifyFocusableAttributeMutations(page, moduleUrl) {
           }
           const style = document.createElement('style');
           style.textContent = '[data-focus-state="hidden"] > button, #focus-closed > button, [aria-expanded="false"] > button { display:none; } #attribute-tail { visibility: var(--test-tail-visibility, visible); }';
-          const group = document.createElement('div');
+          const group = document.createElement(attribute === 'closed-details' ? 'details' : 'div');
+          if (group instanceof HTMLDetailsElement) {
+            group.open = true;
+            const summary = document.createElement('summary');
+            summary.textContent = 'Advanced options';
+            summary.tabIndex = -1;
+            group.append(summary);
+          }
           const tail = document.createElement('button');
           tail.id = 'attribute-tail';
           group.append(tail);
@@ -47,6 +54,10 @@ export async function verifyFocusableAttributeMutations(page, moduleUrl) {
             first.focus();
             if (attribute === 'outside-visibility') {
               ancestor.style.setProperty('--test-tail-visibility', 'hidden');
+            } else if (attribute === 'closed-details') {
+              group.open = false;
+            } else if (attribute === 'content-visibility') {
+              group.style.contentVisibility = 'hidden';
             } else {
               group.setAttribute(attribute, attribute === 'id' ? 'focus-closed' : attribute === 'aria-expanded' ? 'false' : 'hidden');
             }
@@ -56,6 +67,10 @@ export async function verifyFocusableAttributeMutations(page, moduleUrl) {
             const hiddenFocus = getZdpActiveElement(document)?.id;
             if (attribute === 'outside-visibility') {
               ancestor.style.removeProperty('--test-tail-visibility');
+            } else if (attribute === 'closed-details') {
+              group.open = true;
+            } else if (attribute === 'content-visibility') {
+              group.style.removeProperty('content-visibility');
             } else {
               group.removeAttribute(attribute);
             }
