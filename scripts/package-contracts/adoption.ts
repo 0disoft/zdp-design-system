@@ -75,6 +75,7 @@ async function checkComboboxContract(): Promise<void> {
   const publicEntry = await readFile(join(root, 'src/lib/index.ts'), 'utf8');
   const consumerContract = await readConsumerContract(root);
 
+  // Browser controls checks exercise keyboard navigation and active option scrolling.
   for (const requiredText of [
     "import type { ZdpComboboxOption, ZdpComboboxSize }",
     'role="combobox"',
@@ -85,12 +86,8 @@ async function checkComboboxContract(): Promise<void> {
     'role="option"',
     'aria-selected={option.value === value}',
     'aria-disabled={option.disabled ?',
-    'handleInputKeydown',
     'event.isComposing',
     'event.keyCode === 229',
-    'if (navigateInput(event)) return;',
-    'activeOptionId = resolveComboboxNavigation(key, wasOpen, value, enabledOptions, activeOptionId)',
-    'resolveActiveOptionId',
     'onQueryChange?.(query)',
     'const nextQuery = selectedOptionLabel || query',
     'onQueryChange?.(nextQuery)',
