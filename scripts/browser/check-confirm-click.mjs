@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 
 export async function verifyConfirmClickContracts(page) {
+  await verifyChordedPointerRelease(page);
   await verifyHoldEscape(page);
   await verifyNestedConfirmEscape(page);
   const button = page.locator('#repeat-confirm-action');
@@ -81,6 +82,53 @@ export async function verifyConfirmClickContracts(page) {
   assert.equal(await primary.getAttribute('data-pending'), 'true');
   assert.equal(await primaryGroup.count(), 0);
   await togglePending();
+}
+
+async function verifyChordedPointerRelease(page) {
+  const trigger = page.locator('#repeat-confirm-action');
+  const count = page.getByTestId('repeat-confirm-count');
+  const failures = [];
+  for (const mode of ['click', 'hold', 'slide']) {
+    const before = Number(await count.textContent());
+    const listeners = await trigger.evaluateHandle((element, mode) => {
+      const controller = new AbortController();
+      const { signal } = controller;
+      element.addEventListener('contextmenu', event => event.preventDefault(), { signal });
+      if (mode !== 'click') {
+        element.addEventListener('click', event => event.stopImmediatePropagation(), { capture: true, signal });
+      }
+      return controller;
+    }, mode);
+    await trigger.scrollIntoViewIfNeeded();
+    const box = await trigger.boundingBox();
+    assert.ok(box);
+    const x = box.x + 8;
+    const y = box.y + box.height / 2;
+    await page.mouse.move(x, y);
+    await page.mouse.down({ button: 'left' });
+    let leftReleased = false;
+    let rightPressed = false;
+    try {
+      assert.equal(await trigger.getAttribute('data-active'), 'true', `${mode}: a primary press must start the gesture`);
+      await page.mouse.down({ button: 'right' });
+      rightPressed = true;
+      await page.mouse.up({ button: 'left' });
+      leftReleased = true;
+      if (await trigger.getAttribute('data-active') !== null) failures.push(`${mode}: active after release`);
+      if (mode === 'slide') await page.mouse.move(x + box.width, y);
+      await page.waitForTimeout(700); // The hold deadline is 600 ms.
+      if (Number(await count.textContent()) !== before) failures.push(`${mode}: confirmed after release`);
+      if (await trigger.getAttribute('aria-expanded') !== 'false') failures.push(`${mode}: opened click confirmation`);
+    } finally {
+      if (!leftReleased) await page.mouse.up({ button: 'left' });
+      if (rightPressed) await page.mouse.up({ button: 'right' });
+      await listeners.evaluate(controller => controller.abort());
+      await listeners.dispose();
+    }
+    if (await trigger.getAttribute('aria-expanded') === 'true') await page.keyboard.press('Escape');
+    await page.waitForFunction(() => !document.querySelector('#repeat-confirm-action').hasAttribute('data-confirmed'));
+  }
+  assert.deepEqual(failures, [], 'Releasing the primary button must cancel a chorded hold or slide.');
 }
 
 async function verifyHoldEscape(page) {

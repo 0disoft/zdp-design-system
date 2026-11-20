@@ -203,9 +203,16 @@
   }
 
   function handlePointerMove(event: PointerEvent): void {
-    if (event.pointerId === activePointerId) {
-      updateSlideProgress(event.clientX);
+    if (event.pointerId !== activePointerId) return;
+
+    // With another button held, primary release can arrive as pointermove.
+    if ((event.buttons & 1) === 0) {
+      suppressPointerClick = true;
+      handlePointerEnd(event);
+      return;
     }
+
+    updateSlideProgress(event.clientX);
   }
 
   function handlePointerEnd(event: PointerEvent): void {
