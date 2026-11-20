@@ -13,6 +13,36 @@ export async function verifyTabPanelFocusContracts(page) {
       : fixture.getByRole('tab', { selected: true });
     assert.equal(await target.evaluate((element) => document.activeElement === element), true, `Panel updates must recover lost focus and preserve deliberate focus moves (${action}).`);
   }
+  const shadowResults = [];
+  const host = fixture.getByTestId('tab-panel-shadow-host');
+  const shadowEditor = fixture.getByRole('textbox', { name: 'Shadow tab panel editor', exact: true });
+  for (const action of ['switch', 'remove', 'disable-all', 'reorder', 'switch-outside']) {
+    await fixture.getByTestId('reset').click();
+    await editor.evaluate((element) => {
+      const host = document.createElement('div');
+      host.dataset.testid = 'tab-panel-shadow-host';
+      element.after(host);
+      const nestedHost = document.createElement('div');
+      host.attachShadow({ mode: 'open' }).append(nestedHost);
+      const input = document.createElement('input');
+      input.setAttribute('aria-label', 'Shadow tab panel editor');
+      nestedHost.attachShadow({ mode: 'open' }).append(input);
+      input.focus();
+    });
+    try {
+      assert.equal(await shadowEditor.evaluate((element) => element.matches(':focus')), true);
+      await fixture.getByTestId(action).evaluate((element) => element.click());
+      const target = action === 'disable-all' ? fixture.getByRole('tablist')
+        : action === 'reorder' ? shadowEditor
+        : action === 'switch-outside' ? fixture.getByTestId('outside')
+        : fixture.getByRole('tab', { selected: true });
+      shadowResults.push([action, await target.evaluate((element) => element.matches(':focus'))]);
+    } finally {
+      if (await host.count()) await host.evaluate((element) => element.remove());
+    }
+  }
+  assert.deepEqual(shadowResults.filter(([, focused]) => !focused), [],
+    'Panel updates must recover or preserve focus from nested shadow roots.');
   await fixture.getByTestId('reset').click();
 }
 

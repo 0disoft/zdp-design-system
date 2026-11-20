@@ -38,7 +38,7 @@
     const root = rootElement;
     const list = tabListElement;
     const focused = root ? getZdpActiveElement(root.getRootNode() as Document | ShadowRoot) : null;
-    if (root && list && focused && root.contains(focused)) {
+    if (root && list && focused && containsTabFocusTarget(root, focused)) {
       void restoreTabFocus(root, list, focused);
     }
   });
@@ -49,11 +49,22 @@
     const focused = getZdpActiveElement(list.getRootNode() as Document | ShadowRoot);
     // Preserve a consumer's deliberate focus move during the update.
     if (hasZdpFocusMoved(root, previous)) return;
-    const target = previous.isConnected && root.contains(previous) &&
+    const target = previous.isConnected && containsTabFocusTarget(root, previous) &&
       !previous.matches(':disabled') && previous.getClientRects().length > 0
       ? previous
       : list.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]:not(:disabled)') ?? list;
     if (focused !== target) target.focus();
+  }
+
+  function containsTabFocusTarget(root: HTMLElement, target: HTMLElement): boolean {
+    let current: Node = target;
+    while (!root.contains(current)) {
+      const tree = current.getRootNode();
+      const host = tree.nodeType === 11 ? (tree as ShadowRoot).host : null;
+      if (!host) return false;
+      current = host;
+    }
+    return true;
   }
 
   const normalizedSelectedItem = $derived(
