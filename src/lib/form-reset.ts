@@ -52,6 +52,24 @@ function afterFormReset(event: Event, callback: () => void): () => void {
   };
 }
 
+const formOwnershipSelector = 'input, textarea, select, [id]';
+
+function canChangeFormOwnership(record: MutationRecord): boolean {
+  // An explicit form reference can be shadowed by any earlier element with the same ID.
+  if (record.type === 'attributes') return true;
+
+  for (const nodes of [record.addedNodes, record.removedNodes]) {
+    for (const node of nodes) {
+      if (node.nodeType !== 1) continue;
+      const element = node as Element;
+      if (element.matches(formOwnershipSelector) || element.querySelector(formOwnershipSelector)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 /** Share one observer per tree instead of observing the page once per input. */
 function observeFormOwnership(root: Node, callback: () => void): () => void {
   const view = root.nodeType === 9 ? (root as Document).defaultView : root.ownerDocument?.defaultView;
@@ -60,7 +78,8 @@ function observeFormOwnership(root: Node, callback: () => void): () => void {
   let state = ownershipObservers.get(root);
   if (!state) {
     const callbacks = new Set<() => void>();
-    const observer = new Observer(() => {
+    const observer = new Observer((records) => {
+      if (!records.some(canChangeFormOwnership)) return;
       for (const refresh of [...callbacks]) refresh();
     });
     observer.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['form', 'id'] });

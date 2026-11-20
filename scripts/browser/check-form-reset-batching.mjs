@@ -83,4 +83,46 @@ export async function verifyFormResetBatching(page) {
       mode === 'cancelled' ? 'edited' : `seed-${i}`));
   }
   console.log(`Form reset batching: ${results.length} scenarios passed (1000 inputs, 1 timer).`);
+
+  const ownershipReads = await page.evaluate(async (rootPath) => {
+    const { syncZdpFormReset } = await import(`/@fs/${rootPath}/src/lib/form-reset.ts`);
+    const form = document.createElement('form');
+    const results = document.createElement('div');
+    document.body.append(form, results);
+
+    const inputs = Array.from({ length: 1000 }, () => document.createElement('input'));
+    form.append(...inputs);
+    const actions = inputs.map(input => syncZdpFormReset(input, { onReset() {} }));
+    try {
+      await Promise.resolve();
+      let reads = 0;
+      for (const input of inputs) {
+        const getRootNode = input.getRootNode.bind(input);
+        input.getRootNode = () => {
+          reads++;
+          return getRootNode();
+        };
+      }
+      const row = document.createElement('div');
+      row.append(document.createElement('span'));
+      results.append(row);
+      await Promise.resolve();
+      const unrelated = reads;
+
+      const moved = document.createElement('div');
+      moved.append(inputs[0]);
+      results.append(moved);
+      await Promise.resolve();
+      return { unrelated, afterMove: reads - unrelated };
+    } finally {
+      for (const action of actions) action.destroy();
+      form.remove();
+      results.remove();
+    }
+  }, process.cwd().replaceAll('\\', '/'));
+  assert.equal(ownershipReads.unrelated, 0,
+    'Adding unrelated content must skip ownership refresh for all 1000 inputs.');
+  assert.ok(ownershipReads.afterMove > 0, 'A subtree move containing an input must still refresh ownership.');
+  console.log('Form ownership: 0 reads for unrelated content with 1000 mounted inputs.');
+
 }
