@@ -137,39 +137,18 @@
     "const securityBoundary = {\n  secrets: 'server-only',\n  audit: 'required'\n};";
 </script>
 
-<SkipLink href="#foundation-tokens">본문으로 건너뛰기</SkipLink>
+<SkipLink href="#storybook-components">본문으로 건너뛰기</SkipLink>
 
 <main class="storybook-preview zdp-surface-reset" lang="ko">
   <header class="storybook-preview__header">
-    <div>
-      <p class="eyebrow">Quiet Ivory</p>
-      <div class="storybook-preview__brand">
-        <img src={simpleShipMark} alt="" width="48" height="48" />
-        <h1 class="zdp-visually-hidden">ZDP Design System</h1>
-      </div>
-      <p>Ivory surfaces, warm cocoa text, and consistent working controls.</p>
+    <div class="storybook-preview__brand">
+      <img src={simpleShipMark} alt="" width="48" height="48" />
+      <h1 lang="en">ZDP Design System</h1>
     </div>
-    <span>Storybook</span>
+    <a class="storybook-preview__jump" href="#storybook-expression-title">표현용 폰트</a>
   </header>
 
-  <section class="expression-panel" aria-labelledby="storybook-expression-title">
-    <div>
-      <p class="eyebrow">Type</p>
-      <h2 id="storybook-expression-title">표현용 폰트</h2>
-      <p>필요한 화면에서만 불러와 쓰는 제목, 캠페인, 짧은 안내용 글꼴 묶음.</p>
-    </div>
-    <div class="type-specimens" role="group" aria-label="표현용 폰트 샘플">
-      <span class="type-specimen type-specimen--script"><small>Script</small><strong>Sunlit routes</strong></span>
-      <span class="type-specimen type-specimen--inscription"><small>Inscription</small><strong>Gate Mark</strong></span>
-      <span class="type-specimen type-specimen--sketch"><small>Sketch</small><strong>Field Notes</strong></span>
-      <span class="type-specimen type-specimen--editorial"><small>Editorial</small><strong>Quiet policy</strong></span>
-      <span class="type-specimen type-specimen--sans"><small>Sans</small><strong>Campaign line</strong></span>
-      <span class="type-specimen type-specimen--keyboard"><small>Keyboard</small><strong>⌘ K</strong></span>
-      <span class="type-specimen type-specimen--brand"><small>Brand wordmark · optional</small><strong class="zdp-brand-wordmark zdp-brand-wordmark--compact">8ailors</strong></span>
-    </div>
-  </section>
-
-  <div class="storybook-preview__grid">
+  <div class="storybook-preview__grid" id="storybook-components">
     <LightOverview bind:lightDialogOpen {lightShareCount} bind:lightChoiceFrequency {shareItems} {lightToastItems} {lightAccordionItems} {lightSegmentedItems} {lightCodeExample} />
 
     <DarkOverview bind:darkDialogOpen {darkShareCount} bind:darkChoiceFrequency {darkShareItems} {darkToastItems} {darkAccordionItems} {darkSegmentedItems} {darkCodeExample} />
@@ -192,6 +171,22 @@
       <span>i18n</span>
       <strong><span lang="ko">긴문장</span> / <span lang="zh">自由</span> / <span lang="hi">स्वर</span> / <span lang="ja">余白</span> / Safe</strong>
     </article>
+  </section>
+
+  <section class="expression-panel" aria-labelledby="storybook-expression-title">
+    <div>
+      <h2 id="storybook-expression-title">표현용 폰트</h2>
+      <p>제목, 캠페인, 짧은 안내에 사용하는 글꼴입니다.</p>
+    </div>
+    <div class="type-specimens" role="group" aria-label="표현용 폰트 샘플">
+      <span class="type-specimen type-specimen--script"><small>Script</small><strong>Sunlit routes</strong></span>
+      <span class="type-specimen type-specimen--inscription"><small>Inscription</small><strong>Gate Mark</strong></span>
+      <span class="type-specimen type-specimen--sketch"><small>Sketch</small><strong>Field Notes</strong></span>
+      <span class="type-specimen type-specimen--editorial"><small>Editorial</small><strong>Quiet policy</strong></span>
+      <span class="type-specimen type-specimen--sans"><small>Sans</small><strong>Campaign line</strong></span>
+      <span class="type-specimen type-specimen--keyboard"><small>Keyboard</small><strong>⌘ K</strong></span>
+      <span class="type-specimen type-specimen--brand"><small>Brand wordmark · optional</small><strong class="zdp-brand-wordmark zdp-brand-wordmark--compact">8ailors</strong></span>
+    </div>
   </section>
 
   <div class="motif-strip" aria-hidden="true">

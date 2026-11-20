@@ -94,6 +94,16 @@
       </section>
 
       <section class="preview-section">
+        <h3 id="storybook-light-actions">Actions</h3>
+        <Inline gap="sm" align="center">
+          <Button variant="primary">저장</Button>
+          <Button variant="secondary"><Icon size="sm">+</Icon><VisuallyHidden>새 항목 </VisuallyHidden>추가</Button>
+          <Button variant="danger">삭제</Button>
+          <IconButton ariaLabel="추가" variant="solid">+</IconButton>
+        </Inline>
+      </section>
+
+      <section class="preview-section">
         <h3 id="storybook-light-code">Code</h3>
         <Stack gap="sm">
           <p class="code-note">
@@ -122,16 +132,6 @@
           />
           <p class="status-note" id="storybook-light-command-help">이 화면에서 찾을 항목을 입력하세요.</p>
         </div>
-      </section>
-
-      <section class="preview-section">
-        <h3 id="storybook-light-actions">Actions</h3>
-        <Inline gap="sm" align="center">
-          <Button variant="primary">저장</Button>
-          <Button variant="secondary"><Icon size="sm">+</Icon><VisuallyHidden>새 항목 </VisuallyHidden>추가</Button>
-          <Button variant="danger">삭제</Button>
-          <IconButton ariaLabel="추가" variant="solid">+</IconButton>
-        </Inline>
       </section>
 
       <section class="preview-section">

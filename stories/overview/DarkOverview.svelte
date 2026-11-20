@@ -94,6 +94,16 @@
       </section>
 
       <section class="preview-section">
+        <h3 id="storybook-dark-actions">Actions</h3>
+        <Inline gap="sm" align="center">
+          <Button variant="primary">저장</Button>
+          <Button variant="secondary"><Icon size="sm">+</Icon><VisuallyHidden>새 항목 </VisuallyHidden>추가</Button>
+          <Button variant="danger">삭제</Button>
+          <IconButton ariaLabel="추가" variant="ghost">+</IconButton>
+        </Inline>
+      </section>
+
+      <section class="preview-section">
         <h3 id="storybook-dark-code">Code</h3>
         <Stack gap="sm">
           <p class="code-note">
@@ -124,16 +134,6 @@
           />
           <p class="status-note" id="storybook-dark-command-help">필요한 항목으로 바로 이동하세요.</p>
         </div>
-      </section>
-
-      <section class="preview-section">
-        <h3 id="storybook-dark-actions">Actions</h3>
-        <Inline gap="sm" align="center">
-          <Button variant="primary">저장</Button>
-          <Button variant="secondary"><Icon size="sm">+</Icon><VisuallyHidden>새 항목 </VisuallyHidden>추가</Button>
-          <Button variant="danger">삭제</Button>
-          <IconButton ariaLabel="추가" variant="ghost">+</IconButton>
-        </Inline>
       </section>
 
       <section class="preview-section">
