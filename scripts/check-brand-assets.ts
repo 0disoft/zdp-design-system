@@ -205,11 +205,11 @@ function checkShipSvg(fileName: string, source: string): void {
 }
 
 function checkRodiSvg(source: string): void {
-  if (!source.includes('viewBox="0 0 1254.000000 1254.000000"')) {
+  if (!source.includes('viewBox="0 0 1254 1254"')) {
     failures.push('rodi-mark.svg must preserve the approved 1254 square viewBox.');
   }
-  if ((source.match(/<path\b/g) ?? []).length !== 3) {
-    failures.push('rodi-mark.svg must preserve exactly three traced paths.');
+  if ((source.match(/<path\b/g) ?? []).length !== 2) {
+    failures.push('rodi-mark.svg must preserve the connected mark and separate dot.');
   }
   if (!source.includes('fill="#000000"') || !source.includes('stroke="none"')) {
     failures.push('rodi-mark.svg must preserve its approved black fill-only rendering.');

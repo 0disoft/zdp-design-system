@@ -92,14 +92,6 @@
         <img src={assets.shipMarkSimpleTricolor} alt="" width="48" height="48" />
         <figcaption>Simple tricolor mark · 32 px minimum</figcaption>
       </figure>
-      <figure class="asset-frame asset-frame--mark asset-frame--rodi">
-        <img src={assets.rodiMark} alt="" width="1254" height="1254" />
-        <figcaption>Rodisoft company mark · scalable SVG</figcaption>
-      </figure>
-      <figure class="asset-frame asset-frame--mark asset-frame--rodi">
-        <img src={assets.rodiMarkRaster} alt="" width="1254" height="1254" />
-        <figcaption>Rodisoft company mark · approved PNG fallback</figcaption>
-      </figure>
       <figure class="asset-frame asset-frame--missing">
         {#if unavailableAsset}
           <span class="asset-missing-preview" aria-hidden="true">
@@ -119,6 +111,14 @@
           />
         {/if}
         <figcaption>Unavailable asset</figcaption>
+      </figure>
+      <figure class="asset-frame asset-frame--rodi">
+        <img src={assets.rodiMark} alt="" width="1254" height="1254" />
+        <figcaption>Rodisoft company mark · scalable SVG</figcaption>
+      </figure>
+      <figure class="asset-frame asset-frame--rodi">
+        <img src={assets.rodiMarkRaster} alt="" width="1254" height="1254" />
+        <figcaption>Rodisoft company mark · approved PNG fallback</figcaption>
       </figure>
     </div>
   </section>
@@ -244,7 +244,9 @@
   }
 
   .asset-frame--rodi img {
-    max-inline-size: 24rem;
+    background: white;
+    inline-size: min(20rem, calc(100% - 2 * var(--zdp-space-8)));
+    margin: var(--zdp-space-8) auto;
   }
 
   .asset-mark-preview {

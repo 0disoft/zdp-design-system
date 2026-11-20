@@ -115,7 +115,7 @@ export const zdpBrandAssets = Object.freeze({
     ['light'],
     ['company-mark', 'print', 'scalable'],
     false,
-    '85fe4d251ee46f8f78233e0e2d11c4f8eb18f56fc0c81bbc1ada45743336d299'
+    '50db1a2fecd7bf965b69af51cce00e8b64b04056c81b8b9dcba0ca01ebdf31d1'
   ),
   rodiMarkRaster: createAsset(
     'zdp-brand-rodi-mark-1254',

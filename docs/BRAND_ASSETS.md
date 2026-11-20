@@ -78,13 +78,13 @@ Raster derivatives are encoded without retained source metadata. WebP and JPEG f
 - 소비처 색을 따라야 할 때는 `ship-mark-simple-current-color.svg`를 inline SVG로 삽입한다. 외부 `<img>`는 소비처 CSS의 `color`를 상속하지 않으므로 이 파일을 `<img>` 색상 변경 수단으로 쓰지 않는다.
 - `ship-mark-simple-tricolor.svg`는 넓은 브랜드 소개·캠페인 표면에서만 32 CSS px 이상으로 쓴다. 작은 아이콘, 상태 표시, 본문 장식에는 단색을 쓴다.
 - simple 제품군은 왼쪽 작은 직각삼각형, 오른쪽 큰 직각삼각형, 아래 사다리꼴의 정확히 세 path와 그 사이 여백으로 구성한다. path 비율, 순서, 간격, 지정 색을 소비처에서 따로 바꾸지 않는다.
-- `rodi-mark.svg`는 Rodisoft 회사 식별과 인쇄의 정본이다. `rodi-mark-1254.png`는 SVG를 받지 않는 도구에만 사용하고, PNG를 다시 트레이싱해 별도 정본을 만들지 않는다.
+- Rodisoft 회사 식별과 인쇄에는 `rodi-mark.svg`를 사용한다. SVG를 받지 않는 도구에는 `rodi-mark-1254.png`를 사용한다. 두 형식의 윤곽과 여백은 승인 원본 PNG를 기준으로 맞춘다. SVG의 배경은 투명하고 PNG에는 흰 바탕이 포함돼 있다.
 
 Decorative backgrounds use `alt=""`. When an image itself conveys content, the consumer owns a context-specific localized `alt`; the design system does not invent product copy. A ship mark inside an already named brand link is decorative and also uses `alt=""`.
 
 ## Source and generation boundary
 
-Generated fallback-background source PNGs are deliberately not stored in this repository or included in the npm package. Keep them in the maintainer-owned brand/media asset store. `src/lib/assets/brand/` contains only allowlisted publishable derivatives and approved marks. The approved `rodi-mark-1254.png` is a public compatibility asset paired with the authoritative `rodi-mark.svg`, not a generator source.
+Generated fallback-background source PNGs are deliberately not stored in this repository or included in the npm package. Keep them in the maintainer-owned brand/media asset store. `src/lib/assets/brand/` contains only allowlisted publishable derivatives and approved marks. The original `rodi-mark-1254.png` serves both as the public compatibility asset and as the outline reference for `rodi-mark.svg`.
 
 When intentionally rebuilding derivatives, materialize the four files below in one external directory and run `bun run brand-assets:generate -- --source-dir <directory>`. Then visually review Storybook before accepting changed output hashes. The generator rejects any source whose SHA-256 differs, uses Lanczos resizing, renders the ship geometry in Chromium with the square-specific hull color, strips source metadata, and writes only the declared derivatives. `bun run brand-assets:check` validates output hashes, dimensions, formats, byte budgets, allowlists, SVG paths, repository/package source exclusion, and the forbidden distorted-logo hash.
 
