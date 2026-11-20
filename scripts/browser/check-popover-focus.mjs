@@ -7,6 +7,25 @@ export async function verifyPopoverFocusContracts(page) {
     const fixture = page.getByTestId(testId);
     const trigger = fixture.getByRole('button', { name: 'Bound popover trigger', exact: true });
     const editor = fixture.getByRole('textbox', { name: 'Bound popover editor', exact: true });
+    for (const action of ['close', 'close-outside']) {
+      await trigger.focus();
+      await trigger.evaluate(element => element.click());
+      const nestedFocus = await editor.evaluate((element) => {
+        const host = element.ownerDocument.createElement('div');
+        element.after(host);
+        const shadow = host.attachShadow({ mode: 'open' });
+        const input = element.ownerDocument.createElement('input');
+        shadow.append(input);
+        input.focus();
+        return shadow.activeElement === input;
+      });
+      assert.equal(nestedFocus, true, 'The nested shadow editor must actually have focus.');
+      await fixture.getByTestId(action).evaluate(element => element.click());
+      assert.equal(await editor.count(), 0);
+      const target = action === 'close' ? trigger : fixture.getByTestId('outside');
+      assert.equal(await target.evaluate(isActive), true,
+        `Parent closure must recover nested shadow focus and preserve deliberate moves (${testId}, ${action}).`);
+    }
     for (const action of ['close', 'close-outside', 'close-document-outside', 'close-without-restore']) {
       await trigger.focus();
       await trigger.evaluate((element) => element.click());

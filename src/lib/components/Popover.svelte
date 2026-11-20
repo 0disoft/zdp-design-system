@@ -66,9 +66,13 @@
   $effect.pre(() => {
     const root = rootElement;
     if (open || restoreFocusAfterClose !== null || !root) return;
-    const focused = getZdpActiveElement(root.getRootNode() as Document | ShadowRoot);
+    const tree = root.getRootNode() as Document | ShadowRoot;
+    const focusInTree = tree.activeElement;
     const panel = root.querySelector('.zdp-popover__panel');
-    if (focused && panel?.contains(focused)) {
+    // The panel's tree sees a focused shadow host instead of its inner control.
+    if (focusInTree && panel?.contains(focusInTree)) {
+      const focused = getZdpActiveElement(tree);
+      if (!focused) return;
       void restoreExternallyClosedFocus(root, focused, previousFocusElement);
     }
   });
