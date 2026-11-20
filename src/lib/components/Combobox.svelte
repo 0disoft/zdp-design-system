@@ -79,6 +79,7 @@
 
   let rootElement = $state<HTMLElement | null>(null);
   let inputElement = $state<HTMLInputElement | null>(null);
+  let submittedInputElement = $state<HTMLInputElement | null>(null);
   let controlElement = $state<HTMLElement | null>(null);
   let open = $state(false);
   let activeOptionId = $state<string | null>(null);
@@ -296,6 +297,10 @@
     lastSyncedValue = value;
     lastSyncedOptionLabel = option.label;
     cachedSelection = option;
+    // A consumer can submit the form before Svelte applies its DOM updates.
+    if (inputElement && inputElement.value !== query) inputElement.value = query;
+    if (submittedInputElement) submittedInputElement.value = submittedValue;
+    syncInputValidity(inputElement, selectionMissing, resolvedSelectionRequiredText);
     onQueryChange?.(query);
     onValueChange?.(value, option);
     setOpen(false);
@@ -421,7 +426,7 @@
       use:syncZdpFormReset={{ initialValue: query, onReset: handleFormReset }}
     />
     {#if name}
-      <input type="hidden" {name} value={submittedValue} disabled={disabled} />
+      <input type="hidden" {name} value={submittedValue} disabled={disabled} bind:this={submittedInputElement} />
     {/if}
     <button
       class="zdp-combobox__toggle"

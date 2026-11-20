@@ -40,6 +40,7 @@ export async function verifyComboboxEditingContracts(page) {
 }
 
 export async function verifyComboboxSelectionContracts(page) {
+  await verifySubmitOnSelection(page);
   const cached = page.getByRole('combobox', { name: 'Cached filtered choice', exact: true });
   const authoritative = page.getByRole('combobox', { name: 'Authoritative filtered choice', exact: true });
   const unknown = page.getByRole('combobox', { name: 'Unknown filtered choice', exact: true });
@@ -98,4 +99,18 @@ export async function verifyComboboxSelectionContracts(page) {
   assert.equal(await page.getByTestId('invalidated-selection-clears').textContent(), '1');
   await page.getByRole('button', { name: 'Invalidate selected metadata', exact: true }).click();
   assert.equal(await page.getByTestId('invalidated-selection-clears').textContent(), '1', 'Repeated invalidation must not emit another clear.');
+}
+
+async function verifySubmitOnSelection(page) {
+  const input = page.getByRole('combobox', { name: 'Submit on selection', exact: true });
+  const submitted = page.getByTestId('combobox-auto-submitted');
+  await input.focus();
+  await input.press('ArrowDown');
+  await input.press('ArrowDown');
+  await input.press('Enter');
+  const afterKeyboard = await submitted.textContent();
+  await input.press('ArrowDown');
+  await page.getByRole('option', { name: 'Alpha', exact: true }).click();
+  assert.deepEqual([afterKeyboard, await submitted.textContent()], ['beta,', 'beta,alpha,'],
+    'Submitting synchronously in onValueChange must validate and use the newly selected option.');
 }

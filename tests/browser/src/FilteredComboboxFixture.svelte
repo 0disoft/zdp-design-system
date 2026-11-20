@@ -12,6 +12,8 @@
   let optionalClears = 0;
   let invalidatedValue = 'alpha';
   let invalidatedClears = 0;
+  let autoSubmitForm: HTMLFormElement;
+  let autoSubmittedValues = '';
 </script>
 
 <section aria-label="Filtered selection contracts">
@@ -33,4 +35,13 @@
   <output data-testid="optional-selection-clears">{optionalClears}</output>
   <output data-testid="invalidated-selection-value">{invalidatedValue}</output>
   <output data-testid="invalidated-selection-clears">{invalidatedClears}</output>
+  <form bind:this={autoSubmitForm} onsubmit={(event) => {
+    event.preventDefault();
+    const data = new FormData(autoSubmitForm);
+    autoSubmittedValues += `${data.get('team')},`;
+  }}>
+    <Combobox label="Submit on selection" name="team" options={[alpha, beta]} required
+      onValueChange={() => autoSubmitForm.requestSubmit()} />
+  </form>
+  <output data-testid="combobox-auto-submitted">{autoSubmittedValues}</output>
 </section>
