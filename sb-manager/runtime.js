@@ -10976,6 +10976,7 @@ var band = (cols) => {
     Preview,
     {
       ref: iframeRef,
+      "data-is-storybook-thumbnail": !0,
       title: readableTitle,
       src,
       "data-content-width": rememberedDimensions?.width,
@@ -14798,7 +14799,7 @@ init_react();
 
 // ../addons/a11y/src/constants.ts
 var ADDON_ID2 = "storybook/a11y", PANEL_ID2 = `${ADDON_ID2}/panel`;
-var UI_STATE_ID = `${ADDON_ID2}/ui`, RESULT = `${ADDON_ID2}/result`, REQUEST = `${ADDON_ID2}/request`, RUNNING = `${ADDON_ID2}/running`, ERROR = `${ADDON_ID2}/error`, MANUAL = `${ADDON_ID2}/manual`, SELECT = `${ADDON_ID2}/select`, DOCUMENTATION_LINK = "writing-tests/accessibility-testing", DOCUMENTATION_DISCREPANCY_LINK = `${DOCUMENTATION_LINK}#why-are-my-tests-failing-in-different-environments`;
+var UI_STATE_ID = `${ADDON_ID2}/ui`, RESULT = `${ADDON_ID2}/result`, REQUEST = `${ADDON_ID2}/request`, RUNNING = `${ADDON_ID2}/running`, ERROR = `${ADDON_ID2}/error`, MANUAL = `${ADDON_ID2}/manual`, DOCUMENTATION_LINK = "writing-tests/accessibility-testing", DOCUMENTATION_DISCREPANCY_LINK = `${DOCUMENTATION_LINK}#why-are-my-tests-failing-in-different-environments`;
 
 // ../addons/onboarding/src/constants.ts
 var ADDON_ID3 = "storybook/onboarding", ADDON_ONBOARDING_CHANNEL = `${ADDON_ID3}/channel`;
@@ -23158,6 +23159,7 @@ var getStatusLabel = (status) => status.split(":")[1].replace(/^./, (char) => ch
           onMouseEnter: () => {
             (item.type === "component" || item.type === "story") && api.emit(PRELOAD_ENTRIES, {
               ids: [children[0]],
+              source: "hover",
               options: { target: refId }
             });
           }
@@ -26760,7 +26762,11 @@ var { document: document8 } = scope, ResultsList = styled.ol({
     [onClick]
   ), api = useStorybookApi();
   useEffect(() => {
-    api && props.isHighlighted && item.type === "component" && api.emit(PRELOAD_ENTRIES, { ids: [item.children[0]] }, { options: { target: item.refId } });
+    api && props.isHighlighted && item.type === "component" && api.emit(PRELOAD_ENTRIES, {
+      ids: [item.children[0]],
+      source: "search",
+      options: { target: item.refId }
+    });
   }, [api, props.isHighlighted, item]);
   let nameMatch = matches.find((match) => match.key === "name"), pathMatches = matches.filter((match) => match.key === "path"), icon = item.status ? getStatus(theme, item.status).icon : null;
   return react_default.createElement(ResultRow, { ...props, onClick: click }, react_default.createElement(IconWrapper2, null, item.type === "component" && react_default.createElement(TypeIcon2, { viewBox: "0 0 14 14", width: "14", height: "14", type: "component" }, react_default.createElement(UseSymbol, { type: "component" })), item.type === "story" && react_default.createElement(TypeIcon2, { viewBox: "0 0 14 14", width: "14", height: "14", type: item.subtype }, react_default.createElement(UseSymbol, { type: item.subtype })), !(item.type === "component" || item.type === "story") && react_default.createElement(TypeIcon2, { viewBox: "0 0 14 14", width: "14", height: "14", type: "document" }, react_default.createElement(UseSymbol, { type: "document" }))), react_default.createElement(ResultRowContent, { className: "search-result-item--label" }, react_default.createElement(Title3, null, react_default.createElement(Highlight, { match: nameMatch }, item.name)), react_default.createElement(Path, null, item.path.map((group, index) => react_default.createElement("span", { key: index }, react_default.createElement(Highlight, { match: pathMatches.find((match) => match.arrayIndex === index) }, group))))), item.status ? react_default.createElement(StatusLabel, { status: item.status }, icon) : null);
@@ -26793,6 +26799,7 @@ var { document: document8 } = scope, ResultsList = styled.ol({
     item?.type === "component" && api.emit(PRELOAD_ENTRIES, {
       // @ts-expect-error (TODO)
       ids: [item.isLeaf ? item.id : item.children[0]],
+      source: "search",
       options: { target: refId }
     });
   }, []), handleClearLastViewed = () => {
