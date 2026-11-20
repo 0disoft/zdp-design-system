@@ -53,6 +53,8 @@
               currentPage={5}
               totalPages={12}
               ariaLabel="밝은 화면 목록 페이지"
+              previousLabel="이전"
+              nextLabel="다음"
               hrefForPage={(page) => `#light-page-${page}`}
             />
           </Stack>
@@ -115,6 +117,8 @@
               currentPage={9}
               totalPages={18}
               ariaLabel="어두운 화면 목록 페이지"
+              previousLabel="이전"
+              nextLabel="다음"
               hrefForPage={(page) => `#dark-page-${page}`}
             />
           </Stack>

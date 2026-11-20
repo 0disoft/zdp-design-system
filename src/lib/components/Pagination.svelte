@@ -150,7 +150,7 @@
     </li>
 
     {#each paginationItems as item (item.key)}
-      <li class="zdp-pagination__item">
+      <li class="zdp-pagination__item" data-zdp-pagination-item={item.type}>
         {#if item.type === 'ellipsis'}
           <span class="zdp-pagination__ellipsis" aria-hidden="true">...</span>
         {:else if item.href && item.page !== activePage}
@@ -174,6 +174,9 @@
           >
             {item.page}
           </button>
+          {#if item.page === activePage}
+            <span class="zdp-pagination__total">/ {normalizedTotalPages}</span>
+          {/if}
         {/if}
       </li>
     {/each}
@@ -236,10 +239,44 @@
     width: max-content;
   }
 
-  @container (max-width: 30rem) {
-    .zdp-pagination__list {
+  .zdp-pagination__total {
+    display: none;
+  }
+
+  @container (max-width: 29rem) {
+    .zdp-pagination__list:not(:has(.zdp-pagination__total)) {
       flex-wrap: wrap;
       width: auto;
+    }
+
+    .zdp-pagination__list:has(.zdp-pagination__total) {
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .zdp-pagination__list:has(.zdp-pagination__total) [data-zdp-pagination-item]:not(:has(.zdp-pagination__total)) {
+      display: none;
+    }
+
+    .zdp-pagination__item:has(.zdp-pagination__total) {
+      align-items: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .zdp-pagination__total {
+      color: var(--zdp-color-ink-muted);
+      display: inline;
+      margin-inline-start: var(--zdp-space-2);
+      white-space: nowrap;
+    }
+
+    .zdp-pagination__list:has(.zdp-pagination__total) .zdp-pagination__item:not([data-zdp-pagination-item]) {
+      flex-shrink: 1;
+    }
+
+    .zdp-pagination__list:has(.zdp-pagination__total) .zdp-pagination__link--control {
+      overflow-wrap: anywhere;
+      white-space: normal;
     }
   }
 

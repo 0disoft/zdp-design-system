@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { feedbackMarkPath } from '../feedback-mark.js';
+
   interface Props {
     tone?: 'neutral' | 'info' | 'success' | 'warning' | 'danger';
     labelledBy?: string | null;
@@ -17,7 +19,12 @@
   aria-labelledby={labelledBy ?? undefined}
   role={semanticRole ?? undefined}
 >
-  <span class="zdp-callout__mark" aria-hidden="true"></span>
+  <span class="zdp-callout__mark" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <path d={feedbackMarkPath[tone]} />
+    </svg>
+  </span>
   <div class="zdp-callout__body">
     <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
   </div>
@@ -34,7 +41,7 @@
     display: grid;
     font-family: var(--zdp-font-family-sans);
     gap: var(--zdp-space-3);
-    grid-template-columns: var(--zdp-space-2) minmax(0, 1fr);
+    grid-template-columns: var(--zdp-control-glyph-md) minmax(0, 1fr);
     line-height: var(--zdp-type-body-small-line-height);
     min-width: 0;
     padding: var(--zdp-space-4);
@@ -42,13 +49,16 @@
 
   .zdp-callout__mark {
     align-self: start;
-    background: var(--zdp-color-line-strong);
-    border-radius: var(--zdp-radius-sm);
-    display: block;
-    height: calc(var(--zdp-type-body-small-size) * var(--zdp-type-body-small-line-height));
+    align-items: center;
+    color: var(--zdp-color-ink-muted);
+    display: grid;
+    min-block-size: calc(var(--zdp-type-body-small-size) * var(--zdp-type-body-small-line-height));
     -webkit-user-select: none;
     user-select: none;
-    width: var(--zdp-space-2);
+  }
+
+  .zdp-callout__mark :global(svg) {
+    inline-size: 100%;
   }
 
   .zdp-callout__body {
@@ -68,18 +78,18 @@
   }
 
   .zdp-callout--info .zdp-callout__mark {
-    background: var(--zdp-color-accent-primary-strong);
+    color: var(--zdp-color-accent-primary-strong);
   }
 
   .zdp-callout--success .zdp-callout__mark {
-    background: var(--zdp-color-accent-success);
+    color: var(--zdp-color-accent-success);
   }
 
   .zdp-callout--warning .zdp-callout__mark {
-    background: var(--zdp-color-accent-warning);
+    color: var(--zdp-color-accent-warning);
   }
 
   .zdp-callout--danger .zdp-callout__mark {
-    background: var(--zdp-color-accent-danger);
+    color: var(--zdp-color-accent-danger);
   }
 </style>

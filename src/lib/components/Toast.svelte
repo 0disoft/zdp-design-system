@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ZdpToastTone } from '../toast.js';
+  import { feedbackMarkPath } from '../feedback-mark.js';
 
   interface Props {
     tone?: ZdpToastTone;
@@ -36,7 +37,12 @@
   aria-atomic={resolvedAtomic}
   role={resolvedRole ?? undefined}
 >
-  <span class="zdp-toast__mark" aria-hidden="true"></span>
+  <span class="zdp-toast__mark" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <path d={feedbackMarkPath[tone]} />
+    </svg>
+  </span>
   <div class="zdp-toast__body">
     <!-- svelte-ignore slot_element_deprecated public slot compatibility --><slot />
   </div>
@@ -58,7 +64,7 @@
     display: grid;
     font-family: var(--zdp-font-family-sans);
     gap: var(--zdp-space-3);
-    grid-template-columns: var(--zdp-space-2) minmax(0, 1fr) auto;
+    grid-template-columns: var(--zdp-control-glyph-md) minmax(0, 1fr) auto;
     inline-size: min(100%, 28rem);
     line-height: var(--zdp-type-body-small-line-height);
     min-width: 0;
@@ -66,14 +72,16 @@
   }
 
   .zdp-toast__mark {
-    align-self: stretch;
-    background: var(--zdp-color-line-strong);
-    border-radius: var(--zdp-radius-sm);
-    display: block;
+    align-items: center;
+    color: var(--zdp-color-ink-muted);
+    display: grid;
     min-block-size: calc(var(--zdp-type-body-small-size) * var(--zdp-type-body-small-line-height));
     -webkit-user-select: none;
     user-select: none;
-    width: var(--zdp-space-2);
+  }
+
+  .zdp-toast__mark :global(svg) {
+    inline-size: 100%;
   }
 
   .zdp-toast__body {
@@ -118,6 +126,7 @@
     font-size: var(--zdp-type-caption-size);
     font-weight: var(--zdp-font-weight-medium);
     justify-content: center;
+    justify-self: start;
     line-height: var(--zdp-type-caption-line-height);
     margin-block-start: var(--zdp-space-3);
     min-height: var(--zdp-control-height-sm);
@@ -174,19 +183,19 @@
   }
 
   .zdp-toast--info .zdp-toast__mark {
-    background: var(--zdp-color-accent-primary-strong);
+    color: var(--zdp-color-accent-primary-strong);
   }
 
   .zdp-toast--success .zdp-toast__mark {
-    background: var(--zdp-color-accent-success);
+    color: var(--zdp-color-accent-success);
   }
 
   .zdp-toast--warning .zdp-toast__mark {
-    background: var(--zdp-color-accent-warning);
+    color: var(--zdp-color-accent-warning);
   }
 
   .zdp-toast--danger .zdp-toast__mark {
-    background: var(--zdp-color-accent-danger);
+    color: var(--zdp-color-accent-danger);
   }
   .zdp-toast__close:active,
   .zdp-toast__body :global(.zdp-toast__action:active) {

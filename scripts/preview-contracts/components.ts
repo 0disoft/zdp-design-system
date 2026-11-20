@@ -330,7 +330,7 @@ for (const requiredText of [
   '.zdp-callout',
   '.zdp-callout__mark',
   '.zdp-callout__body',
-  'height: calc(var(--zdp-type-body-small-size) * var(--zdp-type-body-small-line-height))',
+  'min-block-size: calc(var(--zdp-type-body-small-size) * var(--zdp-type-body-small-line-height))',
   '.zdp-callout--info .zdp-callout__mark',
   '.zdp-callout--success .zdp-callout__mark',
   '.zdp-callout--warning .zdp-callout__mark',

@@ -163,7 +163,7 @@
 
   .zdp-tabs__list {
     align-items: center;
-    border-bottom: 1px solid var(--zdp-color-line-subtle);
+    border-block-end: 1px solid var(--zdp-color-line-subtle);
     display: flex;
     flex-wrap: wrap;
     gap: var(--zdp-space-1);
@@ -174,7 +174,7 @@
     align-items: center;
     background: transparent;
     border: 0;
-    border-bottom: var(--zdp-control-border-width) solid transparent;
+    border-block-end: 2px solid transparent;
     border-radius: var(--zdp-control-radius) var(--zdp-control-radius) 0 0;
     color: var(--zdp-color-ink-muted);
     cursor: pointer;
@@ -200,13 +200,12 @@
   }
 
   .zdp-tabs__tab--active {
-    background: var(--zdp-color-interaction-selected);
-    border-bottom-color: transparent;
+    border-block-end-color: var(--zdp-color-ink-strong);
     color: var(--zdp-color-ink-strong);
+    font-weight: var(--zdp-font-weight-semibold);
   }
 
   .zdp-tabs__tab:focus-visible {
-    border-color: var(--zdp-color-focus-line);
     outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
     outline-offset: var(--zdp-control-focus-outline-offset);
   }
@@ -238,5 +237,11 @@
   }
   .zdp-tabs__tab:where(:active:not(:disabled):not([aria-selected="true"])) {
     background: var(--zdp-color-interaction-pressed);
+  }
+
+  @media (forced-colors: active) {
+    .zdp-tabs__tab--active {
+      border-block-end-color: ButtonText;
+    }
   }
 </style>

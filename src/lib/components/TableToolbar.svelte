@@ -132,13 +132,14 @@
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-normal);
+    container-type: inline-size;
     display: flex;
     flex-wrap: wrap;
     font-family: var(--zdp-font-family-sans);
     gap: var(--zdp-space-3);
     justify-content: space-between;
     min-width: 0;
-    padding: var(--zdp-space-3);
+    padding-block: var(--zdp-space-2);
   }
 
   .zdp-table-toolbar__body {
@@ -203,7 +204,7 @@
     line-height: var(--zdp-type-caption-line-height);
   }
 
-  @media (max-width: 48rem) {
+  @container (max-width: 28rem) {
     .zdp-table-toolbar__actions {
       inline-size: 100%;
       justify-content: flex-start;

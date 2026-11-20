@@ -275,8 +275,11 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
     'overscroll-behavior-inline: contain',
     'touch-action: pan-x pan-y',
     'overflow-wrap: normal',
-    'white-space: nowrap',
-    'word-break: normal'
+    'white-space: var(--zdp-table-cell-white-space, nowrap)',
+    'white-space: var(--zdp-table-cell-white-space, normal)',
+    'word-break: normal',
+    'onscroll={updateScrollCue}',
+    'new ResizeObserver(updateScrollCue)'
   ]) {
     if (!table.includes(requiredText)) {
       failures.push(`Table component is missing ${requiredText}.`);
@@ -343,7 +346,7 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
     'min-inline-size: min(100%, 16rem)',
     '.zdp-table-toolbar__actions',
     'margin-inline-start: auto',
-    '@media (max-width: 48rem)'
+    '@container (max-width: 28rem)'
   ]) {
     if (!tableToolbar.includes(requiredText)) {
       failures.push(`TableToolbar component is missing ${requiredText}.`);
@@ -453,6 +456,7 @@ export function checkLayoutContracts(context: StorybookCheckContext): void {
     '.zdp-pagination__item',
     '.zdp-pagination__link',
     '.zdp-pagination__link--control',
+    '.zdp-pagination__total',
     'overflow-x: auto',
     'overscroll-behavior-inline: contain',
     '--zdp-pagination-focus-bleed',

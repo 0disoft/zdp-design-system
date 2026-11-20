@@ -901,25 +901,26 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
                 <li class="zdp-pagination__item">
                   <a class="zdp-pagination__link zdp-pagination__link--control" href="#light-page-4" aria-label="Previous">Previous</a>
                 </li>
-                <li class="zdp-pagination__item">
+                <li class="zdp-pagination__item" data-zdp-pagination-item="page">
                   <a class="zdp-pagination__link" href="#light-page-1" aria-label="1 page">1</a>
                 </li>
-                <li class="zdp-pagination__item">
+                <li class="zdp-pagination__item" data-zdp-pagination-item="ellipsis">
                   <span class="zdp-pagination__ellipsis" aria-hidden="true">...</span>
                 </li>
-                <li class="zdp-pagination__item">
+                <li class="zdp-pagination__item" data-zdp-pagination-item="page">
                   <a class="zdp-pagination__link" href="#light-page-4" aria-label="4 page">4</a>
                 </li>
-                <li class="zdp-pagination__item">
+                <li class="zdp-pagination__item" data-zdp-pagination-item="page">
                   <button class="zdp-pagination__link" type="button" aria-label="Current page, page 5" aria-current="page" disabled>5</button>
+                  <span class="zdp-pagination__total">/ 12</span>
                 </li>
-                <li class="zdp-pagination__item">
+                <li class="zdp-pagination__item" data-zdp-pagination-item="page">
                   <a class="zdp-pagination__link" href="#light-page-6" aria-label="6 page">6</a>
                 </li>
-                <li class="zdp-pagination__item">
+                <li class="zdp-pagination__item" data-zdp-pagination-item="ellipsis">
                   <span class="zdp-pagination__ellipsis" aria-hidden="true">...</span>
                 </li>
-                <li class="zdp-pagination__item">
+                <li class="zdp-pagination__item" data-zdp-pagination-item="page">
                   <a class="zdp-pagination__link" href="#light-page-12" aria-label="12 page">12</a>
                 </li>
                 <li class="zdp-pagination__item">
@@ -939,7 +940,7 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
                 <span class="zdp-badge zdp-badge--danger zdp-badge--md">주의</span>
               </div>
               <section class="zdp-callout zdp-callout--info" aria-labelledby="light-callout-info" role="note">
-                <span class="zdp-callout__mark" aria-hidden="true"></span>
+                <span class="zdp-callout__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></svg></span>
                 <div class="zdp-callout__body">
                   <strong id="light-callout-info">다음 단계가 준비됐습니다.</strong>
                   <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
@@ -947,7 +948,7 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
               </section>
               <div class="zdp-divider zdp-divider--horizontal zdp-divider--subtle" aria-hidden="true"></div>
               <section class="zdp-callout zdp-callout--danger" aria-labelledby="light-callout-danger" role="alert">
-                <span class="zdp-callout__mark" aria-hidden="true"></span>
+                <span class="zdp-callout__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6m0-6-6 6"/></svg></span>
                 <div class="zdp-callout__body">
                   <strong id="light-callout-danger">삭제 전에 다시 확인하세요.</strong>
                   <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
@@ -961,7 +962,7 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
                 aria-labelledby="light-toast-title"
                 aria-describedby="light-toast-message"
               >
-                <span class="zdp-toast__mark" aria-hidden="true"></span>
+                <span class="zdp-toast__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></svg></span>
                 <div class="zdp-toast__body">
                   <strong class="zdp-toast__title" id="light-toast-title">초안이 준비됐습니다.</strong>
                   <p class="zdp-toast__message" id="light-toast-message">검토할 수 있는 상태로 바뀌었습니다.</p>
@@ -979,7 +980,7 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
                   aria-labelledby="light-status-toast-saved-title"
                   aria-describedby="light-status-toast-saved-message"
                 >
-                  <span class="zdp-toast__mark" aria-hidden="true"></span>
+                  <span class="zdp-toast__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></svg></span>
                   <div class="zdp-toast__body">
                     <strong class="zdp-toast__title" id="light-status-toast-saved-title">저장됐습니다.</strong>
                     <p class="zdp-toast__message" id="light-status-toast-saved-message">변경 내역이 목록에 반영됐습니다.</p>
@@ -994,7 +995,7 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
                   aria-labelledby="light-status-toast-warning-title"
                   aria-describedby="light-status-toast-warning-message"
                 >
-                  <span class="zdp-toast__mark" aria-hidden="true"></span>
+                  <span class="zdp-toast__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5m0 3h.01"/></svg></span>
                   <div class="zdp-toast__body">
                     <strong class="zdp-toast__title" id="light-status-toast-warning-title">확인이 필요합니다.</strong>
                     <p class="zdp-toast__message" id="light-status-toast-warning-message">다음 단계 전에 비어 있는 값을 확인하세요.</p>
@@ -1981,25 +1982,26 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
                 <li class="zdp-pagination__item">
                   <a class="zdp-pagination__link zdp-pagination__link--control" href="#dark-page-8" aria-label="Previous">Previous</a>
                 </li>
-                <li class="zdp-pagination__item">
+                <li class="zdp-pagination__item" data-zdp-pagination-item="page">
                   <a class="zdp-pagination__link" href="#dark-page-1" aria-label="1 page">1</a>
                 </li>
-                <li class="zdp-pagination__item">
+                <li class="zdp-pagination__item" data-zdp-pagination-item="ellipsis">
                   <span class="zdp-pagination__ellipsis" aria-hidden="true">...</span>
                 </li>
-                <li class="zdp-pagination__item">
+                <li class="zdp-pagination__item" data-zdp-pagination-item="page">
                   <a class="zdp-pagination__link" href="#dark-page-8" aria-label="8 page">8</a>
                 </li>
-                <li class="zdp-pagination__item">
+                <li class="zdp-pagination__item" data-zdp-pagination-item="page">
                   <button class="zdp-pagination__link" type="button" aria-label="Current page, page 9" aria-current="page" disabled>9</button>
+                  <span class="zdp-pagination__total">/ 18</span>
                 </li>
-                <li class="zdp-pagination__item">
+                <li class="zdp-pagination__item" data-zdp-pagination-item="page">
                   <a class="zdp-pagination__link" href="#dark-page-10" aria-label="10 page">10</a>
                 </li>
-                <li class="zdp-pagination__item">
+                <li class="zdp-pagination__item" data-zdp-pagination-item="ellipsis">
                   <span class="zdp-pagination__ellipsis" aria-hidden="true">...</span>
                 </li>
-                <li class="zdp-pagination__item">
+                <li class="zdp-pagination__item" data-zdp-pagination-item="page">
                   <a class="zdp-pagination__link" href="#dark-page-18" aria-label="18 page">18</a>
                 </li>
                 <li class="zdp-pagination__item">
@@ -2019,7 +2021,7 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
                 <span class="zdp-badge zdp-badge--danger zdp-badge--md">주의</span>
               </div>
               <section class="zdp-callout zdp-callout--info" aria-labelledby="dark-callout-info" role="note">
-                <span class="zdp-callout__mark" aria-hidden="true"></span>
+                <span class="zdp-callout__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></svg></span>
                 <div class="zdp-callout__body">
                   <strong id="dark-callout-info">작업 흐름이 준비됐습니다.</strong>
                   <p>필요한 입력을 확인한 뒤 저장하면 변경 내역에 남습니다.</p>
@@ -2027,7 +2029,7 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
               </section>
               <div class="zdp-divider zdp-divider--horizontal zdp-divider--subtle" aria-hidden="true"></div>
               <section class="zdp-callout zdp-callout--danger" aria-labelledby="dark-callout-danger" role="alert">
-                <span class="zdp-callout__mark" aria-hidden="true"></span>
+                <span class="zdp-callout__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6m0-6-6 6"/></svg></span>
                 <div class="zdp-callout__body">
                   <strong id="dark-callout-danger">위험 작업 전에 다시 확인하세요.</strong>
                   <p>되돌릴 수 없는 작업은 제품 저장소에서 별도 확인 흐름을 연결합니다.</p>
@@ -2041,7 +2043,7 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
                 aria-labelledby="dark-toast-title"
                 aria-describedby="dark-toast-message"
               >
-                <span class="zdp-toast__mark" aria-hidden="true"></span>
+                <span class="zdp-toast__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></svg></span>
                 <div class="zdp-toast__body">
                   <strong class="zdp-toast__title" id="dark-toast-title">작업이 저장됐습니다.</strong>
                   <p class="zdp-toast__message" id="dark-toast-message">다음 화면에서도 같은 상태를 볼 수 있습니다.</p>
@@ -2059,7 +2061,7 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
                   aria-labelledby="dark-status-toast-synced-title"
                   aria-describedby="dark-status-toast-synced-message"
                 >
-                  <span class="zdp-toast__mark" aria-hidden="true"></span>
+                  <span class="zdp-toast__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></svg></span>
                   <div class="zdp-toast__body">
                     <strong class="zdp-toast__title" id="dark-status-toast-synced-title">동기화가 끝났습니다.</strong>
                     <p class="zdp-toast__message" id="dark-status-toast-synced-message">열려 있는 화면에서 최신 상태를 볼 수 있습니다.</p>
@@ -2073,7 +2075,7 @@ const ready = releaseGate.every((key) =&gt; evidence[key] === 'ready');</code></
                   aria-labelledby="dark-status-toast-danger-title"
                   aria-describedby="dark-status-toast-danger-message"
                 >
-                  <span class="zdp-toast__mark" aria-hidden="true"></span>
+                  <span class="zdp-toast__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6m0-6-6 6"/></svg></span>
                   <div class="zdp-toast__body">
                     <strong class="zdp-toast__title" id="dark-status-toast-danger-title">연결이 끊겼습니다.</strong>
                     <p class="zdp-toast__message" id="dark-status-toast-danger-message">다시 연결한 뒤 작업을 이어가세요.</p>

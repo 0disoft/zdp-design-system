@@ -3671,7 +3671,7 @@
   display: grid;
   font-family: var(--zdp-font-family-sans);
   gap: var(--zdp-space-3);
-  grid-template-columns: var(--zdp-space-2) minmax(0, 1fr);
+  grid-template-columns: var(--zdp-control-glyph-md) minmax(0, 1fr);
   line-height: var(--zdp-type-body-small-line-height);
   min-width: 0;
   padding: var(--zdp-space-4);
@@ -3679,13 +3679,16 @@
 
 .zdp-callout__mark {
   align-self: start;
-  background: var(--zdp-color-line-strong);
-  border-radius: var(--zdp-radius-sm);
-  display: block;
-  height: calc(var(--zdp-type-body-small-size) * var(--zdp-type-body-small-line-height));
+  align-items: center;
+  color: var(--zdp-color-ink-muted);
+  display: grid;
+  min-block-size: calc(var(--zdp-type-body-small-size) * var(--zdp-type-body-small-line-height));
   -webkit-user-select: none;
   user-select: none;
-  width: var(--zdp-space-2);
+}
+
+.zdp-callout__mark svg {
+  inline-size: 100%;
 }
 
 .zdp-callout__body {
@@ -3705,19 +3708,19 @@
 }
 
 .zdp-callout--info .zdp-callout__mark {
-  background: var(--zdp-color-accent-primary-strong);
+  color: var(--zdp-color-accent-primary-strong);
 }
 
 .zdp-callout--success .zdp-callout__mark {
-  background: var(--zdp-color-accent-success);
+  color: var(--zdp-color-accent-success);
 }
 
 .zdp-callout--warning .zdp-callout__mark {
-  background: var(--zdp-color-accent-warning);
+  color: var(--zdp-color-accent-warning);
 }
 
 .zdp-callout--danger .zdp-callout__mark {
-  background: var(--zdp-color-accent-danger);
+  color: var(--zdp-color-accent-danger);
 }
 
 /* Generated from src/lib/components/Toast.svelte; do not edit directly. */
@@ -3731,7 +3734,7 @@
   display: grid;
   font-family: var(--zdp-font-family-sans);
   gap: var(--zdp-space-3);
-  grid-template-columns: var(--zdp-space-2) minmax(0, 1fr) auto;
+  grid-template-columns: var(--zdp-control-glyph-md) minmax(0, 1fr) auto;
   inline-size: min(100%, 28rem);
   line-height: var(--zdp-type-body-small-line-height);
   min-width: 0;
@@ -3739,14 +3742,16 @@
 }
 
 .zdp-toast__mark {
-  align-self: stretch;
-  background: var(--zdp-color-line-strong);
-  border-radius: var(--zdp-radius-sm);
-  display: block;
+  align-items: center;
+  color: var(--zdp-color-ink-muted);
+  display: grid;
   min-block-size: calc(var(--zdp-type-body-small-size) * var(--zdp-type-body-small-line-height));
   -webkit-user-select: none;
   user-select: none;
-  width: var(--zdp-space-2);
+}
+
+.zdp-toast__mark svg {
+  inline-size: 100%;
 }
 
 .zdp-toast__body {
@@ -3791,6 +3796,7 @@
   font-size: var(--zdp-type-caption-size);
   font-weight: var(--zdp-font-weight-medium);
   justify-content: center;
+  justify-self: start;
   line-height: var(--zdp-type-caption-line-height);
   margin-block-start: var(--zdp-space-3);
   min-height: var(--zdp-control-height-sm);
@@ -3847,19 +3853,19 @@
 }
 
 .zdp-toast--info .zdp-toast__mark {
-  background: var(--zdp-color-accent-primary-strong);
+  color: var(--zdp-color-accent-primary-strong);
 }
 
 .zdp-toast--success .zdp-toast__mark {
-  background: var(--zdp-color-accent-success);
+  color: var(--zdp-color-accent-success);
 }
 
 .zdp-toast--warning .zdp-toast__mark {
-  background: var(--zdp-color-accent-warning);
+  color: var(--zdp-color-accent-warning);
 }
 
 .zdp-toast--danger .zdp-toast__mark {
-  background: var(--zdp-color-accent-danger);
+  color: var(--zdp-color-accent-danger);
 }
 .zdp-toast__close:active,
 .zdp-toast__body .zdp-toast__action:active {
@@ -4261,10 +4267,44 @@
   width: max-content;
 }
 
-@container (max-width: 30rem) {
-  .zdp-pagination__list {
+.zdp-pagination__total {
+  display: none;
+}
+
+@container (max-width: 29rem) {
+  .zdp-pagination__list:not(:has(.zdp-pagination__total)) {
     flex-wrap: wrap;
     width: auto;
+  }
+
+  .zdp-pagination__list:has(.zdp-pagination__total) {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .zdp-pagination__list:has(.zdp-pagination__total) [data-zdp-pagination-item]:not(:has(.zdp-pagination__total)) {
+    display: none;
+  }
+
+  .zdp-pagination__item:has(.zdp-pagination__total) {
+    align-items: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .zdp-pagination__total {
+    color: var(--zdp-color-ink-muted);
+    display: inline;
+    margin-inline-start: var(--zdp-space-2);
+    white-space: nowrap;
+  }
+
+  .zdp-pagination__list:has(.zdp-pagination__total) .zdp-pagination__item:not([data-zdp-pagination-item]) {
+    flex-shrink: 1;
+  }
+
+  .zdp-pagination__list:has(.zdp-pagination__total) .zdp-pagination__link--control {
+    overflow-wrap: anywhere;
+    white-space: normal;
   }
 }
 
@@ -4352,6 +4392,7 @@
   border: 1px solid var(--zdp-color-line-subtle);
   border-radius: var(--zdp-control-radius);
   box-sizing: border-box;
+  container: zdp-table / inline-size;
   max-width: 100%;
   min-width: 0;
   overscroll-behavior-inline: contain;
@@ -4368,7 +4409,7 @@
   font-size: var(--zdp-type-body-small-size);
   inline-size: 100%;
   line-height: var(--zdp-type-body-small-line-height);
-  min-inline-size: 36rem;
+  min-inline-size: var(--zdp-table-min-inline-size, 0);
 }
 
 .zdp-table__caption {
@@ -4401,7 +4442,7 @@
   padding: var(--zdp-space-3) var(--zdp-space-4);
   text-align: start;
   vertical-align: top;
-  white-space: nowrap;
+  white-space: var(--zdp-table-cell-white-space, nowrap);
   word-break: normal;
 }
 
@@ -4417,6 +4458,46 @@
 .zdp-table--density-compact th,
 .zdp-table--density-compact td {
   padding: var(--zdp-space-2) var(--zdp-space-3);
+}
+
+@container zdp-table (max-width: 36rem) {
+  .zdp-table th,
+  .zdp-table td {
+    padding-inline: var(--zdp-space-3);
+    white-space: var(--zdp-table-cell-white-space, normal);
+    word-break: keep-all;
+  }
+
+  .zdp-table .zdp-sort-header__label {
+    overflow-wrap: normal;
+  }
+}
+
+.zdp-table__scroll-cue {
+  color: var(--zdp-color-ink-strong);
+  display: block;
+  inline-size: 100cqi;
+  inset-inline-start: 0;
+  pointer-events: none;
+  position: sticky;
+}
+
+.zdp-table__scroll-cue::after {
+  background: var(--zdp-color-surface-raised);
+  border: 1px solid var(--zdp-color-line-strong);
+  border-radius: var(--zdp-control-radius);
+  content: '›';
+  display: grid;
+  inline-size: var(--zdp-control-glyph-md);
+  inset-block-end: var(--zdp-space-1);
+  inset-inline-end: var(--zdp-space-1);
+  line-height: var(--zdp-control-glyph-md);
+  place-items: center;
+  position: absolute;
+}
+
+.zdp-table__scroll-cue:dir(rtl)::after {
+  content: '‹';
 }
 
 /* Generated from src/lib/components/SortHeader.svelte; do not edit directly. */
@@ -4525,13 +4606,14 @@
   border-radius: var(--zdp-control-radius);
   box-sizing: border-box;
   color: var(--zdp-color-ink-normal);
+  container-type: inline-size;
   display: flex;
   flex-wrap: wrap;
   font-family: var(--zdp-font-family-sans);
   gap: var(--zdp-space-3);
   justify-content: space-between;
   min-width: 0;
-  padding: var(--zdp-space-3);
+  padding-block: var(--zdp-space-2);
 }
 
 .zdp-table-toolbar__body {
@@ -4596,7 +4678,7 @@
   line-height: var(--zdp-type-caption-line-height);
 }
 
-@media (max-width: 48rem) {
+@container (max-width: 28rem) {
   .zdp-table-toolbar__actions {
     inline-size: 100%;
     justify-content: flex-start;
@@ -4734,7 +4816,7 @@
 
 .zdp-tabs__list {
   align-items: center;
-  border-bottom: 1px solid var(--zdp-color-line-subtle);
+  border-block-end: 1px solid var(--zdp-color-line-subtle);
   display: flex;
   flex-wrap: wrap;
   gap: var(--zdp-space-1);
@@ -4745,7 +4827,7 @@
   align-items: center;
   background: transparent;
   border: 0;
-  border-bottom: var(--zdp-control-border-width) solid transparent;
+  border-block-end: 2px solid transparent;
   border-radius: var(--zdp-control-radius) var(--zdp-control-radius) 0 0;
   color: var(--zdp-color-ink-muted);
   cursor: pointer;
@@ -4771,13 +4853,12 @@
 }
 
 .zdp-tabs__tab--active {
-  background: var(--zdp-color-interaction-selected);
-  border-bottom-color: transparent;
+  border-block-end-color: var(--zdp-color-ink-strong);
   color: var(--zdp-color-ink-strong);
+  font-weight: var(--zdp-font-weight-semibold);
 }
 
 .zdp-tabs__tab:focus-visible {
-  border-color: var(--zdp-color-focus-line);
   outline: var(--zdp-control-focus-outline-width) solid var(--zdp-color-focus-surface);
   outline-offset: var(--zdp-control-focus-outline-offset);
 }
@@ -4809,6 +4890,12 @@
 }
 .zdp-tabs__tab:where(:active:not(:disabled):not([aria-selected="true"])) {
   background: var(--zdp-color-interaction-pressed);
+}
+
+@media (forced-colors: active) {
+  .zdp-tabs__tab--active {
+    border-block-end-color: ButtonText;
+  }
 }
 
 /* Generated from src/lib/components/CodeBlock.svelte; do not edit directly. */

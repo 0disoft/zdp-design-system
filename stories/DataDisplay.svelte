@@ -14,6 +14,9 @@
   import Table from '../src/lib/components/Table.svelte';
   import TableToolbar from '../src/lib/components/TableToolbar.svelte';
 
+  let lightDensity: 'default' | 'compact' = 'compact';
+  let darkDensity: 'default' | 'compact' = 'default';
+
   const lightCodeExample =
     "const requiredEvidence = ['owner', 'budget', 'audit-log'];\nconst canPromote = requiredEvidence.every((item) => status[item] === 'ready');";
   const darkCodeExample =
@@ -40,7 +43,7 @@
               title="점검 목록"
               summary="권한과 감사 항목을 확인합니다."
               selectedCount={2}
-              density="compact"
+              bind:density={lightDensity}
               densityLabel="표 밀도"
               labelledBy="data-light-table-title"
             >
@@ -51,7 +54,7 @@
                 <Button>새로 고침</Button>
               </svelte:fragment>
             </TableToolbar>
-            <Table caption="보안 점검 목록" labelledBy="data-light-table-title" density="compact">
+            <Table caption="보안 점검 목록" labelledBy="data-light-table-title" density={lightDensity}>
               <thead>
                 <tr>
                   <th scope="col" aria-sort="ascending">
@@ -153,7 +156,7 @@
               title="점검 목록"
               summary="대기 항목을 먼저 확인합니다."
               selectedCount={1}
-              density="default"
+              bind:density={darkDensity}
               densityLabel="표 밀도"
               labelledBy="data-dark-table-title"
             >
@@ -164,7 +167,7 @@
                 <Button>검토</Button>
               </svelte:fragment>
             </TableToolbar>
-            <Table caption="보안 점검 목록" labelledBy="data-dark-table-title" density="compact">
+            <Table caption="보안 점검 목록" labelledBy="data-dark-table-title" density={darkDensity}>
               <thead>
                 <tr>
                   <th scope="col">

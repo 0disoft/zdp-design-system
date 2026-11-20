@@ -24,7 +24,7 @@ Breadcrumb는 첫 번째 명시적 `current` item 하나만 `aria-current="page"
 
 Tabs, SegmentedControl, LocaleSwitcher, TextScaleControl에 전달된 선택값이 없거나 disabled·unknown 값이면 첫 enabled 항목으로 바인딩 값을 자동 보정한다. enabled 항목이 하나도 없으면 어떤 항목도 selected/checked로 표시하지 않는다. ARIA·시각 선택과 부모 상태는 항상 같은 값을 정본으로 공유한다.
 
-Pagination은 목록 페이지 이동의 `nav`, ordered list, link/button, ellipsis, `aria-current="page"` 구조만 제공하며 전체 개수, 현재 페이지 상태, 페이지 크기, 쿼리 라우팅, 필터, 정렬, 데이터 로딩, 권한 판단은 소비 앱이 계속 소유한다. 작은 컨테이너에서는 pagination nav가 horizontal overflow를 소유하고 페이지 버튼이 여러 줄로 무너지지 않아야 하며, 스크롤 표면 안에서도 focus outline의 위아래 edge가 잘리지 않아야 한다.
+Pagination은 목록 페이지 이동의 `nav`, ordered list, link/button, ellipsis, `aria-current="page"` 구조를 제공하며 전체 개수, 현재 페이지 상태, 페이지 크기, 쿼리 라우팅, 필터, 정렬, 데이터 로딩, 권한 판단은 소비 앱이 계속 소유한다. 29rem 이하의 컨테이너에는 이전·현재/전체·다음만 한 줄에 표시한다. 긴 라벨은 컨트롤 안에서 줄바꿈하며 스크롤이 필요한 경우에도 focus outline을 보존한다. 현재 페이지의 접근성 이름과 이전·다음 라벨은 기존 props로 현지화한다.
 
 Tabs는 가까운 정보 묶음 전환을 표현하되 라우팅, 권한, 데이터 로딩 판단은 소비 앱이 계속 소유한다. 기본 tab/panel prefix는 인스턴스마다 다르고 SSR과 hydration에서 안정적이며, 소비 앱이 명시적인 `idPrefix`를 전달하는 계약도 유지한다. 기존 `let:selectedId`, `let:selectedItem`, `bind:selectedId` 계약은 계속 지원한다.
 

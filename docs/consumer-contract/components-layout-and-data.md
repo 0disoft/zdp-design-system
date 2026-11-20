@@ -16,6 +16,8 @@ Grid는 반복되는 카드, 요약, 선택지 묶음의 responsive columns와 g
 Toolbar는 가까운 화면 도구와 액션 묶음의 wrapping, main/action 배치만 제공하며 저장, 삭제, 필터, 권한 판단은 소비 앱이 계속 소유한다.
 
 Table은 표 형식 정보의 native table, caption, row/column header, horizontal overflow wrapper만 제공하며 정렬, 필터, 데이터 로딩, 권한 판단은 소비 앱이 계속 소유한다. 좁은 폭에서도 header와 cell 데이터가 한 글자씩 쪼개지지 않고 table wrapper가 overflow를 소유해야 한다. Table wrapper는 header 오른쪽에 빈 gutter stripe를 만들 수 있는 상시 `scrollbar-gutter: stable`을 기본값으로 쓰지 않는다.
+
+Table은 가용 폭에 맞추고 36rem 이하의 컨테이너에서 셀의 줄바꿈을 허용한다. 비교를 위해 열 너비를 유지해야 하는 표는 wrapper 또는 부모에서 `--zdp-table-min-inline-size`로 최소 폭을 정하거나 `--zdp-table-cell-white-space`를 `nowrap`으로 설정할 수 있다. Svelte Table은 더 볼 열이 있을 때 화살표를 표시한다. 정적 HTML 표는 브라우저의 가로 스크롤을 사용한다.
 SortHeader와 TableToolbar는 sortable column affordance, 선택 행 액션 자리, 밀도 전환 표면만 제공하며 `aria-sort`, 실제 정렬 계산, 선택 상태, 필터, 권한, 데이터 로딩 판단은 소비 앱이 계속 소유한다. `aria-sort`는 SortHeader 버튼이 아니라 owning `th` 또는 columnheader에 둔다.
 
 KeyValue는 용어와 값의 description list 구조와 responsive columns만 제공하며 실제 원장, 보안, 결제, 권한 판단은 소비 앱이 계속 소유한다.
