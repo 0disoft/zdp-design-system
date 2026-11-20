@@ -109,21 +109,38 @@ export async function verifyFormResetBatching(page) {
       await Promise.resolve();
       const unrelated = reads;
 
+      row.id = 'unrelated-form-results';
+      await Promise.resolve();
+      const afterId = reads - unrelated;
+
       const moved = document.createElement('div');
       moved.append(inputs[0]);
       results.append(moved);
       await Promise.resolve();
-      return { unrelated, afterMove: reads - unrelated };
+      const afterMove = reads - unrelated - afterId;
+
+      // A control can switch from its ancestor form to an explicit association.
+      form.id = 'form-ownership-probe';
+      inputs[1].setAttribute('form', form.id);
+      await Promise.resolve();
+      const beforeBlocker = reads;
+      const blocker = document.createElement('div');
+      blocker.id = form.id;
+      form.before(blocker);
+      await Promise.resolve();
+      const afterBlocker = reads - beforeBlocker;
+      blocker.remove();
+      await Promise.resolve();
+      return { unrelated, afterId, afterMove, afterBlocker, afterUnblock: reads - beforeBlocker - afterBlocker };
     } finally {
       for (const action of actions) action.destroy();
       form.remove();
       results.remove();
     }
   }, process.cwd().replaceAll('\\', '/'));
-  assert.equal(ownershipReads.unrelated, 0,
-    'Adding unrelated content must skip ownership refresh for all 1000 inputs.');
-  assert.ok(ownershipReads.afterMove > 0, 'A subtree move containing an input must still refresh ownership.');
-  console.log('Form ownership: 0 reads for unrelated content with 1000 mounted inputs.');
+  assert.deepEqual(ownershipReads, { unrelated: 0, afterId: 0, afterMove: 1, afterBlocker: 1, afterUnblock: 1 },
+    'Refresh only moved controls and explicit form references affected by duplicate IDs.');
+  console.log('Form ownership: 0 reads for unrelated content or IDs, 1 read for a move or ID collision with 1000 mounted inputs.');
 
   const targetedReset = await page.evaluate(async (rootPath) => {
     const { syncZdpFormReset } = await import(`/@fs/${rootPath}/src/lib/form-reset.ts`);

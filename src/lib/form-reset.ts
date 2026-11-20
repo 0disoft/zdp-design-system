@@ -8,7 +8,8 @@ interface FormResetOptions<Control extends FormControl> {
 
 interface FormOwnershipObserver {
   observer: MutationObserver;
-  callbacks: Set<() => void>;
+  controls: Map<Element, Set<() => void>>;
+  explicitControls: Set<Element>;
 }
 
 const ownershipObservers = new WeakMap<Node, FormOwnershipObserver>();
@@ -105,46 +106,80 @@ function afterFormReset(event: Event, callback: () => void): () => void {
   };
 }
 
-const formOwnershipSelector = 'input, textarea, select, [id]';
+const formControlSelector = 'input, textarea, select';
 
-function canChangeFormOwnership(record: MutationRecord): boolean {
-  // An explicit form reference can be shadowed by any earlier element with the same ID.
-  if (record.type === 'attributes') return true;
+function refreshChangedOwnership(
+  { controls, explicitControls }: FormOwnershipObserver,
+  records: readonly MutationRecord[]
+): void {
+  const changed = new Set<Element>();
+  const watchIds = explicitControls.size > 0;
+  const selector = watchIds ? `${formControlSelector}, [id]` : formControlSelector;
+  let idsChanged = false;
 
-  for (const nodes of [record.addedNodes, record.removedNodes]) {
-    for (const node of nodes) {
-      if (node.nodeType !== 1) continue;
-      const element = node as Element;
-      if (element.matches(formOwnershipSelector) || element.querySelector(formOwnershipSelector)) {
-        return true;
+  function mark(element: Element): void {
+    if (controls.has(element)) changed.add(element);
+    if (watchIds && !idsChanged && element.hasAttribute('id')) idsChanged = true;
+  }
+
+  for (const record of records) {
+    if (record.type === 'attributes') {
+      const target = record.target as Element;
+      if (record.attributeName === 'id') {
+        idsChanged = true;
+      } else if (controls.has(target)) {
+        if (target.hasAttribute('form')) explicitControls.add(target);
+        else explicitControls.delete(target);
+        changed.add(target);
+      }
+      continue;
+    }
+    for (const nodes of [record.addedNodes, record.removedNodes]) {
+      for (const node of nodes) {
+        if (node.nodeType !== 1) continue;
+        const element = node as Element;
+        mark(element);
+        for (const candidate of element.querySelectorAll(selector)) mark(candidate);
       }
     }
   }
-  return false;
+  // An earlier element with the same ID can shadow the referenced form.
+  if (idsChanged) for (const control of explicitControls) changed.add(control);
+  for (const control of changed) {
+    for (const refresh of controls.get(control) ?? []) refresh();
+  }
 }
 
 /** Share one observer per tree instead of observing the page once per input. */
-function observeFormOwnership(root: Node, callback: () => void): () => void {
+function observeFormOwnership(root: Node, control: FormControl, callback: () => void): () => void {
   const view = root.nodeType === 9 ? (root as Document).defaultView : root.ownerDocument?.defaultView;
   const Observer = view?.MutationObserver;
   if (!Observer) return () => {};
   let state = ownershipObservers.get(root);
   if (!state) {
-    const callbacks = new Set<() => void>();
+    const controls: FormOwnershipObserver['controls'] = new Map();
+    const explicitControls = new Set<Element>();
     const observer = new Observer((records) => {
-      if (!records.some(canChangeFormOwnership)) return;
-      for (const refresh of [...callbacks]) refresh();
+      refreshChangedOwnership(subscription, records);
     });
+    const subscription = { observer, controls, explicitControls };
     observer.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['form', 'id'] });
-    state = { observer, callbacks };
+    state = subscription;
     ownershipObservers.set(root, state);
   }
-  const subscription = state;
-  subscription.callbacks.add(callback);
+  const { observer, controls, explicitControls } = state;
+  const callbacks = controls.get(control) ?? new Set<() => void>();
+  callbacks.add(callback);
+  controls.set(control, callbacks);
+  if (control.hasAttribute('form')) explicitControls.add(control);
   return () => {
-    subscription.callbacks.delete(callback);
-    if (subscription.callbacks.size === 0) {
-      subscription.observer.disconnect();
+    callbacks.delete(callback);
+    if (callbacks.size === 0) {
+      controls.delete(control);
+      explicitControls.delete(control);
+    }
+    if (controls.size === 0) {
+      observer.disconnect();
       ownershipObservers.delete(root);
     }
   };
@@ -230,7 +265,7 @@ export function syncZdpFormReset<Control extends FormControl>(
     if (tree !== observedTree) {
       stopObserving();
       observedTree = tree;
-      stopObserving = observeFormOwnership(tree, refreshOwnership);
+      stopObserving = observeFormOwnership(tree, control, refreshOwnership);
     }
   }
   refreshOwnership();
