@@ -56,8 +56,8 @@
 <style>
   .zdp-toast {
     align-items: start;
-    background: var(--zdp-color-surface-panel);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+    background: var(--zdp-color-surface-raised);
+    border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-normal);
@@ -200,5 +200,11 @@
   .zdp-toast__close:active,
   .zdp-toast__body :global(.zdp-toast__action:active) {
     background: var(--zdp-color-interaction-pressed);
+  }
+
+  @media (forced-colors: active) {
+    .zdp-toast {
+      border-color: CanvasText;
+    }
   }
 </style>

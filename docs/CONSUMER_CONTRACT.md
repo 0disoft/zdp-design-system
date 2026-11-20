@@ -46,6 +46,7 @@ Default component text is English. 소비 앱은 화면 locale에 맞춰 user-fa
 
 - 소비 저장소는 제품 문구, 라우팅, SEO, 데이터 로딩, 인증, 결제, 권한 판단을 직접 소유한다.
 - 디자인 시스템은 색상, 타입, 간격, radius, focus, i18n, control metric, shared component API만 제공한다.
+- 평상시 컨트롤과 콘텐츠 묶음은 배경색의 밝기 차이와 여백으로 구분한다. 입력·오류 상태, 키보드 포커스와 강제 색상 모드, 표의 행이나 떠 있는 패널처럼 경계가 정보를 전달하는 곳에 테두리를 사용한다.
 - Card와 CardHeader는 비상호작용 콘텐츠 컨테이너다. panel/raised tone은 색상 단계로 깊이를 만들고, `outline`만 명시적 테두리를 사용한다. `hover`는 부드러운 표면색 변화만 제공하며 클릭 가능성, 손가락 커서, 키보드 focus를 암시하지 않는다. 전체 카드 이동이나 실행은 내부 Link 또는 Button으로 명시한다.
 - 소비 저장소는 `zdp-design-system`의 public export만 사용하고 내부 `src/` deep import를 만들지 않는다.
 - package export는 `dist/` 산출물을 통해 소비한다. `bun run package:build`는 `@sveltejs/package`와 `tsconfig.package.json`으로 `src/lib`를 atomic staging tree 안에서만 컴파일하고, 원본 `.ts`가 산출물에 남으면 실패한다. helper 모듈은 `.js`와 `.d.ts`, Svelte 컴포넌트는 TypeScript를 제거한 `.svelte`와 `.svelte.d.ts`를 함께 내보낸다. 모든 export leaf는 `types` 조건을 첫 번째에 두고 root는 `dist/index.d.ts`, 컴포넌트는 `dist/components/*.svelte.d.ts`, helper는 각 `dist/<module>.d.ts`로 연결하므로 bundler와 NodeNext 소비처가 같은 선언을 본다. root runtime entry는 `dist/index.js`이고 root barrel은 호환용이다. 원천은 `src/lib`, `src/styles`, `tokens/zdp.tokens.json`, `src/lib/share.ts`이고 `dist/`는 release 전 `bun run package:build`로 다시 만든다.

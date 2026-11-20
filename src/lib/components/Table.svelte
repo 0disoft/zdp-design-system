@@ -51,7 +51,7 @@
 <style>
   .zdp-table-wrap {
     background: var(--zdp-color-surface-panel);
-    border: 1px solid var(--zdp-color-line-subtle);
+    border: 1px solid transparent;
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     container: zdp-table / inline-size;
@@ -145,8 +145,8 @@
   }
 
   .zdp-table__scroll-cue::after {
-    background: var(--zdp-color-surface-raised);
-    border: 1px solid var(--zdp-color-line-strong);
+    background: var(--zdp-color-interaction-hover);
+    border: 1px solid transparent;
     border-radius: var(--zdp-control-radius);
     content: '›';
     display: grid;
@@ -160,5 +160,11 @@
 
   .zdp-table__scroll-cue:dir(rtl)::after {
     content: '‹';
+  }
+
+  @media (forced-colors: active) {
+    .zdp-table__scroll-cue::after {
+      border-color: CanvasText;
+    }
   }
 </style>

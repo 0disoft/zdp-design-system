@@ -21,7 +21,7 @@
 
 <style>
   .zdp-key-value {
-    border: 1px solid var(--zdp-color-line-subtle);
+    border: 1px solid transparent;
     border-radius: var(--zdp-control-radius);
     color: var(--zdp-color-ink-normal);
     display: grid;

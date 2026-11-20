@@ -185,6 +185,10 @@
     padding: var(--zdp-space-1);
   }
 
+  .zdp-share-dock--inline .zdp-share-dock__list {
+    border-color: transparent;
+  }
+
   .zdp-share-dock--bottom .zdp-share-dock__list,
   .zdp-share-dock--inline .zdp-share-dock__list {
     display: flex;
@@ -256,13 +260,11 @@
 
   .zdp-share-action:where(:hover:not(:disabled):not([aria-disabled="true"])) {
     background: var(--zdp-color-interaction-hover);
-    border-color: var(--zdp-color-line-subtle);
     color: var(--zdp-color-ink-strong);
   }
 
   .zdp-share-action:where(:active:not(:disabled):not([aria-disabled="true"])) {
     background: var(--zdp-color-interaction-pressed);
-    border-color: var(--zdp-color-line-subtle);
     color: var(--zdp-color-ink-strong);
   }
 

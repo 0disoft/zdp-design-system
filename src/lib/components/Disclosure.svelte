@@ -113,8 +113,8 @@
 
 <style>
   .zdp-disclosure {
-    background: var(--zdp-color-surface-panel);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+    background: var(--zdp-color-surface-raised);
+    border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
     color: var(--zdp-color-ink-normal);
@@ -214,14 +214,13 @@
   }
 
   .zdp-disclosure__panel {
-    border-block-start: 1px solid var(--zdp-color-line-subtle);
     color: var(--zdp-color-ink-normal);
     display: grid;
     gap: var(--zdp-space-2);
     line-height: var(--zdp-type-body-line-height);
     min-width: 0;
     overflow-wrap: var(--zdp-i18n-overflow-wrap);
-    padding: var(--zdp-space-3);
+    padding: var(--zdp-space-2) var(--zdp-control-padding-md) var(--zdp-space-3);
   }
 
   .zdp-disclosure__panel :global(*) {
@@ -229,6 +228,10 @@
   }
 
   @media (forced-colors: active) {
+    .zdp-disclosure {
+      border-color: ButtonText;
+    }
+
     .zdp-disclosure__mark::before {
       background-color: currentColor;
       color: ButtonText;

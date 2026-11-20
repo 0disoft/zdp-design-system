@@ -68,11 +68,11 @@
 <style>
   .zdp-theme-toggle {
     align-items: center;
-    background: var(--zdp-color-surface-panel);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+    background: var(--zdp-color-surface-raised);
+    border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-control-radius);
     box-sizing: border-box;
-    color: var(--zdp-color-ink-normal);
+    color: var(--zdp-color-ink-strong);
     cursor: pointer;
     display: inline-grid;
     flex: 0 0 auto;
@@ -84,7 +84,6 @@
     position: relative;
     transition:
       background-color var(--zdp-motion-fast) ease,
-      border-color var(--zdp-motion-fast) ease,
       color var(--zdp-motion-fast) ease;
     vertical-align: middle;
     -webkit-user-select: none;
@@ -103,14 +102,10 @@
 
   .zdp-theme-toggle:where(:hover:not(:disabled)) {
     background: var(--zdp-color-interaction-hover);
-    border-color: var(--zdp-color-line-strong);
-    color: var(--zdp-color-ink-strong);
   }
 
   .zdp-theme-toggle:where(:active:not(:disabled)) {
     background: var(--zdp-color-interaction-pressed);
-    border-color: var(--zdp-color-line-strong);
-    color: var(--zdp-color-ink-strong);
   }
 
   .zdp-theme-toggle:focus-visible {
@@ -163,9 +158,9 @@
     opacity: 0;
   }
 
-  .zdp-theme-toggle[data-zdp-theme-state='dark'] {
-    background: var(--zdp-color-surface-raised);
-    border-color: var(--zdp-color-line-strong);
-    color: var(--zdp-color-ink-strong);
+  @media (forced-colors: active) {
+    .zdp-theme-toggle {
+      border-color: ButtonText;
+    }
   }
 </style>

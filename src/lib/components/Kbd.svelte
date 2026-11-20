@@ -32,7 +32,7 @@
 <style>
   .zdp-kbd {
     background: var(--zdp-color-surface-raised);
-    border: var(--zdp-control-border-width) solid var(--zdp-color-line-subtle);
+    border: var(--zdp-control-border-width) solid transparent;
     border-radius: var(--zdp-radius-sm);
     box-sizing: border-box;
     color: var(--zdp-color-ink-muted);
@@ -68,5 +68,11 @@
 
   .zdp-kbd--md {
     font-size: 0.86em;
+  }
+
+  @media (forced-colors: active) {
+    .zdp-kbd {
+      border-color: CanvasText;
+    }
   }
 </style>
