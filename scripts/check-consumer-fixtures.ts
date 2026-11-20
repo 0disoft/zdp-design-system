@@ -58,10 +58,11 @@ async function checkPackedConsumerFixture(): Promise<void> {
     await assertInstalledPackageSurface(packedRoot);
     const fullFixtureRoot = resolve(packedRoot, 'full');
     await copyFullConsumerFixture(fullFixtureRoot);
+    await copyConsumerExamples(packedRoot, fullFixtureRoot);
     await checkPackedTypeConsumers(packedRoot, repoRoot);
     await checkPackedConsumerTypes(fullFixtureRoot);
     if (typesOnly) return;
-    await checkPackedFrameworkNeutralViteDev(packedRoot);
+    await checkPackedConsumerViteDev(fullFixtureRoot);
     await checkPackedConsumerSsrHydration(packedRoot);
     await checkFullConsumerBuild(fullFixtureRoot);
     await checkSingleComponentTreeShaking(packedRoot);
@@ -70,20 +71,42 @@ async function checkPackedConsumerFixture(): Promise<void> {
   }
 }
 
-async function checkPackedFrameworkNeutralViteDev(packedRoot: string): Promise<void> {
-  const fixtureRoot = resolve(packedRoot, 'framework-neutral-dev');
-  await mkdir(fixtureRoot, { recursive: true });
+async function copyConsumerExamples(packedRoot: string, fullFixtureRoot: string): Promise<void> {
+  const packageRoot = resolve(packedRoot, 'node_modules/zdp-design-system');
+  const document = await readFile(resolve(packageRoot, 'docs/consumer-contract/working-examples.md'), 'utf8');
+  const examples = [...document.matchAll(/^```svelte\r?\n([\s\S]*?)^```[ \t]*\r?$/gm)];
+  const exampleNames = ['FormExample', 'ListExample'];
+  assert.equal(examples.length, exampleNames.length, 'Expected two runnable Svelte examples in the packed documentation.');
+
+  await Promise.all(exampleNames.map((name, index) =>
+    writeFile(resolve(fullFixtureRoot, 'src', `${name}.svelte`), examples[index]![1]!, 'utf8')
+  ));
+  await writeFile(resolve(fullFixtureRoot, 'consumer-examples.html'),
+    '<!doctype html><html lang="ko"><meta charset="utf-8"><title>소비 예제</title>' +
+    '<main class="zdp-surface-reset" id="app"></main><script type="module" src="/examples.js"></script></html>');
+  await writeFile(resolve(fullFixtureRoot, 'examples.js'), [
+    "import { mount } from 'svelte';",
+    "import FormExample from './src/FormExample.svelte';",
+    "import ListExample from './src/ListExample.svelte';",
+    "const target = document.querySelector('#app');",
+    "mount(FormExample, { target });",
+    "mount(ListExample, { target });"
+  ].join('\n'));
+}
+
+async function checkPackedConsumerViteDev(fixtureRoot: string): Promise<void> {
   await writeFile(
-    resolve(fixtureRoot, 'index.html'),
+    resolve(fixtureRoot, 'framework-neutral.html'),
     '<link rel="icon" href="data:," /><div id="app"></div><script type="module" src="/main.js"></script>\n',
     'utf8'
   );
   await writeFile(resolve(fixtureRoot, 'main.js'), createFrameworkNeutralDevSource(), 'utf8');
 
   const server = await createServer({
-    cacheDir: resolve(packedRoot, 'vite-framework-neutral-cache'),
+    cacheDir: resolve(fixtureRoot, 'vite-consumer-cache'),
     configFile: false,
     logLevel: 'silent',
+    plugins: [svelte()],
     root: fixtureRoot,
     server: {
       hmr: false,

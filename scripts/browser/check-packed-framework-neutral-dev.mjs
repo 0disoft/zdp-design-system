@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright-core';
+import { verifyConsumerExamples } from './check-consumer-examples.mjs';
 
 const port = Number.parseInt(process.argv[2] ?? '', 10);
 assert.ok(Number.isInteger(port) && port > 0, 'Packed framework-neutral browser check requires a Vite port.');
@@ -20,7 +21,7 @@ try {
   page.setDefaultTimeout(10_000);
   page.setDefaultNavigationTimeout(30_000);
 
-  await page.goto(`http://127.0.0.1:${port}`, {
+  await page.goto(`http://127.0.0.1:${port}/framework-neutral.html`, {
     timeout: 30_000,
     waitUntil: 'networkidle'
   });
@@ -37,6 +38,11 @@ try {
   });
 
   console.log('Packed framework-neutral Vite dev browser check passed.');
+
+  await page.goto(`http://127.0.0.1:${port}/consumer-examples.html`);
+  await verifyConsumerExamples(page);
+  assert.deepEqual(runtimeErrors, [], 'Runnable consumer documentation reported a browser error.');
+  console.log('Packed documentation examples passed browser checks.');
 } finally {
   await browser.close();
 }
