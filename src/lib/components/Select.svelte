@@ -16,7 +16,7 @@
   let {
     id = $bindable(null),
     name = $bindable(null),
-    value = $bindable(''),
+    value = $bindable(),
     describedBy = $bindable(null),
     errorMessageId = $bindable(null),
     invalid = $bindable(false),
@@ -50,7 +50,7 @@
     class="zdp-select"
     id={id ?? undefined}
     name={name ?? undefined}
-    {value}
+    {...(value === undefined ? {} : { value })}
     aria-describedby={ariaDescribedBy ?? undefined}
     aria-errormessage={resolvedErrorMessageId ?? undefined}
     aria-invalid={invalid ? 'true' : undefined}

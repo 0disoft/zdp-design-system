@@ -1,7 +1,7 @@
 type FormControl = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
 
 interface FormResetOptions<Control extends FormControl> {
-  initialValue?: string;
+  initialValue?: string | undefined;
   initialChecked?: boolean;
   onReset: (control: Control) => void;
 }

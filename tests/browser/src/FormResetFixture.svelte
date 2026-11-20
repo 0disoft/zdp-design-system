@@ -67,4 +67,21 @@
   <button type="button" onclick={() => (asyncOptionsLoaded = true)}>Load reset options</button>
   <button type="button" onclick={() => (asyncOptionsRevision += 1)}>Replace reset options</button>
   <output data-testid="async-reset-value">{asyncChoice}</output>
+  <form id="native-select-defaults">
+    <label for="native-first-option">Implicit default</label>
+    <Select id="native-first-option" name="implicit" required>
+      <option value="a">First option</option>
+      <option value="b">Second option</option>
+    </Select>
+    <label for="native-marked-option">Markup default</label>
+    <Select id="native-marked-option" name="marked" required>
+      <option value="a">First option</option>
+      <option value="b" selected>Second option</option>
+    </Select>
+    <label for="native-empty-option">Explicit empty default</label>
+    <Select id="native-empty-option" name="empty" value="" required>
+      <option value="a">First option</option>
+      <option value="">Choose an option</option>
+    </Select>
+  </form>
 </section>

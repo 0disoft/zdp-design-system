@@ -67,6 +67,20 @@ export async function verifyFormResetContracts(page) {
 }
 
 export async function verifyAsyncSelectResetContracts(page) {
+  const nativeDefaults = page.locator('#native-select-defaults');
+  const defaultValues = () => nativeDefaults.evaluate(element => ({
+    values: Object.fromEntries(new FormData(element)),
+    valid: Array.from(element.querySelectorAll('select'), select => select.validity.valid)
+  }));
+  const expected = { values: { implicit: 'a', marked: 'b', empty: '' }, valid: [true, true, true] };
+  assert.deepEqual(await defaultValues(), expected, 'Select without a value must retain its native default selection.');
+  await nativeDefaults.getByLabel('Implicit default').selectOption('b');
+  await nativeDefaults.getByLabel('Markup default').selectOption('a');
+  await nativeDefaults.getByLabel('Explicit empty default').selectOption('a');
+  await nativeDefaults.evaluate(form => form.reset());
+  await page.waitForFunction(() => document.querySelector('#native-empty-option').value === '');
+  assert.deepEqual(await defaultValues(), expected, 'Reset must restore both native and explicit defaults.');
+
   const select = page.getByRole('combobox', { name: 'Async reset choice', exact: true });
   const value = page.getByTestId('async-reset-value');
   await page.getByRole('button', { name: 'Load reset options', exact: true }).click();
