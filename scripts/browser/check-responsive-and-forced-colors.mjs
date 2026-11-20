@@ -122,24 +122,31 @@ async function measureShareDock(dock, list) {
 
 async function verifyTableToolbarBreakpoint(page) {
   const toolbar = page.getByRole('group', { name: 'Browser table tools' });
-  const actions = toolbar.locator('.zdp-table-toolbar__actions');
+  const setWidth = (width) => toolbar.evaluate((element, value) => {
+    element.style.setProperty('inline-size', value);
+  }, width);
 
-  await page.setViewportSize({ width: 800, height: 900 });
-  const wideGeometry = await measureToolbar(toolbar);
-  assert.ok(
-    wideGeometry.actionWidth < wideGeometry.toolbarWidth * 0.5,
-    'TableToolbar actions must remain content-sized above the 48rem breakpoint.'
-  );
-  assert.equal(wideGeometry.justifyContent, 'flex-end');
+  await page.setViewportSize({ width: 1000, height: 900 });
+  try {
+    await setWidth('30rem');
+    const wideGeometry = await measureToolbar(toolbar);
+    assert.ok(
+      wideGeometry.actionWidth < wideGeometry.toolbarWidth * 0.5,
+      'TableToolbar actions must remain content-sized in containers wider than 28rem.'
+    );
+    assert.equal(wideGeometry.justifyContent, 'flex-end');
 
-  await page.setViewportSize({ width: 760, height: 900 });
-  const narrowGeometry = await measureToolbar(toolbar);
-  assert.ok(
-    narrowGeometry.actionWidth > narrowGeometry.toolbarWidth * 0.9,
-    'TableToolbar actions must occupy their own row below the 48rem breakpoint.'
-  );
-  assert.equal(narrowGeometry.justifyContent, 'flex-start');
-  assert.equal(narrowGeometry.marginInlineStart, '0px');
+    await setWidth('26rem');
+    const narrowGeometry = await measureToolbar(toolbar);
+    assert.ok(
+      narrowGeometry.actionWidth > narrowGeometry.toolbarWidth * 0.9,
+      'TableToolbar actions must occupy their own row in containers narrower than 28rem.'
+    );
+    assert.equal(narrowGeometry.justifyContent, 'flex-start');
+    assert.equal(narrowGeometry.marginInlineStart, '0px');
+  } finally {
+    await toolbar.evaluate((element) => element.style.removeProperty('inline-size'));
+  }
 }
 
 async function measureToolbar(toolbar) {
