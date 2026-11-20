@@ -13,6 +13,59 @@ interface FormOwnershipObserver {
 
 const ownershipObservers = new WeakMap<Node, FormOwnershipObserver>();
 
+interface TreeResetSubscription {
+  order: number;
+  callback: (event: Event) => void;
+}
+
+interface TreeResetState {
+  controls: Map<Element, Set<TreeResetSubscription>>;
+  listener: (event: Event) => void;
+  nextOrder: number;
+}
+
+const treeResetStates = new WeakMap<EventTarget, TreeResetState>();
+
+function dispatchTreeReset(controls: TreeResetState['controls'], event: Event): void {
+  const target = event.target as HTMLFormElement | null;
+  if (target?.localName !== 'form' || target.namespaceURI !== 'http://www.w3.org/1999/xhtml') return;
+  // Use the native getter because a named form control can shadow "elements".
+  const elements = Object.getOwnPropertyDescriptor(HTMLFormElement.prototype, 'elements')?.get
+    ?.call(target) as HTMLFormControlsCollection | undefined;
+  if (!elements) return;
+  const subscriptions: TreeResetSubscription[] = [];
+  for (const element of elements) {
+    const registered = controls.get(element);
+    if (registered) subscriptions.push(...registered);
+  }
+  subscriptions.sort((left, right) => left.order - right.order);
+  for (const subscription of subscriptions) subscription.callback(event);
+}
+
+function subscribeTreeReset(root: EventTarget, control: FormControl, callback: (event: Event) => void): () => void {
+  let state = treeResetStates.get(root);
+  if (!state) {
+    const controls: TreeResetState['controls'] = new Map();
+    const listener = (event: Event) => dispatchTreeReset(controls, event);
+    state = { controls, listener, nextOrder: 0 };
+    treeResetStates.set(root, state);
+    root.addEventListener('reset', listener, true);
+  }
+  const { controls, listener } = state;
+  const subscriptions = controls.get(control) ?? new Set<TreeResetSubscription>();
+  const subscription = { order: state.nextOrder++, callback };
+  subscriptions.add(subscription);
+  controls.set(control, subscriptions);
+  return () => {
+    subscriptions.delete(subscription);
+    if (subscriptions.size === 0) controls.delete(control);
+    if (controls.size === 0) {
+      root.removeEventListener('reset', listener, true);
+      treeResetStates.delete(root);
+    }
+  };
+}
+
 interface FormResetBatch {
   timer: ReturnType<typeof setTimeout>;
   callbacks: Set<() => void>;
@@ -130,8 +183,9 @@ export function syncZdpFormReset<Control extends FormControl>(
   // Hydration may remove SSR value/checked attributes later in this turn.
   queueMicrotask(() => { if (active) restoreDefaults(); });
   const pendingResets = new Set<() => void>();
+  const treeSubscriptions = new Map<EventTarget, () => void>();
   // A listener on the form travels with it across shadow roots and documents.
-  const roots = new Set<EventTarget>();
+  let listenedForm: HTMLFormElement | null = null;
   let observedTree: Node | null = null;
   let stopObserving = () => {};
   const handledResets = new WeakSet<Event>();
@@ -155,20 +209,23 @@ export function syncZdpFormReset<Control extends FormControl>(
   function refreshOwnership(): void {
     if (!active) return;
     const tree = control.getRootNode();
-    const nextRoots = new Set<EventTarget>([
-      control.ownerDocument, tree, ...(control.form ? [control.form] : [])
-    ]);
-    for (const root of roots) {
+    const form = control.form;
+    const nextRoots = new Set<EventTarget>([control.ownerDocument, tree]);
+    for (const [root, unsubscribe] of treeSubscriptions) {
       if (!nextRoots.has(root)) {
-        root.removeEventListener('reset', handleReset, true);
-        roots.delete(root);
+        unsubscribe();
+        treeSubscriptions.delete(root);
       }
     }
     for (const root of nextRoots) {
-      if (!roots.has(root)) {
-        root.addEventListener('reset', handleReset, true);
-        roots.add(root);
+      if (!treeSubscriptions.has(root)) {
+        treeSubscriptions.set(root, subscribeTreeReset(root, control, handleReset));
       }
+    }
+    if (form !== listenedForm) {
+      listenedForm?.removeEventListener('reset', handleReset, true);
+      listenedForm = form;
+      listenedForm?.addEventListener('reset', handleReset, true);
     }
     if (tree !== observedTree) {
       stopObserving();
@@ -184,7 +241,10 @@ export function syncZdpFormReset<Control extends FormControl>(
       stopObserving();
       for (const cancel of pendingResets) cancel();
       pendingResets.clear();
-      for (const root of roots) root.removeEventListener('reset', handleReset, true);
+      for (const unsubscribe of treeSubscriptions.values()) unsubscribe();
+      treeSubscriptions.clear();
+      listenedForm?.removeEventListener('reset', handleReset, true);
+      listenedForm = null;
     }
   };
 }

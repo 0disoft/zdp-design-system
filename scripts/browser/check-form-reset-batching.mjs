@@ -125,4 +125,40 @@ export async function verifyFormResetBatching(page) {
   assert.ok(ownershipReads.afterMove > 0, 'A subtree move containing an input must still refresh ownership.');
   console.log('Form ownership: 0 reads for unrelated content with 1000 mounted inputs.');
 
+  const targetedReset = await page.evaluate(async (rootPath) => {
+    const { syncZdpFormReset } = await import(`/@fs/${rootPath}/src/lib/form-reset.ts`);
+    const container = document.createElement('div');
+    const target = document.createElement('form');
+    const other = document.createElement('form');
+    const input = document.createElement('input');
+    target.append(input);
+    container.append(target, other);
+    document.body.append(container);
+    let unrelatedReads = 0;
+    let unrelatedCallbacks = 0;
+    const restored = [];
+    const active = syncZdpFormReset(input, { initialValue: 'seed', onReset: control => restored.push(control.value) });
+    const inputs = Array.from({ length: 1000 }, () => document.createElement('input'));
+    other.append(...inputs);
+    const actions = inputs.map(control => syncZdpFormReset(control, { onReset: () => unrelatedCallbacks++ }));
+    const getForm = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'form').get;
+    try {
+      await Promise.resolve();
+      for (const control of inputs) {
+        Object.defineProperty(control, 'form', { get() { unrelatedReads++; return getForm.call(this); } });
+      }
+      input.value = 'edited';
+      target.reset();
+      const readsDuringReset = unrelatedReads;
+      await new Promise(resolve => setTimeout(resolve, 20));
+      return { readsDuringReset, unrelatedCallbacks, restored };
+    } finally {
+      active.destroy();
+      for (const action of actions) action.destroy();
+      container.remove();
+    }
+  }, process.cwd().replaceAll('\\', '/'));
+  assert.deepEqual(targetedReset, { readsDuringReset: 0, unrelatedCallbacks: 0, restored: ['seed'] },
+    'Reset dispatch must touch only the target form.');
+  console.log('Form reset dispatch: 0 reads for 1000 controls in an unrelated form.');
 }
