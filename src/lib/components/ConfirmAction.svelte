@@ -46,7 +46,7 @@
   let trigger: HTMLButtonElement | undefined = $state();
   let confirmationGroup: HTMLDivElement | undefined = $state();
   const dismissLayer = createZdpDismissLayer();
-  // Survives success/pending resets until the completing pointer's click arrives.
+  // Survives success, cancellation, and pending resets until the pointer's click arrives.
   let suppressPointerClick = false;
   let startX = 0;
   let slideDirection = 1;
@@ -270,6 +270,16 @@
     trigger?.focus();
   }
 
+  function handleEscape(): void {
+    if (active) {
+      // The browser can still click the trigger when the cancelled pointer is released.
+      if (activePointerId !== null) suppressPointerClick = true;
+      cancelInteraction();
+      return;
+    }
+    cancelConfirmation();
+  }
+
   function confirmClick(): void {
     if (confirmationOpen) confirmAction();
   }
@@ -297,10 +307,11 @@
     }
   });
   $effect.pre(() => {
-    dismissLayer.setActive(confirmationOpen, confirmationGroup ?? null, {
+    const escapeRoot = active ? trigger : confirmationGroup;
+    dismissLayer.setActive(active || confirmationOpen, escapeRoot ?? null, {
       escapeWithin: true,
       ignoreOutside: true,
-      onEscape: cancelConfirmation
+      onEscape: handleEscape
     });
   });
 </script>

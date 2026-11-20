@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 
 export async function verifyConfirmClickContracts(page) {
+  await verifyHoldEscape(page);
   await verifyNestedConfirmEscape(page);
   const button = page.locator('#repeat-confirm-action');
   const count = page.getByTestId('repeat-confirm-count');
@@ -82,6 +83,41 @@ export async function verifyConfirmClickContracts(page) {
   await togglePending();
 }
 
+async function verifyHoldEscape(page) {
+  const trigger = page.locator('#repeat-confirm-action');
+  const count = page.getByTestId('repeat-confirm-count');
+  const results = [];
+  for (const input of ['keyboard', 'pointer']) {
+    const before = Number(await count.textContent());
+    await trigger.focus();
+    if (input === 'keyboard') {
+      await page.keyboard.down('Enter');
+    } else {
+      await trigger.scrollIntoViewIfNeeded();
+      const box = await trigger.boundingBox();
+      await page.mouse.move(box.x + 8, box.y + box.height / 2);
+      await page.mouse.down();
+    }
+    try {
+      assert.equal(await trigger.getAttribute('data-active'), 'true');
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(700); // The hold deadline is 600 ms.
+    } finally {
+      if (input === 'keyboard') await page.keyboard.up('Enter');
+      else await page.mouse.up();
+    }
+    results.push({
+      confirmations: Number(await count.textContent()) - before,
+      expanded: await trigger.getAttribute('aria-expanded')
+    });
+    await page.waitForFunction(() => !document.querySelector('#repeat-confirm-action').hasAttribute('data-confirmed'));
+  }
+  assert.deepEqual(results, [
+    { confirmations: 0, expanded: 'false' },
+    { confirmations: 0, expanded: 'false' }
+  ], 'Escape must stop keyboard and pointer holds without confirming or opening an inline confirmation on release.');
+}
+
 async function verifyNestedConfirmEscape(page) {
   const opener = page.getByRole('button', { name: 'Open confirmation dialog', exact: true });
   const dialog = page.getByRole('dialog', { name: 'Edit draft before confirming', exact: true });
@@ -97,6 +133,17 @@ async function verifyNestedConfirmEscape(page) {
 
   await opener.click();
   await draft.fill('Unsaved changes');
+  await trigger.focus();
+  await page.keyboard.down('Space');
+  try {
+    assert.equal(await trigger.getAttribute('data-active'), 'true');
+    await page.keyboard.press('Escape');
+    assert.equal(await dialog.count(), 1, 'Escape during a hold must keep the dialog open.');
+    assert.equal(await trigger.getAttribute('data-active'), null, 'Escape must cancel the active hold.');
+    assert.equal(await draft.inputValue(), 'Unsaved changes');
+  } finally {
+    await page.keyboard.up('Space');
+  }
   await openConfirmation();
   await page.keyboard.press('Escape');
   assert.equal(await dialog.count(), 1, 'The first Escape must keep the parent dialog open.');
