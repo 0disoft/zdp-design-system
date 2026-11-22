@@ -326,10 +326,20 @@ export function createZdpSplitPaneController(
     }
   }
 
-  function render(values = getNormalizedValues()): void {
+  function renderSize(size: number): void {
+    const valueText = options.getValueText?.(size) ?? `${size} pixels`;
+    root.style.setProperty('--zdp-resizable-split-pane-size', `${size}px`);
+    separator.setAttribute('aria-valuenow', String(size));
+    separator.setAttribute('aria-valuetext', valueText);
+    if (separator.getAttribute('aria-controls') !== primary.id) {
+      separator.setAttribute('aria-controls', primary.id);
+    }
+  }
+
+  function render(): void {
+    const values = getNormalizedValues();
     const orientation = getOrientation();
-    const renderedSize = values.renderedSize;
-    const valueText = options.getValueText?.(renderedSize) ?? `${renderedSize} pixels`;
+    renderSize(values.renderedSize);
 
     root.classList.add('zdp-resizable-split-pane');
     root.classList.toggle('zdp-resizable-split-pane--vertical', orientation === 'vertical');
@@ -338,7 +348,6 @@ export function createZdpSplitPaneController(
     root.setAttribute('data-zdp-resizable-split-pane', '');
     root.setAttribute('data-zdp-resizable-split-pane-orientation', orientation);
     toggleAttributeValue(root, 'data-zdp-resizable-split-pane-constrained', values.constrained ? 'true' : null);
-    root.style.setProperty('--zdp-resizable-split-pane-size', `${renderedSize}px`);
     root.style.setProperty('--zdp-resizable-split-pane-handle-size', `${values.handleSize}px`);
 
     primary.classList.add('zdp-resizable-split-pane__primary');
@@ -348,12 +357,9 @@ export function createZdpSplitPaneController(
     separator.setAttribute('data-zdp-split-pane-separator', '');
     separator.setAttribute('role', 'separator');
     separator.setAttribute('aria-label', options.ariaLabel?.trim() || 'Resize primary panel');
-    separator.setAttribute('aria-controls', primary.id);
     separator.setAttribute('aria-orientation', orientation);
     separator.setAttribute('aria-valuemin', String(values.minSize));
     separator.setAttribute('aria-valuemax', String(values.effectiveMaxSize));
-    separator.setAttribute('aria-valuenow', String(renderedSize));
-    separator.setAttribute('aria-valuetext', valueText);
     separator.setAttribute('tabindex', isDisabled() ? '-1' : '0');
     toggleAttributeValue(separator, 'aria-disabled', isDisabled() ? 'true' : null);
 
@@ -368,7 +374,7 @@ export function createZdpSplitPaneController(
     const nextRenderedSize = values.renderedSize;
 
     requestedSize = nextRenderedSize;
-    render(values);
+    renderSize(nextRenderedSize);
 
     if (nextRenderedSize === previousSize) {
       return;

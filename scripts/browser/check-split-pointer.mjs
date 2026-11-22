@@ -185,27 +185,56 @@ export async function verifySplitPointerOwnership(page) {
     root.style.cssText = 'width: 800px; height: 100px;';
     const primary = document.createElement('div');
     const separator = document.createElement('div');
-    root.append(primary, separator);
+    const secondary = document.createElement('div');
+    root.append(primary, separator, secondary);
     document.body.append(root);
     // Synthetic events need capture stubs; geometry and listeners use the real DOM.
     separator.setPointerCapture = () => {};
     separator.hasPointerCapture = () => false;
     const commits = [];
-    const controller = createZdpSplitPaneController({ root, primary, separator }, {
+    const controller = createZdpSplitPaneController({ root, primary, separator, secondary }, {
       size: 280, minSize: 100, maxSize: 600,
       onResizeCommit: (size) => commits.push(size)
     });
+    const mutations = [];
+    const observer = new MutationObserver(records => mutations.push(...records));
     try {
-      for (const [type, clientX] of [['pointerdown', 10], ['pointermove', 50], ['pointerup', 90]]) {
-        separator.dispatchEvent(new PointerEvent(type, { pointerId: 7, isPrimary: true, button: 0, clientX }));
-      }
-      return { size: controller.getSize(), commits };
+      const dispatch = (type, clientX) => separator.dispatchEvent(new PointerEvent(type, {
+        pointerId: 7, pointerType: 'mouse', isPrimary: true, button: 0, buttons: type === 'pointerup' ? 0 : 1, clientX
+      }));
+      dispatch('pointerdown', 10);
+      dispatch('pointermove', 50);
+      dispatch('pointerup', 90);
+      const release = { size: controller.getSize(), commits: [...commits] };
+      // Let the initial ResizeObserver delivery finish before isolating the drag frame.
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      dispatch('pointerdown', 10);
+      observer.observe(root, { subtree: true, attributes: true });
+      dispatch('pointermove', 50);
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      mutations.push(...observer.takeRecords());
+      const frame = {
+        size: controller.getSize(),
+        style: root.style.getPropertyValue('--zdp-resizable-split-pane-size'),
+        now: separator.getAttribute('aria-valuenow'),
+        text: separator.getAttribute('aria-valuetext'),
+        attributes: mutations.map(record => record.attributeName).sort()
+      };
+      observer.disconnect();
+      dispatch('pointerup', 50);
+      return { release, frame, commits };
     } finally {
+      observer.disconnect();
       controller.destroy();
       root.remove();
     }
   }, process.cwd().replaceAll('\\', '/'));
-  assert.deepEqual(finalPosition, { size: 360, commits: [360] }, 'Commit the release coordinate even when the final move has not been delivered.');
+  assert.deepEqual(finalPosition.release, { size: 360, commits: [360] }, 'Commit the release coordinate even when the final move has not been delivered.');
+  assert.deepEqual(finalPosition.frame, {
+    size: 400, style: '400px', now: '400', text: '400 pixels',
+    attributes: ['aria-valuenow', 'aria-valuetext', 'style']
+  }, 'A drag frame updates the size and accessible value without rewriting static attributes.');
+  assert.deepEqual(finalPosition.commits, [360, 400]);
   const pane = page.locator('#browser-split-pane');
   const separator = pane.getByRole('separator');
   await separator.scrollIntoViewIfNeeded();
