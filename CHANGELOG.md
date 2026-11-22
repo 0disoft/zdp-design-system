@@ -2,6 +2,61 @@
 
 ## Unreleased
 
+## 0.67.4
+
+- Keep Accordion trigger and panel IDs distinct when item keys differ only by trailing whitespace.
+- Keep previous, current and total, and next together on narrow pagination controls.
+- Increased hull contrast in square brand fallbacks so the ship reads at avatar size.
+- Coalesce overlapping position refreshes for Combobox, Menu, Popover, and Tooltip while preserving the latest overlay placement.
+- Look up the active Combobox option by ID when scrolling it into view, without collecting the entire rendered list.
+- Require keyboard navigation or a click to choose a Combobox result after typing, and keep Home and End available for text editing.
+- Hide gesture instructions when a confirmation completes.
+- Synchronize the Combobox form with a newly chosen option before selection callbacks can submit it while the consumer updates the selection metadata.
+- Clear the Combobox submitted value and update native validity before edit callbacks when typing invalidates a selection.
+- Clear the submitted Combobox value and update native validity before notifying consumers that supplied selection metadata invalidated the selection.
+- Synchronize the Combobox submission value and native validation before reporting that a form reset closed the listbox.
+- Synchronize Combobox form values and native validity before notifying consumers of a selection.
+- Improved the distinction between Skiff, Sloop, Galleon, and Flagship credit icons at 24px.
+- Cancel active ConfirmAction holds with Escape before closing a surrounding dialog, and ignore the cancelled pointer's release click.
+- Cancel a keyboard hold when its release is handled by an IME, while leaving the key event available to the IME.
+- Preserve a keyboard confirmation hold when a different activation key is released.
+- Cancel ConfirmAction's inline confirmation on Escape before dismissing an enclosing overlay, when the key is pressed inside the confirmation group.
+- Follow the reading direction for ConfirmAction slide gestures, progress fills, and arrow indicators in right-to-left layouts.
+- Cancel ConfirmAction when the primary pointer button is released while another button remains pressed.
+- Restore keyboard focus when a Disclosure collapses with focus inside a nested shadow root.
+- Added a Geist Sans-first English font stack with Manrope, Inter, Noto Sans KR, and system fallbacks.
+- Keep controls inside closed details and content skipped by CSS out of modal Tab navigation.
+- Give alerts and notifications distinct status icons and align notification actions with their text.
+- Skip native form ownership refreshes for unrelated DOM updates, while continuing to track moved controls and changes to form associations.
+- Refresh form-reset subscriptions only for controls affected by DOM moves or explicit form associations.
+- Route shared form reset listeners to controls belonging to the form being reset.
+- Refresh explicit form associations only when a referenced ID changes or a matching ID enters or leaves the DOM.
+- Made copy-link and device-share actions easier to find by grouping and labeling them in inline share docks.
+- Recalculate modal tab stops from current rendered visibility so app-level style changes cannot leave keyboard focus trapped on the wrong element.
+- Ship an implementation guide and a discoverable documentation index for design-system consumers and coding agents.
+- Restore background isolation if the app removes an inert attribute while a modal is open, and respect the app's updated state when the modal closes.
+- Restore focus to the surviving trigger after closing stacked modals out of order, including when the removed trigger is inside a shadow root.
+- Keep Dialog, Sheet, and TermSheet keyboard focus wrapping aligned with shadow-root and slot tab order.
+- Keep Dialog, Sheet, and TermSheet background isolation aligned with their rendered paths through open shadow DOM slots, including slot reassignment.
+- Restore focus when a controlled Popover closes while an editor inside a nested shadow root has focus.
+- Report both errors and the backup path when package promotion and backup restoration fail.
+- Reduce resting outlines on preference controls, notifications, disclosures, and inline content while keeping focus and high-contrast boundaries.
+- Fit short tables to narrow containers, indicate horizontally scrollable columns, and align table tools with the table edge.
+- Restore release files and fragments when release preparation fails partway through a local run.
+- Restore modal background isolation when an open layer is detached and reinserted under an existing portal container.
+- Resume interrupted GitHub release drafts by verifying existing assets, uploading missing files, and publishing only the complete release.
+- Retry transient EPERM errors when promoting a completed package build, preserving the previous output if promotion still fails.
+- Corrected the vector Rodisoft mark to match the approved PNG silhouette and margins.
+- Preserve native Select defaults and form reset behavior when no value is supplied, while honoring explicit values including the empty string.
+- End a split-pane drag when the primary mouse button is released while another button is still pressed.
+- Restore split pane DOM state and remove event handlers when controller initialization throws, so retrying on the same elements works.
+- Update only the split pane size and accessible value during drag and keyboard resizing, avoiding repeated writes to unchanged layout attributes.
+- Restore StatusToast keyboard focus when deferred queue updates remove the focused dismiss control.
+- Identify the current tab with a visible underline and stronger type.
+- Preserve or restore keyboard focus inside nested shadow roots when tab panels change.
+- Show keyboard-triggered tooltips when focus enters a nested shadow DOM trigger, while keeping Escape dismissal and focus restoration behavior.
+- Replace incomplete form, sorting, pagination, and notification examples with runnable Svelte examples, and clarify when Astro controls need hydration.
+
 ## 0.67.3
 
 - Keep Input, Textarea, Select, Combobox, CommandField, and surface-reset text-field focus rings inside their borders so clipping and scroll containers preserve all four edges, including Windows forced-colors mode.
