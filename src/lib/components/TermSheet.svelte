@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
-  import { createZdpModalLifecycle } from '../modal-lifecycle.js';
+  import { createZdpModalLifecycle } from '../modal-focus.js';
   import type { ZdpTermSheetPlacement, ZdpTermSheetTerm } from '../term.js';
 
   interface Props {

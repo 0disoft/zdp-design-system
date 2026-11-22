@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
-  import { createZdpModalLifecycle } from '../modal-lifecycle.js';
+  import { createZdpModalLifecycle } from '../modal-focus.js';
 
   interface Props {
     open?: boolean;
