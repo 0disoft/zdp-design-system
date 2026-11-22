@@ -2,6 +2,7 @@
   import { untrack } from 'svelte';
   import Disclosure from './Disclosure.svelte';
   import { reconcileOpenIds } from '../accordion-state.js';
+  import { toZdpDomKey } from '../dom-id.js';
   import type {
     ZdpAccordionItem,
     ZdpAccordionMode,
@@ -82,7 +83,7 @@
   {#each items as item (item.id)}
     <div class="zdp-accordion__item" role="listitem">
       <Disclosure
-        id={`zdp-accordion-${componentId}-${item.id}`}
+        id={`zdp-accordion-${componentId}-${toZdpDomKey(item.id)}`}
         title={item.title}
         open={isItemOpen(item.id)}
         disabled={item.disabled ?? false}

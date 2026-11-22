@@ -46,6 +46,20 @@ test('single mode opens the first enabled default and empty input renders no tri
   assert.deepEqual(expanded(render(Accordion, { props: { items: [] } }).body), []);
 });
 
+test('SSR gives each distinct item key a unique trigger and panel association', () => {
+  const keys = ['general', 'general ', 'general%20', '', ' '];
+  const items = keys.map((id, index) => ({ id, title: String(index), content: String(index), open: true }));
+  const { body } = render(Accordion, { props: { items } });
+  const triggers = Array.from(body.matchAll(/<button[^>]* id="([^"]+)"[^>]* aria-controls="([^"]+)"/g),
+    ([, trigger, panel]) => ({ trigger, panel }));
+  const panels = Array.from(body.matchAll(/ id="([^"]+)" role="group" aria-labelledby="([^"]+)"/g),
+    ([, panel, trigger]) => ({ trigger, panel }));
+  assert.equal(triggers.length, keys.length);
+  assert.equal(new Set(triggers.map(({ trigger }) => trigger)).size, keys.length);
+  assert.equal(new Set(triggers.map(({ panel }) => panel)).size, keys.length);
+  assert.deepEqual(panels, triggers);
+});
+
 test('large SSR input preserves every expanded item', t => {
   for (const size of [1000, 5000, 10000]) {
     const large = Array.from({ length: size }, (_, i) => ({ id: `item-${i}`, title: `Title ${i}`, content: '', open: true }));
