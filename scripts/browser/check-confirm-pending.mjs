@@ -58,7 +58,19 @@ export async function verifyConfirmPendingAppearance(page, root, buttons, setPen
   }
 }
 
-export async function verifyConfirmPendingContracts(page) {
+export async function verifyConfirmPendingContracts(sourcePage) {
+  // Playwright's clock applies to the entire context, including its other pages.
+  const page = await sourcePage.context().browser().newPage();
+  try {
+    await page.clock.install();
+    await page.goto(sourcePage.url(), { waitUntil: 'domcontentloaded' });
+    await verifyPendingStates(page);
+  } finally {
+    await page.close();
+  }
+}
+
+async function verifyPendingStates(page) {
   const root = page.getByTestId('confirm-pending-fixture');
   const buttons = root.getByTestId('confirm-pending-actions').locator('button');
   const button = buttons.first();
@@ -68,21 +80,31 @@ export async function verifyConfirmPendingContracts(page) {
     if ((await button.getAttribute('data-pending') === 'true') !== pending) await toggle.evaluate(element => element.click());
   };
   await verifyConfirmPendingAppearance(page, root, buttons, setPending);
+  await page.clock.pauseAt(await page.evaluate(() => Date.now() + 10_000));
   await button.focus();
   await page.keyboard.down('Enter');
-  await page.waitForFunction(() => document.querySelector('#pending-confirm-primary').hasAttribute('data-active'));
-  await setPending(true);
-  await page.keyboard.up('Enter');
-  await page.waitForTimeout(700);
-  assert.equal(await count.textContent(), '0', 'Pending during a hold must cancel its confirmation timer.');
-  await setPending(false);
+  try {
+    assert.equal(await button.getAttribute('data-active'), 'true');
+    await page.clock.runFor(300);
+    assert.equal(await count.textContent(), '0', 'An incomplete hold must not confirm.');
+    await setPending(true);
+    assert.equal(await button.isDisabled(), true);
+    assert.equal(await button.getAttribute('data-active'), null);
+    // Clear pending before the original deadline so a stale timer cannot hide
+    // behind the pending guard or be cancelled by releasing the key.
+    await setPending(false);
+    assert.equal(await button.isDisabled(), false);
+    await page.clock.runFor(400);
+    assert.equal(await count.textContent(), '0', 'Pending during a hold must cancel its confirmation timer.');
+  } finally { await page.keyboard.up('Enter'); }
   assert.equal(await button.getAttribute('data-active'), null);
   await button.focus();
   await page.keyboard.down('Space');
   try {
-    await page.waitForFunction(() => document.querySelector('[data-testid="confirm-pending-count"]').textContent === '1');
+    await page.clock.runFor(600);
+    assert.equal(await count.textContent(), '1');
   } finally { await page.keyboard.up('Space'); }
-  await page.waitForTimeout(1100);
+  await page.clock.runFor(1100);
   assert.equal(await button.getAttribute('data-pending'), 'true', 'Pending must outlive the old one-second confirmation reset.');
   const box = await button.boundingBox();
   await page.mouse.click(box.x + 8, box.y + box.height / 2);
@@ -92,16 +114,18 @@ export async function verifyConfirmPendingContracts(page) {
   });
   assert.equal(await button.getAttribute('data-active'), null);
   assert.equal(await count.textContent(), '1');
-  await root.getByTestId('confirm-pending-disable').click();
+  const toggleDisabled = () => root.getByTestId('confirm-pending-disable').evaluate(element => element.click());
+  await toggleDisabled();
   assert.notEqual(await buttons.last().evaluate(element => getComputedStyle(element).opacity), '1');
   await setPending(false);
   assert.equal(await buttons.last().isDisabled(), true, 'Clearing pending must preserve explicit disabled.');
-  await root.getByTestId('confirm-pending-disable').click();
+  await toggleDisabled();
   // Recovery covers both successful and failed requests: the caller clears pending.
   await button.focus();
   await page.keyboard.down('Enter');
   try {
-    await page.waitForFunction(() => document.querySelector('[data-testid="confirm-pending-count"]').textContent === '2');
+    await page.clock.runFor(600);
+    assert.equal(await count.textContent(), '2');
   } finally { await page.keyboard.up('Enter'); }
   await setPending(false);
   assert.equal(await button.locator('.zdp-confirm-action__label').textContent(), 'Confirm primary');
