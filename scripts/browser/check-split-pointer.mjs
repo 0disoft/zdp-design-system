@@ -212,12 +212,32 @@ export async function verifySplitPointerOwnership(page) {
   const box = await separator.boundingBox();
   const x = box.x + box.width / 2;
   const y = box.y + box.height / 2;
+  const selectionLocked = () => page.evaluate(() =>
+    document.documentElement.classList.contains('zdp-user-select-dragging'));
+  const initialSize = Number(await separator.getAttribute('aria-valuenow'));
+  await page.mouse.move(x, y);
+  await page.mouse.down({ button: 'left' });
+  try {
+    await page.mouse.move(x + 16, y);
+    await page.mouse.down({ button: 'right' });
+    await page.mouse.up({ button: 'left' });
+    assert.equal(await selectionLocked(), false, 'Releasing the initiating button must end a chorded drag.');
+    await page.mouse.move(x + 40, y);
+    await page.mouse.up({ button: 'right' });
+    assert.equal(Number(await separator.getAttribute('aria-valuenow')), initialSize + 16,
+      'Moving and releasing the other button must not resize beyond the primary release position.');
+  } finally {
+    await page.mouse.up({ button: 'left' });
+    await page.mouse.up({ button: 'right' });
+  }
+  const currentBox = await separator.boundingBox();
+  const currentX = currentBox.x + currentBox.width / 2;
   const session = await page.context().newCDPSession(page);
   try {
     await session.send('Emulation.setTouchEmulationEnabled', { enabled: true });
-    await page.mouse.move(x, y);
+    await page.mouse.move(currentX, y);
     await page.mouse.down();
-    await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ id: 1, x, y }] });
+    await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ id: 1, x: currentX, y }] });
     await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
     assert.equal(await pane.evaluate((element) => element.classList.contains('zdp-resizable-split-pane--dragging')), true, 'Ending a simultaneous touch must not end the initiating mouse drag.');
     await page.mouse.up();

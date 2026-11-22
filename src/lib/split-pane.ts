@@ -438,6 +438,12 @@ export function createZdpSplitPaneController(
     }
 
     event.preventDefault();
+    // With another mouse button held, primary release is delivered as a move.
+    if (event.pointerType === 'mouse' && (event.buttons & 1) === 0) {
+      handlePointerUp(event);
+      return;
+    }
+
     pointerMoved = pointerMoved || Math.abs(pointerCoordinate(event) - pointerStartCoordinate) >= 3;
 
     if (pointerMoved) {
