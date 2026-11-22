@@ -78,6 +78,28 @@ for (const { name, code, failures, expectedAttempts, expectedPackage } of [
   }));
 }
 
+test('failed promotion and rollback preserve both errors and leave the backup recoverable', async () => fixture(async paths => {
+  const promotionError = Object.assign(new Error('staging rename failed'), { code: 'EIO' });
+  const restoreError = Object.assign(new Error('backup rename failed'), { code: 'EACCES' });
+  await assert.rejects(withAtomicDirectory(paths, transaction => transaction.replace(), {
+    async renameStaging() { throw promotionError; },
+    async restoreBackup(source, destination) {
+      assert.equal(source, paths.backupRoot);
+      assert.equal(destination, paths.targetRoot);
+      throw restoreError;
+    }
+  }), error => {
+    assert.ok(error instanceof AggregateError);
+    assert.deepEqual(error.errors, [promotionError, restoreError]);
+    assert.ok(error.message.includes(paths.backupRoot));
+    assert.ok(error.message.includes(paths.targetRoot));
+    return true;
+  });
+  assert.equal(await readFile(join(paths.backupRoot, 'marker'), 'utf8'), 'previous');
+  await withAtomicDirectory(paths, transaction => transaction.recover());
+  assert.equal(await readFile(join(paths.targetRoot, 'marker'), 'utf8'), 'previous');
+}));
+
 test('returning early keeps ownership until the outstanding promotion completes', async () => fixture(async paths => {
   const entered = gate();
   const release = gate();

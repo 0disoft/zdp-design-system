@@ -32,6 +32,7 @@ interface AtomicDirectoryIO {
   }>;
   removeLock(path: string): Promise<void>;
   renameStaging(source: string, destination: string): Promise<void>;
+  restoreBackup(source: string, destination: string): Promise<void>;
 }
 
 /** Hold ownership from recovery through staging, promotion, and failure cleanup. */
@@ -41,7 +42,8 @@ export async function withAtomicDirectory<T>(
   {
     openLock = path => open(path, 'wx'),
     removeLock = path => rm(path, { force: true }),
-    renameStaging = rename
+    renameStaging = rename,
+    restoreBackup = rename
   }: Partial<AtomicDirectoryIO> = {}
 ): Promise<T> {
   const lockPath = `${paths.targetRoot}.__lock__`;
@@ -69,7 +71,7 @@ export async function withAtomicDirectory<T>(
     await lock.writeFile(`${process.pid}\n`);
     const result = await operation({
       recover: () => run(() => recoverAtomicDirectory(paths)),
-      replace: beforePromote => run(() => replaceDirectoryAtomically(paths, renameStaging, beforePromote))
+      replace: beforePromote => run(() => replaceDirectoryAtomically(paths, renameStaging, restoreBackup, beforePromote))
     });
     active = false;
     // A caller that forgot to await a method must not release its filesystem lock.
@@ -105,6 +107,7 @@ async function recoverAtomicDirectory(paths: AtomicDirectoryPaths): Promise<void
 async function replaceDirectoryAtomically(
   { backupRoot, stagingRoot, targetRoot }: AtomicDirectoryPaths,
   renameStaging: AtomicDirectoryIO['renameStaging'],
+  restoreBackup: AtomicDirectoryIO['restoreBackup'],
   beforePromote?: () => Promise<void>
 ): Promise<void> {
 
@@ -124,7 +127,14 @@ async function replaceDirectoryAtomically(
     await promoteStaging(stagingRoot, targetRoot, renameStaging);
   } catch (error) {
     if (!existsSync(targetRoot) && hadTarget && existsSync(backupRoot)) {
-      await rename(backupRoot, targetRoot);
+      try {
+        await restoreBackup(backupRoot, targetRoot);
+      } catch (restoreError) {
+        throw new AggregateError(
+          [error, restoreError],
+          `Package promotion failed and the previous package could not be restored from ${backupRoot} to ${targetRoot}.`
+        );
+      }
     }
     throw error;
   }
