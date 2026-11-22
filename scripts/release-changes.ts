@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
-import { appendFile, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { spawnSync } from 'node:child_process';
+import { appendFile, copyFile, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -56,6 +58,8 @@ async function main(args: readonly string[]): Promise<void> {
       return;
     case 'self-test':
       runSelfTest();
+      await checkPrepareRollback();
+      console.log('Release change self-test passed.');
       return;
     default:
       throw new Error(
@@ -137,29 +141,74 @@ async function prepareRelease(options: PrepareOptions): Promise<void> {
     `CHANGELOG.md already contains the calculated next version ${nextVersion}.`
   );
 
-  packageJson.version = nextVersion;
-  await writeFile(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`, 'utf8');
-  await writeFile(changelogPath, nextChangelog, 'utf8');
-  for (const document of documentation) {
-    await writeFile(document.path, document.content, 'utf8');
-  }
-
-  for (const fragment of fragments) {
-    await rm(join(changesDirectory, fragment.fileName));
-  }
-
-  if (options.releaseNotesPath !== null) {
-    await writeFile(options.releaseNotesPath, `${releaseNotes}\n`, 'utf8');
-  }
-
-  await writePrepareOutputs(options.githubOutputPath, {
-    hasChanges: true,
-    version: nextVersion,
-    bump,
-    fragmentCount: fragments.length
+  await applyReleaseChanges(async (change) => {
+    const write = (path: string, text: string) => change(path, () => writeFile(path, text, 'utf8'));
+    packageJson.version = nextVersion;
+    await write(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`);
+    await write(changelogPath, nextChangelog);
+    for (const document of documentation) {
+      await write(document.path, document.content);
+    }
+    for (const fragment of fragments) {
+      const path = join(changesDirectory, fragment.fileName);
+      await change(path, () => rm(path));
+    }
+    const { releaseNotesPath, githubOutputPath } = options;
+    if (releaseNotesPath !== null) {
+      await write(releaseNotesPath, `${releaseNotes}\n`);
+    }
+    if (githubOutputPath !== null) {
+      await change(githubOutputPath, () => writePrepareOutputs(githubOutputPath, {
+        hasChanges: true,
+        version: nextVersion,
+        bump,
+        fragmentCount: fragments.length
+      }));
+    }
   });
 
   console.log(`Prepared ${nextVersion} from ${fragments.length} release fragment(s).`);
+}
+
+async function readIfPresent(path: string): Promise<Buffer | null> {
+  try {
+    return await readFile(path);
+  } catch (error) {
+    if (isRecord(error) && error.code === 'ENOENT') return null;
+    throw error;
+  }
+}
+
+async function applyReleaseChanges(
+  apply: (change: (path: string, edit: () => Promise<void>) => Promise<void>) => Promise<void>
+): Promise<void> {
+  const attempted: { path: string; before: Buffer | null }[] = [];
+  try {
+    await apply(async (path, edit) => {
+      const before = await readIfPresent(path);
+      // Even a rejected write can have truncated an existing file.
+      attempted.push({ path, before });
+      await edit();
+    });
+  } catch (cause) {
+    const failures: Error[] = [];
+    for (const { path, before } of attempted.reverse()) {
+      try {
+        const current = await readIfPresent(path);
+        if (before === null) {
+          if (current !== null) await rm(path);
+        } else if (current === null || !before.equals(current)) {
+          await writeFile(path, before);
+        }
+      } catch (error) {
+        failures.push(new Error(`Could not restore ${path}`, { cause: error }));
+      }
+    }
+    if (failures.length) {
+      throw new AggregateError(failures, 'Release preparation failed and some files could not be restored.', { cause });
+    }
+    throw cause;
+  }
 }
 
 function parsePrepareOptions(args: readonly string[]): PrepareOptions {
@@ -491,5 +540,40 @@ function runSelfTest(): void {
   assert.throws(() => parseFragment('heading.md', '---\nbump: patch\n---\n\n## Added\n'), /headings/);
   assert.throws(() => bumpVersion('1.0.0-beta.1', 'patch'), /plain major\.minor\.patch SemVer/);
 
-  console.log('Release change self-test passed.');
+}
+
+async function checkPrepareRollback(): Promise<void> {
+  const fixture = await mkdtemp(join(tmpdir(), 'zdp-release-prepare-'));
+  try {
+    for (const directory of ['scripts', 'docs', '.changes']) await mkdir(join(fixture, directory));
+    const script = join(fixture, 'scripts', 'release-changes.ts');
+    await copyFile(fileURLToPath(import.meta.url), script);
+    const inputFiles = new Map([
+      ['package.json', '{ "version": "1.2.3" }\n'],
+      ['CHANGELOG.md', '# Changelog\n\n## Unreleased\n\n## 1.2.3\n\n- Previous release.\n'],
+      ['README.md', 'zdp-design-system: ^1.2.3\r\n'],
+      ['docs/CONSUMER_CONTRACT.md', 'zdp-design-system: ^1.2.3\n'],
+      ['.changes/README.md', 'bump: patch\nbump: minor\nbump: major\nrelease/zdp-design-system\n'],
+      ['.changes/first.md', '---\r\nbump: patch\r\n---\r\n\r\n- Fixed first item.\r\n'],
+      ['.changes/second.md', '---\nbump: patch\n---\n\n- Fixed second item.\n'],
+      ['notes.md', 'Existing notes.\n']
+    ]);
+    for (const [path, contents] of inputFiles) await writeFile(join(fixture, path), contents);
+    const output = join(fixture, 'missing-parent', 'output');
+    const args = [script, 'prepare', '--release-notes', join(fixture, 'notes.md'), '--github-output', output];
+    const failure = spawnSync(process.execPath, args, { cwd: fixture, encoding: 'utf8' });
+    assert.equal(failure.status, 1, failure.stderr);
+    assert.match(failure.stderr, /ENOENT/);
+    for (const [path, contents] of inputFiles) {
+      assert.equal(await readFile(join(fixture, path), 'utf8'), contents, `${path} must be restored byte-for-byte.`);
+    }
+
+    await mkdir(join(fixture, 'missing-parent'));
+    const retry = spawnSync(process.execPath, args, { cwd: fixture, encoding: 'utf8' });
+    assert.equal(retry.status, 0, retry.stderr);
+    assert.match(await readFile(output, 'utf8'), /version=1\.2\.4\nbump=patch\nfragment_count=2\n/);
+    assert.deepEqual(await readdir(join(fixture, '.changes')), ['README.md']);
+  } finally {
+    await rm(fixture, { recursive: true, force: true });
+  }
 }
