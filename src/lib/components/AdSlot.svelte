@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ZdpAdSlotPlacement, ZdpAdSlotState } from '../ad-slot.js';
+  import { normalizeIdRefs } from '../dom-id.js';
 
   type DescribedBy = string | readonly string[] | null;
 
@@ -38,19 +39,6 @@
     }
   }
 
-  function normalizeIdRefs(value: DescribedBy): string | null {
-    if (value === null) {
-      return null;
-    }
-
-    if (typeof value === 'string') {
-      const normalized = value.trim();
-      return normalized ? normalized : null;
-    }
-
-    const normalized = value.map((entry) => entry.trim()).filter(Boolean);
-    return normalized.length > 0 ? normalized.join(' ') : null;
-  }
   // Only blocked/empty states render a neutral fallback; provider markup stays consumer-owned.
   let showFallback = $derived(state === 'blocked' || state === 'empty');
   let resolvedFallbackText = $derived(fallbackText ?? label);

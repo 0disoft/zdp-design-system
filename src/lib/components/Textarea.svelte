@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { HTMLTextareaAttributes } from 'svelte/elements';
   import { syncZdpFormReset } from '../form-reset.js';
+  import { normalizeIdRefs } from '../dom-id.js';
 
   type DescribedBy = string | readonly string[] | null;
 
@@ -61,19 +62,6 @@
     oninput?.(event);
   }
 
-  function normalizeIdRefs(value: DescribedBy): string | null {
-    if (value === null) {
-      return null;
-    }
-
-    if (typeof value === 'string') {
-      const normalized = value.trim();
-      return normalized ? normalized : null;
-    }
-
-    const normalized = value.map((entry) => entry.trim()).filter(Boolean);
-    return normalized.length > 0 ? normalized.join(' ') : null;
-  }
   let ariaDescribedBy = $derived(normalizeIdRefs(describedBy));
   let resolvedErrorMessageId = $derived(invalid && errorMessageId ? errorMessageId : null);
 </script>

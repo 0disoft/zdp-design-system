@@ -3,6 +3,14 @@ export function toZdpDomId(value: string, fallback: string): string {
   return normalized ? toZdpDomKey(normalized) : fallback;
 }
 
+export function normalizeIdRefs(value: string | readonly string[] | null): string | null {
+  if (value === null) return null;
+  if (typeof value === 'string') return value.trim() || null;
+
+  const normalized = value.map((entry) => entry.trim()).filter(Boolean);
+  return normalized.length > 0 ? normalized.join(' ') : null;
+}
+
 /** Lossless item identity: preserve whitespace, empty keys, and lone surrogates. */
 export function toZdpDomKey(value: string): string {
   if (!value.length) return '%empty';

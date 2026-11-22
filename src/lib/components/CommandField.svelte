@@ -3,6 +3,7 @@
   import type { ZdpCommandFieldSize, ZdpCommandFieldType } from '../command.js';
   import ShortcutHint from './ShortcutHint.svelte';
   import { syncZdpFormReset } from '../form-reset.js';
+  import { normalizeIdRefs } from '../dom-id.js';
 
   type DescribedBy = string | readonly string[] | null;
   type AriaAutocomplete = 'none' | 'inline' | 'list' | 'both';
@@ -101,20 +102,6 @@
     inputElement.value = '';
     inputElement.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
     inputElement.focus();
-  }
-
-  function normalizeIdRefs(value: DescribedBy): string | null {
-    if (value === null) {
-      return null;
-    }
-
-    if (typeof value === 'string') {
-      const normalized = value.trim();
-      return normalized ? normalized : null;
-    }
-
-    const normalized = value.map((entry) => entry.trim()).filter(Boolean);
-    return normalized.length > 0 ? normalized.join(' ') : null;
   }
 </script>
 

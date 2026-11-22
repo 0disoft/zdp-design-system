@@ -3,7 +3,7 @@
   import type { HTMLInputAttributes } from 'svelte/elements';
   import type { ZdpComboboxOption, ZdpComboboxSize } from '../combobox.js';
   import { resolveComboboxNavigation } from '../combobox-navigation.js';
-  import { toZdpDomId, toZdpDomKey } from '../dom-id.js';
+  import { normalizeIdRefs, toZdpDomId, toZdpDomKey } from '../dom-id.js';
   import { createZdpDismissLayer } from '../dismiss-layer.js';
   import { syncZdpFormReset } from '../form-reset.js';
   import { positionZdpFloatingPanel } from '../floating-position.js';
@@ -379,20 +379,6 @@
 
   function optionDomId(optionId: string): string {
     return `${resolvedIdPrefix}-option-${toDomId(optionId)}`;
-  }
-
-  function normalizeIdRefs(value: DescribedBy): string | null {
-    if (value === null) {
-      return null;
-    }
-
-    if (typeof value === 'string') {
-      const normalized = value.trim();
-      return normalized ? normalized : null;
-    }
-
-    const normalized = value.map((entry) => entry.trim()).filter(Boolean);
-    return normalized.length > 0 ? normalized.join(' ') : null;
   }
 
   function toDomId(id: string): string {
