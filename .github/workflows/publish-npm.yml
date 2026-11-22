@@ -192,7 +192,44 @@ jobs:
             echo "Release ${GITHUB_REF_NAME} and its package assets already exist and match."
             exit 0
           fi
-          # A creation failure or timeout has an uncertain outcome: never retry it here.
+          # REST's tag lookup returns published releases only. A failed creation
+          # can leave a draft with some assets uploaded.
+          draft_id="$(timeout --signal=TERM --kill-after=5s 20s gh api graphql \
+            -f query='query($owner: String!, $name: String!, $tag: String!) { repository(owner: $owner, name: $name) { release(tagName: $tag) { isDraft databaseId } } }' \
+            -f owner="${GITHUB_REPOSITORY%/*}" -f name="${GITHUB_REPOSITORY#*/}" -f tag="$GITHUB_REF_NAME" \
+            --jq '.data.repository.release | select(.isDraft == true) | .databaseId')"
+          if [ -n "$draft_id" ]; then
+            [[ "$draft_id" =~ ^[1-9][0-9]*$ ]]
+            draft_endpoint="repos/$GITHUB_REPOSITORY/releases/$draft_id"
+            draft_plan() {
+              timeout --signal=TERM --kill-after=5s 20s gh api "$draft_endpoint" \
+                | node scripts/github-release-draft.mjs "$draft_id" "$GITHUB_REF_NAME" \
+                    release-notes.md "$RELEASE_TARBALL" "$RELEASE_MANIFEST"
+            }
+            plan="$(draft_plan)"
+            while IFS=$'\t' read -r asset starter_id; do
+              [ -n "$asset" ] || continue
+              if [ "$starter_id" != '-' ]; then
+                timeout --signal=TERM --kill-after=5s 15s gh api --method DELETE \
+                  "repos/$GITHUB_REPOSITORY/releases/assets/$starter_id" --silent
+              fi
+              case "$asset" in
+                "$RELEASE_TARBALL") label='npm package tarball' ;;
+                "$RELEASE_MANIFEST") label='npm release artifact manifest' ;;
+                *) exit 1 ;;
+              esac
+              timeout --signal=TERM --kill-after=5s 45s gh release upload "$GITHUB_REF_NAME" "$asset#$label"
+            done <<< "$plan"
+            remaining="$(draft_plan)"
+            if [ -n "$remaining" ]; then
+              echo '::error::GitHub release draft is still missing verified assets.'
+              exit 1
+            fi
+            timeout --signal=TERM --kill-after=5s 30s gh api --method PATCH "$draft_endpoint" -F draft=false --silent
+            echo "Resumed and published release ${GITHUB_REF_NAME}."
+            exit 0
+          fi
+          # A failed write is reconciled on the next run.
           timeout --signal=TERM --kill-after=5s 120s gh release create "$GITHUB_REF_NAME" \
             "$RELEASE_TARBALL#npm package tarball" \
             "$RELEASE_MANIFEST#npm release artifact manifest" \

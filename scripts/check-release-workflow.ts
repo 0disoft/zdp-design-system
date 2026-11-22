@@ -105,7 +105,11 @@ assert.ok(workflow.includes('cmp "$RELEASE_TARBALL" "$release_assets/$RELEASE_TA
 assert.ok(workflow.includes('cmp "$RELEASE_MANIFEST" "$release_assets/$RELEASE_MANIFEST"'));
 assert.ok(workflow.includes('"$RELEASE_TARBALL#npm package tarball"'));
 assert.ok(workflow.includes('"$RELEASE_MANIFEST#npm release artifact manifest"'));
-assert.ok(!workflow.includes('gh release upload'));
+assert.ok(createReleaseStep.includes('gh api graphql'));
+assert.ok(createReleaseStep.includes('node scripts/github-release-draft.mjs "$draft_id" "$GITHUB_REF_NAME"'));
+assert.ok(createReleaseStep.includes('gh release upload "$GITHUB_REF_NAME" "$asset#$label"'));
+assert.match(createReleaseStep, /remaining="\$\(draft_plan\)"[\s\S]*?exit 1[\s\S]*?gh api --method PATCH "\$draft_endpoint" -F draft=false/);
+assert.ok(createReleaseStep.indexOf('gh release upload') < createReleaseStep.lastIndexOf('gh release create'));
 assert.ok(!workflow.includes('--clobber'));
 
 assert.match(releasePrWorkflow, /^name: Prepare release pull request$/m);

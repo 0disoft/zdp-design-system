@@ -2,12 +2,41 @@ import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { test } from 'node:test';
 import { readGitHubReleaseTag } from './github-release-preflight.mjs';
+import { planDraftAssets } from './github-release-draft.mjs';
 
 const repository = 'example/package';
 const tag = 'v1.2.3';
 const options = { token: 'test-token', apiUrl: 'https://api.github.com' };
 const response = (status = 200, value = { tag_name: tag }) => ({ status, text: async () => JSON.stringify(value) });
 const lookup = overrides => readGitHubReleaseTag(repository, tag, { ...options, ...overrides });
+
+const tarball = { name: 'zdp-design-system-1.2.3.tgz', size: 42, digest: 'sha256:tarball' };
+const manifest = { name: 'release-artifact.json', size: 16, digest: 'sha256:manifest' };
+const expectedDraft = { id: '12', tag, notes: 'Release notes\n', assets: [tarball, manifest] };
+const draft = {
+  id: 12, tag_name: tag, draft: true, name: tag, body: expectedDraft.notes,
+  author: { login: 'github-actions[bot]' }, assets: [{ ...tarball, id: 20, state: 'uploaded' }]
+};
+
+test('resumes a partially uploaded draft and treats a fully uploaded draft as ready', () => {
+  assert.deepEqual(planDraftAssets(draft, expectedDraft), [{ name: manifest.name, starterId: null }]);
+  const complete = { ...draft, assets: [...draft.assets, { ...manifest, id: 21, state: 'uploaded' }] };
+  assert.deepEqual(planDraftAssets(complete, expectedDraft), []);
+});
+
+test('plans to replace only the empty starter left by a failed asset upload', () => {
+  const interrupted = { ...draft, assets: [...draft.assets, { name: manifest.name, id: 21, size: 0, state: 'starter' }] };
+  assert.deepEqual(planDraftAssets(interrupted, expectedDraft), [{ name: manifest.name, starterId: 21 }]);
+});
+
+test('refuses foreign drafts, unexpected assets and mismatched uploaded content', () => {
+  for (const fields of [{ draft: false }, { name: 'Manual release' }, { body: 'Different content' }, { author: { login: 'maintainer' } }]) {
+    assert.throws(() => planDraftAssets({ ...draft, ...fields }, expectedDraft), /does not match the automated release/);
+  }
+  assert.throws(() => planDraftAssets({ ...draft, assets: [{ name: 'extra.txt' }] }, expectedDraft), /Unexpected or duplicate/);
+  assert.throws(() => planDraftAssets({ ...draft, assets: [{ ...draft.assets[0], digest: 'sha256:other' }] }, expectedDraft),
+    /does not match the verified release input/);
+});
 
 test('authenticated GET encodes tags, rejects redirects and returns the matching release', async () => {
   const specialTag = 'release/v1.2.3';
