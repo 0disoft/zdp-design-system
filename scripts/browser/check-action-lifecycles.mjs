@@ -130,6 +130,22 @@ export async function verifyConfirmRepeatContracts(page) {
   const button = page.locator('#repeat-confirm-action');
   const count = page.getByTestId('repeat-confirm-count');
 
+  const beforeChord = Number(await count.textContent());
+  await button.focus();
+  await page.keyboard.down(' ');
+  try {
+    await page.keyboard.press('Enter');
+    assert.equal(await button.getAttribute('data-active'), 'true',
+      'Releasing Enter must preserve the hold started by Space.');
+    await page.waitForFunction(
+      (expected) => document.querySelector('[data-testid="repeat-confirm-count"]').textContent === String(expected),
+      beforeChord + 1
+    );
+  } finally {
+    await page.keyboard.up(' ');
+  }
+  await page.waitForFunction(() => !document.querySelector('#repeat-confirm-action').hasAttribute('data-confirmed'));
+
   for (const key of ['Enter', ' ']) {
     const previousCount = Number(await count.textContent());
     await button.focus();

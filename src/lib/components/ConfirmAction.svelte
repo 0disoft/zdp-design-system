@@ -39,6 +39,7 @@
   let progress = $state(0);
   let active = $state(false);
   let activePointerId: number | null = null;
+  let activeKey: 'Enter' | ' ' | null = null;
   let confirmed = $state(false);
   const componentId = $props.id();
   const confirmationId = `${componentId}-confirmation`;
@@ -152,6 +153,7 @@
   }
 
   function clearTimers(): void {
+    activeKey = null;
     if (typeof window === 'undefined') {
       return;
     }
@@ -242,13 +244,14 @@
 
     if (!event.repeat && !active) {
       beginInteraction(null, event.currentTarget as HTMLButtonElement);
+      if (active) activeKey = event.key;
     }
   }
 
   function handleKeyup(event: KeyboardEvent): void {
     if (event.isComposing || event.keyCode === 229) {
       // IME can relabel the release after an ordinary key starts the hold.
-      if (active && activePointerId === null) cancelInteraction();
+      if (activeKey !== null) cancelInteraction();
       return;
     }
 
@@ -256,7 +259,7 @@
       if (!event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey) {
         event.preventDefault();
       }
-      cancelInteraction();
+      if (event.key === activeKey) cancelInteraction();
     }
   }
 
