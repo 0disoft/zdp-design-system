@@ -1,6 +1,12 @@
 import assert from 'node:assert/strict';
+import { execFile } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { test } from 'node:test';
+import { promisify } from 'node:util';
 import { readGitHubReleaseTag } from './github-release-preflight.mjs';
 import { planDraftAssets } from './github-release-draft.mjs';
 
@@ -9,6 +15,118 @@ const tag = 'v1.2.3';
 const options = { token: 'test-token', apiUrl: 'https://api.github.com' };
 const response = (status = 200, value = { tag_name: tag }) => ({ status, text: async () => JSON.stringify(value) });
 const lookup = overrides => readGitHubReleaseTag(repository, tag, { ...options, ...overrides });
+
+const run = promisify(execFile);
+const mockGh = [
+  "import assert from 'node:assert/strict';",
+  "import { createHash } from 'node:crypto';",
+  "import { readFileSync, writeFileSync } from 'node:fs';",
+  "const file = 'github-state.json';",
+  "const state = JSON.parse(readFileSync(file, 'utf8'));",
+  "const [command, ...args] = process.argv.slice(2);",
+  "const save = action => { state.calls.push(action); writeFileSync(file, JSON.stringify(state)); };",
+  "const endpoint = 'repos/example/package/releases/12';",
+  "if (command === 'api' && args[0] === 'graphql') {",
+  "  assert.ok(args.includes('tag=v1.2.3'));",
+  "  save('lookup'); console.log(state.draft.id);",
+  "} else if (command === 'api' && args[0] === endpoint) {",
+  "  save('read'); console.log(JSON.stringify(state.draft));",
+  "} else if (command === 'api' && args[1] === 'DELETE') {",
+  "  assert.equal(args[2], 'repos/example/package/releases/assets/21');",
+  "  assert.equal(state.draft.assets.find(asset => asset.id === 21).state, 'starter');",
+  "  state.draft.assets = state.draft.assets.filter(asset => asset.id !== 21); save('delete starter');",
+  "} else if (command === 'release' && args[0] === 'upload') {",
+  "  assert.deepEqual(args.slice(1), ['v1.2.3', 'release-artifact.json#npm release artifact manifest']);",
+  "  const name = 'release-artifact.json';",
+  "  assert.ok(!state.draft.assets.some(asset => asset.name === name));",
+  "  if (state.mode === 'lost-response') {",
+  "    const bytes = readFileSync(name);",
+  "    state.draft.assets.push({ name, size: bytes.length, digest: 'sha256:' + createHash('sha256').update(bytes).digest('hex'), state: 'uploaded' });",
+  "  }",
+  "  save('upload');",
+  "  if (state.mode === 'lost-response') process.exitCode = 1;",
+  "} else if (command === 'api' && args[1] === 'PATCH') {",
+  "  assert.equal(args[2], endpoint); assert.ok(args.includes('draft=false'));",
+  "  state.draft.draft = false; save('publish');",
+  "} else {",
+  "  assert.fail(JSON.stringify([command, ...args]));",
+  "}"
+].join('\n');
+
+test('the release step resumes an interrupted draft and verifies remote assets before publishing', async () => {
+  const yaml = (await readFile(new URL('../.github/workflows/publish-npm.yml', import.meta.url), 'utf8')).replaceAll('\r\n', '\n');
+  const step = yaml.match(/^      - name: Create GitHub release\n(?:.*\n)*?^        run: \|\n((?:^ {10}.*\n)+)/m)?.[1];
+  assert.ok(step, 'The workflow release step must supply the script under test.');
+  const shell = 'export PATH="$PWD/mock-bin:$PATH"\n' + step.replace(/^ {10}/gm, '');
+  const bash = process.platform === 'win32'
+    ? join(process.env.ProgramFiles ?? 'C:/Program Files', 'Git', 'bin', 'bash.exe')
+    : 'bash';
+  const fixture = await mkdtemp(join(tmpdir(), 'zdp-release-workflow-'));
+  const server = createServer((request, reply) => {
+    if (request.method !== 'GET' || request.url !== '/repos/example/package/releases/tags/v1.2.3') {
+      reply.writeHead(400).end();
+    } else {
+      reply.writeHead(404).end();
+    }
+  });
+  try {
+    await new Promise((yes, no) => { server.once('error', no); server.listen(0, '127.0.0.1', yes); });
+    for (const directory of ['scripts', 'mock-bin']) await mkdir(join(fixture, directory));
+    for (const script of ['github-release-preflight.mjs', 'github-release-draft.mjs', 'github-api-read.mjs']) {
+      await copyFile(new URL(script, import.meta.url), join(fixture, 'scripts', script));
+    }
+    await writeFile(join(fixture, 'mock-bin', 'gh'), '#!/usr/bin/env bash\nexec node ./mock-gh.mjs "$@"\n', { mode: 0o755 });
+    await writeFile(join(fixture, 'mock-gh.mjs'), mockGh);
+    const packageName = 'zdp-design-system-1.2.3.tgz';
+    const manifestName = 'release-artifact.json';
+    const bytes = Buffer.from('verified package');
+    const notes = 'Release notes\n';
+    await writeFile(join(fixture, packageName), bytes);
+    await writeFile(join(fixture, manifestName), '{}\n');
+    await writeFile(join(fixture, 'release-notes.md'), notes);
+    const statePath = join(fixture, 'github-state.json');
+    const readState = async () => JSON.parse(await readFile(statePath, 'utf8'));
+    const seed = mode => writeFile(statePath, JSON.stringify({
+      mode, calls: [],
+      draft: {
+        id: 12, tag_name: tag, draft: true, name: tag, body: notes, author: { login: 'github-actions[bot]' },
+        assets: [
+          { name: packageName, size: bytes.length, digest: 'sha256:' + createHash('sha256').update(bytes).digest('hex'), state: 'uploaded' },
+          { name: manifestName, id: 21, size: 0, state: 'starter' }
+        ]
+      }
+    }));
+    const executeStep = () => run(bash, ['-c', shell], { cwd: fixture, timeout: 30_000, env: {
+      ...process.env, GH_TOKEN: 'test-token', GITHUB_API_URL: 'http://127.0.0.1:' + server.address().port,
+      GITHUB_REPOSITORY: repository, GITHUB_REF_NAME: tag, RELEASE_TARBALL: packageName, RELEASE_MANIFEST: manifestName
+    } });
+
+    await seed('missing-after-upload');
+    await assert.rejects(executeStep(), error => {
+      assert.equal(error.code, 1);
+      assert.match(error.stdout, /still missing verified assets/);
+      return true;
+    });
+    let state = await readState();
+    assert.equal(state.draft.draft, true);
+    assert.deepEqual(state.calls, ['lookup', 'read', 'delete starter', 'upload', 'read']);
+
+    await seed('lost-response');
+    await assert.rejects(executeStep(), { code: 1 });
+    state = await readState();
+    assert.equal(state.draft.draft, true);
+    assert.deepEqual(state.calls, ['lookup', 'read', 'delete starter', 'upload']);
+    assert.equal(state.draft.assets.length, 2);
+    await executeStep();
+    state = await readState();
+    assert.equal(state.draft.draft, false);
+    assert.deepEqual(state.calls, ['lookup', 'read', 'delete starter', 'upload', 'lookup', 'read', 'read', 'publish']);
+  } finally {
+    server.closeAllConnections();
+    await new Promise((yes, no) => server.close(error => error ? no(error) : yes()));
+    await rm(fixture, { recursive: true, force: true });
+  }
+});
 
 const tarball = { name: 'zdp-design-system-1.2.3.tgz', size: 42, digest: 'sha256:tarball' };
 const manifest = { name: 'release-artifact.json', size: 16, digest: 'sha256:manifest' };
