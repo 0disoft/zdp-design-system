@@ -1,8 +1,6 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
-  import { createZdpModalFocus } from '../modal-focus.js';
-  import { createZdpDismissLayer } from '../dismiss-layer.js';
-  import { createZdpModalLayer } from '../modal-layer.js';
+  import { createZdpModalLifecycle } from '../modal-lifecycle.js';
   import type { ZdpSheetPlacement, ZdpSheetSize } from '../sheet.js';
 
   interface Props {
@@ -33,45 +31,24 @@
 
   let layerElement: HTMLDivElement | null = $state(null);
   let panelElement: HTMLDivElement | null = $state(null);
-  const modalLayer = createZdpModalLayer();
-  const dismissLayer = createZdpDismissLayer();
-  const modalFocus = createZdpModalFocus({
+  const modal = createZdpModalLifecycle({
     getOpen: () => open,
     getPanel: () => panelElement,
     getLayer: () => layerElement,
-    modalLayer
+    getCloseOnEscape: () => closeOnEscape,
+    getCloseOnBackdrop: () => closeOnBackdrop,
+    requestClose
   });
 
-  onDestroy(() => {
-    modalFocus.destroy();
-    modalLayer.destroy();
-    dismissLayer.destroy();
-  });
+  onDestroy(modal.destroy);
 
   function requestClose(): void {
     open = false;
     onClose?.();
   }
 
-  function handleBackdropClick(): void {
-    if (closeOnBackdrop) {
-      requestClose();
-    }
-  }
-
-  function handleBackdropPointerDown(event: PointerEvent): void {
-    event.preventDefault();
-  }
-
-  $effect.pre(() => {
-    modalLayer.setActive(open, layerElement);
-    dismissLayer.setActive(open, layerElement, {
-      closeOnEscape,
-      closeOnOutside: false,
-      onEscape: requestClose
-    });
-  });
-  $effect(() => modalFocus.sync());
+  $effect.pre(modal.syncLayers);
+  $effect(modal.syncFocus);
 </script>
 
 {#if open}
@@ -82,14 +59,14 @@
         type="button"
         aria-label={closeLabel}
         tabindex="-1"
-        onpointerdown={handleBackdropPointerDown}
-        onclick={handleBackdropClick}
+        onpointerdown={modal.handleBackdropPointerDown}
+        onclick={modal.handleBackdropClick}
       ></button>
     {:else}
       <div
         class="zdp-sheet__backdrop"
         aria-hidden="true"
-        onpointerdown={handleBackdropPointerDown}
+        onpointerdown={modal.handleBackdropPointerDown}
       ></div>
     {/if}
     <div
@@ -104,7 +81,7 @@
       data-zdp-sheet-size={size}
       data-zdp-sheet-surface="sheet"
       tabindex="-1"
-      onkeydown={modalFocus.handleKeydown}
+      onkeydown={modal.handleKeydown}
     >
       <header class="zdp-sheet__header">
         <div class="zdp-sheet__title">

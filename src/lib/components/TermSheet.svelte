@@ -1,8 +1,6 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
-  import { createZdpModalFocus } from '../modal-focus.js';
-  import { createZdpDismissLayer } from '../dismiss-layer.js';
-  import { createZdpModalLayer } from '../modal-layer.js';
+  import { createZdpModalLifecycle } from '../modal-lifecycle.js';
   import type { ZdpTermSheetPlacement, ZdpTermSheetTerm } from '../term.js';
 
   interface Props {
@@ -39,30 +37,18 @@
 
   let panelElement = $state<HTMLElement | null>(null);
   let layerElement = $state<HTMLElement | null>(null);
-  const modalLayer = createZdpModalLayer();
-  const dismissLayer = createZdpDismissLayer();
-  const modalFocus = createZdpModalFocus({
+  const modal = createZdpModalLifecycle({
     getOpen: () => effectiveOpen,
     getPanel: () => panelElement,
     getLayer: () => layerElement,
-    modalLayer
+    getCloseOnEscape: () => closeOnEscape,
+    getCloseOnBackdrop: () => closeOnBackdrop,
+    requestClose
   });
   const effectiveOpen = $derived(open && term !== null);
 
-  $effect.pre(() => {
-    modalLayer.setActive(effectiveOpen, layerElement);
-    dismissLayer.setActive(effectiveOpen, layerElement, {
-      closeOnEscape,
-      closeOnOutside: false,
-      onEscape: requestClose
-    });
-  });
-
-  onDestroy(() => {
-    modalFocus.destroy();
-    modalLayer.destroy();
-    dismissLayer.destroy();
-  });
+  $effect.pre(modal.syncLayers);
+  onDestroy(modal.destroy);
 
   const titleId = $derived(`${id}-title`);
   const descriptionId = $derived(`${id}-description`);
@@ -73,17 +59,7 @@
     onClose?.();
   }
 
-  function handleBackdropClick(): void {
-    if (closeOnBackdrop) {
-      requestClose();
-    }
-  }
-
-  function handleBackdropPointerDown(event: PointerEvent): void {
-    event.preventDefault();
-  }
-
-  $effect(() => modalFocus.sync());
+  $effect(modal.syncFocus);
 </script>
 
 {#if effectiveOpen && term !== null}
@@ -94,14 +70,14 @@
         type="button"
         aria-label={closeLabel}
         tabindex="-1"
-        onpointerdown={handleBackdropPointerDown}
-        onclick={handleBackdropClick}
+        onpointerdown={modal.handleBackdropPointerDown}
+        onclick={modal.handleBackdropClick}
       ></button>
     {:else}
       <div
         class="zdp-term-sheet__backdrop"
         aria-hidden="true"
-        onpointerdown={handleBackdropPointerDown}
+        onpointerdown={modal.handleBackdropPointerDown}
       ></div>
     {/if}
     <div
@@ -118,7 +94,7 @@
       data-zdp-term-id={term.id}
       data-zdp-term-placement={resolvedPlacement}
       data-zdp-term-surface="sheet"
-      onkeydown={modalFocus.handleKeydown}
+      onkeydown={modal.handleKeydown}
     >
       <header class="zdp-term-sheet__header">
         <div class="zdp-term-sheet__heading">

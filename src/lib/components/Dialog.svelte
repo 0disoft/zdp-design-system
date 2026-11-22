@@ -1,8 +1,6 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
-  import { createZdpModalFocus } from '../modal-focus.js';
-  import { createZdpDismissLayer } from '../dismiss-layer.js';
-  import { createZdpModalLayer } from '../modal-layer.js';
+  import { createZdpModalLifecycle } from '../modal-lifecycle.js';
 
   interface Props {
     open?: boolean;
@@ -30,46 +28,25 @@
 
   let panelElement: HTMLElement | null = $state(null);
   let layerElement: HTMLElement | null = $state(null);
-  const modalLayer = createZdpModalLayer();
-  const dismissLayer = createZdpDismissLayer();
-  const modalFocus = createZdpModalFocus({
+  const modal = createZdpModalLifecycle({
     getOpen: () => open,
     getPanel: () => panelElement,
     getLayer: () => layerElement,
-    modalLayer
+    getCloseOnEscape: () => closeOnEscape,
+    getCloseOnBackdrop: () => closeOnBackdrop,
+    requestClose
   });
 
-  onDestroy(() => {
-    modalFocus.destroy();
-    modalLayer.destroy();
-    dismissLayer.destroy();
-  });
+  onDestroy(modal.destroy);
 
   function requestClose(): void {
     open = false;
     onClose?.();
   }
 
-  function handleBackdropClick(): void {
-    if (closeOnBackdrop) {
-      requestClose();
-    }
-  }
+  $effect.pre(modal.syncLayers);
 
-  function handleBackdropPointerDown(event: PointerEvent): void {
-    event.preventDefault();
-  }
-
-  $effect.pre(() => {
-    modalLayer.setActive(open, layerElement);
-    dismissLayer.setActive(open, layerElement, {
-      closeOnEscape,
-      closeOnOutside: false,
-      onEscape: requestClose
-    });
-  });
-
-  $effect(() => modalFocus.sync());
+  $effect(modal.syncFocus);
 </script>
 
 {#if open}
@@ -80,14 +57,14 @@
         type="button"
         aria-label={closeLabel}
         tabindex="-1"
-        onpointerdown={handleBackdropPointerDown}
-        onclick={handleBackdropClick}
+        onpointerdown={modal.handleBackdropPointerDown}
+        onclick={modal.handleBackdropClick}
       ></button>
     {:else}
       <div
         class="zdp-dialog__backdrop"
         aria-hidden="true"
-        onpointerdown={handleBackdropPointerDown}
+        onpointerdown={modal.handleBackdropPointerDown}
       ></div>
     {/if}
     <div
@@ -99,7 +76,7 @@
       aria-labelledby={labelledBy}
       aria-describedby={describedBy ?? undefined}
       tabindex="-1"
-      onkeydown={modalFocus.handleKeydown}
+      onkeydown={modal.handleKeydown}
     >
       <header class="zdp-dialog__header">
         <div class="zdp-dialog__title">
