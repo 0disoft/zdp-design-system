@@ -87,11 +87,15 @@ export async function verifyFormResetBatching(page) {
   const ownershipReads = await page.evaluate(async (rootPath) => {
     const { syncZdpFormReset } = await import(`/@fs/${rootPath}/src/lib/form-reset.ts`);
     const form = document.createElement('form');
+    const otherForm = document.createElement('form');
+    otherForm.id = 'form-ownership-other';
     const results = document.createElement('div');
-    document.body.append(form, results);
+    document.body.append(form, otherForm, results);
 
     const inputs = Array.from({ length: 1000 }, () => document.createElement('input'));
-    form.append(...inputs);
+    form.append(...inputs.slice(0, 3));
+    otherForm.append(...inputs.slice(3));
+    for (const input of inputs.slice(3)) input.setAttribute('form', otherForm.id);
     const actions = inputs.map(input => syncZdpFormReset(input, { onReset() {} }));
     try {
       await Promise.resolve();
@@ -122,6 +126,7 @@ export async function verifyFormResetBatching(page) {
       // A control can switch from its ancestor form to an explicit association.
       form.id = 'form-ownership-probe';
       inputs[1].setAttribute('form', form.id);
+      inputs[2].setAttribute('form', 'form-ownership-renamed');
       await Promise.resolve();
       const beforeBlocker = reads;
       const blocker = document.createElement('div');
@@ -131,16 +136,26 @@ export async function verifyFormResetBatching(page) {
       const afterBlocker = reads - beforeBlocker;
       blocker.remove();
       await Promise.resolve();
-      return { unrelated, afterId, afterMove, afterBlocker, afterUnblock: reads - beforeBlocker - afterBlocker };
+      const afterUnblock = reads - beforeBlocker - afterBlocker;
+      const beforeRename = reads;
+      inputs[1].name = 'id';
+      form.setAttribute('id', 'form-ownership-renamed');
+      await Promise.resolve();
+      const afterRename = reads - beforeRename;
+      const renamedOwners = [inputs[1].form === null, inputs[2].form === form];
+      return { unrelated, afterId, afterMove, afterBlocker, afterUnblock, afterRename, renamedOwners };
     } finally {
       for (const action of actions) action.destroy();
       form.remove();
+      otherForm.remove();
       results.remove();
     }
   }, process.cwd().replaceAll('\\', '/'));
-  assert.deepEqual(ownershipReads, { unrelated: 0, afterId: 0, afterMove: 1, afterBlocker: 1, afterUnblock: 1 },
-    'Refresh only moved controls and explicit form references affected by duplicate IDs.');
-  console.log('Form ownership: 0 reads for unrelated content or IDs, 1 read for a move or ID collision with 1000 mounted inputs.');
+  assert.deepEqual(ownershipReads, {
+    unrelated: 0, afterId: 0, afterMove: 1, afterBlocker: 1, afterUnblock: 1, afterRename: 2,
+    renamedOwners: [true, true]
+  }, 'Refresh only moved controls and references affected by ID collisions or renames.');
+  console.log('Form ownership: 0 reads for an unrelated ID, 1 for a collision, 2 for a rename with 1000 mounted inputs.');
 
   const targetedReset = await page.evaluate(async (rootPath) => {
     const { syncZdpFormReset } = await import(`/@fs/${rootPath}/src/lib/form-reset.ts`);

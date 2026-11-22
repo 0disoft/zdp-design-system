@@ -9,7 +9,8 @@ interface FormResetOptions<Control extends FormControl> {
 interface FormOwnershipObserver {
   observer: MutationObserver;
   controls: Map<Element, Set<() => void>>;
-  explicitControls: Set<Element>;
+  formIdsByControl: Map<Element, string>;
+  controlsByFormId: Map<string, Set<Element>>;
 }
 
 const ownershipObservers = new WeakMap<Node, FormOwnershipObserver>();
@@ -108,28 +109,53 @@ function afterFormReset(event: Event, callback: () => void): () => void {
 
 const formControlSelector = 'input, textarea, select';
 
+function indexFormReference(state: FormOwnershipObserver, control: Element, id: string | null): void {
+  const { formIdsByControl, controlsByFormId } = state;
+  const previousId = formIdsByControl.get(control);
+  if (previousId === id) return;
+  if (previousId !== undefined) {
+    const previousControls = controlsByFormId.get(previousId);
+    previousControls?.delete(control);
+    if (previousControls?.size === 0) controlsByFormId.delete(previousId);
+    formIdsByControl.delete(control);
+  }
+  if (!id) return;
+  const referencingControls = controlsByFormId.get(id) ?? new Set<Element>();
+  referencingControls.add(control);
+  controlsByFormId.set(id, referencingControls);
+  formIdsByControl.set(control, id);
+}
+
 function refreshChangedOwnership(
-  { controls, explicitControls }: FormOwnershipObserver,
+  state: FormOwnershipObserver,
   records: readonly MutationRecord[]
 ): void {
+  const { controls, controlsByFormId } = state;
   const changed = new Set<Element>();
-  const watchIds = explicitControls.size > 0;
+  const changedIds = new Set<string>();
+  const watchIds = controlsByFormId.size > 0;
   const selector = watchIds ? `${formControlSelector}, [id]` : formControlSelector;
-  let idsChanged = false;
+
+  function markId(element: Element): void {
+    if (!watchIds) return;
+    // Named form controls can shadow properties and methods on the form.
+    const id = Element.prototype.getAttribute.call(element, 'id');
+    if (id) changedIds.add(id);
+  }
 
   function mark(element: Element): void {
     if (controls.has(element)) changed.add(element);
-    if (watchIds && !idsChanged && element.hasAttribute('id')) idsChanged = true;
+    markId(element);
   }
 
   for (const record of records) {
     if (record.type === 'attributes') {
       const target = record.target as Element;
       if (record.attributeName === 'id') {
-        idsChanged = true;
+        if (!watchIds) continue;
+        if (record.oldValue) changedIds.add(record.oldValue);
+        markId(target);
       } else if (controls.has(target)) {
-        if (target.hasAttribute('form')) explicitControls.add(target);
-        else explicitControls.delete(target);
         changed.add(target);
       }
       continue;
@@ -144,10 +170,14 @@ function refreshChangedOwnership(
     }
   }
   // An earlier element with the same ID can shadow the referenced form.
-  if (idsChanged) for (const control of explicitControls) changed.add(control);
+  for (const id of changedIds) {
+    for (const control of controlsByFormId.get(id) ?? []) changed.add(control);
+  }
   for (const control of changed) {
+    indexFormReference(state, control, control.getAttribute('form'));
     for (const refresh of controls.get(control) ?? []) refresh();
   }
+
 }
 
 /** Share one observer per tree instead of observing the page once per input. */
@@ -158,25 +188,25 @@ function observeFormOwnership(root: Node, control: FormControl, callback: () => 
   let state = ownershipObservers.get(root);
   if (!state) {
     const controls: FormOwnershipObserver['controls'] = new Map();
-    const explicitControls = new Set<Element>();
     const observer = new Observer((records) => {
       refreshChangedOwnership(subscription, records);
     });
-    const subscription = { observer, controls, explicitControls };
-    observer.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['form', 'id'] });
+    const subscription = { observer, controls, formIdsByControl: new Map(), controlsByFormId: new Map() };
+    observer.observe(root, { childList: true, subtree: true, attributeOldValue: true, attributeFilter: ['form', 'id'] });
     state = subscription;
     ownershipObservers.set(root, state);
   }
-  const { observer, controls, explicitControls } = state;
+  const subscription = state;
+  const { observer, controls } = subscription;
   const callbacks = controls.get(control) ?? new Set<() => void>();
   callbacks.add(callback);
   controls.set(control, callbacks);
-  if (control.hasAttribute('form')) explicitControls.add(control);
+  indexFormReference(subscription, control, control.getAttribute('form'));
   return () => {
     callbacks.delete(callback);
     if (callbacks.size === 0) {
       controls.delete(control);
-      explicitControls.delete(control);
+      indexFormReference(subscription, control, null);
     }
     if (controls.size === 0) {
       observer.disconnect();
