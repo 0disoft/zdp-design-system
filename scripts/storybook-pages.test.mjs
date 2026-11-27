@@ -213,8 +213,14 @@ await test('keeps privileged Pages workflows on trusted code and immutable actio
   assert.doesNotMatch(publishWorkflow, /pull_request_target:/);
   assert.doesNotMatch(publishWorkflow, /ref: \$\{\{ github\.event\.workflow_run\.head_sha \}\}/);
 
-  assert.match(cleanupWorkflow, /pull_request_target:/);
-  assert.match(cleanupWorkflow, /types:\n      - closed/);
+  assert.match(cleanupWorkflow, /pull_request:\n    types:\n      - closed/);
+  assert.doesNotMatch(cleanupWorkflow, /pull_request_target:/);
+  assert.match(cleanupWorkflow, /workflow_dispatch:\n    inputs:\n      pr-number:/);
+  assert.ok(cleanupWorkflow.includes("github.ref == 'refs/heads/main'"));
+  assert.ok(cleanupWorkflow.includes('github.event.pull_request.head.repo.full_name == github.repository'));
+  assert.ok(cleanupWorkflow.includes('select(.state == "closed") | .head.repo.full_name'));
+  assert.ok(cleanupWorkflow.includes('[ "$candidate" != "$GITHUB_REPOSITORY" ]'));
+  assert.ok(cleanupWorkflow.includes('--pr-number "$PR_NUMBER"'));
   assert.match(cleanupWorkflow, /ref: main/);
   assert.doesNotMatch(cleanupWorkflow, /github\.event\.pull_request\.head\.sha/);
 
