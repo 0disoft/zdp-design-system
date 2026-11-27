@@ -14,3 +14,4 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Stress: Story = {};
+// Temporary Storybook preview lifecycle check.
