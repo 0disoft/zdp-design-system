@@ -40,7 +40,7 @@ jobs:
             exit 1
           fi
 
-          candidate="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" +            --jq 'select(.state == "closed") | .head.repo.full_name')"
+          candidate="$(gh api --jq 'select(.state == "closed") | .head.repo.full_name' "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER")"
           if [ "$candidate" != "$GITHUB_REPOSITORY" ]; then
             echo '::error::Only closed pull requests from this repository can be cleaned up.'
             exit 1

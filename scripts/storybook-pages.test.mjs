@@ -218,7 +218,9 @@ await test('keeps privileged Pages workflows on trusted code and immutable actio
   assert.match(cleanupWorkflow, /workflow_dispatch:\n    inputs:\n      pr-number:/);
   assert.ok(cleanupWorkflow.includes("github.ref == 'refs/heads/main'"));
   assert.ok(cleanupWorkflow.includes('github.event.pull_request.head.repo.full_name == github.repository'));
-  assert.ok(cleanupWorkflow.includes('select(.state == "closed") | .head.repo.full_name'));
+  assert.ok(cleanupWorkflow.includes(
+    `gh api --jq 'select(.state == "closed") | .head.repo.full_name' "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER")`
+  ));
   assert.ok(cleanupWorkflow.includes('[ "$candidate" != "$GITHUB_REPOSITORY" ]'));
   assert.ok(cleanupWorkflow.includes('--pr-number "$PR_NUMBER"'));
   assert.match(cleanupWorkflow, /ref: main/);
